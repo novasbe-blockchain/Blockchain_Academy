@@ -11,10 +11,17 @@ const chapters = [
   { id: 's4-interop',  label: 'Interoperability' },
   { id: 's4-bridges',  label: 'Bridge Security' },
   { id: 's4-cosmos',   label: 'Cosmos' },
+  { id: 's4-cosmos-eco', label: 'Cosmos Apps' },
   { id: 's4-layer0', label: 'Layer 0' },
+  { id: 's4-xrp', label: 'XRP Ledger' },
+  { id: 's4-xrp-eco', label: 'XRP Apps' },
   { id: 's4-starknet', label: 'Starknet' },
+  { id: 's4-starknet-eco', label: 'Starknet Apps' },
   { id: 's4-layer2',   label: 'Layer 2: Optimistic vs ZK' },
   { id: 's4-l2apps',   label: 'L2 App Landscape' },
+  { id: 's4-privacy',  label: 'Privacy' },
+  { id: 's4-evaluate', label: 'Evaluate a Project' },
+  { id: 's4-decision', label: 'Decision Framework' },
   { id: 's4-quiz',     label: 'Quiz' },
   { id: 's4-takeaways', label: 'Takeaways' },
 ];
@@ -415,6 +422,136 @@ export function BP_Section4() {
           </div>
         </div>
 
+        {/* ═══════ COSMOS APPS — ecosystem ═══════ */}
+        <div id="s4-cosmos-eco" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Cosmos ecosystem — what runs across IBC</h2>
+            <p className="text-sm text-muted-foreground mt-1">The IBC graph connects 110+ chains. Each one specialised — and the most-used app on Cosmos isn't on the Hub itself, it's on the zones.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-5 gap-2.5">
+            {[
+              {
+                emoji: '🌊',
+                name: 'Osmosis',
+                category: 'DEX',
+                color: '#7B2BF9',
+                tag: 'leading IBC DEX',
+                stats: '~$200M TVL · since 2021',
+                apps: [
+                  { name: 'Concentrated liquidity', kind: 'Uniswap-v3-style ranges' },
+                  { name: 'Superfluid staking',     kind: 'LP tokens that also stake' },
+                  { name: 'IBC-native swaps',       kind: 'Any IBC asset, no bridge' },
+                  { name: 'Trade as IBC msg',       kind: 'Cross-chain swap in one tx' },
+                ],
+              },
+              {
+                emoji: '📈',
+                name: 'dYdX v4',
+                category: 'Perps DEX',
+                color: '#6966FF',
+                tag: 'migrated off StarkEx (2023)',
+                stats: 'Daily vol in $100Ms · Cosmos SDK',
+                apps: [
+                  { name: 'Order-book perps',  kind: 'Off-chain matching, on-chain settlement' },
+                  { name: 'Sovereign chain',   kind: 'Validators paid in trading fees' },
+                  { name: 'Custom matching',   kind: 'Built specifically for derivatives' },
+                  { name: 'Cosmos SDK proof',  kind: 'Largest sovereign-zone migration to date' },
+                ],
+              },
+              {
+                emoji: '🧊',
+                name: 'Celestia',
+                category: 'Modular DA',
+                color: '#7E5CF7',
+                tag: 'pioneer of modular thesis',
+                stats: 'Mainnet 2023 · TIA token',
+                apps: [
+                  { name: 'Data availability',   kind: 'Sells blob space to rollups' },
+                  { name: 'Data sampling',       kind: 'Light clients verify w/o full state' },
+                  { name: 'Powers RaaS',         kind: 'Manta, Eclipse, Movement use it' },
+                  { name: 'Modular blockchain',  kind: 'Separates execution / DA / settlement' },
+                ],
+              },
+              {
+                emoji: '☁️',
+                name: 'Akash',
+                category: 'GPU Compute',
+                color: '#FF414C',
+                tag: 'decentralised cloud',
+                stats: 'Major AI-workload growth in 2024',
+                apps: [
+                  { name: 'GPU rentals',     kind: 'A100s, H100s for ML training' },
+                  { name: 'Reverse auction', kind: 'Buyers post jobs, providers bid' },
+                  { name: 'AKT payments',    kind: 'Settle in token or any IBC asset' },
+                  { name: 'Open-source ML',  kind: 'Llama / Mistral hosting' },
+                ],
+              },
+              {
+                emoji: '🌀',
+                name: 'Stride',
+                category: 'Liquid Staking',
+                color: '#E91E63',
+                tag: 'IBC LST leader',
+                stats: 'Liquid stakes ATOM, OSMO, INJ, TIA…',
+                apps: [
+                  { name: 'stATOM, stTIA…',  kind: 'Liquid staking tokens, IBC-portable' },
+                  { name: 'Auto-compound',   kind: 'Rewards re-staked automatically' },
+                  { name: 'IBC-native LST',  kind: 'Use stTokens across all IBC chains' },
+                  { name: 'Stride Hub',      kind: 'Now an Interchain Security consumer chain' },
+                ],
+              },
+            ].map(app => (
+              <motion.div
+                key={app.name}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-1.5 p-2.5 rounded-xl border-2 min-h-0"
+                style={{ borderColor: app.color + '55', backgroundColor: app.color + '0a' }}
+              >
+                <div className="shrink-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-base shrink-0 leading-none">{app.emoji}</span>
+                    <div className="font-black text-[12px] leading-tight" style={{ color: app.color }}>{app.name}</div>
+                  </div>
+                  <span
+                    className="inline-block text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded mt-1"
+                    style={{ backgroundColor: app.color + '20', color: app.color, border: `1px solid ${app.color}40` }}
+                  >
+                    {app.category}
+                  </span>
+                </div>
+
+                <div className="shrink-0">
+                  <div className="text-[10px] text-foreground font-medium leading-tight">{app.tag}</div>
+                  <div className="text-[9px] text-muted-foreground italic leading-snug mt-0.5">{app.stats}</div>
+                </div>
+
+                <div className="flex-1 min-h-0 flex flex-col gap-1">
+                  {app.apps.map(item => (
+                    <div
+                      key={item.name}
+                      className="rounded-md border bg-card/60 px-1.5 py-1 min-h-0"
+                      style={{ borderColor: app.color + '35' }}
+                    >
+                      <div className="text-[10px] font-bold leading-tight" style={{ color: app.color }}>{item.name}</div>
+                      <div className="text-[9px] text-muted-foreground leading-snug mt-0.5">{item.kind}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#22d3ee55', backgroundColor: '#22d3ee0d' }}>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#22d3ee' }}>Also worth knowing — </span>
+              <span className="font-medium text-foreground">Injective</span> (finance-focused L1) · <span className="font-medium text-foreground">Sei</span> (orderbook L1) · <span className="font-medium text-foreground">Mantra</span> (RWA tokenisation) · <span className="font-medium text-foreground">Stargaze</span> (NFTs) · <span className="font-medium text-foreground">Secret Network</span> (privacy) · <span className="font-medium text-foreground">Fetch.ai / ASI</span> (AI agents) · <span className="font-medium text-foreground">Neutron</span> (smart-contract platform secured by ATOM).
+            </p>
+          </div>
+        </div>
+
         {/* ═══════ S4-LAYER0 ═══════ */}
         <div id="s4-layer0" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-3">
@@ -546,6 +683,292 @@ export function BP_Section4() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* ═══════ S4-XRP — XRP Ledger ═══════ */}
+        <div id="s4-xrp" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
+              XRP Ledger: payments-optimised L1
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              One of the longest-running blockchains (live since 2012). Designed specifically for fast, cheap payments and FX — with a built-in DEX and a consensus model that is neither Proof of Work nor Proof of Stake.
+            </p>
+          </div>
+
+          {/* Definition strip */}
+          <div className="shrink-0 mb-3 rounded-xl border p-3" style={{ borderColor: '#06b6d455', backgroundColor: '#06b6d40d' }}>
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#06b6d4' }}>What's distinct about XRPL</p>
+            <p className="text-sm text-foreground mt-0.5 leading-snug">
+              XRPL doesn't use mining or staking. Validators agree on transaction order via <span className="font-semibold">Federated Byzantine Agreement</span>: each node picks a Unique Node List (UNL) of validators it trusts, and consensus rounds (~3-5 s) propagate proposals until ≥ 80% of UNL agrees. Tokens beyond XRP itself live as <span className="font-semibold">Trust Lines / IOUs</span> — a permission a holder grants to receive a particular issuer's asset.
+            </p>
+          </div>
+
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-5 min-h-0">
+
+            {/* Left: Architecture visual + history */}
+            <div className="flex flex-col gap-3 min-h-0">
+              <div className="flex items-center gap-2 shrink-0">
+                <div className="size-2 rounded-full bg-[#06b6d4]" />
+                <h3 className="text-base lg:text-lg font-semibold text-foreground">Consensus — UNL voting</h3>
+              </div>
+
+              {/* Visual */}
+              <div className="flex-1 min-h-[260px] rounded-xl border border-border bg-card/50 p-4 relative">
+                <svg viewBox="0 0 480 280" className="w-full h-full">
+                  <defs>
+                    <marker id="xrp-arrow" markerWidth={6} markerHeight={6} refX={5} refY={3} orient="auto">
+                      <polygon points="0 0, 6 3, 0 6" fill="#06b6d4" />
+                    </marker>
+                  </defs>
+                  {/* Validator ring */}
+                  {[
+                    { x: 240, y: 50 },
+                    { x: 380, y: 100 },
+                    { x: 400, y: 200 },
+                    { x: 280, y: 240 },
+                    { x: 140, y: 240 },
+                    { x: 60,  y: 180 },
+                    { x: 90,  y: 90  },
+                  ].map((v, i) => (
+                    <g key={i}>
+                      <circle cx={v.x} cy={v.y} r={16} fill="#06b6d420" stroke="#06b6d4" strokeWidth={1.5} />
+                      <text x={v.x} y={v.y + 4} textAnchor="middle" fontSize={10} fontWeight="700" fill="#06b6d4">V{i + 1}</text>
+                    </g>
+                  ))}
+                  {/* Inter-validator agreement lines (mesh) */}
+                  {[
+                    [240, 50, 380, 100],
+                    [240, 50, 90,  90],
+                    [380, 100, 400, 200],
+                    [400, 200, 280, 240],
+                    [280, 240, 140, 240],
+                    [140, 240, 60, 180],
+                    [60, 180, 90, 90],
+                    [240, 50, 280, 240],
+                    [380, 100, 60, 180],
+                  ].map(([x1, y1, x2, y2], i) => (
+                    <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#06b6d4" strokeWidth={0.6} opacity={0.35} strokeDasharray="3 3" />
+                  ))}
+                  {/* Center label */}
+                  <text x={240} y={150} textAnchor="middle" fontSize={11} fontWeight="800" className="fill-foreground">≥ 80% UNL agree</text>
+                  <text x={240} y={166} textAnchor="middle" fontSize={9} className="fill-muted-foreground">~3-5 s consensus rounds</text>
+                </svg>
+              </div>
+
+              {/* Quick history strip */}
+              <div className="shrink-0 grid grid-cols-3 gap-2">
+                {[
+                  { metric: '2012', label: 'launched · pre-Ethereum' },
+                  { metric: '~1,500', label: 'TPS sustained' },
+                  { metric: '~$0.0002', label: 'avg tx fee · burned' },
+                ].map(s => (
+                  <div key={s.label} className="px-2 py-1.5 rounded-lg border border-[#06b6d4]/30 bg-[#06b6d4]/05 text-center">
+                    <div className="text-xs font-black text-[#06b6d4] leading-none">{s.metric}</div>
+                    <div className="text-[9px] text-muted-foreground mt-0.5 uppercase tracking-wider leading-snug">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Properties */}
+            <div className="flex flex-col gap-2 min-h-0">
+              <div className="flex items-center gap-2 shrink-0">
+                <div className="size-2 rounded-full bg-[#6366f1]" />
+                <h3 className="text-base lg:text-lg font-semibold text-foreground">Core properties</h3>
+              </div>
+
+              <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
+                {[
+                  {
+                    emoji: '💱',
+                    title: 'Native DEX since day one',
+                    desc: 'Order-book DEX has been part of the protocol since 2012 — no smart contract required. AMM (XLS-30) added natively in 2024 alongside the orderbook.',
+                  },
+                  {
+                    emoji: '🔗',
+                    title: 'Trust Lines / IOUs',
+                    desc: 'Issued assets (USD-pegged tokens, fiat IOUs, RWA) live as a balance on a Trust Line — a permissioned link a holder opens to a specific issuer. Different mental model from ERC-20.',
+                  },
+                  {
+                    emoji: '🪝',
+                    title: 'Hooks · light smart contracts',
+                    desc: 'Lightweight, gas-metered WebAssembly hooks that fire before / after transactions on an account. Limited surface vs full smart contracts — trade-off for predictable fees.',
+                  },
+                  {
+                    emoji: '🔷',
+                    title: 'EVM Sidechain',
+                    desc: 'A separate, EVM-compatible sidechain bridged to XRPL (mainnet 2025) so Solidity dApps can settle to XRPL and use XRP for gas. Aimed at expanding the dev surface beyond XRPL\'s native model.',
+                  },
+                ].map((card) => (
+                  <motion.div
+                    key={card.title}
+                    initial={{ opacity: 0, x: 16 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3 }}
+                    className="flex gap-3 p-2.5 bg-card rounded-lg border border-[#06b6d4]/25 min-h-0"
+                  >
+                    <span className="text-lg lg:text-xl flex-shrink-0 leading-none mt-0.5">{card.emoji}</span>
+                    <div className="min-w-0">
+                      <p className="text-xs lg:text-sm font-semibold text-foreground">{card.title}</p>
+                      <p className="text-[10px] lg:text-xs text-muted-foreground mt-0.5 leading-relaxed">{card.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Honest context panels */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 shrink-0">
+                <div className="p-2.5 bg-[#06b6d4]/05 rounded-lg border border-[#06b6d4]/30">
+                  <p className="text-[11px] font-bold text-[#06b6d4] mb-1 flex items-center gap-1.5">
+                    <span>🏦</span> Where it actually shines
+                  </p>
+                  <p className="text-[10px] text-muted-foreground leading-relaxed">
+                    Cross-border payments, FX, RWA tokenisation. Ripple&apos;s ODL (On-Demand Liquidity) uses XRP as a bridge currency; central-bank pilots (Bhutan, Palau, Colombia) use XRPL tech for CBDC experiments.
+                  </p>
+                </div>
+                <div className="p-2.5 bg-[#f59e0b]/05 rounded-lg border border-[#f59e0b]/30">
+                  <p className="text-[11px] font-bold text-[#f59e0b] mb-1 flex items-center gap-1.5">
+                    <span>⚖️</span> Honest context
+                  </p>
+                  <p className="text-[10px] text-muted-foreground leading-relaxed">
+                    SEC sued Ripple in 2020 over XRP sales; 2023 ruling found programmatic sales weren&apos;t securities, institutional sales were. Smaller smart-contract footprint than EVM ecosystems — the bet is on payments + RWA, not general-purpose dApps.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ═══════ XRP APPS — ecosystem ═══════ */}
+        <div id="s4-xrp-eco" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">XRP Ledger ecosystem — apps and partnerships</h2>
+            <p className="text-sm text-muted-foreground mt-1">XRPL&apos;s footprint skews more toward enterprise rails and tokenised real-world assets than retail DeFi. Recent additions (AMM, RLUSD, EVM sidechain) are widening that footprint into 2024-26.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-5 gap-2.5">
+            {[
+              {
+                emoji: '💸',
+                name: 'RippleNet · ODL',
+                category: 'Payments',
+                color: '#06b6d4',
+                tag: 'cross-border settlement',
+                stats: 'Banking partners worldwide · since 2018',
+                apps: [
+                  { name: 'On-Demand Liquidity',  kind: 'XRP as bridge currency for FX' },
+                  { name: 'RippleNet',            kind: 'Banking corridor messaging + settlement' },
+                  { name: 'Travelex · SBI',       kind: 'Live remittance integrations' },
+                  { name: 'Central-bank pilots',  kind: 'Bhutan, Palau, Colombia CBDC trials' },
+                ],
+              },
+              {
+                emoji: '🪙',
+                name: 'RLUSD',
+                category: 'Stablecoin',
+                color: '#3b82f6',
+                tag: 'Ripple\'s regulated stablecoin',
+                stats: 'Live Dec 2024 · USD-backed · NYDFS',
+                apps: [
+                  { name: 'NYDFS-regulated', kind: 'New York Trust company issuance' },
+                  { name: 'On both XRPL + ETH', kind: 'Mints natively on XRPL and Ethereum' },
+                  { name: 'Treasury-backed', kind: 'Reserves: cash + short-dated US treasuries' },
+                  { name: 'RippleNet integration', kind: 'Settles cross-border payments alongside XRP' },
+                ],
+              },
+              {
+                emoji: '📈',
+                name: 'Sologenic',
+                category: 'RWA · tokenised stocks',
+                color: '#10b981',
+                tag: 'tokenised equities & metals',
+                stats: 'Live since 2020 · SOLO token',
+                apps: [
+                  { name: 'Tokenised stocks', kind: 'Apple, Tesla shares as XRPL IOUs' },
+                  { name: 'Sologenic DEX',    kind: 'Front-end on the native XRPL DEX' },
+                  { name: 'Coinfield',        kind: 'Sister exchange · tokenised metals' },
+                  { name: 'NFT marketplace',  kind: 'XLS-20 NFT trading' },
+                ],
+              },
+              {
+                emoji: '👛',
+                name: 'Xaman (ex-Xumm)',
+                category: 'Wallet',
+                color: '#8b5cf6',
+                tag: 'leading XRPL wallet',
+                stats: 'Built by XRPL Labs · iOS / Android',
+                apps: [
+                  { name: 'Self-custody',     kind: 'Keys stay on the device' },
+                  { name: 'xApps',            kind: 'Mini-apps (DEX, NFT, payments) inside the wallet' },
+                  { name: 'Hooks support',    kind: 'Manage account-level hook code' },
+                  { name: 'PayString',        kind: 'Human-readable address aliases' },
+                ],
+              },
+              {
+                emoji: '🔄',
+                name: 'Native DEX & AMM',
+                category: 'On-protocol DeFi',
+                color: '#ec4899',
+                tag: 'order book + AMM',
+                stats: 'DEX since 2012 · AMM (XLS-30) live 2024',
+                apps: [
+                  { name: 'Order-book DEX', kind: 'Native, no smart contract needed' },
+                  { name: 'AMM (XLS-30)',   kind: 'Constant-product pools on protocol' },
+                  { name: 'Path payments',  kind: 'Auto-route through multi-asset hops' },
+                  { name: 'Issued assets',  kind: 'Trade any IOU side-by-side with XRP' },
+                ],
+              },
+            ].map(app => (
+              <motion.div
+                key={app.name}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-1.5 p-2.5 rounded-xl border-2 min-h-0"
+                style={{ borderColor: app.color + '55', backgroundColor: app.color + '0a' }}
+              >
+                <div className="shrink-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-base shrink-0 leading-none">{app.emoji}</span>
+                    <div className="font-black text-[12px] leading-tight" style={{ color: app.color }}>{app.name}</div>
+                  </div>
+                  <span
+                    className="inline-block text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded mt-1"
+                    style={{ backgroundColor: app.color + '20', color: app.color, border: `1px solid ${app.color}40` }}
+                  >
+                    {app.category}
+                  </span>
+                </div>
+
+                <div className="shrink-0">
+                  <div className="text-[10px] text-foreground font-medium leading-tight">{app.tag}</div>
+                  <div className="text-[9px] text-muted-foreground italic leading-snug mt-0.5">{app.stats}</div>
+                </div>
+
+                <div className="flex-1 min-h-0 flex flex-col gap-1">
+                  {app.apps.map(item => (
+                    <div
+                      key={item.name}
+                      className="rounded-md border bg-card/60 px-1.5 py-1 min-h-0"
+                      style={{ borderColor: app.color + '35' }}
+                    >
+                      <div className="text-[10px] font-bold leading-tight" style={{ color: app.color }}>{item.name}</div>
+                      <div className="text-[9px] text-muted-foreground leading-snug mt-0.5">{item.kind}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#06b6d455', backgroundColor: '#06b6d40d' }}>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#06b6d4' }}>Also worth knowing — </span>
+              <span className="font-medium text-foreground">Bitstamp</span> integrated XRP since 2017 · <span className="font-medium text-foreground">XRPL Hooks</span> mainnet activation expanded contract surface · <span className="font-medium text-foreground">Coreum</span> spun out of XRPL family with a Cosmos-SDK chain · <span className="font-medium text-foreground">Flare</span> connects to XRPL via FAssets · <span className="font-medium text-foreground">EVM sidechain</span> opening a Solidity-compatible footprint in 2025.
+            </p>
           </div>
         </div>
 
@@ -692,6 +1115,136 @@ export function BP_Section4() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* ═══════ STARKNET APPS — ecosystem ═══════ */}
+        <div id="s4-starknet-eco" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Starknet ecosystem — apps native to Cairo</h2>
+            <p className="text-sm text-muted-foreground mt-1">Starknet&apos;s app character has shifted distinctly toward fully-on-chain games, native AA wallets, and AI-agent experiments — areas where the Cairo VM&apos;s ZK-friendliness is genuinely useful.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-5 gap-2.5">
+            {[
+              {
+                emoji: '💧',
+                name: 'Ekubo',
+                category: 'Native AMM',
+                color: '#8b5cf6',
+                tag: 'concentrated liquidity',
+                stats: 'Built by the Uniswap v3 author',
+                apps: [
+                  { name: 'Singleton design',    kind: 'One contract for all pools (gas-efficient)' },
+                  { name: 'Concentrated LPs',    kind: 'Range positions, like Uni v3' },
+                  { name: 'Extensions',          kind: 'Programmable hooks per pool' },
+                  { name: 'STRK / ETH base',     kind: 'Deepest liquidity on Starknet' },
+                ],
+              },
+              {
+                emoji: '🎮',
+                name: 'Realms · Dojo',
+                category: 'Onchain Games',
+                color: '#ec4899',
+                tag: 'fully on-chain games',
+                stats: 'Loot Survivor, Eternum, Loot universe',
+                apps: [
+                  { name: 'Dojo engine',     kind: 'ECS framework for fully on-chain games' },
+                  { name: 'Loot Survivor',   kind: 'Roguelike fully on Starknet' },
+                  { name: 'Realms · Eternum', kind: 'On-chain MMO economy' },
+                  { name: 'Cairo for state', kind: 'Every move is a verified transaction' },
+                ],
+              },
+              {
+                emoji: '🏦',
+                name: 'ZKLend · Nostra · Vesu',
+                category: 'Lending',
+                color: '#10b981',
+                tag: 'money markets',
+                stats: 'Aave-style on Starknet',
+                apps: [
+                  { name: 'ZKLend',  kind: 'Earliest Starknet lending market' },
+                  { name: 'Nostra',  kind: 'Lending + LST + stablecoin' },
+                  { name: 'Vesu',    kind: 'Modular lending pools (2024)' },
+                  { name: 'Lending receipts',  kind: 'STRK / ETH deposits earn yield' },
+                ],
+              },
+              {
+                emoji: '👛',
+                name: 'Argent X · Braavos · Ready',
+                category: 'Smart Wallets',
+                color: '#f59e0b',
+                tag: 'native account abstraction',
+                stats: 'Every wallet is a smart contract',
+                apps: [
+                  { name: 'Argent X',          kind: 'Default Starknet wallet, social recovery' },
+                  { name: 'Braavos',           kind: 'Multi-sig + biometric signing' },
+                  { name: 'Session keys',      kind: 'Sign once, play many in-game' },
+                  { name: 'Multi-call',        kind: 'Approve + swap + stake in one tx' },
+                ],
+              },
+              {
+                emoji: '🤖',
+                name: 'AI agents',
+                category: 'Autonomous Agents',
+                color: '#06b6d4',
+                tag: 'on-chain AI experiments',
+                stats: 'Frame in Cairo · agents w/ on-chain wallets',
+                apps: [
+                  { name: 'Eliza framework',   kind: 'Open-source agent runtime supports Starknet' },
+                  { name: 'Agent wallets',     kind: 'Smart accounts AI can fund and act from' },
+                  { name: 'On-chain AI infra', kind: 'Verifiable inference using STARK proofs' },
+                  { name: 'Reasoning ✓ proofs', kind: 'Cairo enables proving model output' },
+                ],
+              },
+            ].map(app => (
+              <motion.div
+                key={app.name}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-1.5 p-2.5 rounded-xl border-2 min-h-0"
+                style={{ borderColor: app.color + '55', backgroundColor: app.color + '0a' }}
+              >
+                <div className="shrink-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-base shrink-0 leading-none">{app.emoji}</span>
+                    <div className="font-black text-[12px] leading-tight" style={{ color: app.color }}>{app.name}</div>
+                  </div>
+                  <span
+                    className="inline-block text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded mt-1"
+                    style={{ backgroundColor: app.color + '20', color: app.color, border: `1px solid ${app.color}40` }}
+                  >
+                    {app.category}
+                  </span>
+                </div>
+
+                <div className="shrink-0">
+                  <div className="text-[10px] text-foreground font-medium leading-tight">{app.tag}</div>
+                  <div className="text-[9px] text-muted-foreground italic leading-snug mt-0.5">{app.stats}</div>
+                </div>
+
+                <div className="flex-1 min-h-0 flex flex-col gap-1">
+                  {app.apps.map(item => (
+                    <div
+                      key={item.name}
+                      className="rounded-md border bg-card/60 px-1.5 py-1 min-h-0"
+                      style={{ borderColor: app.color + '35' }}
+                    >
+                      <div className="text-[10px] font-bold leading-tight" style={{ color: app.color }}>{item.name}</div>
+                      <div className="text-[9px] text-muted-foreground leading-snug mt-0.5">{item.kind}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#8b5cf655', backgroundColor: '#8b5cf60d' }}>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#8b5cf6' }}>Also worth knowing — </span>
+              <span className="font-medium text-foreground">JediSwap</span>, <span className="font-medium text-foreground">mySwap</span> (alternative AMMs) · <span className="font-medium text-foreground">Mintsquare</span>, <span className="font-medium text-foreground">Briq</span> (NFT marketplaces) · <span className="font-medium text-foreground">Influence</span> (on-chain space MMO) · <span className="font-medium text-foreground">Ethereal / Topology</span> (game studios) · <span className="font-medium text-foreground">Voyager</span> · <span className="font-medium text-foreground">Starkscan</span> (block explorers) · <span className="font-medium text-foreground">Layerswap</span>, <span className="font-medium text-foreground">Orbiter</span> (bridges).
+            </p>
           </div>
         </div>
 
@@ -917,6 +1470,300 @@ export function BP_Section4() {
           </div>
         </div>
 
+        {/* ═══════ PRIVACY PRIMITIVES ═══════ */}
+        <div id="s4-privacy" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Privacy on a public ledger</h2>
+            <p className="text-sm text-muted-foreground mt-1">Public blockchains are radically transparent by default — every address, every balance, every transaction. Privacy requires extra cryptographic machinery, and each approach makes a different trade-off.</p>
+          </div>
+
+          <div className="shrink-0 mb-4 rounded-xl border p-3" style={{ borderColor: '#8b5cf655', backgroundColor: '#8b5cf60d' }}>
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#8b5cf6' }}>Why this is hard</p>
+            <p className="text-sm text-foreground mt-0.5 leading-snug">
+              You cannot just "encrypt" a blockchain — validators must verify state transitions. The trick is letting them verify that <span className="italic">a transaction is valid</span> without learning <span className="italic">who, what, or how much</span>. Different projects pick different combinations of cryptography to achieve this.
+            </p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-2.5">
+            {[
+              {
+                icon: '🛡️',
+                name: 'Zcash',
+                sub: 'L1 · zk-SNARKs · 2016',
+                color: '#f59e0b',
+                mechanism: 'Two transaction types: transparent (like Bitcoin) and shielded (zero-knowledge). Shielded txs use zk-SNARKs to prove ownership and conservation of value without revealing sender, recipient, or amount.',
+                tradeoff: 'Privacy is opt-in — most Zcash volume is transparent, weakening the anonymity set. Earlier shielded scheme required a one-time trusted setup ceremony.',
+                today: 'Halo arc removed trusted setup · still active · lost ground to mandatory-privacy chains.',
+              },
+              {
+                icon: '👁️‍🗨️',
+                name: 'Monero',
+                sub: 'L1 · ring sigs + stealth · 2014',
+                color: '#ef4444',
+                mechanism: 'Mandatory privacy by combining three techniques: ring signatures (sender hidden in a group of N), stealth addresses (recipient gets a fresh one-time address), and RingCT (amount hidden via Pedersen commitments).',
+                tradeoff: 'No optional transparency — auditing or compliance is genuinely hard, which is why exchanges have delisted XMR in many jurisdictions. Larger transaction size, slower verification.',
+                today: 'Most-used privacy coin · target of sustained regulator pressure · removed from major centralised exchanges since 2024.',
+              },
+              {
+                icon: '🧬',
+                name: 'Aztec · Aleo',
+                sub: 'ZK app-layer privacy · 2023+',
+                color: '#10b981',
+                mechanism: 'Programmable privacy. Aztec is a ZK rollup on Ethereum where smart contracts can have private state and inputs. Aleo is its own L1 with the same idea. Both use zk-SNARKs to prove arbitrary private computation.',
+                tradeoff: 'Much more flexible than fixed-purpose privacy coins (build any private dApp), but the dev tooling is newer and more complex (Noir, Leo languages). Privacy is at the contract level, not always at the chain level.',
+                today: 'Aztec mainnet rolled out 2024-25 · target use cases: private DeFi, KYC-without-disclosure, confidential payroll.',
+              },
+              {
+                icon: '🔀',
+                name: 'Mixers · sanctioned',
+                sub: 'Tornado Cash · cautionary case',
+                color: '#6b7280',
+                mechanism: 'Pool deposits from many users, then let each withdraw to a fresh address — breaking the on-chain link between sender and recipient. Used both for legitimate privacy and for laundering hacked funds.',
+                tradeoff: 'Smart-contract mixers (no operator) are immutable and credibly neutral, but exactly that property made them a regulator target. Users who deposited legitimately have struggled to withdraw to compliant exchanges.',
+                today: 'OFAC sanctioned Tornado Cash (Aug 2022) · Samourai Wallet co-founders arrested 2024 · regulatory line for "privacy tooling" still being drawn.',
+              },
+            ].map(p => (
+              <motion.div
+                key={p.name}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-1.5 p-2.5 rounded-xl border-2 min-h-0"
+                style={{ borderColor: p.color + '55', backgroundColor: p.color + '0a' }}
+              >
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="text-lg shrink-0 leading-none">{p.icon}</span>
+                  <div className="min-w-0">
+                    <div className="font-black text-[12px] leading-tight" style={{ color: p.color }}>{p.name}</div>
+                    <div className="text-[9px] text-muted-foreground leading-tight">{p.sub}</div>
+                  </div>
+                </div>
+
+                <div className="rounded-md border bg-card/60 p-1.5" style={{ borderColor: p.color + '30' }}>
+                  <div className="text-[8px] font-bold uppercase tracking-wider" style={{ color: p.color }}>Mechanism</div>
+                  <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{p.mechanism}</div>
+                </div>
+
+                <div className="rounded-md border bg-card/60 p-1.5 flex-1 min-h-0" style={{ borderColor: p.color + '30' }}>
+                  <div className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground">Trade-off</div>
+                  <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{p.tradeoff}</div>
+                </div>
+
+                <div className="rounded-md p-1.5 border-l-2" style={{ borderColor: p.color, backgroundColor: p.color + '12' }}>
+                  <div className="text-[8px] font-black uppercase tracking-widest" style={{ color: p.color }}>Today</div>
+                  <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{p.today}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#f59e0b55', backgroundColor: '#f59e0b0d' }}>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#f59e0b' }}>The regulatory frontier — </span>
+              Privacy on public chains is the most contested area in crypto. OFAC sanctioned Tornado Cash in 2022 and the Samourai Wallet team was arrested in 2024 — both for non-custodial code. The line between "privacy tool" and "money-laundering infrastructure" is being drawn in court right now. Build with this in mind, and design with selective-disclosure or proof-of-compliance options where regulation matters.
+            </p>
+          </div>
+        </div>
+
+        {/* ═══════ EVALUATE A PROJECT ═══════ */}
+        <div id="s4-evaluate" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">How to evaluate a project — a working checklist</h2>
+            <p className="text-sm text-muted-foreground mt-1">Before you trust a protocol with your funds — or build on top of one — run through these six axes. The best projects pass most of them. Most fail at least one.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-2.5">
+            {[
+              {
+                icon: '👥',
+                title: 'Team & track record',
+                color: '#6366f1',
+                green: ['Doxxed founders with verifiable history', 'Prior shipped products in the space', 'Active GitHub commits, not just whitepapers'],
+                red:   ['Anonymous team with no on-chain history', 'Founders previously linked to rugged projects', 'LinkedIn profiles created last month'],
+              },
+              {
+                icon: '🔍',
+                title: 'Smart contract & audits',
+                color: '#10b981',
+                green: ['Multiple audits from reputable firms (Trail of Bits, ConsenSys Diligence, OpenZeppelin)', 'Findings publicly addressed', 'Verified source on Etherscan'],
+                red:   ['No audits, or audits older than the current code', '"Audit" by an unknown firm', 'Upgradeable proxy with single-key admin · no timelock'],
+              },
+              {
+                icon: '💰',
+                title: 'Token distribution',
+                color: '#f59e0b',
+                green: ['Clear vesting schedule for team & investors', 'Top 10 holders < 30% of supply', 'On-chain treasury controlled by multisig or DAO'],
+                red:   ['Team unlock cliffs that dump on retail', 'Top wallet holds > 50% of supply', '"Treasury" is one EOA controlled by anon dev'],
+              },
+              {
+                icon: '🌊',
+                title: 'Liquidity & lock-ups',
+                color: '#8b5cf6',
+                green: ['LP tokens locked for 6-12+ months', 'Deep pools across multiple DEXes', 'Buy/sell pressure roughly symmetric'],
+                red:   ['Liquidity provided by team without lock', 'Single thin pool · withdraw and the price collapses', 'Tax-on-transfer tokens (especially asymmetric)'],
+              },
+              {
+                icon: '📣',
+                title: 'Marketing & promises',
+                color: '#ec4899',
+                green: ['Documentation that explains trade-offs honestly', 'Clear roadmap with realistic timelines', 'Engagement with critical questions'],
+                red:   ['Guaranteed APY · "risk-free yield" · "100x potential"', 'Celebrity / influencer pump campaigns', 'Banned-word use: "next Bitcoin", "Ethereum killer"'],
+              },
+              {
+                icon: '🔬',
+                title: 'On-chain analysis',
+                color: '#06b6d4',
+                green: ['Real users (unique addresses growing organically)', 'TVL and volume verifiable on DeFiLlama', 'Diverse holder base across cohorts'],
+                red:   ['Volume from a few wallets cycling each other (wash trading)', 'TVL inflated by recursive lending of one asset', 'Snapshot of daily active addresses suspiciously round'],
+              },
+            ].map(c => (
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-2 p-3 rounded-xl border-2 min-h-0"
+                style={{ borderColor: c.color + '50', backgroundColor: c.color + '08' }}
+              >
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-lg shrink-0 leading-none">{c.icon}</span>
+                  <div className="font-black text-sm leading-tight" style={{ color: c.color }}>{c.title}</div>
+                </div>
+
+                <div className="rounded-md border bg-card/60 p-1.5 flex-1 min-h-0" style={{ borderColor: '#39B54A40' }}>
+                  <div className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: '#39B54A' }}>✓ Green flags</div>
+                  {c.green.map((item, i) => (
+                    <div key={i} className="text-[10px] text-muted-foreground leading-snug">· {item}</div>
+                  ))}
+                </div>
+
+                <div className="rounded-md border bg-card/60 p-1.5 flex-1 min-h-0" style={{ borderColor: '#ED1C2440' }}>
+                  <div className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: '#ED1C24' }}>✗ Red flags</div>
+                  {c.red.map((item, i) => (
+                    <div key={i} className="text-[10px] text-muted-foreground leading-snug">· {item}</div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#06b6d455', backgroundColor: '#06b6d40d' }}>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#06b6d4' }}>Tools you can use today — </span>
+              <span className="font-medium text-foreground">Etherscan / block explorers</span> (verify contracts, read holders) · <span className="font-medium text-foreground">DeFiLlama</span> (TVL, real volumes) · <span className="font-medium text-foreground">Token Terminal</span> (revenue, P/E equivalents) · <span className="font-medium text-foreground">Nansen / Arkham</span> (wallet labelling, smart-money flows) · <span className="font-medium text-foreground">Dune dashboards</span> (custom on-chain analytics). Most red flags above are visible in 10 minutes if you know where to look.
+            </p>
+          </div>
+        </div>
+
+        {/* ═══════ DECISION FRAMEWORK ═══════ */}
+        <div id="s4-decision" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Choosing a platform — a decision framework</h2>
+            <p className="text-sm text-muted-foreground mt-1">The course's promise was: compare, evaluate, and select platforms based on architecture and trade-offs. This is the synthesis — answer five questions in order, and the platform space narrows fast.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {/* Left: 5-question decision tree */}
+            <div className="flex flex-col gap-2 min-h-0">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground shrink-0">Five questions, in order</p>
+              <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
+                {[
+                  {
+                    n: '1',
+                    q: 'Permission model',
+                    ask: 'Should anyone be able to read & write, or only known parties?',
+                    answers: [
+                      { tag: 'Anyone', recs: 'Bitcoin · Ethereum · L2s · Cosmos · Solana', color: '#6366f1' },
+                      { tag: 'Known parties only', recs: 'Hyperledger Fabric · Corda · Quorum / Besu', color: '#39B54A' },
+                    ],
+                  },
+                  {
+                    n: '2',
+                    q: 'Programmability',
+                    ask: 'Just transfer value, or run application logic on-chain?',
+                    answers: [
+                      { tag: 'Value transfer only', recs: 'Bitcoin L1 · Lightning for retail payments', color: '#f59e0b' },
+                      { tag: 'Smart contracts', recs: 'Ethereum + EVM family · Cosmos SDK · Cairo / Starknet', color: '#6366f1' },
+                    ],
+                  },
+                  {
+                    n: '3',
+                    q: 'Throughput & cost ceiling',
+                    ask: 'How sensitive is the app to gas costs and confirmation latency?',
+                    answers: [
+                      { tag: 'Low — settlement / high-value', recs: 'Ethereum L1', color: '#627EEA' },
+                      { tag: 'High — consumer / DeFi', recs: 'Arbitrum · Base · Optimism · Solana', color: '#ec4899' },
+                    ],
+                  },
+                  {
+                    n: '4',
+                    q: 'Privacy needs',
+                    ask: 'Does the app require selective or full data confidentiality?',
+                    answers: [
+                      { tag: 'No', recs: 'Default chain choice', color: '#6b7280' },
+                      { tag: 'Yes', recs: 'Aztec · Starknet (ZK creds) · Zcash · Fabric channels', color: '#8b5cf6' },
+                    ],
+                  },
+                  {
+                    n: '5',
+                    q: 'Sovereignty vs shared security',
+                    ask: 'Need full control over consensus, gas, upgrades — or to inherit security from day one?',
+                    answers: [
+                      { tag: 'Sovereignty', recs: 'Cosmos zone · Avalanche L1', color: '#22d3ee' },
+                      { tag: 'Shared security', recs: 'Polkadot parachain · Ethereum rollup · Babylon-secured chain', color: '#ED1C24' },
+                    ],
+                  },
+                ].map(step => (
+                  <div key={step.n} className="rounded-xl border p-2.5 bg-card min-h-0" style={{ borderColor: 'hsl(var(--border))' }}>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <div className="size-5 rounded-full flex items-center justify-center text-[10px] font-black text-white shrink-0" style={{ backgroundColor: '#6366f1' }}>{step.n}</div>
+                      <div className="font-bold text-xs text-foreground leading-tight">{step.q}</div>
+                      <div className="text-[10px] text-muted-foreground italic leading-tight ml-auto">{step.ask}</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1.5 ml-7">
+                      {step.answers.map((a, i) => (
+                        <div key={i} className="rounded-md border px-1.5 py-1" style={{ borderColor: a.color + '40', backgroundColor: a.color + '0d' }}>
+                          <div className="text-[9px] font-black uppercase tracking-wider" style={{ color: a.color }}>{a.tag}</div>
+                          <div className="text-[10px] text-muted-foreground leading-snug">{a.recs}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: use-case → platform map */}
+            <div className="flex flex-col gap-2 min-h-0">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground shrink-0">Worked examples — use case to platform</p>
+              <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
+                {[
+                  { use: 'Cross-border remittance, low value', rec: 'Bitcoin Lightning · USDC on Base / Solana', why: 'Low cost · sub-second finality · users already trust USD-denominated value', color: '#f59e0b' },
+                  { use: 'High-value DeFi protocol', rec: 'Ethereum L1 + L2 deployment', why: 'L1 for vault security, L2 for user flow · deepest liquidity · audits available', color: '#627EEA' },
+                  { use: 'Multi-company supply chain', rec: 'Hyperledger Fabric channel', why: 'Permissioned access control · selective data sharing · no token economics needed', color: '#39B54A' },
+                  { use: 'Privacy-preserving identity / KYC', rec: 'Starknet (Cairo + ZK creds) · Aztec', why: 'Programmable privacy · verifiable claims without disclosure · L1 settlement', color: '#8b5cf6' },
+                  { use: 'On-chain game with tradable assets', rec: 'Immutable · Ronin · Starknet (Dojo) · Base', why: 'Throughput · low gas · gaming-focused tooling · existing player ecosystems', color: '#ec4899' },
+                  { use: 'Sovereign app-chain with custom consensus', rec: 'Cosmos zone via Cosmos SDK', why: 'Pick your VM, gas token, governance · trade-off: bootstrap your own validators', color: '#22d3ee' },
+                  { use: 'Cross-border govt credentials', rec: 'EU EBSI (Fabric-based) · purpose-built consortium', why: 'Regulator-mandated participation · interop required at policy level', color: '#6366f1' },
+                ].map(c => (
+                  <div key={c.use} className="rounded-lg border p-2 min-h-0 flex flex-col gap-0.5" style={{ borderColor: c.color + '40', backgroundColor: c.color + '08' }}>
+                    <div className="text-[10px] font-bold leading-tight" style={{ color: c.color }}>{c.use}</div>
+                    <div className="text-[11px] font-semibold text-foreground leading-snug">→ {c.rec}</div>
+                    <div className="text-[10px] text-muted-foreground italic leading-snug">{c.why}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#6366f155', backgroundColor: '#6366f10d' }}>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#6366f1' }}>The honest meta-answer — </span>
+              Most projects get this wrong by picking a platform first and forcing the use case onto it. Run through these five questions before naming a chain. If the use case doesn't actually need a blockchain at all, that's a valid answer too — a Postgres database with row-level signatures is often the right tool.
+            </p>
+          </div>
+        </div>
+
         {/* ═══════ QUIZ ═══════ */}
         <div id="s4-quiz" className="h-full">
           <QuizSlide
@@ -928,6 +1775,34 @@ export function BP_Section4() {
               { text: 'Bridges are slower than direct transactions, giving attackers more time to execute front-running attacks during the transfer window.', correct: false },
             ]}
             explanation="To bridge 1 ETH from Ethereum to another chain, you lock the ETH in a smart contract on Ethereum and mint a wrapped version on the destination chain. Every user who bridges concentrates their locked assets in that one contract — making it an increasingly valuable target. The Ronin bridge held $625M in locked ETH and USDC before attackers compromised 5 of 9 validator keys and drained it. The fundamental tension is that bridges require centralization (trusted validators or multisig) to operate efficiently, which directly conflicts with blockchain's trust minimization principle. Native interoperability protocols like IBC avoid this by design."
+          />
+        </div>
+
+        {/* ═══════ QUIZ 2 — Optimistic vs ZK withdrawal latency ═══════ */}
+        <div id="s4-quiz-2" className="h-full">
+          <QuizSlide
+            question="A user withdraws funds from Arbitrum (an optimistic rollup) back to Ethereum L1. The standard withdrawal takes ~7 days. Why?"
+            options={[
+              { text: 'L1 block time is slower than L2 block time, so L1 must catch up before processing the withdrawal.', correct: false },
+              { text: 'Optimistic rollups assume transactions valid by default. The 7-day "challenge window" lets anyone submit a fraud proof if the L2 state is invalid; until that window closes, withdrawals can\'t be safely finalised on L1.', correct: true },
+              { text: 'Arbitrum batches withdrawals weekly to amortise gas costs across users.', correct: false },
+              { text: 'Ethereum L1 deliberately rate-limits L2 withdrawals to prevent rollup-induced congestion.', correct: false },
+            ]}
+            explanation="The 7-day delay is structural to the optimistic rollup model. The L2 sequencer posts state roots to L1 with the assumption they're valid; anyone watching the chain can challenge an invalid root by submitting a fraud proof during the challenge window. Until that window expires, L1 cannot trust the state root enough to release withdrawals. ZK rollups don't have this delay — each batch ships with a validity proof that L1 verifies cryptographically, so withdrawals can finalise in one L1 block. Third-party fast bridges (Across, Hop, Stargate) let users skip the wait by paying liquidity providers a small premium up front."
+          />
+        </div>
+
+        {/* ═══════ QUIZ 3 — Sovereignty vs shared security ═══════ */}
+        <div id="s4-quiz-3" className="h-full">
+          <QuizSlide
+            question="A team is launching a new app-specific blockchain. They need full control over consensus algorithm, gas token, and upgrade governance. Which model best fits — and what's the trade-off?"
+            options={[
+              { text: 'Polkadot parachain via Coretime — sovereignty within the relay chain\'s shared security envelope, no trade-off.', correct: false },
+              { text: 'Cosmos zone via Cosmos SDK — full sovereignty over consensus, gas, and upgrades; the trade-off is bootstrapping their own validator set without inheriting any external security.', correct: true },
+              { text: 'Avalanche L1 — sovereign chains, but they must use Snowman consensus and pay AVAX-denominated subscription fees.', correct: false },
+              { text: 'All three give equal sovereignty; the decision is purely cost-driven.', correct: false },
+            ]}
+            explanation="Cosmos zones are sovereign by design. Each chain picks its own consensus engine (CometBFT is default, but anything goes), its own gas token, its own governance and upgrade rules. The trade-off is real: the team must recruit validators, design economic security, and bootstrap a token of value to pay them — no shared security comes for free. Polkadot parachains share the relay chain's validator set (great), but must conform to the relay's runtime model and Coretime schedule (less sovereignty than Cosmos). Avalanche L1s (formerly Subnets, renamed via ACP-13/77 in 2024) do allow custom VMs and validator subsets, but in practice most run Snowman variants and pay validator fees in AVAX. The honest framing: shared security versus sovereignty is a trade-off, not a tier list."
           />
         </div>
 

@@ -17,6 +17,7 @@ const chapters = [
   { id: 's2-consensus', label: 'PoW → PoS' },
   { id: 's2-evmecosystem', label: 'EVM Everywhere' },
   { id: 's2-defi',        label: 'DeFi Mechanics' },
+  { id: 's2-stablecoins', label: 'Stablecoins' },
   { id: 's2-apps',        label: 'Apps Beyond DeFi' },
   { id: 's2-comparison',  label: 'BTC vs ETH' },
   { id: 's2-quiz', label: 'Quiz' },
@@ -953,6 +954,98 @@ export function BP_Section2() {
               </div>
             </div>
 
+          </div>
+        </div>
+
+        {/* ═══════ STABLECOINS ═══════ */}
+        <div id="s2-stablecoins" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Stablecoins — the most-used app category</h2>
+            <p className="text-sm text-muted-foreground mt-1">Tokens engineered to track a stable reference (almost always 1 USD). Quietly the largest dApp category by volume — and the bridge between traditional finance and crypto.</p>
+          </div>
+
+          <div className="shrink-0 mb-4 rounded-xl border p-3" style={{ borderColor: '#10b98155', backgroundColor: '#10b9810d' }}>
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#10b981' }}>What is a stablecoin?</p>
+            <p className="text-sm text-foreground mt-0.5 leading-snug">
+              An on-chain token whose value tracks an external reference — almost always the US dollar. The interesting question is <span className="font-semibold">what backs the peg</span>: actual dollars in a bank, on-chain crypto collateral, or pure algorithm. Each model fails differently.
+            </p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-3">
+            {[
+              {
+                icon: '🏦',
+                title: 'Fiat-backed',
+                sub: 'Custodial · 1:1 reserve',
+                color: '#3b82f6',
+                mechanism: 'A regulated issuer holds USD (or short-dated treasuries) 1:1 in a bank account. Users mint tokens by depositing fiat; redeem by burning tokens. Pegged because the issuer guarantees redemption.',
+                examples: 'USDT (Tether) · ~$140B — largest, opaque attestations · USDC (Circle) · ~$60B — monthly Big-Four attestations · PYUSD (PayPal) · ~$1B — newer, regulated.',
+                risk: 'You\'re trusting the issuer. USDC briefly depegged to $0.87 in March 2023 when Circle had $3.3B locked in collapsed Silicon Valley Bank. Tether has settled multiple lawsuits over reserve disclosures.',
+              },
+              {
+                icon: '⚖️',
+                title: 'Crypto-backed',
+                sub: 'Decentralised · over-collateralised',
+                color: '#8b5cf6',
+                mechanism: 'Users lock crypto (ETH, wBTC) into a smart contract at a 150-200% collateral ratio and mint stablecoins. If collateral value drops, the contract auto-liquidates positions. No human issuer.',
+                examples: 'DAI (MakerDAO/Sky) · ~$5B — the original, since 2017 · GHO (Aave) · LUSD (Liquity) · crvUSD (Curve) — each with slightly different liquidation mechanics.',
+                risk: 'Capital-inefficient (need $150 of crypto to mint $100). Collateral itself is volatile — a fast crash can outrun liquidations (DAI briefly traded over $1 in March 2020). Modern DAI now holds significant USDC reserves, partially re-introducing custodial risk.',
+              },
+              {
+                icon: '⚙️',
+                title: 'Algorithmic & hybrid',
+                sub: 'No (or partial) collateral',
+                color: '#ED1C24',
+                mechanism: 'Maintain the peg via supply-mint/burn algorithms or delta-neutral derivatives positions. Pure algorithmic versions have a documented failure mode; hybrids (Frax, Ethena) blend collateral with synthetic strategies.',
+                examples: 'TerraUSD (UST) · collapsed May 2022, wiped out ~$60B — death-spiral case study · Frax · ~$650M, partially-collateralised hybrid · Ethena USDe · synthetic delta-neutral, ~$5B+ in 2024.',
+                risk: 'Pure algorithmic: every prior attempt has failed. Hybrid: Ethena depends on ETH-perp funding rates staying positive — works in bull markets, untested through a sustained bear cycle. Treat with extra caution.',
+              },
+            ].map(s => (
+              <motion.div
+                key={s.title}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="rounded-xl border-2 p-3 flex flex-col gap-2 min-h-0"
+                style={{ borderColor: s.color + '50', backgroundColor: s.color + '08' }}
+              >
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xl shrink-0 leading-none">{s.icon}</span>
+                  <div className="min-w-0">
+                    <div className="font-black text-sm leading-tight" style={{ color: s.color }}>{s.title}</div>
+                    <div className="text-[10px] text-muted-foreground leading-tight">{s.sub}</div>
+                  </div>
+                </div>
+                <div className="rounded-lg border bg-card/60 px-2 py-1.5" style={{ borderColor: s.color + '30' }}>
+                  <div className="text-[9px] font-bold uppercase tracking-wider" style={{ color: s.color }}>How the peg works</div>
+                  <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{s.mechanism}</div>
+                </div>
+                <div className="rounded-lg border bg-card/60 px-2 py-1.5 flex-1 min-h-0" style={{ borderColor: s.color + '30' }}>
+                  <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Real examples</div>
+                  <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{s.examples}</div>
+                </div>
+                <div className="rounded-lg p-2 border-l-2" style={{ borderColor: '#ED1C24', backgroundColor: '#ED1C2410' }}>
+                  <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: '#ED1C24' }}>How it can break</div>
+                  <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{s.risk}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Market scale + regulation strip */}
+          <div className="shrink-0 mt-3 grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <div className="rounded-xl border p-2.5" style={{ borderColor: '#10b98155', backgroundColor: '#10b9810d' }}>
+              <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#10b981' }}>Scale</p>
+              <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">
+                Total stablecoin supply: <span className="font-semibold text-foreground">~$200B</span> · daily settlement volume rivals Visa · USDT alone settles more on-chain volume than Bitcoin some days. Stablecoins are the most-used dApp by transaction count.
+              </p>
+            </div>
+            <div className="rounded-xl border p-2.5" style={{ borderColor: '#f59e0b55', backgroundColor: '#f59e0b0d' }}>
+              <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#f59e0b' }}>Regulation tightening</p>
+              <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">
+                EU MiCA (live 2024) restricts non-euro algorithmic stablecoins · US frameworks debated in Congress · Hong Kong sandbox active. Issuer transparency, reserve audits, and licensing are the new baseline.
+              </p>
+            </div>
           </div>
         </div>
 
