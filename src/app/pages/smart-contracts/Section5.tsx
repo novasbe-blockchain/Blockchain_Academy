@@ -147,7 +147,7 @@ export function SC_Section5() {
   return (
     <div className="h-full w-full flex overflow-hidden">
       <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
-        <SectionNav chapters={chapters} />
+        <SectionNav chapters={chapters} accentColor="#6366f1" />
       </div>
       <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
         <div className="slide-flow">
@@ -169,7 +169,7 @@ export function SC_Section5() {
             <p className="text-muted-foreground text-sm mt-1">Smart contracts are deterministic and closed — they cannot reach outside the blockchain on their own.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             <div className="flex flex-col gap-3">
               {[
@@ -255,7 +255,7 @@ export function SC_Section5() {
             <p className="text-muted-foreground text-sm mt-1">Smart contracts inherit the constraints of their underlying blockchain — and those constraints are significant.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             <div className="flex flex-col gap-4">
               <div className="flex-1 p-4 bg-card border border-[#ED1C24]/30 rounded-xl">
@@ -375,7 +375,7 @@ export function SC_Section5() {
             <p className="text-muted-foreground text-sm mt-1">Four structural problems that define the frontier of blockchain engineering.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             <div className="p-5 bg-card border border-[#ED1C24]/30 rounded-xl flex flex-col gap-3">
               <div className="flex items-start gap-3">
@@ -509,7 +509,7 @@ export function SC_Section5() {
             <p className="text-muted-foreground text-sm mt-1">Smart contract vulnerabilities are public, permanent, and exploited within hours of deployment if missed.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
             {[
               { title: 'Reentrancy', emoji: '🔁', color: '#ED1C24',
                 desc: 'A function calls an external contract before updating its own state. The external contract calls back into the original — repeating the original action with stale state. The DAO (2016): $60M.',
@@ -551,7 +551,7 @@ export function SC_Section5() {
             <p className="text-muted-foreground text-sm mt-1">Smart contracts are not plug-and-play — significant upfront investment is required and ongoing costs must be planned for.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             {[
               { title: 'Immutability & Redeployment', color: '#ED1C24',
                 points: [
@@ -601,7 +601,7 @@ export function SC_Section5() {
             <p className="text-muted-foreground text-sm mt-1">Smart contracts blur the boundary between code and law — and law has not yet caught up.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
 
             <div className="p-5 bg-card border border-[#ED1C24]/30 rounded-xl flex flex-col gap-3">
               <div className="flex items-center gap-2">

@@ -339,7 +339,7 @@ export function SC_Section2() {
   return (
     <div className="h-full w-full flex overflow-hidden">
       <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
-        <SectionNav chapters={chapters} />
+        <SectionNav chapters={chapters} accentColor="#6366f1" />
       </div>
       <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
         <div className="slide-flow">
@@ -427,7 +427,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">Every smart contract is made of five building blocks — understanding them is understanding the language of Web3.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             {/* Left: component cards */}
             <div className="flex flex-col gap-3">
@@ -506,7 +506,7 @@ export function SC_Section2() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1 mb-1">Reading a Smart Contract</h2>
             <p className="text-sm text-muted-foreground">You don't need to write Solidity — but every PM, auditor, and analyst must be able to read it. Here is a minimal ERC-20 token contract, fully annotated.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             {/* Code block */}
             <div className="bg-[#0d1117] rounded-xl overflow-auto p-4 font-mono text-sm leading-relaxed border border-border">
               {[
@@ -582,7 +582,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">Why smart contracts run the same way, everywhere, every time.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             {/* Left: four properties */}
             <div className="flex flex-col gap-3">
@@ -762,7 +762,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">A dApp is not just a smart contract — it's a full stack where blockchain is one layer.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             {/* Left: three pillars */}
             <div className="flex flex-col gap-3">
@@ -861,7 +861,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">Infrastructure and contracts — both transformed by the same underlying shift.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             {/* App infrastructure comparison */}
             <div className="flex flex-col min-h-0">
@@ -998,7 +998,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">The case for choosing smart contracts over traditional software — and when not to.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
 
             {/* Column 1: Core reasons */}
             <div className="flex flex-col gap-3">
@@ -1085,7 +1085,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">Every computation costs gas. Understanding this is essential for building real applications.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             {/* Left: fundamentals */}
             <div className="flex flex-col gap-3">

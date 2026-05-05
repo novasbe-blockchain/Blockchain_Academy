@@ -139,7 +139,7 @@ export function SC_Section4() {
   return (
     <div className="h-full w-full flex overflow-hidden">
       <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
-        <SectionNav chapters={chapters} />
+        <SectionNav chapters={chapters} accentColor="#6366f1" />
       </div>
       <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
         <div className="slide-flow">
@@ -282,7 +282,7 @@ export function SC_Section4() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Strategic Alignment</h2>
             <p className="text-muted-foreground text-sm mt-1">Adopting smart contracts must serve a clear business purpose and align with company strategy.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             {[
               { title: 'Clarify the use case', desc: 'Pinpoint where a smart contract solves a real pain point — automating a manual workflow, removing a costly intermediary, or building shared truth across distrusting parties. Align this with the company\'s strategic priorities — not the other way around.', color: '#6366f1' },
               { title: 'Define success metrics', desc: 'Set specific, measurable targets: cost reduction (e.g. 30% in dispute resolution), speed improvement (e.g. days → minutes), error rate reduction. Forms the basis of a business case for stakeholders.', color: '#8b5cf6' },
@@ -304,7 +304,7 @@ export function SC_Section4() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Technical Infrastructure</h2>
             <p className="text-muted-foreground text-sm mt-1">Implementing smart contracts demands a solid technical foundation — platform, integration, and IT capacity.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
             {[
               { title: 'Scalable platform', emoji: '⚡', desc: 'Choose a chain that meets your throughput, latency, and finality needs (Section 6 covers this in depth). EVM compatibility = vast tooling ecosystem.', color: '#8b5cf6' },
               { title: 'Legacy integration', emoji: '🔌', desc: 'Smart contracts must talk to ERPs, CRMs, and SaaS systems. Plan middleware (The Graph, Moralis), event listeners, and data sync from day one.', color: '#6366f1' },
@@ -331,7 +331,7 @@ export function SC_Section4() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Legal & Regulatory</h2>
             <p className="text-muted-foreground text-sm mt-1">Smart contracts blend code and law — raising challenges around enforceability, jurisdiction, and compliance.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#22d3ee]">Things to engage legal counsel on early</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
@@ -367,7 +367,7 @@ export function SC_Section4() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Risk Management</h2>
             <p className="text-muted-foreground text-sm mt-1">Once deployed, smart contracts are typically immutable and execute automatically. There is little room for error.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
             {[
               { title: 'Pre-deployment audits', emoji: '🔍', desc: 'At least one — ideally two independent — security audits before mainnet. Budget $20k–$100k+ depending on contract complexity.', color: '#ED1C24' },
               { title: 'Formal verification', emoji: '🧮', desc: 'For high-value contracts, formal verification (Certora, Halmos) proves properties mathematically — beyond what audits catch.', color: '#f59e0b' },
@@ -394,7 +394,7 @@ export function SC_Section4() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Financial / Resource Planning</h2>
             <p className="text-muted-foreground text-sm mt-1">Smart contract adoption demands solid financial planning. Long-term automation savings can be significant — but upfront costs are real.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="flex flex-col gap-3">
               <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">Upfront costs (one-time)</div>
               {[
@@ -443,7 +443,7 @@ export function SC_Section4() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Opportunities</h2>
             <p className="text-muted-foreground text-sm mt-1">Where smart contracts demonstrably outperform legacy approaches — backed by academic research.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="flex flex-col gap-3">
               <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">Operational opportunities</div>
               {[
@@ -484,7 +484,7 @@ export function SC_Section4() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Challenges</h2>
             <p className="text-muted-foreground text-sm mt-1">The systemic obstacles to mainstream smart contract adoption — as documented in research.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
             {[
               { emoji: '⚙️', title: 'Technical complexity', desc: 'Solidity, EVM gas mechanics, and asynchronous execution flatten the developer pool. Few engineers know this stack deeply.', color: '#6366f1' },
               { emoji: '⚖️', title: 'Regulatory uncertainty', desc: 'Securities, tax, KYC, and consumer-protection laws are still evolving. Compliance is a moving target across jurisdictions.', color: '#8b5cf6' },
@@ -511,7 +511,7 @@ export function SC_Section4() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Strategies for Competitive Advantage</h2>
             <p className="text-muted-foreground text-sm mt-1">How real companies turn smart contracts into a durable strategic moat — applied examples.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
             {[
               { name: 'Compound', emoji: '🏦', moat: 'Trustless lending', desc: 'Eliminates intermediaries; on-chain interest rates set algorithmically. Capital efficiency that legacy banks cannot match.', color: '#6366f1' },
               { name: 'We.trade', emoji: '🌐', moat: 'B2B trade finance', desc: 'Bank consortium platform built on Hyperledger Fabric for SME cross-border trade. Eventually shut down — illustrating that "consortium" governance is hard.', color: '#8b5cf6' },

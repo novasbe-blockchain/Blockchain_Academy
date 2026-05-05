@@ -142,7 +142,7 @@ export function SC_Section1() {
   return (
     <div className="h-full w-full flex overflow-hidden">
       <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
-        <SectionNav chapters={chapters} />
+        <SectionNav chapters={chapters} accentColor="#6366f1" />
       </div>
       <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
         <div className="slide-flow">
@@ -165,7 +165,7 @@ export function SC_Section1() {
             <p className="text-muted-foreground text-sm mt-1">A program that lives on a blockchain — and runs exactly as written, every time.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             {/* Left: definition + analogy */}
             <div className="flex flex-col gap-4">
@@ -228,7 +228,7 @@ export function SC_Section1() {
             <p className="text-muted-foreground text-sm mt-1">The original analogy — and the mind behind the concept, 30 years before DeFi.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-6">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-6 content-center">
 
             {/* Left: Szabo bio + quote */}
             <div className="flex flex-col gap-4">

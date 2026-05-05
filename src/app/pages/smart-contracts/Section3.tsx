@@ -9,56 +9,56 @@ import { Building2 } from 'lucide-react';
 const chapters = [
   { id: 's3-industries-intro', label: 'Industries Overview' },
 
-  // DeFi vertical
-  { id: 's3-defi-intro',       label: '💸 DeFi · Intro' },
+  { kind: 'group' as const, id: 'g-defi',    label: '💸 DeFi' },
+  { id: 's3-defi-intro',       label: 'Intro' },
   { id: 's3-defi-amm',         label: '🎯 AMM Curve' },
   { id: 's3-defi-dex',         label: 'DEX Examples' },
   { id: 's3-defi-stablecoins', label: 'Stablecoins' },
-  { id: 's3-defi-borderless',  label: 'Borderless Transfers' },
-  { id: 's3-defi-prosCons',    label: 'DeFi · Pros & Cons' },
+  { id: 's3-defi-borderless',  label: 'Borderless' },
+  { id: 's3-defi-prosCons',    label: 'Pros & Cons' },
 
-  // Gaming & NFTs vertical
-  { id: 's3-nft-intro',        label: '🎮 NFTs · Intro' },
+  { kind: 'group' as const, id: 'g-nft',     label: '🎮 Gaming & NFTs' },
+  { id: 's3-nft-intro',        label: 'Intro' },
   { id: 's3-nft-economies',    label: 'True Ownership' },
   { id: 's3-nft-p2e',          label: 'Play-to-Earn' },
   { id: 's3-nft-finance',      label: 'NFT Finance' },
-  { id: 's3-nft-prosCons',     label: 'NFTs · Pros & Cons' },
+  { id: 's3-nft-prosCons',     label: 'Pros & Cons' },
 
-  // Real Asset Tokenization vertical
-  { id: 's3-rwa-intro',        label: '🏢 RWA · Intro' },
-  { id: 's3-rwa-spectrum',     label: '🎯 RWA Spectrum' },
-  { id: 's3-rwa-securitize',   label: 'Securitize / BUIDL' },
-  { id: 's3-rwa-mortgages',    label: 'Automated Mortgages' },
-  { id: 's3-rwa-collateral',   label: 'RWA Collateral' },
-  { id: 's3-rwa-property',     label: 'Property Sales' },
-  { id: 's3-rwa-prosCons',     label: 'RWA · Pros & Cons' },
+  { kind: 'group' as const, id: 'g-rwa',     label: '🏢 RWA' },
+  { id: 's3-rwa-intro',        label: 'Intro' },
+  { id: 's3-rwa-spectrum',     label: '🎯 Spectrum' },
+  { id: 's3-rwa-securitize',   label: 'BUIDL' },
+  { id: 's3-rwa-mortgages',    label: 'Mortgages' },
+  { id: 's3-rwa-collateral',   label: 'Collateral' },
+  { id: 's3-rwa-property',     label: 'Property' },
+  { id: 's3-rwa-prosCons',     label: 'Pros & Cons' },
 
-  // Supply Chain vertical
-  { id: 's3-sc-intro',         label: '🚚 Supply Chain · Intro' },
-  { id: 's3-sc-provenance',    label: 'Product Provenance' },
-  { id: 's3-sc-shipping',      label: 'Shipping Documents' },
-  { id: 's3-sc-prosCons',      label: 'Supply Chain · Pros & Cons' },
+  { kind: 'group' as const, id: 'g-sc',      label: '🚚 Supply Chain' },
+  { id: 's3-sc-intro',         label: 'Intro' },
+  { id: 's3-sc-provenance',    label: 'Provenance' },
+  { id: 's3-sc-shipping',      label: 'Shipping' },
+  { id: 's3-sc-prosCons',      label: 'Pros & Cons' },
 
-  // Digital Certification vertical
-  { id: 's3-cert-intro',       label: '📜 Cert · Intro' },
-  { id: 's3-cert-howitworks',  label: '🎯 Proof of Existence' },
+  { kind: 'group' as const, id: 'g-cert',    label: '📜 Certification' },
+  { id: 's3-cert-intro',       label: 'Intro' },
+  { id: 's3-cert-howitworks',  label: '🎯 Proof of Exist' },
   { id: 's3-cert-law',         label: 'Estonia KSI' },
   { id: 's3-cert-education',   label: 'MIT Blockcerts' },
-  { id: 's3-cert-products',    label: 'Luxury (AURA)' },
-  { id: 's3-cert-prosCons',    label: 'Cert · Pros & Cons' },
+  { id: 's3-cert-products',    label: 'AURA Luxury' },
+  { id: 's3-cert-prosCons',    label: 'Pros & Cons' },
 
-  // Cross-industry case studies
-  { id: 's3-cases-intro',      label: '📁 Case Studies' },
+  { kind: 'group' as const, id: 'g-cases',   label: '📁 Case Studies' },
+  { id: 's3-cases-intro',      label: 'Overview' },
   { id: 's3-homedepot',        label: 'Home Depot' },
-  { id: 's3-realestate',       label: 'Propy Real Estate' },
-  { id: 's3-dmv',              label: 'California DMV' },
-  { id: 's3-walmart',          label: 'Walmart Food Trust' },
-  { id: 's3-santander',        label: 'Santander Bond' },
-  { id: 's3-estonia-eres',     label: 'Estonia e-Residency' },
-  { id: 's3-dao',              label: 'The DAO Hack' },
-  { id: 's3-asx',              label: 'ASX CHESS Failure' },
+  { id: 's3-realestate',       label: 'Propy' },
+  { id: 's3-dmv',              label: 'CA DMV' },
+  { id: 's3-walmart',          label: 'Walmart' },
+  { id: 's3-santander',        label: 'Santander' },
+  { id: 's3-estonia-eres',     label: 'Estonia eRes' },
+  { id: 's3-dao',              label: 'The DAO ⚠️' },
+  { id: 's3-asx',              label: 'ASX ❌' },
 
-  // Closers
+  { kind: 'group' as const, id: 'g-close',   label: '✅ Wrap Up' },
   { id: 's3-exercise',         label: '🎯 Design Your Own' },
   { id: 's3-quiz',             label: 'Quiz' },
   { id: 's3-takeaways',        label: 'Takeaways' },
@@ -660,7 +660,7 @@ export function SC_Section3() {
   return (
     <div className="h-full w-full flex overflow-hidden">
       <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
-        <SectionNav chapters={chapters} />
+        <SectionNav chapters={chapters} accentColor="#6366f1" />
       </div>
       <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
         <div className="slide-flow">
@@ -722,7 +722,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">What is DeFi?</h2>
             <p className="text-muted-foreground text-sm mt-1">An emerging peer-to-peer financial system using cryptocurrencies and smart contracts.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="flex flex-col gap-3">
               <div className="p-4 bg-card border border-[#6366f1]/30 rounded-xl">
                 <div className="font-bold text-sm text-[#6366f1] mb-2">The Core Idea</div>
@@ -766,7 +766,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Decentralized Exchanges (DEXs)</h2>
             <p className="text-muted-foreground text-sm mt-1">Trading venues executed entirely by smart contracts — no central broker, no clearing house, no custody risk.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 <div className="size-10 rounded-xl bg-[#6366f1]/15 flex items-center justify-center text-xl shrink-0">🦄</div>
@@ -824,7 +824,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Stablecoins & Stable-Value Storage</h2>
             <p className="text-muted-foreground text-sm mt-1">Tokens engineered to hold a steady value — the rails that make crypto usable as money.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="flex flex-col gap-3">
               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Stablecoin types</div>
               {[
@@ -877,7 +877,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Borderless Value Transfers</h2>
             <p className="text-muted-foreground text-sm mt-1">Moving digital assets entirely by smart contract — no correspondent banks, no clearing networks.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
             <div className="p-5 bg-card border border-[#ED1C24]/30 rounded-xl flex flex-col gap-2">
               <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">Traditional</div>
               <div className="font-black text-foreground">SWIFT cross-border wire</div>
@@ -955,7 +955,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">What is an NFT?</h2>
             <p className="text-muted-foreground text-sm mt-1">A unique digital asset recorded on-chain that certifies ownership and authenticity.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#8b5cf6]">Unlike fungible tokens…</div>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -992,7 +992,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">True Ownership, Digital IP & Virtual Economies</h2>
             <p className="text-muted-foreground text-sm mt-1">Smart contracts turn server-side database rows into player-owned, transferable, programmable assets.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
             {[
               { emoji: '🏛', title: 'Before Web3', color: '#ED1C24',
                 points: [
@@ -1036,7 +1036,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Play-to-Earn Economies</h2>
             <p className="text-muted-foreground text-sm mt-1">Smart contracts link in-game achievements to token rewards, turning gameplay into income.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#8b5cf6]">How it works</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
@@ -1073,7 +1073,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">NFT Finance · Lending, Renting, Yield</h2>
             <p className="text-muted-foreground text-sm mt-1">If digital assets have value, secondary liquidity can be built around them.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#8b5cf6]">Collateralized lending</div>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -1140,7 +1140,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Securitize · BlackRock BUIDL · BNY Mellon</h2>
             <p className="text-muted-foreground text-sm mt-1">A regulated digital asset issuance and management platform bridging TradFi and blockchain.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#39B54A]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#39B54A]">How it works</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
@@ -1181,7 +1181,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Automated Mortgages</h2>
             <p className="text-muted-foreground text-sm mt-1">Lending agreements executed entirely by smart contracts — no banks or loan officers required.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#39B54A]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#39B54A]">What the contract does</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
@@ -1237,7 +1237,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Property Sales · Real Pilots</h2>
             <p className="text-muted-foreground text-sm mt-1">Property transactions involve escrow, title, notaries — and weeks. Blockchain pilots compress this dramatically.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
             <div className="p-4 bg-card border border-[#39B54A]/30 rounded-xl flex flex-col gap-2">
               <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">Sweden</div>
               <div className="font-black text-foreground text-sm">Land Registry Pilot</div>
@@ -1319,7 +1319,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Product Provenance</h2>
             <p className="text-muted-foreground text-sm mt-1">A shared blockchain record where every participant appends validated data at hand-off — single source of truth.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/30 rounded-xl flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">👜</span>
@@ -1359,7 +1359,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Global Shipping Documents · GSBN eBL</h2>
             <p className="text-muted-foreground text-sm mt-1">Bills of Lading and customs forms, courier-couriered for centuries — now tokenized on a shared ledger.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#ED1C24]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#ED1C24]">The legacy problem</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
@@ -1440,7 +1440,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Estonia · KSI Blockchain (Guardtime)</h2>
             <p className="text-muted-foreground text-sm mt-1">Government records, registries, and healthcare data integrity since 2012.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#22d3ee]">What Estonia did</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
@@ -1471,7 +1471,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Education · MIT Blockcerts</h2>
             <p className="text-muted-foreground text-sm mt-1">Combating fake degrees and simplifying credential verification.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#22d3ee]">The problem</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
@@ -1508,7 +1508,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Product Authenticity · Luxury Goods</h2>
             <p className="text-muted-foreground text-sm mt-1">Digital "title deeds" of authenticity for high-value physical products.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#8b5cf6]">How it works</div>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -1584,7 +1584,7 @@ export function SC_Section3() {
             <p className="text-muted-foreground text-sm mt-1">How the world's largest home improvement retailer used blockchain to eliminate weeks of supplier disputes.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 mt-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
 
             {/* Problem */}
             <div className="flex flex-col gap-3">
@@ -1681,7 +1681,7 @@ export function SC_Section3() {
             <p className="text-muted-foreground text-sm mt-1">The first legally recognised property sale via NFT — and what it means for real estate globally.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 mt-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
 
             {/* Problem */}
             <div className="flex flex-col gap-3">
@@ -1777,7 +1777,7 @@ export function SC_Section3() {
             <p className="text-muted-foreground text-sm mt-1">The largest US state DMV moves 42 million vehicle titles to a public blockchain — live in 2024.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 mt-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
 
             {/* Problem */}
             <div className="flex flex-col gap-3">
@@ -1874,7 +1874,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Walmart · Food Trust</h2>
             <p className="text-muted-foreground text-sm mt-1">Tracing food contamination from 7 days to 2.2 seconds — IBM Hyperledger Fabric in production.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 mt-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
             <div className="p-4 bg-gradient-to-br from-[#ED1C24]/10 to-transparent border border-[#ED1C24]/30 rounded-xl flex flex-col gap-2">
               <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">The Problem</div>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -1927,7 +1927,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Santander · End-to-End Blockchain Bond</h2>
             <p className="text-muted-foreground text-sm mt-1">$20M bond issued entirely on Ethereum — the first major bank to settle a security on a public chain.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 mt-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
             <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
               <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">Background</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
@@ -1976,7 +1976,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Estonia · e-Residency</h2>
             <p className="text-muted-foreground text-sm mt-1">Blockchain-backed digital identity. Open an EU company from anywhere.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 mt-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
             <div className="p-4 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-2">
               <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest">Background</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
@@ -2025,7 +2025,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">The DAO · Decentralized Autonomous Organization</h2>
             <p className="text-muted-foreground text-sm mt-1">$150M raised, $60M drained. The hack that split Ethereum and proved "code is law" has limits.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 mt-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
             <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
               <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">The Vision (2016)</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
@@ -2066,7 +2066,7 @@ export function SC_Section3() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">ASX · CHESS Replacement Project</h2>
             <p className="text-muted-foreground text-sm mt-1">$255M+ AUD spent, six years of work — abandoned in 2022. Just because you CAN use blockchain doesn't mean you SHOULD.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 mt-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
             <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
               <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">Background</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">

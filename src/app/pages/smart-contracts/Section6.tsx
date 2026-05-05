@@ -489,7 +489,7 @@ export function SC_Section6() {
   return (
     <div className="h-full w-full flex overflow-hidden">
       <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
-        <SectionNav chapters={chapters} />
+        <SectionNav chapters={chapters} accentColor="#6366f1" />
       </div>
       <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
         <div className="slide-flow">
@@ -538,7 +538,7 @@ export function SC_Section6() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">What is an ERC?</h2>
             <p className="text-muted-foreground text-sm mt-1">"Ethereum Request for Comments" — community-driven proposals that become standards.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#6366f1]">Definition</div>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -604,7 +604,7 @@ export function SC_Section6() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">ERC-20 in Solidity · OpenZeppelin</h2>
             <p className="text-muted-foreground text-sm mt-1">The audited, battle-tested way to deploy a fungible token.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl flex flex-col">
               <div className="text-xs font-semibold text-muted-foreground mb-2">MyToken.sol</div>
               <pre className="flex-1 bg-muted p-3 rounded-lg text-[11px] font-mono text-foreground overflow-auto leading-relaxed">{`// SPDX-License-Identifier: MIT
@@ -646,7 +646,7 @@ contract MyToken is ERC20 {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Smart Contract Frameworks</h2>
             <p className="text-muted-foreground text-sm mt-1">Developer toolkits for the entire contract lifecycle — write, compile, test, deploy, upgrade.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="flex flex-col gap-3">
               <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">Project lifecycle</div>
               {[
@@ -789,7 +789,7 @@ contract MyToken is ERC20 {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Node Infrastructure</h2>
             <p className="text-muted-foreground text-sm mt-1">Every interaction with a smart contract passes through a node. Choose carefully.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
             {[
               { title: 'Run your own node', emoji: '🏠', color: '#39B54A',
                 pros: ['Full control', 'Compliance-friendly (no third-party logs)', 'Lower latency for high-volume apps', 'No rate limits'],
@@ -829,7 +829,7 @@ contract MyToken is ERC20 {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">API & Middleware</h2>
             <p className="text-muted-foreground text-sm mt-1">Bridges between smart contracts and legacy systems (ERPs, CRMs, databases).</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="flex flex-col gap-3">
               <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest">What middleware does</div>
               {[
@@ -870,7 +870,7 @@ contract MyToken is ERC20 {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Event-Driven Architecture</h2>
             <p className="text-muted-foreground text-sm mt-1">Smart contracts emit events. Off-chain services listen and act on them — like webhooks for the blockchain.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#22d3ee]">How it flows</div>
               <ol className="text-xs text-muted-foreground space-y-2 flex-1 list-decimal list-inside">
@@ -902,7 +902,7 @@ contract MyToken is ERC20 {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Orchestration with Oracles</h2>
             <p className="text-muted-foreground text-sm mt-1">Smart contracts can't natively access real-world data. Oracles are the bridges.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#f59e0b]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#f59e0b]">What oracles do</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
@@ -939,7 +939,7 @@ contract MyToken is ERC20 {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Data Management · On-chain vs Off-chain</h2>
             <p className="text-muted-foreground text-sm mt-1">Blockchain is not designed for large-scale, mutable, or sensitive data. Be deliberate.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#39B54A]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#39B54A]">Store on-chain</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
@@ -982,7 +982,7 @@ contract MyToken is ERC20 {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">AI-Driven Smart Contract Development</h2>
             <p className="text-muted-foreground text-sm mt-1">Use AI tools where they shine — and know where they don't belong.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#39B54A]/30 rounded-xl flex flex-col gap-3">
               <div className="font-bold text-sm text-[#39B54A]">✓ Where AI helps</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
