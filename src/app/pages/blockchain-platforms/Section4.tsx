@@ -13,7 +13,8 @@ const chapters = [
   { id: 's4-bridges',         label: 'Bridge Security' },
   { id: 's4-cosmos',          label: 'Cosmos' },
   { id: 's4-cosmos-eco',      label: 'Cosmos Apps' },
-  { id: 's4-layer0',          label: 'Layer 0' },
+  { id: 's4-layer0',          label: 'Layer 0: Concept' },
+  { id: 's4-layer0-2',        label: 'Layer 0: Platforms' },
   { id: 's4-polkadot',        label: 'Polkadot' },
   { id: 's4-polkadot-eco',   label: 'Polkadot Apps' },
   { id: 's4-avalanche',       label: 'Avalanche' },
@@ -647,8 +648,9 @@ export function BP_Section4() {
         </div>
 
         {/* ═══════ S4-LAYER0 ═══════ */}
+        {/* ═══════ S4-LAYER0 (1/2) — Concept ═══════ */}
         <div id="s4-layer0" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-3">
+          <div className="shrink-0 mb-4">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
               Layer 0: Infrastructure for Blockchains
             </h2>
@@ -658,24 +660,23 @@ export function BP_Section4() {
           </div>
 
           {/* One-line definition with analogy */}
-          <div className="shrink-0 mb-4 rounded-xl border p-3" style={{ borderColor: '#22d3ee55', backgroundColor: '#22d3ee0d' }}>
+          <div className="shrink-0 mb-5 rounded-xl border p-4" style={{ borderColor: '#22d3ee55', backgroundColor: '#22d3ee0d' }}>
             <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#22d3ee' }}>In one line</p>
-            <p className="text-sm text-foreground mt-0.5 leading-snug">
+            <p className="text-sm text-foreground mt-1 leading-snug">
               A Layer 0 leases <span className="font-semibold">validators, security, and messaging</span> to many L1s at once — so a new chain doesn't need to bootstrap its own validator set from scratch.
             </p>
-            <p className="text-[11px] text-muted-foreground italic mt-1.5">
+            <p className="text-xs text-muted-foreground italic mt-2">
               Think of it as the internet backbone: many ISPs (L1s) plug into shared cables (L0) instead of each laying their own.
             </p>
           </div>
 
-          <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-5 min-h-0">
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0">
 
-            {/* Left — Concept: stack + capabilities */}
-            <div className="flex flex-col gap-3 min-h-0">
-              {/* Stack visual — foundation-up */}
-              <div className="shrink-0 p-3 bg-card/50 rounded-xl border border-border">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">The stack — read bottom-up</p>
-                <div className="flex flex-col-reverse gap-1.5">
+            {/* Left — Stack visual */}
+            <div className="flex flex-col gap-4 min-h-0">
+              <div className="flex-1 p-4 bg-card/50 rounded-xl border border-border flex flex-col justify-center">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-3">The stack — read bottom-up</p>
+                <div className="flex flex-col-reverse gap-2">
                   {[
                     { num: '0', label: 'Layer 0',  sub: 'Relay / Primary Network · shared validators',  border: '#22d3ee' },
                     { num: '1', label: 'Layer 1',  sub: 'App-specific chains plugged into L0',          border: '#6366f1' },
@@ -683,78 +684,92 @@ export function BP_Section4() {
                   ].map(layer => (
                     <div
                       key={layer.label}
-                      className="p-2 lg:p-2.5 rounded-lg flex items-center gap-3"
+                      className="p-3 rounded-lg flex items-center gap-3"
                       style={{ backgroundColor: layer.border + '20', border: `1px solid ${layer.border}` }}
                     >
                       <div
-                        className="size-7 rounded-md flex items-center justify-center text-sm font-black shrink-0"
+                        className="size-8 rounded-md flex items-center justify-center text-sm font-black shrink-0"
                         style={{ backgroundColor: layer.border + '30', color: layer.border }}
                       >L{layer.num}</div>
                       <div className="min-w-0">
-                        <p className="text-xs lg:text-sm font-semibold leading-tight" style={{ color: layer.border }}>{layer.label}</p>
-                        <p className="text-[10px] lg:text-xs text-muted-foreground leading-tight">{layer.sub}</p>
+                        <p className="text-sm font-semibold leading-tight" style={{ color: layer.border }}>{layer.label}</p>
+                        <p className="text-xs text-muted-foreground leading-tight mt-0.5">{layer.sub}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
+            </div>
 
-              {/* What L0 provides — 3 capability cards */}
+            {/* Right — What L0 provides */}
+            <div className="flex flex-col gap-3 min-h-0">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">What Layer 0 provides</p>
-              <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
+              <div className="flex-1 min-h-0 grid auto-rows-fr gap-3">
                 {[
                   { icon: '🔐', title: 'Shared security',          desc: 'A pooled validator set secures every L1 connected to it. New chains inherit security on day 1 — no need to find their own validators.' },
                   { icon: '📨', title: 'Native cross-chain messaging', desc: 'L0 defines the message format and trust model for inter-L1 communication (XCM, Warp) — no third-party bridge needed.' },
                   { icon: '⚙️', title: 'Shared infrastructure',     desc: 'Block production, finality, governance and upgrades live at L0. L1s focus only on application logic and tokenomics.' },
                 ].map(c => (
-                  <div key={c.title} className="rounded-xl border border-[#22d3ee]/30 bg-card p-2.5 flex items-start gap-2.5 min-h-0">
-                    <span className="text-lg shrink-0 leading-none mt-0.5">{c.icon}</span>
+                  <div key={c.title} className="rounded-xl border border-[#22d3ee]/30 bg-card p-4 flex items-start gap-3 min-h-0">
+                    <span className="text-2xl shrink-0 leading-none mt-0.5">{c.icon}</span>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-foreground">{c.title}</p>
-                      <p className="text-[10px] lg:text-xs text-muted-foreground leading-relaxed mt-0.5">{c.desc}</p>
+                      <p className="text-sm font-bold text-foreground">{c.title}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed mt-1">{c.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
+        </div>
 
-            {/* Right — L0 platforms overview + trade-off */}
+        {/* ═══════ S4-LAYER0 (2/2) — Platforms ═══════ */}
+        <div id="s4-layer0-2" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-5">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Layer 0: Known Platforms & Trade-offs</h2>
+            <p className="text-sm text-muted-foreground mt-1">The three active L0 networks today — and how the L0 model compares to Cosmos's sovereign-chain approach.</p>
+          </div>
+
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0">
+
+            {/* Left — L0 platforms */}
             <div className="flex flex-col gap-3 min-h-0">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">Known Layer 0 platforms</p>
-
-              <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
+              <div className="flex-1 min-h-0 grid auto-rows-fr gap-3">
                 {[
                   { emoji: '🔴', name: 'Polkadot', token: 'DOT', consensus: 'BABE + GRANDPA', color: '#e6007a', tagline: 'Relay Chain + Parachains · XCM native messaging · Coretime model (2024)' },
                   { emoji: '🔺', name: 'Avalanche', token: 'AVAX', consensus: 'Snowman (sub-1s)', color: '#e84142', tagline: 'Primary Network (X/P/C-Chain) + sovereign Avalanche L1s · Warp messaging' },
                   { emoji: '₿', name: 'Babylon', token: 'BABY', consensus: 'BTC-staked PoS', color: '#f59e0b', tagline: 'Uses Bitcoin staking to provide shared security to any PoS chain — no new token needed' },
                 ].map(p => (
-                  <div key={p.name} className="rounded-xl p-3 min-h-0 flex flex-col gap-1" style={{ borderWidth: '1px', borderColor: p.color + '55', backgroundColor: p.color + '08' }}>
+                  <div key={p.name} className="rounded-xl p-4 min-h-0 flex flex-col gap-2" style={{ borderWidth: '1px', borderColor: p.color + '55', backgroundColor: p.color + '08' }}>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-sm">{p.emoji}</span>
-                      <p className="text-sm font-bold text-foreground">{p.name}</p>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded font-mono" style={{ backgroundColor: p.color + '18', color: p.color, border: `1px solid ${p.color}35` }}>{p.token}</span>
-                      <span className="ml-auto text-[10px] text-muted-foreground">{p.consensus}</span>
+                      <span className="text-base">{p.emoji}</span>
+                      <p className="text-base font-bold text-foreground">{p.name}</p>
+                      <span className="text-xs px-1.5 py-0.5 rounded font-mono" style={{ backgroundColor: p.color + '18', color: p.color, border: `1px solid ${p.color}35` }}>{p.token}</span>
+                      <span className="ml-auto text-xs text-muted-foreground">{p.consensus}</span>
                     </div>
-                    <p className="text-[11px] text-muted-foreground leading-snug">{p.tagline}</p>
+                    <p className="text-sm text-muted-foreground leading-snug">{p.tagline}</p>
                   </div>
                 ))}
               </div>
+            </div>
 
-              {/* Trade-off vs Cosmos */}
-              <div className="shrink-0 rounded-xl p-3" style={{ borderWidth: '1px', borderColor: '#6366f155', backgroundColor: '#6366f10d' }}>
-                <p className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: '#6366f1' }}>The design trade-off</p>
-                <div className="grid grid-cols-2 gap-3">
+            {/* Right — Trade-off vs Cosmos */}
+            <div className="flex flex-col justify-center min-h-0">
+              <div className="rounded-xl p-6" style={{ borderWidth: '1px', borderColor: '#6366f155', backgroundColor: '#6366f10d' }}>
+                <p className="text-[10px] font-black uppercase tracking-widest mb-4" style={{ color: '#6366f1' }}>The design trade-off</p>
+                <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <p className="text-xs font-bold text-foreground mb-1">Layer 0 model</p>
-                    <p className="text-[11px] text-muted-foreground leading-snug">
+                    <p className="text-sm font-bold text-foreground mb-2">Layer 0 model</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       <span className="text-[#10b981]">↑</span> shared security on day 1<br/>
                       <span className="text-[#10b981]">↑</span> native cross-chain messaging<br/>
                       <span className="text-[#ef4444]">↓</span> chains must follow L0 rules
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-foreground mb-1">Cosmos model</p>
-                    <p className="text-[11px] text-muted-foreground leading-snug">
+                    <p className="text-sm font-bold text-foreground mb-2">Cosmos model</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       <span className="text-[#10b981]">↑</span> full sovereignty per chain<br/>
                       <span className="text-[#10b981]">↑</span> any consensus, any VM, any rules<br/>
                       <span className="text-[#ef4444]">↓</span> each chain bootstraps own validators

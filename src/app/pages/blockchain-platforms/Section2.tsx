@@ -18,7 +18,8 @@ const chapters = [
   { id: 's2-evmecosystem', label: 'EVM Everywhere' },
   { id: 's2-defi',        label: 'DeFi Mechanics' },
   { id: 's2-stablecoins', label: 'Stablecoins' },
-  { id: 's2-apps',        label: 'Apps Beyond DeFi' },
+  { id: 's2-apps',        label: 'Apps Beyond DeFi (1)' },
+  { id: 's2-apps-2',      label: 'Apps Beyond DeFi (2)' },
   { id: 's2-comparison',  label: 'BTC vs ETH' },
   { id: 's2-quiz', label: 'Quiz' },
   { id: 's2-takeaways', label: 'Takeaways' },
@@ -1049,7 +1050,7 @@ export function BP_Section2() {
           </div>
         </div>
 
-        {/* ═══════ APPS — Beyond DeFi ═══════ */}
+        {/* ═══════ APPS — Beyond DeFi (1/2) ═══════ */}
         <div id="s2-apps" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-3">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Beyond DeFi — what else runs on Ethereum</h2>
@@ -1063,7 +1064,7 @@ export function BP_Section2() {
             </p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-2 gap-3">
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-4">
             {[
               {
                 icon: '🎨',
@@ -1083,6 +1084,45 @@ export function BP_Section2() {
                 examples: 'MakerDAO (DAI issuance) · Uniswap DAO (controls $7B+ in UNI) · ENS DAO (.eth registry) · Optimism Citizen House · Gitcoin grants.',
                 limit: 'Voter turnout often 1–5%. Token-weighted votes mean whales decide. Most "DAOs" delegate decisions to small core teams. Legal status of DAOs is unsettled in most jurisdictions.',
               },
+            ].map(app => (
+              <motion.div
+                key={app.title}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="rounded-xl border-2 p-4 flex flex-col gap-3 min-h-0"
+                style={{ borderColor: app.color + '50', backgroundColor: app.color + '08' }}
+              >
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-2xl shrink-0 leading-none">{app.icon}</span>
+                  <div className="min-w-0">
+                    <div className="font-black text-base leading-tight" style={{ color: app.color }}>{app.title}</div>
+                    <div className="text-xs text-muted-foreground leading-tight">{app.sub}</div>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground leading-snug flex-1">{app.what}</p>
+                <div className="rounded-lg border bg-card/60 px-3 py-1.5 text-xs leading-snug" style={{ borderColor: app.color + '40' }}>
+                  <span className="font-bold" style={{ color: app.color }}>Examples: </span>
+                  <span className="text-muted-foreground">{app.examples}</span>
+                </div>
+                <div className="rounded-lg border bg-card/60 px-3 py-1.5 text-xs leading-snug" style={{ borderColor: '#ED1C2440' }}>
+                  <span className="font-bold" style={{ color: '#ED1C24' }}>Honest limit: </span>
+                  <span className="text-muted-foreground">{app.limit}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* ═══════ APPS — Beyond DeFi (2/2) ═══════ */}
+        <div id="s2-apps-2" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Beyond DeFi — Identity & Gaming</h2>
+            <p className="text-sm text-muted-foreground mt-1">Two more verticals where Ethereum's programmability opens possibilities that centralised systems cannot replicate — yet.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {[
               {
                 icon: '🆔',
                 title: 'Identity & decentralized social',
@@ -1107,22 +1147,22 @@ export function BP_Section2() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="rounded-xl border-2 p-3 flex flex-col gap-2 min-h-0"
+                className="rounded-xl border-2 p-4 flex flex-col gap-3 min-h-0"
                 style={{ borderColor: app.color + '50', backgroundColor: app.color + '08' }}
               >
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-xl shrink-0 leading-none">{app.icon}</span>
+                  <span className="text-2xl shrink-0 leading-none">{app.icon}</span>
                   <div className="min-w-0">
-                    <div className="font-black text-sm leading-tight" style={{ color: app.color }}>{app.title}</div>
-                    <div className="text-[10px] text-muted-foreground leading-tight">{app.sub}</div>
+                    <div className="font-black text-base leading-tight" style={{ color: app.color }}>{app.title}</div>
+                    <div className="text-xs text-muted-foreground leading-tight">{app.sub}</div>
                   </div>
                 </div>
-                <p className="text-[11px] text-muted-foreground leading-snug flex-1">{app.what}</p>
-                <div className="rounded-lg border bg-card/60 px-2 py-1 text-[10px] leading-snug" style={{ borderColor: app.color + '40' }}>
+                <p className="text-sm text-muted-foreground leading-snug flex-1">{app.what}</p>
+                <div className="rounded-lg border bg-card/60 px-3 py-1.5 text-xs leading-snug" style={{ borderColor: app.color + '40' }}>
                   <span className="font-bold" style={{ color: app.color }}>Examples: </span>
                   <span className="text-muted-foreground">{app.examples}</span>
                 </div>
-                <div className="rounded-lg border bg-card/60 px-2 py-1 text-[10px] leading-snug" style={{ borderColor: '#ED1C2440' }}>
+                <div className="rounded-lg border bg-card/60 px-3 py-1.5 text-xs leading-snug" style={{ borderColor: '#ED1C2440' }}>
                   <span className="font-bold" style={{ color: '#ED1C24' }}>Honest limit: </span>
                   <span className="text-muted-foreground">{app.limit}</span>
                 </div>
@@ -1130,8 +1170,8 @@ export function BP_Section2() {
             ))}
           </div>
 
-          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#627EEA55', backgroundColor: '#627EEA0d' }}>
-            <p className="text-[11px] text-muted-foreground leading-snug">
+          <div className="shrink-0 mt-4 rounded-xl border p-3" style={{ borderColor: '#627EEA55', backgroundColor: '#627EEA0d' }}>
+            <p className="text-sm text-muted-foreground leading-snug">
               <span className="font-bold" style={{ color: '#627EEA' }}>The URI gotcha — </span>
               ERC-721 NFTs typically store only a URL pointing to off-chain metadata. The token on-chain proves you own a pointer; the actual image/asset lives on IPFS, Arweave, or — too often — a single web server. If the host disappears, your NFT renders blank. Always check where the metadata is pinned before buying.
             </p>
