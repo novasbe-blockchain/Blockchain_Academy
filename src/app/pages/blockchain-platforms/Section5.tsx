@@ -1,0 +1,1053 @@
+import { motion } from 'motion/react';
+import { TitleSlide } from '../../components/templates/TitleSlide';
+import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
+import { SectionNav } from '../../components/navigation/SectionNav';
+import { QuizSlide } from '../../components/templates/QuizSlide';
+import { Zap } from 'lucide-react';
+
+const chapters = [
+  { id: 's5-zkp',              label: 'ZKP: The Intuition' },
+  { id: 's5-zkp-props',        label: 'ZKP: Properties & Uses' },
+  { id: 's5-starknet',         label: 'Starknet' },
+  { id: 's5-starknet-compare', label: 'Starknet: ZK in Practice' },
+  { id: 's5-starknet-eco',     label: 'Starknet Apps' },
+  { id: 's5-layer2',       label: 'Layer 2: Optimistic vs ZK' },
+  { id: 's5-l2apps',       label: 'L2 App Landscape' },
+  { id: 's5-privacy',      label: 'Privacy' },
+  { id: 's5-evaluate',     label: 'Evaluate a Project' },
+  { id: 's5-decision',          label: 'Decision Framework' },
+  { id: 's5-decision-examples', label: 'Platform Examples' },
+  { id: 's5-quiz',              label: 'Quiz' },
+  { id: 's5-takeaways',    label: 'Takeaways' },
+];
+
+export function BP_Section5() {
+  return (
+    <div className="h-full w-full flex overflow-hidden">
+      <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
+        <SectionNav chapters={chapters} />
+      </div>
+      <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
+        <div className="slide-flow">
+
+        {/* ═══════ TITLE ═══════ */}
+        <div className="h-full">
+          <TitleSlide
+            sectionNumber="SECTION 05"
+            title="New Trends"
+            subtitle="ZK rollups, Layer 2 scaling, privacy primitives, and choosing the right platform"
+            icon={<Zap className="size-20 text-[#8b5cf6]" />}
+            gradient="from-[#8b5cf6] to-[#ec4899]"
+          />
+        </div>
+
+        {/* ═══════ S5-ZKP — Zero-Knowledge Proofs vulgarisation ═══════ */}
+        <div id="s5-zkp" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
+              Zero-Knowledge Proofs — Proving Without Revealing
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              One of the most counterintuitive ideas in cryptography, with very practical consequences. You don't need to understand the maths — the intuition is enough.
+            </p>
+          </div>
+
+          {/* Core idea callout */}
+          <div className="shrink-0 mb-4 rounded-xl border-2 p-4" style={{ borderColor: '#8b5cf680', backgroundColor: '#8b5cf60d' }}>
+            <p className="text-xs font-black uppercase tracking-widest mb-1" style={{ color: '#8b5cf6' }}>The core idea in one sentence</p>
+            <p className="text-lg font-semibold text-foreground leading-snug">
+              A zero-knowledge proof lets you convince someone that a statement is true — <span style={{ color: '#8b5cf6' }}>without revealing anything that makes it true</span>.
+            </p>
+          </div>
+
+          {/* Three analogies — 3 columns */}
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+            {/* Analogy 1 — Age at a bar */}
+            <div className="flex flex-col rounded-xl border bg-card p-4 gap-4" style={{ borderColor: '#f59e0b50' }}>
+              <div className="shrink-0 flex items-center gap-2.5">
+                <span className="text-3xl">🍺</span>
+                <div>
+                  <p className="font-bold text-foreground">Proving your age at a bar</p>
+                  <p className="text-xs text-muted-foreground">Data minimisation</p>
+                </div>
+              </div>
+              <div className="flex-1 grid grid-rows-2 gap-3">
+                <div className="rounded-lg border p-3" style={{ borderColor: '#ef444440', backgroundColor: '#ef44440a' }}>
+                  <p className="text-[9px] font-black uppercase tracking-wider text-[#ef4444] mb-1.5">Without ZKP</p>
+                  <p className="text-sm text-muted-foreground leading-snug">You show your passport. The bouncer sees your <span className="font-semibold text-foreground">name, address, nationality, and exact birth date</span> — far more than they need to verify one thing.</p>
+                </div>
+                <div className="rounded-lg border p-3" style={{ borderColor: '#39B54A40', backgroundColor: '#39B54A0a' }}>
+                  <p className="text-[9px] font-black uppercase tracking-wider text-[#39B54A] mb-1.5">With ZKP</p>
+                  <p className="text-sm text-muted-foreground leading-snug">You generate a proof: <span className="font-semibold text-foreground">"I was born before today minus 18 years."</span> The bouncer verifies ✓ — and learns <span className="italic">nothing else about you</span>.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Analogy 2 — Waldo */}
+            <div className="flex flex-col rounded-xl border bg-card p-4 gap-4" style={{ borderColor: '#6366f150' }}>
+              <div className="shrink-0 flex items-center gap-2.5">
+                <span className="text-3xl">🔍</span>
+                <div>
+                  <p className="font-bold text-foreground">Finding Waldo</p>
+                  <p className="text-xs text-muted-foreground">Proving knowledge without disclosure</p>
+                </div>
+              </div>
+              <div className="flex-1 flex flex-col justify-around gap-3">
+                <div className="rounded-lg border p-3 bg-muted/30">
+                  <p className="text-sm text-muted-foreground leading-snug">I claim I found Waldo on a huge crowded page. You don't trust me — so I need to prove it.</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-px flex-1 bg-border" />
+                  <span className="text-xs text-muted-foreground shrink-0 italic">my proof</span>
+                  <div className="h-px flex-1 bg-border" />
+                </div>
+                <div className="rounded-lg border p-3" style={{ borderColor: '#6366f140', backgroundColor: '#6366f10a' }}>
+                  <p className="text-sm text-muted-foreground leading-snug">I lay a black sheet over the entire image with a tiny hole — <span className="font-semibold text-foreground">only Waldo is visible</span>. You confirm he's there. You still have no idea where on the page he is.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Analogy 3 — Cave */}
+            <div className="flex flex-col rounded-xl border bg-card p-4 gap-4" style={{ borderColor: '#22d3ee50' }}>
+              <div className="shrink-0 flex items-center gap-2.5">
+                <span className="text-3xl">🕳️</span>
+                <div>
+                  <p className="font-bold text-foreground">The magic cave</p>
+                  <p className="text-xs text-muted-foreground">The classic ZKP thought experiment</p>
+                </div>
+              </div>
+              <div className="flex-1 flex flex-col gap-3">
+                {[
+                  { n: '1', text: 'A cave has a ring path with a locked door in the middle. Alice knows the magic word to open it.' },
+                  { n: '2', text: 'Alice walks in from the left. Bob shouts "come back from the RIGHT." She does — proving she opened the door.' },
+                  { n: '3', text: "Repeat 20 times. The chance she's cheating without the password drops below 1 in a million. Bob is fully convinced." },
+                ].map(s => (
+                  <div key={s.n} className="flex gap-3 items-start">
+                    <div className="size-7 rounded-full flex items-center justify-center text-xs font-black text-white shrink-0 mt-0.5" style={{ backgroundColor: '#22d3ee' }}>{s.n}</div>
+                    <p className="text-sm text-muted-foreground leading-snug flex-1">{s.text}</p>
+                  </div>
+                ))}
+                <div className="mt-auto rounded-lg border p-2.5" style={{ borderColor: '#22d3ee30', backgroundColor: '#22d3ee0a' }}>
+                  <p className="text-xs text-muted-foreground italic leading-snug">Bob gains full confidence. He learns <span className="font-semibold text-foreground">nothing about what the password actually is</span>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ═══════ S5-ZKP-PROPS — Properties & Blockchain Uses ═══════ */}
+        <div id="s5-zkp-props" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
+              ZKP: Three Formal Properties & Blockchain Applications
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Once you have the intuition, these properties formalise it. The blockchain use cases follow directly from the third property — zero-knowledge.
+            </p>
+          </div>
+
+          {/* Three properties — horizontal row */}
+          <div className="shrink-0 grid grid-cols-3 gap-4 mb-5">
+            {[
+              { emoji: '✅', prop: 'Completeness',   color: '#39B54A', desc: 'If the statement is true and Alice is honest, she will always be able to convince Bob. A valid proof always passes.' },
+              { emoji: '🔒', prop: 'Soundness',      color: '#ED1C24', desc: 'If the statement is false, Alice cannot cheat and convince Bob — no matter how clever she is. A fake proof always fails.' },
+              { emoji: '🙈', prop: 'Zero-Knowledge', color: '#8b5cf6', desc: 'Bob learns nothing beyond "the statement is true." No extra information leaks — not accidentally, not even in theory.' },
+            ].map(p => (
+              <div key={p.prop} className="flex gap-4 items-start rounded-xl border p-4 bg-card" style={{ borderColor: p.color + '50' }}>
+                <span className="text-3xl shrink-0">{p.emoji}</span>
+                <div>
+                  <p className="font-black text-lg mb-1.5" style={{ color: p.color }}>{p.prop}</p>
+                  <p className="text-sm text-muted-foreground leading-snug">{p.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Four blockchain uses — 2×2 */}
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-4">
+            {[
+              { icon: '🪪', title: 'Private identity & KYC',   color: '#6366f1', desc: 'Prove your passport is valid, your sanctions check passed, and your age is ≥ 18 — without showing any document. One ZK credential, verifiable by any dApp anywhere.' },
+              { icon: '🗳️', title: 'Private voting',            color: '#39B54A', desc: 'Prove your vote was counted in the final tally, and that you only voted once — without revealing which candidate you chose. Fully auditable election, fully private ballot.' },
+              { icon: '🏦', title: 'Proof of solvency',         color: '#f59e0b', desc: 'A bank or exchange proves it holds enough assets to cover all liabilities — without disclosing individual account balances, trading positions, or counterparty identities.' },
+              { icon: '⚡', title: 'ZK rollups (Starknet ↗)', color: '#8b5cf6', desc: 'Prove that 10,000 transactions are all valid — with a single compact STARK proof that Ethereum L1 verifies in one block. No waiting, no challenge window, no trust in the sequencer.' },
+            ].map(u => (
+              <motion.div
+                key={u.title}
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3 }}
+                className="rounded-xl border p-4 bg-card flex gap-4 items-start"
+                style={{ borderColor: u.color + '40' }}
+              >
+                <span className="text-3xl shrink-0">{u.icon}</span>
+                <div>
+                  <p className="font-bold text-base mb-1.5" style={{ color: u.color }}>{u.title}</p>
+                  <p className="text-sm text-muted-foreground leading-snug">{u.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* SNARK vs STARK */}
+          <div className="shrink-0 mt-4 rounded-xl border p-3 grid grid-cols-2 gap-6" style={{ borderColor: '#8b5cf655', backgroundColor: '#8b5cf60d' }}>
+            <div>
+              <p className="text-xs font-black uppercase tracking-widest mb-1" style={{ color: '#8b5cf6' }}>ZK-SNARK — Succinct Non-interactive ARgument of Knowledge</p>
+              <p className="text-sm text-muted-foreground leading-snug">Tiny proofs, extremely fast to verify. Requires a one-time trusted setup ceremony. Used by Zcash, Polygon zkEVM, early zkSync.</p>
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-widest mb-1" style={{ color: '#8b5cf6' }}>ZK-STARK — Scalable Transparent ARgument of Knowledge</p>
+              <p className="text-sm text-muted-foreground leading-snug">No trusted setup, quantum-resistant. Proofs are larger but fully transparent and more scalable. Used by <span className="font-semibold text-foreground">Starknet</span> — next section.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ═══════ S5-STARKNET ═══════ */}
+        <div id="s5-starknet" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
+              Starknet: ZK-Rollup on Ethereum
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Batches thousands of transactions off-chain, generates a cryptographic STARK proof, and posts only that proof to Ethereum L1.
+            </p>
+          </div>
+
+          {/* Why ZK is the next step */}
+          <div className="shrink-0 mb-3 rounded-xl border p-3" style={{ borderColor: '#8b5cf655', backgroundColor: '#8b5cf60d' }}>
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#8b5cf6' }}>
+              Why ZK has to be the next step
+            </p>
+            <p className="text-sm text-foreground mt-0.5 leading-snug">
+              Ethereum L1 can't host applications that need <span className="font-semibold">cheap throughput</span> AND <span className="font-semibold">privacy</span>. Optimistic rollups solve cost only; ZK rollups also unlock <span className="font-semibold">verifiable privacy</span> — a user can prove a fact <span className="italic">without revealing the underlying data</span>.
+            </p>
+          </div>
+
+          {/* 4 core properties — 2×2 */}
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-4 mb-4">
+            {[
+              { emoji: '⚡', title: 'Throughput',     color: '#8b5cf6', desc: '500–1,000 TPS vs ~15 TPS on Ethereum L1. Transactions execute off-chain in batches — the STARK prover is the bottleneck, not the EVM.' },
+              { emoji: '💸', title: 'Cost',           color: '#39B54A', desc: '10–100× cheaper for end users. One STARK proof amortises the L1 settlement cost across thousands of transactions in the same batch.' },
+              { emoji: '🔒', title: 'Security model', color: '#22d3ee', desc: 'Inherits Ethereum L1 security via validity proofs. No fraud window, no trust in the sequencer — if the proof is invalid, Ethereum rejects it outright.' },
+              { emoji: '🛡️', title: 'Cairo language', color: '#ec4899', desc: "Starknet's native language, compiled to Sierra IR. Far more efficient than Solidity/EVM for STARK proving — ZK-friendly logic without low-level circuit expertise." },
+            ].map(card => (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, x: -16 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3 }}
+                className="flex gap-4 p-4 bg-card rounded-xl border"
+                style={{ borderColor: card.color + '40' }}
+              >
+                <span className="text-3xl shrink-0 leading-none mt-0.5">{card.emoji}</span>
+                <div>
+                  <p className="font-bold text-lg mb-1.5" style={{ color: card.color }}>{card.title}</p>
+                  <p className="text-sm text-muted-foreground leading-snug">{card.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* 2024–2025 news */}
+          <div className="shrink-0 p-3 bg-[#8b5cf6]/5 rounded-xl border border-[#8b5cf6]/20">
+            <p className="text-xs font-semibold text-[#8b5cf6] mb-2">Starknet in 2024–2025</p>
+            <div className="grid grid-cols-4 gap-2">
+              {[
+                { label: 'STRK Token',     sub: 'Token launch & community airdrop' },
+                { label: 'v0.13+',         sub: '1,000+ TPS throughput milestone' },
+                { label: 'AI Agents',      sub: 'On-chain AI agent integration experiments' },
+                { label: 'Onchain Gaming', sub: 'Dojo engine — fully on-chain games in Cairo' },
+              ].map(item => (
+                <div key={item.label} className="p-2 bg-card rounded-lg border border-border">
+                  <p className="text-xs font-semibold text-foreground">{item.label}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{item.sub}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ═══════ S5-STARKNET-COMPARE — ZK in Practice ═══════ */}
+        <div id="s5-starknet-compare" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
+              Starknet: ZK in Practice
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              A concrete KYC walkthrough using Starknet's ZK credentials, then a head-to-head with optimistic rollups — the most common comparison when evaluating L2s.
+            </p>
+          </div>
+
+          {/* KYC walkthrough — full width */}
+          <div className="shrink-0 mb-4 rounded-xl border p-4" style={{ borderColor: '#8b5cf660', backgroundColor: '#8b5cf608' }}>
+            <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: '#8b5cf6' }}>
+              🔐 Concrete example — KYC without sharing your identity
+            </p>
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                { n: '1', label: 'Bank issues a credential', desc: 'Your bank verifies you once and signs a ZK credential containing { name, DOB, residency, sanctions check }. This credential lives in your wallet — only you hold it.' },
+                { n: '2', label: 'You generate a proof',     desc: 'In your wallet, you build a STARK proof: "credential is signed by Bank · age ≥ 18 · residency = EU · sanctions = false." No raw data is included in the proof itself.' },
+                { n: '3', label: 'Cairo contract verifies',  desc: "The dApp's Cairo contract on Starknet verifies the proof and grants access. Your name and birth date never leave your wallet — not even the dApp operator can read them." },
+              ].map(s => (
+                <div key={s.n} className="rounded-xl border bg-card p-4 flex flex-col gap-2" style={{ borderColor: '#8b5cf640' }}>
+                  <div className="flex items-center gap-2">
+                    <div className="size-7 rounded-full flex items-center justify-center text-sm font-black text-white shrink-0" style={{ backgroundColor: '#8b5cf6' }}>{s.n}</div>
+                    <p className="text-sm font-bold text-foreground leading-tight">{s.label}</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-snug">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground italic mt-3">
+              Same pattern: <span className="font-medium text-foreground">private voting · proof of solvency · medical records · sanctions screening</span> — anywhere the question is "is this true?" without "who are you?".
+            </p>
+          </div>
+
+          {/* ZK vs Optimistic — full-width comparison */}
+          <div className="flex-1 min-h-0 bg-card rounded-xl border border-border overflow-hidden">
+            <div className="grid grid-cols-2 divide-x divide-border h-full">
+              <div className="p-5 flex flex-col gap-3 min-h-0">
+                <div className="shrink-0">
+                  <p className="text-xl font-black text-[#8b5cf6]">ZK Rollup</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Starknet · zkSync · Polygon zkEVM · Scroll</p>
+                </div>
+                <p className="text-sm text-muted-foreground leading-snug shrink-0">Each batch ships with a <span className="font-semibold text-foreground">validity proof</span> that Ethereum L1 verifies mathematically. No trust in the operator required.</p>
+                <div className="flex-1 min-h-0 flex flex-col gap-2.5">
+                  {[
+                    { label: 'Proof type',        value: 'Validity proof — mathematically proven', color: '#8b5cf6' },
+                    { label: 'Finality',          value: '⚡ Minutes — one L1 block to verify the proof', color: '#39B54A' },
+                    { label: 'Compute overhead',  value: 'High — STARK/SNARK generation is expensive', color: '#ef4444' },
+                    { label: 'EVM compatibility', value: '⚠️ Partial — zkEVM spectrum still maturing', color: '#f97316' },
+                    { label: 'Trust model',       value: 'Trustless — math is the arbiter, not watchers', color: '#39B54A' },
+                    { label: 'Best for',          value: 'Payments, privacy apps, high-security finance', color: '#6366f1' },
+                  ].map(r => (
+                    <div key={r.label} className="flex gap-2 items-baseline">
+                      <span className="text-muted-foreground w-36 shrink-0 text-xs">{r.label}</span>
+                      <span style={{ color: r.color }} className="font-medium text-sm">{r.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-5 flex flex-col gap-3 min-h-0">
+                <div className="shrink-0">
+                  <p className="text-xl font-black text-[#f59e0b]">Optimistic Rollup</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Arbitrum · Optimism · Base</p>
+                </div>
+                <p className="text-sm text-muted-foreground leading-snug shrink-0">Posts transactions with an <span className="font-semibold text-foreground">optimistic assumption</span> of validity. A 7-day challenge window lets anyone submit a fraud proof.</p>
+                <div className="flex-1 min-h-0 flex flex-col gap-2.5">
+                  {[
+                    { label: 'Proof type',        value: 'Fraud proof — only if fraud detected', color: '#f59e0b' },
+                    { label: 'Finality',          value: '7-day withdrawal delay (challenge window)', color: '#ef4444' },
+                    { label: 'Compute overhead',  value: 'Low — no proof generation overhead at all', color: '#39B54A' },
+                    { label: 'EVM compatibility', value: '✅ Full EVM equivalence — deploy existing Solidity', color: '#39B54A' },
+                    { label: 'Trust model',       value: 'At least 1 honest watcher must monitor the chain', color: '#f59e0b' },
+                    { label: 'Best for',          value: 'DeFi, general dApps needing EVM compatibility', color: '#6366f1' },
+                  ].map(r => (
+                    <div key={r.label} className="flex gap-2 items-baseline">
+                      <span className="text-muted-foreground w-36 shrink-0 text-xs">{r.label}</span>
+                      <span style={{ color: r.color }} className="font-medium text-sm">{r.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ═══════ STARKNET APPS — ecosystem ═══════ */}
+        <div id="s5-starknet-eco" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Starknet ecosystem — apps native to Cairo</h2>
+            <p className="text-sm text-muted-foreground mt-1">Starknet&apos;s app character has shifted distinctly toward fully-on-chain games, native AA wallets, and AI-agent experiments — areas where the Cairo VM&apos;s ZK-friendliness is genuinely useful.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-5 gap-2.5">
+            {[
+              {
+                emoji: '💧',
+                name: 'Ekubo',
+                category: 'Native AMM',
+                color: '#8b5cf6',
+                tag: 'concentrated liquidity',
+                stats: 'Built by the Uniswap v3 author',
+                apps: [
+                  { name: 'Singleton design',    kind: 'One contract for all pools (gas-efficient)' },
+                  { name: 'Concentrated LPs',    kind: 'Range positions, like Uni v3' },
+                  { name: 'Extensions',          kind: 'Programmable hooks per pool' },
+                  { name: 'STRK / ETH base',     kind: 'Deepest liquidity on Starknet' },
+                ],
+              },
+              {
+                emoji: '🎮',
+                name: 'Realms · Dojo',
+                category: 'Onchain Games',
+                color: '#ec4899',
+                tag: 'fully on-chain games',
+                stats: 'Loot Survivor, Eternum, Loot universe',
+                apps: [
+                  { name: 'Dojo engine',     kind: 'ECS framework for fully on-chain games' },
+                  { name: 'Loot Survivor',   kind: 'Roguelike fully on Starknet' },
+                  { name: 'Realms · Eternum', kind: 'On-chain MMO economy' },
+                  { name: 'Cairo for state', kind: 'Every move is a verified transaction' },
+                ],
+              },
+              {
+                emoji: '🏦',
+                name: 'ZKLend · Nostra · Vesu',
+                category: 'Lending',
+                color: '#10b981',
+                tag: 'money markets',
+                stats: 'Aave-style on Starknet',
+                apps: [
+                  { name: 'ZKLend',  kind: 'Earliest Starknet lending market' },
+                  { name: 'Nostra',  kind: 'Lending + LST + stablecoin' },
+                  { name: 'Vesu',    kind: 'Modular lending pools (2024)' },
+                  { name: 'Lending receipts',  kind: 'STRK / ETH deposits earn yield' },
+                ],
+              },
+              {
+                emoji: '👛',
+                name: 'Argent X · Braavos · Ready',
+                category: 'Smart Wallets',
+                color: '#f59e0b',
+                tag: 'native account abstraction',
+                stats: 'Every wallet is a smart contract',
+                apps: [
+                  { name: 'Argent X',          kind: 'Default Starknet wallet, social recovery' },
+                  { name: 'Braavos',           kind: 'Multi-sig + biometric signing' },
+                  { name: 'Session keys',      kind: 'Sign once, play many in-game' },
+                  { name: 'Multi-call',        kind: 'Approve + swap + stake in one tx' },
+                ],
+              },
+              {
+                emoji: '🤖',
+                name: 'AI agents',
+                category: 'Autonomous Agents',
+                color: '#06b6d4',
+                tag: 'on-chain AI experiments',
+                stats: 'Frame in Cairo · agents w/ on-chain wallets',
+                apps: [
+                  { name: 'Eliza framework',   kind: 'Open-source agent runtime supports Starknet' },
+                  { name: 'Agent wallets',     kind: 'Smart accounts AI can fund and act from' },
+                  { name: 'On-chain AI infra', kind: 'Verifiable inference using STARK proofs' },
+                  { name: 'Reasoning ✓ proofs', kind: 'Cairo enables proving model output' },
+                ],
+              },
+            ].map(app => (
+              <motion.div
+                key={app.name}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-1.5 p-2.5 rounded-xl border-2 min-h-0"
+                style={{ borderColor: app.color + '55', backgroundColor: app.color + '0a' }}
+              >
+                <div className="shrink-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-base shrink-0 leading-none">{app.emoji}</span>
+                    <div className="font-black text-[12px] leading-tight" style={{ color: app.color }}>{app.name}</div>
+                  </div>
+                  <span
+                    className="inline-block text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded mt-1"
+                    style={{ backgroundColor: app.color + '20', color: app.color, border: `1px solid ${app.color}40` }}
+                  >
+                    {app.category}
+                  </span>
+                </div>
+
+                <div className="shrink-0">
+                  <div className="text-[10px] text-foreground font-medium leading-tight">{app.tag}</div>
+                  <div className="text-[9px] text-muted-foreground italic leading-snug mt-0.5">{app.stats}</div>
+                </div>
+
+                <div className="flex-1 min-h-0 flex flex-col gap-1">
+                  {app.apps.map(item => (
+                    <div
+                      key={item.name}
+                      className="rounded-md border bg-card/60 px-1.5 py-1 min-h-0"
+                      style={{ borderColor: app.color + '35' }}
+                    >
+                      <div className="text-[10px] font-bold leading-tight" style={{ color: app.color }}>{item.name}</div>
+                      <div className="text-[9px] text-muted-foreground leading-snug mt-0.5">{item.kind}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#8b5cf655', backgroundColor: '#8b5cf60d' }}>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#8b5cf6' }}>Also worth knowing — </span>
+              <span className="font-medium text-foreground">JediSwap</span>, <span className="font-medium text-foreground">mySwap</span> (alternative AMMs) · <span className="font-medium text-foreground">Mintsquare</span>, <span className="font-medium text-foreground">Briq</span> (NFT marketplaces) · <span className="font-medium text-foreground">Influence</span> (on-chain space MMO) · <span className="font-medium text-foreground">Ethereal / Topology</span> (game studios) · <span className="font-medium text-foreground">Voyager</span> · <span className="font-medium text-foreground">Starkscan</span> (block explorers) · <span className="font-medium text-foreground">Layerswap</span>, <span className="font-medium text-foreground">Orbiter</span> (bridges).
+            </p>
+          </div>
+        </div>
+
+        {/* ═══════ LAYER 2: OPTIMISTIC VS ZK ═══════ */}
+        <div id="s5-layer2" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-4">
+            <span className="text-xs font-black uppercase tracking-widest text-[#39B54A]">Section 05</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1 mb-1">Layer 2 Scaling: Optimistic vs ZK Rollups</h2>
+            <p className="text-sm text-muted-foreground">Both rollup types execute transactions off-chain and post results to Ethereum L1 — but they differ fundamentally in <em>how they prove correctness</em>.</p>
+          </div>
+          <div className="flex-1 min-h-0 flex flex-col gap-4">
+            {/* Head-to-head cards */}
+            <div className="flex gap-4 flex-1 min-h-0">
+              {/* Optimistic */}
+              <div className="flex-1 flex flex-col rounded-xl border-2 border-[#f97316]/40 bg-card overflow-hidden">
+                <div className="h-1.5 bg-[#f97316] shrink-0" />
+                <div className="flex flex-col flex-1 p-4 gap-3 min-h-0">
+                  <div className="shrink-0">
+                    <div className="font-black text-lg text-[#f97316]">Optimistic Rollups</div>
+                    <div className="text-xs text-muted-foreground font-medium">Assume valid until proven otherwise</div>
+                  </div>
+                  <div className="text-xs text-muted-foreground shrink-0">Transactions are posted to L1 with an <span className="font-semibold text-foreground">optimistic assumption</span> that they are valid. A 7-day challenge window allows anyone to submit a <span className="font-semibold text-[#f97316]">fraud proof</span> if they detect an invalid state transition.</div>
+                  {[
+                    { label: 'Proof type', value: 'Fraud proof (submitted if fraud detected)', color: '#f97316' },
+                    { label: 'Finality', value: '~7-day withdrawal delay (challenge window)', color: '#ef4444' },
+                    { label: 'Compute cost', value: 'Low — no proof generation overhead', color: '#39B54A' },
+                    { label: 'EVM compatibility', value: '✅ Full EVM equivalence — deploy existing Solidity', color: '#39B54A' },
+                    { label: 'Trust model', value: 'At least 1 honest verifier must watch the chain', color: '#f97316' },
+                    { label: 'Main chains', value: 'Arbitrum One, Optimism, Base', color: '#f97316' },
+                    { label: 'Best for', value: 'General DeFi, DApps needing EVM compatibility', color: '#6366f1' },
+                  ].map(r => (
+                    <div key={r.label} className="flex gap-2 text-xs shrink-0">
+                      <span className="text-muted-foreground w-28 shrink-0">{r.label}</span>
+                      <span style={{ color: r.color }} className="font-medium">{r.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ZK */}
+              <div className="flex-1 flex flex-col rounded-xl border-2 border-[#6366f1]/40 bg-card overflow-hidden">
+                <div className="h-1.5 bg-[#6366f1] shrink-0" />
+                <div className="flex flex-col flex-1 p-4 gap-3 min-h-0">
+                  <div className="shrink-0">
+                    <div className="font-black text-lg text-[#6366f1]">ZK Rollups</div>
+                    <div className="text-xs text-muted-foreground font-medium">Cryptographic validity proof — no trust required</div>
+                  </div>
+                  <div className="text-xs text-muted-foreground shrink-0">Each batch of transactions is accompanied by a <span className="font-semibold text-foreground">zero-knowledge validity proof</span> (SNARK or STARK) that mathematically proves correctness. L1 verifies the proof — no challenge window needed.</div>
+                  {[
+                    { label: 'Proof type', value: 'Validity proof (ZK-SNARK or ZK-STARK)', color: '#6366f1' },
+                    { label: 'Finality', value: '⚡ Minutes — as soon as L1 verifies the proof', color: '#39B54A' },
+                    { label: 'Compute cost', value: 'High — proof generation is computationally intensive', color: '#ef4444' },
+                    { label: 'EVM compatibility', value: '⚠️ Partial — zkEVM still maturing (Type 1–4 spectrum)', color: '#f97316' },
+                    { label: 'Trust model', value: 'Trustless — math proves correctness, not watchers', color: '#39B54A' },
+                    { label: 'Main chains', value: 'zkSync Era, Starknet, Polygon zkEVM, Scroll', color: '#6366f1' },
+                    { label: 'Best for', value: 'Payments, exchanges, privacy apps, high-security finance', color: '#6366f1' },
+                  ].map(r => (
+                    <div key={r.label} className="flex gap-2 text-xs shrink-0">
+                      <span className="text-muted-foreground w-28 shrink-0">{r.label}</span>
+                      <span style={{ color: r.color }} className="font-medium">{r.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Shared mechanics + decision rule */}
+            <div className="grid grid-cols-2 gap-4 shrink-0">
+              <div className="p-4 bg-card border border-border rounded-xl">
+                <div className="font-bold text-sm text-foreground mb-2">What both share</div>
+                <ul className="space-y-1.5 text-xs text-muted-foreground">
+                  <li className="flex gap-2"><span className="text-[#39B54A]">•</span>Execute transactions off-chain, post compressed data to Ethereum L1</li>
+                  <li className="flex gap-2"><span className="text-[#39B54A]">•</span>Inherit Ethereum's security — L1 is the final arbiter</li>
+                  <li className="flex gap-2"><span className="text-[#39B54A]">•</span>10–100× cheaper than L1 for end users</li>
+                  <li className="flex gap-2"><span className="text-[#39B54A]">•</span>Native bridges back to L1 (with different withdrawal times)</li>
+                  <li className="flex gap-2"><span className="text-[#39B54A]">•</span>ERC-20 tokens and ETH work on both</li>
+                </ul>
+              </div>
+              <div className="p-4 bg-[#6366f1]/8 border border-[#6366f1]/30 rounded-xl">
+                <div className="font-bold text-sm text-[#6366f1] mb-2">How to choose</div>
+                <ul className="space-y-1.5 text-xs text-muted-foreground">
+                  <li className="flex gap-2"><span className="text-[#f97316]">→</span><span><span className="font-semibold text-foreground">Need EVM compatibility today?</span> Use Arbitrum or Optimism — fastest path to deploy existing Solidity.</span></li>
+                  <li className="flex gap-2"><span className="text-[#6366f1]">→</span><span><span className="font-semibold text-foreground">Need instant finality for payments/exchange?</span> Use a ZK rollup — users don't want to wait 7 days to withdraw.</span></li>
+                  <li className="flex gap-2"><span className="text-[#6366f1]">→</span><span><span className="font-semibold text-foreground">Building privacy features?</span> ZK proofs are foundational — only ZK rollups enable transaction privacy by design.</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ═══════ L2 APPS — what runs on each rollup ═══════ */}
+        <div id="s5-l2apps" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">What runs on each rollup</h2>
+            <p className="text-sm text-muted-foreground mt-1">Mechanism (optimistic vs ZK) is one axis. Culture is another — each major rollup has developed a distinct app character that often matters more than the proving system.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-5 gap-2.5">
+            {[
+              {
+                emoji: '🟦',
+                name: 'Arbitrum One',
+                type: 'Optimistic',
+                typeColor: '#f97316',
+                color: '#28A0F0',
+                culture: 'DeFi-heavy · mature ecosystem',
+                tvl: '~$13B TVL — highest of any L2',
+                apps: [
+                  { name: 'GMX',     kind: 'Decentralised perpetuals' },
+                  { name: 'Camelot', kind: 'Native DEX, concentrated liquidity' },
+                  { name: 'Pendle',  kind: 'Yield-tokenisation primitive' },
+                  { name: 'Radiant', kind: 'Cross-chain lending' },
+                ],
+              },
+              {
+                emoji: '🔴',
+                name: 'Optimism · OP Stack',
+                type: 'Optimistic',
+                typeColor: '#f97316',
+                color: '#FF0420',
+                culture: 'Public-goods · modular framework',
+                tvl: 'OP Stack also powers Base, Worldchain, Mode, opBNB',
+                apps: [
+                  { name: 'Velodrome',   kind: 'Vote-escrow DEX, cornerstone of OP DeFi' },
+                  { name: 'Synthetix',   kind: 'Synthetic assets and on-chain perps' },
+                  { name: 'Worldcoin',   kind: 'Iris-scan identity, $WLD' },
+                  { name: 'Retro Funding', kind: 'Public-goods grants via OP DAO' },
+                ],
+              },
+              {
+                emoji: '🔵',
+                name: 'Base (Coinbase)',
+                type: 'OP Stack',
+                typeColor: '#f97316',
+                color: '#0052FF',
+                culture: 'Consumer & social-first',
+                tvl: '~$5B TVL · fastest user growth in 2024',
+                apps: [
+                  { name: 'Aerodrome',        kind: 'Velodrome fork, dominant Base DEX' },
+                  { name: 'Zora',             kind: 'Mint-anything creator economy' },
+                  { name: 'Farcaster Frames', kind: 'Mini-apps inside social posts' },
+                  { name: 'friend.tech',      kind: '2023 hype-and-bust — honest case study' },
+                ],
+              },
+              {
+                emoji: '⬛',
+                name: 'zkSync Era',
+                type: 'ZK',
+                typeColor: '#8b5cf6',
+                color: '#1E69FF',
+                culture: 'Native account abstraction',
+                tvl: 'Earlier zkRollup · ZK Stack now powers other ZK chains',
+                apps: [
+                  { name: 'SyncSwap',  kind: 'Native AMM' },
+                  { name: 'Maverick',  kind: 'Directional liquidity AMM' },
+                  { name: 'ZeroLend',  kind: 'Lending market' },
+                  { name: 'Native AA', kind: 'Every wallet is a smart contract by default' },
+                ],
+              },
+              {
+                emoji: '🟪',
+                name: 'Starknet',
+                type: 'ZK · Cairo',
+                typeColor: '#8b5cf6',
+                color: '#EC796B',
+                culture: 'Gaming · AI agents · on-chain compute',
+                tvl: 'Cairo-native VM · STARK proofs · STRK token',
+                apps: [
+                  { name: 'Realms / Loot Survivor', kind: 'Fully on-chain games (Dojo engine)' },
+                  { name: 'Ekubo',                  kind: 'Starknet-native concentrated AMM' },
+                  { name: 'Influence',              kind: 'On-chain space MMO' },
+                  { name: 'AI Agent experiments',   kind: 'Autonomous agents with on-chain state' },
+                ],
+              },
+            ].map(rollup => (
+              <motion.div
+                key={rollup.name}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-1.5 p-2.5 rounded-xl border-2 min-h-0"
+                style={{ borderColor: rollup.color + '55', backgroundColor: rollup.color + '0a' }}
+              >
+                <div className="shrink-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-base shrink-0 leading-none">{rollup.emoji}</span>
+                    <div className="font-black text-[12px] leading-tight" style={{ color: rollup.color }}>{rollup.name}</div>
+                  </div>
+                  <span
+                    className="inline-block text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded mt-1"
+                    style={{ backgroundColor: rollup.typeColor + '20', color: rollup.typeColor, border: `1px solid ${rollup.typeColor}40` }}
+                  >
+                    {rollup.type}
+                  </span>
+                </div>
+
+                <div className="shrink-0">
+                  <div className="text-[10px] text-foreground font-medium leading-tight">{rollup.culture}</div>
+                  <div className="text-[9px] text-muted-foreground italic leading-snug mt-0.5">{rollup.tvl}</div>
+                </div>
+
+                <div className="flex-1 min-h-0 flex flex-col gap-1">
+                  {rollup.apps.map(app => (
+                    <div
+                      key={app.name}
+                      className="rounded-md border bg-card/60 px-1.5 py-1 min-h-0"
+                      style={{ borderColor: rollup.color + '35' }}
+                    >
+                      <div className="text-[10px] font-bold leading-tight" style={{ color: rollup.color }}>{app.name}</div>
+                      <div className="text-[9px] text-muted-foreground leading-snug mt-0.5">{app.kind}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#8b5cf655', backgroundColor: '#8b5cf60d' }}>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#8b5cf6' }}>How to choose — </span>
+              DeFi-mature builder → Arbitrum or Base. Public goods or rollup-as-a-service → Optimism / OP Stack. Consumer & social with Coinbase reach → Base. Account-abstraction native → zkSync. Games or proof-heavy compute → Starknet. The mechanism (optimistic vs ZK) increasingly matters less than the ecosystem fit.
+            </p>
+          </div>
+        </div>
+
+        {/* ═══════ PRIVACY PRIMITIVES ═══════ */}
+        <div id="s5-privacy" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Privacy on a public ledger</h2>
+            <p className="text-sm text-muted-foreground mt-1">Public blockchains are radically transparent by default — every address, every balance, every transaction. Privacy requires extra cryptographic machinery, and each approach makes a different trade-off.</p>
+          </div>
+
+          <div className="shrink-0 mb-4 rounded-xl border p-3" style={{ borderColor: '#8b5cf655', backgroundColor: '#8b5cf60d' }}>
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#8b5cf6' }}>Why this is hard</p>
+            <p className="text-sm text-foreground mt-0.5 leading-snug">
+              You cannot just "encrypt" a blockchain — validators must verify state transitions. The trick is letting them verify that <span className="italic">a transaction is valid</span> without learning <span className="italic">who, what, or how much</span>. Different projects pick different combinations of cryptography to achieve this.
+            </p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-2.5">
+            {[
+              {
+                icon: '🛡️',
+                name: 'Zcash',
+                sub: 'L1 · zk-SNARKs · 2016',
+                color: '#f59e0b',
+                mechanism: 'Two transaction types: transparent (like Bitcoin) and shielded (zero-knowledge). Shielded txs use zk-SNARKs to prove ownership and conservation of value without revealing sender, recipient, or amount.',
+                tradeoff: 'Privacy is opt-in — most Zcash volume is transparent, weakening the anonymity set. Earlier shielded scheme required a one-time trusted setup ceremony.',
+                today: 'Halo arc removed trusted setup · still active · lost ground to mandatory-privacy chains.',
+              },
+              {
+                icon: '👁️‍🗨️',
+                name: 'Monero',
+                sub: 'L1 · ring sigs + stealth · 2014',
+                color: '#ef4444',
+                mechanism: 'Mandatory privacy by combining three techniques: ring signatures (sender hidden in a group of N), stealth addresses (recipient gets a fresh one-time address), and RingCT (amount hidden via Pedersen commitments).',
+                tradeoff: 'No optional transparency — auditing or compliance is genuinely hard, which is why exchanges have delisted XMR in many jurisdictions. Larger transaction size, slower verification.',
+                today: 'Most-used privacy coin · target of sustained regulator pressure · removed from major centralised exchanges since 2024.',
+              },
+              {
+                icon: '🧬',
+                name: 'Aztec · Aleo',
+                sub: 'ZK app-layer privacy · 2023+',
+                color: '#10b981',
+                mechanism: 'Programmable privacy. Aztec is a ZK rollup on Ethereum where smart contracts can have private state and inputs. Aleo is its own L1 with the same idea. Both use zk-SNARKs to prove arbitrary private computation.',
+                tradeoff: 'Much more flexible than fixed-purpose privacy coins (build any private dApp), but the dev tooling is newer and more complex (Noir, Leo languages). Privacy is at the contract level, not always at the chain level.',
+                today: 'Aztec mainnet rolled out 2024-25 · target use cases: private DeFi, KYC-without-disclosure, confidential payroll.',
+              },
+              {
+                icon: '🔀',
+                name: 'Mixers · sanctioned',
+                sub: 'Tornado Cash · cautionary case',
+                color: '#6b7280',
+                mechanism: 'Pool deposits from many users, then let each withdraw to a fresh address — breaking the on-chain link between sender and recipient. Used both for legitimate privacy and for laundering hacked funds.',
+                tradeoff: 'Smart-contract mixers (no operator) are immutable and credibly neutral, but exactly that property made them a regulator target. Users who deposited legitimately have struggled to withdraw to compliant exchanges.',
+                today: 'OFAC sanctioned Tornado Cash (Aug 2022) · Samourai Wallet co-founders arrested 2024 · regulatory line for "privacy tooling" still being drawn.',
+              },
+            ].map(p => (
+              <motion.div
+                key={p.name}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-1.5 p-2.5 rounded-xl border-2 min-h-0"
+                style={{ borderColor: p.color + '55', backgroundColor: p.color + '0a' }}
+              >
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="text-lg shrink-0 leading-none">{p.icon}</span>
+                  <div className="min-w-0">
+                    <div className="font-black text-[12px] leading-tight" style={{ color: p.color }}>{p.name}</div>
+                    <div className="text-[9px] text-muted-foreground leading-tight">{p.sub}</div>
+                  </div>
+                </div>
+
+                <div className="rounded-md border bg-card/60 p-1.5" style={{ borderColor: p.color + '30' }}>
+                  <div className="text-[8px] font-bold uppercase tracking-wider" style={{ color: p.color }}>Mechanism</div>
+                  <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{p.mechanism}</div>
+                </div>
+
+                <div className="rounded-md border bg-card/60 p-1.5 flex-1 min-h-0" style={{ borderColor: p.color + '30' }}>
+                  <div className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground">Trade-off</div>
+                  <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{p.tradeoff}</div>
+                </div>
+
+                <div className="rounded-md p-1.5 border-l-2" style={{ borderColor: p.color, backgroundColor: p.color + '12' }}>
+                  <div className="text-[8px] font-black uppercase tracking-widest" style={{ color: p.color }}>Today</div>
+                  <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{p.today}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#f59e0b55', backgroundColor: '#f59e0b0d' }}>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#f59e0b' }}>The regulatory frontier — </span>
+              Privacy on public chains is the most contested area in crypto. OFAC sanctioned Tornado Cash in 2022 and the Samourai Wallet team was arrested in 2024 — both for non-custodial code. The line between "privacy tool" and "money-laundering infrastructure" is being drawn in court right now. Build with this in mind, and design with selective-disclosure or proof-of-compliance options where regulation matters.
+            </p>
+          </div>
+        </div>
+
+        {/* ═══════ EVALUATE A PROJECT ═══════ */}
+        <div id="s5-evaluate" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">How to evaluate a project — a working checklist</h2>
+            <p className="text-sm text-muted-foreground mt-1">Before you trust a protocol with your funds — or build on top of one — run through these six axes. The best projects pass most of them. Most fail at least one.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-2.5">
+            {[
+              {
+                icon: '👥',
+                title: 'Team & track record',
+                color: '#6366f1',
+                green: ['Doxxed founders with verifiable history', 'Prior shipped products in the space', 'Active GitHub commits, not just whitepapers'],
+                red:   ['Anonymous team with no on-chain history', 'Founders previously linked to rugged projects', 'LinkedIn profiles created last month'],
+              },
+              {
+                icon: '🔍',
+                title: 'Smart contract & audits',
+                color: '#10b981',
+                green: ['Multiple audits from reputable firms (Trail of Bits, ConsenSys Diligence, OpenZeppelin)', 'Findings publicly addressed', 'Verified source on Etherscan'],
+                red:   ['No audits, or audits older than the current code', '"Audit" by an unknown firm', 'Upgradeable proxy with single-key admin · no timelock'],
+              },
+              {
+                icon: '💰',
+                title: 'Token distribution',
+                color: '#f59e0b',
+                green: ['Clear vesting schedule for team & investors', 'Top 10 holders < 30% of supply', 'On-chain treasury controlled by multisig or DAO'],
+                red:   ['Team unlock cliffs that dump on retail', 'Top wallet holds > 50% of supply', '"Treasury" is one EOA controlled by anon dev'],
+              },
+              {
+                icon: '🌊',
+                title: 'Liquidity & lock-ups',
+                color: '#8b5cf6',
+                green: ['LP tokens locked for 6-12+ months', 'Deep pools across multiple DEXes', 'Buy/sell pressure roughly symmetric'],
+                red:   ['Liquidity provided by team without lock', 'Single thin pool · withdraw and the price collapses', 'Tax-on-transfer tokens (especially asymmetric)'],
+              },
+              {
+                icon: '📣',
+                title: 'Marketing & promises',
+                color: '#ec4899',
+                green: ['Documentation that explains trade-offs honestly', 'Clear roadmap with realistic timelines', 'Engagement with critical questions'],
+                red:   ['Guaranteed APY · "risk-free yield" · "100x potential"', 'Celebrity / influencer pump campaigns', 'Banned-word use: "next Bitcoin", "Ethereum killer"'],
+              },
+              {
+                icon: '🔬',
+                title: 'On-chain analysis',
+                color: '#06b6d4',
+                green: ['Real users (unique addresses growing organically)', 'TVL and volume verifiable on DeFiLlama', 'Diverse holder base across cohorts'],
+                red:   ['Volume from a few wallets cycling each other (wash trading)', 'TVL inflated by recursive lending of one asset', 'Snapshot of daily active addresses suspiciously round'],
+              },
+            ].map(c => (
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-2 p-3 rounded-xl border-2 min-h-0"
+                style={{ borderColor: c.color + '50', backgroundColor: c.color + '08' }}
+              >
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-lg shrink-0 leading-none">{c.icon}</span>
+                  <div className="font-black text-sm leading-tight" style={{ color: c.color }}>{c.title}</div>
+                </div>
+
+                <div className="rounded-md border bg-card/60 p-1.5 flex-1 min-h-0" style={{ borderColor: '#39B54A40' }}>
+                  <div className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: '#39B54A' }}>✓ Green flags</div>
+                  {c.green.map((item, i) => (
+                    <div key={i} className="text-[10px] text-muted-foreground leading-snug">· {item}</div>
+                  ))}
+                </div>
+
+                <div className="rounded-md border bg-card/60 p-1.5 flex-1 min-h-0" style={{ borderColor: '#ED1C2440' }}>
+                  <div className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: '#ED1C24' }}>✗ Red flags</div>
+                  {c.red.map((item, i) => (
+                    <div key={i} className="text-[10px] text-muted-foreground leading-snug">· {item}</div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#06b6d455', backgroundColor: '#06b6d40d' }}>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#06b6d4' }}>Tools you can use today — </span>
+              <span className="font-medium text-foreground">Etherscan / block explorers</span> (verify contracts, read holders) · <span className="font-medium text-foreground">DeFiLlama</span> (TVL, real volumes) · <span className="font-medium text-foreground">Token Terminal</span> (revenue, P/E equivalents) · <span className="font-medium text-foreground">Nansen / Arkham</span> (wallet labelling, smart-money flows) · <span className="font-medium text-foreground">Dune dashboards</span> (custom on-chain analytics). Most red flags above are visible in 10 minutes if you know where to look.
+            </p>
+          </div>
+        </div>
+
+        {/* ═══════ DECISION FRAMEWORK — Five Questions ═══════ */}
+        <div id="s5-decision" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Choosing a platform — five questions, in order</h2>
+            <p className="text-sm text-muted-foreground mt-1">Answer these five questions sequentially and the platform space narrows fast. The order matters — skip to Q3 before settling Q1 and you'll pick the wrong category entirely.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid auto-rows-fr gap-3">
+            {[
+              {
+                n: '1',
+                q: 'Permission model',
+                ask: 'Should anyone be able to read & write, or only known parties?',
+                answers: [
+                  { tag: 'Anyone (permissionless)', recs: 'Bitcoin · Ethereum · L2s · Cosmos · Solana', color: '#6366f1' },
+                  { tag: 'Known parties only (permissioned)', recs: 'Hyperledger Fabric · Corda · Quorum / Besu', color: '#39B54A' },
+                ],
+              },
+              {
+                n: '2',
+                q: 'Programmability',
+                ask: 'Just transfer value, or run application logic on-chain?',
+                answers: [
+                  { tag: 'Value transfer only', recs: 'Bitcoin L1 · Lightning Network for retail payments', color: '#f59e0b' },
+                  { tag: 'Smart contracts needed', recs: 'Ethereum + EVM family · Cosmos SDK · Cairo / Starknet', color: '#6366f1' },
+                ],
+              },
+              {
+                n: '3',
+                q: 'Throughput & cost ceiling',
+                ask: 'How sensitive is the app to gas costs and confirmation latency?',
+                answers: [
+                  { tag: 'Low — settlement / high-value txs', recs: 'Ethereum L1 — accept higher cost for maximum security', color: '#627EEA' },
+                  { tag: 'High — consumer / DeFi / gaming', recs: 'Arbitrum · Base · Optimism · Solana · Avalanche L1', color: '#ec4899' },
+                ],
+              },
+              {
+                n: '4',
+                q: 'Privacy needs',
+                ask: 'Does the app require selective or full data confidentiality?',
+                answers: [
+                  { tag: 'No privacy requirements', recs: 'Default to your chain from Q3 — no extra machinery needed', color: '#6b7280' },
+                  { tag: 'Privacy required', recs: 'Aztec · Starknet (ZK creds) · Zcash · Hyperledger Fabric channels', color: '#8b5cf6' },
+                ],
+              },
+              {
+                n: '5',
+                q: 'Sovereignty vs shared security',
+                ask: 'Need full control over consensus, gas token, upgrades — or inherit security from day one?',
+                answers: [
+                  { tag: 'Sovereignty (own validator set)', recs: 'Cosmos zone via Cosmos SDK · Avalanche L1 (ACP-77)', color: '#22d3ee' },
+                  { tag: 'Shared security (inherit from L1)', recs: 'Polkadot parachain · Ethereum rollup · Babylon-secured chain', color: '#ED1C24' },
+                ],
+              },
+            ].map(step => (
+              <div key={step.n} className="rounded-xl border bg-card p-3 min-h-0 flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                  <div className="size-7 rounded-full flex items-center justify-center text-sm font-black text-white shrink-0" style={{ backgroundColor: '#6366f1' }}>{step.n}</div>
+                  <div className="font-bold text-sm text-foreground">{step.q}</div>
+                  <div className="text-xs text-muted-foreground italic ml-auto text-right">{step.ask}</div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 ml-10">
+                  {step.answers.map((a, i) => (
+                    <div key={i} className="rounded-md border px-2.5 py-1.5" style={{ borderColor: a.color + '40', backgroundColor: a.color + '0d' }}>
+                      <div className="text-[10px] font-black uppercase tracking-wider mb-0.5" style={{ color: a.color }}>{a.tag}</div>
+                      <div className="text-xs text-muted-foreground leading-snug">{a.recs}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 rounded-xl border p-3" style={{ borderColor: '#6366f155', backgroundColor: '#6366f10d' }}>
+            <p className="text-sm text-muted-foreground leading-snug">
+              <span className="font-bold" style={{ color: '#6366f1' }}>The honest meta-answer — </span>
+              Most projects get this wrong by picking a platform first and forcing the use case onto it. If the use case doesn't actually need a blockchain at all, that's a valid answer too — a Postgres database with row-level signatures is often the right tool.
+            </p>
+          </div>
+        </div>
+
+        {/* ═══════ DECISION EXAMPLES — Worked Examples ═══════ */}
+        <div id="s5-decision-examples" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Platform selection — worked examples</h2>
+            <p className="text-sm text-muted-foreground mt-1">Seven use cases walked through the five-question framework to a concrete recommendation. Read the "why" column to understand which axis drove the decision.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-3">
+            {[
+              { use: 'Cross-border remittance, low value',        rec: 'Bitcoin Lightning · USDC on Base / Solana',         why: 'Low cost · sub-second finality · users already trust USD-denominated value',                     color: '#f59e0b' },
+              { use: 'High-value DeFi protocol',                  rec: 'Ethereum L1 + L2 deployment',                      why: 'L1 for vault security, L2 for user flow · deepest liquidity · most auditors available',          color: '#627EEA' },
+              { use: 'Multi-company supply chain',                 rec: 'Hyperledger Fabric channel',                       why: 'Permissioned access · selective data sharing per channel · no token economics required',          color: '#39B54A' },
+              { use: 'Privacy-preserving identity / KYC',         rec: 'Starknet (Cairo + ZK creds) · Aztec',              why: 'Programmable ZK privacy · verifiable claims without disclosure · Ethereum L1 settlement',         color: '#8b5cf6' },
+              { use: 'On-chain game with tradable assets',         rec: 'Immutable · Ronin · Starknet (Dojo) · Base',       why: 'High throughput · low gas per action · gaming-focused tooling · existing player ecosystems',      color: '#ec4899' },
+              { use: 'Sovereign app-chain, custom consensus',      rec: 'Cosmos zone via Cosmos SDK',                       why: 'Full control over VM, gas token, governance · trade-off: bootstrap your own validator set',       color: '#22d3ee' },
+              { use: 'Cross-border government credentials',        rec: 'EU EBSI (Fabric-based) · purpose-built consortium', why: 'Regulator-mandated participation · interop required at policy level · no public token needed',  color: '#6366f1' },
+            ].map((c, i, arr) => (
+              <div
+                key={c.use}
+                className={`rounded-xl border p-4 min-h-0 flex flex-col gap-1.5${i === arr.length - 1 && arr.length % 2 !== 0 ? ' col-span-2' : ''}`}
+                style={{ borderColor: c.color + '50', backgroundColor: c.color + '08' }}
+              >
+                <div className="text-xs font-black uppercase tracking-wider leading-tight" style={{ color: c.color }}>{c.use}</div>
+                <div className="text-base font-bold text-foreground leading-snug">→ {c.rec}</div>
+                <div className="text-sm text-muted-foreground italic leading-snug">{c.why}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ═══════ QUIZ — Optimistic vs ZK withdrawal latency ═══════ */}
+        <div id="s5-quiz" className="h-full">
+          <QuizSlide
+            question="A user withdraws funds from Arbitrum (an optimistic rollup) back to Ethereum L1. The standard withdrawal takes ~7 days. Why?"
+            options={[
+              { text: 'L1 block time is slower than L2 block time, so L1 must catch up before processing the withdrawal.', correct: false },
+              { text: 'Optimistic rollups assume transactions valid by default. The 7-day "challenge window" lets anyone submit a fraud proof if the L2 state is invalid; until that window closes, withdrawals can\'t be safely finalised on L1.', correct: true },
+              { text: 'Arbitrum batches withdrawals weekly to amortise gas costs across users.', correct: false },
+              { text: 'Ethereum L1 deliberately rate-limits L2 withdrawals to prevent rollup-induced congestion.', correct: false },
+            ]}
+            explanation="The 7-day delay is structural to the optimistic rollup model. The L2 sequencer posts state roots to L1 with the assumption they're valid; anyone watching the chain can challenge an invalid root by submitting a fraud proof during the challenge window. Until that window expires, L1 cannot trust the state root enough to release withdrawals. ZK rollups don't have this delay — each batch ships with a validity proof that L1 verifies cryptographically, so withdrawals can finalise in one L1 block. Third-party fast bridges (Across, Hop, Stargate) let users skip the wait by paying liquidity providers a small premium up front."
+          />
+        </div>
+
+        {/* ═══════ QUIZ 2 — Sovereignty vs shared security ═══════ */}
+        <div id="s5-quiz-2" className="h-full">
+          <QuizSlide
+            question="A team is launching a new app-specific blockchain. They need full control over consensus algorithm, gas token, and upgrade governance. Which model best fits — and what's the trade-off?"
+            options={[
+              { text: 'Polkadot parachain via Coretime — sovereignty within the relay chain\'s shared security envelope, no trade-off.', correct: false },
+              { text: 'Cosmos zone via Cosmos SDK — full sovereignty over consensus, gas, and upgrades; the trade-off is bootstrapping their own validator set without inheriting any external security.', correct: true },
+              { text: 'Avalanche L1 — sovereign chains, but they must use Snowman consensus and pay AVAX-denominated subscription fees.', correct: false },
+              { text: 'All three give equal sovereignty; the decision is purely cost-driven.', correct: false },
+            ]}
+            explanation="Cosmos zones are sovereign by design. Each chain picks its own consensus engine (CometBFT is default, but anything goes), its own gas token, its own governance and upgrade rules. The trade-off is real: the team must recruit validators, design economic security, and bootstrap a token of value to pay them — no shared security comes for free. Polkadot parachains share the relay chain's validator set (great), but must conform to the relay's runtime model and Coretime schedule (less sovereignty than Cosmos). Avalanche L1s (formerly Subnets, renamed via ACP-13/77 in 2024) do allow custom VMs and validator subsets, but in practice most run Snowman variants and pay validator fees in AVAX. The honest framing: shared security versus sovereignty is a trade-off, not a tier list."
+          />
+        </div>
+
+        {/* ═══════ TAKEAWAYS ═══════ */}
+        <div id="s5-takeaways" className="h-full">
+          <TakeawaySlide
+            title="Section 05 — Key Takeaways"
+            takeaways={[
+              'ZK rollups use cryptographic validity proofs — no challenge window, instant finality, and the foundation for verifiable privacy',
+              'Optimistic rollups (Arbitrum, Base, Optimism) offer full EVM compatibility with lower computation cost — at the price of a 7-day withdrawal delay',
+              'Each L2 has a distinct culture: Arbitrum for DeFi depth, Base for consumer apps, Starknet for games and ZK-native compute',
+              'Privacy on public chains requires extra cryptographic machinery — the regulatory line for "privacy tooling" is still being drawn',
+              'Run five questions before picking a platform: permission, programmability, throughput, privacy, and sovereignty',
+            ]}
+          />
+        </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}

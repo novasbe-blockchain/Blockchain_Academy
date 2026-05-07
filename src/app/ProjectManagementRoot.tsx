@@ -1,5 +1,6 @@
-import { Outlet } from 'react-router';
+import { Outlet, useLocation } from 'react-router';
 import { CourseNav } from './components/navigation/CourseNav';
+import { SlideNavButtons } from './components/navigation/SlideNavButtons';
 
 const BASE = '/project-management';
 
@@ -16,12 +17,19 @@ const sections = [
 ];
 
 export function ProjectManagementRoot() {
+  const location = useLocation();
+  const normalizedPath = location.pathname.replace(/\/$/, '');
+  const currentIdx = sections.findIndex(s => s.path === normalizedPath);
+  const nextChapterPath = currentIdx >= 0 && currentIdx < sections.length - 1
+    ? sections[currentIdx + 1].path : undefined;
+
   return (
     <div className="h-full w-full flex flex-col">
       <CourseNav base={BASE} sections={sections} accentColor="#f97316" />
       <main className="flex-1 overflow-hidden">
         <Outlet />
       </main>
+      <SlideNavButtons nextChapterPath={nextChapterPath} />
     </div>
   );
 }

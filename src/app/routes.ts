@@ -21,7 +21,9 @@ import { BP_Section1 } from "./pages/blockchain-platforms/Section1";
 import { BP_Section2 } from "./pages/blockchain-platforms/Section2";
 import { BP_Section3 } from "./pages/blockchain-platforms/Section3";
 import { BP_Section4 } from "./pages/blockchain-platforms/Section4";
+import { BP_Section5 } from "./pages/blockchain-platforms/Section5";
 import { Conclusion } from "./pages/blockchain-platforms/Conclusion";
+import { BP_Bibliography } from "./pages/blockchain-platforms/Bibliography";
 import { SmartContractsHome } from "./pages/smart-contracts/Home";
 import { SC_LearningObjectives } from "./pages/smart-contracts/LearningObjectives";
 import { SC_Section1 } from "./pages/smart-contracts/Section1";
@@ -30,6 +32,7 @@ import { SC_Section3 } from "./pages/smart-contracts/Section3";
 import { SC_Section4 } from "./pages/smart-contracts/Section4";
 import { SC_Section5 } from "./pages/smart-contracts/Section5";
 import { SC_Conclusion } from "./pages/smart-contracts/Conclusion";
+import { SC_Bibliography } from "./pages/smart-contracts/Bibliography";
 import { ProjectManagementRoot } from "./ProjectManagementRoot";
 import { ProjectManagementHome } from "./pages/project-management/Home";
 import { PM_LearningObjectives } from "./pages/project-management/LearningObjectives";
@@ -80,6 +83,7 @@ export const router = createBrowserRouter([
           { path: "section-4", Component: SC_Section4 },
           { path: "section-5", Component: SC_Section5 },
           { path: "conclusion", Component: SC_Conclusion },
+          { path: "bibliography", Component: SC_Bibliography },
         ],
       },
 
@@ -95,7 +99,9 @@ export const router = createBrowserRouter([
           { path: "section-2", Component: BP_Section2 },
           { path: "section-3", Component: BP_Section3 },
           { path: "section-4", Component: BP_Section4 },
+          { path: "section-5", Component: BP_Section5 },
           { path: "conclusion", Component: Conclusion },
+          { path: "bibliography", Component: BP_Bibliography },
         ],
       },
 
