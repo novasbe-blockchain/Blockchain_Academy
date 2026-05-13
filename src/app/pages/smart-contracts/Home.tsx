@@ -21,23 +21,37 @@ const sections = [
   },
   {
     number: '03',
-    title: 'Case Studies',
-    description: 'Real-world deployments: Home Depot supply chain, real-estate NFT deeds, and vehicle titles at the California DMV.',
+    title: 'Industries & Case Studies',
+    description: 'Five industry verticals (DeFi, Gaming/NFTs, RWA, Supply Chain, Digital Cert) plus eight flagship cases including Walmart, Santander, Estonia, The DAO, and ASX.',
     path: `${BASE}/section-3`,
     gradient: 'from-[#6366f1] to-[#22d3ee]',
   },
   {
     number: '04',
-    title: 'Dehype Smart Contracts',
-    description: 'The oracle problem, practical challenges and limitations, and an honest look at where smart contracts fall short.',
+    title: 'Critical Thinking',
+    description: 'Decision framework: when to use a smart contract — and when not to. Plus the 5-pillar adoption model for serious business deployment.',
     path: `${BASE}/section-4`,
-    gradient: 'from-[#ED1C24] to-[#6366f1]',
+    gradient: 'from-[#6366f1] to-[#8b5cf6]',
   },
   {
     number: '05',
+    title: 'Limitations & Risks',
+    description: 'Oracle problem, blockchain trilemma, security risks (reentrancy, flash loans, MEV), cost realities, and regulatory uncertainty.',
+    path: `${BASE}/section-5`,
+    gradient: 'from-[#ED1C24] to-[#6366f1]',
+  },
+  {
+    number: '06',
+    title: 'Build & Integration',
+    description: 'ERC standards, EIP process, frameworks (Hardhat / Foundry), 17-platform comparison, integration patterns, and AI-driven development.',
+    path: `${BASE}/section-6`,
+    gradient: 'from-[#6366f1] to-[#22d3ee]',
+  },
+  {
+    number: '07',
     title: 'Team Project',
     description: 'Design a smart contract business application, map stakeholders, identify risks, and present your case to the class.',
-    path: `${BASE}/section-5`,
+    path: `${BASE}/section-7`,
     gradient: 'from-[#39B54A] to-[#6366f1]',
   },
   {
@@ -83,10 +97,11 @@ export function SmartContractsHome() {
 
           <div className="flex items-center justify-center gap-4 mb-12">
             {[
-              { label: '5 Sections' },
-              { label: '30+ Slides' },
-              { label: '3 Case Studies' },
-              { label: 'Team Project' },
+              { label: '7 Sections' },
+              { label: '90+ Slides' },
+              { label: '5 Industry Verticals' },
+              { label: '8 Case Studies' },
+              { label: '7 Interactive Demos' },
             ].map(b => (
               <div key={b.label} className="px-4 py-2 bg-card rounded-lg border border-border">
                 <span className="text-sm text-muted-foreground">{b.label}</span>

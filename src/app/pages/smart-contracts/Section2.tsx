@@ -6,6 +6,9 @@ import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { Cog, Check, X } from 'lucide-react';
 
+import imgDisintermediation from '../../../assets/sc/disintermediation.png';
+import imgDappStack         from '../../../assets/sc/dapp-stack.png';
+
 const chapters = [
   { id: 's2-workflow',      label: 'Workflow' },
   { id: 's2-components',   label: 'Core Components' },
@@ -17,9 +20,10 @@ const chapters = [
   { id: 's2-capabilities', label: 'New Capabilities' },
   { id: 's2-why',          label: 'Why Build with SC?' },
   { id: 's2-gas',          label: 'Gas & Tx Economics' },
+  { id: 's2-reshape',      label: 'Reshape Business' },
   { id: 's2-quiz',         label: 'Quizzes' },
-  { id: 's2-ex-gas',       label: '🎯 Exercise: Gas' },
-  { id: 's2-ex-stack',     label: '🎯 Exercise: Stack' },
+  { id: 's2-ex-gas',       label: '🧩 Exercise: Gas' },
+  { id: 's2-ex-stack',     label: '🧩 Exercise: Stack' },
   { id: 's2-takeaways',    label: 'Takeaways' },
   { id: 's2-summary',      label: 'Summary' },
 ];
@@ -68,7 +72,7 @@ function GasRankingExercise() {
     <div className="h-full flex flex-col p-6 lg:p-8">
       <div className="shrink-0 flex items-center justify-between mb-5">
         <div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">🎯 Exercise</span>
+          <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">🧩 Exercise</span>
           <h2 className="text-2xl font-bold text-foreground mt-1">Gas Estimation Challenge</h2>
           <p className="text-muted-foreground text-sm">Click the 5 operations in order from <span className="text-[#39B54A] font-semibold">cheapest</span> to <span className="text-[#ED1C24] font-semibold">most expensive</span>.</p>
         </div>
@@ -232,7 +236,7 @@ function DAppStackExercise() {
     <div className="h-full flex flex-col p-6 lg:p-8">
       <div className="shrink-0 flex items-center justify-between mb-4">
         <div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">🎯 Exercise</span>
+          <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">🧩 Exercise</span>
           <h2 className="text-2xl font-bold text-foreground mt-1">Build the dApp Stack</h2>
           <p className="text-muted-foreground text-sm">
             {selected ? <span className="text-[#6366f1] font-semibold">Now click a layer to place <span className="font-black">{STACK_ITEMS.find(i=>i.id===selected)?.label}</span></span>
@@ -338,7 +342,7 @@ export function SC_Section2() {
   return (
     <div className="h-full w-full flex overflow-hidden">
       <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
-        <SectionNav chapters={chapters} />
+        <SectionNav chapters={chapters} accentColor="#6366f1" />
       </div>
       <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
         <div className="slide-flow">
@@ -426,7 +430,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">Every smart contract is made of five building blocks — understanding them is understanding the language of Web3.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             {/* Left: component cards */}
             <div className="flex flex-col gap-3">
@@ -505,7 +509,7 @@ export function SC_Section2() {
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1 mb-1">Reading a Smart Contract</h2>
             <p className="text-sm text-muted-foreground">You don't need to write Solidity — but every PM, auditor, and analyst must be able to read it. Here is a minimal ERC-20 token contract, fully annotated.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             {/* Code block */}
             <div className="bg-[#0d1117] rounded-xl overflow-auto p-4 font-mono text-sm leading-relaxed border border-border">
               {[
@@ -581,7 +585,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">Why smart contracts run the same way, everywhere, every time.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             {/* Left: four properties */}
             <div className="flex flex-col gap-3">
@@ -761,7 +765,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">A dApp is not just a smart contract — it's a full stack where blockchain is one layer.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             {/* Left: three pillars */}
             <div className="flex flex-col gap-3">
@@ -801,51 +805,13 @@ export function SC_Section2() {
               ))}
             </div>
 
-            {/* Right: full stack diagram */}
-            <div className="flex flex-col gap-2">
+            {/* Right: dApp stack diagram */}
+            <div className="flex flex-col gap-3">
               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Full dApp stack</div>
-
-              {/* User */}
-              <div className="flex justify-center py-2">
-                <div className="px-6 py-2 bg-muted border border-border rounded-full text-sm font-bold text-foreground">👤 User</div>
+              <div className="shrink-0 flex items-center justify-center p-4 bg-white rounded-xl border border-border">
+                <img src={imgDappStack} alt="dApp stack: User → Browser → Web Server (Front-end) → Smart Contracts → Ethereum Virtual Machine → Ethereum Blockchain" className="max-h-80 w-auto object-contain" />
               </div>
-              <div className="flex justify-center text-muted-foreground text-sm">↕ interacts via</div>
-
-              {/* Frontend layer */}
-              <div className="p-3 border-2 border-[#f59e0b]/50 bg-[#f59e0b]/08 rounded-xl">
-                <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest mb-2">🖥️ Frontend Layer</div>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {['React / Next.js', 'MetaMask Wallet', 'RPC (Infura)'].map(c => (
-                    <div key={c} className="text-center text-[10px] py-1 px-1.5 bg-[#f59e0b]/12 border border-[#f59e0b]/25 rounded text-muted-foreground">{c}</div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex justify-center text-muted-foreground text-sm">↕ calls</div>
-
-              {/* Blockchain layer */}
-              <div className="p-3 border-2 border-[#6366f1]/50 bg-[#6366f1]/08 rounded-xl">
-                <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest mb-2">🔗 Blockchain Layer</div>
-                <div className="grid grid-cols-2 gap-1.5 mb-1.5">
-                  {['Smart Contract', 'Virtual Machine (EVM)', 'Blockchain Nodes', 'Consensus (PoS)'].map(c => (
-                    <div key={c} className="text-center text-[10px] py-1 px-1.5 bg-[#6366f1]/12 border border-[#6366f1]/25 rounded text-muted-foreground">{c}</div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex justify-center text-muted-foreground text-sm">↕ stores / reads</div>
-
-              {/* Off-chain layer */}
-              <div className="p-3 border-2 border-[#39B54A]/50 bg-[#39B54A]/08 rounded-xl">
-                <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-2">🗄️ Off-Chain Layer</div>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {['IPFS / Arweave', 'The Graph', 'Oracles (Chainlink)'].map(c => (
-                    <div key={c} className="text-center text-[10px] py-1 px-1.5 bg-[#39B54A]/12 border border-[#39B54A]/25 rounded text-muted-foreground">{c}</div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-auto p-2.5 bg-[#6366f1]/10 border border-[#6366f1]/25 rounded-lg text-xs text-muted-foreground">
+              <div className="shrink-0 p-2.5 bg-[#6366f1]/10 border border-[#6366f1]/25 rounded-lg text-xs text-muted-foreground">
                 <span className="font-semibold text-foreground">Key insight:</span> only the blockchain layer is decentralized. Most dApps still rely on centralized hosting (Vercel, AWS) for their frontend — a nuance that's often overlooked.
               </div>
             </div>
@@ -860,10 +826,10 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">Infrastructure and contracts — both transformed by the same underlying shift.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 flex flex-col gap-4">
 
             {/* App infrastructure comparison */}
-            <div className="flex flex-col min-h-0">
+            <div className="flex flex-col min-h-0 flex-1">
               <div className="text-xs font-semibold text-[#6366f1] uppercase tracking-widest mb-2 shrink-0">App Infrastructure</div>
               <div className="flex-1 min-h-0 bg-card border border-border rounded-xl overflow-hidden flex flex-col">
                 {/* Header */}
@@ -880,19 +846,24 @@ export function SC_Section2() {
                     { prop: '🗄️ Data storage', trad: 'Private databases', dapp: 'On-chain state + IPFS' },
                     { prop: '💰 Cost model', trad: 'Subscription / ads', dapp: 'Gas per transaction' },
                     { prop: '🚫 Censorship', trad: 'Platform can ban users', dapp: 'No one can block valid txs' },
-                  ].map((r, i, arr) => (
-                    <div key={r.prop} className={`flex-1 grid grid-cols-3 text-xs ${i < arr.length - 1 ? 'border-b border-border' : ''}`}>
-                      <div className="px-2.5 flex items-center border-r border-border font-medium text-muted-foreground">{r.prop}</div>
-                      <div className="px-2.5 flex items-center justify-center border-r border-border text-muted-foreground text-center">{r.trad}</div>
-                      <div className="px-2.5 flex items-center justify-center text-muted-foreground text-center">{r.dapp}</div>
-                    </div>
-                  ))}
+                  ].map((r, i, arr) => {
+                    const odd = i % 2 === 1;
+                    const tradBg  = odd ? 'rgba(237, 28, 36, 0.07)'  : 'rgba(237, 28, 36, 0.03)';
+                    const dappBg  = odd ? 'rgba(57, 181, 74, 0.08)'  : 'rgba(57, 181, 74, 0.03)';
+                    return (
+                      <div key={r.prop} className={`flex-1 grid grid-cols-3 text-xs ${i < arr.length - 1 ? 'border-b border-border' : ''}`}>
+                        <div className={`px-2.5 flex items-center border-r border-border font-semibold text-foreground ${odd ? 'bg-muted/60' : 'bg-muted/30'}`}>{r.prop}</div>
+                        <div className="px-2.5 flex items-center justify-center border-r border-[#ED1C24]/15 text-muted-foreground text-center" style={{ backgroundColor: tradBg }}>{r.trad}</div>
+                        <div className="px-2.5 flex items-center justify-center text-muted-foreground text-center" style={{ backgroundColor: dappBg }}>{r.dapp}</div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
 
             {/* Contract comparison */}
-            <div className="flex flex-col min-h-0">
+            <div className="flex flex-col min-h-0 flex-1">
               <div className="text-xs font-semibold text-[#8b5cf6] uppercase tracking-widest mb-2 shrink-0">Contract Execution</div>
               <div className="flex-1 min-h-0 bg-card border border-border rounded-xl overflow-hidden flex flex-col">
                 {/* Header */}
@@ -909,13 +880,18 @@ export function SC_Section2() {
                     { prop: '🔐 Trust',        trad: 'Trust both parties + courts', smart: 'Trust the code only' },
                     { prop: '👁️ Transparency', trad: 'Private, often ambiguous', smart: 'Public, deterministic code' },
                     { prop: '🌍 Geography',    trad: 'Jurisdiction-dependent', smart: 'Borderless, always enforceable' },
-                  ].map((r, i, arr) => (
-                    <div key={r.prop} className={`flex-1 grid grid-cols-3 text-xs ${i < arr.length - 1 ? 'border-b border-border' : ''}`}>
-                      <div className="px-2.5 flex items-center border-r border-border font-medium text-muted-foreground">{r.prop}</div>
-                      <div className="px-2.5 flex items-center justify-center border-r border-border text-muted-foreground text-center">{r.trad}</div>
-                      <div className="px-2.5 flex items-center justify-center text-muted-foreground text-center">{r.smart}</div>
-                    </div>
-                  ))}
+                  ].map((r, i, arr) => {
+                    const odd = i % 2 === 1;
+                    const tradBg  = odd ? 'rgba(237, 28, 36, 0.07)'  : 'rgba(237, 28, 36, 0.03)';
+                    const smartBg = odd ? 'rgba(99, 102, 241, 0.08)' : 'rgba(99, 102, 241, 0.03)';
+                    return (
+                      <div key={r.prop} className={`flex-1 grid grid-cols-3 text-xs ${i < arr.length - 1 ? 'border-b border-border' : ''}`}>
+                        <div className={`px-2.5 flex items-center border-r border-border font-semibold text-foreground ${odd ? 'bg-muted/60' : 'bg-muted/30'}`}>{r.prop}</div>
+                        <div className="px-2.5 flex items-center justify-center border-r border-[#ED1C24]/15 text-muted-foreground text-center" style={{ backgroundColor: tradBg }}>{r.trad}</div>
+                        <div className="px-2.5 flex items-center justify-center text-muted-foreground text-center" style={{ backgroundColor: smartBg }}>{r.smart}</div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -997,7 +973,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">The case for choosing smart contracts over traditional software — and when not to.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
 
             {/* Column 1: Core reasons */}
             <div className="flex flex-col gap-3">
@@ -1084,7 +1060,7 @@ export function SC_Section2() {
             <p className="text-muted-foreground text-sm mt-1">Every computation costs gas. Understanding this is essential for building real applications.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
 
             {/* Left: fundamentals */}
             <div className="flex flex-col gap-3">
@@ -1154,6 +1130,40 @@ export function SC_Section2() {
               </div>
             </div>
 
+          </div>
+        </div>
+
+        {/* ═══════ RESHAPE BUSINESS ═══════ */}
+        <div id="s2-reshape" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-5 flex items-start gap-4">
+            <img src={imgDisintermediation} alt="Two people exchanging documents directly — disintermediation" className="hidden lg:block h-20 object-contain shrink-0" />
+            <div>
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">How Smart Contracts Reshape Traditional Business</h2>
+              <p className="text-muted-foreground text-sm mt-1">Five structural shifts that distinguish smart-contract-native businesses from traditional ones.</p>
+            </div>
+          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-5 gap-3 content-center">
+            {[
+              { num: '01', emoji: '🔓', title: 'Disintermediation',     color: '#6366f1', desc: 'Peer-to-peer execution. No banks, brokers, or escrow services needed for the agreement to clear.', src: 'IBM (2019)' },
+              { num: '02', emoji: '⚙️', title: 'Process Automation',    color: '#8b5cf6', desc: 'Autonomous "if X, then Y" rules execute the moment conditions are met — no manual approval step.', src: 'Akinsola & Mary (2025)' },
+              { num: '03', emoji: '🔍', title: 'Trustless & Transparent',color: '#22d3ee', desc: 'Trust shifts from people to code + consensus. All actions are verifiable, auditable, and global.', src: 'Nzuva (2019)' },
+              { num: '04', emoji: '💰', title: 'Cost Reduction',         color: '#39B54A', desc: 'Eliminates middlemen, manual paperwork, and ongoing legal oversight. Cuts escrow, reconciliation, and compliance costs.', src: 'Perlman (2019)' },
+              { num: '05', emoji: '🌐', title: 'New Value Chains',       color: '#f59e0b', desc: 'Entirely new business models, products, and ecosystems become possible — DAOs, tokenized assets, M2M payments.', src: 'Dal Mas et al. (2019)' },
+            ].map(c => (
+              <div key={c.num} className="p-4 bg-card border rounded-xl flex flex-col gap-2"
+                style={{ borderColor: c.color + '40' }}>
+                <div className="flex items-center gap-2">
+                  <div className="size-8 rounded-lg flex items-center justify-center text-white text-xs font-black" style={{ backgroundColor: c.color }}>{c.num}</div>
+                  <div className="text-2xl">{c.emoji}</div>
+                </div>
+                <div className="font-bold text-sm text-foreground">{c.title}</div>
+                <div className="text-xs text-muted-foreground leading-snug flex-1">{c.desc}</div>
+                <div className="text-[10px] italic text-muted-foreground">{c.src}</div>
+              </div>
+            ))}
+          </div>
+          <div className="shrink-0 mt-4 p-3 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground">
+            <span className="font-semibold text-foreground">The pattern:</span> traditional businesses centralize trust in an intermediary. Smart-contract-native businesses distribute that trust into code + consensus, then build new economic primitives on top — composability, atomicity, and global reach. The next section explores where this works in practice.
           </div>
         </div>
 

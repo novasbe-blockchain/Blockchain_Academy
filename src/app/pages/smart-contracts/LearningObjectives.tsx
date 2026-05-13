@@ -1,5 +1,5 @@
 import { TitleSlide } from '../../components/templates/TitleSlide';
-import { GraduationCap, Code2, Layers, Building2, AlertTriangle, Users } from 'lucide-react';
+import { GraduationCap, Code2, Layers, Building2, Brain, AlertTriangle, Wrench, Users } from 'lucide-react';
 
 const objectives = [
   {
@@ -16,15 +16,27 @@ const objectives = [
   },
   {
     icon: <Building2 className="size-6 text-[#22d3ee]" />,
-    title: "Real-World Case Studies",
-    description: "Analyze real deployments — Home Depot supply chain, California DMV vehicle titles, and real-estate NFT deeds — and extract lessons from each implementation.",
+    title: "Industries & Case Studies",
+    description: "Tour five industry verticals (DeFi, Gaming/NFTs, RWA, Supply Chain, Digital Cert) plus eight case studies including Walmart, Santander, Estonia, The DAO hack, and the ASX failure.",
     color: "#22d3ee",
+  },
+  {
+    icon: <Brain className="size-6 text-[#6366f1]" />,
+    title: "Critical Thinking & Adoption",
+    description: "Apply a decision framework to determine when a smart contract is the right tool — and when a database is better. Master the 5-pillar adoption model for serious deployment.",
+    color: "#6366f1",
   },
   {
     icon: <AlertTriangle className="size-6 text-[#ED1C24]" />,
     title: "Limitations & Security",
-    description: "Understand the oracle problem, identify key attack vectors (reentrancy, flash loans, front-running), and evaluate the structural limits preventing mainstream adoption.",
+    description: "Understand the oracle problem, the blockchain trilemma, key attack vectors (reentrancy, flash loans, MEV), and the cost & regulatory realities that gate mainstream adoption.",
     color: "#ED1C24",
+  },
+  {
+    icon: <Wrench className="size-6 text-[#22d3ee]" />,
+    title: "Build & Integration",
+    description: "Navigate ERC standards, the EIP process, frameworks (Hardhat / Foundry), 17-platform comparison, integration patterns, and where AI tools belong in smart-contract development.",
+    color: "#22d3ee",
   },
   {
     icon: <Users className="size-6 text-[#39B54A]" />,

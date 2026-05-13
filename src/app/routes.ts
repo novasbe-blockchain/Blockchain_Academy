@@ -31,6 +31,8 @@ import { SC_Section2 } from "./pages/smart-contracts/Section2";
 import { SC_Section3 } from "./pages/smart-contracts/Section3";
 import { SC_Section4 } from "./pages/smart-contracts/Section4";
 import { SC_Section5 } from "./pages/smart-contracts/Section5";
+import { SC_Section6 } from "./pages/smart-contracts/Section6";
+import { SC_Section7 } from "./pages/smart-contracts/Section7";
 import { SC_Conclusion } from "./pages/smart-contracts/Conclusion";
 import { SC_Bibliography } from "./pages/smart-contracts/Bibliography";
 import { ProjectManagementRoot } from "./ProjectManagementRoot";
@@ -82,6 +84,8 @@ export const router = createBrowserRouter([
           { path: "section-3", Component: SC_Section3 },
           { path: "section-4", Component: SC_Section4 },
           { path: "section-5", Component: SC_Section5 },
+          { path: "section-6", Component: SC_Section6 },
+          { path: "section-7", Component: SC_Section7 },
           { path: "conclusion", Component: SC_Conclusion },
           { path: "bibliography", Component: SC_Bibliography },
         ],
