@@ -12,6 +12,7 @@ const chapters = [
   { id: 's0-comparison', label: 'Comparison' },
   { id: 's0-usecases', label: 'Use of Blockchain' },
   { id: 's0-takeaways', label: 'Takeaways' },
+  { id: 's0-team-reminder', label: '🤝 Team Reminder' },
 ];
 
 export function Section0() {
@@ -297,6 +298,35 @@ export function Section0() {
               'There is no universally best blockchain — each is optimised for different constraints',
             ]}
           />
+        </div>
+
+        {/* ═══════ TEAM REMINDER (Course 03 starts) ═══════ */}
+        <div id="s0-team-reminder" className="h-full flex items-center justify-center p-8 relative overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none opacity-50" style={{ background: 'radial-gradient(circle at 30% 20%, #6366f124, transparent 60%), radial-gradient(circle at 70% 80%, #8b5cf624, transparent 60%)' }} />
+          <div className="relative z-10 max-w-3xl w-full p-8 bg-card border-2 rounded-2xl text-center" style={{ borderColor: '#6366f160' }}>
+            <div className="inline-flex px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-white shadow-md mb-4"
+              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
+              🤝 Quick team reminder
+            </div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-3">Got your team yet?</h2>
+            <p className="text-muted-foreground text-sm leading-relaxed mb-5 max-w-2xl mx-auto">
+              By the end of <strong className="text-foreground">Day 1</strong> you should have formed a team of <strong className="text-foreground">3–4 people</strong>. Today's content on platform trade-offs will feed directly into the design choices your team will need to make in <strong className="text-foreground">Day 3</strong>.
+            </p>
+            <div className="grid grid-cols-3 gap-3 text-left mt-6">
+              <div className="p-3 rounded-xl border" style={{ borderColor: '#39B54A40', backgroundColor: '#39B54A0c' }}>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#39B54A] mb-1">If yes</div>
+                <div className="text-xs text-muted-foreground">Sit together if you can — start discussing platform fit during the breaks.</div>
+              </div>
+              <div className="p-3 rounded-xl border" style={{ borderColor: '#f59e0b40', backgroundColor: '#f59e0b0c' }}>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#f59e0b] mb-1">If not yet</div>
+                <div className="text-xs text-muted-foreground">Find your teammates during the next break. Don't wait until Day 3 — you'll be playing catch-up.</div>
+              </div>
+              <div className="p-3 rounded-xl border" style={{ borderColor: '#6366f140', backgroundColor: '#6366f10c' }}>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#6366f1] mb-1">Today's link</div>
+                <div className="text-xs text-muted-foreground">As you see Bitcoin / Ethereum / Hyperledger / etc — think which one would fit a pain point you've experienced.</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         </div>

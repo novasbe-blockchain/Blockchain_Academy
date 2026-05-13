@@ -5,6 +5,7 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { Building2 } from 'lucide-react';
+import { TeamCheckpoint } from '../../components/TeamCheckpoint';
 
 import imgDefiIntro      from '../../../assets/sc/defi-intro.png';
 import imgDefiBorderless from '../../../assets/sc/defi-borderless.png';
@@ -19,6 +20,7 @@ import imgWalmart        from '../../../assets/sc/walmart-food-trust.jpg';
 import imgSantander      from '../../../assets/sc/santander-bank.jpg';
 
 const chapters = [
+  { id: 's3-team-pick',        label: '🤝 Pick Your Industry' },
   { id: 's3-industries-intro', label: 'Industries Overview' },
 
   { kind: 'group' as const, id: 'g-defi',    label: '💸 DeFi' },
@@ -1103,6 +1105,44 @@ export function SC_Section3() {
             subtitle="Where smart contracts are reshaping real industries — and the case studies that prove it (and the ones that didn't)"
             icon={<Building2 className="size-20 text-[#6366f1]" />}
             gradient="from-[#6366f1] to-[#22d3ee]"
+          />
+        </div>
+
+        {/* ═══════ TEAM CHECKPOINT — PICK YOUR INDUSTRY ═══════ */}
+        <div id="s3-team-pick" className="h-full">
+          <TeamCheckpoint
+            contextLabel="Day 3 · before Industries deep-dive"
+            title="Pick your industry"
+            subtitle="The next five chapters walk through DeFi, Gaming/NFTs, RWA, Supply Chain, and Digital Certification — pick the one your team's problem statement lives in, so you can study it with intent."
+            duration="10 min"
+            sections={[
+              {
+                label: 'What you have',
+                color: '#22d3ee',
+                items: [
+                  <>The <strong>problem statement</strong> your team agreed on at the end of Day 2.</>,
+                  <>Some sense of which industry it touches (banking? retail? logistics? government?).</>,
+                ],
+              },
+              {
+                label: 'Discuss as a team',
+                color: '#39B54A',
+                items: [
+                  <>Which of the five upcoming verticals fits your problem best?</>,
+                  <>If multiple fit, pick the one where the smart-contract pattern is <strong>most established</strong> — you'll have more references.</>,
+                  <>If none fit cleanly, that's a signal worth noting — your problem may need adapting (or may not be a great smart-contract fit).</>,
+                ],
+              },
+              {
+                label: 'During the next chapters',
+                color: '#6366f1',
+                items: [
+                  <>Pay extra attention to the vertical you chose — note the existing players, the real-world deployments, and the pros/cons.</>,
+                  <>The other verticals still matter — patterns transfer. Capture anything that looks adjacent to your problem.</>,
+                  <>The <strong>Critical Thinking decision flow</strong> later in the day is where you'll formally test if blockchain is the right tool.</>,
+                ],
+              },
+            ]}
           />
         </div>
 
