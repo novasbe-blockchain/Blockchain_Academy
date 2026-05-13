@@ -273,7 +273,7 @@ export function SC_Section4() {
                 items: [
                   <>If <strong>✅ Smart Contract</strong>: great — continue with conviction. Note <em>why</em> (multi-party? trust gap? automation?).</>,
                   <>If <strong>⚠️ Hybrid</strong>: figure out what part is on-chain vs off-chain. Most real-world deployments live here.</>,
-                  <>If <strong>❌ Database</strong>: be honest with yourselves. Pivot the problem, or pick a new one — better now than after 20 hours of design.</>,
+                  <>If <strong>❌ Database</strong>: that's a perfectly valid project too. Your deliverable becomes <em>"we investigated X and concluded blockchain isn't the right tool because Y, Z"</em> — backed by the analysis. The rubric rewards critical thinking, not blockchain enthusiasm.</>,
                 ],
               },
               {
@@ -288,7 +288,7 @@ export function SC_Section4() {
             ]}
             footnote={
               <span className="text-muted-foreground">
-                <strong className="text-foreground">A useful rule:</strong> if your team can't convince a sceptical reviewer in two sentences <em>why</em> blockchain is the right tool for your problem, the verdict probably isn't ✅. The Three Lessons coming up (Estonia / The DAO / ASX) make this concrete.
+                <strong className="text-foreground">A useful rule:</strong> if your team can't convince a sceptical reviewer in two sentences <em>why</em> blockchain is the right tool, the verdict probably isn't ✅ — and that's fine. A clear-eyed "no, here's why" earns the same Problem-Solution-fit points as a strong "yes". The Three Lessons coming up (Estonia / The DAO / ASX) make all three outcomes concrete.
               </span>
             }
           />

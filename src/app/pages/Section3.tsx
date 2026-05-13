@@ -846,7 +846,7 @@ export function Section3() {
                 items: [
                   <>Each member shares <strong>one industry</strong> you find interesting or work in.</>,
                   <>Note any business pain points you've personally experienced — paper-heavy processes, slow settlements, trust gaps, etc.</>,
-                  <>Don't commit to a problem yet — keep ideas open until Day 3.</>,
+                  <>Sketch a few candidate problems freely. You can refine — or completely change direction — as you learn more across Days 2 and 3.</>,
                 ],
               },
               {

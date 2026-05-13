@@ -20,12 +20,11 @@ const chapters = [
 
 // Online sessions calendar (2026, 6–8 pm)
 const TIMELINE = [
-  { date: 'May 26',  label: 'Project walkthrough + Q&A',          color: '#6366f1' },
-  { date: 'May 28',  label: 'Reading material + Project Q&A',     color: '#8b5cf6' },
-  { date: 'June 2',  label: 'AI development hands-on',            color: '#22d3ee' },
-  { date: 'June 5',  label: 'Early project presentations + Q&A',  color: '#f59e0b' },
-  { date: 'June 9',  label: 'Final presentations + submission',   color: '#39B54A' },
-  { date: 'June 10', label: 'Submission deadline · closes',       color: '#ED1C24' },
+  { date: 'May 26, 2026',  label: 'Project walkthrough + Q&A',         color: '#6366f1' },
+  { date: 'May 28, 2026',  label: 'Reading material + Project Q&A',    color: '#8b5cf6' },
+  { date: 'June 2, 2026',  label: 'AI development hands-on',           color: '#22d3ee' },
+  { date: 'June 5, 2026',  label: 'Early project presentations + Q&A', color: '#f59e0b' },
+  { date: 'June 9, 2026',  label: 'Final presentations + submission',  color: '#39B54A' },
 ];
 
 export function SC_Section7() {
@@ -93,20 +92,22 @@ export function SC_Section7() {
             {/* Right — timeline */}
             <div className="flex flex-col gap-2 min-h-0">
               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Online sessions · 6–8 pm</div>
-              <div className="flex-1 min-h-0 flex flex-col gap-1.5 overflow-y-auto">
+              <div className="flex-1 min-h-0 flex flex-col gap-2 overflow-y-auto">
                 {TIMELINE.map((t) => (
-                  <div key={t.date} className="flex items-stretch gap-3 p-2.5 bg-card border rounded-lg"
+                  <div key={t.date} className="flex items-stretch gap-3 p-3 bg-card border rounded-lg"
                     style={{ borderColor: t.color + '40' }}>
-                    <div className="w-2 rounded-full shrink-0" style={{ backgroundColor: t.color }} />
+                    <div className="w-1.5 rounded-full shrink-0" style={{ backgroundColor: t.color }} />
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                        <div className="font-black text-sm" style={{ color: t.color }}>{t.date}</div>
-                        <div className="text-[10px] text-muted-foreground">2026</div>
+                      <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                        <div className="font-bold text-sm text-foreground" style={{ color: t.color }}>{t.label}</div>
+                        <div className="text-[11px] text-muted-foreground font-mono shrink-0">{t.date}</div>
                       </div>
-                      <div className="text-xs text-foreground mt-0.5">{t.label}</div>
                     </div>
                   </div>
                 ))}
+              </div>
+              <div className="shrink-0 p-2.5 bg-[#ED1C24]/10 border border-[#ED1C24]/30 rounded-lg text-xs text-muted-foreground">
+                <span className="font-bold text-[#ED1C24]">Deadline:</span> submissions close <span className="font-mono">June 10, 2026</span>.
               </div>
             </div>
 
@@ -228,44 +229,54 @@ export function SC_Section7() {
 
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
 
-            <div className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: '#6366f140' }}>
-              <div className="flex items-center gap-2">
-                <div className="size-7 rounded-lg flex items-center justify-center text-white text-xs font-black bg-[#6366f1]">3.1</div>
-                <div className="font-black text-sm text-foreground">Governance Framework</div>
+            {[
+              {
+                num: '3.1', title: 'Governance Framework', color: '#6366f1',
+                intro: 'Decide how the system steers itself once it\'s live.',
+                points: [
+                  'How is the contract system governed day-to-day?',
+                  'On-chain vs off-chain — which decisions live where?',
+                  'DAOs, multisigs, or traditional governance — which fits?',
+                  'Who can upgrade or pause the contract, and under what controls?',
+                ],
+              },
+              {
+                num: '3.2', title: 'Regulatory & Legal', color: '#8b5cf6',
+                intro: 'Map the rules that apply before they bite you.',
+                points: [
+                  'Jurisdiction — where do users and data live?',
+                  'Applicable regulations: MiCA, securities law, AML / KYC, sector rules.',
+                  'Legal viability today — what licenses or approvals are needed?',
+                  'GDPR if you touch personal data — store hashes, not raw fields.',
+                ],
+              },
+              {
+                num: '3.3', title: 'Risk Assessment', color: '#ED1C24',
+                intro: 'Name what could go wrong — across three layers.',
+                points: [
+                  'Technical · contract bugs, oracle failures, congestion, key loss.',
+                  'Business · adoption, competition, regulatory shift, market timing.',
+                  'Operational · team dependencies, custody, incident response.',
+                  'For each row: likelihood × impact + a mitigation plan.',
+                ],
+              },
+            ].map(c => (
+              <div key={c.num} className="p-5 bg-card border-2 rounded-xl flex flex-col gap-3" style={{ borderColor: c.color + '50' }}>
+                <div className="flex items-center gap-2">
+                  <div className="size-8 rounded-lg flex items-center justify-center text-white text-xs font-black" style={{ backgroundColor: c.color }}>{c.num}</div>
+                  <div className="font-black text-sm text-foreground">{c.title}</div>
+                </div>
+                <div className="text-xs text-muted-foreground italic">{c.intro}</div>
+                <ul className="space-y-2 text-xs text-foreground/90 flex-1">
+                  {c.points.map((p, i) => (
+                    <li key={i} className="flex gap-2 leading-snug">
+                      <span style={{ color: c.color }} className="shrink-0 mt-0.5 font-bold">›</span>
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-1.5 text-xs text-muted-foreground flex-1">
-                <li className="flex gap-1.5"><span className="text-[#6366f1] shrink-0">›</span>How is the contract system governed?</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1] shrink-0">›</span>On-chain vs off-chain governance — which decisions live where?</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1] shrink-0">›</span>Role of DAOs, multisigs, or traditional governance structures.</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1] shrink-0">›</span>Who can upgrade or pause the contract — and how is that controlled?</li>
-              </ul>
-            </div>
-
-            <div className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: '#8b5cf640' }}>
-              <div className="flex items-center gap-2">
-                <div className="size-7 rounded-lg flex items-center justify-center text-white text-xs font-black bg-[#8b5cf6]">3.2</div>
-                <div className="font-black text-sm text-foreground">Regulatory & Legal</div>
-              </div>
-              <ul className="space-y-1.5 text-xs text-muted-foreground flex-1">
-                <li className="flex gap-1.5"><span className="text-[#8b5cf6] shrink-0">›</span>Jurisdiction — where do users and data live?</li>
-                <li className="flex gap-1.5"><span className="text-[#8b5cf6] shrink-0">›</span>Which regulations apply? <strong className="text-foreground">MiCA</strong>, securities law, AML/KYC, sector-specific rules?</li>
-                <li className="flex gap-1.5"><span className="text-[#8b5cf6] shrink-0">›</span>Is your solution legally viable today? What licenses or approvals are needed?</li>
-                <li className="flex gap-1.5"><span className="text-[#8b5cf6] shrink-0">›</span><strong className="text-foreground">GDPR</strong> considerations if you handle personal data — hashes vs raw data.</li>
-              </ul>
-            </div>
-
-            <div className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: '#ED1C2440' }}>
-              <div className="flex items-center gap-2">
-                <div className="size-7 rounded-lg flex items-center justify-center text-white text-xs font-black bg-[#ED1C24]">3.3</div>
-                <div className="font-black text-sm text-foreground">Risk Assessment</div>
-              </div>
-              <ul className="space-y-1.5 text-xs text-muted-foreground flex-1">
-                <li className="flex gap-1.5"><span className="text-[#ED1C24] shrink-0">›</span><strong className="text-foreground">Technical</strong> — contract bugs, oracle failures, network congestion, key management.</li>
-                <li className="flex gap-1.5"><span className="text-[#ED1C24] shrink-0">›</span><strong className="text-foreground">Business</strong> — adoption, competition, regulatory shifts, market timing.</li>
-                <li className="flex gap-1.5"><span className="text-[#ED1C24] shrink-0">›</span><strong className="text-foreground">Operational</strong> — team dependencies, custody, incident response.</li>
-                <li className="flex gap-1.5"><span className="text-[#ED1C24] shrink-0">›</span>For each: likelihood, impact, and mitigation.</li>
-              </ul>
-            </div>
+            ))}
 
           </div>
         </div>
@@ -364,7 +375,8 @@ export function SC_Section7() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-card border border-border rounded-xl">
                   <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Format</div>
-                  <div className="font-bold text-sm text-foreground mt-1">PDF or Word</div>
+                  <div className="font-bold text-sm text-foreground mt-1">PDF</div>
+                  <div className="text-[10px] text-muted-foreground">ideally</div>
                 </div>
                 <div className="p-3 bg-card border border-border rounded-xl">
                   <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Length</div>
