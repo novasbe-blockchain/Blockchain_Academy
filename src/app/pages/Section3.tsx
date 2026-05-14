@@ -7,6 +7,7 @@ import { QuizSlide } from '../components/templates/QuizSlide';
 import { CalloutBox } from '../components/shared/CalloutBox';
 import { Rocket, ExternalLink } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
+import { TeamCheckpoint } from '../components/TeamCheckpoint';
 import ethereumLogo from '../../ethereum-eth-logo.svg';
 import vitalikPhoto from '../../vitalik-buterin.jpg';
 import amazonLogo from '../../amazon.png';
@@ -32,6 +33,7 @@ const section3Chapters = [
   { id: 's3-discussion', label: 'Discussion' },
   { id: 's3-quiz', label: 'Quizzes' },
   { id: 's3-takeaways', label: 'Takeaways' },
+  { id: 's3-team-checkpoint', label: '🤝 Team Checkpoint' },
 ];
 
 export function Section3() {
@@ -818,6 +820,50 @@ export function Section3() {
               "Ethical trade-offs are real: energy consumption, privacy vs transparency, irreversibility, and dual-use potential",
               "Future trends — ZK proofs, AI integration, DID, account abstraction — will define blockchain's next decade"
             ]}
+          />
+        </div>
+
+        {/* ═══════ TEAM CHECKPOINT — DAY 1 WRAP ═══════ */}
+        <div id="s3-team-checkpoint" className="h-full">
+          <TeamCheckpoint
+            contextLabel="Day 1 wrap · Course 01 → Course 02 / 03"
+            title="Form your team"
+            subtitle="The team project runs across all five courses. Find your teammates now — you'll start using the team in Day 2 and Day 3."
+            duration="10–15 min"
+            sections={[
+              {
+                label: 'Do now',
+                color: '#39B54A',
+                items: [
+                  <>Form a team of <strong>3–4 members</strong>. Mix backgrounds where you can.</>,
+                  <>Exchange contact details — WhatsApp / Telegram / email — so you can coordinate between sessions.</>,
+                  <>Pick a working name for your team and a primary point of contact.</>,
+                ],
+              },
+              {
+                label: 'Discuss together',
+                color: '#6366f1',
+                items: [
+                  <>Each member shares <strong>one industry</strong> you find interesting or work in.</>,
+                  <>Note any business pain points you've personally experienced — paper-heavy processes, slow settlements, trust gaps, etc.</>,
+                  <>Sketch a few candidate problems freely. You can refine — or completely change direction — as you learn more across Days 2 and 3.</>,
+                ],
+              },
+              {
+                label: 'Bring to Day 2',
+                color: '#8b5cf6',
+                items: [
+                  <>Your team's contact list — everyone in one chat group.</>,
+                  <>A short list (~3) of pain points worth exploring.</>,
+                  <>Curiosity about which blockchain platforms could fit them.</>,
+                ],
+              },
+            ]}
+            footnote={
+              <span className="text-muted-foreground">
+                <strong className="text-foreground">What's next →</strong> Day 2 (Blockchain Platforms) will introduce platform trade-offs you'll need to choose between. Day 3 (Smart Contracts) is where your team's idea becomes a concrete design.
+              </span>
+            }
           />
         </div>
 

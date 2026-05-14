@@ -5,6 +5,7 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { Brain } from 'lucide-react';
+import { TeamCheckpoint } from '../../components/TeamCheckpoint';
 
 import imgDaoTimeline   from '../../../assets/sc/dao-timeline.png';
 import imgAsxAsic       from '../../../assets/sc/asx-asic.jpg';
@@ -15,6 +16,7 @@ const chapters = [
   { id: 's4-decision-intro',     label: 'Should You Use SC?' },
   { id: 's4-decision-chart',     label: 'Decision Tree' },
   { id: 's4-decision-flow',      label: '🧩 Decision Flow' },
+  { id: 's4-team-framework',     label: '🤝 Run Your Problem' },
   { id: 's4-decision-yes',       label: 'When SC Make Sense' },
   { id: 's4-decision-no',        label: 'When to Rethink' },
 
@@ -246,6 +248,50 @@ export function SC_Section4() {
         {/* ═══════ INTERACTIVE DECISION FLOW ═══════ */}
         <div id="s4-decision-flow" className="h-full">
           <DecisionFlow />
+        </div>
+
+        {/* ═══════ TEAM CHECKPOINT — RUN YOUR PROBLEM ═══════ */}
+        <div id="s4-team-framework" className="h-full">
+          <TeamCheckpoint
+            contextLabel="Day 3 · after the Decision Flow"
+            title="Run your problem through the framework"
+            subtitle="Take the problem statement you brought from Day 2 and answer the 8 questions on the previous slide — together, as a team. Treat this as a real go/no-go gate for your project."
+            duration="15 min"
+            sections={[
+              {
+                label: 'Method',
+                color: '#22d3ee',
+                items: [
+                  <>Open the interactive decision flow on the previous slide. Answer each question <strong>honestly for your specific problem</strong> — not the optimistic answer.</>,
+                  <>Disagree as a team if you must — note the disagreements as open questions to research.</>,
+                  <>Record your verdict: ✅ Smart Contract · ⚠️ Hybrid · ❌ Database.</>,
+                ],
+              },
+              {
+                label: 'Then discuss',
+                color: '#6366f1',
+                items: [
+                  <>If <strong>✅ Smart Contract</strong>: great — continue with conviction. Note <em>why</em> (multi-party? trust gap? automation?).</>,
+                  <>If <strong>⚠️ Hybrid</strong>: figure out what part is on-chain vs off-chain. Most real-world deployments live here.</>,
+                  <>If <strong>❌ Database</strong>: that's a perfectly valid project too. Your deliverable becomes <em>"we investigated X and concluded blockchain isn't the right tool because Y, Z"</em> — backed by the analysis. The rubric rewards critical thinking, not blockchain enthusiasm.</>,
+                ],
+              },
+              {
+                label: 'Capture',
+                color: '#39B54A',
+                items: [
+                  <>Your verdict + a 2-sentence justification.</>,
+                  <>One specific risk the framework surfaced (privacy concern? flexibility need? single trusted party lurking?).</>,
+                  <>This goes into <strong>Part 1 of the project deliverable</strong> — keep your notes.</>,
+                ],
+              },
+            ]}
+            footnote={
+              <span className="text-muted-foreground">
+                <strong className="text-foreground">A useful rule:</strong> if your team can't convince a sceptical reviewer in two sentences <em>why</em> blockchain is the right tool, the verdict probably isn't ✅ — and that's fine. A clear-eyed "no, here's why" earns the same Problem-Solution-fit points as a strong "yes". The Three Lessons coming up (Estonia / The DAO / ASX) make all three outcomes concrete.
+              </span>
+            }
+          />
         </div>
 
         {/* ═══════ WHEN SC MAKE SENSE ═══════ */}

@@ -4,6 +4,7 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Zap } from 'lucide-react';
+import { TeamCheckpoint } from '../../components/TeamCheckpoint';
 
 const chapters = [
   { id: 's5-zkp',              label: 'ZKP: The Intuition' },
@@ -23,6 +24,7 @@ const chapters = [
   { id: 's5-decision-examples', label: 'Platform Examples' },
   { id: 's5-quiz',              label: 'Quiz' },
   { id: 's5-takeaways',    label: 'Takeaways' },
+  { id: 's5-team-checkpoint', label: '🤝 Team Checkpoint' },
 ];
 
 export function BP_Section5() {
@@ -1427,6 +1429,51 @@ export function BP_Section5() {
               'Privacy on public chains requires extra cryptographic machinery — the regulatory line for "privacy tooling" is still being drawn',
               'Run five questions before picking a platform: permission, programmability, throughput, privacy, and sovereignty',
             ]}
+          />
+        </div>
+
+        {/* ═══════ TEAM CHECKPOINT — DAY 2 WRAP ═══════ */}
+        <div id="s5-team-checkpoint" className="h-full">
+          <TeamCheckpoint
+            contextLabel="Day 2 wrap · Course 03 → Course 02 (Day 3)"
+            title="Find your problem statement"
+            subtitle="You've now seen the platform landscape. Time to converge on the specific problem your team wants to tackle — before Day 3 turns it into a concrete smart-contract design."
+            duration="15–20 min"
+            sections={[
+              {
+                label: 'What you have',
+                color: '#22d3ee',
+                items: [
+                  <>Your team of <strong>3–4 members</strong> from Day 1 (find them now if you skipped it).</>,
+                  <>The pain points each member brought into Day 2.</>,
+                  <>An understanding of platform trade-offs — public vs permissioned, L1 vs L2, throughput vs cost.</>,
+                ],
+              },
+              {
+                label: 'Do now together',
+                color: '#39B54A',
+                items: [
+                  <>Each member pitches their top pain point (60 seconds each, no debate yet).</>,
+                  <>As a team, pick <strong>one problem statement</strong> — specific enough to design for, broad enough that everyone is engaged.</>,
+                  <>Write it as <em>"Today, &lt;who&gt; struggles with &lt;what&gt; because &lt;why&gt;. We want to design a smart-contract solution that …"</em></>,
+                  <>Capture three current pain metrics if you can — cost, time, error rate, trust gap, etc.</>,
+                ],
+              },
+              {
+                label: 'Bring to Day 3',
+                color: '#8b5cf6',
+                items: [
+                  <>Your one-sentence problem statement.</>,
+                  <>A first guess at the industry (you'll refine it Day 3 morning).</>,
+                  <>An open mind — the Day 3 decision framework may tell you blockchain isn't the right tool.</>,
+                ],
+              },
+            ]}
+            footnote={
+              <span className="text-muted-foreground">
+                <strong className="text-foreground">Day 3 preview →</strong> Business Applications for Smart Contracts will run your problem through a structured decision framework, walk you through five industry verticals, then have you sketch a full design as a team. The project deliverable starts there.
+              </span>
+            }
           />
         </div>
 
