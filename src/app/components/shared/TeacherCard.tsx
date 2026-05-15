@@ -58,15 +58,23 @@ export function TeacherCard({
           <p className="text-sm font-semibold mt-0.5 mb-5" style={{ color: accentColor }}>{role}</p>
 
           <ul className="space-y-2">
-            {highlights.map((point, i) => (
-              <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
-                <span
-                  className="mt-1.5 size-1.5 rounded-full shrink-0"
-                  style={{ background: accentColor }}
-                />
-                {point}
-              </li>
-            ))}
+            {highlights.map((point, i) => {
+              // Strings (and numbers) get the default bullet rendering.
+              // ReactNodes pass through verbatim so the caller can build a richer layout.
+              const isPrimitive = typeof point === 'string' || typeof point === 'number';
+              if (isPrimitive) {
+                return (
+                  <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
+                    <span
+                      className="mt-1.5 size-1.5 rounded-full shrink-0"
+                      style={{ background: accentColor }}
+                    />
+                    {point}
+                  </li>
+                );
+              }
+              return <li key={i} className="text-sm text-muted-foreground">{point}</li>;
+            })}
           </ul>
         </div>
       </div>
