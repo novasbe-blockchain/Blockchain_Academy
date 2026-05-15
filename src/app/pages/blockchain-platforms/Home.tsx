@@ -1,6 +1,10 @@
 import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import logo from '../../../blockchainptlogo.jpeg';
+import { TeacherCard } from '../../components/shared/TeacherCard';
+import { helder, shayan } from '../../data/instructors';
+
+const instructors = [helder, shayan];
 
 const BASE = '/blockchain-platforms';
 
@@ -116,34 +120,15 @@ export function BlockchainPlatformsHome() {
         </div>
       </div>
 
-      {/* Instructor */}
+      {/* Instructors */}
       <div className="max-w-7xl mx-auto px-12 py-16 border-t border-border">
-        <h2 className="text-4xl font-bold text-foreground mb-3">Meet the Instructor</h2>
-        <p className="text-muted-foreground mb-10">The person behind this course</p>
+        <h2 className="text-4xl font-bold text-foreground mb-3">Meet the Instructor{instructors.length > 1 ? 's' : ''}</h2>
+        <p className="text-muted-foreground mb-10">The people behind this course</p>
 
-        <div className="max-w-2xl bg-card border border-border rounded-2xl p-6 flex gap-6 items-start">
-          <div className="size-20 rounded-full bg-gradient-to-br from-[#39B54A] to-[#22d3ee] flex items-center justify-center shrink-0 text-white text-2xl font-black">
-            LZ
-          </div>
-          <div>
-            <div className="text-xs font-bold text-[#39B54A] tracking-widest mb-1">INSTRUCTOR</div>
-            <h3 className="text-xl font-black text-foreground mb-0.5">Leid Zejnilović</h3>
-            <p className="text-sm text-[#39B54A] font-medium mb-3">
-              Associate Dean for AI & Digital Transformation · Associate Professor, NovaSBE
-            </p>
-            <ul className="space-y-1.5">
-              {[
-                'Dual Ph.D. from Carnegie Mellon University and Católica Lisbon School of Business and Economics',
-                'M.Sc. in Engineering & Public Policy · M.Sc. in Information Technology',
-                'Research focuses on Artificial Intelligence, digital innovation, and user-driven innovation',
-              ].map(h => (
-                <li key={h} className="flex gap-2 text-sm text-muted-foreground">
-                  <span className="text-[#39B54A] shrink-0">•</span>
-                  {h}
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {instructors.map((instructor) => (
+            <TeacherCard key={instructor.name} {...instructor} />
+          ))}
         </div>
       </div>
     </div>

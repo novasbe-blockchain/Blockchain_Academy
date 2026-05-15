@@ -1,9 +1,11 @@
+import type { ReactNode } from 'react';
+
 interface TeacherCardProps {
   photo?: string;
   nickname: string;
   name: string;
   role: string;
-  highlights: string[];
+  highlights: ReactNode[];
   gradient?: string;
   accentColor?: string;
 }

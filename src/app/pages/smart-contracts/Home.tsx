@@ -1,6 +1,8 @@
 import { Link } from 'react-router';
-import { ArrowRight, ExternalLink } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import logo from '../../../blockchainptlogo.jpeg';
+import { TeacherCard } from '../../components/shared/TeacherCard';
+import { shayan } from '../../data/instructors';
 
 const BASE = '/smart-contracts';
 
@@ -61,13 +63,6 @@ const sections = [
     path: `${BASE}/conclusion`,
     gradient: 'from-[#6366f1] to-[#ED1C24]',
   },
-];
-
-const highlights = [
-  { label: 'Background', value: 'Information Security' },
-  { label: 'PhD', value: 'Blockchain Technology' },
-  { label: 'Industry', value: 'Smart Contract Security' },
-  { label: 'Role', value: 'CTO' },
 ];
 
 export function SmartContractsHome() {
@@ -150,46 +145,8 @@ export function SmartContractsHome() {
         <h2 className="text-4xl font-bold text-foreground mb-3">Meet the Instructor</h2>
         <p className="text-muted-foreground mb-10">The person behind this course</p>
 
-        <div className="max-w-2xl bg-card border border-border rounded-2xl p-6 flex gap-6 items-start">
-          <div className="size-20 rounded-full bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] flex items-center justify-center shrink-0 text-white text-2xl font-black">
-            SE
-          </div>
-          <div>
-            <div className="text-xs font-bold text-[#6366f1] tracking-widest mb-1">INSTRUCTOR</div>
-            <h3 className="text-xl font-black text-foreground mb-0.5">Shayan Eskandari</h3>
-            <a
-              href="https://shayan.es"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm text-[#6366f1] font-medium mb-4 hover:underline"
-            >
-              shayan.es <ExternalLink className="size-3" />
-            </a>
-
-            <div className="flex flex-wrap gap-2 mb-4">
-              {highlights.map(h => (
-                <div key={h.label} className="px-3 py-1 bg-[#6366f1]/10 border border-[#6366f1]/20 rounded-full">
-                  <span className="text-xs text-muted-foreground">{h.label}: </span>
-                  <span className="text-xs font-semibold text-[#6366f1]">{h.value}</span>
-                </div>
-              ))}
-            </div>
-
-            <ul className="space-y-1.5">
-              {[
-                'Background in Information Security',
-                'PhD in Blockchain Technology',
-                'Blockchain Engineer at Bitcoin ATM startup',
-                'Senior Smart Contract Security Engineer',
-                'Chief Technology Officer',
-              ].map(h => (
-                <li key={h} className="flex gap-2 text-sm text-muted-foreground">
-                  <span className="text-[#6366f1] shrink-0">•</span>
-                  {h}
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="max-w-4xl">
+          <TeacherCard {...shayan} />
         </div>
       </div>
     </div>

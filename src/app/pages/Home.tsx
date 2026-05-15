@@ -1,27 +1,10 @@
 import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import logo from '../../blockchainptlogo.jpeg';
-import helderPhoto from '../../Profile photos Helder.jpg';
 import { TeacherCard } from '../components/shared/TeacherCard';
+import { helder, shayan } from '../data/instructors';
 
-const instructors = [
-  {
-    photo: helderPhoto,
-    nickname: 'The Crypto "Jack of all trades"',
-    name: 'Helder SALVADOR',
-    role: 'Blockchain Engineer & Teacher',
-    gradient: 'from-[#ED1C24] to-[#39B54A]' as const,
-    accentColor: '#ED1C24',
-    highlights: [
-      'Started in blockchain in 2017 / 2018, drawn in by the finance side of things',
-      'Now focused on user-centered use cases and real-world adoption',
-      'Directed a blockchain master programme in Paris',
-      'Explored the full stack — product owner, infrastructure, smart contracts',
-      'Won a hackathon prize at Hacking Paris 2025 by Chiliz (Content creation & interaction track)',
-      'Currently Blockchain Specialist @ NovaSBE',
-    ],
-  }
-];
+const instructors = [helder, shayan];
 
 const BASE = '/blockchain-fundamentals';
 
