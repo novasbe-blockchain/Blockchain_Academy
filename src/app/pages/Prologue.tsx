@@ -4,16 +4,21 @@ import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
 import { QuizSlide } from '../components/templates/QuizSlide';
 import { CalloutBox } from '../components/shared/CalloutBox';
-import { ScrollText } from 'lucide-react';
+import { ScrollText, ExternalLink } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
+import bitcoinPedigree from '../../assets/bf/bitcoin-academic-pedigree.png';
 
 const prologueChapters = [
-  { id: 'p-cypherpunks', label: 'The Cypherpunks' },
+  { id: 'p-money',             label: 'What Is Money?' },
+  { id: 'p-money-value',       label: 'Why It Has Value' },
+  { id: 'p-cypherpunks',       label: 'The Cypherpunks' },
   { id: 'p-cypherpunk-values', label: 'By the People' },
-  { id: 'p-timeline', label: 'Timeline' },
-  { id: 'p-why', label: 'Why It Matters' },
-  { id: 'p-takeaways', label: 'Takeaways' },
-  { id: 'p-quiz', label: 'Quizzes' },
+  { id: 'p-timeline',          label: 'Timeline' },
+  { id: 'p-pedigree',          label: 'Academic Pedigree' },
+  { id: 'p-why',               label: 'Why It Matters' },
+  { id: 'p-who-controls',      label: 'Who Owns Your Money?' },
+  { id: 'p-takeaways',         label: 'Takeaways' },
+  { id: 'p-quiz',              label: 'Quizzes' },
 ];
 
 export function Prologue() {
@@ -33,6 +38,85 @@ export function Prologue() {
             subtitle="How a movement for privacy and freedom gave birth to decentralized money"
             icon={<ScrollText className="size-20 text-[#8b5cf6]" />}
             gradient="from-[#8b5cf6] to-[#ED1C24]"
+          />
+        </div>
+
+        {/* ═══════ MONEY · A SHORT HISTORY ═══════ */}
+        <div id="p-money" className="h-full">
+          <ConceptSlide
+            title="What Is Money?"
+            description="Before we get to Bitcoin, a quick look at the long road that got us here. Every generation invented new money — and each form solved the limits of the last."
+            visual={
+              <div className="space-y-4 w-full">
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { era: '~9000 BCE', name: 'Barter', emoji: '🐄', desc: 'Direct exchange of goods. Worked in small tribes — broke down as soon as someone had grain and the other wanted a roof.', color: '#8b5cf6' },
+                    { era: '~3000 BCE', name: 'Commodity money', emoji: '🐚', desc: 'Shells, salt, cattle, beads. The first abstract store of value — items everyone agreed had worth.', color: '#f59e0b' },
+                    { era: '~600 BCE', name: 'Coins (gold / silver)', emoji: '🪙', desc: 'Stamped metal coins. Scarce, durable, divisible. Empires rose and fell controlling the mint.', color: '#ED1C24' },
+                    { era: '~1000 CE', name: 'Paper notes & banks', emoji: '💵', desc: 'IOUs redeemable for gold, then for trust in the issuer alone. The gold standard ended in 1971 — money became pure trust.', color: '#39B54A' },
+                    { era: '~1950', name: 'Bank cards / digital ledgers', emoji: '💳', desc: 'Money becomes a database entry at a bank. Convenient, but every transaction passes through gatekeepers.', color: '#6366f1' },
+                    { era: '2009', name: 'Bitcoin', emoji: '₿', desc: 'Digital scarcity without a central issuer — the first form of money that nobody operates and nobody can switch off.', color: '#22d3ee' },
+                  ].map(m => (
+                    <div key={m.name} className="p-3 bg-card rounded-xl border" style={{ borderColor: m.color + '40' }}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-2xl">{m.emoji}</span>
+                        <div>
+                          <div className="text-[10px] font-mono uppercase tracking-widest" style={{ color: m.color }}>{m.era}</div>
+                          <div className="font-bold text-sm text-foreground">{m.name}</div>
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-snug">{m.desc}</p>
+                    </div>
+                  ))}
+                </div>
+                <CalloutBox type="tip" title="The throughline">
+                  Each form of money fixed a problem with the last — portability, scarcity, divisibility, settlement speed. Bitcoin was an attempt to fix the trust assumption itself.
+                </CalloutBox>
+              </div>
+            }
+            keyPoints={[
+              'Money is older than writing — almost every civilization invented some form of it independently',
+              'The form changes constantly; the function (medium of exchange, store of value, unit of account) stays the same',
+              'Every shift opened new economic possibilities — and concentrated power in whoever controlled the new layer',
+              'Asking "what comes next?" is not exotic — it\'s what societies have always done',
+            ]}
+          />
+        </div>
+
+        {/* ═══════ WHY DOES MONEY HAVE VALUE ═══════ */}
+        <div id="p-money-value" className="h-full">
+          <ConceptSlide
+            title="Why Does Money Have Value?"
+            description="A piece of paper, a number in a database, a gold coin, a Bitcoin — none of them are intrinsically worth anything. Money works because four things are true at once."
+            visual={
+              <div className="space-y-4 w-full">
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { emoji: '🤝', label: 'Shared trust',    color: '#8b5cf6', desc: 'Everyone in the network agrees this thing is worth something. The agreement is the value.' },
+                    { emoji: '🪨', label: 'Scarcity',        color: '#ED1C24', desc: 'You can\'t easily make more of it. Gold is rare. Dollars are limited by central banks. Bitcoin caps at 21 million.' },
+                    { emoji: '🔧', label: 'Utility',         color: '#39B54A', desc: 'You can use it — pay taxes, buy bread, settle a debt. A currency no one accepts is just a collectible.' },
+                    { emoji: '🌐', label: 'Network effect',  color: '#6366f1', desc: 'The more people accept it, the more useful it becomes. New money struggles, established money compounds.' },
+                  ].map(p => (
+                    <div key={p.label} className="flex items-start gap-3 p-4 bg-card rounded-xl border-2" style={{ borderColor: p.color + '50' }}>
+                      <div className="text-3xl shrink-0">{p.emoji}</div>
+                      <div>
+                        <div className="font-black text-sm" style={{ color: p.color }}>{p.label}</div>
+                        <div className="text-xs text-muted-foreground mt-1 leading-snug">{p.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <CalloutBox type="important" title="A thought experiment">
+                  Tomorrow morning, every shop in your country decides not to accept euros. The notes in your wallet still exist — what are they worth? Money's value lives in <em>everyone else's</em> head, not in the paper.
+                </CalloutBox>
+              </div>
+            }
+            keyPoints={[
+              'Money has value because we collectively decide it does — there is no objective number',
+              'When trust breaks (hyperinflation, bank runs, sanctions), the same notes lose worth overnight',
+              'Bitcoin\'s designers asked: can we engineer trust + scarcity + utility + network effects without any central authority?',
+              'This is the question the rest of this course tries to answer',
+            ]}
           />
         </div>
 
@@ -177,6 +261,60 @@ export function Prologue() {
           />
         </div>
 
+        {/* ═══════ BITCOIN'S ACADEMIC PEDIGREE ═══════ */}
+        <div id="p-pedigree" className="h-full flex flex-col p-6 lg:p-10 relative overflow-hidden">
+          <div className="shrink-0 mb-5">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Bitcoin's Academic Pedigree</h2>
+            <p className="text-muted-foreground text-sm mt-1">The concept of cryptocurrencies is built from forgotten ideas in research literature — every piece predates Bitcoin by decades.</p>
+          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-[1.8fr_1fr] gap-6">
+            <div className="flex items-center justify-center bg-white rounded-xl border border-border p-3 min-h-0">
+              <img
+                src={bitcoinPedigree}
+                alt="Chronology of key ideas found in Bitcoin: a 1980-to-2015 grid mapping research strands (Linked Timestamping, Digital Cash, Proof of Work, Byzantine Fault Tolerance, Public Keys as Identities, Smart Contracts) to specific papers — Merkle Tree (1980), Ecash (1980s), Hashcash (1990s), Bit Gold (2005), Bitcoin (2008), Ethereum (2015)."
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+            <div className="flex flex-col gap-3">
+              <div className="p-4 bg-card border border-[#8b5cf6]/30 rounded-xl">
+                <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest mb-2">The paper</div>
+                <div className="font-bold text-foreground text-sm leading-snug mb-1">Bitcoin's Academic Pedigree</div>
+                <div className="text-xs text-muted-foreground">Arvind Narayanan &amp; Jeremy Clark · ACM Queue, 2017</div>
+              </div>
+              <div className="p-4 bg-card border border-border rounded-xl flex-1">
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">Six research strands fed into Bitcoin</div>
+                <ul className="space-y-1.5 text-xs text-muted-foreground">
+                  {[
+                    { c: '#6366f1', l: 'Linked timestamping', s: 'Haber & Stornetta · 1990–91' },
+                    { c: '#39B54A', l: 'Digital cash',         s: 'Chaum · Ecash · 1982+' },
+                    { c: '#f59e0b', l: 'Proof of work',        s: 'Dwork–Naor · Hashcash · 1990s' },
+                    { c: '#22d3ee', l: 'Byzantine fault tolerance', s: 'Lamport · Paxos · PBFT' },
+                    { c: '#ED1C24', l: 'Public keys as identities', s: 'Chaum · Goldberg' },
+                    { c: '#8b5cf6', l: 'Smart contracts',      s: 'Szabo · 1994 essay' },
+                  ].map(r => (
+                    <li key={r.l} className="flex items-start gap-2">
+                      <span className="mt-1.5 size-1.5 rounded-full shrink-0" style={{ background: r.c }} />
+                      <div>
+                        <div className="font-semibold text-foreground">{r.l}</div>
+                        <div className="text-[10px]">{r.s}</div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <a
+                href="https://www.resistance.money/class/readings/pedigree.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-[#8b5cf6]/15 border border-[#8b5cf6]/40 text-[#8b5cf6] text-xs font-bold hover:bg-[#8b5cf6]/25 transition-colors"
+              >
+                📄 Read the full paper
+                <ExternalLink className="size-3.5" />
+              </a>
+            </div>
+          </div>
+        </div>
+
         {/* ═══════ 4. WHY THIS HISTORY MATTERS ═══════ */}
         <div id="p-why" className="h-full">
           <ConceptSlide
@@ -219,22 +357,127 @@ export function Prologue() {
           />
         </div>
 
+        {/* ═══════ WHO CONTROLS YOUR MONEY? ═══════ */}
+        <div id="p-who-controls" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-5 text-center">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Who Controls Your Money?</h2>
+            <p className="text-muted-foreground text-sm mt-1">A side-by-side of what can actually happen to the value you hold, in each system.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-4 gap-3">
+            {[
+              {
+                name: 'Cash',
+                emoji: '💵',
+                color: '#f59e0b',
+                control: 'You',
+                rows: [
+                  ['Custody',       'Physical · only you hold it'],
+                  ['Can be frozen?', 'No — but can be lost, stolen, or seized in person'],
+                  ['Supply',        'Inflated by the central bank'],
+                  ['Censorship',    'None online · works face-to-face'],
+                  ['Cross-border',  'Hard · limits, declarations, FX desks'],
+                  ['Digital?',      'No — physical only'],
+                ],
+              },
+              {
+                name: 'Bank account',
+                emoji: '🏦',
+                color: '#ED1C24',
+                control: 'Your bank + government',
+                rows: [
+                  ['Custody',       'The bank holds it · you have a claim'],
+                  ['Can be frozen?', 'Yes · account freeze, sanctions, garnishment'],
+                  ['Supply',        'Fractional reserve + central-bank policy'],
+                  ['Censorship',    'Yes · bank can refuse transactions / clients'],
+                  ['Cross-border',  '3–5 days · SWIFT · 1–3% FX spread'],
+                  ['Digital?',      'Yes · via the bank\'s database'],
+                ],
+              },
+              {
+                name: 'Digital payment',
+                emoji: '📱',
+                color: '#8b5cf6',
+                control: 'The platform',
+                rows: [
+                  ['Custody',       'Platform holds · you have a balance'],
+                  ['Can be frozen?', 'Yes · de-platformed, chargebacks, terms of service'],
+                  ['Supply',        'Same as the underlying fiat'],
+                  ['Censorship',    'Yes · platform decides who transacts'],
+                  ['Cross-border',  'Restricted · region-locked · KYC tiers'],
+                  ['Digital?',      'Yes · proprietary rails'],
+                ],
+              },
+              {
+                name: 'Bitcoin',
+                emoji: '₿',
+                color: '#22d3ee',
+                control: 'You (if self-custody)',
+                rows: [
+                  ['Custody',       'Your keys, your coins (or a custodian, if you choose)'],
+                  ['Can be frozen?', 'Not at the protocol layer · custodians can freeze theirs'],
+                  ['Supply',        'Capped at 21 million · no human can change it'],
+                  ['Censorship',    'Permissionless · anyone can send / receive'],
+                  ['Cross-border',  'Same as a local transfer · minutes, no FX'],
+                  ['Digital?',      'Native-digital · settles on a public ledger'],
+                ],
+              },
+            ].map(c => (
+              <div key={c.name} className="flex flex-col rounded-xl border-2 overflow-hidden" style={{ borderColor: c.color + '50' }}>
+                <div className="p-3 text-center" style={{ backgroundColor: c.color + '15' }}>
+                  <div className="text-3xl mb-1">{c.emoji}</div>
+                  <div className="font-black text-foreground">{c.name}</div>
+                  <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: c.color }}>{c.control}</div>
+                </div>
+                <div className="flex-1 flex flex-col">
+                  {c.rows.map(([k, v], i) => (
+                    <div key={k} className="px-3 py-2 text-[11px]" style={{ backgroundColor: i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)' }}>
+                      <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{k}</div>
+                      <div className="text-foreground leading-snug mt-0.5">{v}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-4 p-4 bg-gradient-to-br from-[#8b5cf6]/10 via-[#ED1C24]/10 to-[#22d3ee]/10 border-2 border-[#8b5cf6]/40 rounded-xl text-center">
+            <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest mb-1">Question to sit with</div>
+            <div className="text-base font-semibold text-foreground">What does it mean to truly <em>own</em> something digital — if there is always someone who can take it back?</div>
+          </div>
+        </div>
+
         {/* ═══════ 5. TAKEAWAYS ═══════ */}
         <div id="p-takeaways" className="h-full">
           <TakeawaySlide
             title="Prologue Takeaways"
             takeaways={[
+              "Money is older than writing — its form keeps changing, its function (trust + scarcity + utility + network) does not",
+              "Value lives in collective agreement, not in the object — when trust breaks, the same notes become paper",
               "The cypherpunk movement championed privacy as a fundamental right, defended through code rather than law",
               "From the 1980s to 2008, cryptographers built the individual pieces that Bitcoin would later unify",
-              "Satoshi Nakamoto combined proof-of-work, chained blocks, digital scarcity, and P2P networking into one system",
+              "Satoshi combined proof-of-work, chained blocks, digital scarcity, and P2P networking — none of which he invented",
               "The Genesis Block message — 'Chancellor on brink of second bailout for banks' — reveals Bitcoin's ideological roots",
-              "Understanding this history is essential to critically evaluating blockchain technology today"
+              "Cash, bank accounts, and digital-payment platforms each hand control to someone else; Bitcoin asks: can you keep it yourself?",
             ]}
           />
         </div>
 
         {/* ═══════ 6. QUIZZES ═══════ */}
         <div id="p-quiz" className="h-full">
+          <QuizSlide
+            question="Money has taken many forms — shells, coins, paper, bank-account entries, Bitcoin. What is the underlying reason any of them have value?"
+            options={[
+              { text: "The material they're made of (metal, paper, electrons) determines their worth", correct: false },
+              { text: "Governments declare them valuable through law", correct: false },
+              { text: "A network of people collectively agrees to accept them — trust, scarcity, utility, and network effects compound", correct: true },
+              { text: "Their value is fixed once a central authority decides on an exchange rate", correct: false },
+            ]}
+            explanation="Money's value is not in the object — it's in the shared agreement of everyone in the network. When that agreement breaks (hyperinflation, sanctions, platform bans), the same notes lose value overnight. The four foundations are: trust, scarcity, utility, and network effects. Bitcoin asks whether all four can be engineered without any single authority — that's the question this course explores."
+          />
+        </div>
+
+        <div className="h-full">
           <QuizSlide
             question="What was the core belief of the Cypherpunk movement?"
             options={[
