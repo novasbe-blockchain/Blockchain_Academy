@@ -20,9 +20,7 @@ const chapters = [
 export function PM_Section3() {
   return (
     <div className="h-full w-full flex overflow-hidden">
-      <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
-        <SectionNav chapters={chapters} />
-      </div>
+      <SectionNav chapters={chapters} />
       <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
         <div className="slide-flow">
 

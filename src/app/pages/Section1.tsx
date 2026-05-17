@@ -1003,42 +1003,63 @@ const TOPOLOGIES: Record<TopoMode, Topology> = {
     edges: ['s0','s1','s2','s3','s4','s5','s6'].map(s => ({ a: 'c', b: s })),
   },
   decentralized: {
+    // 4 hubs at irregular positions (not a tidy triangle) with varying numbers
+    // of leaves and slightly uneven hub-to-hub connectivity.
     nodes: [
-      { id: 'h0', x: 160, y: 55,  size: 11 },
-      { id: 'h1', x: 60,  y: 215, size: 11 },
-      { id: 'h2', x: 260, y: 215, size: 11 },
-      { id: 'l0a', x: 100, y: 18 },
-      { id: 'l0b', x: 225, y: 18 },
-      { id: 'l1a', x: 15,  y: 195 },
-      { id: 'l1b', x: 70,  y: 270 },
-      { id: 'l2a', x: 305, y: 195 },
-      { id: 'l2b', x: 250, y: 270 },
+      { id: 'h0', x: 60,  y: 70,  size: 11 },
+      { id: 'h1', x: 215, y: 50,  size: 11 },
+      { id: 'h2', x: 140, y: 215, size: 11 },
+      { id: 'h3', x: 275, y: 175, size: 11 },
+      // h0 cluster
+      { id: 'l0a', x: 20,  y: 25  },
+      { id: 'l0b', x: 18,  y: 135 },
+      // h1 cluster (3 leaves — denser)
+      { id: 'l1a', x: 175, y: 6   },
+      { id: 'l1b', x: 270, y: 12  },
+      { id: 'l1c', x: 255, y: 100 },
+      // h2 cluster
+      { id: 'l2a', x: 80,  y: 262 },
+      { id: 'l2b', x: 195, y: 262 },
+      // h3 cluster (only 1 leaf — sparse)
+      { id: 'l3a', x: 305, y: 230 },
     ],
     edges: [
-      { a: 'h0', b: 'h1' }, { a: 'h0', b: 'h2' }, { a: 'h1', b: 'h2' },
+      // hub mesh — not all pairs (h0↔h3 missing) so they're "decentralised", not "distributed"
+      { a: 'h0', b: 'h1' }, { a: 'h1', b: 'h2' }, { a: 'h2', b: 'h3' }, { a: 'h0', b: 'h2' }, { a: 'h1', b: 'h3' },
+      // leaves
       { a: 'h0', b: 'l0a' }, { a: 'h0', b: 'l0b' },
-      { a: 'h1', b: 'l1a' }, { a: 'h1', b: 'l1b' },
+      { a: 'h1', b: 'l1a' }, { a: 'h1', b: 'l1b' }, { a: 'h1', b: 'l1c' },
       { a: 'h2', b: 'l2a' }, { a: 'h2', b: 'l2b' },
+      { a: 'h3', b: 'l3a' },
     ],
   },
   distributed: {
+    // Organic mesh — 11 nodes at irregular positions, each peering with 2–4
+    // nearby nodes. No central hub, no rigid grid.
     nodes: [
-      { id: 'p00', x: 60,  y: 50  }, { id: 'p01', x: 160, y: 50  }, { id: 'p02', x: 260, y: 50  },
-      { id: 'p10', x: 60,  y: 140 }, { id: 'p11', x: 160, y: 140 }, { id: 'p12', x: 260, y: 140 },
-      { id: 'p20', x: 60,  y: 230 }, { id: 'p21', x: 160, y: 230 }, { id: 'p22', x: 260, y: 230 },
+      { id: 'p1',  x: 45,  y: 55  },
+      { id: 'p2',  x: 130, y: 28  },
+      { id: 'p3',  x: 235, y: 60  },
+      { id: 'p4',  x: 295, y: 30  },
+      { id: 'p5',  x: 80,  y: 130 },
+      { id: 'p6',  x: 180, y: 115 },
+      { id: 'p7',  x: 270, y: 140 },
+      { id: 'p8',  x: 35,  y: 215 },
+      { id: 'p9',  x: 135, y: 230 },
+      { id: 'p10', x: 215, y: 245 },
+      { id: 'p11', x: 295, y: 220 },
     ],
     edges: [
-      // horizontal
-      { a: 'p00', b: 'p01' }, { a: 'p01', b: 'p02' },
-      { a: 'p10', b: 'p11' }, { a: 'p11', b: 'p12' },
-      { a: 'p20', b: 'p21' }, { a: 'p21', b: 'p22' },
-      // vertical
-      { a: 'p00', b: 'p10' }, { a: 'p10', b: 'p20' },
-      { a: 'p01', b: 'p11' }, { a: 'p11', b: 'p21' },
-      { a: 'p02', b: 'p12' }, { a: 'p12', b: 'p22' },
-      // diagonals (mesh feel)
-      { a: 'p00', b: 'p11' }, { a: 'p11', b: 'p22' },
-      { a: 'p02', b: 'p11' }, { a: 'p11', b: 'p20' },
+      { a: 'p1', b: 'p2'  }, { a: 'p1', b: 'p5'  },
+      { a: 'p2', b: 'p3'  }, { a: 'p2', b: 'p5'  }, { a: 'p2', b: 'p6' },
+      { a: 'p3', b: 'p4'  }, { a: 'p3', b: 'p6'  }, { a: 'p3', b: 'p7' },
+      { a: 'p4', b: 'p7'  },
+      { a: 'p5', b: 'p6'  }, { a: 'p5', b: 'p8'  }, { a: 'p5', b: 'p9' },
+      { a: 'p6', b: 'p7'  }, { a: 'p6', b: 'p9'  }, { a: 'p6', b: 'p10' },
+      { a: 'p7', b: 'p10' }, { a: 'p7', b: 'p11' },
+      { a: 'p8', b: 'p9'  },
+      { a: 'p9', b: 'p10' },
+      { a: 'p10', b: 'p11' },
     ],
   },
 };
@@ -1219,9 +1240,7 @@ function NetworkTopologyDemo() {
 export function Section1() {
   return (
     <div className="size-full flex overflow-hidden">
-      <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
-        <SectionNav chapters={section1Chapters} />
-      </div>
+      <SectionNav chapters={section1Chapters} />
       <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
         <div className="slide-flow">
 

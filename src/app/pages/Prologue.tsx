@@ -24,9 +24,7 @@ const prologueChapters = [
 export function Prologue() {
   return (
     <div className="h-full w-full flex overflow-hidden">
-      <div className="w-44 shrink-0 h-full hidden lg:block border-r border-border">
-        <SectionNav chapters={prologueChapters} />
-      </div>
+      <SectionNav chapters={prologueChapters} />
       <div id="section-scroll" className="flex-1 overflow-y-auto snap-y snap-mandatory">
         <div className="slide-flow">
 
