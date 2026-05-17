@@ -39,7 +39,7 @@ export function BP_LearningObjectives() {
     <div id="section-scroll" className="size-full overflow-y-auto snap-y snap-mandatory">
       <div>
         {/* Title */}
-        <div className="h-screen snap-start">
+        <div className="h-screen snap-start flex flex-col">
           <TitleSlide
             sectionNumber="BEFORE WE BEGIN"
             title="Learning Objectives"
