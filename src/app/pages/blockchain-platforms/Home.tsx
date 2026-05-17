@@ -55,9 +55,9 @@ const sections = [
 
 export function BlockchainPlatformsHome() {
   return (
-    <div className="size-full overflow-y-auto">
+    <div id="section-scroll" className="size-full overflow-y-auto snap-y snap-mandatory">
       {/* Hero */}
-      <div className="min-h-screen flex items-center justify-center p-12 relative overflow-hidden">
+      <div className="min-h-screen snap-start flex items-center justify-center p-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(57,181,74,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(57,181,74,0.05)_1px,transparent_1px)] bg-[size:50px_50px]" />
         <div className="absolute top-1/4 right-1/4 size-96 bg-gradient-to-br from-[#39B54A] to-[#22d3ee] opacity-15 blur-3xl rounded-full" />
         <div className="absolute bottom-1/4 left-1/4 size-96 bg-gradient-to-br from-[#627EEA] to-[#39B54A] opacity-15 blur-3xl rounded-full" />
@@ -95,7 +95,7 @@ export function BlockchainPlatformsHome() {
       </div>
 
       {/* Sections Overview */}
-      <div className="max-w-7xl mx-auto px-12 py-16">
+      <div className="min-h-screen snap-start max-w-7xl mx-auto px-12 py-16">
         <h2 className="text-4xl font-bold text-foreground mb-12">Course Sections</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sections.map((section) => (
@@ -121,7 +121,7 @@ export function BlockchainPlatformsHome() {
       </div>
 
       {/* Instructors */}
-      <div className="max-w-7xl mx-auto px-12 py-16 border-t border-border">
+      <div className="min-h-screen snap-start max-w-7xl mx-auto px-12 py-16 border-t border-border">
         <h2 className="text-4xl font-bold text-foreground mb-3">Meet the Instructor{instructors.length > 1 ? 's' : ''}</h2>
         <p className="text-muted-foreground mb-10">The people behind this course</p>
 

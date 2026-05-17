@@ -47,10 +47,10 @@ const courseSections = [
 
 export function CourseSummary() {
   return (
-    <div className="size-full overflow-y-auto">
-      <div className="min-h-screen">
+    <div id="section-scroll" className="size-full overflow-y-auto snap-y snap-mandatory">
+      <div>
         {/* Title */}
-        <div className="h-screen">
+        <div className="h-screen snap-start">
           <TitleSlide
             sectionNumber="OVERVIEW"
             title="Course Summary"
@@ -61,7 +61,7 @@ export function CourseSummary() {
         </div>
 
         {/* Course Map */}
-        <div className="h-screen flex items-center justify-center p-12">
+        <div className="h-screen snap-start flex items-center justify-center p-12">
           <div className="max-w-4xl w-full">
             <h2 className="text-4xl font-bold text-foreground mb-2 text-center">Course Roadmap</h2>
             <p className="text-muted-foreground mb-10 text-center">Four parts. One coherent journey from history to the future.</p>

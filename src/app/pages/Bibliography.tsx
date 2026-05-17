@@ -309,7 +309,7 @@ export function Bibliography() {
     : resources.filter(r => r.tag === activeFilter);
 
   return (
-    <div className="size-full overflow-y-auto">
+    <div id="section-scroll" className="size-full overflow-y-auto">
       <div className="max-w-5xl mx-auto px-8 py-16">
 
         {/* Header */}

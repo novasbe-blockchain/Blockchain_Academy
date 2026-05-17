@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 
 export function Conclusion() {
   return (
-    <div className="h-full w-full overflow-y-auto snap-y snap-mandatory">
+    <div id="section-scroll" className="h-full w-full overflow-y-auto snap-y snap-mandatory">
       <div className="slide-flow">
 
       {/* ═══════ CONCLUSION SLIDE ═══════ */}

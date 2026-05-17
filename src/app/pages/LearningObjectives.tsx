@@ -36,10 +36,10 @@ const objectives = [
 
 export function LearningObjectives() {
   return (
-    <div className="size-full overflow-y-auto">
-      <div className="min-h-screen">
+    <div id="section-scroll" className="size-full overflow-y-auto snap-y snap-mandatory">
+      <div>
         {/* Title */}
-        <div className="h-screen">
+        <div className="h-screen snap-start">
           <TitleSlide
             sectionNumber="BEFORE WE BEGIN"
             title="Learning Objectives"
@@ -49,7 +49,7 @@ export function LearningObjectives() {
         </div>
 
         {/* Objectives Grid */}
-        <div className="h-screen flex items-center justify-center p-12">
+        <div className="h-screen snap-start flex items-center justify-center p-12">
           <div className="max-w-5xl w-full">
             <h2 className="text-4xl font-bold text-foreground mb-3 text-center">By the End of This Course</h2>
             <p className="text-lg text-muted-foreground mb-10 text-center max-w-2xl mx-auto">
