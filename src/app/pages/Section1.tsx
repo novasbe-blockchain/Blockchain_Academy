@@ -6,7 +6,6 @@ import { DiagramSlide } from '../components/templates/DiagramSlide';
 import { QuizSlide } from '../components/templates/QuizSlide';
 import { DiscussionSlide } from '../components/templates/DiscussionSlide';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
-import { DefinitionBox } from '../components/shared/DefinitionBox';
 import { CalloutBox } from '../components/shared/CalloutBox';
 import { BlockchainChain } from '../components/blockchain/BlockchainChain';
 import { BlockchainBlock } from '../components/blockchain/BlockchainBlock';
@@ -981,6 +980,242 @@ function ChainBuilderExercise() {
   );
 }
 
+// ─── Interactive DLT topology demo ──────────────────────────────────────────
+
+type TopoMode = 'centralized' | 'decentralized' | 'distributed';
+
+interface TopoNode { id: string; x: number; y: number; size?: number }
+interface TopoEdge { a: string; b: string }
+interface Topology { nodes: TopoNode[]; edges: TopoEdge[] }
+
+const TOPOLOGIES: Record<TopoMode, Topology> = {
+  centralized: {
+    nodes: [
+      { id: 'c',  x: 160, y: 140, size: 14 },
+      { id: 's0', x: 260, y: 140 },
+      { id: 's1', x: 218, y: 222 },
+      { id: 's2', x: 126, y: 240 },
+      { id: 's3', x: 44,  y: 200 },
+      { id: 's4', x: 44,  y: 80  },
+      { id: 's5', x: 140, y: 30  },
+      { id: 's6', x: 250, y: 58  },
+    ],
+    edges: ['s0','s1','s2','s3','s4','s5','s6'].map(s => ({ a: 'c', b: s })),
+  },
+  decentralized: {
+    nodes: [
+      { id: 'h0', x: 160, y: 55,  size: 11 },
+      { id: 'h1', x: 60,  y: 215, size: 11 },
+      { id: 'h2', x: 260, y: 215, size: 11 },
+      { id: 'l0a', x: 100, y: 18 },
+      { id: 'l0b', x: 225, y: 18 },
+      { id: 'l1a', x: 15,  y: 195 },
+      { id: 'l1b', x: 70,  y: 270 },
+      { id: 'l2a', x: 305, y: 195 },
+      { id: 'l2b', x: 250, y: 270 },
+    ],
+    edges: [
+      { a: 'h0', b: 'h1' }, { a: 'h0', b: 'h2' }, { a: 'h1', b: 'h2' },
+      { a: 'h0', b: 'l0a' }, { a: 'h0', b: 'l0b' },
+      { a: 'h1', b: 'l1a' }, { a: 'h1', b: 'l1b' },
+      { a: 'h2', b: 'l2a' }, { a: 'h2', b: 'l2b' },
+    ],
+  },
+  distributed: {
+    nodes: [
+      { id: 'p00', x: 60,  y: 50  }, { id: 'p01', x: 160, y: 50  }, { id: 'p02', x: 260, y: 50  },
+      { id: 'p10', x: 60,  y: 140 }, { id: 'p11', x: 160, y: 140 }, { id: 'p12', x: 260, y: 140 },
+      { id: 'p20', x: 60,  y: 230 }, { id: 'p21', x: 160, y: 230 }, { id: 'p22', x: 260, y: 230 },
+    ],
+    edges: [
+      // horizontal
+      { a: 'p00', b: 'p01' }, { a: 'p01', b: 'p02' },
+      { a: 'p10', b: 'p11' }, { a: 'p11', b: 'p12' },
+      { a: 'p20', b: 'p21' }, { a: 'p21', b: 'p22' },
+      // vertical
+      { a: 'p00', b: 'p10' }, { a: 'p10', b: 'p20' },
+      { a: 'p01', b: 'p11' }, { a: 'p11', b: 'p21' },
+      { a: 'p02', b: 'p12' }, { a: 'p12', b: 'p22' },
+      // diagonals (mesh feel)
+      { a: 'p00', b: 'p11' }, { a: 'p11', b: 'p22' },
+      { a: 'p02', b: 'p11' }, { a: 'p11', b: 'p20' },
+    ],
+  },
+};
+
+const MODE_INFO: Record<TopoMode, { color: string; label: string; tagline: string; lesson: string }> = {
+  centralized: {
+    color: '#ED1C24',
+    label: 'Centralized',
+    tagline: 'One server holds everything. Fast and simple — but if it goes down, the whole network goes down.',
+    lesson: 'Try clicking the centre node. Then try clicking one satellite. Same act, very different blast radius.',
+  },
+  decentralized: {
+    color: '#f59e0b',
+    label: 'Decentralized',
+    tagline: 'Several hubs share authority. No single hub controls everything, but each hub still rules its cluster.',
+    lesson: 'Click a hub — its leaves are orphaned because they only reach the network through it. The other clusters keep working.',
+  },
+  distributed: {
+    color: '#39B54A',
+    label: 'Distributed',
+    tagline: 'Every node is a peer with the same role. No single failure can take the network down.',
+    lesson: 'Try clicking several nodes. The mesh routes around the gaps — this is what blockchain inherits.',
+  },
+};
+
+function largestConnected(topo: Topology, failed: Set<string>): Set<string> {
+  const adj = new Map<string, string[]>();
+  for (const n of topo.nodes) adj.set(n.id, []);
+  for (const e of topo.edges) { adj.get(e.a)!.push(e.b); adj.get(e.b)!.push(e.a); }
+
+  const visited = new Set<string>();
+  let best = new Set<string>();
+  for (const n of topo.nodes) {
+    if (failed.has(n.id) || visited.has(n.id)) continue;
+    const comp = new Set<string>();
+    const stack = [n.id];
+    while (stack.length) {
+      const cur = stack.pop()!;
+      if (comp.has(cur)) continue;
+      comp.add(cur);
+      visited.add(cur);
+      for (const nb of adj.get(cur) || []) if (!failed.has(nb) && !comp.has(nb)) stack.push(nb);
+    }
+    if (comp.size > best.size) best = comp;
+  }
+  return best;
+}
+
+function NetworkTopologyDemo() {
+  const [mode, setMode] = useState<TopoMode>('centralized');
+  const [failed, setFailed] = useState<Set<string>>(new Set());
+
+  const topo = TOPOLOGIES[mode];
+  const info = MODE_INFO[mode];
+  const total = topo.nodes.length;
+  const aliveCount = total - failed.size;
+  const main = largestConnected(topo, failed);
+  const connected = main.size;
+  const isolated = aliveCount - connected;
+
+  let status: { color: string; label: string };
+  if (aliveCount === 0)              status = { color: '#ED1C24', label: 'Network down — all nodes offline' };
+  else if (connected === aliveCount) status = { color: '#39B54A', label: `Operational · ${connected}/${total} reachable` };
+  else if (connected / aliveCount <= 0.5) status = { color: '#ED1C24', label: `Down · only ${connected}/${total} reachable, ${isolated} isolated` };
+  else                               status = { color: '#f59e0b', label: `Degraded · ${connected}/${total} reachable, ${isolated} isolated` };
+
+  const toggleNode = (id: string) => {
+    setFailed(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const switchMode = (m: TopoMode) => {
+    setMode(m);
+    setFailed(new Set());
+  };
+
+  const nodeFill = (id: string) => {
+    if (failed.has(id)) return '#ED1C24';
+    if (main.has(id))   return info.color;
+    return '#9ca3af'; // isolated alive
+  };
+
+  return (
+    <div className="w-full flex flex-col gap-3">
+      {/* Mode tabs */}
+      <div className="grid grid-cols-3 gap-1.5">
+        {(['centralized','decentralized','distributed'] as TopoMode[]).map(m => {
+          const active = m === mode;
+          const c = MODE_INFO[m];
+          return (
+            <button
+              key={m}
+              onClick={() => switchMode(m)}
+              className="px-2.5 py-2 rounded-lg border-2 text-xs font-bold transition-colors"
+              style={{
+                borderColor: active ? c.color : 'var(--border)',
+                backgroundColor: active ? c.color + '15' : 'transparent',
+                color: active ? c.color : 'var(--foreground)',
+              }}
+            >
+              {c.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Diagram */}
+      <div className="bg-card rounded-xl border border-border p-2">
+        <svg viewBox="0 0 320 280" className="w-full h-auto" role="img" aria-label={`${info.label} network topology`}>
+          {/* Edges */}
+          {topo.edges.map((e, i) => {
+            const a = topo.nodes.find(n => n.id === e.a)!;
+            const b = topo.nodes.find(n => n.id === e.b)!;
+            const dead = failed.has(e.a) || failed.has(e.b);
+            return (
+              <line
+                key={i}
+                x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+                stroke={dead ? '#ED1C2440' : info.color + '70'}
+                strokeWidth={1.5}
+                strokeDasharray={dead ? '3 3' : undefined}
+              />
+            );
+          })}
+          {/* Nodes */}
+          {topo.nodes.map(n => {
+            const r = n.size ?? 9;
+            const fill = nodeFill(n.id);
+            const isFailed = failed.has(n.id);
+            return (
+              <g key={n.id} onClick={() => toggleNode(n.id)} style={{ cursor: 'pointer' }}>
+                {/* halo when alive in main component */}
+                {!isFailed && main.has(n.id) && (
+                  <circle cx={n.x} cy={n.y} r={r + 5} fill={fill} opacity={0.12} />
+                )}
+                <circle cx={n.x} cy={n.y} r={r} fill={fill} stroke="#fff" strokeWidth={2} />
+                {isFailed && (
+                  <>
+                    <line x1={n.x - r * 0.55} y1={n.y - r * 0.55} x2={n.x + r * 0.55} y2={n.y + r * 0.55} stroke="#fff" strokeWidth={2} />
+                    <line x1={n.x + r * 0.55} y1={n.y - r * 0.55} x2={n.x - r * 0.55} y2={n.y + r * 0.55} stroke="#fff" strokeWidth={2} />
+                  </>
+                )}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Status + reset */}
+      <div className="flex items-center gap-2">
+        <div className="flex-1 px-3 py-2 rounded-lg border-2 text-xs font-bold flex items-center gap-2"
+             style={{ borderColor: status.color + '60', backgroundColor: status.color + '12', color: status.color }}>
+          <span className="size-2 rounded-full" style={{ backgroundColor: status.color }} />
+          {status.label}
+        </div>
+        <button
+          onClick={() => setFailed(new Set())}
+          disabled={failed.size === 0}
+          className="px-2.5 py-2 rounded-lg bg-muted text-xs font-semibold text-muted-foreground hover:bg-muted/80 disabled:opacity-40 transition-colors"
+        >
+          ↺ Reset
+        </button>
+      </div>
+
+      {/* Lesson */}
+      <div className="px-3 py-2 rounded-lg text-[11px] text-muted-foreground leading-snug"
+           style={{ backgroundColor: info.color + '08', borderLeft: `3px solid ${info.color}` }}>
+        <span className="font-semibold text-foreground">{info.label}.</span> {info.tagline}{' '}
+        <span className="italic">{info.lesson}</span>
+      </div>
+    </div>
+  );
+}
+
 export function Section1() {
   return (
     <div className="size-full flex overflow-hidden">
@@ -1078,32 +1313,46 @@ export function Section1() {
         </div>
 
         <div className="h-full">
-          <ConceptSlide
-            title="Understanding DLT Models"
-            description="Distributed Ledger Technology (DLT) removes the need for a central database by replicating data across a network."
-            visual={
-              <div className="space-y-4 w-full">
-                <DefinitionBox
-                  term="Centralized System"
-                  definition="One server or authority holds all data. Fast and simple, but creates a single point of failure and requires full trust in the operator."
-                />
-                <DefinitionBox
-                  term="Decentralized System"
-                  definition="Multiple independent nodes make decisions. No single node has complete control, but sub-groups may still form clusters of authority."
-                />
-                <DefinitionBox
-                  term="Distributed System"
-                  definition="Every node holds a full or partial copy of the data and participates equally. Decisions require network-wide consensus (e.g., blockchain)."
-                />
+          <div className="slide-template w-full flex flex-col p-5 lg:p-8">
+            <div className="shrink-0 mb-3">
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Understanding DLT Models</h2>
+              <p className="text-sm lg:text-base text-muted-foreground max-w-3xl">
+                Distributed Ledger Technology removes the need for a central database by replicating data across a network. Switch between the three topologies and click nodes to take them offline — watch what happens.
+              </p>
+            </div>
+
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-4 lg:gap-6">
+              {/* Interactive */}
+              <div className="flex items-center justify-center">
+                <NetworkTopologyDemo />
               </div>
-            }
-            keyPoints={[
-              "Centralized = one point of control and failure",
-              "Decentralized = multiple independent decision-makers",
-              "Distributed = all nodes participate equally with shared data",
-              "Blockchain is a specific type of distributed ledger"
-            ]}
-          />
+
+              {/* Key insights */}
+              <div className="flex flex-col justify-center gap-3">
+                {[
+                  { color: '#ED1C24', title: 'Centralized = single point of control', desc: 'One operator owns the system. If that node fails, the network fails. Trust is total.' },
+                  { color: '#f59e0b', title: 'Decentralized = clusters of authority',  desc: 'Multiple independent hubs. Killing one breaks its cluster but leaves the rest intact.' },
+                  { color: '#39B54A', title: 'Distributed = every node is a peer',     desc: 'All nodes hold the data and participate equally. The mesh routes around failures.' },
+                  { color: '#6366f1', title: 'Blockchain is a distributed ledger',     desc: 'It adds cryptographic consensus on top of a distributed network — so all peers agree on one shared history.' },
+                ].map((p, i) => (
+                  <div
+                    key={p.title}
+                    className="flex items-start gap-3 p-3 lg:p-4 bg-card rounded-lg border"
+                    style={{ borderColor: p.color + '40' }}
+                  >
+                    <div className="size-7 lg:size-8 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-sm"
+                         style={{ backgroundColor: p.color }}>
+                      {i + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-bold text-foreground leading-snug">{p.title}</div>
+                      <div className="text-xs lg:text-sm text-muted-foreground mt-0.5 leading-snug">{p.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* ═══════ 3. WHY BLOCKCHAIN CHALLENGES TRUSTED THIRD PARTIES ═══════ */}
