@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TitleSlide } from '../components/templates/TitleSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { ComparisonSlide } from '../components/templates/ComparisonSlide';
@@ -17,16 +17,534 @@ const section2Chapters = [
   { id: 's2-byzantine', label: 'Byzantine Problem' },
   { id: 's2-doublespend', label: 'Double-Spending' },
   { id: 's2-immutability', label: 'Immutability' },
-  { id: 's2-supply', label: 'Supply Model' },
+  { id: 's2-supply', label: '🧩 Supply Model' },
   { id: 's2-stats', label: 'Network Statistics' },
   { id: 's2-nodes', label: 'Node Distribution' },
   { id: 's2-keys', label: 'Keys & Seed Phrase' },
   { id: 's2-keys-demo', label: '🧩 Build a Wallet' },
   { id: 's2-security', label: 'Security Model' },
+  { id: 's2-mining', label: 'Mining' },
+  { id: 's2-mining-demo', label: '🧩 Find a Nonce' },
   { id: 's2-programmability', label: 'Programmability' },
   { id: 's2-quiz', label: 'Quizzes' },
   { id: 's2-takeaways', label: 'Takeaways' },
 ];
+
+// ─── Interactive: Bitcoin Supply Chart ──────────────────────────────────────
+
+// Halving epochs — start year (as decimal), reward, cumulative BTC at the
+// START of the epoch. Cumulative-at-start follows the geometric series:
+// after the k-th halving, 21,000,000 × (1 − 1/2^k) BTC has been mined.
+const EPOCHS = [
+  { start: 2009.01, reward: 50,           cumAtStart: 0          },
+  { start: 2012.91, reward: 25,           cumAtStart: 10_500_000 },
+  { start: 2016.52, reward: 12.5,         cumAtStart: 15_750_000 },
+  { start: 2020.36, reward: 6.25,         cumAtStart: 18_375_000 },
+  { start: 2024.30, reward: 3.125,        cumAtStart: 19_687_500 },
+  { start: 2028.30, reward: 1.5625,       cumAtStart: 20_343_750 },
+  { start: 2032.30, reward: 0.78125,      cumAtStart: 20_671_875 },
+  { start: 2036.30, reward: 0.390625,     cumAtStart: 20_835_938 },
+  { start: 2040.30, reward: 0.1953125,    cumAtStart: 20_917_969 },
+  { start: 2044.30, reward: 0.09765625,   cumAtStart: 20_958_984 },
+];
+
+const MAX_BTC = 21_000_000;
+const MIN_YEAR = 2009;
+const MAX_YEAR = 2048;
+
+function epochAtYear(year: number) {
+  for (let i = EPOCHS.length - 1; i >= 0; i--) {
+    if (year >= EPOCHS[i].start) return { ...EPOCHS[i], idx: i };
+  }
+  return { ...EPOCHS[0], idx: 0 };
+}
+
+function supplyAtYear(year: number): number {
+  if (year <= MIN_YEAR) return 0;
+  const e = epochAtYear(year);
+  // 210,000 blocks per epoch, epoch length ≈ 4 years → 52,500 blocks per year
+  const yearsIn = year - e.start;
+  const btcPerYear = 52_500 * e.reward;
+  const total = e.cumAtStart + yearsIn * btcPerYear;
+  return Math.min(total, MAX_BTC);
+}
+
+function fmtBtc(n: number): string {
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + 'M';
+  if (n >= 1_000)     return (n / 1_000).toFixed(1) + 'k';
+  return n.toFixed(0);
+}
+
+function fmtYear(y: number): string {
+  const year = Math.floor(y);
+  const month = Math.round((y - year) * 12);
+  const m = Math.max(1, Math.min(12, month + 1));
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${MONTHS[m - 1]} ${year}`;
+}
+
+function BitcoinSupplyInfoPanel({ year }: { year: number }) {
+  const e = epochAtYear(year);
+  const total = supplyAtYear(year);
+  const pct = (total / MAX_BTC) * 100;
+  const nextHalvingYear = EPOCHS[e.idx + 1]?.start;
+  const yearsToNext = nextHalvingYear ? nextHalvingYear - year : null;
+  const issuanceRate = 52_500 * e.reward;
+
+  return (
+    <div className="flex flex-col gap-2.5">
+      <div className="p-3 bg-gradient-to-br from-[#f59e0b]/15 to-transparent border border-[#f59e0b]/40 rounded-xl">
+        <div className="text-[10px] font-bold text-[#f59e0b] uppercase tracking-widest">Total mined</div>
+        <div className="font-mono font-black text-2xl text-foreground mt-0.5">{Math.round(total).toLocaleString()} BTC</div>
+        <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
+          <div className="h-full bg-[#f59e0b] transition-all" style={{ width: `${pct}%` }} />
+        </div>
+        <div className="text-[10px] text-muted-foreground mt-1">{pct.toFixed(2)}% of 21,000,000 cap</div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <div className="p-2.5 bg-card border border-border rounded-lg">
+          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Epoch</div>
+          <div className="font-black text-foreground">#{e.idx}</div>
+        </div>
+        <div className="p-2.5 bg-card border border-border rounded-lg">
+          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Block reward</div>
+          <div className="font-black text-foreground">{e.reward < 1 ? e.reward.toFixed(4) : e.reward} BTC</div>
+        </div>
+        <div className="p-2.5 bg-card border border-border rounded-lg col-span-2">
+          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Yearly issuance</div>
+          <div className="font-mono font-black text-foreground">≈ {issuanceRate.toLocaleString(undefined, { maximumFractionDigits: 0 })} BTC / year</div>
+        </div>
+        <div className="p-2.5 bg-card border border-border rounded-lg col-span-2">
+          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Next halving</div>
+          {nextHalvingYear ? (
+            <div className="font-black text-foreground">
+              {fmtYear(nextHalvingYear)} <span className="text-muted-foreground font-normal text-xs">· in {yearsToNext!.toFixed(1)} years · reward → {(e.reward / 2).toFixed(4)} BTC</span>
+            </div>
+          ) : (
+            <div className="text-muted-foreground text-xs">All halvings shown — issuance trends to zero by ~2140</div>
+          )}
+        </div>
+      </div>
+
+      <div className="p-2.5 bg-muted/40 border border-border rounded-lg text-[11px] text-muted-foreground leading-snug">
+        Every <strong className="text-foreground">210,000 blocks</strong> (about 4 years), the block reward halves. Started at <strong className="text-foreground">50 BTC</strong> in 2009. The last sat is mined around <strong className="text-foreground">2140</strong> — after that, miners are paid only by transaction fees.
+      </div>
+    </div>
+  );
+}
+
+// Combined slide-friendly wrapper that shares a single `year` state between
+// the chart (left) and info panel (right).
+function BitcoinSupplyInteractive() {
+  const [year, setYear] = useState(2026);
+  return (
+    <div className="h-full flex flex-col p-5 lg:p-8">
+      <div className="shrink-0 mb-3">
+        <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">🧩 Interactive</span>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Bitcoin Supply Model</h2>
+        <p className="text-sm text-muted-foreground max-w-3xl">Fixed cap, predictable issuance, halving every ~4 years. Scrub the slider or jump to any halving — every metric below recalculates from the actual issuance curve.</p>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-5">
+        <div className="min-w-0">
+          <BitcoinSupplyChartWithYear year={year} setYear={setYear} />
+        </div>
+        <div className="overflow-y-auto">
+          <BitcoinSupplyInfoPanel year={year} />
+        </div>
+      </div>
+
+      {/* Qualitative facts strip */}
+      <div className="shrink-0 mt-3 grid grid-cols-3 gap-2 text-[11px]">
+        <div className="p-2 bg-card border border-border rounded-lg">
+          <span className="font-bold text-foreground">Deflationary by design.</span>
+          <span className="text-muted-foreground"> Supply growth slows by half every cycle — there is no monetary committee.</span>
+        </div>
+        <div className="p-2 bg-card border border-border rounded-lg">
+          <span className="font-bold text-foreground">Halvings precede cycles.</span>
+          <span className="text-muted-foreground"> Each prior halving has been followed by a major price expansion within 12–18 months.</span>
+        </div>
+        <div className="p-2 bg-card border border-border rounded-lg">
+          <span className="font-bold text-foreground">~3–4 M BTC lost.</span>
+          <span className="text-muted-foreground"> Forgotten keys, dead wallets — effective supply is meaningfully smaller than the cap.</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Pulled into a separate sub-component so the slider state is owned by the parent.
+function BitcoinSupplyChartWithYear({ year, setYear }: { year: number; setYear: (y: number) => void }) {
+  const currentSupply = supplyAtYear(year);
+  const e = epochAtYear(year);
+
+  const W = 600, H = 300;
+  const M = { top: 18, right: 14, bottom: 36, left: 56 };
+  const pw = W - M.left - M.right;
+  const ph = H - M.top  - M.bottom;
+
+  const sx = (yr: number) => M.left + ((yr - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * pw;
+  const sy = (btc: number) => M.top + ph - (btc / MAX_BTC) * ph;
+
+  const pathPoints: string[] = [];
+  let first = true;
+  for (const ep of EPOCHS) {
+    if (ep.start > MAX_YEAR) break;
+    pathPoints.push(`${first ? 'M' : 'L'} ${sx(ep.start).toFixed(2)} ${sy(ep.cumAtStart).toFixed(2)}`);
+    first = false;
+  }
+  pathPoints.push(`L ${sx(MAX_YEAR).toFixed(2)} ${sy(supplyAtYear(MAX_YEAR)).toFixed(2)}`);
+  const supplyPath = pathPoints.join(' ');
+
+  const yearTicks = [2009, 2012, 2016, 2020, 2024, 2028, 2032, 2036, 2040, 2044, 2048];
+  const supplyTicks = [0, 5, 10, 15, 20, 21];
+
+  return (
+    <div className="w-full flex flex-col gap-3">
+      <div className="p-3 bg-card border border-border rounded-xl">
+        <div className="flex items-center justify-between gap-3 mb-1">
+          <div className="text-xs font-semibold text-muted-foreground">Drag the slider to a year</div>
+          <div className="font-mono font-black text-base text-[#f59e0b]">{fmtYear(year)}</div>
+        </div>
+        <input
+          type="range"
+          min={MIN_YEAR}
+          max={MAX_YEAR}
+          step={0.05}
+          value={year}
+          onChange={ev => setYear(Number(ev.target.value))}
+          className="w-full accent-[#f59e0b]"
+          aria-label="Year"
+        />
+        <div className="flex justify-between text-[10px] text-muted-foreground mt-0.5 font-mono">
+          <span>{MIN_YEAR}</span><span>{MAX_YEAR}</span>
+        </div>
+      </div>
+
+      <div className="bg-card border border-border rounded-xl p-2">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" role="img" aria-label="Bitcoin supply over time">
+          {supplyTicks.map(t => (
+            <g key={`yt-${t}`}>
+              <line x1={M.left} y1={sy(t * 1_000_000)} x2={M.left + pw} y2={sy(t * 1_000_000)}
+                    stroke="currentColor" strokeOpacity="0.08" />
+              <text x={M.left - 6} y={sy(t * 1_000_000) + 3} fontSize="10"
+                    textAnchor="end" fill="currentColor" opacity="0.6">{t}M</text>
+            </g>
+          ))}
+          {yearTicks.map(t => (
+            <g key={`xt-${t}`}>
+              <line x1={sx(t)} y1={M.top + ph} x2={sx(t)} y2={M.top + ph + 4}
+                    stroke="currentColor" strokeOpacity="0.4" />
+              <text x={sx(t)} y={M.top + ph + 16} fontSize="10" textAnchor="middle"
+                    fill="currentColor" opacity="0.6">{t}</text>
+            </g>
+          ))}
+          <line x1={M.left} y1={sy(MAX_BTC)} x2={M.left + pw} y2={sy(MAX_BTC)}
+                stroke="#ED1C24" strokeOpacity="0.5" strokeDasharray="3 3" />
+          <text x={M.left + pw - 4} y={sy(MAX_BTC) - 4} fontSize="10" textAnchor="end" fill="#ED1C24" opacity="0.8">
+            21,000,000 BTC cap
+          </text>
+          {EPOCHS.map((ep, i) => {
+            if (i === 0 || ep.start > MAX_YEAR) return null;
+            const active = e.idx === i;
+            return (
+              <g key={`hv-${i}`} style={{ cursor: 'pointer' }} onClick={() => setYear(ep.start + 0.05)}>
+                <line x1={sx(ep.start)} y1={M.top} x2={sx(ep.start)} y2={M.top + ph}
+                      stroke="#f59e0b" strokeOpacity={active ? 0.9 : 0.35} strokeDasharray="2 4" />
+                <text x={sx(ep.start) + 2} y={M.top + 10} fontSize="9" fill="#f59e0b"
+                      opacity={active ? 1 : 0.7}>
+                  H{i} · {ep.reward < 1 ? ep.reward.toFixed(4) : ep.reward} BTC
+                </text>
+              </g>
+            );
+          })}
+          <path d={supplyPath} fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+          <path d={`${supplyPath} L ${sx(MAX_YEAR)} ${M.top + ph} L ${M.left} ${M.top + ph} Z`}
+                fill="#f59e0b" opacity="0.08" />
+          <line x1={sx(year)} y1={M.top} x2={sx(year)} y2={M.top + ph}
+                stroke="#6366f1" strokeWidth="1.5" strokeOpacity="0.7" />
+          <circle cx={sx(year)} cy={sy(currentSupply)} r="6" fill="#6366f1" stroke="#fff" strokeWidth="2" />
+          <line x1={M.left} y1={M.top} x2={M.left} y2={M.top + ph} stroke="currentColor" strokeOpacity="0.25" />
+          <line x1={M.left} y1={M.top + ph} x2={M.left + pw} y2={M.top + ph} stroke="currentColor" strokeOpacity="0.25" />
+        </svg>
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        {EPOCHS.map((ep, i) => {
+          const active = e.idx === i;
+          return (
+            <button
+              key={i}
+              onClick={() => setYear(ep.start + 0.05)}
+              className="px-2 py-1 rounded-md text-[10px] font-mono font-bold transition-colors"
+              style={{
+                backgroundColor: active ? '#f59e0b' : '#f59e0b15',
+                color: active ? '#fff' : '#f59e0b',
+                borderWidth: 1,
+                borderStyle: 'solid',
+                borderColor: active ? '#f59e0b' : '#f59e0b40',
+              }}
+            >
+              {i === 0 ? 'Genesis' : `H${i}`} · {Math.floor(ep.start)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── Interactive: Mining (nonce search) ────────────────────────────────────
+
+/**
+ * A fast pseudo-hash for the mining demo. NOT a real cryptographic hash —
+ * SHA-256 in the browser is async per-call which makes a tight inner loop
+ * painful to animate. This produces deterministic 64-char hex output so each
+ * (nonce + blockData) input lands on a stable string the student can compare.
+ * The footnote on the slide makes the simplification explicit.
+ */
+function pseudoHash(nonce: number, blockData: string): string {
+  let h = 0x811c9dc5 ^ nonce;
+  const s = blockData + ':' + nonce;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  let out = '';
+  for (let i = 0; i < 8; i++) {
+    h = Math.imul(h ^ (h >>> 13), 0x5bd1e995);
+    h ^= (h >>> 15);
+    out += ((h >>> 0).toString(16).padStart(8, '0'));
+  }
+  return out;
+}
+
+function MiningDemo() {
+  const BLOCK_DATA = 'block#902451 | prev:00000000…a3f8 | tx:8 | reward:3.125 BTC';
+  const [difficulty, setDifficulty] = useState(3); // leading hex zeros required
+  const [mining, setMining]   = useState(false);
+  const [nonce, setNonce]     = useState(0);
+  const [hash, setHash]       = useState(pseudoHash(0, BLOCK_DATA));
+  const [tries, setTries]     = useState(0);
+  const [found, setFound]     = useState<{ nonce: number; hash: string; tries: number; elapsedMs: number } | null>(null);
+  const [startedAt, setStartedAt] = useState<number | null>(null);
+
+  const target = '0'.repeat(difficulty);
+
+  // Animation loop — does N tries per frame and yields back to the browser.
+  useEffect(() => {
+    if (!mining) return;
+
+    const PER_FRAME = 6000;
+    let frame = 0;
+    let stopped = false;
+
+    const start = performance.now();
+    setStartedAt(start);
+    let curNonce = nonce;
+    let curTries = 0;
+
+    const tick = () => {
+      if (stopped) return;
+      for (let i = 0; i < PER_FRAME; i++) {
+        curNonce++;
+        curTries++;
+        const h = pseudoHash(curNonce, BLOCK_DATA);
+        if (h.startsWith(target)) {
+          setNonce(curNonce);
+          setHash(h);
+          setTries(t => t + curTries);
+          setFound({ nonce: curNonce, hash: h, tries: tries + curTries, elapsedMs: performance.now() - start });
+          setMining(false);
+          return;
+        }
+      }
+      // No find this frame — push the latest values and yield
+      setNonce(curNonce);
+      setHash(pseudoHash(curNonce, BLOCK_DATA));
+      setTries(t => t + curTries);
+      curTries = 0;
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+
+    return () => { stopped = true; cancelAnimationFrame(frame); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mining, target]);
+
+  const startMining = () => {
+    setMining(true);
+    setFound(null);
+  };
+  const pause = () => setMining(false);
+  const reset = () => {
+    setMining(false);
+    setNonce(0);
+    setTries(0);
+    setHash(pseudoHash(0, BLOCK_DATA));
+    setFound(null);
+    setStartedAt(null);
+  };
+
+  const elapsedMs = startedAt ? performance.now() - startedAt : 0;
+  const hashRate = mining && elapsedMs > 0 ? Math.round((tries / elapsedMs) * 1000) : 0;
+  const expectedTries = Math.pow(16, difficulty);
+
+  // Render the hash so the matching prefix is green, the rest neutral
+  const renderHash = (h: string) => {
+    const ok = h.slice(0, difficulty);
+    const rest = h.slice(difficulty);
+    const matches = ok === target;
+    return (
+      <span className="font-mono break-all">
+        <span className={matches ? 'text-[#39B54A] font-bold' : 'text-[#ED1C24] font-bold'}>{ok}</span>
+        <span className="text-muted-foreground">{rest}</span>
+      </span>
+    );
+  };
+
+  return (
+    <div className="h-full flex flex-col p-5 lg:p-8">
+      <div className="shrink-0 mb-3 flex items-start justify-between gap-4">
+        <div>
+          <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">🧩 Interactive</span>
+          <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Find a Valid Nonce</h2>
+          <p className="text-sm text-muted-foreground max-w-3xl">
+            Mining is a guessing game: try a nonce, hash the block, check if the hash starts with enough zeros. Pick a difficulty and press Start.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-5">
+        {/* Left — block + live hash */}
+        <div className="flex flex-col gap-3 min-w-0">
+          <div className="p-4 bg-card border border-border rounded-xl">
+            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Block header (simplified)</div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="p-2 bg-muted/40 rounded-md">
+                <div className="text-[10px] text-muted-foreground">Block #</div>
+                <div className="font-mono font-bold text-foreground">902,451</div>
+              </div>
+              <div className="p-2 bg-muted/40 rounded-md">
+                <div className="text-[10px] text-muted-foreground">Prev hash</div>
+                <div className="font-mono font-bold text-foreground">00000000…a3f8</div>
+              </div>
+              <div className="p-2 bg-muted/40 rounded-md">
+                <div className="text-[10px] text-muted-foreground">Transactions</div>
+                <div className="font-mono font-bold text-foreground">8</div>
+              </div>
+              <div className="p-2 bg-muted/40 rounded-md">
+                <div className="text-[10px] text-muted-foreground">Reward</div>
+                <div className="font-mono font-bold text-foreground">3.125 BTC</div>
+              </div>
+              <div className="p-2 bg-[#6366f1]/12 border border-[#6366f1]/30 rounded-md col-span-2">
+                <div className="text-[10px] text-[#6366f1] font-bold uppercase tracking-widest">Nonce (what you adjust)</div>
+                <div className="font-mono font-black text-base text-foreground">{nonce.toLocaleString()}</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-card border-2 rounded-xl"
+               style={{ borderColor: found ? '#39B54A60' : '#f59e0b40' }}>
+            <div className="flex items-center justify-between mb-1">
+              <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: found ? '#39B54A' : '#f59e0b' }}>
+                Current hash
+              </div>
+              <div className="text-[10px] text-muted-foreground font-mono">
+                target: <span className="text-[#39B54A] font-bold">{target}</span>
+                <span className="text-muted-foreground">{'·'.repeat(64 - difficulty)}</span>
+              </div>
+            </div>
+            <div className="text-[12px] leading-snug">{renderHash(hash)}</div>
+          </div>
+
+          {/* Controls */}
+          <div className="flex items-center gap-2">
+            {!mining ? (
+              <button onClick={startMining} disabled={!!found}
+                className="px-4 py-2 rounded-lg bg-[#f59e0b] text-white text-sm font-bold hover:bg-[#f59e0b]/90 disabled:opacity-50 transition-colors">
+                ⛏️ Start mining
+              </button>
+            ) : (
+              <button onClick={pause}
+                className="px-4 py-2 rounded-lg bg-muted text-foreground text-sm font-bold hover:bg-muted/80 transition-colors">
+                ⏸ Pause
+              </button>
+            )}
+            <button onClick={reset}
+              className="px-3 py-2 rounded-lg bg-muted text-xs font-semibold text-muted-foreground hover:bg-muted/80 transition-colors">
+              ↺ Reset
+            </button>
+            <div className="flex-1" />
+            {mining && <span className="text-[11px] text-[#f59e0b] font-bold animate-pulse">searching…</span>}
+            {found && <span className="text-[11px] text-[#39B54A] font-bold">✓ block found</span>}
+          </div>
+
+          {/* Found banner */}
+          {found && (
+            <div className="p-3 bg-gradient-to-br from-[#39B54A]/15 to-transparent border-2 border-[#39B54A]/50 rounded-xl">
+              <div className="text-xs font-black text-[#39B54A] uppercase tracking-widest mb-1">✓ Valid block</div>
+              <div className="text-xs text-muted-foreground leading-snug">
+                Took <strong className="text-foreground">{found.tries.toLocaleString()}</strong> attempts in
+                {' '}<strong className="text-foreground">{(found.elapsedMs / 1000).toFixed(2)}s</strong>.
+                The miner broadcasts this block to the network, every node verifies the hash in microseconds,
+                and the miner gets <strong className="text-foreground">3.125 BTC + tx fees</strong>.
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right — difficulty + stats */}
+        <div className="flex flex-col gap-3 min-w-0 overflow-y-auto">
+          <div className="p-3 bg-card border border-border rounded-xl">
+            <div className="flex items-center justify-between mb-1">
+              <div className="text-xs font-semibold text-foreground">Difficulty (leading hex zeros)</div>
+              <div className="font-mono font-black text-base text-[#f59e0b]">{difficulty}</div>
+            </div>
+            <input
+              type="range"
+              min={1}
+              max={6}
+              step={1}
+              value={difficulty}
+              onChange={ev => { if (!mining) setDifficulty(Number(ev.target.value)); }}
+              disabled={mining}
+              className="w-full accent-[#f59e0b]"
+              aria-label="Difficulty"
+            />
+            <div className="flex justify-between text-[10px] text-muted-foreground mt-0.5 font-mono">
+              <span>1 (easy)</span><span>6 (hard)</span>
+            </div>
+            <div className="text-[10px] text-muted-foreground mt-1.5">
+              Each extra zero makes finding a valid hash ~16× harder. Expected tries: <strong className="text-foreground font-mono">{expectedTries.toLocaleString()}</strong>.
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div className="p-2.5 bg-card border border-border rounded-lg">
+              <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Tries</div>
+              <div className="font-mono font-black text-foreground">{tries.toLocaleString()}</div>
+            </div>
+            <div className="p-2.5 bg-card border border-border rounded-lg">
+              <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Hash rate</div>
+              <div className="font-mono font-black text-foreground">{mining ? `${hashRate.toLocaleString()}/s` : '—'}</div>
+            </div>
+          </div>
+
+          <div className="p-3 bg-[#6366f1]/10 border border-[#6366f1]/30 rounded-xl text-[11px] text-muted-foreground leading-snug">
+            <div className="font-bold text-[#6366f1] mb-1">Real Bitcoin scale</div>
+            The current network does <strong className="text-foreground font-mono">~800 EH/s</strong> — that's 8 × 10²⁰ hashes per second. Real difficulty requires hashes starting with about <strong className="text-foreground">19 zeros in hex</strong>, automatically retargeted every 2,016 blocks to keep block times around 10 minutes.
+          </div>
+
+          <div className="p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-lg text-[10px] text-muted-foreground">
+            <strong className="text-foreground">Note:</strong> this demo uses a fast non-cryptographic hash for animation. Real Bitcoin uses <strong className="text-foreground">double SHA-256</strong> of the 80-byte block header. The search loop is identical.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ─── Interactive: Build a Wallet ────────────────────────────────────────────
 
@@ -493,46 +1011,9 @@ export function Section2() {
           />
         </div>
 
-        {/* ═══════ 4. SUPPLY MODEL ═══════ */}
+        {/* ═══════ 4. SUPPLY MODEL — INTERACTIVE ═══════ */}
         <div id="s2-supply" className="h-full">
-          <ConceptSlide
-            title="Bitcoin Supply Model"
-            description="Bitcoin has a fixed, predictable monetary policy — arguably the most transparent in history."
-            visual={
-              <div className="space-y-4 w-full">
-                <div className="p-5 bg-card rounded-xl border-2 border-[#f59e0b]">
-                  <h4 className="font-bold text-[#f59e0b] mb-3">📊 Supply Numbers</h4>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                      <div className="text-muted-foreground">Maximum Supply</div>
-                      <div className="font-bold text-foreground text-lg">21,000,000 BTC</div>
-                    </div>
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                      <div className="text-muted-foreground">Circulating (~2025)</div>
-                      <div className="font-bold text-foreground text-lg">~19,800,000 BTC</div>
-                    </div>
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                      <div className="text-muted-foreground">Current Block Reward</div>
-                      <div className="font-bold text-foreground text-lg">3.125 BTC</div>
-                    </div>
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                      <div className="text-muted-foreground">Next Halving</div>
-                      <div className="font-bold text-foreground text-lg">~2028</div>
-                    </div>
-                  </div>
-                </div>
-                <CalloutBox type="tip" title="The Halving">
-                  Every 210,000 blocks (~4 years), the block reward is cut in half. Started at 50 BTC in 2009, now 3.125 BTC after the April 2024 halving. The last Bitcoin will be mined around the year 2140.
-                </CalloutBox>
-              </div>
-            }
-            keyPoints={[
-              "Fixed supply makes Bitcoin deflationary by design",
-              "~94% of all Bitcoin that will ever exist has already been mined",
-              "Halving events historically precede major price cycles",
-              "Estimated 3-4 million BTC are permanently lost (forgotten keys)"
-            ]}
-          />
+          <BitcoinSupplyInteractive />
         </div>
 
         {/* ═══════ 5. NETWORK STATISTICS ═══════ */}
@@ -771,6 +1252,52 @@ export function Section2() {
               "Security increases as hash rate and node count grow"
             ]}
           />
+        </div>
+
+        {/* ═══════ 8. MINING — CONCEPT ═══════ */}
+        <div id="s2-mining" className="h-full">
+          <ConceptSlide
+            title="Mining — A Global Guessing Game"
+            description="Miners don't 'create' bitcoin out of thin air. They compete to add the next page to the ledger, and the network rewards whoever wins the race."
+            visual={
+              <div className="space-y-3 w-full">
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  {[
+                    { n: '1', emoji: '📥', title: 'Collect transactions',  desc: 'Miners watch the mempool and pick pending transactions, prioritising the highest fees.', color: '#6366f1' },
+                    { n: '2', emoji: '🧱', title: 'Build a candidate block', desc: 'They pack the transactions into a block, point its header at the previous block, and add a counter called the nonce.',     color: '#8b5cf6' },
+                    { n: '3', emoji: '🎲', title: 'Guess the nonce',        desc: 'They hash the block header, change the nonce, hash again, change again — billions of times per second.',   color: '#f59e0b' },
+                    { n: '4', emoji: '🎯', title: 'Until the hash is small enough', desc: 'A valid block hash must start with a specific number of zeros — set by the current difficulty.',          color: '#ED1C24' },
+                    { n: '5', emoji: '📡', title: 'Broadcast the block',    desc: 'First miner to find a valid hash sends the block to the network. Every node verifies it in a single hash check.', color: '#22d3ee' },
+                    { n: '6', emoji: '💰', title: 'Collect the reward',     desc: 'The winning miner gets the block subsidy (3.125 BTC today) plus all the transaction fees in that block.',     color: '#39B54A' },
+                  ].map(s => (
+                    <div key={s.n} className="flex items-start gap-3 p-3 bg-card rounded-lg border" style={{ borderColor: s.color + '40' }}>
+                      <div className="size-7 rounded-md flex items-center justify-center text-white text-xs font-black shrink-0" style={{ backgroundColor: s.color }}>{s.n}</div>
+                      <div className="min-w-0">
+                        <div className="font-bold text-foreground text-sm flex items-center gap-1.5">
+                          <span>{s.emoji}</span>{s.title}
+                        </div>
+                        <div className="text-xs text-muted-foreground leading-snug mt-0.5">{s.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <CalloutBox type="tip" title="Why all the effort?">
+                  Proof-of-work makes rewriting history physically expensive. To overwrite a single old block you'd have to redo all the work for that block AND every block after it — faster than the rest of the world combined. With ~800 EH/s on the network, that's currently uneconomical to attempt.
+                </CalloutBox>
+              </div>
+            }
+            keyPoints={[
+              "Mining is a race to find a nonce that produces a small-enough hash — the only way to win is to keep guessing",
+              "Difficulty automatically retargets every 2,016 blocks to keep block times around 10 minutes",
+              "Honest mining earns more than attacking — that's the security argument, not just trust",
+              "The reward shrinks every halving — eventually only transaction fees pay miners",
+            ]}
+          />
+        </div>
+
+        {/* ═══════ 8b. MINING — INTERACTIVE ═══════ */}
+        <div id="s2-mining-demo" className="h-full">
+          <MiningDemo />
         </div>
 
         {/* ═══════ 9. BITCOIN'S PROGRAMMABILITY LIMITS ═══════ */}
