@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { ChevronUp, ChevronDown, ArrowRight } from 'lucide-react';
+import { useT } from '../../i18n';
 
 interface SlideNavButtonsProps {
   nextChapterPath?: string;
@@ -12,6 +13,7 @@ export function SlideNavButtons({ nextChapterPath }: SlideNavButtonsProps) {
   const [hasScrollEl, setHasScrollEl] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const t = useT();
 
   const updatePosition = useCallback(() => {
     const el = document.getElementById('section-scroll');
@@ -63,7 +65,8 @@ export function SlideNavButtons({ nextChapterPath }: SlideNavButtonsProps) {
         <button
           onClick={scrollPrev}
           className="size-10 rounded-full bg-background/80 backdrop-blur-sm border border-border shadow-lg flex items-center justify-center text-foreground hover:bg-accent transition-all"
-          title="Previous slide"
+          title={t('slideNav.previous')}
+          aria-label={t('slideNav.previous')}
         >
           <ChevronUp className="size-5" />
         </button>
@@ -72,9 +75,9 @@ export function SlideNavButtons({ nextChapterPath }: SlideNavButtonsProps) {
         <button
           onClick={() => navigate(nextChapterPath!)}
           className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-primary text-primary-foreground shadow-lg hover:opacity-90 transition-all text-sm font-semibold whitespace-nowrap"
-          title="Go to next chapter"
+          title={t('slideNav.goToNextChapter')}
         >
-          <span>Next chapter</span>
+          <span>{t('slideNav.nextChapter')}</span>
           <ArrowRight className="size-4" />
         </button>
       )}
@@ -82,7 +85,8 @@ export function SlideNavButtons({ nextChapterPath }: SlideNavButtonsProps) {
         <button
           onClick={scrollNext}
           className="size-10 rounded-full bg-background/80 backdrop-blur-sm border border-border shadow-lg flex items-center justify-center text-foreground hover:bg-accent transition-all"
-          title="Next slide"
+          title={t('slideNav.next')}
+          aria-label={t('slideNav.next')}
         >
           <ChevronDown className="size-5" />
         </button>

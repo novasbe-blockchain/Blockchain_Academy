@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { useT } from '../../i18n';
 
 const STORAGE_KEY = 'section-nav-collapsed';
 
@@ -23,6 +24,7 @@ interface SectionNavProps {
  * strip via the toggle button at the top. Choice persists in localStorage.
  */
 export function SectionNav({ chapters, accentColor = '#ED1C24' }: SectionNavProps) {
+  const t = useT();
   const buttons = chapters.filter(c => c.kind !== 'group');
   const [activeId, setActiveId] = useState<string>(buttons[0]?.id ?? '');
   const [collapsed, setCollapsed] = useState<boolean>(() => {
@@ -73,8 +75,8 @@ export function SectionNav({ chapters, accentColor = '#ED1C24' }: SectionNavProp
         <button
           type="button"
           onClick={() => setCollapsed(c => !c)}
-          aria-label={collapsed ? 'Expand chapter sidebar' : 'Collapse chapter sidebar'}
-          title={collapsed ? 'Expand chapter sidebar' : 'Collapse chapter sidebar'}
+          aria-label={collapsed ? t('sectionNav.expand') : t('sectionNav.collapse')}
+          title={collapsed ? t('sectionNav.expand') : t('sectionNav.collapse')}
           className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
         >
           {collapsed

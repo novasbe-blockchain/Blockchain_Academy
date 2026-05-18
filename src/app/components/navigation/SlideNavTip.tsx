@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { ChevronUp, ChevronDown, X } from 'lucide-react';
+import { useT } from '../../i18n';
 
 const STORAGE_KEY = 'slide-nav-tip-seen';
 const AUTO_FADE_MS = 10_000;
@@ -15,6 +16,7 @@ const AUTO_FADE_MS = 10_000;
  */
 export function SlideNavTip() {
   const location = useLocation();
+  const t = useT();
   const [visible, setVisible] = useState(false);
 
   // Decide whether to show on the current route.
@@ -81,7 +83,7 @@ export function SlideNavTip() {
         }}
         className="group flex items-center gap-3 px-4 py-2.5 rounded-full border bg-card/95 backdrop-blur shadow-lg shadow-black/10 hover:shadow-xl transition-shadow"
         style={{ borderColor: 'rgba(99,102,241,0.5)' }}
-        aria-label="Dismiss navigation hint"
+        aria-label={t('slideNavTip.dismiss')}
       >
         <div className="flex flex-col gap-0.5">
           <span className="size-5 rounded-md border border-border bg-muted flex items-center justify-center">
@@ -92,8 +94,8 @@ export function SlideNavTip() {
           </span>
         </div>
         <div className="text-left">
-          <div className="text-xs font-bold text-foreground leading-tight">Arrow keys to navigate</div>
-          <div className="text-[10px] text-muted-foreground leading-tight">Press ↑ or ↓ to move between slides</div>
+          <div className="text-xs font-bold text-foreground leading-tight">{t('slideNavTip.title')}</div>
+          <div className="text-[10px] text-muted-foreground leading-tight">{t('slideNavTip.subtitle')}</div>
         </div>
         <X className="size-4 text-muted-foreground group-hover:text-foreground transition-colors" />
       </button>

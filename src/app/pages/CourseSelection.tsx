@@ -1,12 +1,15 @@
 import { Link } from 'react-router';
 import { ArrowRight, Lock } from 'lucide-react';
 import logo from '../../blockchainptlogo.jpeg';
+import { useT } from '../i18n';
+import type { TranslationKey } from '../i18n';
 
 interface Course {
   number: string;
-  title: string;
-  description: string;
-  topics: string[];
+  titleKey: TranslationKey;
+  descriptionKey: TranslationKey;
+  /** Five topic-chip translation keys, in display order. */
+  topicKeys: [TranslationKey, TranslationKey, TranslationKey, TranslationKey, TranslationKey];
   gradient: string;
   accentColor: string;
   path: string;
@@ -16,9 +19,9 @@ interface Course {
 const courses: Course[] = [
   {
     number: '01',
-    title: 'Blockchain Fundamentals',
-    description: 'Understand how blockchain technology works from the ground up — cryptography, consensus, Bitcoin, and the Web3 ecosystem.',
-    topics: ['DLT & Hashing', 'Bitcoin & Mining', 'Wallets & Transactions', 'Consensus Mechanisms', 'Web3 & dApps'],
+    titleKey: 'course.01.title',
+    descriptionKey: 'course.01.description',
+    topicKeys: ['course.01.topic.1', 'course.01.topic.2', 'course.01.topic.3', 'course.01.topic.4', 'course.01.topic.5'],
     gradient: 'from-[#ED1C24] to-[#f59e0b]',
     accentColor: '#ED1C24',
     path: '/blockchain-fundamentals',
@@ -26,9 +29,9 @@ const courses: Course[] = [
   },
   {
     number: '02',
-    title: 'Blockchain Platforms',
-    description: 'Bitcoin, Ethereum, Hyperledger Fabric, and interoperability — understand the trade-offs of each platform and when to use which.',
-    topics: ['Bitcoin Architecture', 'Ethereum & EVM', 'Hyperledger Fabric', 'Interoperability', 'Cosmos & Layer 0'],
+    titleKey: 'course.02.title',
+    descriptionKey: 'course.02.description',
+    topicKeys: ['course.02.topic.1', 'course.02.topic.2', 'course.02.topic.3', 'course.02.topic.4', 'course.02.topic.5'],
     gradient: 'from-[#39B54A] to-[#22d3ee]',
     accentColor: '#39B54A',
     path: '/blockchain-platforms',
@@ -36,9 +39,9 @@ const courses: Course[] = [
   },
   {
     number: '03',
-    title: 'Business Applications for Smart Contracts',
-    description: 'From theory to industry disruption — understand what smart contracts can and cannot do for your business, with real case studies and a team project.',
-    topics: ['Smart Contract Fundamentals', 'EVM & Web3 Landscape', 'Case Studies', 'Oracle Problem', 'Team Project'],
+    titleKey: 'course.03.title',
+    descriptionKey: 'course.03.description',
+    topicKeys: ['course.03.topic.1', 'course.03.topic.2', 'course.03.topic.3', 'course.03.topic.4', 'course.03.topic.5'],
     gradient: 'from-[#6366f1] to-[#8b5cf6]',
     accentColor: '#6366f1',
     path: '/smart-contracts',
@@ -46,9 +49,9 @@ const courses: Course[] = [
   },
   {
     number: '04',
-    title: 'Project Management for Blockchain Initiatives',
-    description: 'Plan, execute, and lead blockchain projects — from scoping and governance to risk management, team leadership, and measuring success.',
-    topics: ['Project Lifecycle', 'Scope & Governance', 'Risk & Audits', 'Communication', 'Team Leadership'],
+    titleKey: 'course.04.title',
+    descriptionKey: 'course.04.description',
+    topicKeys: ['course.04.topic.1', 'course.04.topic.2', 'course.04.topic.3', 'course.04.topic.4', 'course.04.topic.5'],
     gradient: 'from-[#f97316] to-[#eab308]',
     accentColor: '#f97316',
     path: '/project-management',
@@ -57,6 +60,8 @@ const courses: Course[] = [
 ];
 
 export function CourseSelection() {
+  const t = useT();
+
   return (
     <div className="size-full overflow-y-auto">
       {/* Hero */}
@@ -73,10 +78,10 @@ export function CourseSelection() {
               <img src={logo} alt="Blockchain Academy" className="h-24 object-contain" />
             </div>
             <h1 className="text-5xl lg:text-6xl font-black text-foreground mb-4">
-              Blockchain Academy
+              {t('home.title')}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Four courses. One complete mastery path. Choose where to begin.
+              {t('home.tagline')}
             </p>
           </div>
 
@@ -96,27 +101,27 @@ export function CourseSelection() {
                   </div>
 
                   <h2 className="text-xl font-bold text-foreground mb-2 group-hover:text-[--accent] transition-colors">
-                    {course.title}
+                    {t(course.titleKey)}
                   </h2>
                   <p className="text-sm text-muted-foreground mb-5 flex-1">
-                    {course.description}
+                    {t(course.descriptionKey)}
                   </p>
 
                   {/* Topics */}
                   <div className="flex flex-wrap gap-1.5 mb-5">
-                    {course.topics.map(t => (
+                    {course.topicKeys.map(key => (
                       <span
-                        key={t}
+                        key={key}
                         className="text-[10px] font-semibold px-2 py-0.5 rounded-full border"
                         style={{ color: course.accentColor, borderColor: course.accentColor + '40', backgroundColor: course.accentColor + '10' }}
                       >
-                        {t}
+                        {t(key)}
                       </span>
                     ))}
                   </div>
 
                   <div className="flex items-center gap-2 font-bold text-sm" style={{ color: course.accentColor }}>
-                    Start Course
+                    {t('common.start')}
                     <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
                   </div>
 
@@ -138,24 +143,24 @@ export function CourseSelection() {
                     <span className="text-white font-black text-lg">{course.number}</span>
                   </div>
 
-                  <h2 className="text-xl font-bold text-foreground mb-2">{course.title}</h2>
-                  <p className="text-sm text-muted-foreground mb-5 flex-1">{course.description}</p>
+                  <h2 className="text-xl font-bold text-foreground mb-2">{t(course.titleKey)}</h2>
+                  <p className="text-sm text-muted-foreground mb-5 flex-1">{t(course.descriptionKey)}</p>
 
                   {/* Topics */}
                   <div className="flex flex-wrap gap-1.5 mb-5">
-                    {course.topics.map(t => (
+                    {course.topicKeys.map(key => (
                       <span
-                        key={t}
+                        key={key}
                         className="text-[10px] font-semibold px-2 py-0.5 rounded-full border"
                         style={{ color: course.accentColor, borderColor: course.accentColor + '40', backgroundColor: course.accentColor + '10' }}
                       >
-                        {t}
+                        {t(key)}
                       </span>
                     ))}
                   </div>
 
                   <div className="flex items-center gap-2 font-bold text-sm" style={{ color: course.accentColor }}>
-                    Start Course
+                    {t('common.start')}
                     <ArrowRight className="size-4" />
                   </div>
 
@@ -165,7 +170,7 @@ export function CourseSelection() {
                       <Lock className="size-6 text-foreground" />
                     </div>
                     <span className="px-3 py-1 rounded-full bg-background/80 border border-border text-xs font-semibold text-foreground">
-                      Coming Soon
+                      {t('common.comingSoon')}
                     </span>
                   </div>
                 </div>

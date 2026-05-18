@@ -1,18 +1,18 @@
 import { Outlet, useLocation } from 'react-router';
-import { CourseNav } from './components/navigation/CourseNav';
+import { CourseNav, type Section } from './components/navigation/CourseNav';
 import { SlideNavButtons } from './components/navigation/SlideNavButtons';
 
 const BASE = '/blockchain-fundamentals';
 
-const sections = [
-  { id: 'home', number: '🏠', label: 'Home',         path: BASE },
-  { id: 'lo',   number: '🎯', label: 'Objectives',  path: `${BASE}/learning-objectives` },
-  { id: 'cs',   number: '🗺️', label: 'Summary',     path: `${BASE}/course-summary` },
-  { id: '0',    number: '00', label: 'Prologue',     path: `${BASE}/prologue` },
-  { id: '1',    number: '01', label: 'Intro',        path: `${BASE}/section-1` },
-  { id: '2',    number: '02', label: 'Bitcoin',      path: `${BASE}/section-2` },
-  { id: '3',    number: '03', label: "What's Next",  path: `${BASE}/section-3` },
-  { id: 'bib',  number: '📖', label: 'Bibliography', path: `${BASE}/bibliography` },
+const sections: Section[] = [
+  { id: 'home', number: '🏠', label: 'section.home',         path: BASE },
+  { id: 'lo',   number: '🎯', label: 'section.objectives',   path: `${BASE}/learning-objectives` },
+  { id: 'cs',   number: '🗺️', label: 'section.summary',      path: `${BASE}/course-summary` },
+  { id: '0',    number: '00', label: 'section.prologue',     path: `${BASE}/prologue` },
+  { id: '1',    number: '01', label: 'section.bf.intro',     path: `${BASE}/section-1` },
+  { id: '2',    number: '02', label: 'section.bf.bitcoin',   path: `${BASE}/section-2` },
+  { id: '3',    number: '03', label: 'section.bf.whatsNext', path: `${BASE}/section-3` },
+  { id: 'bib',  number: '📖', label: 'section.bibliography', path: `${BASE}/bibliography` },
 ];
 
 export function Root() {
