@@ -589,9 +589,21 @@ function ImmutableChainDemo() {
   // Compute each block's CURRENT hash from its stored prev + (possibly tampered) data.
   const currentHashes = chain.map(b => hashShort(`${b.num}|${b.prevHashStored}|${b.data}`));
 
-  // A block is "broken" if its stored prev-hash field no longer matches the
-  // previous block's CURRENT hash (because that block was tampered with).
-  const isBroken = chain.map((b, i) => i === 0 ? false : b.prevHashStored !== currentHashes[i - 1]);
+  // A block is "broken" if either:
+  //   • its stored prev-hash field no longer matches the previous block's
+  //     CURRENT hash (the immediate cascade trigger), OR
+  //   • any earlier block in the chain is already broken (the cascade itself
+  //     — once an upstream link is severed, the whole chain downstream is
+  //     part of a fork that the honest network would reject).
+  const isBroken: boolean[] = [];
+  for (let i = 0; i < chain.length; i++) {
+    if (i === 0) {
+      isBroken.push(false);
+    } else {
+      const linkBad = chain[i].prevHashStored !== currentHashes[i - 1];
+      isBroken.push(linkBad || isBroken[i - 1]);
+    }
+  }
   const isTampered = chain.map(b => b.data !== b.originalData);
 
   const anyChange = isTampered.some(Boolean) || isBroken.some(Boolean);
