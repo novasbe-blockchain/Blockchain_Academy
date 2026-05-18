@@ -6,6 +6,8 @@ import { ComparisonSlide } from '../../components/templates/ComparisonSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Layers } from 'lucide-react';
+import { GasCalculator } from '../../components/ethereum/GasCalculator';
+import { Eip1559Demo } from '../../components/ethereum/Eip1559Demo';
 
 const chapters = [
   { id: 's2-why', label: 'Why Ethereum?' },
@@ -13,9 +15,12 @@ const chapters = [
   { id: 's2-accounts', label: 'Accounts' },
   { id: 's2-evm', label: 'EVM' },
   { id: 's2-transaction', label: 'Transaction' },
+  { id: 's2-gas', label: '🧩 Gas' },
+  { id: 's2-eip1559', label: '🧩 EIP-1559' },
   { id: 's2-smartcontracts', label: 'Smart Contracts' },
   { id: 's2-consensus', label: 'PoW → PoS' },
   { id: 's2-evmecosystem', label: 'EVM Everywhere' },
+  { id: 's2-rollups', label: 'Rollups & L2s' },
   { id: 's2-defi',        label: 'DeFi Mechanics' },
   { id: 's2-stablecoins', label: 'Stablecoins' },
   { id: 's2-apps',        label: 'Apps Beyond DeFi (1)' },
@@ -140,6 +145,48 @@ export function BP_Section2() {
             </div>
 
           </div>
+
+          {/* ─── PoW → PoS energy teaser ─── */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85, duration: 0.4 }}
+            className="shrink-0 mt-4 rounded-xl border border-border bg-card px-4 py-3"
+          >
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <div className="text-xs font-semibold text-foreground">
+                …and in 2022, Ethereum did something Bitcoin can't: <span className="text-[#10b981]">switched off mining entirely.</span>
+              </div>
+              <span className="text-[10px] text-muted-foreground italic shrink-0">we'll cover The Merge in detail later ↓</span>
+            </div>
+
+            {/* Energy bars */}
+            <div className="grid grid-cols-[max-content_1fr_max-content] gap-x-3 gap-y-1.5 items-center text-xs">
+              {/* PoW row */}
+              <span className="font-bold text-[#f59e0b]">⛏️ PoW (pre-2022)</span>
+              <div className="h-3 rounded-full bg-muted overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: '100%' }}
+                  transition={{ delay: 1.0, duration: 0.7, ease: 'easeOut' }}
+                  className="h-full rounded-full bg-gradient-to-r from-[#f59e0b] to-[#ef4444]"
+                />
+              </div>
+              <span className="font-mono font-bold text-foreground">~73 TWh/yr</span>
+
+              {/* PoS row */}
+              <span className="font-bold text-[#10b981]">🌿 PoS (since Sep 2022)</span>
+              <div className="h-3 rounded-full bg-muted overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: '0.014%' }}
+                  transition={{ delay: 1.2, duration: 0.7, ease: 'easeOut' }}
+                  className="h-full rounded-full bg-[#10b981]"
+                />
+              </div>
+              <span className="font-mono font-bold text-foreground">~0.01 TWh/yr <span className="text-[#10b981]">(−99.95%)</span></span>
+            </div>
+          </motion.div>
         </div>
 
         {/* ═══════ S2-ACCOUNTS-VISUAL ═══════ */}
@@ -480,6 +527,188 @@ export function BP_Section2() {
                 <span className="font-bold" style={{ color: '#627EEA' }}>Account model vs UTXO — </span>
                 Ethereum tracks balance directly on each account. No input/output chains — just add/subtract from a global state.
               </motion.div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ═══════ S2-GAS ═══════ */}
+        <div id="s2-gas" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Gas — Paying for Computation</h2>
+            <p className="text-muted-foreground text-sm mt-1">Every operation costs gas. Gas links computation to economics — and stops infinite loops cold.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            {/* Left — explanation */}
+            <div className="flex flex-col gap-3 min-h-0">
+
+              {/* What is gas */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="rounded-xl border border-border bg-card p-4"
+              >
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#627EEA] mb-1">What is gas?</div>
+                <p className="text-sm text-foreground leading-relaxed">
+                  A <span className="font-bold">unit of computational work.</span> Every EVM opcode has a fixed gas price: <span className="font-mono">ADD</span> costs 3, <span className="font-mono">SSTORE</span> costs ~20,000. The harder the work, the more gas it burns.
+                </p>
+              </motion.div>
+
+              {/* Why */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="rounded-xl border border-border bg-card p-4"
+              >
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#10b981] mb-1">Why gas exists</div>
+                <ul className="text-sm text-muted-foreground space-y-1.5 leading-relaxed">
+                  <li><span className="text-foreground font-semibold">Halts the halting problem:</span> the EVM is Turing-complete — gas guarantees every transaction terminates.</li>
+                  <li><span className="text-foreground font-semibold">Anti-spam:</span> a free chain would be flooded instantly.</li>
+                  <li><span className="text-foreground font-semibold">Prices scarce block space:</span> only ~30M gas per block.</li>
+                </ul>
+              </motion.div>
+
+              {/* Formula */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className="rounded-xl border-2 border-[#627EEA]/40 bg-[#627EEA]/08 p-4"
+                style={{ backgroundColor: '#627EEA10' }}
+              >
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[#627EEA] mb-2">The formula</div>
+                <div className="font-mono text-center text-base lg:text-lg font-black text-foreground mb-2 leading-snug">
+                  cost = gasUsed × (baseFee + tip)
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-[11px] text-center">
+                  <div>
+                    <div className="font-bold text-foreground">gasUsed</div>
+                    <div className="text-muted-foreground">work done</div>
+                  </div>
+                  <div>
+                    <div className="font-bold text-foreground">baseFee 🔥</div>
+                    <div className="text-muted-foreground">set by network, burned</div>
+                  </div>
+                  <div>
+                    <div className="font-bold text-foreground">tip</div>
+                    <div className="text-muted-foreground">paid to validator</div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.35 }}
+                className="text-[11px] text-muted-foreground italic shrink-0"
+              >
+                Gas is measured in <span className="font-mono font-bold text-foreground">Gwei</span> (10⁻⁹ ETH). Run out mid-execution and your tx <span className="text-foreground font-semibold">reverts</span> — but you still pay for the gas already burned.
+              </motion.div>
+            </div>
+
+            {/* Right — interactive calculator */}
+            <div className="flex flex-col min-h-0">
+              <GasCalculator />
+            </div>
+
+          </div>
+        </div>
+
+        {/* ═══════ S2-EIP1559 ═══════ */}
+        <div id="s2-eip1559" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">EIP-1559 — Making Fees Predictable</h2>
+            <p className="text-muted-foreground text-sm mt-1">London hard fork · August 2021 · the upgrade that fixed Ethereum's fee market</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            {/* Left — the problem & the fix */}
+            <div className="flex flex-col gap-3 min-h-0">
+
+              {/* The Problem */}
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+                className="rounded-xl border-2 border-[#ef4444]/40 bg-[#ef4444]/05 p-4"
+                style={{ backgroundColor: '#ef444410' }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">⚠️</span>
+                  <h3 className="font-black text-sm text-[#ef4444]">Before — First-Price Auction</h3>
+                </div>
+                <p className="text-xs text-muted-foreground mb-2 leading-relaxed">
+                  Users blindly guessed how much to bid. The top fees won block space. Everyone overpaid out of fear of being stuck.
+                </p>
+                <div className="grid grid-cols-3 gap-1.5 text-[10px]">
+                  <div className="rounded-lg bg-card border border-[#ef4444]/30 p-1.5 text-center">
+                    <div className="font-bold text-foreground">😰 Overpay</div>
+                    <div className="text-muted-foreground">"better safe…"</div>
+                  </div>
+                  <div className="rounded-lg bg-card border border-[#ef4444]/30 p-1.5 text-center">
+                    <div className="font-bold text-foreground">⏳ Stuck</div>
+                    <div className="text-muted-foreground">bid too low</div>
+                  </div>
+                  <div className="rounded-lg bg-card border border-[#ef4444]/30 p-1.5 text-center">
+                    <div className="font-bold text-foreground">💸 Miner-only</div>
+                    <div className="text-muted-foreground">100% to miner</div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* The Fix */}
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="rounded-xl border-2 border-[#10b981]/40 bg-[#10b981]/05 p-4 flex-1 min-h-0 flex flex-col"
+                style={{ backgroundColor: '#10b98110' }}
+              >
+                <div className="flex items-center gap-2 mb-2 shrink-0">
+                  <span className="text-lg">✅</span>
+                  <h3 className="font-black text-sm text-[#10b981]">After — Base Fee + Tip</h3>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 mb-3 shrink-0">
+                  <div className="rounded-lg bg-card border-2 border-[#627EEA]/40 p-2.5">
+                    <div className="flex items-center gap-1 mb-1">
+                      <span className="text-sm">🔥</span>
+                      <span className="font-black text-xs text-[#627EEA]">Base fee</span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground leading-relaxed">
+                      Set by the protocol. Auto-adjusts <span className="font-mono font-bold text-foreground">±12.5%</span> per block to hit 50% fullness. <span className="text-foreground font-semibold">Burned</span> — no one collects it.
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-card border-2 border-[#10b981]/40 p-2.5">
+                    <div className="flex items-center gap-1 mb-1">
+                      <span className="text-sm">💰</span>
+                      <span className="font-black text-xs text-[#10b981]">Priority tip</span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground leading-relaxed">
+                      Optional. Paid by user, kept by the <span className="text-foreground font-semibold">validator</span>. Usually 1–2 Gwei — only spikes for urgent inclusion.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex-1 min-h-0 flex flex-col gap-1.5">
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Why it works</div>
+                  <ul className="text-[11px] text-muted-foreground space-y-1 leading-relaxed">
+                    <li>✓ <span className="text-foreground font-semibold">Predictable:</span> wallets show base fee in real time — no blind bidding.</li>
+                    <li>✓ <span className="text-foreground font-semibold">Deflationary pressure:</span> burned ETH offsets new issuance — sometimes net negative.</li>
+                    <li>✓ <span className="text-foreground font-semibold">Validators stay honest:</span> can't pocket base fee, so no incentive to manipulate it.</li>
+                  </ul>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right — interactive demo */}
+            <div className="flex flex-col min-h-0">
+              <Eip1559Demo />
             </div>
 
           </div>
@@ -853,107 +1082,312 @@ export function BP_Section2() {
           </div>
         </div>
 
+        {/* ═══════ S2-ROLLUPS ═══════ */}
+        <div id="s2-rollups" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Rollups — Scaling Without Trusting</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Ethereum's L1 caps at ~15–30 TPS. <span className="text-foreground font-semibold">Rollups</span> batch thousands of transactions off-chain and post a single compressed update to L1 — inheriting its security.
+            </p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            {/* Left — How a rollup works */}
+            <div className="flex flex-col gap-3 min-h-0">
+              <h3 className="text-base font-bold text-foreground shrink-0">How a rollup works</h3>
+
+              <div className="flex-1 min-h-0 flex flex-col gap-2">
+                {[
+                  {
+                    n: 1, label: 'Users transact on L2',
+                    detail: 'You send a transaction to the rollup — same wallet, same UX. Confirmed in ~1–2 seconds. Fees: cents.',
+                    color: '#627EEA',
+                  },
+                  {
+                    n: 2, label: 'Sequencer batches them',
+                    detail: 'Hundreds-to-thousands of L2 transactions get ordered and executed by the rollup\'s sequencer.',
+                    color: '#8b5cf6',
+                  },
+                  {
+                    n: 3, label: 'Compressed data posted to L1',
+                    detail: 'Compressed batch + new state root → posted to Ethereum (via blobs since EIP-4844). L1 stores the data so anyone can verify.',
+                    color: '#f59e0b',
+                  },
+                  {
+                    n: 4, label: 'L1 verifies and finalises',
+                    detail: 'A proof (validity / fraud) tells L1 the batch is correct. Once accepted on L1, the rollup state is as secure as Ethereum itself.',
+                    color: '#10b981',
+                  },
+                ].map((s, i) => (
+                  <motion.div
+                    key={s.n}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.08, duration: 0.3 }}
+                    className="flex-1 flex items-start gap-3 p-3 rounded-xl border bg-card"
+                    style={{ borderColor: s.color + '40' }}
+                  >
+                    <div
+                      className="size-8 rounded-lg flex items-center justify-center text-white font-black text-sm shrink-0"
+                      style={{ backgroundColor: s.color }}
+                    >{s.n}</div>
+                    <div className="min-w-0">
+                      <div className="font-bold text-sm text-foreground">{s.label}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{s.detail}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="shrink-0 rounded-xl border border-[#627EEA]/30 px-3 py-2 text-[11px] text-center"
+                style={{ backgroundColor: '#627EEA12', color: '#627EEA' }}
+              >
+                <span className="font-bold">Security inherited from L1</span> · execution moved off-chain · data still on-chain
+              </motion.div>
+            </div>
+
+            {/* Right — Optimistic vs ZK + Tradeoffs */}
+            <div className="flex flex-col gap-3 min-h-0">
+              <h3 className="text-base font-bold text-foreground shrink-0">Two flavors: optimistic vs ZK</h3>
+
+              <div className="grid grid-cols-2 gap-3 shrink-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                  className="rounded-xl border-2 border-[#FF0420]/40 bg-[#FF0420]/05 p-3"
+                  style={{ backgroundColor: '#FF042010' }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">🤝</span>
+                    <div className="font-black text-sm text-[#FF0420]">Optimistic</div>
+                  </div>
+                  <ul className="text-[11px] text-muted-foreground space-y-1 leading-relaxed">
+                    <li><span className="text-foreground font-semibold">Assumes valid</span> by default</li>
+                    <li>Challenge window: <span className="font-mono font-bold text-foreground">~7 days</span></li>
+                    <li>If fraud: anyone submits a <span className="text-foreground font-semibold">fraud proof</span></li>
+                    <li>EVM-equivalent — easy migration</li>
+                  </ul>
+                  <div className="mt-2 pt-2 border-t border-border text-[10px] text-muted-foreground">
+                    <span className="font-bold text-foreground">Live:</span> Arbitrum · Optimism · Base
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25 }}
+                  className="rounded-xl border-2 border-[#8C8DFC]/40 bg-[#8C8DFC]/05 p-3"
+                  style={{ backgroundColor: '#8C8DFC10' }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">🔐</span>
+                    <div className="font-black text-sm text-[#8C8DFC]">ZK (validity)</div>
+                  </div>
+                  <ul className="text-[11px] text-muted-foreground space-y-1 leading-relaxed">
+                    <li>Each batch carries a <span className="text-foreground font-semibold">zero-knowledge proof</span></li>
+                    <li>Withdrawal: <span className="font-mono font-bold text-foreground">~hours</span> (proof-bound)</li>
+                    <li>L1 verifies math — no challenge needed</li>
+                    <li>Heavier prover · cutting-edge cryptography</li>
+                  </ul>
+                  <div className="mt-2 pt-2 border-t border-border text-[10px] text-muted-foreground">
+                    <span className="font-bold text-foreground">Live:</span> zkSync · Starknet · Linea · Scroll
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* L1 vs L2 metrics */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="rounded-xl border border-border bg-card p-3 flex-1 min-h-0 flex flex-col"
+              >
+                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">L1 vs L2 — what changes for users</div>
+                <div className="grid grid-cols-3 gap-2 text-center text-[11px] flex-1">
+                  <div className="rounded-lg bg-muted/40 border border-border p-2 flex flex-col justify-center">
+                    <div className="text-muted-foreground text-[10px]">Throughput</div>
+                    <div className="font-bold text-foreground">~15–30 TPS</div>
+                    <div className="text-[#10b981] font-mono">→ thousands</div>
+                  </div>
+                  <div className="rounded-lg bg-muted/40 border border-border p-2 flex flex-col justify-center">
+                    <div className="text-muted-foreground text-[10px]">Tx fee</div>
+                    <div className="font-bold text-foreground">~$1–20</div>
+                    <div className="text-[#10b981] font-mono">→ ¢</div>
+                  </div>
+                  <div className="rounded-lg bg-muted/40 border border-border p-2 flex flex-col justify-center">
+                    <div className="text-muted-foreground text-[10px]">Finality</div>
+                    <div className="font-bold text-foreground">~12 min</div>
+                    <div className="text-[#10b981] font-mono">→ ~1–2 s soft</div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="shrink-0 rounded-xl border border-[#f59e0b]/30 px-3 py-2 text-[11px] leading-relaxed"
+                style={{ backgroundColor: '#f59e0b12', color: 'var(--muted-foreground)' }}
+              >
+                <span className="font-bold text-[#f59e0b]">EIP-4844 (Dencun, Mar 2024) </span>
+                introduced <span className="font-mono text-foreground">blob</span> data — a cheap, ephemeral lane on L1 dedicated to rollups. L2 fees dropped ~10× overnight.
+              </motion.div>
+            </div>
+
+          </div>
+        </div>
+
         {/* ═══════ DEFI MECHANICS ═══════ */}
         <div id="s2-defi" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-4">
             <span className="text-xs font-black uppercase tracking-widest text-[#627EEA]">Section 02</span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1 mb-1">DeFi: How Decentralised Finance Actually Works</h2>
-            <p className="text-sm text-muted-foreground">DeFi replaces financial institutions with smart contracts. Understanding three core primitives unlocks 90% of the ecosystem.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1 mb-1">DeFi — Three Primitives, One Idea</h2>
+            <p className="text-sm text-muted-foreground">
+              DeFi replaces financial intermediaries with smart contracts. Three primitives explain ~90% of what's out there.{' '}
+              <span className="text-[#627EEA] font-semibold">We'll go deeper in Course 03 (Smart Contracts) — this is the lay of the land.</span>
+            </p>
           </div>
-          <div className="flex-1 min-h-0 flex gap-4">
+
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
 
             {/* AMM */}
-            <div className="flex-1 flex flex-col rounded-xl border-2 border-[#39B54A]/40 bg-card overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="flex flex-col rounded-xl border-2 border-[#39B54A]/40 bg-card overflow-hidden"
+            >
               <div className="h-1.5 bg-[#39B54A] shrink-0" />
-              <div className="flex flex-col flex-1 p-4 gap-3 min-h-0">
-                <div className="flex items-center gap-2 shrink-0">
+              <div className="flex flex-col flex-1 p-4 gap-3">
+                <div className="flex items-center gap-2">
                   <span className="text-2xl">🔄</span>
                   <div>
-                    <div className="font-black text-base text-[#39B54A]">AMM — Automated Market Maker</div>
-                    <div className="text-xs text-muted-foreground font-medium">Replaces: Order book exchanges (NYSE, Binance)</div>
+                    <div className="font-black text-base text-[#39B54A]">AMM</div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Automated Market Maker</div>
                   </div>
                 </div>
-                <div className="text-sm text-muted-foreground shrink-0">Instead of matching buyers and sellers, an AMM holds two tokens in a <span className="font-semibold text-foreground">liquidity pool</span> and uses a formula to set the price automatically.</div>
-                <div className="p-3 bg-[#39B54A]/10 border border-[#39B54A]/30 rounded-xl shrink-0">
-                  <div className="font-bold text-xs text-[#39B54A] mb-1.5">The Constant Product Formula</div>
-                  <div className="font-mono text-lg text-center font-black text-foreground my-2">x · y = k</div>
-                  <div className="text-xs text-muted-foreground text-center">x = reserve of Token A &nbsp;·&nbsp; y = reserve of Token B &nbsp;·&nbsp; k = constant</div>
-                  <div className="text-xs text-muted-foreground mt-2">When you buy Token A, you add Token B to the pool — raising B's reserve and reducing A's. The price shifts automatically to maintain k.</div>
-                </div>
-                <div className="flex-1 min-h-0 space-y-2">
-                  <div className="text-xs font-black uppercase tracking-widest text-muted-foreground">How a swap works</div>
-                  {['You send 100 USDC to the pool', 'The contract calculates how much ETH to give you (x · y = k)', 'ETH is sent to your wallet — no counterparty needed', 'Slippage: larger trades move the price more (thinner pool)'].map((s, i) => (
-                    <div key={i} className="flex gap-2 text-xs text-muted-foreground">
-                      <span className="size-4 rounded-full bg-[#39B54A] text-white flex items-center justify-center font-bold shrink-0">{i + 1}</span>
-                      {s}
-                    </div>
-                  ))}
-                </div>
-                <div className="text-xs text-muted-foreground pt-2 border-t border-border shrink-0"><span className="font-semibold text-foreground">Live examples:</span> Uniswap (v2/v3), Curve, Balancer, PancakeSwap</div>
-              </div>
-            </div>
 
-            {/* Liquidity Pools */}
-            <div className="flex-1 flex flex-col rounded-xl border-2 border-[#6366f1]/40 bg-card overflow-hidden">
-              <div className="h-1.5 bg-[#6366f1] shrink-0" />
-              <div className="flex flex-col flex-1 p-4 gap-3 min-h-0">
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-2xl">🌊</span>
-                  <div>
-                    <div className="font-black text-base text-[#6366f1]">Liquidity Pools</div>
-                    <div className="text-xs text-muted-foreground font-medium">Replaces: Market makers and broker-dealers</div>
-                  </div>
+                <div className="rounded-lg bg-muted/40 border border-border px-2.5 py-1.5 text-[11px]">
+                  <span className="text-muted-foreground">Replaces </span>
+                  <span className="font-semibold text-foreground">order-book exchanges</span>
                 </div>
-                <div className="text-sm text-muted-foreground shrink-0">Anyone can deposit two tokens into a pool and become a <span className="font-semibold text-foreground">Liquidity Provider (LP)</span>. In return, they earn a share of every trading fee — proportional to their share of the pool.</div>
-                <div className="flex-1 min-h-0 space-y-2.5">
-                  {[
-                    { label: 'LP deposits', value: '100 USDC + 0.05 ETH → receives LP tokens representing pool share', color: '#6366f1' },
-                    { label: 'Trading fees', value: '0.3% of every swap goes to LPs — distributed pro-rata to LP token holders', color: '#39B54A' },
-                    { label: 'Withdraw', value: 'Burn LP tokens → receive proportional share of pool at current prices', color: '#6366f1' },
-                    { label: '⚠️ Impermanent Loss', value: "If ETH price rises 100%, LP earns less than just holding ETH. The 'loss' is impermanent only if the price reverts.", color: '#ef4444' },
-                    { label: 'Concentrated Liquidity (v3)', value: 'Uniswap v3 lets LPs specify a price range — capital is 100–4000× more efficient than v2 uniform distribution', color: '#f97316' },
-                  ].map(r => (
-                    <div key={r.label} className="p-2.5 rounded-lg bg-muted/40 border border-border">
-                      <div className="text-xs font-bold mb-0.5" style={{ color: r.color }}>{r.label}</div>
-                      <div className="text-xs text-muted-foreground">{r.value}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="text-xs text-muted-foreground pt-2 border-t border-border shrink-0"><span className="font-semibold text-foreground">TVL context:</span> Uniswap alone has processed $2T+ in cumulative volume via permissionless pools</div>
-              </div>
-            </div>
 
-            {/* Lending Protocols */}
-            <div className="flex-1 flex flex-col rounded-xl border-2 border-[#f97316]/40 bg-card overflow-hidden">
+                <p className="text-sm text-muted-foreground flex-1">
+                  Two tokens sit in a pool. A formula sets the price automatically — no buyers and sellers to match.
+                </p>
+
+                <div className="p-3 bg-[#39B54A]/10 border border-[#39B54A]/30 rounded-xl text-center">
+                  <div className="font-mono text-xl font-black text-foreground">x · y = k</div>
+                  <div className="text-[10px] text-muted-foreground mt-1">constant-product formula</div>
+                </div>
+
+                <div className="text-[11px] text-muted-foreground pt-2 border-t border-border">
+                  <span className="font-semibold text-foreground">Live: </span>Uniswap · Curve · Balancer
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Lending */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="flex flex-col rounded-xl border-2 border-[#f97316]/40 bg-card overflow-hidden"
+            >
               <div className="h-1.5 bg-[#f97316] shrink-0" />
-              <div className="flex flex-col flex-1 p-4 gap-3 min-h-0">
-                <div className="flex items-center gap-2 shrink-0">
+              <div className="flex flex-col flex-1 p-4 gap-3">
+                <div className="flex items-center gap-2">
                   <span className="text-2xl">🏦</span>
                   <div>
-                    <div className="font-black text-base text-[#f97316]">Lending Protocols</div>
-                    <div className="text-xs text-muted-foreground font-medium">Replaces: Banks (savings accounts + loans)</div>
+                    <div className="font-black text-base text-[#f97316]">Lending</div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Over-Collateralised Loans</div>
                   </div>
                 </div>
-                <div className="text-sm text-muted-foreground shrink-0">Supply assets to earn interest. Borrow against crypto collateral. No credit score, no KYC, no bank. Rates are set algorithmically by supply and demand.</div>
-                <div className="flex-1 min-h-0 space-y-2.5">
-                  {[
-                    { step: 'Supply', desc: 'Deposit 10 ETH → receive aETH (interest-bearing token). Your balance grows each block.', color: '#39B54A' },
-                    { step: 'Borrow', desc: 'Lock 10 ETH as collateral (worth $30k) → borrow up to 75% = $22.5k USDC. Over-collateralized by design.', color: '#f97316' },
-                    { step: 'Interest rate', desc: 'Utilization ratio drives rates: if 90% of pool is borrowed, rates spike to incentivize more supply and repayments.', color: '#6366f1' },
-                    { step: '⚠️ Liquidation', desc: 'If ETH price drops and your collateral ratio falls below the threshold (e.g. 80%), a liquidator repays your debt and claims your collateral at a discount.', color: '#ef4444' },
-                    { step: 'Flash loans', desc: 'Borrow any amount with zero collateral — if repaid in the same transaction. Used for arbitrage and (unfortunately) oracle attacks.', color: '#eab308' },
-                  ].map(r => (
-                    <div key={r.step} className="p-2.5 rounded-lg bg-muted/40 border border-border">
-                      <div className="text-xs font-bold mb-0.5" style={{ color: r.color }}>{r.step}</div>
-                      <div className="text-xs text-muted-foreground">{r.desc}</div>
-                    </div>
-                  ))}
+
+                <div className="rounded-lg bg-muted/40 border border-border px-2.5 py-1.5 text-[11px]">
+                  <span className="text-muted-foreground">Replaces </span>
+                  <span className="font-semibold text-foreground">banks (savings + loans)</span>
                 </div>
-                <div className="text-xs text-muted-foreground pt-2 border-t border-border shrink-0"><span className="font-semibold text-foreground">Live examples:</span> Aave, Compound, MakerDAO, Morpho</div>
+
+                <p className="text-sm text-muted-foreground flex-1">
+                  Supply crypto to earn interest. Borrow against collateral worth more than your loan. No credit score, no KYC. If your collateral falls below threshold, a bot liquidates you.
+                </p>
+
+                <div className="grid grid-cols-2 gap-2 text-[11px]">
+                  <div className="rounded-lg bg-[#39B54A]/10 border border-[#39B54A]/30 px-2 py-1.5 text-center">
+                    <div className="font-bold text-[#39B54A]">Supply</div>
+                    <div className="text-muted-foreground">earn yield</div>
+                  </div>
+                  <div className="rounded-lg bg-[#f97316]/10 border border-[#f97316]/30 px-2 py-1.5 text-center">
+                    <div className="font-bold text-[#f97316]">Borrow</div>
+                    <div className="text-muted-foreground">post collateral</div>
+                  </div>
+                </div>
+
+                <div className="text-[11px] text-muted-foreground pt-2 border-t border-border">
+                  <span className="font-semibold text-foreground">Live: </span>Aave · Compound · MakerDAO
+                </div>
               </div>
-            </div>
+            </motion.div>
+
+            {/* Yield / LP */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="flex flex-col rounded-xl border-2 border-[#6366f1]/40 bg-card overflow-hidden"
+            >
+              <div className="h-1.5 bg-[#6366f1] shrink-0" />
+              <div className="flex flex-col flex-1 p-4 gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">🌾</span>
+                  <div>
+                    <div className="font-black text-base text-[#6366f1]">Yield</div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">LP tokens · Staking · Vaults</div>
+                  </div>
+                </div>
+
+                <div className="rounded-lg bg-muted/40 border border-border px-2.5 py-1.5 text-[11px]">
+                  <span className="text-muted-foreground">Replaces </span>
+                  <span className="font-semibold text-foreground">market-makers + asset managers</span>
+                </div>
+
+                <p className="text-sm text-muted-foreground flex-1">
+                  Anyone can <span className="font-semibold text-foreground">provide liquidity</span> to an AMM, stake ETH for validator rewards, or deposit into auto-compounding vaults — earning a share of the fees.
+                </p>
+
+                <div className="rounded-lg bg-[#ef4444]/10 border border-[#ef4444]/30 px-2.5 py-1.5 text-[11px] flex items-start gap-2">
+                  <span>⚠️</span>
+                  <div>
+                    <span className="font-bold text-[#ef4444]">Impermanent loss</span>
+                    <span className="text-muted-foreground"> · price divergence can leave LPs worse off than just holding.</span>
+                  </div>
+                </div>
+
+                <div className="text-[11px] text-muted-foreground pt-2 border-t border-border">
+                  <span className="font-semibold text-foreground">Live: </span>Lido · Yearn · Convex
+                </div>
+              </div>
+            </motion.div>
 
           </div>
+
+          {/* Bottom hook */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="shrink-0 mt-4 rounded-xl border border-[#627EEA]/30 bg-[#627EEA]/08 px-4 py-2.5 text-xs text-center text-muted-foreground"
+            style={{ backgroundColor: '#627EEA0F' }}
+          >
+            Almost every DeFi product you'll hear about is a composition of these three. Course 03 covers the contract-level mechanics, attacks, and case studies.
+          </motion.div>
         </div>
 
         {/* ═══════ STABLECOINS ═══════ */}
