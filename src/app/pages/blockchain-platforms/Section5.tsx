@@ -8,7 +8,7 @@ import { TeamCheckpoint } from '../../components/TeamCheckpoint';
 
 const chapters = [
   { id: 's5-zkp',              label: 'ZK: The Idea' },
-  { id: 's5-zkp-cave',         label: 'ZK: The Cave' },
+  { id: 's5-zkp-cave',         label: "ZK: Where's Waldo?" },
   { id: 's5-zkp-props',        label: 'ZK: Properties & Uses' },
   { id: 's5-starknet',         label: 'Starknet' },
   { id: 's5-starknet-compare', label: 'Starknet: ZK in Practice' },
@@ -23,6 +23,7 @@ const chapters = [
   { id: 's5-privacy',          label: 'Privacy: Why Hard' },
   { id: 's5-privacy-approaches', label: 'Privacy: Approaches' },
   { id: 's5-privacy-regulation', label: 'Privacy: Regulation' },
+  { id: 's5-privacy-future',     label: 'Privacy: The Upside' },
   { id: 's5-evaluate',         label: 'Evaluate (1/2)' },
   { id: 's5-evaluate-2',       label: 'Evaluate (2/2)' },
   { id: 's5-decision',          label: 'Decision Framework' },
@@ -90,19 +91,19 @@ export function BP_Section5() {
           <div className="shrink-0 mt-4 text-center text-sm text-muted-foreground italic">Next: a thought experiment that makes it click →</div>
         </div>
 
-        {/* ═══════ S5-ZKP-CAVE — the classic thought experiment ═══════ */}
+        {/* ═══════ S5-ZKP-CAVE — Where's Waldo ═══════ */}
         <div id="s5-zkp-cave" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
             <span className="text-xs font-black uppercase tracking-widest text-[#22d3ee]">Section 05 · Zero-Knowledge</span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">The magic cave — ZK made visual</h2>
-            <p className="text-sm text-muted-foreground mt-1">The classic thought experiment. Alice knows a secret password; she proves it to Bob without ever saying it.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where's Waldo? — ZK made visual</h2>
+            <p className="text-sm text-muted-foreground mt-1">The classic intuition. I prove I found Waldo on a huge crowded page — without telling you where he is.</p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4">
             {[
-              { n: '1', emoji: '🚪', title: 'The setup', text: 'A ring-shaped cave with a locked door in the middle. Only the password opens it. Alice walks in; Bob waits outside and cannot see which way she went.' },
-              { n: '2', emoji: '📣', title: 'The challenge', text: 'Bob shouts a random side — "come out the LEFT!" If Alice truly knows the password she can always comply, whichever side he picks.' },
-              { n: '3', emoji: '🔁', title: 'Repeat', text: 'Do it 20 times. Guessing right every time without the password is a 1-in-a-million fluke. Bob is convinced — and never heard the password.' },
+              { n: '1', emoji: '🗣️', title: 'The claim', text: 'I say I found Waldo on this enormous, crowded page. You don\'t believe me — and I refuse to just point, because that gives my answer away.' },
+              { n: '2', emoji: '📄', title: 'The proof', text: 'I cover the whole page with a large opaque sheet that has one tiny Waldo-sized hole, lined up exactly over him. You see Waldo through the hole.' },
+              { n: '3', emoji: '✅', title: 'You\'re convinced', text: 'Waldo is clearly on the page — proven. But the sheet hid the rest, so you still have no idea WHERE on the page he actually is.' },
             ].map(s => (
               <motion.div
                 key={s.n}
@@ -110,7 +111,7 @@ export function BP_Section5() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.3 }}
-                className="flex flex-col gap-3 rounded-xl border-2 p-5"
+                className="flex flex-col gap-3 rounded-xl border-2 p-5 justify-center"
                 style={{ borderColor: '#22d3ee45', backgroundColor: '#22d3ee0a' }}
               >
                 <div className="flex items-center gap-3">
@@ -125,10 +126,10 @@ export function BP_Section5() {
 
           <div className="shrink-0 mt-4 grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div className="rounded-xl border p-3.5" style={{ borderColor: '#22d3ee40', backgroundColor: '#22d3ee0d' }}>
-              <p className="text-sm text-foreground leading-snug"><span className="font-bold text-[#22d3ee]">The punchline — </span>Bob ends 100% convinced and learns <span className="font-semibold">zero</span> about the password itself. That gap is "zero-knowledge".</p>
+              <p className="text-sm text-foreground leading-snug"><span className="font-bold text-[#22d3ee]">The punchline — </span>you end fully convinced Waldo is there, yet learn <span className="font-semibold">nothing</span> about his location. That gap is "zero-knowledge".</p>
             </div>
             <div className="rounded-xl border p-3.5" style={{ borderColor: '#6366f140', backgroundColor: '#6366f10d' }}>
-              <p className="text-sm text-foreground leading-snug"><span className="font-bold text-[#6366f1]">Same trick — "Where's Waldo?" </span>Cover the page with a sheet that has one tiny hole over Waldo. You prove you found him, revealing nothing about <span className="italic">where</span> he is.</p>
+              <p className="text-sm text-foreground leading-snug"><span className="font-bold text-[#6366f1]">The classic version — </span>"the magic cave": Alice repeatedly exits the side a verifier shouts, proving she knows the password without ever saying it. Repeat enough and luck is ruled out.</p>
             </div>
           </div>
         </div>
@@ -631,109 +632,53 @@ export function BP_Section5() {
 
         {/* ═══════ L2 APPS — what runs on each rollup ═══════ */}
         <div id="s5-l2apps" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-3">
+          <div className="shrink-0 mb-4">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">What runs on each rollup</h2>
-            <p className="text-sm text-muted-foreground mt-1">Mechanism (optimistic vs ZK) is one axis. Culture is another — each major rollup has developed a distinct app character that often matters more than the proving system.</p>
+            <p className="text-sm text-muted-foreground mt-1">Mechanism (optimistic vs ZK) is one axis. Culture is another — each major rollup has a distinct app character that often matters more than the proving system.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-5 gap-2.5">
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-4 content-center">
             {[
-              {
-                emoji: '🟦',
-                name: 'Arbitrum One',
-                type: 'Optimistic',
-                typeColor: '#f97316',
-                color: '#28A0F0',
-                culture: 'DeFi-heavy · mature ecosystem',
-                tvl: '~$13B TVL — highest of any L2',
-                apps: [
-                  { name: 'GMX',     kind: 'Decentralised perpetuals' },
-                  { name: 'Camelot', kind: 'Native DEX, concentrated liquidity' },
-                  { name: 'Pendle',  kind: 'Yield-tokenisation primitive' },
-                  { name: 'Radiant', kind: 'Cross-chain lending' },
-                ],
-              },
-              {
-                emoji: '🔴',
-                name: 'Optimism · OP Stack',
-                type: 'Optimistic',
-                typeColor: '#f97316',
-                color: '#FF0420',
-                culture: 'Public-goods · modular framework',
-                tvl: 'OP Stack also powers Base, Worldchain, Mode, opBNB',
-                apps: [
-                  { name: 'Velodrome',   kind: 'Vote-escrow DEX, cornerstone of OP DeFi' },
-                  { name: 'Synthetix',   kind: 'Synthetic assets and on-chain perps' },
-                  { name: 'Worldcoin',   kind: 'Iris-scan identity, $WLD' },
-                  { name: 'Retro Funding', kind: 'Public-goods grants via OP DAO' },
-                ],
-              },
-              {
-                emoji: '🔵',
-                name: 'Base (Coinbase)',
-                type: 'OP Stack',
-                typeColor: '#f97316',
-                color: '#0052FF',
-                culture: 'Consumer & social-first',
-                tvl: '~$5B TVL · fastest user growth in 2024',
-                apps: [
-                  { name: 'Aerodrome',        kind: 'Velodrome fork, dominant Base DEX' },
-                  { name: 'Zora',             kind: 'Mint-anything creator economy' },
-                  { name: 'Farcaster Frames', kind: 'Mini-apps inside social posts' },
-                  { name: 'friend.tech',      kind: '2023 hype-and-bust — honest case study' },
-                ],
-              },
-              {
-                emoji: '🟪',
-                name: 'Starknet',
-                type: 'ZK · Cairo',
-                typeColor: '#8b5cf6',
-                color: '#EC796B',
-                culture: 'Gaming · AI agents · on-chain compute',
-                tvl: 'Cairo-native VM · STARK proofs · STRK token',
-                apps: [
-                  { name: 'Realms / Loot Survivor', kind: 'Fully on-chain games (Dojo engine)' },
-                  { name: 'Ekubo',                  kind: 'Starknet-native concentrated AMM' },
-                  { name: 'Influence',              kind: 'On-chain space MMO' },
-                  { name: 'AI Agent experiments',   kind: 'Autonomous agents with on-chain state' },
-                ],
-              },
+              { emoji: '🟦', name: 'Arbitrum One', type: 'Optimistic', typeColor: '#f97316', color: '#28A0F0',
+                culture: 'DeFi-heavy · mature', tvl: '~$13B TVL — highest of any L2',
+                apps: [ { name: 'GMX', kind: 'Decentralised perpetuals' }, { name: 'Camelot', kind: 'Native concentrated-liquidity DEX' }, { name: 'Pendle', kind: 'Yield-tokenisation primitive' } ] },
+              { emoji: '🔴', name: 'Optimism · OP Stack', type: 'Optimistic', typeColor: '#f97316', color: '#FF0420',
+                culture: 'Public-goods · modular', tvl: 'OP Stack also powers Base, Mode, opBNB',
+                apps: [ { name: 'Velodrome', kind: 'Vote-escrow DEX, OP DeFi core' }, { name: 'Synthetix', kind: 'Synthetic assets & perps' }, { name: 'Worldcoin', kind: 'Iris-scan identity, $WLD' } ] },
+              { emoji: '🔵', name: 'Base (Coinbase)', type: 'OP Stack', typeColor: '#f97316', color: '#0052FF',
+                culture: 'Consumer & social-first', tvl: '~$5B TVL · fastest growth 2024',
+                apps: [ { name: 'Aerodrome', kind: 'Dominant Base DEX' }, { name: 'Zora', kind: 'Mint-anything creator economy' }, { name: 'Farcaster Frames', kind: 'Mini-apps in social posts' } ] },
+              { emoji: '🟪', name: 'Starknet', type: 'ZK · Cairo', typeColor: '#8b5cf6', color: '#EC796B',
+                culture: 'Gaming · on-chain compute', tvl: 'Cairo VM · STARK proofs · STRK',
+                apps: [ { name: 'Realms / Loot Survivor', kind: 'Fully on-chain games (Dojo)' }, { name: 'Ekubo', kind: 'Native concentrated AMM' }, { name: 'Influence', kind: 'On-chain space MMO' } ] },
             ].map(rollup => (
               <motion.div
                 key={rollup.name}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="flex flex-col gap-1.5 p-2.5 rounded-xl border-2 min-h-0"
+                className="flex flex-col gap-3 p-4 rounded-2xl border-2"
                 style={{ borderColor: rollup.color + '55', backgroundColor: rollup.color + '0a' }}
               >
-                <div className="shrink-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-base shrink-0 leading-none">{rollup.emoji}</span>
-                    <div className="font-black text-[12px] leading-tight" style={{ color: rollup.color }}>{rollup.name}</div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl leading-none">{rollup.emoji}</span>
+                    <div className="font-black text-base leading-tight" style={{ color: rollup.color }}>{rollup.name}</div>
                   </div>
-                  <span
-                    className="inline-block text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded mt-1"
-                    style={{ backgroundColor: rollup.typeColor + '20', color: rollup.typeColor, border: `1px solid ${rollup.typeColor}40` }}
-                  >
+                  <span className="inline-block text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded mt-2"
+                    style={{ backgroundColor: rollup.typeColor + '20', color: rollup.typeColor, border: `1px solid ${rollup.typeColor}40` }}>
                     {rollup.type}
                   </span>
                 </div>
-
-                <div className="shrink-0">
-                  <div className="text-[10px] text-foreground font-medium leading-tight">{rollup.culture}</div>
-                  <div className="text-[9px] text-muted-foreground italic leading-snug mt-0.5">{rollup.tvl}</div>
+                <div>
+                  <div className="text-sm text-foreground font-semibold leading-tight">{rollup.culture}</div>
+                  <div className="text-xs text-muted-foreground italic leading-snug mt-0.5">{rollup.tvl}</div>
                 </div>
-
-                <div className="flex-1 min-h-0 flex flex-col gap-1">
+                <div className="flex flex-col gap-2">
                   {rollup.apps.map(app => (
-                    <div
-                      key={app.name}
-                      className="rounded-md border bg-card/60 px-1.5 py-1 min-h-0"
-                      style={{ borderColor: rollup.color + '35' }}
-                    >
-                      <div className="text-[10px] font-bold leading-tight" style={{ color: rollup.color }}>{app.name}</div>
-                      <div className="text-[9px] text-muted-foreground leading-snug mt-0.5">{app.kind}</div>
+                    <div key={app.name} className="rounded-lg border bg-card/60 px-2.5 py-2" style={{ borderColor: rollup.color + '35' }}>
+                      <div className="text-sm font-bold leading-tight" style={{ color: rollup.color }}>{app.name}</div>
+                      <div className="text-xs text-muted-foreground leading-snug mt-0.5">{app.kind}</div>
                     </div>
                   ))}
                 </div>
@@ -741,10 +686,10 @@ export function BP_Section5() {
             ))}
           </div>
 
-          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#8b5cf655', backgroundColor: '#8b5cf60d' }}>
-            <p className="text-[11px] text-muted-foreground leading-snug">
+          <div className="shrink-0 mt-4 rounded-xl border p-3" style={{ borderColor: '#8b5cf655', backgroundColor: '#8b5cf60d' }}>
+            <p className="text-sm text-muted-foreground leading-snug">
               <span className="font-bold" style={{ color: '#8b5cf6' }}>How to choose — </span>
-              DeFi-mature builder → Arbitrum. Public goods or rollup-as-a-service → Optimism / OP Stack. Consumer &amp; social with Coinbase reach → Base. Games or proof-heavy compute → Starknet. The mechanism (optimistic vs ZK) increasingly matters less than the ecosystem fit.
+              DeFi-mature build → Arbitrum. Public goods / rollup-as-a-service → Optimism. Consumer &amp; social with Coinbase reach → Base. Games or proof-heavy compute → Starknet. The mechanism matters less than the ecosystem fit.
             </p>
           </div>
         </div>
@@ -1260,7 +1205,50 @@ export function BP_Section5() {
           </div>
         </div>
 
-        {/* ═══════ EVALUATE A PROJECT ═══════ */}
+        {/* ═══════ S5-PRIVACY-FUTURE — the upside of ZK privacy ═══════ */}
+        <div id="s5-privacy-future" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <span className="text-xs font-black uppercase tracking-widest text-[#8b5cf6]">Section 05 · Privacy</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">The upside — why ZK privacy is the next frontier</h2>
+            <p className="text-sm text-muted-foreground mt-1">ZK flips privacy from "hiding things" to <span className="font-semibold">selective, provable disclosure</span> — the unlock institutions and regulators have been waiting for.</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {[
+              { icon: '🏦', color: '#6366f1', title: 'Confidential DeFi & payments',
+                d: 'Trade without broadcasting your size, run payroll or treasury on-chain without exposing salaries. Dark-pool-style execution with public settlement.' },
+              { icon: '🪪', color: '#10b981', title: 'Reusable private identity',
+                d: 'KYC once, then prove "is human", "over 18", or "not sanctioned" to any dApp — no document, no doxxing, no honeypot of personal data.' },
+              { icon: '📊', color: '#f59e0b', title: 'Proof without exposure',
+                d: 'Exchanges prove solvency, funds prove eligibility, firms prove an audit passed — all without opening their books or counterparties.' },
+              { icon: '🤖', color: '#ec4899', title: 'Verifiable computation',
+                d: 'ZK rollups, coprocessors and verifiable AI: prove an off-chain result was computed correctly, so chains trust heavy work they never ran.' },
+            ].map(c => (
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3 }}
+                className="flex gap-4 items-start rounded-xl border-2 p-5 justify-center flex-col"
+                style={{ borderColor: c.color + '50', backgroundColor: c.color + '0a' }}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{c.icon}</span>
+                  <p className="font-black text-lg" style={{ color: c.color }}>{c.title}</p>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">{c.d}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-4 rounded-xl border-2 p-4 text-center" style={{ borderColor: '#8b5cf680', backgroundColor: '#8b5cf60d' }}>
+            <p className="text-base text-foreground leading-snug">
+              Where this is going: privacy stops being a <span className="font-semibold">red flag</span> and becomes <span className="font-semibold text-[#8b5cf6]">compliant infrastructure</span> — the path for regulated finance, healthcare and government to actually use public chains.
+            </p>
+          </div>
+        </div>
+
         {/* ═══════ EVALUATE A PROJECT — part 1 ═══════ */}
         <div id="s5-evaluate" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
@@ -1373,19 +1361,19 @@ export function BP_Section5() {
                 a: { tag: 'Sovereign', recs: 'Cosmos zone · Avalanche L1', color: '#22d3ee' },
                 b: { tag: 'Shared security', recs: 'Polkadot parachain · Ethereum rollup', color: '#ED1C24' } },
             ].map(s => (
-              <div key={s.n} className="rounded-xl border bg-card p-4 flex flex-col gap-2.5">
+              <div key={s.n} className="rounded-xl border bg-card p-5 flex flex-col justify-center gap-3">
                 <div className="flex items-center gap-3">
                   <div className="size-8 rounded-full flex items-center justify-center text-sm font-black text-white shrink-0" style={{ backgroundColor: '#6366f1' }}>{s.n}</div>
                   <div>
                     <div className="font-bold text-base text-foreground leading-tight">{s.q}</div>
-                    <div className="text-xs text-muted-foreground">{s.ask}</div>
+                    <div className="text-sm text-muted-foreground">{s.ask}</div>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2.5">
                   {[s.a, s.b].map((o, i) => (
-                    <div key={i} className="rounded-lg border px-3 py-2" style={{ borderColor: o.color + '45', backgroundColor: o.color + '0d' }}>
+                    <div key={i} className="rounded-lg border px-3.5 py-2.5" style={{ borderColor: o.color + '45', backgroundColor: o.color + '0d' }}>
                       <div className="text-xs font-black uppercase tracking-wider" style={{ color: o.color }}>{o.tag}</div>
-                      <div className="text-xs text-muted-foreground leading-snug mt-0.5">{o.recs}</div>
+                      <div className="text-sm text-muted-foreground leading-snug mt-0.5">{o.recs}</div>
                     </div>
                   ))}
                 </div>
