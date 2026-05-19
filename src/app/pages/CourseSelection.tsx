@@ -42,7 +42,7 @@ const courses: Course[] = [
     gradient: 'from-[#6366f1] to-[#8b5cf6]',
     accentColor: '#6366f1',
     path: '/smart-contracts',
-    available: false,
+    available: true,
   },
   {
     number: '04',
