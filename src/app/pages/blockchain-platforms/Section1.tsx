@@ -1161,7 +1161,7 @@ export function BP_Section1() {
             </p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-2 gap-3">
+          <div className="flex-1 min-h-0 overflow-y-auto grid grid-cols-1 lg:grid-cols-2 lg:auto-rows-fr gap-3">
             {[
               {
                 icon: '⚡',
@@ -1205,7 +1205,7 @@ export function BP_Section1() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="rounded-xl border-2 p-3 flex flex-col gap-2 min-h-0"
+                className="rounded-xl border-2 p-3 flex flex-col gap-2 min-h-0 overflow-hidden"
                 style={{ borderColor: app.color + '50', backgroundColor: app.color + '08' }}
               >
                 <div className="flex items-center gap-2 shrink-0">
@@ -1496,99 +1496,103 @@ export function BP_Section1() {
             </p>
           </div>
 
-          {/* Zone labels */}
-          <div className="shrink-0 hidden lg:grid grid-cols-7 gap-2 mb-2">
-            <div className="col-span-1 text-[10px] font-black uppercase tracking-widest text-[#f59e0b] text-center">Wallet</div>
-            <div className="col-span-3 text-[10px] font-black uppercase tracking-widest text-[#6366f1] text-center">Network (P2P)</div>
-            <div className="col-span-1 text-[10px] font-black uppercase tracking-widest text-[#8b5cf6] text-center">Mining</div>
-            <div className="col-span-2 text-[10px] font-black uppercase tracking-widest text-[#39B54A] text-center">Blockchain</div>
-          </div>
-
-          {/* Pipeline */}
-          <div className="flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-2.5">
-            {[
-              {
-                n: 1, emoji: '👛', zone: '#f59e0b',
+          {/* Pipeline — two-row snake (row 1 →, drop, row 2 ←) */}
+          {(() => {
+            const STAGES = [
+              { n: '1', emoji: '👛', zone: '#f59e0b', zoneLabel: 'Wallet',
                 title: 'Construct & Sign',
                 what: 'Wallet picks UTXOs as inputs, sets outputs (recipient + change), and signs each input with your private key (ECDSA).',
-                note: 'Still 100% local — nothing on-chain yet.',
-              },
-              {
-                n: 2, emoji: '📡', zone: '#6366f1',
+                note: 'Still 100% local — nothing on-chain yet.' },
+              { n: '2', emoji: '📡', zone: '#6366f1', zoneLabel: 'Network',
                 title: 'Broadcast',
                 what: 'The signed raw transaction is pushed to the ~8 full-node peers your wallet is connected to.',
-                note: 'txid = double-SHA256 of the tx bytes.',
-              },
-              {
-                n: 3, emoji: '🔁', zone: '#6366f1',
+                note: 'txid = double-SHA256 of the tx bytes.' },
+              { n: '3', emoji: '🔁', zone: '#6366f1', zoneLabel: 'Network',
                 title: 'Relay & Validate',
                 what: 'Each node checks signatures, that inputs exist & are unspent, no double-spend, and fee sanity — then gossips it onward.',
-                note: 'Reaches ~50k nodes in under a second.',
-              },
-              {
-                n: 4, emoji: '⏳', zone: '#6366f1',
+                note: 'Reaches ~50k nodes in under a second.' },
+              { n: '4', emoji: '⏳', zone: '#6366f1', zoneLabel: 'Network',
                 title: 'Mempool',
                 what: 'Valid but unconfirmed. The tx waits in every node’s mempool, ranked by fee rate (sat/vByte).',
-                note: 'Higher fee → picked sooner.',
-              },
-              {
-                n: 5, emoji: '⛏️', zone: '#8b5cf6',
+                note: 'Higher fee → picked sooner.' },
+              { n: '5', emoji: '⛏️', zone: '#8b5cf6', zoneLabel: 'Mining',
                 title: 'Mining',
                 what: 'A miner selects the highest-fee txs, builds a candidate block (Merkle root), and grinds the nonce until blockHash < target.',
-                note: 'Proof of Work · ~10 min on average.',
-              },
-              {
-                n: 6, emoji: '🧱', zone: '#39B54A',
+                note: 'Proof of Work · ~10 min on average.' },
+              { n: '6', emoji: '🧱', zone: '#39B54A', zoneLabel: 'Blockchain',
                 title: 'Block Propagated',
                 what: 'The winner broadcasts the block. Every node re-verifies the PoW and all txs, then appends it.',
-                note: 'Your tx now has 1 confirmation.',
-              },
-              {
-                n: 7, emoji: '✅', zone: '#39B54A',
-                title: 'Confirmations → Final',
+                note: 'Your tx now has 1 confirmation.' },
+              { n: '7', emoji: '🔒', zone: '#39B54A', zoneLabel: 'Blockchain',
+                title: 'Confirmations',
                 what: 'Each new block stacked on top buries it deeper. Rewriting it means out-hashing the whole network.',
-                note: '~6 confirmations (~60 min) ≈ irreversible.',
-              },
-            ].map((s, i) => (
+                note: '~6 confirmations (~60 min).' },
+              { n: '🏁', emoji: '✅', zone: '#10b981', zoneLabel: 'Done',
+                title: 'Settled — Final',
+                what: 'The payment is economically irreversible. The recipient can safely release the goods or service.',
+                note: 'End of the journey.' },
+            ];
+            const row1 = STAGES.slice(0, 4);            // 1 → 2 → 3 → 4  (left→right)
+            const row2 = STAGES.slice(4).reverse();      // visual: 🏁 ← 7 ← 6 ← 5 (so 5 sits under 4)
+
+            const Card = ({ s, dir }: { s: typeof STAGES[number]; dir: 'right' | 'left' | 'none' }) => (
               <motion.div
-                key={s.n}
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08, duration: 0.35, ease: 'easeOut' }}
-                className="relative flex flex-col rounded-xl border bg-card p-3 min-h-0"
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className="relative flex flex-col rounded-xl border bg-card p-3 min-h-0 overflow-hidden"
                 style={{ borderColor: s.zone + '55' }}
               >
-                {/* connector arrow (lg only, between cards) */}
-                {i < 6 && (
-                  <div
-                    className="hidden lg:flex absolute top-1/2 -right-[11px] -translate-y-1/2 z-10 size-4 items-center justify-center rounded-full text-white text-[10px] font-black"
-                    style={{ backgroundColor: s.zone }}
-                  >
-                    ›
-                  </div>
+                {/* horizontal connector chip */}
+                {dir === 'right' && (
+                  <div className="hidden lg:flex absolute top-1/2 -right-[13px] -translate-y-1/2 z-10 size-5 items-center justify-center rounded-full text-white text-xs font-black shadow" style={{ backgroundColor: s.zone }}>›</div>
+                )}
+                {dir === 'left' && (
+                  <div className="hidden lg:flex absolute top-1/2 -left-[13px] -translate-y-1/2 z-10 size-5 items-center justify-center rounded-full text-white text-xs font-black shadow" style={{ backgroundColor: s.zone }}>‹</div>
                 )}
 
-                <div className="flex items-center gap-2 shrink-0 mb-1.5">
-                  <span
-                    className="size-6 rounded-md flex items-center justify-center text-white text-[11px] font-black shrink-0"
-                    style={{ backgroundColor: s.zone }}
-                  >
-                    {s.n}
-                  </span>
-                  <span className="text-lg leading-none">{s.emoji}</span>
+                <div className="flex items-center justify-between gap-2 shrink-0 mb-1.5">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="size-6 rounded-md flex items-center justify-center text-white text-[11px] font-black shrink-0" style={{ backgroundColor: s.zone }}>{s.n}</span>
+                    <span className="text-lg leading-none">{s.emoji}</span>
+                  </div>
+                  <span className="text-[9px] font-black uppercase tracking-widest shrink-0" style={{ color: s.zone }}>{s.zoneLabel}</span>
                 </div>
 
                 <div className="font-bold text-[13px] text-foreground leading-tight mb-1">{s.title}</div>
                 <div className="text-[11px] text-muted-foreground leading-snug flex-1">{s.what}</div>
-                <div
-                  className="mt-2 text-[10px] font-medium leading-snug rounded-md px-2 py-1"
-                  style={{ backgroundColor: s.zone + '14', color: s.zone }}
-                >
-                  {s.note}
-                </div>
+                <div className="mt-2 text-[10px] font-medium leading-snug rounded-md px-2 py-1" style={{ backgroundColor: s.zone + '14', color: s.zone }}>{s.note}</div>
               </motion.div>
-            ))}
-          </div>
+            );
+
+            return (
+              <div className="flex-1 min-h-0 flex flex-col gap-2">
+                {/* Row 1 → */}
+                <div className="flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {row1.map((s, i) => (
+                    <Card key={s.n} s={s} dir={i < 3 ? 'right' : 'none'} />
+                  ))}
+                </div>
+
+                {/* Drop connector — aligned under the last column */}
+                <div className="hidden lg:grid grid-cols-4 gap-3 shrink-0">
+                  <div className="col-start-4 flex justify-center">
+                    <div className="flex flex-col items-center -my-1">
+                      <div className="w-px h-3" style={{ backgroundColor: '#8b5cf6' }} />
+                      <div className="size-5 rounded-full flex items-center justify-center text-white text-xs font-black shadow" style={{ backgroundColor: '#8b5cf6' }}>⌄</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Row 2 ← (rendered right-to-left so step 5 sits under step 4) */}
+                <div className="flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {row2.map((s, i) => (
+                    <Card key={s.n} s={s} dir={i >= 1 ? 'left' : 'none'} />
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Timing strip + caveat */}
           <div className="shrink-0 mt-4 grid grid-cols-1 lg:grid-cols-3 gap-3">
