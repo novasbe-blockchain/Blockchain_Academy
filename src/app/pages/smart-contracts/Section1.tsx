@@ -10,6 +10,7 @@ import { FileCode2, Check, X } from 'lucide-react';
 import imgSzaboVending from '../../../assets/sc/szabo-vending-machine.png';
 
 const chapters = [
+  { id: 's1-warmup',   label: '🧩 BTC vs ETH' },
   { id: 's1-recap',    label: 'Ethereum Recap' },
   { id: 's1-what',     label: 'What is a Smart Contract?' },
   { id: 's1-szabo',    label: 'Nick Szabo\'s Vending Machine' },
@@ -140,6 +141,124 @@ function SmartContractSortingExercise() {
   );
 }
 
+// ─── Warm-up: Bitcoin or Ethereum? (recap from Course 02) ───────────────────
+
+type Chain = 'btc' | 'eth' | 'both';
+
+const BTC_ETH: { stmt: string; answer: Chain; why: string }[] = [
+  { stmt: 'Launched in 2009 by Satoshi Nakamoto', answer: 'btc',  why: 'Bitcoin was the first blockchain. Ethereum came in 2015.' },
+  { stmt: 'Launched in 2015 by Vitalik Buterin & co.', answer: 'eth',  why: 'Ethereum mainnet went live July 2015 with the Solidity language.' },
+  { stmt: 'Hard cap of 21 million coins', answer: 'btc',  why: 'Bitcoin has a fixed 21M supply. ETH has no hard cap (~120M circulating).' },
+  { stmt: 'Turing-complete smart contracts (the EVM)', answer: 'eth',  why: 'Ethereum runs arbitrary logic on the EVM. Bitcoin Script is intentionally limited.' },
+  { stmt: 'Tracks funds with the UTXO model', answer: 'btc',  why: 'Bitcoin spends discrete unspent outputs. Ethereum uses account balances.' },
+  { stmt: 'Tracks funds with account balances', answer: 'eth',  why: 'Ethereum mutates a balance per account. Bitcoin uses UTXOs.' },
+  { stmt: 'Switched to Proof of Stake in 2022', answer: 'eth',  why: 'The Merge moved Ethereum to PoS. Bitcoin still uses Proof of Work.' },
+  { stmt: 'A public, decentralised ledger where the native coin pays fees', answer: 'both', why: 'True of both — BTC pays Bitcoin fees, ETH pays Ethereum gas.' },
+];
+
+const CHAIN_META: Record<Chain, { label: string; color: string; glyph: string }> = {
+  btc:  { label: 'Bitcoin',  color: '#f59e0b', glyph: '₿' },
+  eth:  { label: 'Ethereum', color: '#6366f1', glyph: 'Ξ' },
+  both: { label: 'Both',     color: '#8b5cf6', glyph: '⇋' },
+};
+
+function BitcoinEthereumWarmup() {
+  const [picks, setPicks] = useState<Record<number, Chain>>({});
+  const total = BTC_ETH.length;
+  const done = Object.keys(picks).length;
+  const correct = Object.entries(picks).filter(([i, p]) => p === BTC_ETH[+i].answer).length;
+
+  const pick = (i: number, c: Chain) => {
+    if (picks[i]) return;
+    setPicks(prev => ({ ...prev, [i]: c }));
+  };
+  const reset = () => setPicks({});
+
+  return (
+    <div className="h-full flex flex-col p-6 lg:p-8">
+      <div className="shrink-0 flex items-center justify-between mb-4">
+        <div>
+          <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">🧩 Warm-up · from Course 02</span>
+          <h2 className="text-2xl font-bold text-foreground mt-1">Bitcoin or Ethereum?</h2>
+          <p className="text-muted-foreground text-sm mt-0.5">Recall before we build. Tag each statement, then see the answer.</p>
+        </div>
+        <div className="flex items-center gap-4">
+          {done > 0 && (
+            <div className="text-right">
+              <div className="text-2xl font-black" style={{ color: correct === done ? '#39B54A' : '#f59e0b' }}>{correct}/{done}</div>
+              <div className="text-xs text-muted-foreground">correct</div>
+            </div>
+          )}
+          {done === total && (
+            <button onClick={reset} className="px-3 py-1.5 rounded-lg bg-muted hover:bg-muted/80 text-xs font-semibold text-muted-foreground transition-colors">↺ Reset</button>
+          )}
+        </div>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 grid-rows-2 gap-3">
+        {BTC_ETH.map((q, i) => {
+          const picked = picks[i];
+          const open = !!picked;
+          const right = picked === q.answer;
+          const ans = CHAIN_META[q.answer];
+          return (
+            <motion.div
+              key={i}
+              layout
+              className="relative rounded-xl border-2 overflow-hidden flex flex-col"
+              style={{
+                borderColor: !open ? 'var(--border)' : right ? '#39B54A' : '#ED1C24',
+                backgroundColor: !open ? 'var(--card)' : right ? '#39B54A10' : '#ED1C2410',
+              }}
+            >
+              <div className="flex-1 p-3 flex flex-col gap-2">
+                <div className="text-sm font-semibold text-foreground leading-snug flex-1">{q.stmt}</div>
+                <AnimatePresence>
+                  {open && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+                      className="text-[11px] leading-snug"
+                    >
+                      <span className="font-black" style={{ color: ans.color }}>{ans.glyph} {ans.label}</span>
+                      <span className="text-muted-foreground"> — {q.why}</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              {!open ? (
+                <div className="flex border-t border-border shrink-0">
+                  {(['btc','eth','both'] as Chain[]).map((c, ci) => {
+                    const m = CHAIN_META[c];
+                    return (
+                      <button
+                        key={c}
+                        onClick={() => pick(i, c)}
+                        className={`flex-1 py-2 text-xs font-black transition-colors ${ci < 2 ? 'border-r border-border' : ''}`}
+                        style={{ color: m.color }}
+                      >
+                        {m.glyph} {m.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="shrink-0 flex items-center justify-center py-2 gap-1.5 border-t" style={{ borderColor: right ? '#39B54A40' : '#ED1C2440' }}>
+                  {right
+                    ? <Check className="size-4 text-[#39B54A]" strokeWidth={3} />
+                    : <X className="size-4 text-[#ED1C24]" strokeWidth={3} />}
+                  <span className="text-xs font-bold" style={{ color: right ? '#39B54A' : '#ED1C24' }}>
+                    {right ? 'Correct' : `You said ${CHAIN_META[picked].label}`}
+                  </span>
+                </div>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function SC_Section1() {
   return (
     <div className="h-full w-full flex overflow-hidden">
@@ -158,7 +277,12 @@ export function SC_Section1() {
           />
         </div>
 
-        {/* ═══════ 0. ETHEREUM RECAP (warm-up) ═══════ */}
+        {/* ═══════ 0a. WARM-UP: BITCOIN vs ETHEREUM ═══════ */}
+        <div id="s1-warmup" className="h-full">
+          <BitcoinEthereumWarmup />
+        </div>
+
+        {/* ═══════ 0b. ETHEREUM RECAP (warm-up) ═══════ */}
         <div id="s1-recap" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
             <span className="text-xs font-black uppercase tracking-widest text-[#6366f1]">Warm-up · from Course 02</span>
@@ -348,44 +472,44 @@ export function SC_Section1() {
             title="Historical Evolution of Smart Contracts"
             events={[
               {
-                year: '1998',
-                title: 'Szabo designs Bit Gold',
-                description: 'The closest precursor to Bitcoin: proof-of-work chains of ownership. Still lacks a decentralized execution environment to run contracts.',
+                year: '1994',
+                title: 'Szabo coins "smart contract"',
+                description: 'Nick Szabo defines a smart contract as promises enforced by code, using the vending machine analogy. The idea exists 15 years before any chain can run it.',
               },
               {
                 year: '2009',
-                title: 'Bitcoin launches — limited scripting',
-                description: 'Bitcoin Script enables basic conditional logic (multisig, timelocks) but is intentionally non-Turing-complete. Smart contracts remain constrained.',
+                title: 'Bitcoin — the first on-chain contracts',
+                description: 'Bitcoin Script can express conditional spending: multisig, timelocks, HTLCs. Deliberately non-Turing-complete, so contract logic stays narrow and payment-focused.',
               },
               {
                 year: '2015',
-                title: 'Ethereum mainnet — Solidity launches',
-                description: 'The first general-purpose smart contract platform goes live. Developers can now write arbitrary business logic on a global, trustless computer.',
+                title: 'Ethereum + Solidity — general-purpose contracts',
+                description: 'The Turing-complete EVM ships. For the first time, developers can deploy arbitrary contract logic to a shared, trustless computer.',
               },
               {
                 year: '2016',
-                title: 'The DAO hack — $60M drained',
-                description: 'A reentrancy bug is exploited repeatedly before anyone can react. Ethereum hard-forks to recover funds. "Code is law" meets its first major stress test.',
+                title: 'The DAO — the first contract crisis',
+                description: 'A reentrancy bug drains $60M from a single contract. Ethereum hard-forks (ETH / ETC) to recover funds. Smart-contract security becomes a discipline.',
               },
               {
                 year: '2017',
-                title: 'ICO boom — ERC-20 tokens',
-                description: 'ERC-20 lets anyone issue a token and raise capital via smart contract in minutes. Billions raised; most projects fail. Regulation follows.',
+                title: 'ERC-20 — token contracts standardised',
+                description: 'A shared token interface lets any contract issue fungible tokens that every wallet and exchange understands. The ICO boom follows.',
+              },
+              {
+                year: '2018',
+                title: 'ERC-721 — NFT contracts standardised',
+                description: 'A standard for unique, owned tokens. Contracts can now represent one-of-a-kind assets and enforce royalties on every transfer.',
               },
               {
                 year: '2020',
-                title: 'DeFi Summer — protocols replace banks',
-                description: 'Uniswap, Compound, Aave lock $1B+ in smart contracts. Permissionless lending, trading, and yield — no banks, no accounts, no KYC.',
-              },
-              {
-                year: '2021',
-                title: 'NFT explosion — ERC-721 goes mainstream',
-                description: '$41B NFT market. On-chain ownership of art, collectibles, and gaming assets. Smart contracts enforce royalties automatically on every resale.',
+                title: 'DeFi Summer — composable contracts',
+                description: 'Uniswap, Aave and Compound show contracts calling contracts — "money legos." Lending, trading and yield run entirely in code, no intermediary.',
               },
               {
                 year: 'Today',
-                title: '$100B+ locked — multi-chain ecosystem',
-                description: 'Ethereum, Solana, BNB Chain, Avalanche, and L2s host thousands of live contracts. Security is now the primary battleground — $6B+ lost to exploits since 2016.',
+                title: 'Audited, multi-chain, high-stakes',
+                description: 'Contracts hold $100B+ across Ethereum, L2s and other chains. Auditing is mandatory practice — $6B+ has been lost to contract exploits since 2016.',
               },
             ]}
           />

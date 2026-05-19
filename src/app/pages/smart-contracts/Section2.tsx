@@ -847,12 +847,22 @@ export function SC_Section2() {
                     <div className="text-xs font-semibold text-muted-foreground">Fungible — every unit identical</div>
                   </div>
                 </div>
-                <div className="flex items-center justify-center gap-1.5 py-5 rounded-xl" style={{ backgroundColor: '#6366f10f' }}>
+                <div className="flex items-center justify-center gap-1.5 py-3 rounded-xl" style={{ backgroundColor: '#6366f10f' }}>
                   {[0,1,2,3,4].map(k => (
-                    <div key={k} className="size-9 rounded-full bg-[#6366f1] text-white text-[11px] font-black flex items-center justify-center">1</div>
+                    <div key={k} className="size-8 rounded-full bg-[#6366f1] text-white text-[10px] font-black flex items-center justify-center">1</div>
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground flex-1">Money-like tokens. 1 unit = 1 unit — always interchangeable.</p>
+                <p className="text-xs text-muted-foreground">Money-like tokens. 1 unit = 1 unit — always interchangeable.</p>
+                <div className="rounded-lg bg-[#0d1117] p-2.5 flex-1 min-h-0">
+                  <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Core functions</div>
+                  <div className="font-mono text-[10px] leading-relaxed space-y-0.5" style={{ color: '#6366f1' }}>
+                    <div>transfer(to, amount)</div>
+                    <div>approve(spender, amount)</div>
+                    <div>transferFrom(from, to, amount)</div>
+                    <div>balanceOf(account)</div>
+                    <div>totalSupply()</div>
+                  </div>
+                </div>
                 <div className="flex flex-wrap gap-1.5">
                   {['USDC','DAI','UNI','WETH'].map(t => <span key={t} className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#6366f115', color: '#6366f1' }}>{t}</span>)}
                 </div>
@@ -873,12 +883,22 @@ export function SC_Section2() {
                     <div className="text-xs font-semibold text-muted-foreground">Non-fungible — each one unique</div>
                   </div>
                 </div>
-                <div className="flex items-center justify-center gap-2 py-5 rounded-xl" style={{ backgroundColor: '#f973160f' }}>
+                <div className="flex items-center justify-center gap-2 py-3 rounded-xl" style={{ backgroundColor: '#f973160f' }}>
                   {[{n:'#1',c:'#f97316'},{n:'#2',c:'#8b5cf6'},{n:'#3',c:'#39B54A'}].map(b => (
-                    <div key={b.n} className="size-11 rounded-lg text-white text-xs font-black flex items-center justify-center" style={{ backgroundColor: b.c }}>{b.n}</div>
+                    <div key={b.n} className="size-10 rounded-lg text-white text-xs font-black flex items-center justify-center" style={{ backgroundColor: b.c }}>{b.n}</div>
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground flex-1">One-of-a-kind tokens. Each has a unique ID and owner — not interchangeable.</p>
+                <p className="text-xs text-muted-foreground">One-of-a-kind tokens. Each has a unique ID and owner — not interchangeable.</p>
+                <div className="rounded-lg bg-[#0d1117] p-2.5 flex-1 min-h-0">
+                  <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Core functions</div>
+                  <div className="font-mono text-[10px] leading-relaxed space-y-0.5" style={{ color: '#f97316' }}>
+                    <div>ownerOf(tokenId)</div>
+                    <div>transferFrom(from, to, tokenId)</div>
+                    <div>approve(to, tokenId)</div>
+                    <div>setApprovalForAll(op, bool)</div>
+                    <div>tokenURI(tokenId)</div>
+                  </div>
+                </div>
                 <div className="flex flex-wrap gap-1.5">
                   {['CryptoPunks','ENS','Title deeds'].map(t => <span key={t} className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#f9731615', color: '#f97316' }}>{t}</span>)}
                 </div>
@@ -899,11 +919,21 @@ export function SC_Section2() {
                     <div className="text-xs font-semibold text-muted-foreground">Multi-token — both, one contract</div>
                   </div>
                 </div>
-                <div className="flex items-center justify-center gap-2 py-5 rounded-xl" style={{ backgroundColor: '#39B54A0f' }}>
-                  {[0,1,2].map(k => <div key={k} className="size-8 rounded-full bg-[#39B54A] text-white text-[10px] font-black flex items-center justify-center">x99</div>)}
-                  <div className="size-10 rounded-lg bg-[#f97316] text-white text-sm font-black flex items-center justify-center">★</div>
+                <div className="flex items-center justify-center gap-2 py-3 rounded-xl" style={{ backgroundColor: '#39B54A0f' }}>
+                  {[0,1,2].map(k => <div key={k} className="size-7 rounded-full bg-[#39B54A] text-white text-[9px] font-black flex items-center justify-center">x99</div>)}
+                  <div className="size-9 rounded-lg bg-[#f97316] text-white text-sm font-black flex items-center justify-center">★</div>
                 </div>
-                <p className="text-sm text-muted-foreground flex-1">One contract holds many token types — fungible <em>and</em> unique — with cheap batch transfers.</p>
+                <p className="text-xs text-muted-foreground">One contract holds many token types — fungible <em>and</em> unique — with cheap batch transfers.</p>
+                <div className="rounded-lg bg-[#0d1117] p-2.5 flex-1 min-h-0">
+                  <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Core functions</div>
+                  <div className="font-mono text-[10px] leading-relaxed space-y-0.5" style={{ color: '#39B54A' }}>
+                    <div>balanceOf(account, id)</div>
+                    <div>balanceOfBatch(accounts, ids)</div>
+                    <div>safeTransferFrom(from, to, id, amt)</div>
+                    <div>safeBatchTransferFrom(…)</div>
+                    <div>setApprovalForAll(op, bool)</div>
+                  </div>
+                </div>
                 <div className="flex flex-wrap gap-1.5">
                   {['Game items','Tickets','Editions'].map(t => <span key={t} className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#39B54A15', color: '#39B54A' }}>{t}</span>)}
                 </div>
