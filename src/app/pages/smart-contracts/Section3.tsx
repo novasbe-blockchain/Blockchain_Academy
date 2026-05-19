@@ -24,10 +24,11 @@ const chapters = [
   { id: 's3-industries-intro', label: 'Industries Overview' },
 
   { kind: 'group' as const, id: 'g-defi',    label: '💸 DeFi' },
-  { id: 's3-defi-intro',       label: 'Intro' },
-  { id: 's3-defi-amm',         label: '🧩 AMM Curve' },
-  { id: 's3-defi-dex',         label: 'DEX Examples' },
-  { id: 's3-defi-stablecoins', label: '🧩 Stablecoins' },
+  { id: 's3-defi-intro',          label: 'Intro' },
+  { id: 's3-defi-dex',            label: 'DEX Examples' },
+  { id: 's3-defi-amm',            label: '🧩 AMM Curve' },
+  { id: 's3-defi-stablecoins-intro', label: 'Stablecoins' },
+  { id: 's3-defi-stablecoins',    label: '🧩 Peg Simulator' },
   { id: 's3-defi-borderless',  label: 'Borderless' },
   { id: 's3-defi-prosCons',    label: 'Pros & Cons' },
 
@@ -710,22 +711,19 @@ function PegSimulator() {
 function RoyaltyCalculator() {
   const [salePrice, setSalePrice] = useState(10000);
   const [creatorPct,  setCreator]   = useState(5);   // ERC-2981 default-ish
-  const [collabPct,   setCollab]    = useState(2);
   const [marketPct,   setMarketPct] = useState(2.5); // marketplace fee
   const [resales,     setResales]   = useState(3);
 
   const creator   = salePrice * creatorPct  / 100;
-  const collab    = salePrice * collabPct   / 100;
   const market    = salePrice * marketPct   / 100;
-  const seller    = salePrice - creator - collab - market;
+  const seller    = salePrice - creator - market;
 
   // Royalty earned across N resales (cumulative)
-  const totalRoyalty = (creator + collab) * resales;
+  const totalRoyalty = creator * resales;
 
   const slices = [
     { label: 'Seller',       value: seller,  color: '#6366f1' },
     { label: 'Creator',      value: creator, color: '#39B54A' },
-    { label: 'Collaborator', value: collab,  color: '#8b5cf6' },
     { label: 'Marketplace',  value: market,  color: '#f59e0b' },
   ];
 
@@ -753,7 +751,6 @@ function RoyaltyCalculator() {
 
           {[
             { label: 'Creator royalty',     val: creatorPct, set: setCreator,   color: '#39B54A', max: 15 },
-            { label: 'Collaborator share',  val: collabPct,  set: setCollab,    color: '#8b5cf6', max: 10 },
             { label: 'Marketplace fee',     val: marketPct,  set: setMarketPct, color: '#f59e0b', max: 10 },
           ].map(s => (
             <div key={s.label} className="p-3 bg-card border border-border rounded-xl">
@@ -808,7 +805,7 @@ function RoyaltyCalculator() {
 
           {/* Cumulative royalty over N resales */}
           <div className="p-3 bg-gradient-to-br from-[#39B54A]/10 to-transparent border border-[#39B54A]/30 rounded-xl">
-            <div className="text-[10px] font-bold text-[#39B54A] uppercase tracking-widest">Cumulative royalties (creator + collaborator)</div>
+            <div className="text-[10px] font-bold text-[#39B54A] uppercase tracking-widest">Cumulative creator royalties</div>
             <div className="flex items-baseline gap-2 mt-1">
               <div className="font-mono font-black text-2xl text-[#39B54A]">${totalRoyalty.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
               <div className="text-xs text-muted-foreground">across {resales} resale{resales !== 1 ? 's' : ''}</div>
@@ -1190,25 +1187,25 @@ export function SC_Section3() {
         <div className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">What is DeFi?</h2>
-            <p className="text-muted-foreground text-sm mt-1">An emerging peer-to-peer financial system using cryptocurrencies and smart contracts.</p>
+            <p className="text-muted-foreground text-base mt-1">An emerging peer-to-peer financial system using cryptocurrencies and smart contracts.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="flex flex-col gap-3">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="flex flex-col gap-3 justify-center">
               <div className="p-4 bg-card border border-[#6366f1]/30 rounded-xl">
-                <div className="font-bold text-sm text-[#6366f1] mb-2">The Core Idea</div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <div className="font-bold text-base text-[#6366f1] mb-2">The Core Idea</div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Remove third-party intermediaries. Instead of a bank enforcing a loan or a clearinghouse settling a trade, a smart contract automatically executes those functions when conditions are met. Cutting out middlemen reduces fees, settlement times, and gives users more control over their assets.
                 </p>
               </div>
               <div className="p-4 bg-card border border-[#8b5cf6]/30 rounded-xl">
-                <div className="font-bold text-sm text-[#8b5cf6] mb-2">"Value and Code at the same level"</div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <div className="font-bold text-base text-[#8b5cf6] mb-2">"Value and Code at the same level"</div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   In traditional finance, the rules of trade live in legal documents and back-office systems separate from the money itself. In DeFi, value (ETH, USDC, NFTs) and the rules that govern it (the contract code) sit on the same blockchain — composable, atomic, transparent.
                 </p>
               </div>
             </div>
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">DeFi primitives</div>
+            <div className="flex flex-col gap-3 justify-center">
+              <div className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">DeFi primitives</div>
               {[
                 { name: 'DEXs / AMMs', desc: 'Decentralized exchanges using liquidity pools (Uniswap, CoW Swap, Curve)', color: '#6366f1' },
                 { name: 'Lending', desc: 'Over-collateralized loans without credit checks (Aave, Compound)', color: '#8b5cf6' },
@@ -1217,11 +1214,69 @@ export function SC_Section3() {
                 { name: 'Derivatives', desc: 'Perpetuals, options, synthetics — trading without intermediaries (dYdX, GMX)', color: '#22d3ee' },
               ].map(p => (
                 <div key={p.name} className="flex items-start gap-3 p-2.5 bg-card border border-border rounded-lg">
-                  <div className="px-2 py-0.5 rounded font-bold text-xs shrink-0 text-white" style={{ backgroundColor: p.color }}>{p.name}</div>
-                  <div className="text-xs text-muted-foreground">{p.desc}</div>
+                  <div className="px-2 py-0.5 rounded font-bold text-sm shrink-0 text-white" style={{ backgroundColor: p.color }}>{p.name}</div>
+                  <div className="text-sm text-muted-foreground">{p.desc}</div>
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* DeFi: DEX use cases */}
+        <div id="s3-defi-dex" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-5">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Decentralized Exchanges (DEXs)</h2>
+            <p className="text-muted-foreground text-base mt-1">Trading venues executed entirely by smart contracts — no central broker, no clearing house, no custody risk.</p>
+          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="flex items-center gap-2">
+                <div className="size-10 rounded-xl bg-[#6366f1]/15 flex items-center justify-center text-xl shrink-0">🦄</div>
+                <div>
+                  <div className="font-black text-base text-foreground">Uniswap</div>
+                  <div className="text-sm text-[#6366f1]">Non-custodial token swaps</div>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Lets any wallet swap thousands of tokens in one on-chain call. Liquidity providers deposit token pairs; the smart contract's AMM quotes the rate, moves the assets, and charges 0.01–1% per pool, settling in about 15 seconds.
+              </p>
+              <div className="grid grid-cols-2 gap-2 mt-auto">
+                <div className="p-2 bg-[#6366f1]/10 rounded-lg text-center">
+                  <div className="font-mono font-black text-base text-[#6366f1]">~$1.5B</div>
+                  <div className="text-xs text-muted-foreground">Daily volume (07/2025)</div>
+                </div>
+                <div className="p-2 bg-[#6366f1]/10 rounded-lg text-center">
+                  <div className="font-mono font-black text-base text-[#6366f1]">never</div>
+                  <div className="text-xs text-muted-foreground">Takes custody of user funds</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="flex items-center gap-2">
+                <div className="size-10 rounded-xl bg-[#8b5cf6]/15 flex items-center justify-center text-xl shrink-0">🐮</div>
+                <div>
+                  <div className="font-black text-base text-foreground">CoW Swap</div>
+                  <div className="text-sm text-[#8b5cf6]">MEV-protected, intent-based</div>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Wallets trade tokens by submitting <span className="font-semibold text-foreground">signed intents</span> rather than on-chain swap transactions. Off-chain solvers batch orders, match users directly through Coincidence of Wants, and route any leftover flow to on-chain liquidity. Trades settle in a single transaction with built-in MEV protection.
+              </p>
+              <div className="grid grid-cols-2 gap-2 mt-auto">
+                <div className="p-2 bg-[#8b5cf6]/10 rounded-lg text-center">
+                  <div className="font-mono font-black text-base text-[#8b5cf6]">CoW</div>
+                  <div className="text-xs text-muted-foreground">Coincidence of Wants matching</div>
+                </div>
+                <div className="p-2 bg-[#8b5cf6]/10 rounded-lg text-center">
+                  <div className="font-mono font-black text-base text-[#8b5cf6]">no MEV</div>
+                  <div className="text-xs text-muted-foreground">Front-running mitigated</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="shrink-0 mt-4 p-3 rounded-xl border border-border bg-muted/30 text-sm text-muted-foreground">
+            <span className="font-semibold text-foreground">Why this matters:</span> a DEX delivers centralized-exchange-scale liquidity without ever taking custody of user funds. The contract enforces the rules; users keep their keys.
           </div>
         </div>
 
@@ -1230,61 +1285,54 @@ export function SC_Section3() {
           <InteractiveAMM />
         </div>
 
-        {/* DeFi: DEX use cases */}
-        <div id="s3-defi-dex" className="h-full flex flex-col p-6 lg:p-10">
+        {/* DeFi: Stablecoins — concept primer */}
+        <div id="s3-defi-stablecoins-intro" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Decentralized Exchanges (DEXs)</h2>
-            <p className="text-muted-foreground text-sm mt-1">Trading venues executed entirely by smart contracts — no central broker, no clearing house, no custody risk.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Stablecoins — Crypto That Holds $1</h2>
+            <p className="text-muted-foreground text-sm mt-1">The most-used on-chain asset: tokens engineered to track a stable reference, almost always 1&nbsp;USD. Three designs, three failure modes.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <div className="size-10 rounded-xl bg-[#6366f1]/15 flex items-center justify-center text-xl shrink-0">🦄</div>
-                <div>
-                  <div className="font-black text-sm text-foreground">Uniswap</div>
-                  <div className="text-xs text-[#6366f1]">Non-custodial token swaps</div>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Lets any wallet swap thousands of tokens in one on-chain call. Liquidity providers deposit token pairs; the smart contract's AMM quotes the rate, moves the assets, and charges 0.01–1% per pool, settling in about 15 seconds.
-              </p>
-              <div className="grid grid-cols-2 gap-2 mt-auto">
-                <div className="p-2 bg-[#6366f1]/10 rounded-lg text-center">
-                  <div className="font-mono font-black text-base text-[#6366f1]">~$1.5B</div>
-                  <div className="text-[10px] text-muted-foreground">Daily volume (07/2025)</div>
-                </div>
-                <div className="p-2 bg-[#6366f1]/10 rounded-lg text-center">
-                  <div className="font-mono font-black text-base text-[#6366f1]">never</div>
-                  <div className="text-[10px] text-muted-foreground">Takes custody of user funds</div>
-                </div>
-              </div>
-            </div>
 
-            <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <div className="size-10 rounded-xl bg-[#8b5cf6]/15 flex items-center justify-center text-xl shrink-0">🐮</div>
-                <div>
-                  <div className="font-black text-sm text-foreground">CoW Swap</div>
-                  <div className="text-xs text-[#8b5cf6]">MEV-protected, intent-based</div>
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-5 grid-rows-1">
+            {[
+              {
+                icon: '🏦', color: '#39B54A', name: 'Fiat-backed',
+                how: 'A company holds real dollars / T-bills in a bank and issues one token per dollar.',
+                risk: 'You must trust the issuer and its reserves.',
+                ex: ['USDC', 'USDT'],
+              },
+              {
+                icon: '⛓️', color: '#6366f1', name: 'Crypto-collateralised',
+                how: 'Users lock surplus crypto (e.g. $150 of ETH) in a contract to mint $100 of stablecoin.',
+                risk: 'A sharp crash can under-collateralise and trigger liquidations.',
+                ex: ['DAI'],
+              },
+              {
+                icon: '🧮', color: '#ED1C24', name: 'Algorithmic',
+                how: 'Code expands and contracts supply to chase the peg — no real assets behind it.',
+                risk: 'Reflexive: confidence loss spirals. UST/LUNA wiped out ~$40B in 2022.',
+                ex: ['UST ✝'],
+              },
+            ].map(s => (
+              <div key={s.name} className="flex flex-col rounded-2xl border-2 bg-card overflow-hidden" style={{ borderColor: s.color + '40' }}>
+                <div className="h-1.5" style={{ backgroundColor: s.color }} />
+                <div className="flex-1 flex flex-col gap-3 p-5 justify-center">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl">{s.icon}</span>
+                    <div className="font-black text-lg" style={{ color: s.color }}>{s.name}</div>
+                  </div>
+                  <p className="text-sm text-foreground leading-relaxed">{s.how}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed"><span className="font-semibold" style={{ color: s.color }}>Risk: </span>{s.risk}</p>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {s.ex.map(e => <span key={e} className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: s.color + '15', color: s.color }}>{e}</span>)}
+                  </div>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Wallets trade tokens by submitting <span className="font-semibold text-foreground">signed intents</span> rather than on-chain swap transactions. Off-chain solvers batch orders, match users directly through Coincidence of Wants, and route any leftover flow to on-chain liquidity. Trades settle in a single transaction with built-in MEV protection.
-              </p>
-              <div className="grid grid-cols-2 gap-2 mt-auto">
-                <div className="p-2 bg-[#8b5cf6]/10 rounded-lg text-center">
-                  <div className="font-mono font-black text-base text-[#8b5cf6]">CoW</div>
-                  <div className="text-[10px] text-muted-foreground">Coincidence of Wants matching</div>
-                </div>
-                <div className="p-2 bg-[#8b5cf6]/10 rounded-lg text-center">
-                  <div className="font-mono font-black text-base text-[#8b5cf6]">no MEV</div>
-                  <div className="text-[10px] text-muted-foreground">Front-running mitigated</div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-          <div className="shrink-0 mt-4 p-3 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">Why this matters:</span> a DEX delivers centralized-exchange-scale liquidity without ever taking custody of user funds. The contract enforces the rules; users keep their keys.
+
+          <div className="shrink-0 mt-4 p-3 rounded-xl border border-[#6366f1]/30 text-center text-sm" style={{ backgroundColor: '#6366f10f' }}>
+            <span className="font-bold text-[#6366f1]">Next: </span>
+            <span className="text-muted-foreground">stress-test a peg yourself — push collateral and demand until a stablecoin breaks.</span>
           </div>
         </div>
 
@@ -1379,31 +1427,31 @@ export function SC_Section3() {
         <div className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">What is an NFT?</h2>
-            <p className="text-muted-foreground text-sm mt-1">A unique digital asset recorded on-chain that certifies ownership and authenticity.</p>
+            <p className="text-muted-foreground text-base mt-1">A unique digital asset recorded on-chain that certifies ownership and authenticity.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#8b5cf6]">Unlike fungible tokens…</div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#8b5cf6]">Unlike fungible tokens…</div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Cryptocurrencies (ETH, USDC) are <span className="font-semibold text-foreground">interchangeable</span> — your 1 ETH equals my 1 ETH. NFTs are not. Each NFT has its own ID and metadata, recorded on the ERC-721 (or ERC-1155) standard. Owning the token means owning that specific asset.
               </p>
               <div className="grid grid-cols-2 gap-2 mt-auto">
                 <div className="p-2 bg-[#8b5cf6]/10 rounded-lg">
-                  <div className="text-[10px] text-muted-foreground">Standard</div>
-                  <div className="font-mono font-black text-sm text-[#8b5cf6]">ERC-721</div>
+                  <div className="text-xs text-muted-foreground">Standard</div>
+                  <div className="font-mono font-black text-base text-[#8b5cf6]">ERC-721</div>
                 </div>
                 <div className="p-2 bg-[#8b5cf6]/10 rounded-lg">
-                  <div className="text-[10px] text-muted-foreground">Multi-token</div>
-                  <div className="font-mono font-black text-sm text-[#8b5cf6]">ERC-1155</div>
+                  <div className="text-xs text-muted-foreground">Multi-token</div>
+                  <div className="font-mono font-black text-base text-[#8b5cf6]">ERC-1155</div>
                 </div>
               </div>
             </div>
-            <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#6366f1]">In gaming…</div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+            <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#6366f1]">In gaming…</div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 NFTs can represent swords, skins, characters, or virtual land. Because the NFT sits in the player's Web3 wallet — not on the publisher's server — it can be listed, traded, or rented peer-to-peer. Open, player-controlled markets emerge.
               </p>
-              <ul className="space-y-1.5 text-xs text-muted-foreground">
+              <ul className="space-y-1.5 text-sm text-muted-foreground">
                 {['Items survive server shutdowns', 'Tradeable on third-party marketplaces', 'Cross-game interoperability potential', 'Embedded royalties to creators'].map(p => (
                   <li key={p} className="flex gap-1.5"><span className="text-[#6366f1]">›</span>{p}</li>
                 ))}
@@ -1467,34 +1515,34 @@ export function SC_Section3() {
             <img src={imgP2eEcosystem} alt="Play-to-Earn ecosystem icons: gaming, NFTs, tokens, creatures" className="hidden lg:block h-20 object-contain shrink-0" />
             <div>
               <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Play-to-Earn in Production</h2>
-              <p className="text-muted-foreground text-sm mt-1">Smart contracts link in-game achievements to token rewards — and route perpetual royalties back to creators on every resale.</p>
+              <p className="text-muted-foreground text-base mt-1">Smart contracts link in-game achievements to token rewards — and route perpetual royalties back to creators on every resale.</p>
             </div>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#8b5cf6]">How it works</div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#8b5cf6]">How it works</div>
+              <ul className="text-sm text-muted-foreground space-y-2 flex-1">
                 <li className="flex gap-2"><span className="text-[#8b5cf6] shrink-0 mt-0.5">›</span>Win a match, breed a creature, finish a quest → smart contract mints/transfers token rewards to your wallet</li>
                 <li className="flex gap-2"><span className="text-[#8b5cf6] shrink-0 mt-0.5">›</span>Tokens swappable for stablecoins or reinvested in better gear</li>
                 <li className="flex gap-2"><span className="text-[#8b5cf6] shrink-0 mt-0.5">›</span>Guilds emerge — NFT holders lend assets to new players for revenue split</li>
                 <li className="flex gap-2"><span className="text-[#8b5cf6] shrink-0 mt-0.5">›</span>Labor and capital combine inside a self-governing digital economy</li>
               </ul>
             </div>
-            <div className="p-5 bg-gradient-to-br from-[#8b5cf6]/10 to-transparent border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3">
+            <div className="p-5 bg-gradient-to-br from-[#8b5cf6]/10 to-transparent border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3 justify-center">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">⚔️</span>
                 <div>
-                  <div className="font-black text-sm text-foreground">Ubisoft · Champions Tactics: Grimoria Chronicles</div>
-                  <div className="text-xs text-[#8b5cf6]">Strategic Innovation Lab · Oct 2024</div>
+                  <div className="font-black text-base text-foreground">Ubisoft · Champions Tactics: Grimoria Chronicles</div>
+                  <div className="text-sm text-[#8b5cf6]">Strategic Innovation Lab · Oct 2024</div>
                 </div>
               </div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
+              <ul className="text-sm text-muted-foreground space-y-2 flex-1">
                 <li className="flex gap-2"><span className="text-[#8b5cf6] shrink-0 mt-0.5">›</span>Launched on the <span className="font-semibold text-foreground">Oasys</span> blockchain (gaming-focused EVM L1)</li>
                 <li className="flex gap-2"><span className="text-[#8b5cf6] shrink-0 mt-0.5">›</span><span className="font-semibold text-foreground">75,000 Champion NFTs</span> minted in a capped drop — sold out in hours, funding live-ops upfront</li>
                 <li className="flex gap-2"><span className="text-[#8b5cf6] shrink-0 mt-0.5">›</span>Players battle squads in PvP; victories earn on-chain reward tokens redeemable for gear</li>
                 <li className="flex gap-2"><span className="text-[#8b5cf6] shrink-0 mt-0.5">›</span>Every secondary sale routes a <span className="font-semibold text-foreground">5% royalty</span> to Ubisoft and collaborating artists — perpetual revenue loop</li>
               </ul>
-              <div className="mt-auto p-2 bg-[#8b5cf6]/10 rounded-lg text-xs text-muted-foreground">
+              <div className="mt-auto p-2 bg-[#8b5cf6]/10 rounded-lg text-sm text-muted-foreground">
                 A mainstream AAA studio using NFTs and smart-contract royalties to power an active game economy in 2025.
               </div>
             </div>
@@ -1505,30 +1553,30 @@ export function SC_Section3() {
         <div id="s3-nft-finance" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">NFT Finance · Lending, Renting, Yield</h2>
-            <p className="text-muted-foreground text-sm mt-1">If digital assets have value, secondary liquidity can be built around them.</p>
+            <p className="text-muted-foreground text-base mt-1">If digital assets have value, secondary liquidity can be built around them.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="flex flex-col gap-3">
-              <div className="p-4 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-2">
-                <div className="font-bold text-sm text-[#8b5cf6]">Collateralized lending</div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="flex flex-col gap-3 justify-center">
+              <div className="p-4 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-2 justify-center">
+                <div className="font-bold text-base text-[#8b5cf6]">Collateralized lending</div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   NFT holders borrow against their assets without selling. The NFT is locked in a smart contract; if the loan defaults, the contract auctions or transfers the NFT to the lender. Liquidity unlocked, ownership preserved.
                 </p>
-                <div className="text-[10px] text-muted-foreground italic">Examples: NFTfi, BendDAO, Zharta</div>
+                <div className="text-xs text-muted-foreground italic">Examples: NFTfi, BendDAO, Zharta</div>
               </div>
-              <div className="p-4 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-2">
-                <div className="font-bold text-sm text-[#22d3ee]">Rentals & flywheels</div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+              <div className="p-4 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-2 justify-center">
+                <div className="font-bold text-base text-[#22d3ee]">Rentals & flywheels</div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   NFTs can be rented to new players for a revenue split. As assets circulate, utilization grows, lenders earn yield secured by on-chain collateral, liquidity deepens, better pricing emerges, attracting more capital — a self-reinforcing flywheel.
                 </p>
-                <div className="text-[10px] text-muted-foreground italic">Pattern: borrow → use in-game → earn → split with owner</div>
+                <div className="text-xs text-muted-foreground italic">Pattern: borrow → use in-game → earn → split with owner</div>
               </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest">Real-world example · Zharta</div>
+            <div className="flex flex-col gap-2 justify-center">
+              <div className="text-sm font-bold text-[#8b5cf6] uppercase tracking-widest">Real-world example · Zharta</div>
               <div className="p-3 bg-card border border-[#8b5cf6]/30 rounded-xl">
                 <img src={imgZhartaLoans} alt="Zharta loan volume — Borrow chart over a year, +300 loans, 13.6% APR" className="w-full h-auto rounded-lg" />
-                <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+                <p className="text-sm text-muted-foreground leading-relaxed mt-2">
                   Borrow against your NFT — keep 100% upside, retain investing opportunities, share the risk. Zharta's smart contracts grew to <span className="font-semibold text-foreground">300+ loans</span> at <span className="font-semibold text-foreground">13.6% APR</span>, with 2-year terms — secured by on-chain collateral.
                 </p>
               </div>
@@ -1584,34 +1632,34 @@ export function SC_Section3() {
         <div id="s3-rwa-securitize" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Securitize · BlackRock BUIDL · BNY Mellon</h2>
-            <p className="text-muted-foreground text-sm mt-1">A regulated digital asset issuance and management platform bridging TradFi and blockchain.</p>
+            <p className="text-muted-foreground text-base mt-1">A regulated digital asset issuance and management platform bridging TradFi and blockchain.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#39B54A]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#39B54A]">How it works</div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="p-5 bg-card border border-[#39B54A]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#39B54A]">How it works</div>
+              <ul className="text-sm text-muted-foreground space-y-2 flex-1">
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Financial firms issue digital securities on blockchain networks (Ethereum, Polygon, Avalanche)</li>
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Each token represents ownership of off-chain assets — treasuries, private credit, structured products</li>
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Investors receive tokenized shares, tradeable and settleable on-chain</li>
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>KYC/AML automated via on-chain compliance modules</li>
               </ul>
-              <div className="p-2 bg-[#39B54A]/10 rounded-lg text-xs">
+              <div className="p-2 bg-[#39B54A]/10 rounded-lg text-sm">
                 <span className="font-semibold text-foreground">Regulatory status:</span> <span className="text-muted-foreground">Registered with SEC/FINRA — supports compliant digital securities issuance under U.S. law.</span>
               </div>
             </div>
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">Flagship deployments</div>
+            <div className="flex flex-col gap-3 justify-center">
+              <div className="text-sm font-bold text-[#39B54A] uppercase tracking-widest">Flagship deployments</div>
               <div className="p-4 bg-card border border-[#39B54A]/25 rounded-xl">
-                <div className="font-bold text-foreground text-sm mb-1">BlackRock BUIDL</div>
-                <p className="text-xs text-muted-foreground">USD Institutional Digital Liquidity Fund — tokenized money-market exposure for institutions.</p>
+                <div className="font-bold text-foreground text-base mb-1">BlackRock BUIDL</div>
+                <p className="text-sm text-muted-foreground">USD Institutional Digital Liquidity Fund — tokenized money-market exposure for institutions.</p>
               </div>
               <div className="p-4 bg-card border border-[#39B54A]/25 rounded-xl">
-                <div className="font-bold text-foreground text-sm mb-1">Securitize × BNY Mellon</div>
-                <p className="text-xs text-muted-foreground">Tokenized fund backed by AAA-rated structured credit — institutional credit exposure on-chain.</p>
+                <div className="font-bold text-foreground text-base mb-1">Securitize × BNY Mellon</div>
+                <p className="text-sm text-muted-foreground">Tokenized fund backed by AAA-rated structured credit — institutional credit exposure on-chain.</p>
               </div>
               <div className="p-4 bg-[#39B54A]/10 border border-[#39B54A]/30 rounded-xl">
-                <div className="font-bold text-foreground text-sm mb-1">Value unlocked</div>
-                <ul className="text-xs text-muted-foreground space-y-1">
+                <div className="font-bold text-foreground text-base mb-1">Value unlocked</div>
+                <ul className="text-sm text-muted-foreground space-y-1">
                   <li className="flex gap-1.5"><span className="text-[#39B54A]">›</span>Fractional access to institutional-grade assets</li>
                   <li className="flex gap-1.5"><span className="text-[#39B54A]">›</span>24/7 settlement vs T+1 / T+2 legacy</li>
                   <li className="flex gap-1.5"><span className="text-[#39B54A]">›</span>Streamlined investor onboarding</li>
@@ -1625,27 +1673,27 @@ export function SC_Section3() {
         <div id="s3-rwa-mortgages" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Automated Mortgages</h2>
-            <p className="text-muted-foreground text-sm mt-1">Lending agreements executed entirely by smart contracts — no banks or loan officers required.</p>
+            <p className="text-muted-foreground text-base mt-1">Lending agreements executed entirely by smart contracts — no banks or loan officers required.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#39B54A]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#39B54A]">What the contract does</div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="p-5 bg-card border border-[#39B54A]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#39B54A]">What the contract does</div>
+              <ul className="text-sm text-muted-foreground space-y-2 flex-1">
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Holds and transfers funds based on pre-coded conditions</li>
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Monitors repayment schedule — calculates interest, principal split</li>
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Applies penalties on late payments automatically</li>
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Manages collateral — liquidates if loan defaults</li>
               </ul>
             </div>
-            <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#6366f1]">Why on-chain?</div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
+            <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#6366f1]">Why on-chain?</div>
+              <ul className="text-sm text-muted-foreground space-y-2 flex-1">
                 <li className="flex gap-2"><span className="text-[#6366f1]">›</span>No 30–60 day origination process</li>
                 <li className="flex gap-2"><span className="text-[#6366f1]">›</span>Transparent terms — borrower and lender see the same code</li>
                 <li className="flex gap-2"><span className="text-[#6366f1]">›</span>Lower cost — no bank back office</li>
                 <li className="flex gap-2"><span className="text-[#6366f1]">›</span>Programmable repayments — dynamic interest, deferrals encoded</li>
               </ul>
-              <div className="p-2 bg-[#6366f1]/10 rounded-lg text-xs text-muted-foreground mt-auto">
+              <div className="p-2 bg-[#6366f1]/10 rounded-lg text-sm text-muted-foreground mt-auto">
                 <span className="font-semibold text-foreground">Limitation:</span> the property itself still requires legal title transfer off-chain — for now.
               </div>
             </div>
@@ -1769,36 +1817,36 @@ export function SC_Section3() {
         <div id="s3-sc-prov-real" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Provenance in Production</h2>
-            <p className="text-muted-foreground text-sm mt-1">Two flagship deployments — luxury anti-counterfeit and organic-food traceability.</p>
+            <p className="text-muted-foreground text-base mt-1">Two flagship deployments — luxury anti-counterfeit and organic-food traceability.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/30 rounded-xl flex flex-col gap-3">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="p-5 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/30 rounded-xl flex flex-col gap-3 justify-center">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">👜</span>
                 <div>
-                  <div className="font-black text-sm text-foreground">LVMH · Aura Consortium</div>
-                  <div className="text-xs text-[#f59e0b]">Louis Vuitton, Prada, Cartier coalition</div>
+                  <div className="font-black text-base text-foreground">LVMH · Aura Consortium</div>
+                  <div className="text-sm text-[#f59e0b]">Louis Vuitton, Prada, Cartier coalition</div>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Every handbag, watch, or perfume bottle gets a <span className="font-semibold text-foreground">digital passport</span> on a permissioned blockchain — recording materials, manufacturing date, and ownership changes. Scanning the embedded NFC or QR tag reveals provenance to shoppers, while smart-contract updates ensure resale platforms and after-sales services access accurate, brand-verified data throughout the product's lifetime.
               </p>
-              <div className="p-2 bg-[#f59e0b]/10 rounded-lg text-xs text-muted-foreground mt-auto">
+              <div className="p-2 bg-[#f59e0b]/10 rounded-lg text-sm text-muted-foreground mt-auto">
                 <span className="font-semibold text-foreground">Goal:</span> fight counterfeiting and enhance customer trust across luxury brands.
               </div>
             </div>
-            <div className="p-5 bg-gradient-to-br from-[#39B54A]/10 to-transparent border border-[#39B54A]/30 rounded-xl flex flex-col gap-3">
+            <div className="p-5 bg-gradient-to-br from-[#39B54A]/10 to-transparent border border-[#39B54A]/30 rounded-xl flex flex-col gap-3 justify-center">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">🐔</span>
                 <div>
-                  <div className="font-black text-sm text-foreground">Carrefour BIO · Organic chicken provenance</div>
-                  <div className="text-xs text-[#39B54A]">European retailer, consumer-facing QR</div>
+                  <div className="font-black text-base text-foreground">Carrefour BIO · Organic chicken provenance</div>
+                  <div className="text-sm text-[#39B54A]">European retailer, consumer-facing QR</div>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Every Carrefour BIO chicken carries a QR code. Scanning pulls a blockchain record showing breed, farm GPS, organic feed, antibiotic-free status, slaughter date, packing plant, and temperature-controlled transport history. Data uploaded by farmers, processors, and logistics partners at hand-off — locked on a permissioned ledger.
               </p>
-              <div className="p-2 bg-[#39B54A]/10 rounded-lg text-xs text-muted-foreground mt-auto">
+              <div className="p-2 bg-[#39B54A]/10 rounded-lg text-sm text-muted-foreground mt-auto">
                 Faster recalls, stronger trust in the organic label, instant tamper-proof proof of authenticity.
               </div>
             </div>
@@ -1809,34 +1857,34 @@ export function SC_Section3() {
         <div id="s3-sc-shipping" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Global Shipping Documents · GSBN eBL</h2>
-            <p className="text-muted-foreground text-sm mt-1">Bills of Lading and customs forms, courier-couriered for centuries — now tokenized on a shared ledger.</p>
+            <p className="text-muted-foreground text-base mt-1">Bills of Lading and customs forms, courier-couriered for centuries — now tokenized on a shared ledger.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#ED1C24]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#ED1C24]">The legacy problem</div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="p-5 bg-card border border-[#ED1C24]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#ED1C24]">The legacy problem</div>
+              <ul className="text-sm text-muted-foreground space-y-2 flex-1">
                 <li className="flex gap-2"><span className="text-[#ED1C24]">›</span>Bills of Lading and Letters of Credit move as paper — couriered across oceans</li>
                 <li className="flex gap-2"><span className="text-[#ED1C24]">›</span>Documents prone to loss, fraud, week-long delays</li>
                 <li className="flex gap-2"><span className="text-[#ED1C24]">›</span>Carriers, ports, banks, and regulators each maintain separate records</li>
                 <li className="flex gap-2"><span className="text-[#ED1C24]">›</span>Reconciling discrepancies takes days of phone calls</li>
               </ul>
             </div>
-            <div className="p-5 bg-gradient-to-br from-[#39B54A]/10 to-transparent border border-[#39B54A]/30 rounded-xl flex flex-col gap-3">
+            <div className="p-5 bg-gradient-to-br from-[#39B54A]/10 to-transparent border border-[#39B54A]/30 rounded-xl flex flex-col gap-3 justify-center">
               <div className="flex items-center gap-3">
                 <img src={imgGsbnEbl} alt="Container ship and an electronic Bill of Lading with QR code" className="hidden lg:block h-16 object-contain shrink-0" />
                 <div>
-                  <div className="font-black text-sm text-foreground">Global Shipping Business Network (GSBN)</div>
-                  <div className="text-xs text-[#39B54A]">COSCO · Hapag-Lloyd · OOCL · ONE + major ports</div>
+                  <div className="font-black text-base text-foreground">Global Shipping Business Network (GSBN)</div>
+                  <div className="text-sm text-[#39B54A]">COSCO · Hapag-Lloyd · OOCL · ONE + major ports</div>
                 </div>
               </div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
+              <ul className="text-sm text-muted-foreground space-y-2 flex-1">
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Permissioned blockchain issuing electronic Bills of Lading (eBLs)</li>
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Each digital document cryptographically signed, shareable in seconds, tamper-evident</li>
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Smart contracts notify customs on cargo load, trigger goods release on ownership transfer, settle carrier fees</li>
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Live since 2021 — over <span className="font-semibold text-foreground">2 million containers</span> processed</li>
                 <li className="flex gap-2"><span className="text-[#39B54A]">›</span>Targeting <span className="font-semibold text-foreground">50% eBL adoption by 2026</span></li>
               </ul>
-              <div className="p-2 bg-[#39B54A]/10 rounded-lg text-xs text-muted-foreground mt-auto">
+              <div className="p-2 bg-[#39B54A]/10 rounded-lg text-sm text-muted-foreground mt-auto">
                 Document turnaround compressed from <span className="font-semibold text-foreground">days to hours</span>.
               </div>
             </div>
@@ -1891,27 +1939,27 @@ export function SC_Section3() {
         <div id="s3-cert-law" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Estonia · KSI Blockchain (Guardtime)</h2>
-            <p className="text-muted-foreground text-sm mt-1">Government records, registries, and healthcare data integrity since 2012.</p>
+            <p className="text-muted-foreground text-base mt-1">Government records, registries, and healthcare data integrity since 2012.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#22d3ee]">What Estonia did</div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#22d3ee]">What Estonia did</div>
+              <ul className="text-sm text-muted-foreground space-y-2 flex-1">
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Permissioned blockchain (Guardtime's KSI) used since <span className="font-semibold text-foreground">2012</span></li>
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Enforces integrity of land registry, business registry, court system, healthcare records</li>
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>"Keyless" signatures — relies on hash chains, not private keys</li>
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Detects any tampering of historical records</li>
               </ul>
             </div>
-            <div className="p-5 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#22d3ee]">The principle</div>
-              <p className="text-xs text-muted-foreground leading-relaxed italic border-l-2 border-[#22d3ee] pl-3">
+            <div className="p-5 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#22d3ee]">The principle</div>
+              <p className="text-sm text-muted-foreground leading-relaxed italic border-l-2 border-[#22d3ee] pl-3">
                 "History cannot be rewritten by anybody and the authenticity of electronic data can be guaranteed."
               </p>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 By using blockchain as a backbone for data integrity, Estonia ensures official records are beyond tampering — even by future government insiders. This is digital sovereignty by mathematical proof rather than institutional trust.
               </p>
-              <div className="p-2 bg-[#22d3ee]/10 rounded-lg text-xs text-muted-foreground mt-auto">
+              <div className="p-2 bg-[#22d3ee]/10 rounded-lg text-sm text-muted-foreground mt-auto">
                 <span className="font-semibold text-foreground">Why it matters:</span> Estonia treats blockchain as <span className="italic">infrastructure</span> — not a product. The same principle now underpins their e-Residency program and X-Road data exchange.
               </div>
             </div>
@@ -1922,33 +1970,33 @@ export function SC_Section3() {
         <div id="s3-cert-education" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Education · MIT Blockcerts</h2>
-            <p className="text-muted-foreground text-sm mt-1">Combating fake degrees and simplifying credential verification.</p>
+            <p className="text-muted-foreground text-base mt-1">Combating fake degrees and simplifying credential verification.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#22d3ee]">The problem</div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#22d3ee]">The problem</div>
+              <ul className="text-sm text-muted-foreground space-y-2 flex-1">
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Verifying a diploma traditionally requires emailing the registrar — days of delay</li>
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Fake transcripts and credentials are a multi-billion-dollar fraud market</li>
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>International credential recognition is especially friction-heavy</li>
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Students don't truly own their academic record — institutions do</li>
               </ul>
             </div>
-            <div className="p-5 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
+            <div className="p-5 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3 justify-center">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">🎓</span>
                 <div>
-                  <div className="font-black text-sm text-foreground">MIT pilot · 2017</div>
-                  <div className="text-xs text-[#22d3ee]">Open Blockcerts standard</div>
+                  <div className="font-black text-base text-foreground">MIT pilot · 2017</div>
+                  <div className="text-sm text-[#22d3ee]">Open Blockcerts standard</div>
                 </div>
               </div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
+              <ul className="text-sm text-muted-foreground space-y-2 flex-1">
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Issued blockchain-based digital certificates to <span className="font-semibold text-foreground">100+ graduates</span></li>
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>App lets graduates share a tamper-proof, verifiable digital diploma</li>
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Employers click a link or scan a QR code → instantly verify on-chain</li>
                 <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>No more transcript request bureaucracy</li>
               </ul>
-              <div className="p-2 bg-[#22d3ee]/10 rounded-lg text-xs text-muted-foreground mt-auto">
+              <div className="p-2 bg-[#22d3ee]/10 rounded-lg text-sm text-muted-foreground mt-auto">
                 Open standard now adopted by universities globally — students truly own their credentials.
               </div>
             </div>
@@ -1959,33 +2007,33 @@ export function SC_Section3() {
         <div id="s3-cert-products" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Product Authenticity · Luxury Goods</h2>
-            <p className="text-muted-foreground text-sm mt-1">Digital "title deeds" of authenticity for high-value physical products.</p>
+            <p className="text-muted-foreground text-base mt-1">Digital "title deeds" of authenticity for high-value physical products.</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#8b5cf6]">How it works</div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 grid-rows-1">
+            <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3 justify-center">
+              <div className="font-bold text-base text-[#8b5cf6]">How it works</div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 When a customer buys a high-end handbag, watch, or piece of jewelry, they scan a code that retrieves the item's blockchain certificate. The certificate includes origin, materials, manufacturing date, and full ownership history.
               </p>
-              <ul className="text-xs text-muted-foreground space-y-1.5 mt-1">
+              <ul className="text-sm text-muted-foreground space-y-1.5 mt-1">
                 <li className="flex gap-1.5"><span className="text-[#8b5cf6]">›</span>Buyers verify authenticity instantly</li>
                 <li className="flex gap-1.5"><span className="text-[#8b5cf6]">›</span>Resellers prove provenance</li>
                 <li className="flex gap-1.5"><span className="text-[#8b5cf6]">›</span>Counterfeiters can't fake on-chain history</li>
                 <li className="flex gap-1.5"><span className="text-[#8b5cf6]">›</span>After-sales service tied to verified ownership</li>
               </ul>
             </div>
-            <div className="p-5 bg-gradient-to-br from-[#8b5cf6]/10 to-transparent border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3">
+            <div className="p-5 bg-gradient-to-br from-[#8b5cf6]/10 to-transparent border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3 justify-center">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">💎</span>
                 <div>
-                  <div className="font-black text-sm text-foreground">AURA Blockchain Consortium</div>
-                  <div className="text-xs text-[#8b5cf6]">LVMH · Prada · Cartier (founding partners)</div>
+                  <div className="font-black text-base text-foreground">AURA Blockchain Consortium</div>
+                  <div className="text-sm text-[#8b5cf6]">LVMH · Prada · Cartier (founding partners)</div>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Co-founded by LVMH (Louis Vuitton, Hublot, Bulgari, etc.) alongside Prada and Cartier. Issues a unique digital certificate for each luxury item — handbag, watch, jewelry — recorded on a secure blockchain. Consumers scan to access authenticity, provenance, and ownership history.
               </p>
-              <div className="p-2 bg-[#8b5cf6]/10 rounded-lg text-xs text-muted-foreground mt-auto">
+              <div className="p-2 bg-[#8b5cf6]/10 rounded-lg text-sm text-muted-foreground mt-auto">
                 Industry-wide standard for luxury authentication — collaborative rather than competitive infrastructure.
               </div>
             </div>
