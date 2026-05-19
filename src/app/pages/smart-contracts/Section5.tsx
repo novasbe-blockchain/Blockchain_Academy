@@ -370,128 +370,67 @@ export function SC_Section5() {
         <div id="s5-technical" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Technical Challenges & Limitations</h2>
-            <p className="text-muted-foreground text-sm mt-1">Four structural problems that define the frontier of blockchain engineering.</p>
+            <p className="text-muted-foreground text-sm mt-1">Four structural problems — what they are, why they happen, and how the field is fixing them.</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-
-            <div className="p-5 bg-card border border-[#ED1C24]/30 rounded-xl flex flex-col gap-3">
-              <div className="flex items-start gap-3">
-                <div className="size-10 rounded-xl bg-[#ED1C24]/15 flex items-center justify-center text-xl shrink-0">🤖</div>
-                <div>
-                  <div className="font-black text-sm text-foreground">MEV — Maximal Extractable Value</div>
-                  <div className="text-xs font-semibold text-[#ED1C24]">Validators (and anyone) can reorder transactions for profit</div>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Block producers choose which transactions to include and in what order. This gives them the power to front-run users — seeing a profitable trade in the mempool and inserting their own transaction first to capture the price difference.
-              </p>
-              <ul className="space-y-1.5 text-xs text-muted-foreground">
-                {[
-                  'Front-running: validator sees your DEX trade → inserts same trade before yours → sells into your transaction',
-                  'Sandwich attacks: buy before you, sell after you — you get a worse price, they profit',
-                  '$1.3B+ extracted from Ethereum users since 2020 (Flashbots data)',
-                ].map(l => (
-                  <li key={l} className="flex gap-1.5"><span className="text-[#ED1C24] shrink-0">›</span>{l}</li>
-                ))}
-              </ul>
-              <div className="mt-auto p-2 bg-[#ED1C24]/08 rounded-lg text-xs text-muted-foreground">
-                <span className="font-semibold text-foreground">Mitigation:</span> Flashbots SUAVE, private mempools, commit-reveal schemes, and MEV-aware DEX designs (e.g. CoW Protocol).
-              </div>
-            </div>
-
-            <div className="p-5 bg-card border border-[#f59e0b]/30 rounded-xl flex flex-col gap-3">
-              <div className="flex items-start gap-3">
-                <div className="size-10 rounded-xl bg-[#f59e0b]/15 flex items-center justify-center text-xl shrink-0">🔧</div>
-                <div>
-                  <div className="font-black text-sm text-foreground">Upgradability</div>
-                  <div className="text-xs font-semibold text-[#f59e0b]">Immutable code makes fixing bugs extremely difficult</div>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Once deployed, a smart contract's code cannot be changed. A bug discovered post-deployment — even a critical one — cannot be patched directly. Adding upgrade patterns reintroduces centralisation and complexity.
-              </p>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2 bg-[#ED1C24]/08 border border-[#ED1C24]/20 rounded-lg">
-                  <div className="font-bold text-[#ED1C24] mb-1">Immutable risk</div>
-                  <div className="text-muted-foreground">Bug = permanent. The DAO hack: $60M lost, required Ethereum hard fork to recover.</div>
-                </div>
-                <div className="p-2 bg-[#f59e0b]/08 border border-[#f59e0b]/20 rounded-lg">
-                  <div className="font-bold text-[#f59e0b] mb-1">Proxy pattern risk</div>
-                  <div className="text-muted-foreground">Upgradeable contracts require an admin key — making the protocol only as decentralised as that key holder.</div>
-                </div>
-              </div>
-              <div className="mt-auto p-2 bg-[#f59e0b]/08 rounded-lg text-xs text-muted-foreground">
-                <span className="font-semibold text-foreground">Best practice:</span> immutable core logic + audits before deployment. Upgrade patterns only where strictly necessary, with timelocks and multisig governance.
-              </div>
-            </div>
-
-            <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl flex flex-col gap-3">
-              <div className="flex items-start gap-3">
-                <div className="size-10 rounded-xl bg-[#6366f1]/15 flex items-center justify-center text-xl shrink-0">🔺</div>
-                <div>
-                  <div className="font-black text-sm text-foreground">The Blockchain Trilemma</div>
-                  <div className="text-xs font-semibold text-[#6366f1]">Cannot optimise security, scalability, and decentralisation simultaneously</div>
-                </div>
-              </div>
-              <div className="flex justify-center">
-                <div className="relative w-48 h-36">
-                  <svg viewBox="0 0 200 160" className="w-full h-full">
-                    <polygon points="100,10 190,150 10,150" fill="none" stroke="#6366f180" strokeWidth="2" />
-                    <circle cx="100" cy="10" r="5" fill="#ED1C24" />
-                    <circle cx="190" cy="150" r="5" fill="#39B54A" />
-                    <circle cx="10" cy="150" r="5" fill="#f59e0b" />
-                    <text x="100" y="6" textAnchor="middle" className="text-[10px]" fill="#ED1C24" fontSize="10">Security</text>
-                    <text x="196" y="148" textAnchor="start" fill="#39B54A" fontSize="9">Scalability</text>
-                    <text x="4" y="148" textAnchor="end" fill="#f59e0b" fontSize="9">Decentralisation</text>
-                    <text x="100" y="95" textAnchor="middle" fill="#6366f180" fontSize="9">pick 2</text>
-                  </svg>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-1.5 text-[10px] text-center">
-                {[
-                  { name: 'Bitcoin', sacrifice: 'Scalability (7 TPS)', color: '#f59e0b' },
-                  { name: 'Ethereum L1', sacrifice: 'Scalability → L2s solve this', color: '#627EEA' },
-                  { name: 'Solana', sacrifice: 'Decentralisation (fewer validators)', color: '#9945FF' },
-                ].map(t => (
-                  <div key={t.name} className="p-1.5 bg-muted rounded-lg">
-                    <div className="font-bold" style={{ color: t.color }}>{t.name}</div>
-                    <div className="text-muted-foreground leading-tight">{t.sacrifice}</div>
+          <div className="flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-4">
+            {[
+              {
+                emoji: '🤖', color: '#ED1C24', title: 'MEV — Maximal Extractable Value',
+                what: 'Block producers reorder transactions for profit',
+                why: 'They decide which txs go in and in what order — so they can front-run or sandwich a trade they see waiting in the mempool.',
+                fix: 'Private mempools, commit-reveal, MEV-aware DEXs (CoW Protocol, Flashbots SUAVE).',
+                stat: '$1.3B+ extracted from users since 2020',
+              },
+              {
+                emoji: '🔧', color: '#f59e0b', title: 'Upgradability',
+                what: "Immutable code can't be patched",
+                why: 'Deployed code is permanent. A critical bug stays exploitable forever — The DAO lost $60M and forced an Ethereum hard fork.',
+                fix: 'Audit before deploy; add upgrade proxies only when essential, behind a timelock + multisig.',
+                stat: 'Proxy admin key = a centralisation point',
+              },
+              {
+                emoji: '🔺', color: '#6366f1', title: 'The Blockchain Trilemma',
+                what: 'Security · scalability · decentralisation — pick 2',
+                why: "Maximising all three at L1 isn't possible; every chain deliberately trades one away.",
+                fix: 'Ethereum keeps security + decentralisation and pushes scale to L2 rollups.',
+                stat: 'BTC → 7 TPS · Solana → fewer validators',
+              },
+              {
+                emoji: '📈', color: '#39B54A', title: 'State Growth',
+                what: 'The chain grows ~50 GB/year — forever',
+                why: 'History is append-only and every full node must keep all of it, so eventually only datacenters can run one.',
+                fix: 'EIP-4444 history expiry, stateless clients, and Verkle trees decouple storage from running a node.',
+                stat: 'ETH full ~1.2 TB · archive 15+ TB',
+              },
+            ].map(c => (
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col gap-3 rounded-xl border-2 p-5 justify-center"
+                style={{ borderColor: c.color + '50', backgroundColor: c.color + '08' }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: c.color + '18' }}>{c.emoji}</div>
+                  <div>
+                    <div className="font-black text-base text-foreground leading-tight">{c.title}</div>
+                    <div className="text-sm font-semibold mt-0.5" style={{ color: c.color }}>{c.what}</div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="p-5 bg-card border border-[#39B54A]/30 rounded-xl flex flex-col gap-3">
-              <div className="flex items-start gap-3">
-                <div className="size-10 rounded-xl bg-[#39B54A]/15 flex items-center justify-center text-xl shrink-0">📈</div>
-                <div>
-                  <div className="font-black text-sm text-foreground">State Growth</div>
-                  <div className="text-xs font-semibold text-[#39B54A]">Blockchain size grows 50 GB+ annually — forever</div>
                 </div>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Every transaction ever executed is stored permanently on every full node. The blockchain is append-only — nothing is ever deleted. As adoption grows, so does the burden of running a full node.
-              </p>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                {[
-                  { label: 'Bitcoin full chain', value: '~600 GB', color: '#f59e0b', note: 'Growing ~50 GB/year' },
-                  { label: 'Ethereum full chain', value: '~1.2 TB', color: '#627EEA', note: 'Archive node: 15+ TB' },
-                  { label: 'Pruned node', value: '~10 GB', color: '#39B54A', note: 'Stores only recent state' },
-                  { label: 'State growth risk', value: 'Centralisation', color: '#ED1C24', note: 'Only datacenters can run full nodes' },
-                ].map(s => (
-                  <div key={s.label} className="p-2 bg-muted rounded-lg">
-                    <div className="font-black text-sm" style={{ color: s.color }}>{s.value}</div>
-                    <div className="font-semibold text-[10px] text-foreground">{s.label}</div>
-                    <div className="text-[10px] text-muted-foreground">{s.note}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-auto p-2 bg-[#39B54A]/08 rounded-lg text-xs text-muted-foreground">
-                <span className="font-semibold text-foreground">Mitigation:</span> EIP-4444 (Ethereum history expiry), stateless clients, and Verkle trees aim to decouple state storage from full node requirements.
-              </div>
-            </div>
-
+                <div className="rounded-lg bg-card border p-3" style={{ borderColor: c.color + '25' }}>
+                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Why</span>
+                  <p className="text-sm text-foreground leading-snug mt-0.5">{c.why}</p>
+                </div>
+                <div className="rounded-lg p-3 border-l-2" style={{ borderColor: c.color, backgroundColor: c.color + '12' }}>
+                  <span className="text-xs font-black uppercase tracking-widest" style={{ color: c.color }}>What helps</span>
+                  <p className="text-sm text-foreground leading-snug mt-0.5">{c.fix}</p>
+                </div>
+                <p className="text-xs text-muted-foreground italic">{c.stat}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
 

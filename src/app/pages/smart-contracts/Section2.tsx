@@ -1063,66 +1063,46 @@ export function SC_Section2() {
         <div id="s2-capabilities" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">New Capabilities</h2>
-            <p className="text-muted-foreground text-sm mt-1">What smart contracts make possible that no prior technology could — five genuine breakthroughs.</p>
+            <p className="text-muted-foreground text-sm mt-1">Five things smart contracts make possible that no prior technology could.</p>
           </div>
 
           <div className="flex-1 min-h-0 flex flex-col gap-3">
             {[
-              {
-                color: '#6366f1',
-                emoji: '🧩',
-                title: 'Permissionless Composability',
-                tagline: 'Any contract can interact with any other — no API keys, no approval process.',
-                detail: 'Every deployed contract is a public primitive. Uniswap, Aave, and Compound can be combined into a single transaction by anyone. This "money lego" model has no equivalent in traditional finance — banks do not expose their logic for others to build on.',
-                example: 'Flash loans: borrow $10M, use it across 3 protocols, repay — all in one atomic transaction.',
-              },
-              {
-                color: '#39B54A',
-                emoji: '⚛️',
-                title: 'Atomic Transactions',
-                tagline: 'Complex multi-step operations execute completely — or fail completely. No partial states.',
-                detail: 'In traditional systems, a multi-step process (transfer → update record → notify) can fail halfway, leaving inconsistent state. In smart contracts, all steps are bundled into one atomic operation that either fully succeeds or fully reverts.',
-                example: 'DEX swap: send ETH → verify liquidity → transfer tokens → update reserves — all or nothing.',
-              },
-              {
-                color: '#f59e0b',
-                emoji: '🌍',
-                title: 'Global Shared State',
-                tagline: 'Synchronized state accessible to all participants worldwide — with no central coordinator.',
-                detail: 'Any address on Earth can read and interact with the same smart contract state simultaneously. No API rate limits, no regional servers, no access tiers. The blockchain is a single shared database with global read/write access.',
-                example: 'An NFT ownership record is instantly visible to every marketplace, wallet, and game on every continent.',
-              },
-              {
-                color: '#8b5cf6',
-                emoji: '💸',
-                title: 'Programmable Money',
-                tagline: 'Native value transfer with conditional logic — money that enforces its own rules.',
-                detail: 'ETH and tokens can be embedded directly in contract logic. "Release funds only if the delivery is confirmed." "Split revenue automatically by ownership percentage." Money becomes programmable without requiring a bank API.',
-                example: 'Streaming payments: Superfluid protocol streams salary per second — no payroll department needed.',
-              },
-              {
-                color: '#ED1C24',
-                emoji: '🛡️',
-                title: 'Censorship Resistance',
-                tagline: 'No single entity can block valid transactions — not governments, not companies, not developers.',
-                detail: 'Once deployed, a smart contract runs as long as the blockchain runs. No company can be pressured to shut it down. No regulator can block specific users. The code executes for anyone who sends a valid transaction with sufficient gas.',
-                example: 'Tornado Cash was blacklisted by OFAC — the front-end went down, but the smart contract kept running.',
-              },
+              { color: '#6366f1', emoji: '🧩', title: 'Permissionless Composability',
+                tagline: 'Any contract can plug into any other — no API keys, no approval.',
+                example: 'Flash loan: borrow $10M across 3 protocols and repay, in one atomic tx.' },
+              { color: '#39B54A', emoji: '⚛️', title: 'Atomic Transactions',
+                tagline: 'Multi-step operations fully succeed or fully revert — never half-done.',
+                example: 'DEX swap: send ETH → check liquidity → transfer tokens — all or nothing.' },
+              { color: '#f59e0b', emoji: '🌍', title: 'Global Shared State',
+                tagline: 'One synchronized state, readable worldwide, with no central server.',
+                example: 'An NFT\'s owner is instantly visible to every marketplace and game everywhere.' },
+              { color: '#8b5cf6', emoji: '💸', title: 'Programmable Money',
+                tagline: 'Value with built-in rules — "pay only if delivery is confirmed."',
+                example: 'Superfluid streams salary by the second — no payroll department.' },
+              { color: '#ED1C24', emoji: '🛡️', title: 'Censorship Resistance',
+                tagline: 'No government, company, or dev can block a valid transaction.',
+                example: 'OFAC blacklisted Tornado Cash — the front-end died, the contract ran on.' },
             ].map(c => (
-              <div key={c.title} className="flex-1 flex items-start gap-4 p-4 bg-card border border-border rounded-xl" style={{ borderColor: c.color + '30' }}>
-                <div className="size-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: c.color + '18' }}>{c.emoji}</div>
-                <div className="flex-1 min-w-0 grid grid-cols-3 gap-3">
-                  <div className="col-span-1">
-                    <div className="font-black text-sm text-foreground">{c.title}</div>
-                    <div className="text-xs font-semibold mt-0.5" style={{ color: c.color }}>{c.tagline}</div>
-                  </div>
-                  <div className="col-span-1 text-xs text-muted-foreground leading-relaxed">{c.detail}</div>
-                  <div className="col-span-1">
-                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Real example</div>
-                    <div className="text-xs text-muted-foreground p-2 bg-muted rounded-lg italic">{c.example}</div>
-                  </div>
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, x: -12 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.25 }}
+                className="flex-1 flex items-center gap-4 p-4 rounded-xl border-2 bg-card"
+                style={{ borderColor: c.color + '40' }}
+              >
+                <div className="size-12 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: c.color + '18' }}>{c.emoji}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-black text-base text-foreground">{c.title}</div>
+                  <div className="text-sm font-semibold mt-0.5" style={{ color: c.color }}>{c.tagline}</div>
                 </div>
-              </div>
+                <div className="hidden lg:block w-[34%] shrink-0">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Real example</div>
+                  <div className="text-sm text-muted-foreground italic leading-snug p-2.5 rounded-lg" style={{ backgroundColor: c.color + '0d' }}>{c.example}</div>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
