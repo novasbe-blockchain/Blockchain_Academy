@@ -1,10 +1,11 @@
+import { useEffect, useRef, useState } from 'react';
+import anime from 'animejs';
 import { TitleSlide } from '../components/templates/TitleSlide';
-import { TimelineSlide } from '../components/templates/TimelineSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
 import { QuizSlide } from '../components/templates/QuizSlide';
 import { CalloutBox } from '../components/shared/CalloutBox';
-import { ScrollText, ExternalLink } from 'lucide-react';
+import { ScrollText, ExternalLink, User } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
 import bitcoinPedigree from '../../assets/bf/bitcoin-academic-pedigree.png';
 
@@ -20,6 +21,292 @@ const prologueChapters = [
   { id: 'p-takeaways',         label: 'Takeaways' },
   { id: 'p-quiz',              label: 'Quizzes' },
 ];
+
+/* ── Money Evolution Timeline (animated) ──────────────────────────────── */
+const MONEY_EVENTS = [
+  { era: '~9000 BCE', name: 'Barter',                        emoji: '🐄', color: '#8b5cf6', desc: 'Direct exchange of goods. Worked in small tribes — broke down the moment someone had grain and the other wanted a roof.' },
+  { era: '~3000 BCE', name: 'Commodity money',               emoji: '🐚', color: '#f59e0b', desc: 'Shells, salt, cattle, beads. The first abstract store of value — items everyone agreed had worth.' },
+  { era: '~600 BCE',  name: 'Coins (gold / silver)',         emoji: '🪙', color: '#ED1C24', desc: 'Stamped metal coins. Scarce, durable, divisible. Empires rose and fell controlling the mint.' },
+  { era: '~1000 CE',  name: 'Paper notes & banks',           emoji: '💵', color: '#39B54A', desc: 'IOUs redeemable for gold, then for trust in the issuer alone. The gold standard ended in 1971 — money became pure trust.' },
+  { era: '~1950',     name: 'Bank cards / digital ledgers',  emoji: '💳', color: '#6366f1', desc: 'Money becomes a database entry at a bank. Convenient — but every transaction passes through a gatekeeper.' },
+  { era: '2009',      name: 'Bitcoin',                       emoji: '₿', color: '#22d3ee', desc: 'Digital scarcity without a central issuer — the first form of money that nobody operates and nobody can switch off.' },
+];
+
+function MoneyEvolutionTimeline() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs     = useRef<(HTMLDivElement | null)[]>([]);
+  const connectorRef = useRef<SVGPathElement | null>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const obs = new IntersectionObserver(entries => {
+      for (const e of entries) {
+        if (e.isIntersecting && !revealed) {
+          setRevealed(true);
+
+          // Draw the S-connector
+          if (connectorRef.current) {
+            try {
+              const len = connectorRef.current.getTotalLength();
+              connectorRef.current.style.strokeDasharray = String(len);
+              connectorRef.current.style.strokeDashoffset = String(len);
+              anime({
+                targets: connectorRef.current,
+                strokeDashoffset: [len, 0],
+                duration: 1400,
+                delay: 450,
+                easing: 'easeInOutQuad',
+              });
+            } catch { /* ignore */ }
+          }
+
+          // Stagger reveal each card (top row first L→R, then bottom row L→R)
+          itemRefs.current.forEach((el, i) => {
+            if (!el) return;
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(18px) scale(0.94)';
+            anime({
+              targets: el,
+              opacity: [0, 1],
+              translateY: [18, 0],
+              scale: [0.94, 1],
+              duration: 500,
+              delay: 200 + i * 140,
+              easing: 'easeOutQuad',
+            });
+          });
+          break;
+        }
+      }
+    }, { threshold: 0.3 });
+    obs.observe(containerRef.current);
+    return () => obs.disconnect();
+  }, [revealed]);
+
+  const top = MONEY_EVENTS.slice(0, 3);
+  const bottom = MONEY_EVENTS.slice(3, 6);
+
+  const renderCard = (m: typeof MONEY_EVENTS[number], idx: number) => (
+    <div
+      key={m.name}
+      ref={el => { itemRefs.current[idx] = el; }}
+      className="flex flex-col bg-card rounded-xl border-2 p-4 shadow-sm hover:shadow-md transition-shadow"
+      style={{
+        borderColor: m.color + '50',
+        boxShadow: `0 4px 14px ${m.color}12`,
+        opacity: 0,
+      }}
+    >
+      <div className="flex items-center gap-3 mb-2">
+        <div className="text-3xl leading-none">{m.emoji}</div>
+        <div className="flex-1 min-w-0">
+          <div className="text-[10px] font-mono font-bold uppercase tracking-widest" style={{ color: m.color }}>
+            {m.era}
+          </div>
+          <div className="text-base font-bold text-foreground leading-tight">{m.name}</div>
+        </div>
+      </div>
+      <p className="text-xs text-muted-foreground leading-snug">{m.desc}</p>
+    </div>
+  );
+
+  return (
+    <div ref={containerRef} className="w-full max-w-5xl mx-auto">
+      {/* Top row — chronological L→R */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {top.map((m, i) => renderCard(m, i))}
+      </div>
+
+      {/* S-shaped connector (top-right of row 1 → bottom-left of row 2) */}
+      <div className="relative h-20 my-1">
+        {/* SVG curve — stretched to fit width, stroke uses non-scaling so thickness stays constant */}
+        <svg
+          className="absolute inset-0 w-full h-full"
+          viewBox="0 0 1000 80"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="money-snake-gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#ED1C24" />
+              <stop offset="55%" stopColor="#39B54A" />
+              <stop offset="100%" stopColor="#6366f1" />
+            </linearGradient>
+          </defs>
+          {/* Soft glow line behind the main stroke */}
+          <path
+            d="M 920 6 C 920 60 80 20 80 74"
+            fill="none"
+            stroke="url(#money-snake-gradient)"
+            strokeWidth="10"
+            strokeLinecap="round"
+            strokeOpacity="0.15"
+            vectorEffect="non-scaling-stroke"
+          />
+          {/* Main stroke */}
+          <path
+            ref={connectorRef}
+            d="M 920 6 C 920 60 80 20 80 74"
+            fill="none"
+            stroke="url(#money-snake-gradient)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+        {/* Arrowhead — separate SVG positioned with CSS, never stretched */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '8%',
+            bottom: '-1px',
+            transform: 'translate(-50%, 0)',
+          }}
+          aria-hidden="true"
+        >
+          <svg width="18" height="14" viewBox="0 0 18 14">
+            <polygon points="2,2 16,2 9,13" fill="#6366f1" />
+          </svg>
+        </div>
+        {/* Origin dot at the start of the curve */}
+        <div
+          className="absolute pointer-events-none size-2.5 rounded-full"
+          style={{
+            right: '8%',
+            top: '0',
+            transform: 'translate(50%, -50%)',
+            backgroundColor: '#ED1C24',
+          }}
+          aria-hidden="true"
+        />
+      </div>
+
+      {/* Bottom row — chronological L→R (continues the snake) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {bottom.map((m, i) => renderCard(m, i + 3))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Cypherpunks → Bitcoin timeline (compact, fits viewport) ─────────── */
+const CYPHERPUNK_EVENTS = [
+  { year: '1982', icon: '💰', title: 'David Chaum — DigiCash',                       desc: 'First anonymous digital cash system using blind signatures. Chaum proved private electronic payments were mathematically possible — the cryptographic foundation everyone else would later build on.', color: '#8b5cf6' },
+  { year: '1991', icon: '⏱️', title: 'Haber & Stornetta — Cryptographic Timestamps', desc: 'A cryptographically secured chain of blocks to timestamp digital documents. Without realizing it, they had invented the direct ancestor of every blockchain structure that followed.', color: '#f59e0b' },
+  { year: '1993', icon: '📜', title: "Eric Hughes — A Cypherpunk's Manifesto",       desc: 'The founding document of the cypherpunk movement. Privacy declared a fundamental right, to be defended with code instead of laws. The ideology Bitcoin would later embody.', color: '#ED1C24' },
+  { year: '1997', icon: '⛏️', title: 'Adam Back — Hashcash',                          desc: 'A proof-of-work system originally designed to combat email spam — forcing senders to burn small amounts of CPU. This exact concept became the direct inspiration for Bitcoin mining.', color: '#39B54A' },
+  { year: '1998', icon: '🥇', title: 'Wei Dai (B-Money) & Nick Szabo (Bit Gold)',     desc: 'Two independent proposals for decentralized digital currencies using cryptographic proofs and distributed consensus. Both are now considered the direct precursors to Bitcoin\'s design.', color: '#6366f1' },
+  { year: '2008', icon: '📄', title: 'Satoshi Nakamoto — The Bitcoin Whitepaper',     desc: '"Bitcoin: A Peer-to-Peer Electronic Cash System." An anonymous individual or group combines two decades of cypherpunk research — hashcash, chained timestamps, digital scarcity — into a single working protocol.', color: '#22d3ee' },
+  { year: '2009', icon: '🚀', title: 'The Genesis Block',                             desc: 'January 3, 2009 — Block #0 is mined. Embedded message: "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks". The ideological intent is written into the ledger itself.', color: '#ec4899' },
+];
+
+function CypherpunksMovementTimeline() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const lineRef      = useRef<HTMLDivElement | null>(null);
+  const itemRefs     = useRef<(HTMLDivElement | null)[]>([]);
+  const dotRefs      = useRef<(HTMLDivElement | null)[]>([]);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const obs = new IntersectionObserver(entries => {
+      for (const e of entries) {
+        if (e.isIntersecting && !revealed) {
+          setRevealed(true);
+          if (lineRef.current) {
+            lineRef.current.style.transformOrigin = 'top';
+            lineRef.current.style.transform = 'scaleY(0)';
+            anime({
+              targets: lineRef.current,
+              scaleY: [0, 1],
+              duration: 1600,
+              easing: 'easeInOutQuad',
+            });
+          }
+          itemRefs.current.forEach((el, i) => {
+            if (!el) return;
+            el.style.opacity = '0';
+            el.style.transform = 'translateX(-16px)';
+            anime({
+              targets: el,
+              opacity: [0, 1],
+              translateX: [-16, 0],
+              duration: 500,
+              delay: 220 + i * 150,
+              easing: 'easeOutQuad',
+            });
+          });
+          dotRefs.current.forEach((el, i) => {
+            if (!el) return;
+            el.style.transform = 'scale(0)';
+            anime({
+              targets: el,
+              scale: [0, 1.2, 1],
+              duration: 500,
+              delay: 220 + i * 150 + 80,
+              easing: 'easeOutBack',
+            });
+          });
+          break;
+        }
+      }
+    }, { threshold: 0.25 });
+    obs.observe(containerRef.current);
+    return () => obs.disconnect();
+  }, [revealed]);
+
+  return (
+    <div className="w-full h-full flex flex-col p-5 lg:p-8">
+      <div className="shrink-0 mb-3">
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">From Cypherpunks to Bitcoin</h2>
+        <p className="text-sm lg:text-base text-muted-foreground mt-1">
+          Twenty-seven years from the first anonymous digital cash to the genesis block — each link made the next one possible.
+        </p>
+      </div>
+
+      <div ref={containerRef} className="relative flex-1 min-h-0 overflow-y-auto pl-12 pr-2">
+        {/* Vertical spine */}
+        <div
+          ref={lineRef}
+          className="absolute left-[1.15rem] top-3 bottom-3 w-[3px] rounded-full"
+          style={{
+            background: 'linear-gradient(to bottom, #8b5cf6 0%, #f59e0b 14%, #ED1C24 28%, #39B54A 46%, #6366f1 62%, #22d3ee 78%, #ec4899 95%)',
+          }}
+        />
+        <div className="flex flex-col gap-3">
+          {CYPHERPUNK_EVENTS.map((ev, i) => (
+            <div
+              key={ev.year}
+              ref={el => { itemRefs.current[i] = el; }}
+              className="relative pl-6"
+            >
+              <div
+                ref={el => { dotRefs.current[i] = el; }}
+                className="absolute -left-[1.45rem] top-3 size-7 rounded-full border-[3px] border-background shadow-md flex items-center justify-center text-sm leading-none"
+                style={{ backgroundColor: ev.color, color: '#fff' }}
+              >
+                {ev.icon}
+              </div>
+              <div
+                className="bg-card border-2 rounded-xl px-4 py-3 transition-colors hover:scale-[1.01] transition-transform"
+                style={{ borderColor: ev.color + '40' }}
+              >
+                <div className="flex items-baseline gap-3 mb-1 flex-wrap">
+                  <span className="font-mono text-base font-black tabular-nums" style={{ color: ev.color }}>
+                    {ev.year}
+                  </span>
+                  <h3 className="text-base lg:text-lg font-bold text-foreground leading-tight">{ev.title}</h3>
+                </div>
+                <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed">{ev.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function Prologue() {
   return (
@@ -41,44 +328,23 @@ export function Prologue() {
 
         {/* ═══════ MONEY · A SHORT HISTORY ═══════ */}
         <div id="p-money" className="h-full">
-          <ConceptSlide
-            title="What Is Money?"
-            description="Before we get to Bitcoin, a quick look at the long road that got us here. Every generation invented new money — and each form solved the limits of the last."
-            visual={
-              <div className="space-y-4 w-full">
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { era: '~9000 BCE', name: 'Barter', emoji: '🐄', desc: 'Direct exchange of goods. Worked in small tribes — broke down as soon as someone had grain and the other wanted a roof.', color: '#8b5cf6' },
-                    { era: '~3000 BCE', name: 'Commodity money', emoji: '🐚', desc: 'Shells, salt, cattle, beads. The first abstract store of value — items everyone agreed had worth.', color: '#f59e0b' },
-                    { era: '~600 BCE', name: 'Coins (gold / silver)', emoji: '🪙', desc: 'Stamped metal coins. Scarce, durable, divisible. Empires rose and fell controlling the mint.', color: '#ED1C24' },
-                    { era: '~1000 CE', name: 'Paper notes & banks', emoji: '💵', desc: 'IOUs redeemable for gold, then for trust in the issuer alone. The gold standard ended in 1971 — money became pure trust.', color: '#39B54A' },
-                    { era: '~1950', name: 'Bank cards / digital ledgers', emoji: '💳', desc: 'Money becomes a database entry at a bank. Convenient, but every transaction passes through gatekeepers.', color: '#6366f1' },
-                    { era: '2009', name: 'Bitcoin', emoji: '₿', desc: 'Digital scarcity without a central issuer — the first form of money that nobody operates and nobody can switch off.', color: '#22d3ee' },
-                  ].map(m => (
-                    <div key={m.name} className="p-3 bg-card rounded-xl border" style={{ borderColor: m.color + '40' }}>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-2xl">{m.emoji}</span>
-                        <div>
-                          <div className="text-[10px] font-mono uppercase tracking-widest" style={{ color: m.color }}>{m.era}</div>
-                          <div className="font-bold text-sm text-foreground">{m.name}</div>
-                        </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground leading-snug">{m.desc}</p>
-                    </div>
-                  ))}
-                </div>
+          <div className="w-full h-full flex flex-col p-5 lg:p-8">
+            <div className="shrink-0 mb-4">
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">What Is Money?</h2>
+              <p className="text-sm lg:text-base text-muted-foreground max-w-3xl">
+                Before we get to Bitcoin, a quick look at the long road that got us here.
+                Every generation invented new money — and each form solved the limits of the last.
+              </p>
+            </div>
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              <MoneyEvolutionTimeline />
+              <div className="max-w-3xl mx-auto mt-4">
                 <CalloutBox type="tip" title="The throughline">
                   Each form of money fixed a problem with the last — portability, scarcity, divisibility, settlement speed. Bitcoin was an attempt to fix the trust assumption itself.
                 </CalloutBox>
               </div>
-            }
-            keyPoints={[
-              'Money is older than writing — almost every civilization invented some form of it independently',
-              'The form changes constantly; the function (medium of exchange, store of value, unit of account) stays the same',
-              'Every shift opened new economic possibilities — and concentrated power in whoever controlled the new layer',
-              'Asking "what comes next?" is not exotic — it\'s what societies have always done',
-            ]}
-          />
+            </div>
+          </div>
         </div>
 
         {/* ═══════ WHY DOES MONEY HAVE VALUE ═══════ */}
@@ -120,48 +386,88 @@ export function Prologue() {
 
         {/* ═══════ 1. THE CYPHERPUNKS ═══════ */}
         <div id="p-cypherpunks" className="h-full">
-          <ConceptSlide
-            title="The Cypherpunks"
-            description="In the 1980s and 1990s, a loose group of cryptographers, hackers, and activists decided that privacy was not a luxury — it was a precondition for freedom."
-            visual={
-              <div className="space-y-4 w-full">
-                <div className="p-6 bg-gradient-to-br from-[#8b5cf6]/10 to-transparent rounded-xl border-2 border-[#8b5cf6]/40">
-                  <p className="text-lg italic text-foreground leading-relaxed mb-3">
+          <div className="w-full h-full flex flex-col p-5 lg:p-8">
+            <div className="shrink-0 mb-3">
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">The Cypherpunks</h2>
+              <p className="text-sm lg:text-base text-muted-foreground max-w-3xl">
+                In the 1980s and 1990s, a loose group of cryptographers, hackers, and activists decided that privacy was not a luxury — it was a precondition for freedom.
+              </p>
+            </div>
+
+            {/* TOP — quote + callout on the left, portrait + manifesto link on the right */}
+            <div className="shrink-0 grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-4 mb-3">
+              <div className="flex flex-col gap-3">
+                <div className="p-3 bg-gradient-to-br from-[#8b5cf6]/10 to-transparent rounded-xl border-2 border-[#8b5cf6]/40">
+                  <p className="text-base italic text-foreground leading-relaxed mb-1">
                     "Privacy is a precondition for freedom, not a luxury."
                   </p>
-                  <p className="text-sm text-muted-foreground">— Cypherpunk philosophy</p>
+                  <p className="text-[11px] text-muted-foreground">— Cypherpunk philosophy</p>
                 </div>
                 <CalloutBox type="important" title="Core Cypherpunk Principle">
-                  "Privacy is necessary for an open society in the electronic age. We cannot expect governments, corporations, or other large, faceless organizations to grant us privacy out of their beneficence."
-                  — Eric Hughes, A Cypherpunk's Manifesto (1993)
+                  "Privacy is necessary for an open society in the electronic age. We cannot expect governments, corporations, or other large, faceless organizations to grant us privacy out of their beneficence." — Eric Hughes, <em>A Cypherpunk's Manifesto</em> (1993)
                 </CalloutBox>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-gradient-to-br from-[#ED1C24]/20 to-transparent rounded-xl border border-[#ED1C24]/30">
-                    <h4 className="font-bold text-[#ED1C24] mb-2">🔐 Privacy by Default</h4>
-                    <p className="text-sm text-muted-foreground">Systems should protect privacy without requiring trust in any authority</p>
+              </div>
+
+              <div className="flex items-center justify-center gap-4 p-3 bg-gradient-to-br from-[#8b5cf6]/8 to-transparent rounded-xl border border-[#8b5cf6]/30">
+                <div className="relative shrink-0">
+                  <div className="size-20 lg:size-24 rounded-full bg-gradient-to-br from-[#8b5cf6] via-[#6366f1] to-[#ED1C24] flex items-center justify-center shadow-lg shadow-[#8b5cf6]/40 border-4 border-card">
+                    <User className="size-10 lg:size-12 text-white/95" strokeWidth={1.5} />
                   </div>
-                  <div className="p-4 bg-gradient-to-br from-[#39B54A]/20 to-transparent rounded-xl border border-[#39B54A]/30">
-                    <h4 className="font-bold text-[#39B54A] mb-2">💻 Code is Law</h4>
-                    <p className="text-sm text-muted-foreground">Cryptographic mathematics, not legislation, should enforce rights</p>
-                  </div>
-                  <div className="p-4 bg-gradient-to-br from-[#6366f1]/20 to-transparent rounded-xl border border-[#6366f1]/30">
-                    <h4 className="font-bold text-[#6366f1] mb-2">🌐 Open Source</h4>
-                    <p className="text-sm text-muted-foreground">Tools must be public, auditable, and available to everyone — no gatekeepers</p>
-                  </div>
-                  <div className="p-4 bg-gradient-to-br from-[#f59e0b]/20 to-transparent rounded-xl border border-[#f59e0b]/30">
-                    <h4 className="font-bold text-[#f59e0b] mb-2">🏗️ Build, Don't Beg</h4>
-                    <p className="text-sm text-muted-foreground">Write code to change reality, don't wait for permission from institutions</p>
+                  <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-card border border-[#8b5cf6]/50 shadow text-[9px] font-mono font-bold text-[#8b5cf6] whitespace-nowrap">
+                    1993
                   </div>
                 </div>
+                <div className="flex flex-col gap-2 min-w-0">
+                  <div>
+                    <div className="text-base font-bold text-foreground leading-tight">Eric Hughes</div>
+                    <div className="text-[10px] text-[#8b5cf6] font-semibold uppercase tracking-widest">
+                      Cypherpunk · Manifesto author
+                    </div>
+                  </div>
+                  <a
+                    href="https://www.activism.net/cypherpunk/manifesto.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-br from-[#8b5cf6] to-[#ED1C24] text-white text-xs font-bold shadow-md shadow-[#8b5cf6]/40 hover:opacity-90 hover:scale-[1.02] transition-all w-fit"
+                  >
+                    📄 Read the Manifesto
+                    <ExternalLink className="size-3" />
+                  </a>
+                </div>
               </div>
-            }
-            keyPoints={[
-              "The movement emerged in response to growing government surveillance",
-              "Members communicated via encrypted mailing lists",
-              "They published tools like PGP, Tor, and anonymous remailers",
-              "Their work became the technical DNA of Bitcoin and all blockchains"
-            ]}
-          />
+            </div>
+
+            {/* BOTTOM — 4 principle cards filling the rest of the slide */}
+            <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+              {[
+                { color: '#ED1C24', icon: '🔐', title: 'Privacy by Default',
+                  body: 'Systems should protect privacy without requiring trust in any authority — encryption is the default state, not a switch you have to find and turn on.' },
+                { color: '#39B54A', icon: '💻', title: 'Code is Law',
+                  body: 'Cryptographic mathematics, not legislation, should enforce rights. A law can be repealed; a published cryptographic protocol cannot be un-known.' },
+                { color: '#6366f1', icon: '🌐', title: 'Open Source',
+                  body: 'Tools must be public, auditable, and available to everyone — no gatekeepers. If the code is secret, the privacy it claims to give is unverifiable.' },
+                { color: '#f59e0b', icon: '🏗️', title: 'Build, Don\'t Beg',
+                  body: "Write code to change reality. Don't wait for permission from institutions, don't lobby — ship something that makes the lobbying irrelevant." },
+              ].map(p => (
+                <div
+                  key={p.title}
+                  className="flex flex-col p-4 lg:p-5 rounded-xl border-2 bg-gradient-to-br to-transparent transition-transform hover:scale-[1.02]"
+                  style={{
+                    borderColor: p.color + '55',
+                    background: `linear-gradient(to bottom right, ${p.color}15, transparent)`,
+                  }}
+                >
+                  <div className="text-3xl lg:text-4xl mb-2">{p.icon}</div>
+                  <h4 className="font-black mb-2 text-base lg:text-lg" style={{ color: p.color }}>
+                    {p.title}
+                  </h4>
+                  <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed flex-1">
+                    {p.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* ═══════ 2. CYPHERPUNK VALUES ═══════ */}
@@ -217,46 +523,7 @@ export function Prologue() {
 
         {/* ═══════ 3. TIMELINE ═══════ */}
         <div id="p-timeline" className="h-full">
-          <TimelineSlide
-            title="From Cypherpunks to Bitcoin"
-            events={[
-              {
-                year: "1982",
-                title: "David Chaum — DigiCash",
-                description: "The first anonymous digital cash system using blind signatures. Chaum proved that private electronic payments were mathematically possible."
-              },
-              {
-                year: "1991",
-                title: "Haber & Stornetta — Cryptographic Timestamps",
-                description: "Proposed a cryptographically secured chain of blocks to timestamp digital documents — the direct ancestor of blockchain structure."
-              },
-              {
-                year: "1993",
-                title: "Eric Hughes — A Cypherpunk's Manifesto",
-                description: "Published the founding document of the cypherpunk movement, declaring privacy a fundamental right to be defended with code."
-              },
-              {
-                year: "1997",
-                title: "Adam Back — Hashcash",
-                description: "A proof-of-work system originally designed to combat email spam. This concept became the direct inspiration for Bitcoin's mining mechanism."
-              },
-              {
-                year: "1998",
-                title: "Wei Dai (B-Money) & Nick Szabo (Bit Gold)",
-                description: "Two independent proposals for decentralized digital currencies using cryptographic proofs — both direct precursors to Bitcoin's design."
-              },
-              {
-                year: "2008",
-                title: "Satoshi Nakamoto — The Bitcoin Whitepaper",
-                description: "An anonymous individual or group published 'Bitcoin: A Peer-to-Peer Electronic Cash System', combining decades of cypherpunk research into one unified protocol."
-              },
-              {
-                year: "2009",
-                title: "The Genesis Block",
-                description: "Block #0 is mined on January 3, 2009. Embedded message: 'The Times 03/Jan/2009 Chancellor on brink of second bailout for banks'."
-              }
-            ]}
-          />
+          <CypherpunksMovementTimeline />
         </div>
 
         {/* ═══════ BITCOIN'S ACADEMIC PEDIGREE ═══════ */}
