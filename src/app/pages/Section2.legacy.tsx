@@ -6,29 +6,27 @@ import { QuizSlide } from '../components/templates/QuizSlide';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
 import { CalloutBox } from '../components/shared/CalloutBox';
 import { DefinitionBox } from '../components/shared/DefinitionBox';
-import { Bitcoin, Eye, EyeOff, ExternalLink, AlertTriangle, ShieldX } from 'lucide-react';
+import { Bitcoin, Eye, EyeOff } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
 
 const section2Chapters = [
-  { id: 's2-breakthrough',  label: 'Bitcoin Breakthrough' },
-  { id: 's2-paper',         label: 'The 2008 Paper' },
-  { id: 's2-what',          label: 'What is Bitcoin?' },
-  { id: 's2-byzantine',     label: 'Byzantine Problem' },
-  { id: 's2-doublespend',   label: 'Double-Spending' },
-  { id: 's2-supply',        label: '🧩 Supply Model' },
-  { id: 's2-stats',         label: 'Network Statistics' },
-  { id: 's2-nodes',         label: 'Node Distribution' },
-  { id: 's2-keys',          label: 'Keys & Seed Phrase' },
-  { id: 's2-keys-demo',     label: '🧩 Build a Wallet' },
-  { id: 's2-security',      label: 'Security Model' },
-  { id: 's2-merkle',        label: '🧩 Merkle Tree' },
-  { id: 's2-immutability',  label: '🧩 Immutability' },
-  { id: 's2-mining',        label: 'Mining' },
-  { id: 's2-mining-demo',   label: '🧩 Find a Nonce' },
+  { id: 's2-breakthrough', label: 'Bitcoin Breakthrough' },
+  { id: 's2-what', label: 'What is Bitcoin?' },
+  { id: 's2-byzantine', label: 'Byzantine Problem' },
+  { id: 's2-doublespend', label: 'Double-Spending' },
+  { id: 's2-supply', label: '🧩 Supply Model' },
+  { id: 's2-stats', label: 'Network Statistics' },
+  { id: 's2-nodes', label: 'Node Distribution' },
+  { id: 's2-keys', label: 'Keys & Seed Phrase' },
+  { id: 's2-keys-demo', label: '🧩 Build a Wallet' },
+  { id: 's2-security', label: 'Security Model' },
+  { id: 's2-merkle', label: '🧩 Merkle Tree' },
+  { id: 's2-immutability', label: '🧩 Immutability' },
+  { id: 's2-mining', label: 'Mining' },
+  { id: 's2-mining-demo', label: '🧩 Find a Nonce' },
   { id: 's2-programmability', label: 'Programmability' },
-  { id: 's2-limits',        label: "What it Can't Do" },
-  { id: 's2-quiz',          label: 'Quizzes' },
-  { id: 's2-takeaways',     label: 'Takeaways' },
+  { id: 's2-quiz', label: 'Quizzes' },
+  { id: 's2-takeaways', label: 'Takeaways' },
 ];
 
 // ─── Interactive: Bitcoin Supply Chart ──────────────────────────────────────
@@ -1170,390 +1168,97 @@ export function Section2() {
           />
         </div>
 
-        {/* ═══════ 1b. THE 2008 PAPER — Satoshi's announcement ═══════ */}
-        <div id="s2-paper" className="h-full">
-          <div className="w-full h-full flex flex-col p-5 lg:p-8">
-            <div className="shrink-0 mb-4">
-              <p className="text-[10px] font-mono uppercase tracking-widest text-[#f59e0b] mb-1 font-bold">
-                October 31, 2008
-              </p>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
-                An anonymous post. Two unsolvable problems. One paper.
-              </h2>
-              <p className="text-sm lg:text-base text-muted-foreground max-w-3xl">
-                Someone — or some group — calling themselves <span className="font-mono text-foreground">Satoshi Nakamoto</span> sent a 9-page PDF to a small cryptography mailing list. The claim inside was outrageous: that two problems no one had cracked in 30 years could both be solved at the same time, on the open internet, by ordinary computers.
-              </p>
-            </div>
-
-            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-4 lg:gap-6">
-              {/* LEFT — the post */}
-              <div className="flex flex-col gap-3 min-h-0">
-                <div className="rounded-xl border-2 border-[#f59e0b]/50 bg-card overflow-hidden">
-                  <div className="px-4 py-2 bg-[#f59e0b]/15 border-b border-[#f59e0b]/30 flex items-center gap-2">
-                    <span className="text-xs font-mono text-[#f59e0b] font-bold">📧 mailing list · cryptography@metzdowd.com</span>
-                  </div>
-                  <div className="p-4 space-y-2 text-sm font-mono">
-                    <div className="text-foreground"><span className="text-muted-foreground">From:</span> Satoshi Nakamoto &lt;satoshi@vistomail.com&gt;</div>
-                    <div className="text-foreground"><span className="text-muted-foreground">Subject:</span> Bitcoin P2P e-cash paper</div>
-                    <div className="text-foreground"><span className="text-muted-foreground">Date:</span> Fri, 31 Oct 2008 14:10:00 -0700</div>
-                    <div className="border-t border-border my-2" />
-                    <p className="text-foreground italic text-xs lg:text-sm leading-relaxed">
-                      "I've been working on a new electronic cash system that's fully peer-to-peer, with no trusted third party. The main properties: Double-spending is prevented with a peer-to-peer network. No mint or other trusted parties. Participants can be anonymous. New coins are made from Hashcash style proof-of-work…"
-                    </p>
-                    <div className="text-foreground text-xs pt-1"><span className="text-muted-foreground">Paper:</span> <span className="text-[#f59e0b]">bitcoin.org/bitcoin.pdf</span></div>
-                  </div>
-                </div>
-                <CalloutBox type="tip" title="What happened next">
-                  Almost nobody took it seriously. A few cypherpunks responded. Then on{' '}
-                  <strong className="text-foreground">January 3, 2009</strong>, Satoshi mined Block #0 — embedded with the headline{' '}
-                  <em>"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"</em>. The proof of the claim.
-                </CalloutBox>
-                <a
-                  href="https://bitcoin.org/bitcoin.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold hover:bg-[#f59e0b]/25 transition-colors w-fit"
-                >
-                  📄 Read the original whitepaper
-                  <ExternalLink className="size-3.5" />
-                </a>
-              </div>
-
-              {/* RIGHT — the two problems he claimed to solve */}
-              <div className="flex flex-col gap-3 min-h-0">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
-                  Two problems no one had cracked
-                </p>
-
-                <div className="p-4 rounded-xl border-2 border-[#ED1C24]/40 bg-gradient-to-br from-[#ED1C24]/10 to-transparent">
-                  <h3 className="font-bold text-[#ED1C24] mb-1.5 flex items-center gap-2">
-                    <span className="text-lg">💸</span> Double-spending
-                  </h3>
-                  <p className="text-xs text-foreground/90 leading-relaxed mb-2">
-                    How do you stop someone from spending the same digital dollar twice — when digital files are infinitely copyable?
-                  </p>
-                  <div className="text-[11px] text-muted-foreground bg-muted/30 p-2 rounded">
-                    <strong className="text-foreground/80">Today this still requires a referee.</strong> Visa, PayPal, and your bank all exist because someone has to keep score. Take the referee away — and digital money breaks instantly.
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl border-2 border-[#6366f1]/40 bg-gradient-to-br from-[#6366f1]/10 to-transparent">
-                  <h3 className="font-bold text-[#6366f1] mb-1.5 flex items-center gap-2">
-                    <span className="text-lg">⚔️</span> Byzantine Generals
-                  </h3>
-                  <p className="text-xs text-foreground/90 leading-relaxed mb-2">
-                    How do strangers reach agreement on the truth when some of them might be lying — and there's no central authority to verify who?
-                  </p>
-                  <div className="text-[11px] text-muted-foreground bg-muted/30 p-2 rounded">
-                    <strong className="text-foreground/80">Modern systems still struggle with this.</strong> BGP routing can be hijacked (the 2008 YouTube outage), online voting is famously hard to secure, distributed databases need carefully picked leaders.
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-xl border border-[#39B54A]/40 bg-[#39B54A]/10 text-center">
-                  <p className="text-sm font-bold text-foreground">
-                    Satoshi claimed to have solved <span className="text-[#39B54A]">both</span> at once.
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1 italic">Bitcoin is the proof.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* ═══════ 3. WHAT IS BITCOIN ═══════ */}
         <div id="s2-what" className="h-full">
-          <div className="w-full h-full flex flex-col p-5 lg:p-8">
-            <div className="shrink-0 mb-4">
-              <p className="text-[10px] font-mono uppercase tracking-widest text-[#f59e0b] mb-1 font-bold">
-                What the paper proposed
-              </p>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">What is Bitcoin?</h2>
-              <p className="text-sm lg:text-base text-muted-foreground max-w-3xl">
-                The 9-page paper didn't describe a product, a company, or a token sale. It described a <strong className="text-foreground">system</strong> — a set of rules a network of computers could run together, with no one in charge. Here's what was inside.
-              </p>
-            </div>
-
-            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-4 lg:gap-6">
-              {/* LEFT — actual paper structure */}
-              <div className="flex flex-col gap-3 min-h-0">
-                <div className="rounded-xl border-2 border-[#f59e0b]/40 bg-card overflow-hidden">
-                  <div className="px-3 py-2 bg-[#f59e0b]/10 border-b border-[#f59e0b]/30 flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-[#f59e0b] font-bold uppercase tracking-widest">📄 Bitcoin.pdf · 9 pages</span>
-                    <span className="text-[9px] text-muted-foreground">Nov 2008</span>
+          <ConceptSlide
+            title="What is Bitcoin?"
+            description="Bitcoin is the first decentralized digital currency — a peer-to-peer electronic cash system that operates without banks, governments, or intermediaries."
+            visual={
+              <div className="space-y-4 w-full">
+                <DefinitionBox
+                  term="Bitcoin (BTC)"
+                  definition="A decentralized digital currency created in 2009 by Satoshi Nakamoto. It runs on a public blockchain where transactions are verified by a global network of nodes and miners."
+                />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-gradient-to-br from-[#f59e0b]/20 to-transparent rounded-xl border border-[#f59e0b]/30">
+                    <h4 className="font-bold text-[#f59e0b] mb-2">🌐 Permissionless</h4>
+                    <p className="text-sm text-muted-foreground">Anyone can send, receive, or validate transactions without asking permission</p>
                   </div>
-                  <ol className="p-3 space-y-0.5 text-[11px] font-mono text-muted-foreground">
-                    {[
-                      'Introduction',
-                      'Transactions',
-                      'Timestamp Server',
-                      'Proof-of-Work',
-                      'Network',
-                      'Incentive',
-                      'Reclaiming Disk Space',
-                      'Simplified Payment Verification',
-                      'Combining and Splitting Value',
-                      'Privacy',
-                      'Calculations',
-                      'Conclusion',
-                    ].map((s, i) => (
-                      <li key={s} className="flex gap-2">
-                        <span className="text-[#f59e0b] font-bold w-4 text-right shrink-0">{i + 1}.</span>
-                        <span className="text-foreground">{s}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-                <CalloutBox type="info" title="The system, in one sentence">
-                  Bitcoin is what happens when those 12 sections actually run on a network of independent computers — for years, without anyone in charge, and without breaking.
-                </CalloutBox>
-              </div>
-
-              {/* RIGHT — four design choices */}
-              <div className="flex flex-col gap-3">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
-                  Four design choices that came out of those pages
-                </p>
-                <div className="grid grid-cols-2 gap-3 flex-1">
-                  <div className="p-3.5 bg-gradient-to-br from-[#f59e0b]/15 to-transparent rounded-xl border-2 border-[#f59e0b]/40 flex flex-col">
-                    <h4 className="font-bold text-[#f59e0b] mb-1.5 text-sm">🌐 Permissionless</h4>
-                    <p className="text-xs text-muted-foreground leading-snug">Anyone can send, receive, or validate transactions. No application, no KYC, no gatekeeper.</p>
+                  <div className="p-4 bg-gradient-to-br from-[#ED1C24]/20 to-transparent rounded-xl border border-[#ED1C24]/30">
+                    <h4 className="font-bold text-[#ED1C24] mb-2">🔓 Open Source</h4>
+                    <p className="text-sm text-muted-foreground">The code is public — anyone can audit, fork, or contribute to Bitcoin Core</p>
                   </div>
-                  <div className="p-3.5 bg-gradient-to-br from-[#ED1C24]/15 to-transparent rounded-xl border-2 border-[#ED1C24]/40 flex flex-col">
-                    <h4 className="font-bold text-[#ED1C24] mb-1.5 text-sm">🔓 Open Source</h4>
-                    <p className="text-xs text-muted-foreground leading-snug">The code is public — anyone can read it, audit it, fork it, or contribute to Bitcoin Core.</p>
+                  <div className="p-4 bg-gradient-to-br from-[#39B54A]/20 to-transparent rounded-xl border border-[#39B54A]/30">
+                    <h4 className="font-bold text-[#39B54A] mb-2">💎 Scarce</h4>
+                    <p className="text-sm text-muted-foreground">Hard-capped at 21 million coins — enforced by code, not promises</p>
                   </div>
-                  <div className="p-3.5 bg-gradient-to-br from-[#39B54A]/15 to-transparent rounded-xl border-2 border-[#39B54A]/40 flex flex-col">
-                    <h4 className="font-bold text-[#39B54A] mb-1.5 text-sm">💎 Scarce by design</h4>
-                    <p className="text-xs text-muted-foreground leading-snug">Hard-capped at 21 million coins forever. Enforced by code, not by anyone's promise.</p>
+                  <div className="p-4 bg-gradient-to-br from-[#6366f1]/20 to-transparent rounded-xl border border-[#6366f1]/30">
+                    <h4 className="font-bold text-[#6366f1] mb-2">⚡ Censorship Resistant</h4>
+                    <p className="text-sm text-muted-foreground">No entity can freeze, reverse, or block a valid Bitcoin transaction</p>
                   </div>
-                  <div className="p-3.5 bg-gradient-to-br from-[#6366f1]/15 to-transparent rounded-xl border-2 border-[#6366f1]/40 flex flex-col">
-                    <h4 className="font-bold text-[#6366f1] mb-1.5 text-sm">⚡ Censorship-resistant</h4>
-                    <p className="text-xs text-muted-foreground leading-snug">No entity can freeze, reverse, or block a valid Bitcoin transaction. The math doesn't care who you are.</p>
-                  </div>
-                </div>
-                <div className="p-3 rounded-xl bg-muted/40 border border-border text-xs text-muted-foreground">
-                  <span className="font-bold text-foreground">The paper claimed to solve two specific problems</span> nobody had cracked: double-spending and the Byzantine generals problem. <span className="italic">The next two slides walk through both — with the history of who else tried.</span>
                 </div>
               </div>
-            </div>
-          </div>
+            }
+            keyPoints={[
+              "Bitcoin is both a payment network and a unit of currency (BTC)",
+              "It solved the double-spending problem without a central authority",
+              "Transactions are irreversible once confirmed on-chain",
+              "Bitcoin pioneered the entire cryptocurrency industry"
+            ]}
+          />
         </div>
 
-        {/* ═══════ 4. BYZANTINE GENERALS PROBLEM — HISTORICAL NARRATIVE ═══════ */}
+        {/* ═══════ 2. BYZANTINE GENERALS PROBLEM ═══════ */}
         <div id="s2-byzantine" className="h-full">
-          <div className="w-full h-full flex flex-col p-5 lg:p-8">
-            <div className="shrink-0 mb-3">
-              <p className="text-[10px] font-mono uppercase tracking-widest text-[#f59e0b] mb-1 font-bold">
-                Problem #1 the paper claimed to solve
-              </p>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Byzantine Generals — A 26-Year Puzzle</h2>
-              <p className="text-sm lg:text-base text-muted-foreground max-w-4xl">
-                In <strong className="text-foreground">1982</strong>, three researchers at SRI International — <strong className="text-foreground">Leslie Lamport, Robert Shostak &amp; Marshall Pease</strong> — formalised a question that would haunt distributed systems for decades:
-                <em className="text-foreground"> how do strangers who cannot trust each other agree on the same version of reality, when some of them are actively lying?</em>
-              </p>
-            </div>
-
-            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-4">
-              {/* LEFT — the metaphor + computing translation */}
-              <div className="flex flex-col gap-3 min-h-0">
-                <div className="p-3 bg-gradient-to-br from-[#ED1C24]/15 to-transparent rounded-xl border-2 border-[#ED1C24]/40">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-xl">🏰</span>
-                    <h4 className="font-bold text-[#ED1C24] text-sm">The metaphor</h4>
+          <ConceptSlide
+            title="The Byzantine Generals Problem"
+            description="How do you reach agreement when you can't trust every participant? A 27-year-old computer science puzzle — solved by Bitcoin in 2009."
+            visual={
+              <div className="space-y-4 w-full">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-gradient-to-br from-[#ED1C24]/20 to-transparent rounded-xl border border-[#ED1C24]/30">
+                    <h4 className="font-bold text-[#ED1C24] mb-2">⚔️ The Problem</h4>
+                    <p className="text-sm text-muted-foreground">Generals surrounding a city must agree on one plan — but some are traitors sending conflicting orders. No trusted messenger exists to verify who is lying.</p>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-snug">
-                    Several Byzantine generals surround a city. They must <strong className="text-foreground">all attack together or all retreat together</strong> — a split decision means defeat. They communicate only by messenger, and an unknown number of them are <strong className="text-foreground">traitors</strong> sending conflicting orders. With no trusted referee, can the loyal generals still reach the same plan?
-                  </p>
-                </div>
-
-                <div className="p-3 bg-gradient-to-br from-[#f59e0b]/15 to-transparent rounded-xl border-2 border-[#f59e0b]/40">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-xl">💻</span>
-                    <h4 className="font-bold text-[#f59e0b] text-sm">In computing terms</h4>
+                  <div className="p-4 bg-gradient-to-br from-[#f59e0b]/20 to-transparent rounded-xl border border-[#f59e0b]/30">
+                    <h4 className="font-bold text-[#f59e0b] mb-2">💻 In Computing Terms</h4>
+                    <p className="text-sm text-muted-foreground">Generals = nodes. Messengers = internet packets. Traitors = malicious nodes. Battle plan = shared transaction history. Any node can lie or go offline.</p>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-[11px]">
-                    <div className="bg-card/60 rounded-md p-1.5">
-                      <span className="text-muted-foreground">Generals</span>
-                      <span className="text-foreground font-bold"> = nodes</span>
-                    </div>
-                    <div className="bg-card/60 rounded-md p-1.5">
-                      <span className="text-muted-foreground">Messengers</span>
-                      <span className="text-foreground font-bold"> = network packets</span>
-                    </div>
-                    <div className="bg-card/60 rounded-md p-1.5">
-                      <span className="text-muted-foreground">Traitors</span>
-                      <span className="text-foreground font-bold"> = malicious / faulty nodes</span>
-                    </div>
-                    <div className="bg-card/60 rounded-md p-1.5">
-                      <span className="text-muted-foreground">Battle plan</span>
-                      <span className="text-foreground font-bold"> = shared ledger state</span>
-                    </div>
+                  <div className="p-4 bg-gradient-to-br from-[#39B54A]/20 to-transparent rounded-xl border border-[#39B54A]/30">
+                    <h4 className="font-bold text-[#39B54A] mb-2">⛏️ Bitcoin's Solution</h4>
+                    <p className="text-sm text-muted-foreground">Proof of Work makes lying expensive. Every block costs real energy — so cheating costs more than cooperating. The longest chain always represents the honest majority.</p>
                   </div>
-                </div>
-
-                <div className="p-3 bg-gradient-to-br from-[#39B54A]/15 to-transparent rounded-xl border-2 border-[#39B54A]/40 flex-1">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-xl">⛏️</span>
-                    <h4 className="font-bold text-[#39B54A] text-sm">Bitcoin's answer (Nov 2008)</h4>
-                  </div>
-                  <p className="text-xs text-muted-foreground leading-snug mb-2">
-                    Don't try to <em>identify</em> the traitors — make lying <strong className="text-foreground">economically irrational</strong>. Every block costs real energy to produce. To rewrite history, an attacker would need to out-spend the entire honest majority, forever.
-                  </p>
-                  <div className="grid grid-cols-3 gap-2 text-[10px]">
-                    <div className="bg-card/60 rounded-md p-1.5 text-center">
-                      <div className="text-muted-foreground">Tolerates</div>
-                      <div className="font-bold text-[#39B54A]">&lt; 50% bad hash</div>
-                    </div>
-                    <div className="bg-card/60 rounded-md p-1.5 text-center">
-                      <div className="text-muted-foreground">Trusted setup</div>
-                      <div className="font-bold text-[#39B54A]">None</div>
-                    </div>
-                    <div className="bg-card/60 rounded-md p-1.5 text-center">
-                      <div className="text-muted-foreground">Membership</div>
-                      <div className="font-bold text-[#39B54A]">Open / unknown</div>
-                    </div>
+                  <div className="p-4 bg-gradient-to-br from-[#6366f1]/20 to-transparent rounded-xl border border-[#6366f1]/30">
+                    <h4 className="font-bold text-[#6366f1] mb-2">🔢 The 51% Rule</h4>
+                    <p className="text-sm text-muted-foreground">The network tolerates up to ⅓ of nodes being malicious. As long as honest nodes hold the majority of hash power, consensus is always reached correctly.</p>
                   </div>
                 </div>
               </div>
-
-              {/* RIGHT — historical timeline of consensus attempts */}
-              <div className="flex flex-col gap-2 min-h-0">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
-                  Three decades of partial solutions
-                </p>
-
-                <div className="flex-1 min-h-0 relative overflow-y-auto pr-1">
-                  {/* vertical timeline rail */}
-                  <div className="absolute left-[60px] top-1 bottom-1 w-0.5 bg-gradient-to-b from-[#ED1C24] via-[#f59e0b] to-[#39B54A]" />
-
-                  <div className="space-y-2.5">
-                    {[
-                      {
-                        year: '1982', color: '#ED1C24',
-                        title: 'The problem is named',
-                        who: 'Lamport, Shostak & Pease — SRI International',
-                        body: 'The paper "The Byzantine Generals Problem" proves consensus is mathematically possible only if fewer than ⅓ of participants are traitors — and requires every participant to be known in advance.',
-                        verdict: 'Closed networks only',
-                      },
-                      {
-                        year: '1989', color: '#ED1C24',
-                        title: 'Paxos',
-                        who: 'Leslie Lamport (again)',
-                        body: 'A practical consensus algorithm for distributed databases. Powers Google Chubby, Microsoft Azure, much of modern cloud — but every participant must be pre-authenticated.',
-                        verdict: 'Permissioned only',
-                      },
-                      {
-                        year: '1999', color: '#f59e0b',
-                        title: 'PBFT — Practical Byzantine Fault Tolerance',
-                        who: 'Castro & Liskov, MIT',
-                        body: 'First algorithm fast enough for real-world use that tolerates actively malicious nodes. Still requires a fixed, known set of validators and O(n²) messages — does not scale to thousands.',
-                        verdict: 'Small known sets',
-                      },
-                      {
-                        year: '2008', color: '#39B54A',
-                        title: 'Nakamoto Consensus',
-                        who: 'Satoshi — Bitcoin whitepaper',
-                        body: 'Replaces voting with mining. No fixed validator set, no identity, no pre-authentication. Anyone can join or leave at any time. The longest valid chain is the truth. First and only working solution for OPEN networks.',
-                        verdict: 'Open / permissionless ✓',
-                      },
-                    ].map((e) => (
-                      <div key={e.year} className="relative pl-[80px] pr-1">
-                        {/* dot */}
-                        <div
-                          className="absolute left-[54px] top-1.5 size-3.5 rounded-full border-2 border-background shadow"
-                          style={{ backgroundColor: e.color }}
-                        />
-                        {/* year tag */}
-                        <div
-                          className="absolute left-0 top-0 w-12 text-right font-mono font-black text-sm"
-                          style={{ color: e.color }}
-                        >
-                          {e.year}
-                        </div>
-
-                        <div className="bg-card border border-border rounded-lg p-2.5 hover:border-foreground/30 transition-colors">
-                          <div className="flex items-start justify-between gap-2 mb-0.5">
-                            <h4 className="font-bold text-foreground text-xs">{e.title}</h4>
-                            <span
-                              className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded shrink-0"
-                              style={{ color: e.color, backgroundColor: e.color + '18' }}
-                            >
-                              {e.verdict}
-                            </span>
-                          </div>
-                          <div className="text-[10px] text-muted-foreground italic mb-1">{e.who}</div>
-                          <p className="text-[11px] text-muted-foreground leading-snug">{e.body}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="shrink-0 p-2.5 rounded-lg bg-[#39B54A]/10 border border-[#39B54A]/40 text-[11px] text-muted-foreground">
-                  <span className="font-bold text-[#39B54A]">The leap:</span> Paxos and PBFT need a <strong className="text-foreground">guest list</strong>. Bitcoin works at a <strong className="text-foreground">street party</strong> where nobody checked IDs at the door — and still everyone agrees on what was served.
-                </div>
-              </div>
-            </div>
-          </div>
+            }
+            keyPoints={[
+              "Problem formalized by Lamport, Shostak & Pease in 1982",
+              "Before Bitcoin, no practical solution existed for open, untrusted networks",
+              "Proof of Work is the first mechanism where dishonesty is economically irrational",
+              "Bitcoin achieves consensus without any central authority or trusted party"
+            ]}
+          />
         </div>
 
-        {/* ═══════ 5. DOUBLE-SPENDING — HISTORICAL NARRATIVE ═══════ */}
+        {/* ═══════ DOUBLE-SPENDING ═══════ */}
         <div id="s2-doublespend" className="h-full">
           <ConceptSlide
-            title="Double-Spending — 20 Years of Failed Digital Cash"
-            description="A digital file can be copied infinitely. So how do you make 'money' that can't be? Cypherpunks tried for two decades — every attempt either centralised, collapsed, or never shipped. Bitcoin is the first one still running."
+            title="The Double-Spending Problem"
+            description="Digital money can be copied like any file. Before Bitcoin, only a bank could guarantee you hadn't already spent the same coin twice."
             visual={
               <div className="space-y-3 w-full">
-                {/* ─── Historical timeline of attempts ─── */}
-                <div className="p-3 bg-gradient-to-br from-[#8b5cf6]/15 via-[#6366f1]/5 to-transparent rounded-xl border-2 border-[#8b5cf6]/40">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-bold text-[#8b5cf6] text-sm">📜 Two decades of attempts before Bitcoin</h4>
-                    <span className="text-[10px] font-mono text-muted-foreground">1983 → 2008</span>
-                  </div>
-                  <div className="relative">
-                    {/* horizontal rail */}
-                    <div className="absolute left-2 right-2 top-[18px] h-0.5 bg-gradient-to-r from-[#ED1C24] via-[#f59e0b] to-[#39B54A]" />
-                    <div className="grid grid-cols-6 gap-2 relative">
-                      {[
-                        { year: '1983', name: 'DigiCash', who: 'David Chaum', why: 'Blind-signature ecash. Required a central bank to mint coins. Filed for bankruptcy in 1998.', fate: 'Centralised', color: '#ED1C24' },
-                        { year: '1996', name: 'e-gold', who: 'Douglas Jackson', why: 'Gold-backed online currency. Hit 5M accounts — then seized by US authorities in 2007.', fate: 'Shut down', color: '#ED1C24' },
-                        { year: '1997', name: 'Hashcash', who: 'Adam Back', why: 'Proof-of-work for email anti-spam. Not money — but the cryptographic primitive Satoshi would later reuse.', fate: 'Primitive only', color: '#f59e0b' },
-                        { year: '1998', name: 'b-money', who: 'Wei Dai', why: 'First proposal for a decentralised digital currency using PoW. Never implemented.', fate: 'Proposal only', color: '#f59e0b' },
-                        { year: '1998', name: 'Bit Gold', who: 'Nick Szabo', why: 'PoW-based scarce digital tokens, chained together. Solved most problems — but no working code shipped.', fate: 'Proposal only', color: '#f59e0b' },
-                        { year: '2008', name: 'Bitcoin', who: 'Satoshi Nakamoto', why: 'Combines PoW + chained timestamps + P2P broadcast + incentives. Mainnet launched Jan 3 2009. Still running.', fate: 'Live ✓', color: '#39B54A' },
-                      ].map(item => (
-                        <div key={item.year + item.name} className="flex flex-col items-center">
-                          <div
-                            className="size-4 rounded-full border-2 border-background shadow shrink-0 mb-1.5 z-10"
-                            style={{ backgroundColor: item.color }}
-                          />
-                          <div className="text-center w-full">
-                            <div className="font-mono font-black text-[11px]" style={{ color: item.color }}>{item.year}</div>
-                            <div className="font-bold text-foreground text-[11px] leading-tight">{item.name}</div>
-                            <div className="text-[9px] text-muted-foreground italic mt-0.5">{item.who}</div>
-                            <p className="text-[9px] text-muted-foreground leading-tight mt-1">{item.why}</p>
-                            <div
-                              className="mt-1 inline-block text-[8px] font-bold uppercase tracking-widest px-1 py-0.5 rounded"
-                              style={{ color: item.color, backgroundColor: item.color + '18' }}
-                            >
-                              {item.fate}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* The attack + old fix — compressed into one strip */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-3 bg-gradient-to-br from-[#ED1C24]/20 to-transparent rounded-xl border border-[#ED1C24]/30">
-                    <h4 className="font-bold text-[#ED1C24] mb-1 text-sm">📋 The attack (same since 1983)</h4>
-                    <p className="text-xs text-muted-foreground">Alice has 1 coin. She broadcasts two transactions simultaneously — one paying Bob, one paying herself. Without a referee, both look valid. Who actually gets the coin?</p>
+                    <h4 className="font-bold text-[#ED1C24] mb-1 text-sm">📋 The Attack</h4>
+                    <p className="text-xs text-muted-foreground">Alice has 1 BTC. She broadcasts two transactions simultaneously — one paying Bob, one paying herself. Without a referee, both look valid. Who gets the coin?</p>
                   </div>
                   <div className="p-3 bg-gradient-to-br from-[#f59e0b]/20 to-transparent rounded-xl border border-[#f59e0b]/30">
-                    <h4 className="font-bold text-[#f59e0b] mb-1 text-sm">🏦 The pre-Bitcoin fix — trust a referee</h4>
-                    <p className="text-xs text-muted-foreground">DigiCash, e-gold, banks, PayPal — all worked by keeping a central ledger. No double-spend possible — but you must trust the operator with your money. And operators can be seized, hacked, or simply turn evil.</p>
+                    <h4 className="font-bold text-[#f59e0b] mb-1 text-sm">🏦 The Old Fix — Trust a Bank</h4>
+                    <p className="text-xs text-muted-foreground">Banks keep a central ledger. When you pay, they debit your account instantly. No double-spend possible — but you must trust them 100% with your money.</p>
                   </div>
                 </div>
 
@@ -1641,10 +1346,10 @@ export function Section2() {
               </div>
             }
             keyPoints={[
-              "Every prior attempt either centralised (DigiCash, e-gold) or stayed on paper (b-money, Bit Gold)",
-              "Bitcoin's UTXO model: spending an output destroys it — the same coin cannot be referenced twice",
-              "No central operator to seize, sue, or shut down — validation is run by every node independently",
-              "After a few confirmations, reversing a transaction would cost more than the transaction is worth"
+              "Account model = mutable balance · UTXO model = immutable list of unspent coins",
+              "Spending a UTXO destroys it — the same output cannot be referenced twice",
+              "Every node independently validates that input UTXOs still exist before accepting a tx",
+              "Once buried under more blocks, a confirmed transaction is economically irreversible"
             ]}
           />
         </div>
@@ -2039,67 +1744,6 @@ export function Section2() {
             </div>
 
           </div>
-        </div>
-
-        {/* ═══════ 9b. WHAT BITCOIN CAN'T DO ═══════ */}
-        <div id="s2-limits" className="h-full">
-          <ConceptSlide
-            title="What Bitcoin Can't Do"
-            description="Bitcoin is deliberately limited. The choices that make it secure and scarce also rule out a lot of things. Knowing what it can't do is more honest than pretending it does everything."
-            visual={
-              <div className="space-y-3 w-full">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3.5 bg-gradient-to-br from-[#ED1C24]/15 to-transparent rounded-xl border-2 border-[#ED1C24]/40">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <ShieldX className="size-4 text-[#ED1C24]" />
-                      <h4 className="font-bold text-[#ED1C24]">No real programmability</h4>
-                    </div>
-                    <p className="text-xs text-muted-foreground leading-snug">
-                      Bitcoin's scripting language is intentionally simple. You can send coins, lock them, multi-sign — but you can't build apps, DAOs, NFT marketplaces, or anything stateful.{' '}
-                      <strong className="text-foreground/80">That's Ethereum's job.</strong>
-                    </p>
-                  </div>
-                  <div className="p-3.5 bg-gradient-to-br from-[#f59e0b]/15 to-transparent rounded-xl border-2 border-[#f59e0b]/40">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <AlertTriangle className="size-4 text-[#f59e0b]" />
-                      <h4 className="font-bold text-[#f59e0b]">Low throughput</h4>
-                    </div>
-                    <p className="text-xs text-muted-foreground leading-snug">
-                      ~7 transactions per second on the base layer. Visa does ~24,000. Bitcoin is built for settlement, not retail point-of-sale.{' '}
-                      <strong className="text-foreground/80">Lightning Network adds a layer on top for fast small payments.</strong>
-                    </p>
-                  </div>
-                  <div className="p-3.5 bg-gradient-to-br from-[#6366f1]/15 to-transparent rounded-xl border-2 border-[#6366f1]/40">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-base">⚡</span>
-                      <h4 className="font-bold text-[#6366f1]">Slow finality</h4>
-                    </div>
-                    <p className="text-xs text-muted-foreground leading-snug">
-                      ~10 minutes per block, ~60 minutes for a transaction to be considered irreversible. Fine for moving wealth, painful for buying coffee.
-                    </p>
-                  </div>
-                  <div className="p-3.5 bg-gradient-to-br from-[#8b5cf6]/15 to-transparent rounded-xl border-2 border-[#8b5cf6]/40">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-base">🔋</span>
-                      <h4 className="font-bold text-[#8b5cf6]">Energy-hungry</h4>
-                    </div>
-                    <p className="text-xs text-muted-foreground leading-snug">
-                      Proof of Work uses real electricity by design — that's what makes attacks expensive. Whether the tradeoff is worth it is genuinely debated.
-                    </p>
-                  </div>
-                </div>
-                <CalloutBox type="tip" title="So why is it still the canonical example?">
-                  Because the things Bitcoin <em>does</em> do, it does at a quality nothing else has matched yet: 15+ years of uninterrupted operation, an immovable supply cap, total resistance to censorship, and a security budget paid for in electricity rather than trust.
-                </CalloutBox>
-              </div>
-            }
-            keyPoints={[
-              "Bitcoin is deliberately a single-purpose tool: be digital, scarce, hard-to-stop money",
-              "Want programmable money or rich applications? That's the next course — Smart Contracts on Ethereum and similar chains",
-              "Want faster, cheaper payments? Layer-2 networks like Lightning sit on top of Bitcoin's settlement layer",
-              "Want to compare Bitcoin to other platforms? Course 3 — Blockchain Platforms — does that head-on",
-            ]}
-          />
         </div>
 
         {/* ═══════ QUIZ ═══════ */}
