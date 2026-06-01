@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { TitleSlide } from '../components/templates/TitleSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { ComparisonSlide } from '../components/templates/ComparisonSlide';
@@ -21,20 +22,248 @@ import uniswapLogo from '../../uniswap-uni-logo.svg';
 import usdcLogo from '../../usd-coin-usdc-logo.svg';
 
 const section3Chapters = [
+  { kind: 'group' as const, id: 'g-s3-eth',     label: '🦄 Ethereum' },
   { id: 's3-ethereum',  label: 'Ethereum' },
   { id: 's3-eth-accounts', label: 'Accounts & Gas' },
   { id: 's3-eth-apps',     label: 'DeFi · NFTs · DAOs' },
+
+  { kind: 'group' as const, id: 'g-s3-world',   label: '🌍 Real World' },
   { id: 's3-usecases', label: 'Use Cases' },
   { id: 's3-ecosystem', label: 'Web3 Ecosystem' },
+
+  { kind: 'group' as const, id: 'g-s3-evol',    label: '📜 Web Evolution' },
   { id: 's3-web3', label: 'Web1 → Web3' },
   { id: 's3-dapp', label: 'App vs dApp' },
+
+  { kind: 'group' as const, id: 'g-s3-reflect', label: '⚖️ Reflection' },
   { id: 's3-ethics', label: 'Ethics' },
   { id: 's3-future', label: 'Future Trends' },
   { id: 's3-discussion', label: 'Discussion' },
+
+  { kind: 'group' as const, id: 'g-s3-wrap',    label: '✅ Wrap Up' },
   { id: 's3-quiz', label: 'Quizzes' },
   { id: 's3-takeaways', label: 'Takeaways' },
+  { id: 's3-recap', label: '🧱 Knowledge Wall' },
   { id: 's3-team-checkpoint', label: '🤝 Team Checkpoint' },
 ];
+
+// ─── Knowledge Wall — recap of all Course 1 vocabulary ──────────────────────
+
+interface Brick { term: string; defn: string; section: 1 | 2 | 3 }
+interface ThemeGroup { theme: string; color: string; bricks: Brick[] }
+
+const KNOWLEDGE_WALL: ThemeGroup[] = [
+  {
+    theme: 'Foundations', color: '#ED1C24',
+    bricks: [
+      { term: 'DLT',                 section: 1, defn: 'Distributed Ledger Technology — a database replicated across many independent computers, with no central authority.' },
+      { term: 'Hash',                section: 1, defn: 'A one-way function that turns any input into a fixed-size fingerprint. You can\'t reverse it; tiny input changes flip the output completely.' },
+      { term: 'SHA-256',             section: 1, defn: 'The specific hash function Bitcoin uses. Always produces 64 hex characters.' },
+      { term: 'Avalanche effect',    section: 1, defn: 'Changing one bit of input completely changes the hash output. The "spread" property that makes hashing useful.' },
+      { term: 'Immutability',        section: 2, defn: 'Once written into the chain, a record can\'t be silently altered without leaving evidence everywhere downstream.' },
+      { term: 'Tamper-evidence',     section: 2, defn: 'Stronger than "tamper-proof": any change breaks visible cryptographic links, so the tampering can\'t hide.' },
+      { term: 'Trust-minimization',  section: 1, defn: 'Replacing trust in people or institutions with trust in math, code, and incentives.' },
+    ],
+  },
+  {
+    theme: 'Structure', color: '#f59e0b',
+    bricks: [
+      { term: 'Block',           section: 1, defn: 'A container of transactions with a header that cryptographically links to the previous block.' },
+      { term: 'Chain',           section: 1, defn: 'The sequence of blocks, each tied to its predecessor through a hash pointer.' },
+      { term: 'Genesis block',   section: 1, defn: 'The very first block. Has no predecessor — its prev-hash field is conventionally all zeros.' },
+      { term: 'Block header',    section: 2, defn: 'A block\'s metadata: version, prev hash, merkle root, timestamp, bits (difficulty), and nonce.' },
+      { term: 'Merkle tree',     section: 2, defn: 'A binary tree of hashes. Pairs are hashed together repeatedly until one root remains.' },
+      { term: 'Merkle root',     section: 2, defn: 'A single hash that summarises every transaction in a block. Change any tx → root changes.' },
+      { term: 'Nonce',           section: 2, defn: 'A number a miner cycles through until the block\'s hash meets the difficulty target.' },
+      { term: 'Difficulty / Bits', section: 2, defn: 'How many leading zeros the hash must have. Adjusts every 2,016 blocks to keep ~10 min block time.' },
+      { term: 'Timestamp',       section: 2, defn: 'Approximate time the miner stamped the block. Lives inside the header.' },
+    ],
+  },
+  {
+    theme: 'Identity & Custody', color: '#39B54A',
+    bricks: [
+      { term: 'Wallet',       section: 2, defn: 'Software that holds your keys. It does NOT hold coins — coins live on-chain. The keys prove the coins are yours.' },
+      { term: 'Private key',  section: 2, defn: 'The one secret that authorises spending. Like a PIN, like a house key. Lose it = lose the funds.' },
+      { term: 'Public key',   section: 2, defn: 'Derived from the private key one-way. Used by others to verify your signatures. Safe to share.' },
+      { term: 'Address',      section: 2, defn: 'A short hash of the public key. Like an IBAN or a mailbox slot — anyone can send to it.' },
+      { term: 'Seed phrase',  section: 2, defn: '12 or 24 ordinary English words encoding the master secret. Regenerates the entire wallet on any device.' },
+      { term: 'Signature',    section: 2, defn: 'Cryptographic proof a message was approved by the holder of a specific private key, without revealing the key.' },
+    ],
+  },
+  {
+    theme: 'Network & Consensus', color: '#6366f1',
+    bricks: [
+      { term: 'Node',           section: 1, defn: 'A computer running the blockchain software, storing the chain and validating new transactions/blocks.' },
+      { term: 'P2P',            section: 1, defn: 'Peer-to-peer. No central server — every node talks directly to other nodes.' },
+      { term: 'Consensus',      section: 1, defn: 'How thousands of independent nodes agree on the same state of the chain.' },
+      { term: 'Proof of Work',  section: 2, defn: 'Miners spend electricity guessing nonces. Whoever finds a valid hash first wins the right to add a block.' },
+      { term: 'Proof of Stake', section: 3, defn: 'Validators stake tokens as collateral. Misbehave and the stake is slashed. Ethereum switched to PoS in 2022.' },
+      { term: 'Mining',         section: 2, defn: 'Running computers to solve PoW puzzles in exchange for newly minted coins + transaction fees.' },
+      { term: '51% attack',     section: 1, defn: 'If one entity controls majority hash power, they can rewrite recent history. The reason chains want many nodes.' },
+      { term: 'Byzantine Generals', section: 2, defn: 'The classic problem: how to reach agreement across a network where some participants may lie or fail.' },
+      { term: 'Fork',           section: 2, defn: 'A split in the chain. Soft fork = backward-compatible; hard fork = creates two incompatible chains.' },
+      { term: 'Double-spend',   section: 2, defn: 'Trying to send the same coin twice. Consensus + the longest-chain rule prevents it.' },
+    ],
+  },
+  {
+    theme: 'Bitcoin', color: '#f7931a',
+    bricks: [
+      { term: 'Satoshi Nakamoto', section: 2, defn: 'The pseudonymous creator of Bitcoin. Published the whitepaper Oct 2008, mined the genesis block Jan 2009, vanished 2010.' },
+      { term: 'Whitepaper',       section: 2, defn: 'Bitcoin\'s 9-page founding document. Surprisingly readable. Linked in the Bibliography.' },
+      { term: '21M cap',          section: 2, defn: 'The absolute maximum number of bitcoins that will ever exist. Hard-coded by every full node.' },
+      { term: 'Halving',          section: 2, defn: 'Every ~4 years the block reward halves. Schedules supply decay; last halving expected around 2140.' },
+      { term: 'UTXO',             section: 2, defn: 'Unspent Transaction Output. Bitcoin tracks "unspent coin chunks", not account balances.' },
+      { term: 'Bitcoin Script',   section: 2, defn: 'Bitcoin\'s intentionally limited scripting language. Not Turing-complete — no loops, no persistent state.' },
+      { term: 'Lightning Network',section: 2, defn: 'A Layer-2 network on top of Bitcoin for fast, cheap micropayments. Settles back to L1 periodically.' },
+      { term: 'SPV',              section: 2, defn: 'Simplified Payment Verification. Light clients use Merkle proofs to verify a tx is in a block without storing the chain.' },
+    ],
+  },
+  {
+    theme: 'Ethereum', color: '#627EEA',
+    bricks: [
+      { term: 'Ethereum',       section: 3, defn: 'The first programmable blockchain. Launched 2015 by Vitalik Buterin. Where smart contracts became practical.' },
+      { term: 'EVM',            section: 3, defn: 'Ethereum Virtual Machine. The global computer that executes smart contracts identically on every node.' },
+      { term: 'Smart contract', section: 3, defn: 'Code stored on a blockchain that runs deterministically when called. The data IS the code IS the rules.' },
+      { term: 'Gas',            section: 3, defn: 'The unit measuring computational work on the EVM. Every operation costs gas; you pay for what you use.' },
+      { term: 'Gwei',           section: 3, defn: '1 gwei = 0.000 000 001 ETH. The unit gas prices are quoted in.' },
+      { term: 'EOA',            section: 3, defn: 'Externally Owned Account. An account controlled by a private key — your MetaMask wallet is one.' },
+      { term: 'Contract Account', section: 3, defn: 'An account controlled by code, not a key. Holds a smart contract\'s state. Can\'t initiate transactions on its own.' },
+      { term: 'EIP-1559',       section: 3, defn: 'The 2021 fee market upgrade. Base fee is burned, optional priority tip goes to the validator.' },
+      { term: 'The Merge',      section: 3, defn: 'Sept 2022 — Ethereum switched from PoW to PoS. Cut its energy use by 99.95%.' },
+    ],
+  },
+  {
+    theme: 'Web3 Ecosystem', color: '#8b5cf6',
+    bricks: [
+      { term: 'dApp',          section: 3, defn: 'Decentralised application — a frontend talking to smart contracts on-chain instead of a company server.' },
+      { term: 'DeFi',          section: 3, defn: 'Decentralised Finance. Lending, trading, derivatives running entirely in smart contracts.' },
+      { term: 'NFT',           section: 3, defn: 'Non-Fungible Token. A unique on-chain asset (ERC-721) with a permanent ownership history.' },
+      { term: 'DAO',           section: 3, defn: 'Decentralised Autonomous Organisation. Governance by smart contract + token votes instead of a board.' },
+      { term: 'ERC-20',        section: 3, defn: 'The Ethereum standard for fungible tokens (every USDC, every DAI, every LINK).' },
+      { term: 'ERC-721',       section: 3, defn: 'The Ethereum standard for non-fungible tokens (NFTs).' },
+      { term: 'Stablecoin',    section: 3, defn: 'A token pegged to a stable asset, usually the US dollar. USDC, USDT, DAI.' },
+      { term: 'Oracle',        section: 3, defn: 'A service that brings off-chain data on-chain (prices, sports scores, weather). Chainlink is the leading provider.' },
+      { term: 'IPFS',          section: 3, defn: 'InterPlanetary File System. Content-addressed decentralised storage often used to host NFT metadata.' },
+    ],
+  },
+  {
+    theme: 'Future Trends', color: '#22d3ee',
+    bricks: [
+      { term: 'Layer 1',          section: 3, defn: 'A base-layer blockchain (Bitcoin, Ethereum, Solana). Where consensus + final settlement happens.' },
+      { term: 'Layer 2',          section: 3, defn: 'A network built on top of an L1 to scale throughput while inheriting its security. Arbitrum, Optimism, Base.' },
+      { term: 'Rollup',           section: 3, defn: 'An L2 that batches transactions off-chain and posts a compressed proof back to L1.' },
+      { term: 'ZK proof',         section: 3, defn: 'Zero-Knowledge Proof. Prove a statement is true without revealing the underlying data.' },
+      { term: 'Account Abstraction', section: 3, defn: 'Wallets that behave like smart contracts: social recovery, gasless txs, session keys. UX upgrade.' },
+      { term: 'RWA',              section: 3, defn: 'Real-World Assets. Tokenising real estate, bonds, commodities on-chain. BlackRock, Franklin Templeton are early.' },
+      { term: 'CBDC',             section: 3, defn: 'Central Bank Digital Currency. State-issued digital money — programmable, traceable, sometimes restrictable.' },
+      { term: 'DID',              section: 3, defn: 'Decentralised Identity. User-controlled digital identity, no central registry to revoke you.' },
+    ],
+  },
+];
+
+function sectionColor(s: 1 | 2 | 3): string {
+  return s === 1 ? '#ED1C24' : s === 2 ? '#f59e0b' : '#39B54A';
+}
+
+function KnowledgeWall() {
+  const [selected, setSelected] = useState<Brick | null>(KNOWLEDGE_WALL[0].bricks[0]);
+
+  const totalBricks = KNOWLEDGE_WALL.reduce((n, g) => n + g.bricks.length, 0);
+
+  return (
+    <div className="h-full flex flex-col p-5 lg:p-8">
+      {/* Header */}
+      <div className="shrink-0 mb-3 flex items-start justify-between gap-4">
+        <div>
+          <span className="px-2.5 py-0.5 rounded-full bg-[#39B54A]/15 border border-[#39B54A]/40 text-[#39B54A] text-xs font-bold">🧱 Recap</span>
+          <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Knowledge Wall</h2>
+          <p className="text-sm text-muted-foreground max-w-3xl">
+            Every term you've met across Sections 1, 2, and 3 — in one place. Hover any brick to recall its meaning. <span className="text-foreground font-semibold">{totalBricks} bricks total.</span>
+          </p>
+        </div>
+        {/* Legend */}
+        <div className="shrink-0 flex flex-col gap-1 text-[10px]">
+          <div className="font-bold uppercase tracking-widest text-muted-foreground mb-0.5">First met in</div>
+          {[1, 2, 3].map(s => (
+            <div key={s} className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="size-2 rounded-full" style={{ background: sectionColor(s as 1|2|3) }}></span>
+              <span>§{s} — {s === 1 ? 'Intro' : s === 2 ? 'Bitcoin' : "What's Next"}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Definition tray */}
+      <div
+        className="shrink-0 mb-3 p-4 bg-card border-2 rounded-xl transition-colors min-h-[88px]"
+        style={{ borderColor: selected ? sectionColor(selected.section) + 'AA' : 'var(--border)' }}
+      >
+        {selected ? (
+          <>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-lg lg:text-xl font-black" style={{ color: sectionColor(selected.section) }}>
+                {selected.term}
+              </span>
+              <span
+                className="text-[10px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded"
+                style={{ color: sectionColor(selected.section), backgroundColor: sectionColor(selected.section) + '20' }}
+              >
+                §{selected.section}
+              </span>
+            </div>
+            <p className="text-sm text-foreground leading-snug">{selected.defn}</p>
+          </>
+        ) : (
+          <p className="text-sm text-muted-foreground italic">Hover or tap a brick below to read its definition.</p>
+        )}
+      </div>
+
+      {/* Themed brick groups */}
+      <div className="flex-1 min-h-0 overflow-y-auto pr-1 flex flex-col gap-3">
+        {KNOWLEDGE_WALL.map(group => (
+          <div key={group.theme}>
+            <div className="flex items-baseline gap-2 mb-1.5 sticky top-0 bg-background/95 backdrop-blur-sm py-1 z-10">
+              <span className="size-2 rounded-full shrink-0" style={{ background: group.color }}></span>
+              <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: group.color }}>
+                {group.theme}
+              </span>
+              <span className="text-[10px] text-muted-foreground">· {group.bricks.length}</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {group.bricks.map(b => {
+                const isSelected = selected?.term === b.term;
+                return (
+                  <button
+                    key={b.term}
+                    type="button"
+                    onClick={() => setSelected(b)}
+                    onMouseEnter={() => setSelected(b)}
+                    onFocus={() => setSelected(b)}
+                    className="relative px-2.5 py-1 rounded-md text-xs font-mono font-bold border transition-all hover:-translate-y-0.5"
+                    style={{
+                      color: isSelected ? '#fff' : group.color,
+                      backgroundColor: isSelected ? group.color : group.color + '12',
+                      borderColor: isSelected ? group.color : group.color + '45',
+                      boxShadow: isSelected ? `0 2px 8px ${group.color}55` : undefined,
+                    }}
+                  >
+                    {b.term}
+                    {/* tiny source-section dot */}
+                    <span
+                      className="absolute -top-0.5 -right-0.5 size-1.5 rounded-full ring-1 ring-background"
+                      style={{ background: sectionColor(b.section) }}
+                      aria-hidden
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function Section3() {
   return (
@@ -58,6 +287,10 @@ export function Section3() {
         <div id="s3-ethereum" className="h-full flex flex-col p-5 lg:p-8">
 
           <div className="shrink-0 mb-4">
+            <div className="flex items-center gap-2 mb-1.5 text-[10px] text-muted-foreground">
+              <span className="px-1.5 py-0.5 rounded bg-[#f59e0b]/15 text-[#f59e0b] font-bold">↩ §2</span>
+              <span>Bitcoin Script was <strong className="text-foreground">intentionally limited</strong>. Vitalik's response: don't patch Bitcoin — build a new chain with a real virtual machine.</span>
+            </div>
             <div className="flex items-center gap-3 mb-1">
               <img src={ethereumLogo} alt="Ethereum" className="h-8 object-contain" />
               <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Ethereum — The Programmable Blockchain</h2>
@@ -147,6 +380,10 @@ export function Section3() {
         {/* ═══════ ETH ACCOUNTS & GAS ═══════ */}
         <div id="s3-eth-accounts" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-4">
+            <div className="flex items-center gap-2 mb-1.5 text-[10px] text-muted-foreground">
+              <span className="px-1.5 py-0.5 rounded bg-[#f59e0b]/15 text-[#f59e0b] font-bold">↩ §2</span>
+              <span>Remember — a wallet holds keys, not coins. Ethereum runs the same idea, but with <strong className="text-foreground">two flavours</strong> of account: one human-controlled, one code-controlled.</span>
+            </div>
             <div className="flex items-center gap-3 mb-1">
               <img src={ethereumLogo} alt="Ethereum" className="h-7 object-contain" />
               <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Ethereum: Accounts & Gas</h2>
@@ -226,6 +463,10 @@ export function Section3() {
         {/* ═══════ ETH APPLICATIONS: DeFi · NFTs · DAOs ═══════ */}
         <div id="s3-eth-apps" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-4">
+            <div className="flex items-center gap-2 mb-1.5 text-[10px] text-muted-foreground">
+              <span className="px-1.5 py-0.5 rounded bg-[#627EEA]/15 text-[#627EEA] font-bold">↩ just covered</span>
+              <span>You've seen gas pay for computation. Time to look at what people actually build with it — every example below is a smart contract holding ETH and following rules.</span>
+            </div>
             <div className="flex items-center gap-3 mb-1">
               <img src={ethereumLogo} alt="Ethereum" className="h-7 object-contain" />
               <h2 className="text-2xl lg:text-3xl font-bold text-foreground">What Ethereum Enables: DeFi, NFTs, DAOs</h2>
@@ -304,86 +545,109 @@ export function Section3() {
           </div>
         </div>
 
-        {/* ═══════ 2. BLOCKCHAIN USE CASES ═══════ */}
+        {/* ═══════ 2. BLOCKCHAIN USE CASES — GROUPED BY PATTERN ═══════ */}
         <div id="s3-usecases" className="h-full flex flex-col p-5 lg:p-8">
 
           <div className="shrink-0 mb-3">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Blockchain Use Cases</h2>
-            <p className="text-sm text-muted-foreground">Blockchain extends far beyond cryptocurrency — any industry built on trust, records, or intermediaries is a candidate for transformation.</p>
+            <div className="flex items-center gap-2 mb-1.5 text-[10px] text-muted-foreground">
+              <span className="px-1.5 py-0.5 rounded bg-[#ED1C24]/15 text-[#ED1C24] font-bold">↩ §1</span>
+              <span>Remember the village ledger — every trust problem you saw there shows up again, at industry scale.</span>
+            </div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Blockchain Use Cases — Three Patterns, Twelve Industries</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              Zoom out from DeFi · NFTs · DAOs. The same <strong className="text-foreground">three patterns</strong> show up across every sector — wherever there are middlemen, paper trails, or coordination headaches.
+            </p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-4 gap-3">
-            {[
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-3">
+            {([
               {
-                emoji: '💰', title: 'Finance & DeFi', color: '#f59e0b',
-                points: ['Peer-to-peer lending, trading, and payments with no bank', 'Smart contracts replace brokers and clearing houses', 'Open 24/7 — no business hours, no jurisdiction limits'],
+                key: 'trust',
+                emoji: '🤝',
+                pattern: 'Trust without intermediaries',
+                color: '#f59e0b',
+                tagline: 'Money, claims, and contracts settle directly between parties — banks, brokers, and clearing houses become optional.',
+                industries: [
+                  { emoji: '💰', name: 'Finance & DeFi',     hook: 'Lending, trading, payments — no bank, open 24/7' },
+                  { emoji: '📈', name: 'Capital Markets',     hook: 'Tokenised securities settle in seconds, not T+2 days' },
+                  { emoji: '🏦', name: 'Insurance',           hook: 'Parametric policies auto-pay on verified events' },
+                  { emoji: '🪙', name: 'CBDCs',               hook: 'Programmable state money — power and peril (see Ethics)' },
+                ],
               },
               {
-                emoji: '📈', title: 'Capital Markets', color: '#627EEA',
-                points: ['Tokenised securities settle in seconds vs T+2 days', 'Transparent audit trail reduces counterparty risk', 'Fractional ownership opens markets to retail investors'],
+                key: 'provenance',
+                emoji: '🔗',
+                pattern: 'Verifiable provenance',
+                color: '#39B54A',
+                tagline: 'Anything that needs an unbroken chain of custody gets one — built in, not bolted on.',
+                industries: [
+                  { emoji: '🚚', name: 'Supply Chain',         hook: 'Track & trace from raw material to consumer' },
+                  { emoji: '🌐', name: 'Global Trade',         hook: 'Digital letters of credit replace 5-day paper trails' },
+                  { emoji: '🏥', name: 'Healthcare',           hook: 'Drug-pack authentication, clinical trial integrity' },
+                  { emoji: '🎬', name: 'Media & Entertainment', hook: 'Royalties to collaborators on every play, automatically' },
+                ],
               },
               {
-                emoji: '🏦', title: 'Insurance', color: '#8b5cf6',
-                points: ['Parametric insurance: smart contracts auto-pay on verified events', 'Shared fraud databases prevent double-claiming across insurers', 'Streamlined claims cut processing time from weeks to hours'],
+                key: 'coordination',
+                emoji: '🌐',
+                pattern: 'Self-sovereign coordination',
+                color: '#6366f1',
+                tagline: 'People and organisations coordinate without a single platform or registrar in the middle.',
+                industries: [
+                  { emoji: '🪪', name: 'Digital Identity',           hook: 'You own your credentials, prove age without revealing birthdate' },
+                  { emoji: '🗳️', name: 'Government',                hook: 'Verifiable voting, immutable land registry, transparent procurement' },
+                  { emoji: '🌍', name: 'Energy & Sustainability',    hook: 'Carbon credits without double-counting, P2P energy trading' },
+                  { emoji: '⚖️', name: 'Law & Real Estate',         hook: 'Escrow + title transfers auto-executed, fractional ownership' },
+                ],
               },
-              {
-                emoji: '🪙', title: 'CBDCs', color: '#22d3ee',
-                points: ['Central bank digital currencies for instant interbank settlement', 'Programmable money for targeted fiscal stimulus', 'Financial inclusion for the 1.4B unbanked population'],
-              },
-              {
-                emoji: '🚚', title: 'Supply Chain', color: '#39B54A',
-                points: ['End-to-end track & trace from raw material to consumer', 'Immutable provenance — fight counterfeits in luxury and pharma', 'Automated supplier payments via smart contracts on delivery'],
-              },
-              {
-                emoji: '🌐', title: 'Global Trade', color: '#22d3ee',
-                points: ['Digitise letters of credit and trade documents', 'Reduce 5-day paper processes to near real-time', 'Single shared ledger replaces dozens of siloed systems'],
-              },
-              {
-                emoji: '🏥', title: 'Healthcare', color: '#ED1C24',
-                points: ['Patient-controlled health records shared across providers', 'Drug supply chain authentication — prevent counterfeits', 'Clinical trial data integrity and transparent reporting'],
-              },
-              {
-                emoji: '🪪', title: 'Digital Identity', color: '#8b5cf6',
-                points: ['Self-sovereign identity — you own and control your credentials', 'Tamper-proof KYC reusable across services (do it once)', 'Privacy-preserving proofs: prove age without revealing birthdate'],
-              },
-              {
-                emoji: '🗳️', title: 'Government', color: '#6366f1',
-                points: ['Tamper-proof voting systems with verifiable results', 'Land registry and public records on an immutable ledger', 'Transparent public procurement to reduce corruption'],
-              },
-              {
-                emoji: '🌍', title: 'Energy & Sustainability', color: '#10b981',
-                points: ['Verifiable carbon credits — prevent double-counting', 'Peer-to-peer renewable energy trading between households', 'ESG reporting with on-chain proof, not self-reported data'],
-              },
-              {
-                emoji: '🎬', title: 'Media & Entertainment', color: '#f59e0b',
-                points: ['Creators receive royalties instantly via smart contracts', 'NFTs prove ownership and authenticity of digital works', 'Piracy prevention through on-chain content licensing'],
-              },
-              {
-                emoji: '⚖️', title: 'Law & Real Estate', color: '#ED1C24',
-                points: ['Smart contracts auto-execute clauses (escrow, transfers)', 'Fractional real estate ownership lowers investment barriers', 'Immutable records reduce title fraud and legal disputes'],
-              },
-            ].map(item => (
-              <div key={item.title} className="bg-card border border-border rounded-xl p-3 flex flex-col hover:border-opacity-60 transition-colors" style={{ borderColor: item.color + '40' }}>
-                <div className="flex items-center gap-2 shrink-0 mb-2">
-                  <span className="text-lg">{item.emoji}</span>
-                  <h4 className="font-bold text-sm" style={{ color: item.color }}>{item.title}</h4>
+            ] as const).map(group => (
+              <div key={group.key} className="flex flex-col rounded-xl border-2 bg-card overflow-hidden" style={{ borderColor: group.color + '55' }}>
+                {/* Top stripe */}
+                <div className="h-1.5 shrink-0" style={{ backgroundColor: group.color }} />
+                <div className="flex flex-col flex-1 p-4 gap-3 min-h-0">
+                  {/* Pattern header */}
+                  <div className="shrink-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-2xl">{group.emoji}</span>
+                      <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: group.color }}>Pattern</div>
+                    </div>
+                    <h3 className="font-black text-base lg:text-lg leading-tight text-foreground">{group.pattern}</h3>
+                    <p className="text-xs text-muted-foreground mt-1 leading-snug">{group.tagline}</p>
+                  </div>
+                  {/* Industry list */}
+                  <div className="flex-1 min-h-0 flex flex-col gap-1.5">
+                    <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Shows up in</div>
+                    {group.industries.map(ind => (
+                      <div
+                        key={ind.name}
+                        className="rounded-lg border bg-card/60 p-2"
+                        style={{ borderColor: group.color + '30' }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-base shrink-0">{ind.emoji}</span>
+                          <span className="font-bold text-xs text-foreground">{ind.name}</span>
+                        </div>
+                        <div className="text-[11px] text-muted-foreground leading-snug mt-0.5">{ind.hook}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <ul className="flex flex-col justify-between flex-1">
-                  {item.points.map(p => (
-                    <li key={p} className="flex gap-1.5 text-xs text-muted-foreground flex-1 items-center">
-                      <span className="shrink-0" style={{ color: item.color }}>•</span>
-                      {p}
-                    </li>
-                  ))}
-                </ul>
               </div>
             ))}
+          </div>
+
+          <div className="shrink-0 mt-3 p-2.5 bg-muted/40 border border-border rounded-lg text-[11px] text-muted-foreground">
+            <strong className="text-foreground">Notice:</strong> the same pattern (e.g. <em>verifiable provenance</em>) shows up across supply chain, healthcare, and media. Industries are different surfaces; the underlying primitive is the same — which is why a Course-2 platform choice can serve multiple Course-3 business cases.
           </div>
         </div>
 
         {/* ═══════ 2. BLOCKCHAIN & WEB3 ECOSYSTEM MAP ═══════ */}
         <div id="s3-ecosystem" className="h-full flex items-center justify-center p-8">
           <div className="max-w-4xl w-full">
+            <div className="flex items-center justify-center gap-2 mb-2 text-[10px] text-muted-foreground">
+              <span className="px-1.5 py-0.5 rounded bg-[#6366f1]/15 text-[#6366f1] font-bold">↩ §1 + §2</span>
+              <span>Each use case you just saw lives somewhere in this stack — same nodes from §1 at the bottom, same contracts as DeFi/NFTs in the middle, you at the top.</span>
+            </div>
             <h2 className="text-3xl font-bold text-foreground mb-1 text-center">The Blockchain & Web3 Ecosystem</h2>
             <p className="text-sm text-muted-foreground text-center mb-6">
               A layered stack — from raw infrastructure at the bottom to end users at the top.
@@ -463,6 +727,10 @@ export function Section3() {
         {/* ═══════ 3. EVOLUTION OF THE INTERNET — WEB1 / WEB2 / WEB3 ═══════ */}
         <div id="s3-web3" className="h-full flex flex-col items-center p-8">
           <div className="max-w-5xl w-full flex-1 flex flex-col min-h-0">
+            <div className="flex items-center justify-center gap-2 mb-2 text-[10px] text-muted-foreground shrink-0">
+              <span className="px-1.5 py-0.5 rounded bg-[#39B54A]/15 text-[#39B54A] font-bold">zoom out</span>
+              <span>Quick historical context: how the web's <strong className="text-foreground">ownership model</strong> has shifted in 30 years — and why Web3 looks different from what came before.</span>
+            </div>
             <h2 className="text-3xl font-bold text-foreground mb-1 text-center shrink-0">The Evolution of the Internet</h2>
             <p className="text-sm text-muted-foreground text-center mb-4 shrink-0">
               Each era defined by what users could do — and who owned the data.
@@ -601,6 +869,10 @@ export function Section3() {
 
           {/* Header */}
           <div className="shrink-0 mb-3">
+            <div className="flex items-center gap-2 mb-1.5 text-[10px] text-muted-foreground">
+              <span className="px-1.5 py-0.5 rounded bg-[#ED1C24]/15 text-[#ED1C24] font-bold">↩ §2</span>
+              <span>The same <strong className="text-foreground">immutability</strong> that protects the chain from tampering also protects bad rules from being undone. Same property, two faces.</span>
+            </div>
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Ethical Considerations</h2>
             <p className="text-sm text-muted-foreground">Blockchain is not inherently good or bad — its impact depends on how it is designed, governed, and used.</p>
           </div>
@@ -819,6 +1091,11 @@ export function Section3() {
               "Future trends — ZK proofs, AI integration, DID, account abstraction — will define blockchain's next decade"
             ]}
           />
+        </div>
+
+        {/* ═══════ KNOWLEDGE WALL — RECAP OF EVERYTHING ═══════ */}
+        <div id="s3-recap" className="h-full">
+          <KnowledgeWall />
         </div>
 
         {/* ═══════ TEAM CHECKPOINT — DAY 1 WRAP ═══════ */}

@@ -293,6 +293,111 @@ const resources: Resource[] = [
     tag: "Wallet",
     tagColor: "#f97316",
   },
+
+  // ─── Where to go from here: curated next-step paths ──────────────────────
+  //
+  // Recommended after Course 1. Grouped by intent: write contracts, build a
+  // dApp, audit security, or go academic. Same tag scheme as the rest of the
+  // bibliography — Security is a new tag, the rest are existing.
+
+  // Path: Want to write smart contracts
+  {
+    title: "Solidity by Example",
+    url: "https://solidity-by-example.org/",
+    description: "Hands-on Solidity tutorial — every concept introduced via a short, runnable contract. The fastest path from 'read code' to 'write code'.",
+    tag: "Interactive",
+    tagColor: "#39B54A",
+  },
+  {
+    title: "Cyfrin Updraft — Patrick Collins",
+    url: "https://updraft.cyfrin.io/",
+    description: "Free, structured courses on Solidity, Foundry, and smart contract security. Patrick Collins' production-grade follow-on to his freeCodeCamp series.",
+    tag: "Course",
+    tagColor: "#ED1C24",
+  },
+  {
+    title: "Patrick Collins — Learn Solidity (freeCodeCamp)",
+    url: "https://www.youtube.com/watch?v=gyMwXuJrbJQ",
+    description: "32-hour video crash course on Solidity, Foundry, and full-stack Ethereum development. The most-watched Web3 dev tutorial on YouTube.",
+    tag: "Video",
+    tagColor: "#6366f1",
+  },
+
+  // Path: Want to build a dApp
+  {
+    title: "Scaffold-ETH 2",
+    url: "https://scaffoldeth.io/",
+    description: "Open-source starter kit for Ethereum dApps. Wallet, frontend, contract templates, hot reload — go from idea to deployed dApp in an afternoon.",
+    tag: "Tool",
+    tagColor: "#22d3ee",
+  },
+  {
+    title: "Hardhat",
+    url: "https://hardhat.org/",
+    description: "The most widely-used Ethereum development environment. Local network, fast tests, deployment scripts, plugin ecosystem. Industry standard.",
+    tag: "Tool",
+    tagColor: "#22d3ee",
+  },
+  {
+    title: "Foundry — Forge / Cast / Anvil",
+    url: "https://book.getfoundry.sh/",
+    description: "Rust-based Ethereum toolkit. Faster than Hardhat, lets you write tests directly in Solidity. The modern Cyfrin/Paradigm default.",
+    tag: "Tool",
+    tagColor: "#22d3ee",
+  },
+
+  // Path: Want to understand security
+  {
+    title: "Secureum — Smart Contract Security Bootcamp",
+    url: "https://www.secureum.xyz/",
+    description: "The most respected free smart contract security curriculum. Slides, quizzes, and the famous Race-quiz format. Where many professional auditors start.",
+    tag: "Security",
+    tagColor: "#dc2626",
+  },
+  {
+    title: "Building Secure Smart Contracts — Trail of Bits",
+    url: "https://github.com/crytic/building-secure-contracts",
+    description: "A curated reference of secure smart contract development practices from the auditors at Trail of Bits. Reads like a working engineer's manual.",
+    tag: "Security",
+    tagColor: "#dc2626",
+  },
+  {
+    title: "Trail of Bits — Published Audit Reports",
+    url: "https://github.com/trailofbits/publications",
+    description: "Real audit reports from one of the most respected security firms in the industry. The fastest way to develop instinct for what actually breaks in production.",
+    tag: "Security",
+    tagColor: "#dc2626",
+  },
+  {
+    title: "Solodit — Smart Contract Vulnerability Database",
+    url: "https://solodit.cyfrin.io/",
+    description: "Searchable database of every public smart contract vulnerability ever reported. Pair it with the Secureum curriculum for serious depth.",
+    tag: "Security",
+    tagColor: "#dc2626",
+  },
+
+  // Path: Want academic depth
+  {
+    title: "Bitcoin & Cryptocurrency Technologies — Princeton (free book)",
+    url: "https://bitcoinbook.cs.princeton.edu/",
+    description: "The Princeton textbook by Narayanan, Bonneau, Felten, Miller, and Goldfeder. Rigorous, technical, completely free. The closest thing to a canonical academic reference.",
+    tag: "Book",
+    tagColor: "#8b5cf6",
+  },
+  {
+    title: "Vitalik Buterin's Blog",
+    url: "https://vitalik.eth.limo/",
+    description: "Ethereum's founder writing on protocol design, cryptoeconomics, governance, and the broader vision. Many of the most influential ideas in the field were drafted here first.",
+    tag: "Research",
+    tagColor: "#f59e0b",
+  },
+  {
+    title: "a16z Crypto Canon",
+    url: "https://a16zcrypto.com/posts/article/crypto-readings-resources/",
+    description: "An evolving reading list from Andreessen Horowitz covering every layer of the crypto stack — cryptography, consensus, economics, governance, regulation, history.",
+    tag: "Research",
+    tagColor: "#f59e0b",
+  },
 ];
 
 const ALL_TAGS = ['All', ...Array.from(new Set(resources.map(r => r.tag)))];

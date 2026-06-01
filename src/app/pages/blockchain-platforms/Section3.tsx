@@ -9,20 +9,38 @@ import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Building2 } from 'lucide-react';
 
 const chapters = [
+  { kind: 'group' as const, id: 'g-s3-why',       label: '🤔 Why Permissioned?' },
   { id: 's3-why', label: 'Why Permissioned?' },
   { id: 's3-supplychains', label: 'Supply Chains' },
+
+  { kind: 'group' as const, id: 'g-s3-arch',      label: '🏗️ Architecture' },
   { id: 's3-overview', label: 'Fabric Overview' },
   { id: 's3-fabricx', label: 'Fabric Deep Dive' },
+
+  { kind: 'group' as const, id: 'g-s3-consensus', label: '⚙️ Consensus' },
   { id: 's3-consensus-evo', label: 'Consensus Evolution' },
   { id: 's3-consensus', label: 'Pluggable Consensus' },
   { id: 's3-raft', label: 'Raft Mechanics' },
   { id: 's3-bft', label: 'BFT' },
+
+  { kind: 'group' as const, id: 'g-s3-privacy',   label: '🔐 Privacy & Flow' },
   { id: 's3-channels', label: 'Channels' },
   { id: 's3-txflow', label: 'Transaction Flow' },
+
+  { kind: 'group' as const, id: 'g-s3-exercises', label: '🧩 Exercises' },
   { id: 's3-exercise-supply', label: 'Exercise: Supply Chain' },
   { id: 's3-exercise-health', label: 'Exercise: Health Data' },
+
+  { kind: 'group' as const, id: 'g-s3-prod',      label: '🏭 Production & Comparison' },
   { id: 's3-production', label: 'In Production' },
   { id: 's3-comparison', label: 'ETH vs Fabric' },
+
+  { kind: 'group' as const, id: 'g-s3-fit',       label: '🎯 Fit Analysis' },
+  { id: 's3-bestfits',   label: '🎯 Best Fits' },
+  { id: 's3-worstfits',  label: '🚫 Worst Fits' },
+  { id: 's3-vocab',      label: '🧩 Fabric ↔ Public-chain glossary' },
+
+  { kind: 'group' as const, id: 'g-s3-wrap',      label: '✅ Wrap Up' },
   { id: 's3-quiz', label: 'Quiz' },
   { id: 's3-takeaways', label: 'Takeaways' },
 ];
@@ -2071,6 +2089,128 @@ export function BP_Section3() {
               { feature: 'Best for', option1: 'DeFi, NFTs, public dApps', option2: 'Enterprise B2B, supply chain, finance' },
             ]}
           />
+        </div>
+
+        {/* ═══════ BEST FITS — WHERE FABRIC WINS ═══════ */}
+        <div id="s3-bestfits" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-3">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#0EA5E9]/15 border border-[#0EA5E9]/40 text-[#0EA5E9] text-xs font-bold">🎯 Best Fits</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where Hyperledger Fabric Wins — The Use Cases It Actually Owns</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              Fabric's design choices (permissioned membership, channels for privacy, pluggable consensus, no native token) make it the default whenever the participants are <strong className="text-foreground">known organisations who need to share a ledger without sharing all their data publicly</strong>.
+            </p>
+          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {[
+              { emoji: '🚚', name: 'Multi-party supply chain provenance', why: 'Every step (manufacturer → distributor → retailer) is recorded; channels keep commercial pricing private between specific pairs.', example: 'IBM Food Trust (Walmart, Carrefour, Nestlé) · Maersk TradeLens (deprecated but proof of pattern) · GSBN ocean shipping.' },
+              { emoji: '🏦', name: 'Inter-bank settlement & trade finance', why: 'KYC-by-design, regulator-friendly, ordering service guarantees finality without PoW costs.', example: 'we.trade · Marco Polo · Santander Onyx · Eurosystem TIPS pilots.' },
+              { emoji: '🏥', name: 'Healthcare records & pharma serialisation', why: 'Permissioned access + channels match HIPAA/GDPR requirements. Drug pedigree provable without exposing patient data.', example: 'MediLedger (US drug serialisation) · Change Healthcare claims · regional patient-record exchanges.' },
+              { emoji: '🪪', name: 'Identity & credential consortia',     why: 'No anonymous participants — every party signs with a credential issued by a trusted MSP. Fits regulated identity frameworks.', example: 'Sovrin-style verifiable credentials · government B2B portals · CBDC interbank rails (pilots).' },
+            ].map(uc => (
+              <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#0EA5E955', backgroundColor: '#0EA5E908' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl shrink-0">{uc.emoji}</span>
+                  <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
+                </div>
+                <div className="text-xs text-muted-foreground leading-snug">
+                  <span className="font-bold text-[#0EA5E9] uppercase tracking-widest text-[9px] mr-1">Why</span>
+                  {uc.why}
+                </div>
+                <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
+                  <span className="font-bold text-[#0EA5E9] uppercase tracking-widest text-[9px] mr-1">In the wild</span>
+                  {uc.example}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="shrink-0 mt-3 p-2.5 bg-[#ef4444]/08 border border-[#ef4444]/30 rounded-lg text-[11px] text-muted-foreground">
+            <strong className="text-[#ef4444]">Not a fit for:</strong> permissionless DeFi (use Ethereum), digital scarcity / SoV (use Bitcoin), consumer apps requiring open self-custody, anything where censorship-resistance against the consortium itself is a requirement.
+          </div>
+        </div>
+
+        {/* ═══════ WORST FITS — WHERE FABRIC IS WRONG ═══════ */}
+        <div id="s3-worstfits" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-3">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#ef4444]/15 border border-[#ef4444]/40 text-[#ef4444] text-xs font-bold">🚫 Worst Fits</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where Hyperledger Fabric is the <em>Wrong</em> Tool</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              Fabric's permissioned, no-token, channel-based design is brilliant for B2B consortia — and almost useless for anything that needs an open, public, value-bearing network.
+            </p>
+          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {[
+              { emoji: '🌍', name: 'Public consumer apps / dApps', why: 'Every participant needs an MSP-issued identity. No anonymous users, no permissionless onboarding — incompatible with the public-internet UX.',          alt: 'Use Ethereum (+ L2s) · Solana · Sui for open consumer apps and wallet-based onboarding.' },
+              { emoji: '💎', name: 'Censorship-resistant value / SoV', why: 'A consortium can vote to remove members, freeze assets, or change rules. By design — and exactly what you don\'t want for neutral money.',          alt: 'Use Bitcoin for trust-minimised, jurisdiction-neutral value storage.' },
+              { emoji: '💰', name: 'Composable DeFi / liquidity', why: 'No native token, no open liquidity pools, no shared accounts across organisations. DeFi composability requires permissionless writers + a public AMM.', alt: 'Use Ethereum + L2s · Solana · Sui · Cosmos for DeFi composability and shared liquidity.' },
+              { emoji: '🎨', name: 'NFT marketplaces / open creator economy', why: 'No global token standards (ERC-721/1155 don\'t exist), no public discoverability, no anonymous buyer/seller pairings. Cultural fit is wrong.',  alt: 'Use Ethereum · Polygon · Solana · Base for NFTs, marketplaces, royalties.' },
+            ].map(uc => (
+              <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#ef444455', backgroundColor: '#ef444408' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl shrink-0">{uc.emoji}</span>
+                  <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
+                </div>
+                <div className="text-xs text-muted-foreground leading-snug">
+                  <span className="font-bold text-[#ef4444] uppercase tracking-widest text-[9px] mr-1">Why not</span>
+                  {uc.why}
+                </div>
+                <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
+                  <span className="font-bold text-[#10b981] uppercase tracking-widest text-[9px] mr-1">Use instead</span>
+                  {uc.alt}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="shrink-0 mt-3 p-2.5 bg-[#10b981]/08 border border-[#10b981]/30 rounded-lg text-[11px] text-muted-foreground">
+            <strong className="text-[#10b981]">Right tool, right job:</strong> Fabric shines when participants are <em>known</em>, <em>regulated</em>, and need <em>selective data sharing</em> — supply chain consortia, inter-bank rails, healthcare exchanges. For everything else, pick a public chain.
+          </div>
+        </div>
+
+        {/* ═══════ FABRIC ↔ PUBLIC-CHAIN GLOSSARY ═══════ */}
+        <div id="s3-vocab" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-3">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#0EA5E9]/15 border border-[#0EA5E9]/40 text-[#0EA5E9] text-xs font-bold">🧩 Translation</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Fabric ↔ Public Blockchain — Same Mechanism, Different Vocabulary</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              Most of Fabric is the public-blockchain primitives you already know, <strong className="text-foreground">renamed for enterprise marketing</strong>. Read the right column once and Fabric stops feeling like a different planet.
+            </p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3 overflow-y-auto">
+            {[
+              { pub: 'Wallet / EOA',                pubColor: '#627EEA', fab: 'MSP-issued identity (X.509 cert)',     fabColor: '#0EA5E9', note: 'Your "account" in Fabric is a certificate issued by the Membership Service Provider (MSP) for your org. The CA replaces the public-key infra you do yourself in a wallet.' },
+              { pub: 'Public/private key pair',     pubColor: '#627EEA', fab: 'X.509 cert + private key in MSP',       fabColor: '#0EA5E9', note: 'Same crypto, different distribution. CA issues, MSP revokes. The wallet primitive moves into a controlled enterprise PKI.' },
+              { pub: 'Smart contract',              pubColor: '#627EEA', fab: 'Chaincode',                              fabColor: '#0EA5E9', note: 'A program that runs against the world state and emits state writes. Go / Node.js / Java instead of Solidity, but the role is identical.' },
+              { pub: 'Address',                     pubColor: '#627EEA', fab: 'Identity hash / MSP ID + cert subject',  fabColor: '#0EA5E9', note: 'A canonical pointer to "who you are" on the chain. Fabric attaches it to your org rather than to a self-sovereign key.' },
+              { pub: 'Token (ERC-20 / ERC-721)',    pubColor: '#627EEA', fab: 'Token chaincode (Fabric Token SDK)',     fabColor: '#0EA5E9', note: 'No native token in Fabric. You write a chaincode that tracks balances or asset records yourself, often using the official Token SDK template.' },
+              { pub: 'Gas / Tx fee',                pubColor: '#627EEA', fab: '— none (permissioned)',                  fabColor: '#0EA5E9', note: 'Fabric has no economic spam pressure — participants are vetted. Compute is paid for off-chain by the consortium that runs the network.' },
+              { pub: 'Block',                       pubColor: '#627EEA', fab: 'Block',                                  fabColor: '#0EA5E9', note: 'Same thing. The Orderer assembles transactions into blocks and broadcasts them to channel members.' },
+              { pub: 'Miner / Validator',           pubColor: '#627EEA', fab: 'Endorser + Orderer',                     fabColor: '#0EA5E9', note: 'Fabric splits the role: Endorsers simulate + sign tx proposals; Orderers (Raft/BFT cluster) put them in deterministic order. No PoW, no PoS.' },
+              { pub: 'Consensus (PoW / PoS)',       pubColor: '#627EEA', fab: 'Raft (CFT) or BFT ordering service',     fabColor: '#0EA5E9', note: 'Crash-fault-tolerant ordering by default. BFT ordering exists for stronger trust assumptions. No PoW.' },
+              { pub: 'Mempool',                     pubColor: '#627EEA', fab: 'Tx proposal → endorsement → orderer',    fabColor: '#0EA5E9', note: 'Tx is first proposed to endorsers, then submitted to the orderer for sequencing. There is no global mempool — Fabric never had a fee market.' },
+              { pub: 'Layer 2 / Sidechain',         pubColor: '#627EEA', fab: 'Channel (private sub-ledger)',           fabColor: '#0EA5E9', note: 'A channel is a self-contained ledger with its own members, chaincode, and history — completely invisible to non-members on the same network.' },
+              { pub: 'On-chain governance / DAO',   pubColor: '#627EEA', fab: 'Channel config update (consortium vote)', fabColor: '#0EA5E9', note: 'Members vote off-chain or via signed config transactions. Fabric never adopted on-chain token-vote governance.' },
+            ].map(row => (
+              <div key={row.pub} className="rounded-xl border bg-card p-3 flex flex-col gap-1.5">
+                <div className="grid grid-cols-2 gap-2 items-start">
+                  <div>
+                    <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: row.pubColor }}>Public blockchain</div>
+                    <div className="text-sm font-bold text-foreground mt-0.5">{row.pub}</div>
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: row.fabColor }}>Hyperledger Fabric</div>
+                    <div className="text-sm font-bold text-foreground mt-0.5">{row.fab}</div>
+                  </div>
+                </div>
+                <div className="text-[11px] text-muted-foreground leading-snug border-t border-border pt-1.5">
+                  <span className="text-[#0EA5E9] font-bold mr-1">↔</span>{row.note}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="shrink-0 mt-3 p-2.5 bg-[#0EA5E9]/08 border border-[#0EA5E9]/30 rounded-lg text-[11px] text-muted-foreground">
+            <strong className="text-[#0EA5E9]">Bottom line:</strong> Fabric is mostly the same primitives, packaged for a different buyer. Don't relearn cryptography — relearn the brand names. The pedagogical move is just to keep this glossary open the first few times you read a Fabric tutorial.
+          </div>
         </div>
 
         {/* ═══════ QUIZ ═══════ */}

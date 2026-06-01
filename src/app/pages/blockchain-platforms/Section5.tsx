@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
@@ -6,28 +7,289 @@ import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Zap } from 'lucide-react';
 import { TeamCheckpoint } from '../../components/TeamCheckpoint';
 
+/* ──────────── Interactive Platform Recommender (Airtable-style) ────────────
+   5 questions appear one at a time. Each answer narrows the field of
+   suitable blockchains. After Q5, runs a simple decision tree and shows
+   the top recommendation + 1-2 close runners-up with logos and one-line
+   reasoning. Restart available at any point.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+interface PROpt { label: string; value: string; hint?: string }
+interface PRQuestion { id: string; title: string; subtitle: string; options: PROpt[] }
+
+const PR_QUESTIONS: PRQuestion[] = [
+  {
+    id: 'permission',
+    title: 'Who can use it?',
+    subtitle: 'Anyone in the world, or only known organisations?',
+    options: [
+      { value: 'public',       label: '🌐 Public',       hint: 'Anyone with a wallet. No vetting.' },
+      { value: 'permissioned', label: '🏢 Permissioned', hint: 'Only members invited by a consortium.' },
+    ],
+  },
+  {
+    id: 'purpose',
+    title: 'What does it need to do?',
+    subtitle: 'Just move value, or run logic / apps on-chain?',
+    options: [
+      { value: 'value',     label: '💸 Move value only',          hint: 'Payments, settlement, store of value.' },
+      { value: 'contracts', label: '🤖 Smart contracts',          hint: 'DeFi, NFTs, DAOs, programmable rules.' },
+      { value: 'highperf',  label: '⚡ High-perf consumer apps',  hint: 'Order books, games, social — needs speed.' },
+    ],
+  },
+  {
+    id: 'throughput',
+    title: 'How sensitive to throughput + fees?',
+    subtitle: 'Are you a high-value settlement layer or a consumer app?',
+    options: [
+      { value: 'low',  label: '🐢 Low — settlement only',  hint: 'Few txs/day, large value, fees acceptable.' },
+      { value: 'med',  label: '🛒 Medium — retail',        hint: 'Daily user traffic, fees in cents.' },
+      { value: 'high', label: '🚀 High — apps / games',    hint: 'Thousands of tx/s, sub-second response.' },
+    ],
+  },
+  {
+    id: 'privacy',
+    title: 'Privacy needs?',
+    subtitle: 'How much of your data must stay off the public ledger?',
+    options: [
+      { value: 'none',    label: '🔓 None — all public',          hint: 'Transparency is the feature.' },
+      { value: 'channel', label: '🚪 Selective — known parties',  hint: 'Some data shared only between subsets of members.' },
+      { value: 'strong',  label: '🛡️ Strong — cryptographic',     hint: 'Hide amounts, identities, calldata. ZK or shielded.' },
+    ],
+  },
+  {
+    id: 'sovereignty',
+    title: 'Security & validator model?',
+    subtitle: 'Inherit a big chain\'s security, or own your validator set?',
+    options: [
+      { value: 'inherit',   label: '🛡️ Inherit security',  hint: 'L2 / parachain / settle to a big L1.' },
+      { value: 'own',       label: '🏛️ Run my own',        hint: 'Sovereign chain — full control, must bootstrap validators.' },
+      { value: 'agnostic',  label: '🤷 Doesn\'t matter',    hint: 'Take whatever the default is.' },
+    ],
+  },
+];
+
+interface PRPlatform {
+  id: string;
+  name: string;
+  short: string;       // 1-char emoji or letter for the badge
+  color: string;
+  tagline: string;
+  reason: string;      // why this platform fits the answers
+}
+
+const PLATFORMS: Record<string, PRPlatform> = {
+  btc:    { id: 'btc',   name: 'Bitcoin',             short: '₿',  color: '#f7931a', tagline: 'Digital scarcity · neutral settlement',                  reason: 'Public, value-only, settlement-grade — Bitcoin is the most credible neutral money network.' },
+  ln:     { id: 'ln',    name: 'Bitcoin Lightning',   short: '⚡', color: '#f59e0b', tagline: 'BTC at retail speed · sub-cent fees',                    reason: 'You want public BTC payments but with consumer-grade throughput — Lightning is Bitcoin\'s L2 for that.' },
+  eth:    { id: 'eth',   name: 'Ethereum L1',         short: 'Ξ',  color: '#627EEA', tagline: 'Programmable money · deepest DeFi liquidity',            reason: 'Public, contract-driven, settlement-grade — Ethereum L1 is the canonical choice for high-value composable DeFi.' },
+  arb:    { id: 'arb',   name: 'Ethereum L2 (Arbitrum / Base)', short: '◎', color: '#28A0F0', tagline: 'Cheap EVM · inherits L1 security', reason: 'Same EVM, much lower fees, inherits Ethereum security via fraud proofs. The default for medium-throughput dApps.' },
+  sol:    { id: 'sol',   name: 'Solana',              short: '◐',  color: '#9945FF', tagline: 'Single high-perf chain · sub-second blocks',            reason: 'High throughput + low fees + native ecosystem of consumer-grade dApps. Trade-off: fewer, more powerful validators.' },
+  avax:   { id: 'avax',  name: 'Avalanche L1',        short: '🔺', color: '#E84142', tagline: 'Sovereign chains · sub-second finality',                 reason: 'Sub-second finality with the option to launch a sovereign L1 (subnet) while plugging into the Primary Network.' },
+  cosmos: { id: 'cosmos',name: 'Cosmos zone',         short: '⚛', color: '#22d3ee', tagline: 'Sovereign app-chain · IBC native',                       reason: 'You want full control over consensus + gas + governance, and you\'re happy to bootstrap your own validators. Cosmos SDK + IBC.' },
+  fabric: { id: 'fabric',name: 'Hyperledger Fabric',  short: '🪢', color: '#0EA5E9', tagline: 'Permissioned consortium · channels',                     reason: 'Permissioned membership + channels for selective data sharing — purpose-built for known-party B2B consortia.' },
+  stark:  { id: 'stark', name: 'Starknet (ZK)',       short: '⭑', color: '#EC796B', tagline: 'Cairo VM · validity proofs',                             reason: 'Strong cryptographic privacy and programmable Cairo VM with ZK validity proofs. Best fit when privacy + smart contracts both matter.' },
+  aztec:  { id: 'aztec', name: 'Aztec Network',       short: '◆', color: '#8b5cf6', tagline: 'Encrypted state · public proofs',                        reason: 'Native encrypted state on Ethereum — every tx hides amount + sender by default. The strongest privacy primitive on EVM-adjacent infra.' },
+  xrpl:   { id: 'xrpl',  name: 'XRP Ledger',          short: '✕', color: '#06b6d4', tagline: 'Native DEX · payment-optimised',                         reason: 'Payment-optimised L1 with a native DEX and Trust Lines. Great for cross-border settlement, RWA tokenisation, and FX rails.' },
+};
+
+function recommendPlatform(ans: Record<string, string>): PRPlatform[] {
+  const { permission, purpose, throughput, privacy, sovereignty } = ans;
+
+  // Permissioned short-circuits everything else.
+  if (permission === 'permissioned') return [PLATFORMS.fabric];
+
+  // Strong privacy is the next strongest signal.
+  if (privacy === 'strong')          return [PLATFORMS.aztec, PLATFORMS.stark];
+
+  // Value-only on a public chain.
+  if (purpose === 'value') {
+    if (throughput === 'high') return [PLATFORMS.ln, PLATFORMS.xrpl];
+    if (throughput === 'med')  return [PLATFORMS.xrpl, PLATFORMS.ln];
+    return [PLATFORMS.btc, PLATFORMS.xrpl];
+  }
+
+  // Sovereign / own-validators path
+  if (sovereignty === 'own') {
+    if (throughput === 'high') return [PLATFORMS.avax, PLATFORMS.cosmos];
+    return [PLATFORMS.cosmos, PLATFORMS.avax];
+  }
+
+  // Smart contracts / high-perf on a public chain
+  if (purpose === 'highperf' || throughput === 'high') {
+    return [PLATFORMS.sol, PLATFORMS.arb, PLATFORMS.avax];
+  }
+  if (throughput === 'med') {
+    return [PLATFORMS.arb, PLATFORMS.eth];
+  }
+  // throughput low + contracts → high-value DeFi L1
+  return [PLATFORMS.eth, PLATFORMS.arb];
+}
+
+function PlatformRecommender() {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+
+  const finished = step >= PR_QUESTIONS.length;
+  const ranked = finished ? recommendPlatform(answers) : [];
+
+  const choose = (qId: string, optValue: string) => {
+    setAnswers(a => ({ ...a, [qId]: optValue }));
+    setStep(s => s + 1);
+  };
+
+  const restart = () => { setStep(0); setAnswers({}); };
+
+  const back = () => { if (step > 0) setStep(s => s - 1); };
+
+  return (
+    <div className="h-full flex flex-col p-5 lg:p-8">
+      <div className="shrink-0 mb-3 flex items-start justify-between gap-3">
+        <div>
+          <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">🧩 Wizard</span>
+          <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Pick the Right Platform — Guided</h2>
+          <p className="text-sm text-muted-foreground max-w-3xl">Five short questions. Each answer narrows the field. At the end you get the best fit (and one runner-up) for your scenario, with the reasoning shown.</p>
+        </div>
+        <div className="shrink-0 flex flex-col items-end gap-1">
+          <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{finished ? 'Complete' : `Question ${step + 1} / ${PR_QUESTIONS.length}`}</div>
+          <button onClick={restart} className="text-[10px] px-2 py-0.5 rounded-md bg-muted/60 hover:bg-muted text-muted-foreground font-semibold transition-colors">↺ Restart</button>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div className="shrink-0 mb-3 flex gap-1">
+        {PR_QUESTIONS.map((_, i) => (
+          <div key={i} className="flex-1 h-1.5 rounded-full" style={{ background: i < step ? '#6366f1' : i === step ? '#6366f140' : 'hsl(var(--muted))' }} />
+        ))}
+      </div>
+
+      {/* Body */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        {!finished ? (
+          <div className="rounded-2xl border-2 p-6 max-w-3xl mx-auto" style={{ borderColor: '#6366f155', backgroundColor: '#6366f10d' }}>
+            <div className="text-[10px] font-black uppercase tracking-widest text-[#6366f1] mb-1">Question {step + 1}</div>
+            <h3 className="text-xl lg:text-2xl font-black text-foreground leading-tight">{PR_QUESTIONS[step].title}</h3>
+            <p className="text-sm text-muted-foreground mt-1">{PR_QUESTIONS[step].subtitle}</p>
+            <div className="grid gap-2 mt-4">
+              {PR_QUESTIONS[step].options.map(opt => (
+                <button
+                  key={opt.value}
+                  onClick={() => choose(PR_QUESTIONS[step].id, opt.value)}
+                  className="text-left rounded-xl border-2 px-4 py-3 transition-all hover:-translate-y-0.5 hover:shadow-md"
+                  style={{ borderColor: '#6366f155', backgroundColor: 'hsl(var(--card))' }}
+                >
+                  <div className="font-bold text-sm text-foreground">{opt.label}</div>
+                  {opt.hint && <div className="text-xs text-muted-foreground mt-0.5">{opt.hint}</div>}
+                </button>
+              ))}
+            </div>
+            {step > 0 && (
+              <div className="mt-4">
+                <button onClick={back} className="text-[11px] text-muted-foreground hover:text-foreground font-semibold">← Back to previous question</button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3 max-w-3xl mx-auto">
+            <div className="rounded-2xl border-2 p-5 flex flex-col gap-3" style={{ borderColor: ranked[0]?.color + 'AA', backgroundColor: ranked[0]?.color + '10' }}>
+              <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: ranked[0]?.color }}>Recommended for your scenario</div>
+              <div className="flex items-center gap-4">
+                <div className="size-16 rounded-2xl flex items-center justify-center text-3xl font-black text-white shrink-0 shadow" style={{ background: ranked[0]?.color }}>
+                  {ranked[0]?.short}
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xl lg:text-2xl font-black text-foreground leading-tight">{ranked[0]?.name}</div>
+                  <div className="text-sm text-muted-foreground mt-0.5">{ranked[0]?.tagline}</div>
+                </div>
+              </div>
+              <p className="text-sm text-foreground leading-snug">{ranked[0]?.reason}</p>
+            </div>
+
+            {ranked.length > 1 && (
+              <div className="rounded-xl border border-border bg-card p-3">
+                <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">Also consider</div>
+                <div className="grid gap-2">
+                  {ranked.slice(1).map(p => (
+                    <div key={p.id} className="flex items-center gap-3 rounded-lg border p-2.5" style={{ borderColor: p.color + '55', backgroundColor: p.color + '0d' }}>
+                      <div className="size-10 rounded-lg flex items-center justify-center text-lg font-black text-white shrink-0" style={{ background: p.color }}>{p.short}</div>
+                      <div className="min-w-0">
+                        <div className="text-sm font-bold text-foreground">{p.name}</div>
+                        <div className="text-[11px] text-muted-foreground">{p.tagline}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Answers recap */}
+            <div className="rounded-xl border border-border bg-card p-3">
+              <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">Your answers</div>
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 text-[11px]">
+                {PR_QUESTIONS.map(q => {
+                  const opt = q.options.find(o => o.value === answers[q.id]);
+                  return (
+                    <div key={q.id} className="rounded-lg border border-border bg-muted/30 p-2">
+                      <div className="text-[9px] text-muted-foreground uppercase tracking-widest">{q.title}</div>
+                      <div className="text-xs font-bold text-foreground mt-0.5 leading-tight">{opt?.label}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-[#f59e0b]/40 bg-[#f59e0b]/08 p-2.5 text-[11px] text-muted-foreground">
+              <strong className="text-[#f59e0b]">Reality check:</strong> this is a heuristic. Real selection always includes auditor availability, talent pool, regulatory posture, and existing customer footprint. Use this as a starting point, not a final answer.
+            </div>
+
+            <button onClick={restart} className="mx-auto rounded-md bg-[#6366f1] text-white font-bold text-sm px-4 py-2 hover:bg-[#6366f1]/90 transition-colors">
+              ↺ Run again with different answers
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 const chapters = [
+  { kind: 'group' as const, id: 'g-s5-zk',       label: '🔐 Zero-Knowledge' },
   { id: 's5-zkp',              label: 'ZK: The Idea' },
   { id: 's5-zkp-cave',         label: "ZK: Where's Waldo?" },
   { id: 's5-zkp-props',        label: 'ZK: Properties & Uses' },
+
+  { kind: 'group' as const, id: 'g-s5-stark',    label: '⭑ Starknet' },
   { id: 's5-starknet',         label: 'Starknet' },
   { id: 's5-starknet-compare', label: 'Starknet: ZK in Practice' },
   { id: 's5-starknet-eco',     label: 'Starknet Apps' },
+
+  { kind: 'group' as const, id: 'g-s5-l2',       label: '📈 Layer 2' },
   { id: 's5-l2-why',           label: 'L2: Why Needed' },
   { id: 's5-layer2',           label: 'L2: Optimistic vs ZK' },
   { id: 's5-l2apps',           label: 'L2 App Landscape' },
+
+  { kind: 'group' as const, id: 'g-s5-polka',    label: '🔴 Polkadot' },
   { id: 's5-polkadot',         label: 'Polkadot' },
   { id: 's5-polkadot-eco',     label: 'Polkadot Apps' },
+
+  { kind: 'group' as const, id: 'g-s5-ava',      label: '🔺 Avalanche' },
   { id: 's5-avalanche',        label: 'Avalanche' },
   { id: 's5-avalanche-eco',    label: 'Avalanche Apps' },
+
+  { kind: 'group' as const, id: 'g-s5-priv',     label: '🛡️ Privacy' },
   { id: 's5-privacy',          label: 'Privacy: Why Hard' },
   { id: 's5-privacy-approaches', label: 'Privacy: Approaches' },
   { id: 's5-privacy-regulation', label: 'Privacy: Regulation' },
   { id: 's5-privacy-future',     label: 'Privacy: The Upside' },
+
+  { kind: 'group' as const, id: 'g-s5-eval',     label: '🧪 Evaluating Trends' },
   { id: 's5-evaluate',         label: 'Evaluate (1/2)' },
   { id: 's5-evaluate-2',       label: 'Evaluate (2/2)' },
+
+  { kind: 'group' as const, id: 'g-s5-decide',   label: '🧩 Decision' },
   { id: 's5-decision',          label: 'Decision Framework' },
   { id: 's5-decision-examples', label: 'Platform Examples' },
+
+  { kind: 'group' as const, id: 'g-s5-wrap',     label: '✅ Wrap Up' },
   { id: 's5-quiz',              label: 'Quiz' },
   { id: 's5-takeaways',    label: 'Takeaways' },
   { id: 's5-team-checkpoint', label: '🤝 Team Checkpoint' },
@@ -1335,58 +1597,9 @@ export function BP_Section5() {
           </div>
         </div>
 
-        {/* ═══════ DECISION FRAMEWORK — Five Questions ═══════ */}
-        <div id="s5-decision" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-4">
-            <span className="text-xs font-black uppercase tracking-widest text-[#6366f1]">Section 05 · Decision Framework</span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Choosing a platform — five questions, in order</h2>
-            <p className="text-sm text-muted-foreground mt-1">Answer them sequentially. The order matters: each answer narrows the next.</p>
-          </div>
-
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3 auto-rows-fr">
-            {[
-              { n: '1', q: 'Permission model', ask: 'Anyone reads & writes, or only known parties?',
-                a: { tag: 'Permissionless', recs: 'Bitcoin · Ethereum · L2s · Solana', color: '#6366f1' },
-                b: { tag: 'Permissioned', recs: 'Hyperledger Fabric · Corda · Quorum', color: '#39B54A' } },
-              { n: '2', q: 'Programmability', ask: 'Just move value, or run logic on-chain?',
-                a: { tag: 'Value transfer only', recs: 'Bitcoin L1 · Lightning', color: '#f59e0b' },
-                b: { tag: 'Smart contracts', recs: 'Ethereum/EVM · Cosmos SDK · Starknet', color: '#6366f1' } },
-              { n: '3', q: 'Throughput & cost', ask: 'How sensitive to gas cost and latency?',
-                a: { tag: 'Low — settlement', recs: 'Ethereum L1 (max security)', color: '#627EEA' },
-                b: { tag: 'High — consumer/DeFi', recs: 'Arbitrum · Base · Solana · Avalanche', color: '#ec4899' } },
-              { n: '4', q: 'Privacy needs', ask: 'Selective or full data confidentiality?',
-                a: { tag: 'None', recs: 'Default to your Q3 chain', color: '#6b7280' },
-                b: { tag: 'Privacy required', recs: 'Aztec · Starknet ZK · Fabric channels', color: '#8b5cf6' } },
-              { n: '5', q: 'Sovereignty vs shared security', ask: 'Own the validator set, or inherit security?',
-                a: { tag: 'Sovereign', recs: 'Cosmos zone · Avalanche L1', color: '#22d3ee' },
-                b: { tag: 'Shared security', recs: 'Polkadot parachain · Ethereum rollup', color: '#ED1C24' } },
-            ].map(s => (
-              <div key={s.n} className="rounded-xl border bg-card p-5 flex flex-col justify-center gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="size-8 rounded-full flex items-center justify-center text-sm font-black text-white shrink-0" style={{ backgroundColor: '#6366f1' }}>{s.n}</div>
-                  <div>
-                    <div className="font-bold text-base text-foreground leading-tight">{s.q}</div>
-                    <div className="text-sm text-muted-foreground">{s.ask}</div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2.5">
-                  {[s.a, s.b].map((o, i) => (
-                    <div key={i} className="rounded-lg border px-3.5 py-2.5" style={{ borderColor: o.color + '45', backgroundColor: o.color + '0d' }}>
-                      <div className="text-xs font-black uppercase tracking-wider" style={{ color: o.color }}>{o.tag}</div>
-                      <div className="text-sm text-muted-foreground leading-snug mt-0.5">{o.recs}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-
-            <div className="rounded-xl border-2 p-4 flex flex-col justify-center gap-2" style={{ borderColor: '#6366f155', backgroundColor: '#6366f10d' }}>
-              <p className="text-sm font-black uppercase tracking-widest text-[#6366f1]">The honest meta-answer</p>
-              <p className="text-sm text-foreground leading-snug">
-                Don't pick a platform then force the use case onto it. And if it doesn't truly need a blockchain — a Postgres DB with signed rows is often the right tool.
-              </p>
-            </div>
-          </div>
+        {/* ═══════ DECISION FRAMEWORK — Interactive wizard ═══════ */}
+        <div id="s5-decision" className="h-full">
+          <PlatformRecommender />
         </div>
 
         {/* ═══════ DECISION EXAMPLES — Worked Examples ═══════ */}

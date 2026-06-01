@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import anime from 'animejs';
 import { TitleSlide } from '../components/templates/TitleSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { ComparisonSlide } from '../components/templates/ComparisonSlide';
@@ -6,27 +7,43 @@ import { QuizSlide } from '../components/templates/QuizSlide';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
 import { CalloutBox } from '../components/shared/CalloutBox';
 import { DefinitionBox } from '../components/shared/DefinitionBox';
-import { Bitcoin, Eye, EyeOff, ExternalLink, AlertTriangle, ShieldX } from 'lucide-react';
+import { Bitcoin, ExternalLink, AlertTriangle, ShieldX } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
 
 const section2Chapters = [
+  { kind: 'group' as const, id: 'g-s2-origins',    label: '🚀 Origins' },
   { id: 's2-breakthrough',  label: 'Bitcoin Breakthrough' },
   { id: 's2-paper',         label: 'The 2008 Paper' },
   { id: 's2-what',          label: 'What is Bitcoin?' },
+
+  { kind: 'group' as const, id: 'g-s2-problems',   label: '🤔 Problems Bitcoin Solves' },
   { id: 's2-byzantine',     label: 'Byzantine Problem' },
   { id: 's2-doublespend',   label: 'Double-Spending' },
+
+  { kind: 'group' as const, id: 'g-s2-tokenomics', label: '💰 Tokenomics & Network' },
   { id: 's2-supply',        label: '🧩 Supply Model' },
   { id: 's2-stats',         label: 'Network Statistics' },
   { id: 's2-nodes',         label: 'Node Distribution' },
+
+  { kind: 'group' as const, id: 'g-s2-keys',       label: '🔑 Keys & Wallets' },
   { id: 's2-keys',          label: 'Keys & Seed Phrase' },
-  { id: 's2-keys-demo',     label: '🧩 Build a Wallet' },
+  { id: 's2-keys-demo',     label: '🧩 Wallet Analogies' },
+
+  { kind: 'group' as const, id: 'g-s2-structure',  label: '🛡️ Security & Structure' },
   { id: 's2-security',      label: 'Security Model' },
+  { id: 's2-merkle-build',  label: '🧩 Build a Merkle Tree' },
   { id: 's2-merkle',        label: '🧩 Merkle Tree' },
   { id: 's2-immutability',  label: '🧩 Immutability' },
+
+  { kind: 'group' as const, id: 'g-s2-mining',     label: '⛏️ Mining' },
   { id: 's2-mining',        label: 'Mining' },
   { id: 's2-mining-demo',   label: '🧩 Find a Nonce' },
+
+  { kind: 'group' as const, id: 'g-s2-limits',     label: '🚧 Limits' },
   { id: 's2-programmability', label: 'Programmability' },
   { id: 's2-limits',        label: "What it Can't Do" },
+
+  { kind: 'group' as const, id: 'g-s2-wrap',       label: '✅ Wrap Up' },
   { id: 's2-quiz',          label: 'Quizzes' },
   { id: 's2-takeaways',     label: 'Takeaways' },
 ];
@@ -555,28 +572,94 @@ interface ChainBlock {
   originalData: string;
   /** Frozen at init — the prev_hash field literally written into this block's header. */
   prevHashStored: string;
+  /** Frozen at init — the unix-ish timestamp baked into the block's header at mine-time. */
+  timestamp: number;
+  /** Frozen at init — the nonce that won the proof-of-work race for this block. */
+  nonce: number;
 }
 
 function hashShort(input: string): string {
   return pseudoHash(0, input).slice(0, 12);
 }
 
-const INITIAL_BLOCKS: { num: number; data: string }[] = [
-  { num: 902450, data: 'Alice → Bob: 0.5 BTC' },
-  { num: 902451, data: 'Bob → Carol: 0.25 BTC' },
-  { num: 902452, data: 'Carol → Dave: 0.10 BTC' },
-  { num: 902453, data: 'Dave → Erin: 0.05 BTC' },
+// Realistic-looking constants every Bitcoin block shares (kept identical here
+// so the rendered headers feel authentic without making the demo more complex).
+const BLOCK_VERSION = '0x20000000';
+const BLOCK_BITS    = '0x1702a96e';
+
+/** A block's merkle root is a one-way summary of its transactions — when the
+ *  data is tampered the merkle root recomputes and changes too. */
+function merkleRootOf(data: string): string {
+  return hashShort('mr:' + data);
+}
+
+/** The block's hash binds EVERY header field together. Change any one and the
+ *  hash changes — which is precisely why the cascade is unforgeable. */
+function blockHash(b: { num: number; data: string; timestamp: number; nonce: number }, prevHash: string): string {
+  return hashShort(`${BLOCK_VERSION}|${prevHash}|${merkleRootOf(b.data)}|${b.timestamp}|${BLOCK_BITS}|${b.nonce}|${b.num}`);
+}
+
+/** Formats a unix timestamp as "Dec 29, 13:46 UTC" — short and unambiguous. */
+function fmtTime(unix: number): string {
+  try {
+    const d = new Date(unix * 1000);
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const mm = String(d.getUTCMinutes()).padStart(2, '0');
+    return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCHours()}:${mm} UTC`;
+  } catch {
+    return String(unix);
+  }
+}
+
+const INITIAL_BLOCKS: { num: number; data: string; timestamp: number; nonce: number }[] = [
+  { num: 902450, data: 'Alice → Bob: 0.5 BTC',    timestamp: 1735480000, nonce: 2083236893 },
+  { num: 902451, data: 'Bob → Carol: 0.25 BTC',   timestamp: 1735480642, nonce: 2718845192 },
+  { num: 902452, data: 'Carol → Dave: 0.10 BTC',  timestamp: 1735481186, nonce:  783651029 },
+  { num: 902453, data: 'Dave → Erin: 0.05 BTC',   timestamp: 1735481822, nonce: 1546872910 },
+  { num: 902454, data: 'Erin → Frank: 0.20 BTC',  timestamp: 1735482449, nonce:  998234012 },
+  { num: 902455, data: 'Frank → Gina: 0.15 BTC',  timestamp: 1735483102, nonce:  271828183 },
 ];
 
 function buildChain(initial: typeof INITIAL_BLOCKS): ChainBlock[] {
   const chain: ChainBlock[] = [];
   let prev = '0000000000…GENESIS';
   for (const b of initial) {
-    chain.push({ num: b.num, data: b.data, originalData: b.data, prevHashStored: prev });
+    chain.push({
+      num: b.num,
+      data: b.data,
+      originalData: b.data,
+      prevHashStored: prev,
+      timestamp: b.timestamp,
+      nonce: b.nonce,
+    });
     // The block's hash that lives in the ledger (frozen at "time of mining")
-    prev = hashShort(`${b.num}|${prev}|${b.data}`);
+    prev = blockHash(b, prev);
   }
   return chain;
+}
+
+/** Tight key/value row used inside each block's header readout. */
+function Row({ label, value, mono, title, color }: {
+  label: string;
+  value: string;
+  mono?: boolean;
+  title?: string;
+  color?: string;
+}) {
+  return (
+    <div className="flex items-baseline justify-between gap-2 leading-tight">
+      <span className="text-muted-foreground shrink-0 font-sans uppercase tracking-widest text-[8.5px] font-bold">
+        {label}
+      </span>
+      <span
+        className={`min-w-0 truncate text-right ${mono ? 'font-mono' : 'font-sans'}`}
+        title={title}
+        style={color ? { color } : undefined}
+      >
+        {value}
+      </span>
+    </div>
+  );
 }
 
 function ImmutableChainDemo() {
@@ -588,8 +671,10 @@ function ImmutableChainDemo() {
 
   const resetAll = () => setChain(buildChain(INITIAL_BLOCKS));
 
-  // Compute each block's CURRENT hash from its stored prev + (possibly tampered) data.
-  const currentHashes = chain.map(b => hashShort(`${b.num}|${b.prevHashStored}|${b.data}`));
+  // Compute each block's CURRENT hash from every header field. The merkle
+  // root inside `blockHash` derives from `data`, so when `data` is tampered
+  // both the merkle root and the block hash visibly drift.
+  const currentHashes = chain.map(b => blockHash(b, b.prevHashStored));
 
   // A block is "broken" if either:
   //   • its stored prev-hash field no longer matches the previous block's
@@ -626,54 +711,66 @@ function ImmutableChainDemo() {
         )}
       </div>
 
-      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-3 items-stretch">
+      <div className="flex-1 min-h-0 flex flex-row gap-1 items-stretch overflow-x-auto pb-2">
         {chain.map((b, i) => {
-          const broken = isBroken[i];
-          const tampered = isTampered[i];
-          const status = broken ? 'broken' : tampered ? 'tampered' : 'valid';
+          const broken    = isBroken[i];
+          const tampered  = isTampered[i];
+          const status    = broken ? 'broken' : tampered ? 'tampered' : 'valid';
           const ringColor = status === 'valid' ? '#39B54A' : '#ED1C24';
+          const merkle    = merkleRootOf(b.data);
+          const merkleChanged = merkle !== merkleRootOf(b.originalData);
 
           return (
-            <div key={i} className="flex items-stretch gap-2 min-w-0">
+            <div key={i} className="flex items-stretch gap-1 shrink-0">
               <div
-                className="flex-1 min-w-0 rounded-xl border-2 p-3 flex flex-col gap-2 transition-colors"
+                className="w-[230px] rounded-xl border-2 p-3 flex flex-col gap-2 transition-colors"
                 style={{
                   borderColor: ringColor + (status === 'valid' ? '60' : 'CC'),
                   backgroundColor: status === 'valid' ? ringColor + '08' : ringColor + '12',
                 }}
               >
-                <div className="flex items-center justify-between text-xs">
-                  <div className="font-bold text-foreground">Block #{b.num}</div>
+                {/* Header — block # + status badge */}
+                <div className="flex items-center justify-between">
+                  <div className="text-sm font-black text-foreground">Block #{b.num}</div>
                   <div
-                    className="px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-widest"
+                    className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-widest"
                     style={{ color: ringColor, backgroundColor: ringColor + '20' }}
                   >
                     {status === 'valid' ? '✓ valid' : status === 'tampered' ? '⚠ edited' : '✗ broken'}
                   </div>
                 </div>
 
-                <div>
-                  <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Prev hash</div>
-                  <div className="font-mono text-[11px] text-foreground truncate" title={b.prevHashStored}>
-                    {b.prevHashStored}
-                  </div>
+                {/* Header fields — compact key/value rows */}
+                <div className="rounded-md border border-border/60 bg-card/50 px-2 py-1.5 text-[10px] flex flex-col gap-1 font-mono">
+                  <Row label="Version"   value={BLOCK_VERSION} />
+                  <Row label="Time"      value={fmtTime(b.timestamp)} />
+                  <Row label="Prev hash" value={b.prevHashStored} mono title={b.prevHashStored} />
+                  <Row
+                    label="Merkle root"
+                    value={merkle}
+                    mono
+                    title={merkle}
+                    color={merkleChanged ? '#ED1C24' : undefined}
+                  />
+                  <Row label="Bits"      value={BLOCK_BITS} />
+                  <Row label="Nonce"     value={b.nonce.toLocaleString('en-US')} />
                 </div>
 
+                {/* Transaction (editable — the only tampering surface) */}
                 <div>
-                  <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Transaction</div>
+                  <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">Transaction</div>
                   <input
                     type="text"
                     value={b.data}
                     onChange={e => updateData(i, e.target.value)}
-                    className="w-full px-2 py-1 rounded bg-card border text-xs font-mono text-foreground focus:outline-none focus:ring-1 transition-colors"
-                    style={{
-                      borderColor: tampered ? '#ED1C24' : 'var(--border)',
-                    }}
+                    className="w-full px-2 py-1 rounded bg-card border text-[11px] font-mono text-foreground focus:outline-none focus:ring-1 transition-colors"
+                    style={{ borderColor: tampered ? '#ED1C24' : 'var(--border)' }}
                   />
                 </div>
 
-                <div className="mt-auto">
-                  <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">This block's hash</div>
+                {/* This block's hash (live) */}
+                <div className="mt-auto pt-1 border-t border-border/60">
+                  <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">This block's hash</div>
                   <div className="font-mono text-[11px] font-bold" style={{ color: tampered ? '#ED1C24' : '#39B54A' }}>
                     {currentHashes[i]}
                     {tampered && <span className="text-muted-foreground font-normal text-[10px]"> (recomputed)</span>}
@@ -683,8 +780,8 @@ function ImmutableChainDemo() {
 
               {/* Link arrow to next block */}
               {i < chain.length - 1 && (
-                <div className="hidden lg:flex flex-col items-center justify-center shrink-0 w-3">
-                  <div className="text-xs font-bold" style={{ color: isBroken[i + 1] ? '#ED1C24' : '#39B54A' }}>
+                <div className="flex flex-col items-center justify-center shrink-0 w-4">
+                  <div className="text-sm font-bold" style={{ color: isBroken[i + 1] ? '#ED1C24' : '#39B54A' }}>
                     {isBroken[i + 1] ? '✗' : '→'}
                   </div>
                 </div>
@@ -719,6 +816,156 @@ interface MerkleNode {
   hash: string;
   changed: boolean;
 }
+
+// ─── Interactive: Build a Merkle Tree (4 leaves, type-it-yourself) ──────────
+//
+// Lifted from the v1 Section 1 (Section1.legacy.tsx). Uses real SHA-256 via
+// crypto.subtle so the learner watches actual hashes ripple up the tree as
+// they type. The downstream MerkleTreeDemo is the "tamper a populated tree"
+// counterpart — this one is the "build it from scratch" counterpart.
+
+async function sha256(text: string): Promise<string> {
+  const data   = new TextEncoder().encode(text);
+  const buffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function shortHash(hash: string) {
+  return hash ? hash.slice(0, 10) + '…' : '—';
+}
+
+function InteractiveMerkleTree() {
+  const [txs,        setTxs]        = useState(['', '', '', '']);
+  const [leafHashes, setLeafHashes] = useState(['', '', '', '']);
+  const [midHashes,  setMidHashes]  = useState(['', '']);
+  const [root,       setRoot]       = useState('');
+
+  const recompute = useCallback(async (values: string[]) => {
+    const leaves = await Promise.all(
+      values.map(v => (v ? sha256(v) : Promise.resolve('')))
+    );
+    setLeafHashes(leaves);
+
+    const mid0 = leaves[0] && leaves[1] ? await sha256(leaves[0] + leaves[1]) : '';
+    const mid1 = leaves[2] && leaves[3] ? await sha256(leaves[2] + leaves[3]) : '';
+    setMidHashes([mid0, mid1]);
+
+    const r = mid0 && mid1 ? await sha256(mid0 + mid1) : '';
+    setRoot(r);
+  }, []);
+
+  useEffect(() => { recompute(txs); }, [txs, recompute]);
+
+  const update = (i: number, v: string) => {
+    setTxs(prev => prev.map((t, idx) => idx === i ? v : t));
+  };
+
+  return (
+    // flex-col-reverse so the layout grows like a real tree:
+    //   transactions at the top (leaves), pairs of hashes in the middle,
+    //   merkle root at the bottom (trunk). Pedagogically clearer than
+    //   the upside-down "root on top" convention used in CS textbooks.
+    <div className="flex flex-col-reverse items-center gap-3 py-4">
+      {/* Root — renders at the BOTTOM thanks to flex-col-reverse */}
+      <div className={`px-6 py-3 rounded-lg border-2 transition-all duration-300 ${root ? 'bg-[#ED1C24]/20 border-[#ED1C24]' : 'bg-muted/20 border-border'}`}>
+        <div className="text-xs text-muted-foreground flex items-center gap-1.5">
+          <span>🌳</span>
+          <span>Merkle Root</span>
+          <span className="text-[9px] text-muted-foreground/70">· trunk</span>
+        </div>
+        <div className={`font-mono text-sm ${root ? 'text-[#ED1C24]' : 'text-muted-foreground/50'}`}>
+          {root ? shortHash(root) : 'Hash(AB + CD)'}
+        </div>
+      </div>
+
+      {/* Connectors root → mid */}
+      <div className="flex gap-32">
+        <div className="w-px h-6 bg-border" />
+        <div className="w-px h-6 bg-border" />
+      </div>
+
+      {/* Level 1 */}
+      <div className="flex gap-16">
+        {midHashes.map((h, i) => (
+          <div key={i} className={`px-5 py-2 rounded-lg border transition-all duration-300 ${h ? 'bg-[#39B54A]/20 border-[#39B54A]' : 'bg-muted/20 border-border'}`}>
+            <div className="text-xs text-muted-foreground">Hash {i === 0 ? 'AB' : 'CD'}</div>
+            <div className={`font-mono text-xs ${h ? 'text-[#39B54A]' : 'text-muted-foreground/50'}`}>
+              {h ? shortHash(h) : `Hash(${i === 0 ? 'A + B' : 'C + D'})`}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Connectors mid → leaves */}
+      <div className="flex gap-12">
+        <div className="flex gap-16">
+          <div className="w-px h-6 bg-border" />
+          <div className="w-px h-6 bg-border" />
+        </div>
+        <div className="flex gap-16">
+          <div className="w-px h-6 bg-border" />
+          <div className="w-px h-6 bg-border" />
+        </div>
+      </div>
+
+      {/* Leaves */}
+      <div className="flex gap-6">
+        {leafHashes.map((h, i) => (
+          <div key={i} className={`px-4 py-2 rounded-lg border transition-all duration-300 ${h ? 'bg-[#6366f1]/20 border-[#6366f1]' : 'bg-muted/20 border-border'}`}>
+            <div className="text-xs text-muted-foreground">Tx {String.fromCharCode(65 + i)}</div>
+            <div className={`font-mono text-xs ${h ? 'text-[#6366f1]' : 'text-muted-foreground/50'}`}>
+              {h ? shortHash(h) : `Hash(${String.fromCharCode(65 + i)})`}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Connectors leaves → inputs */}
+      <div className="flex gap-[68px]">
+        {[0, 1, 2, 3].map(i => <div key={i} className="w-px h-6 bg-border" />)}
+      </div>
+
+      {/* Input fields */}
+      <div className="flex gap-6">
+        {txs.map((v, i) => (
+          <input
+            key={i}
+            type="text"
+            value={v}
+            onChange={e => update(i, e.target.value)}
+            placeholder={`Tx ${String.fromCharCode(65 + i)} data...`}
+            className="w-[120px] px-4 py-2 bg-card rounded-lg border-2 border-[#6366f1]/30 text-foreground font-mono text-xs text-center focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1] transition-all placeholder:text-muted-foreground/40"
+          />
+        ))}
+      </div>
+
+      <p className="text-xs text-muted-foreground text-center mt-2 italic">
+        🍃 Type transaction data above — each leaf hashes, pairs merge, and the trunk (root) recomputes in real time
+      </p>
+    </div>
+  );
+}
+
+function BuildMerkleSlide() {
+  return (
+    <div className="h-full flex flex-col p-5 lg:p-8">
+      <div className="shrink-0 mb-3">
+        <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">🧩 Interactive</span>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Build a Merkle Tree</h2>
+        <p className="text-sm text-muted-foreground max-w-3xl">
+          Type four transactions and watch each leaf hash pair up and condense into the <strong className="text-foreground">Merkle root</strong>. One root summarises everything below — change any byte down here and the cascade reaches the top.
+        </p>
+      </div>
+      <div className="flex-1 min-h-0 overflow-y-auto flex items-start justify-center">
+        <InteractiveMerkleTree />
+      </div>
+    </div>
+  );
+}
+
+// ─── Interactive: Tamper a Populated Merkle Tree ────────────────────────────
 
 const MERKLE_TXS_INITIAL = [
   'Alice → Bob · 0.50 BTC',
@@ -781,8 +1028,10 @@ function MerkleTreeDemo() {
         )}
       </div>
 
-      <div className="flex-1 min-h-0 flex flex-col gap-3 overflow-y-auto">
-        {/* Root */}
+      {/* flex-col-reverse so the tree grows like a real one — leaves at top,
+          intermediate hashes pairing downward, merkle root as the trunk at the bottom. */}
+      <div className="flex-1 min-h-0 flex flex-col-reverse gap-3 overflow-y-auto">
+        {/* Root — renders at the BOTTOM thanks to flex-col-reverse */}
         <div className="flex justify-center">
           <div
             className="px-4 py-2 rounded-lg border-2 text-center transition-colors"
@@ -791,16 +1040,20 @@ function MerkleTreeDemo() {
               backgroundColor: (root?.changed ? '#ED1C24' : '#39B54A') + '12',
             }}
           >
-            <div className="text-[10px] font-bold uppercase tracking-widest"
+            <div className="text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-1.5"
                  style={{ color: root?.changed ? '#ED1C24' : '#39B54A' }}>
+              <span>🌳</span>
               {root?.changed ? '⚠ Merkle root changed' : '✓ Merkle root'}
+              <span className="text-[8px] opacity-70">· trunk</span>
             </div>
             <div className="font-mono font-black text-sm text-foreground mt-0.5">{root?.hash ?? '—'}</div>
           </div>
         </div>
 
-        {/* Inner levels (top-down, excluding root and leaves) */}
-        {changedLevels.slice(1, -1).reverse().map((lvl, lvlIdx) => (
+        {/* Inner levels — render in array order (leaves-adjacent first so it sits
+            ABOVE the root in flex-col-reverse, and root-adjacent last so it sits
+            just above the root). */}
+        {changedLevels.slice(1, -1).map((lvl, lvlIdx) => (
           <div key={`lvl-${lvlIdx}`}
                className="grid gap-2"
                style={{ gridTemplateColumns: `repeat(${lvl.length}, minmax(0, 1fr))` }}>
@@ -869,254 +1122,560 @@ function MerkleTreeDemo() {
   );
 }
 
-// ─── Interactive: Build a Wallet ────────────────────────────────────────────
+// ─── Interactive: Wallet Analogies (Bank IBAN + Home Keys) ──────────────────
+//
+// Two side-by-side analogies to make the public-vs-private asymmetry of a
+// wallet visceral. Both auto-play on scroll-in and can be replayed manually.
+// Animations are powered by anime.js v3.
 
-// Small curated subset of the BIP39 wordlist — enough variety for a believable
-// demo without bundling the full 2048-word file.
-const BIP39_WORDS = [
-  'abandon', 'ability', 'about', 'absorb', 'absurd', 'abuse', 'access', 'accident',
-  'accuse', 'acoustic', 'acquire', 'across', 'action', 'actor', 'actual', 'adapt',
-  'address', 'advance', 'affair', 'afford', 'afraid', 'again', 'agent', 'agree',
-  'ahead', 'aim', 'air', 'album', 'alert', 'alien', 'alley', 'allow',
-  'almost', 'alone', 'alpha', 'already', 'also', 'alter', 'always', 'amateur',
-  'amazing', 'amber', 'amused', 'analyst', 'anchor', 'angle', 'angry', 'animal',
-  'announce', 'answer', 'apology', 'appear', 'apple', 'arch', 'arctic', 'area',
-  'armor', 'army', 'around', 'arrest', 'arrow', 'art', 'artist', 'aspect',
-  'asset', 'assist', 'attack', 'aunt', 'author', 'auto', 'avocado', 'awake',
-  'aware', 'awesome', 'awful', 'awkward', 'baby', 'badge', 'balance', 'ball',
-];
+const PUBLIC_COLOR  = '#39B54A'; // green — safe to share
+const PRIVATE_COLOR = '#ED1C24'; // red — never share
 
-async function sha256Hex(input: string): Promise<string> {
-  if (typeof crypto === 'undefined' || !crypto.subtle) {
-    // Fallback for older environments — produce a stable-looking pseudo-hash.
-    let h = '';
-    for (let i = 0; i < 32; i++) h += ((input.charCodeAt(i % input.length) * 17 + i) & 0xff).toString(16).padStart(2, '0');
-    return h;
-  }
-  const buf  = new TextEncoder().encode(input);
-  const hash = await crypto.subtle.digest('SHA-256', buf);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
+/* ─────────────────────────── BANK ACCOUNT (IBAN) ────────────────────────── */
 
-function pickWords(n: number): string[] {
-  const picked: string[] = [];
-  const pool = [...BIP39_WORDS];
-  // Use crypto-strong randomness where available
-  const rand = (max: number) => {
-    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
-      const arr = new Uint32Array(1);
-      crypto.getRandomValues(arr);
-      return arr[0] % max;
+function BankIbanAnalogy() {
+  const rootRef     = useRef<HTMLDivElement | null>(null);
+  const cardRef     = useRef<HTMLDivElement | null>(null);
+  const incomingRef = useRef<HTMLDivElement | null>(null); // coin flying IN
+  const outgoingRef = useRef<HTMLDivElement | null>(null); // coin flying OUT
+  const balanceRef  = useRef<HTMLSpanElement | null>(null);
+  const inCaptionRef  = useRef<HTMLDivElement | null>(null);
+  const outCaptionRef = useRef<HTMLDivElement | null>(null);
+  const pinRef      = useRef<HTMLDivElement | null>(null);
+  const padlockRef  = useRef<HTMLSpanElement | null>(null);
+
+  const [balance, setBalance]   = useState(1420);
+  const [pinDigits, setPinDigits] = useState('');
+  const [phase, setPhase]       = useState<'idle' | 'playing'>('idle');
+  const playedRef               = useRef(false);
+
+  const play = () => {
+    if (phase === 'playing') return;
+    setPhase('playing');
+    setPinDigits('');
+    setBalance(1420);
+
+    // Reset positions
+    if (incomingRef.current) {
+      incomingRef.current.style.opacity = '0';
+      incomingRef.current.style.transform = 'translate(-180px, -10px) scale(0.6)';
     }
-    return Math.floor(Math.random() * max);
-  };
-  for (let i = 0; i < n; i++) {
-    const idx = rand(pool.length);
-    picked.push(pool[idx]);
-    pool.splice(idx, 1);
-  }
-  return picked;
-}
-
-interface Wallet { seed: string[]; priv: string; pub: string; address: string }
-
-function shortHex(hex: string, head = 6, tail = 4) {
-  if (hex.length <= head + tail + 3) return hex;
-  return `${hex.slice(0, head)}…${hex.slice(-tail)}`;
-}
-
-function BuildWalletDemo() {
-  const [wallet, setWallet] = useState<Wallet | null>(null);
-  const [revealed, setRevealed] = useState<number>(0); // 0..4 — how many layers shown
-  const [showPriv, setShowPriv] = useState(false);
-  const [showSeed, setShowSeed] = useState(false);
-  const [signing, setSigning] = useState<'idle' | 'busy' | 'done'>('idle');
-
-  const generate = async () => {
-    setRevealed(0);
-    setShowPriv(false);
-    setShowSeed(false);
-    setSigning('idle');
-    const seed = pickWords(12);
-    const priv = await sha256Hex('seed:' + seed.join(' '));
-    const pub  = '02' + (await sha256Hex('pub:'  + priv)).slice(0, 64); // 66 chars, compressed-style
-    const addrHash = await sha256Hex('addr:' + pub);
-    const address = 'bc1q' + addrHash.slice(0, 38);
-    setWallet({ seed, priv, pub, address });
-
-    // Reveal each layer with a small delay so the derivation feels like a flow.
-    for (let i = 1; i <= 4; i++) {
-      await new Promise(r => setTimeout(r, 350));
-      setRevealed(i);
+    if (outgoingRef.current) {
+      outgoingRef.current.style.opacity = '0';
+      outgoingRef.current.style.transform = 'translate(0px, 0px) scale(1)';
     }
+    if (pinRef.current)     { pinRef.current.style.opacity = '0'; pinRef.current.style.transform = 'translateY(8px)'; }
+    if (padlockRef.current) padlockRef.current.textContent = '🔒';
+    if (inCaptionRef.current)  inCaptionRef.current.style.opacity  = '0';
+    if (outCaptionRef.current) outCaptionRef.current.style.opacity = '0';
+
+    const tl = anime.timeline({
+      easing: 'easeOutQuad',
+      complete: () => setPhase('idle'),
+    });
+
+    // 1) Coin flies in from the left → IBAN card → green pulse → balance bumps
+    tl.add({
+      targets:    incomingRef.current,
+      opacity:    [0, 1],
+      translateX: [-180, 0],
+      translateY: [-10, 0],
+      scale:      [0.6, 1],
+      duration:   900,
+    })
+    .add({
+      targets:  cardRef.current,
+      boxShadow: ['0 0 0px rgba(57,181,74,0)', '0 0 38px rgba(57,181,74,0.55)', '0 0 0px rgba(57,181,74,0)'],
+      duration: 700,
+    }, '-=150')
+    .add({
+      targets: { v: 1420 },
+      v:       1620,
+      round:   1,
+      duration: 600,
+      update: (a) => {
+        if (balanceRef.current) {
+          const v = (a.animations[0].currentValue as unknown) as number;
+          balanceRef.current.textContent = '€ ' + Number(v).toLocaleString('pt-PT') + ',00';
+        }
+      },
+    }, '-=400')
+    .add({
+      targets: incomingRef.current,
+      opacity: [1, 0],
+      scale:   [1, 0.7],
+      duration: 350,
+    })
+    .add({
+      targets:    inCaptionRef.current,
+      opacity:    [0, 1],
+      translateY: [4, 0],
+      duration:   350,
+    }, '-=200')
+
+    // 2) Pause, then PIN-entry overlay appears
+    .add({
+      targets:    pinRef.current,
+      opacity:    [0, 1],
+      translateY: [8, 0],
+      duration:   400,
+      delay:      450,
+    })
+    // 3) PIN digits type in
+    .add({
+      targets: { d: 0 },
+      d:       4,
+      round:   1,
+      duration: 700,
+      easing:  'linear',
+      update: (a) => {
+        const n = Math.floor((a.animations[0].currentValue as unknown) as number);
+        setPinDigits('•'.repeat(n));
+      },
+    })
+    // 4) Padlock opens
+    .add({
+      targets:  padlockRef.current,
+      scale:    [1, 1.35, 1],
+      duration: 380,
+      changeBegin: () => { if (padlockRef.current) padlockRef.current.textContent = '🔓'; },
+    })
+    // 5) Coin flies OUT (debit) — balance decrements
+    .add({
+      targets:    outgoingRef.current,
+      opacity:    [0, 1],
+      translateX: [0, 220],
+      translateY: [0, -16],
+      scale:      [0.7, 1, 0.8],
+      duration:   900,
+    })
+    .add({
+      targets: { v: 1620 },
+      v:       1470,
+      round:   1,
+      duration: 600,
+      update: (a) => {
+        if (balanceRef.current) {
+          const v = (a.animations[0].currentValue as unknown) as number;
+          balanceRef.current.textContent = '€ ' + Number(v).toLocaleString('pt-PT') + ',00';
+        }
+      },
+    }, '-=700')
+    .add({
+      targets:    outCaptionRef.current,
+      opacity:    [0, 1],
+      translateY: [4, 0],
+      duration:   350,
+    }, '-=200');
   };
 
-  const reset = () => {
-    setWallet(null);
-    setRevealed(0);
-    setShowPriv(false);
-    setShowSeed(false);
-    setSigning('idle');
-  };
-
-  const sign = async () => {
-    if (!wallet) return;
-    setSigning('busy');
-    await new Promise(r => setTimeout(r, 700));
-    setSigning('done');
-  };
-
-  const LAYERS = wallet ? [
-    {
-      i: 1, label: 'Seed Phrase',  color: '#8b5cf6',
-      sub: '12 words · human-friendly backup of everything below. Lose this, lose the wallet.',
-      hideable: { is: !showSeed, toggle: () => setShowSeed(v => !v) },
-      body: showSeed
-        ? <div className="grid grid-cols-4 gap-1.5">
-            {wallet.seed.map((w, i) => (
-              <div key={i} className="px-2 py-1.5 bg-[#8b5cf6]/12 border border-[#8b5cf6]/30 rounded text-xs">
-                <span className="text-[9px] text-muted-foreground font-mono mr-1">{i + 1}.</span>
-                <span className="font-mono text-foreground">{w}</span>
-              </div>
-            ))}
-          </div>
-        : <div className="font-mono text-xs text-muted-foreground tracking-widest py-2">• • • • • • • • • • • •</div>,
-    },
-    {
-      i: 2, label: 'Private Key', color: '#ED1C24',
-      sub: 'Derived from the seed. Holding this is what proves ownership. Never share — never type it anywhere online.',
-      hideable: { is: !showPriv, toggle: () => setShowPriv(v => !v) },
-      body: showPriv
-        ? <div className="font-mono text-[11px] break-all text-foreground bg-[#ED1C24]/08 px-2.5 py-2 rounded border border-[#ED1C24]/25">{wallet.priv}</div>
-        : <div className="font-mono text-xs text-muted-foreground bg-muted/40 px-2.5 py-2 rounded border border-border">{wallet.priv.slice(0, 4)}{'•'.repeat(56)}{wallet.priv.slice(-4)}</div>,
-    },
-    {
-      i: 3, label: 'Public Key',  color: '#6366f1',
-      sub: 'A one-way derivation of the private key. Safe to share — others use it to verify your signatures.',
-      body: <div className="font-mono text-[11px] break-all text-foreground bg-[#6366f1]/08 px-2.5 py-2 rounded border border-[#6366f1]/25">{wallet.pub}</div>,
-    },
-    {
-      i: 4, label: 'Address',     color: '#39B54A',
-      sub: 'A short hash of the public key — this is what you paste when someone sends you sats.',
-      body: <div className="font-mono text-[12px] break-all text-foreground bg-[#39B54A]/10 px-2.5 py-2 rounded border border-[#39B54A]/30 font-bold">{wallet.address}</div>,
-    },
-  ] : [];
+  // Auto-play on scroll-in (first time only)
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const obs = new IntersectionObserver(entries => {
+      for (const e of entries) {
+        if (e.isIntersecting && !playedRef.current) {
+          playedRef.current = true;
+          setTimeout(play, 250);
+          break;
+        }
+      }
+    }, { threshold: 0.35 });
+    obs.observe(rootRef.current);
+    return () => obs.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div className="h-full flex flex-col p-5 lg:p-8">
+    <div ref={rootRef} className="relative flex flex-col bg-card border border-border rounded-xl p-4 min-h-[340px] overflow-hidden">
       {/* Header */}
-      <div className="shrink-0 flex items-start justify-between gap-4 mb-3">
+      <div className="flex items-start justify-between gap-3 mb-3">
         <div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">🧩 Interactive</span>
-          <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Build a Wallet</h2>
-          <p className="text-sm text-muted-foreground mt-1">Generate a wallet end-to-end. Watch each layer fall out of the one above — and what's safe to share vs. what isn't.</p>
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Analogy 1</div>
+          <h3 className="text-base lg:text-lg font-bold text-foreground leading-tight">A bank account</h3>
         </div>
-        <div className="shrink-0 flex flex-col gap-2 items-end">
-          <button
-            onClick={generate}
-            className="px-4 py-2 rounded-lg bg-[#f59e0b] text-white text-sm font-bold hover:bg-[#f59e0b]/90 transition-colors"
-          >
-            {wallet ? '🔄 Generate new' : '🎲 Generate a wallet'}
-          </button>
-          {wallet && (
-            <button onClick={reset} className="text-[11px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline">
-              ↺ clear
-            </button>
-          )}
+        <button
+          onClick={play}
+          disabled={phase === 'playing'}
+          className="text-[11px] px-2.5 py-1 rounded-md bg-muted/60 hover:bg-muted text-foreground font-semibold disabled:opacity-50 transition-colors"
+        >↻ Replay</button>
+      </div>
+
+      {/* Stage */}
+      <div className="relative flex-1 min-h-[180px] flex items-center justify-center">
+        {/* Sender — left, vertically aligned with the bank card */}
+        <div className="absolute left-2 top-1/2 -translate-y-1/2 flex flex-col items-center text-center text-[10px] text-muted-foreground gap-0.5 select-none">
+          <span className="text-2xl">👤</span>
+          <span>Anyone</span>
+        </div>
+
+        {/* Bank card */}
+        <div
+          ref={cardRef}
+          className="relative bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white rounded-lg shadow-lg px-4 py-3 w-[230px] z-10"
+          style={{ transition: 'box-shadow 200ms' }}
+        >
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[10px] font-semibold tracking-widest uppercase opacity-80">Banco</span>
+            <span className="text-[10px] opacity-70">●●●●</span>
+          </div>
+          <div className="text-[10px] opacity-70 uppercase tracking-wider">IBAN</div>
+          <div className="font-mono text-[11px] leading-snug">PT50 0033 0000<br/>4521 0000 0028 3</div>
+          <div className="mt-2 flex items-center justify-between">
+            <span className="text-[10px] opacity-70 uppercase tracking-wider">Saldo</span>
+            <span ref={balanceRef} className="font-mono font-bold text-sm">€ 1.420,00</span>
+          </div>
+        </div>
+
+        {/* Incoming coin (animated) */}
+        <div
+          ref={incomingRef}
+          className="absolute z-20 size-9 rounded-full flex items-center justify-center text-lg font-black text-white shadow-md pointer-events-none"
+          style={{
+            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+            opacity: 0,
+            transform: 'translate(-180px, -10px) scale(0.6)',
+          }}
+        >€</div>
+
+        {/* Outgoing coin (animated) */}
+        <div
+          ref={outgoingRef}
+          className="absolute z-20 size-9 rounded-full flex items-center justify-center text-lg font-black text-white shadow-md pointer-events-none"
+          style={{
+            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+            opacity: 0,
+          }}
+        >€</div>
+
+        {/* PIN pad — appears when sending */}
+        <div
+          ref={pinRef}
+          className="absolute right-1 bottom-1 bg-background border border-border rounded-lg px-2.5 py-2 z-10 shadow-md"
+          style={{ opacity: 0 }}
+        >
+          <div className="flex items-center gap-1.5">
+            <span ref={padlockRef} className="text-base">🔒</span>
+            <div className="flex flex-col">
+              <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold">PIN</span>
+              <span className="font-mono font-bold text-foreground text-base leading-none w-12">{pinDigits || '____'}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Recipient — right, vertically aligned with the bank card */}
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col items-center text-center text-[10px] text-muted-foreground gap-0.5 select-none">
+          <span className="text-2xl">🏪</span>
+          <span>Business</span>
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-5 min-h-0">
-        {/* Left — derivation chain */}
-        <div className="flex flex-col gap-2 min-h-0 overflow-y-auto pr-1">
-          {!wallet ? (
-            <div className="flex-1 flex items-center justify-center text-center text-sm text-muted-foreground border border-dashed border-border rounded-xl p-8">
-              Click <span className="font-bold text-foreground">Generate a wallet</span> to watch a seed phrase turn into a private key, public key, and address.
-            </div>
-          ) : LAYERS.map(layer => {
-            const shown = revealed >= layer.i;
-            return (
-              <div
-                key={layer.i}
-                className="bg-card border rounded-xl p-3 transition-all"
-                style={{
-                  borderColor: shown ? layer.color + '60' : 'var(--border)',
-                  opacity: shown ? 1 : 0.25,
-                }}
-              >
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="size-6 rounded-md flex items-center justify-center text-white text-[10px] font-black"
-                        style={{ backgroundColor: layer.color }}>{layer.i}</span>
-                  <span className="font-bold text-sm" style={{ color: layer.color }}>{layer.label}</span>
-                  {layer.hideable && (
-                    <button onClick={layer.hideable.toggle}
-                      className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold text-muted-foreground hover:text-foreground hover:bg-muted">
-                      {layer.hideable.is ? <Eye className="size-3" /> : <EyeOff className="size-3" />}
-                      {layer.hideable.is ? 'show' : 'hide'}
-                    </button>
-                  )}
-                </div>
-                <div className="text-[11px] text-muted-foreground mb-2 leading-snug">{layer.sub}</div>
-                {shown && layer.body}
-                {layer.i < 4 && shown && (
-                  <div className="flex justify-center mt-1 text-[10px] text-muted-foreground">
-                    <span className="font-mono">↓ one-way hash ↓</span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-
-          {/* Sign a transaction CTA */}
-          {wallet && revealed >= 4 && (
-            <div className="p-3 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/40 rounded-xl">
-              <div className="flex items-center justify-between gap-2 mb-1">
-                <div className="font-bold text-sm text-foreground">Try signing a transaction</div>
-                <button onClick={sign} disabled={signing === 'busy'}
-                  className="px-3 py-1 rounded-md bg-[#f59e0b] text-white text-xs font-bold hover:bg-[#f59e0b]/90 disabled:opacity-50 transition-colors">
-                  {signing === 'idle' ? '✍️ Sign' : signing === 'busy' ? 'Signing…' : '✓ Signed'}
-                </button>
-              </div>
-              {signing === 'done' && (
-                <div className="text-[11px] text-muted-foreground">
-                  The private key produced a signature anyone with your <span className="font-semibold text-foreground">public key</span> can verify — without ever seeing the private key itself. That's what makes Bitcoin transactions trust-free.
-                </div>
-              )}
-            </div>
-          )}
+      {/* Captions */}
+      <div className="grid grid-cols-2 gap-2 mt-3 text-[11px]">
+        <div ref={inCaptionRef} style={{ opacity: 0 }}
+          className="p-2 rounded-md border bg-[color:var(--card)]"
+          // dynamic border via style so Tailwind purge isn't needed for arbitrary alpha
+          // eslint-disable-next-line react/jsx-no-comment-textnodes
+        >
+          <div className="text-[10px] uppercase tracking-widest font-bold mb-0.5" style={{ color: PUBLIC_COLOR }}>Anyone can send TO the IBAN</div>
+          <div className="text-muted-foreground leading-snug">It's printed on receipts, on the website footer, even on a coffee mug. Public.</div>
         </div>
+        <div ref={outCaptionRef} style={{ opacity: 0 }}
+          className="p-2 rounded-md border bg-[color:var(--card)]"
+        >
+          <div className="text-[10px] uppercase tracking-widest font-bold mb-0.5" style={{ color: PRIVATE_COLOR }}>Only the PIN holder spends FROM it</div>
+          <div className="text-muted-foreground leading-snug">Without the PIN, the IBAN alone moves nothing. Secret.</div>
+        </div>
+      </div>
 
-        {/* Right — Safe/danger rules + analogy */}
-        <div className="flex flex-col gap-3 min-h-0 overflow-y-auto">
-          <div className="p-4 bg-card border-2 border-[#39B54A]/40 rounded-xl">
-            <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-2">✅ Safe to share</div>
-            <ul className="text-sm text-foreground space-y-1.5">
-              <li className="flex gap-2"><span className="text-[#39B54A] shrink-0">›</span><span><strong>Address</strong> — paste it anywhere, give it on a business card.</span></li>
-              <li className="flex gap-2"><span className="text-[#39B54A] shrink-0">›</span><span><strong>Public key</strong> — used to verify signatures, can't be used to spend.</span></li>
-            </ul>
-          </div>
+      {/* Mapping row */}
+      <div className="mt-3 pt-3 border-t border-border grid grid-cols-2 gap-2 text-[11px]">
+        <div className="flex items-center gap-2">
+          <span className="size-2 rounded-full shrink-0" style={{ background: PUBLIC_COLOR }}></span>
+          <span><strong className="text-foreground">IBAN</strong> ≡ Bitcoin <strong style={{ color: PUBLIC_COLOR }}>address</strong></span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="size-2 rounded-full shrink-0" style={{ background: PRIVATE_COLOR }}></span>
+          <span><strong className="text-foreground">PIN</strong> ≡ <strong style={{ color: PRIVATE_COLOR }}>private key</strong></span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-          <div className="p-4 bg-card border-2 border-[#ED1C24]/40 rounded-xl">
-            <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest mb-2">🚫 Never share</div>
-            <ul className="text-sm text-foreground space-y-1.5">
-              <li className="flex gap-2"><span className="text-[#ED1C24] shrink-0">›</span><span><strong>Private key</strong> — anyone who has it can spend everything at this address.</span></li>
-              <li className="flex gap-2"><span className="text-[#ED1C24] shrink-0">›</span><span><strong>Seed phrase</strong> — regenerates the private key (and every key derived from it).</span></li>
-            </ul>
-          </div>
+/* ─────────────────────── HOME (mailbox + front door key) ────────────────── */
 
-          <div className="p-4 bg-muted/40 border border-border rounded-xl flex-1">
-            <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">🏦 Mental model</div>
-            <div className="text-sm text-muted-foreground leading-snug space-y-2">
-              <p><strong className="text-foreground">Address</strong> ≈ your bank account number — share to receive.</p>
-              <p><strong className="text-foreground">Private key</strong> ≈ your debit-card PIN — proves ownership.</p>
-              <p><strong className="text-foreground">Seed phrase</strong> ≈ the master backup — recreates the entire wallet from scratch on any device.</p>
-            </div>
-          </div>
+function HomeKeysAnalogy() {
+  const rootRef       = useRef<HTMLDivElement | null>(null);
+  const letterRefs    = useRef<(SVGGElement | null)[]>([]);
+  const keyRef        = useRef<SVGGElement | null>(null);
+  const doorRef       = useRef<SVGGElement | null>(null);
+  const insideRef     = useRef<SVGGElement | null>(null);
+  const inCaptionRef  = useRef<HTMLDivElement | null>(null);
+  const outCaptionRef = useRef<HTMLDivElement | null>(null);
 
-          <div className="p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-lg text-[11px] text-muted-foreground">
-            <strong className="text-foreground">Note:</strong> this demo uses SHA-256 to <em>illustrate</em> one-way derivation. Real Bitcoin uses ECDSA on the secp256k1 curve plus RIPEMD-160 + base58. Don't use any value here in production.
+  const [phase, setPhase] = useState<'idle' | 'playing'>('idle');
+  const playedRef         = useRef(false);
+
+  const play = () => {
+    if (phase === 'playing') return;
+    setPhase('playing');
+
+    // Reset
+    letterRefs.current.forEach(g => {
+      if (!g) return;
+      g.style.opacity   = '0';
+      g.style.transform = 'translate(0px, -160px) rotate(-12deg)';
+    });
+    if (keyRef.current)    { keyRef.current.style.opacity = '0'; keyRef.current.style.transform = 'translate(80px, 0px) rotate(0deg)'; }
+    if (doorRef.current)   doorRef.current.style.transform = 'rotateY(0deg)';
+    if (insideRef.current) insideRef.current.style.opacity = '0';
+    if (inCaptionRef.current)  inCaptionRef.current.style.opacity  = '0';
+    if (outCaptionRef.current) outCaptionRef.current.style.opacity = '0';
+
+    const tl = anime.timeline({
+      easing: 'easeOutQuad',
+      complete: () => setPhase('idle'),
+    });
+
+    // 1) Three letters drop into the mailbox (staggered, parabolic-ish)
+    tl.add({
+      targets:    letterRefs.current.filter(Boolean),
+      opacity:    [0, 1],
+      translateY: [-160, 0],
+      translateX: (_el: SVGGElement, i: number) => [(i - 1) * 28, 0],
+      rotate:     ['-12deg', '0deg'],
+      duration:   650,
+      delay:      anime.stagger(220),
+    })
+    .add({
+      targets:    inCaptionRef.current,
+      opacity:    [0, 1],
+      translateY: [4, 0],
+      duration:   400,
+    }, '-=200')
+
+    // 2) Pause, then a key flies in FROM THE RIGHT (over the door) so it
+    //    doesn't pass through the mailbox on the way to the keyhole.
+    .add({
+      targets:    keyRef.current,
+      opacity:    [0, 1],
+      translateX: [80, 0],
+      translateY: [0, 0],
+      duration:   500,
+      delay:      500,
+    })
+    // 3) Key rotates 90° in the lock
+    .add({
+      targets:  keyRef.current,
+      rotate:   ['0deg', '90deg'],
+      duration: 450,
+      easing:   'easeInOutQuad',
+    })
+    // 4) Door opens (rotateY) — the inside reveals (letters retrieved)
+    .add({
+      targets:  doorRef.current,
+      rotateY:  ['0deg', '-72deg'],
+      duration: 600,
+      easing:   'easeInOutCubic',
+    }, '-=100')
+    .add({
+      targets: insideRef.current,
+      opacity: [0, 1],
+      duration: 350,
+    }, '-=300')
+    .add({
+      targets:    outCaptionRef.current,
+      opacity:    [0, 1],
+      translateY: [4, 0],
+      duration:   400,
+    }, '-=200');
+  };
+
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const obs = new IntersectionObserver(entries => {
+      for (const e of entries) {
+        if (e.isIntersecting && !playedRef.current) {
+          playedRef.current = true;
+          setTimeout(play, 250);
+          break;
+        }
+      }
+    }, { threshold: 0.35 });
+    obs.observe(rootRef.current);
+    return () => obs.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div ref={rootRef} className="relative flex flex-col bg-card border border-border rounded-xl p-4 min-h-[340px] overflow-hidden">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Analogy 2</div>
+          <h3 className="text-base lg:text-lg font-bold text-foreground leading-tight">Your home: mailbox + front-door key</h3>
+        </div>
+        <button
+          onClick={play}
+          disabled={phase === 'playing'}
+          className="text-[11px] px-2.5 py-1 rounded-md bg-muted/60 hover:bg-muted text-foreground font-semibold disabled:opacity-50 transition-colors"
+        >↻ Replay</button>
+      </div>
+
+      {/* Stage — SVG house with mailbox + animated key */}
+      <div className="relative flex-1 min-h-[180px] flex items-center justify-center">
+        <svg viewBox="0 0 360 200" className="w-full max-w-[420px] h-auto" style={{ overflow: 'visible' }}>
+          {/* Sky / ground line */}
+          <line x1="0" y1="180" x2="360" y2="180" stroke="currentColor" strokeOpacity="0.15" strokeWidth="1" />
+
+          {/* House body */}
+          <rect x="90" y="80" width="200" height="100" rx="2" fill="hsl(var(--muted))" stroke="hsl(var(--border))" strokeWidth="1" />
+          {/* Roof */}
+          <polygon points="80,80 300,80 190,32" fill="#ED1C24" opacity="0.85" />
+          {/* Window */}
+          <rect x="110" y="100" width="40" height="34" rx="2" fill="#fde68a" stroke="hsl(var(--border))" strokeWidth="1" />
+          <line x1="130" y1="100" x2="130" y2="134" stroke="hsl(var(--border))" strokeWidth="1" />
+          <line x1="110" y1="117" x2="150" y2="117" stroke="hsl(var(--border))" strokeWidth="1" />
+
+          {/* Inside (revealed when door opens) */}
+          <g ref={insideRef} style={{ opacity: 0 }}>
+            <rect x="232" y="110" width="48" height="70" fill="#fde68a" opacity="0.7" />
+            <text x="256" y="150" fontSize="20" textAnchor="middle">✉️</text>
+            <text x="256" y="172" fontSize="11" textAnchor="middle" fill="hsl(var(--foreground))" fontWeight="600">você</text>
+          </g>
+
+          {/* Door — pivots on its left edge for an "opens inward" rotateY */}
+          <g
+            ref={doorRef}
+            style={{
+              transformOrigin: '232px 180px',
+              transformBox: 'fill-box' as React.CSSProperties['transformBox'],
+            }}
+          >
+            <rect x="232" y="110" width="48" height="70" rx="1" fill="#7c2d12" />
+            {/* Door handle */}
+            <circle cx="268" cy="148" r="2.5" fill="#fbbf24" />
+            {/* Lock keyhole */}
+            <circle cx="262" cy="148" r="3.5" fill="#0f172a" stroke="#1e293b" strokeWidth="0.5" />
+          </g>
+
+          {/* Mailbox — STANDALONE on its own post to the LEFT of the house
+              (the house body spans x=90-290, so the mailbox sits clear of it). */}
+          <g>
+            {/* Mailbox body — sits at x:20-60, y:120-150 */}
+            <rect x="20" y="120" width="40" height="30" rx="3" fill="#1e293b" stroke="#0f172a" strokeWidth="0.8" />
+            {/* Letter slot — clear opening across the top front */}
+            <rect x="25" y="125" width="30" height="4" rx="1.5" fill="#94a3b8" />
+            {/* "MAIL" label across the bottom of the box */}
+            <text x="40" y="144" fontSize="6" textAnchor="middle" fill="#94a3b8" fontWeight="700">MAIL</text>
+            {/* Post — anchors the mailbox to the ground (y=180) */}
+            <rect x="38" y="150" width="4" height="30" fill="#475569" />
+            {/* Tiny base on the post so it doesn't look floating */}
+            <rect x="34" y="178" width="12" height="2" rx="0.5" fill="#334155" />
+          </g>
+
+          {/* Letters — three envelopes drop from above into the slot at y≈127 */}
+          {[0, 1, 2].map(i => (
+            <g
+              key={i}
+              ref={el => { letterRefs.current[i] = el; }}
+              style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'] }}
+              transform={`translate(${29 + i * 1}, ${120 - i * 1})`}
+            >
+              <rect x="0" y="0" width="22" height="10" rx="1.5" fill="#fef3c7" stroke="#d97706" strokeWidth="0.7" />
+              <path d="M0,0 L11,6 L22,0" fill="none" stroke="#d97706" strokeWidth="0.7" />
+            </g>
+          ))}
+
+          {/* Key — handle just LEFT of the keyhole, blade extending INTO the
+              keyhole at world (262, 148). Flies in from the right and rotates 90°
+              around the keyhole. */}
+          <g
+            ref={keyRef}
+            style={{
+              opacity: 0,
+              transformOrigin: '262px 148px',
+              transformBox: 'fill-box' as React.CSSProperties['transformBox'],
+            }}
+            transform="translate(251, 144)"
+          >
+            {/* Handle ring — center at world (256, 148), just to the left of keyhole at (262, 148) */}
+            <circle cx="5" cy="4" r="4" fill="none" stroke={PRIVATE_COLOR} strokeWidth="2" />
+            {/* Blade — runs from world x=260 to x=274, passing through the keyhole */}
+            <rect x="9" y="3" width="14" height="2" rx="0.6" fill={PRIVATE_COLOR} />
+            {/* Teeth at the tip — small bumps on the blade's underside */}
+            <rect x="17" y="5" width="1.6" height="2.4" fill={PRIVATE_COLOR} />
+            <rect x="20" y="5" width="1.6" height="3" fill={PRIVATE_COLOR} />
+          </g>
+        </svg>
+      </div>
+
+      {/* Captions */}
+      <div className="grid grid-cols-2 gap-2 mt-3 text-[11px]">
+        <div ref={inCaptionRef} style={{ opacity: 0 }} className="p-2 rounded-md border bg-[color:var(--card)]">
+          <div className="text-[10px] uppercase tracking-widest font-bold mb-0.5" style={{ color: PUBLIC_COLOR }}>Anyone drops mail in</div>
+          <div className="text-muted-foreground leading-snug">The mailbox slot faces the street. Your address is on a thousand databases.</div>
+        </div>
+        <div ref={outCaptionRef} style={{ opacity: 0 }} className="p-2 rounded-md border bg-[color:var(--card)]">
+          <div className="text-[10px] uppercase tracking-widest font-bold mb-0.5" style={{ color: PRIVATE_COLOR }}>Only the keyholder enters</div>
+          <div className="text-muted-foreground leading-snug">No key, no door — and no shortcut. Lose the key and you're locked out forever.</div>
+        </div>
+      </div>
+
+      {/* Mapping row */}
+      <div className="mt-3 pt-3 border-t border-border grid grid-cols-2 gap-2 text-[11px]">
+        <div className="flex items-center gap-2">
+          <span className="size-2 rounded-full shrink-0" style={{ background: PUBLIC_COLOR }}></span>
+          <span><strong className="text-foreground">Mailbox slot</strong> ≡ Bitcoin <strong style={{ color: PUBLIC_COLOR }}>address</strong></span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="size-2 rounded-full shrink-0" style={{ background: PRIVATE_COLOR }}></span>
+          <span><strong className="text-foreground">Front-door key</strong> ≡ <strong style={{ color: PRIVATE_COLOR }}>private key</strong></span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────── COMPOSED SLIDE ─────────────────────────────── */
+
+function WalletAnalogiesDemo() {
+  return (
+    <div className="h-full flex flex-col p-5 lg:p-8">
+      {/* Header */}
+      <div className="shrink-0 mb-3">
+        <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">🧩 Interactive</span>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">What is a Wallet, really?</h2>
+        <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+          A wallet has <strong className="text-foreground">two things</strong> that behave very differently — one is public, one is secret.
+          Two everyday analogies make the asymmetry obvious.
+        </p>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5 overflow-y-auto">
+        <BankIbanAnalogy />
+        <HomeKeysAnalogy />
+      </div>
+
+      {/* Synthesis band */}
+      <div className="shrink-0 mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="p-3 bg-card border-2 rounded-xl" style={{ borderColor: PUBLIC_COLOR + '55' }}>
+          <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: PUBLIC_COLOR }}>✅ The public half</div>
+          <div className="text-sm text-foreground leading-snug">
+            <strong>Address</strong> — print it on a receipt, share it on Twitter, post it on a billboard. Anyone can send Bitcoin to it. Nobody can move what's there with it alone.
           </div>
         </div>
+        <div className="p-3 bg-card border-2 rounded-xl" style={{ borderColor: PRIVATE_COLOR + '55' }}>
+          <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: PRIVATE_COLOR }}>🚫 The private half</div>
+          <div className="text-sm text-foreground leading-snug">
+            <strong>Private key</strong> — the one thing that authorises spending. Like a PIN, like a house key: lose control of it and the funds are gone. No bank to call, no support line.
+          </div>
+        </div>
+      </div>
+
+      <div className="shrink-0 mt-3 p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-lg text-[11px] text-muted-foreground">
+        <strong className="text-foreground">Where the analogies break:</strong> a bank can reverse a fraud, a locksmith can change your lock. Bitcoin has neither. The math is the only enforcement — that's both the appeal and the responsibility of self-custody.
       </div>
     </div>
   );
@@ -1850,7 +2409,7 @@ export function Section2() {
 
         {/* ═══════ KEYS — INTERACTIVE DEMO ═══════ */}
         <div id="s2-keys-demo" className="h-full">
-          <BuildWalletDemo />
+          <WalletAnalogiesDemo />
         </div>
 
         {/* ═══════ 7. SECURITY MODEL ═══════ */}
@@ -1892,7 +2451,12 @@ export function Section2() {
           />
         </div>
 
-        {/* ═══════ 8a. MERKLE TREE — INTERACTIVE ═══════ */}
+        {/* ═══════ 8a-BUILD. BUILD A MERKLE TREE — TYPE YOUR OWN TXs ═══════ */}
+        <div id="s2-merkle-build" className="h-full">
+          <BuildMerkleSlide />
+        </div>
+
+        {/* ═══════ 8a. MERKLE TREE — INTERACTIVE (TAMPER) ═══════ */}
         <div id="s2-merkle" className="h-full">
           <MerkleTreeDemo />
         </div>
@@ -1949,93 +2513,111 @@ export function Section2() {
         </div>
 
         {/* ═══════ 9. BITCOIN'S PROGRAMMABILITY LIMITS ═══════ */}
-        <div id="s2-programmability" className="h-full flex flex-col p-5 lg:p-8">
+        <div id="s2-programmability" className="h-full flex flex-col p-5 lg:p-8 overflow-y-auto">
 
-          <div className="shrink-0 mb-3">
+          <div className="shrink-0 mb-4">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Bitcoin Wasn't Built to Be Programmable</h2>
-            <p className="text-sm text-muted-foreground">By design, Bitcoin prioritises security and simplicity over flexibility — but that left a gap others tried to fill.</p>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              By design, Bitcoin prioritises security and simplicity over flexibility — but that left a gap others tried to fill.
+            </p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-4">
-
-            {/* Left column */}
-            <div className="flex flex-col gap-4 min-h-0">
-
-              <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-2">
-                <h3 className="font-bold text-foreground flex items-center gap-2">
-                  <span className="size-7 rounded-lg bg-[#f59e0b]/20 flex items-center justify-center text-sm">📜</span>
-                  Bitcoin Script — Simple by Design
-                </h3>
+          {/* 1 — PREMISE: what Bitcoin Script IS */}
+          <div className="shrink-0 bg-card border border-[#f59e0b]/40 rounded-xl p-4 mb-4">
+            <div className="flex items-start gap-3">
+              <span className="size-10 rounded-lg bg-[#f59e0b]/20 flex items-center justify-center text-xl shrink-0">📜</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#f59e0b]">The premise</span>
+                </div>
+                <h3 className="font-bold text-foreground mb-1.5">Bitcoin Script — Simple by Design</h3>
                 <p className="text-sm text-muted-foreground">
-                  Bitcoin does have a built-in scripting language called <span className="text-foreground font-medium">Bitcoin Script</span>. It can handle conditions like "spend only with two signatures" or "unlock after a time delay". But it is intentionally <span className="text-foreground font-medium">not Turing-complete</span> — there are no loops, no persistent state, and no complex logic.
+                  Bitcoin <em>does</em> have a built-in scripting language called <span className="text-foreground font-medium">Bitcoin Script</span>. It handles conditions like "spend only with two signatures" or "unlock after a time delay". But it is intentionally <span className="text-foreground font-medium">not Turing-complete</span> — no loops, no persistent state, no complex logic.
                 </p>
-                <div className="px-3 py-2 bg-[#f59e0b]/10 border border-[#f59e0b]/30 rounded-lg text-xs text-muted-foreground italic">
+                <div className="mt-2 px-3 py-1.5 bg-[#f59e0b]/10 border border-[#f59e0b]/30 rounded-md text-xs text-muted-foreground italic">
                   Satoshi's reasoning: a simpler language has a smaller attack surface. The fewer things it can do, the fewer ways it can go wrong.
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-2">
-                <h3 className="font-bold text-foreground flex items-center gap-2">
-                  <span className="size-7 rounded-lg bg-[#6366f1]/20 flex items-center justify-center text-sm">🧪</span>
-                  Early Attempts to Build on Bitcoin
-                </h3>
-                <ul className="text-sm text-muted-foreground space-y-2">
-                  <li className="flex gap-2">
-                    <span className="text-[#f59e0b] shrink-0 font-bold">2012</span>
-                    <span><span className="text-foreground font-medium">Colored Coins</span> — encode metadata in Bitcoin transactions to represent real-world assets. Clever, but very limited.</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-[#f59e0b] shrink-0 font-bold">2013</span>
-                    <span><span className="text-foreground font-medium">Mastercoin / Omni Layer</span> — a protocol layer on top of Bitcoin. Enabled token creation. Still constrained by Bitcoin Script.</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-[#f59e0b] shrink-0 font-bold">2014</span>
-                    <span><span className="text-foreground font-medium">Counterparty</span> — added smart contract-like features by encoding data into Bitcoin transactions. Functional, but hacky and slow.</span>
-                  </li>
-                </ul>
+          {/* 2 — TIMELINE: workarounds the community tried */}
+          <div className="shrink-0 mb-4">
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#6366f1]">The workarounds</span>
+              <span className="text-xs text-muted-foreground">— bolted on top of Bitcoin Script</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {[
+                { year: '2012', name: 'Colored Coins',          desc: 'Encode metadata in Bitcoin transactions to represent real-world assets. Clever, but very limited.' },
+                { year: '2013', name: 'Mastercoin / Omni Layer', desc: 'A protocol layer on top of Bitcoin. Enabled token creation. Still constrained by Bitcoin Script.' },
+                { year: '2014', name: 'Counterparty',           desc: 'Added smart-contract-like features by encoding data into Bitcoin transactions. Functional, but hacky and slow.' },
+              ].map((item, idx) => (
+                <div key={item.name} className="relative bg-card border border-border rounded-xl p-3 flex flex-col">
+                  <div className="absolute -top-2 left-3 px-1.5 py-0.5 rounded bg-background border border-border text-[10px] font-mono font-bold text-[#f59e0b]">
+                    {item.year}
+                  </div>
+                  <div className="flex items-start justify-between mb-1 pt-1">
+                    <span className="font-bold text-foreground text-sm leading-tight">{item.name}</span>
+                    <span className="size-5 rounded bg-[#6366f1]/20 flex items-center justify-center text-[10px] shrink-0 ml-2">🧪</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground leading-snug">{item.desc}</div>
+                  {idx < 2 && (
+                    <div className="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-muted-foreground text-sm">→</div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 3 — VERDICT: hard limits vs the pivot */}
+          <div className="flex-1 min-h-[260px] grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            {/* Hard limits — what no workaround could fix */}
+            <div className="bg-card border-2 border-[#ED1C24]/40 rounded-xl p-4 flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <span className="size-7 rounded-lg bg-[#ED1C24]/20 flex items-center justify-center text-sm">🚧</span>
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-[#ED1C24]">The hard limits</div>
+                  <h3 className="font-bold text-foreground leading-tight">What no workaround could fix</h3>
+                </div>
               </div>
-
+              <div className="grid grid-cols-1 gap-1.5 mt-1">
+                {[
+                  { label: 'Complex smart contracts',    why: 'No loops, no state' },
+                  { label: 'Decentralised apps (dApps)', why: 'No persistent logic' },
+                  { label: 'On-chain tokens & NFTs',     why: 'No native token standard' },
+                  { label: 'Autonomous on-chain rules',  why: 'Script too restrictive' },
+                ].map(item => (
+                  <div key={item.label} className="flex items-center justify-between gap-3 bg-muted/40 rounded-lg px-2.5 py-1.5">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-[#ED1C24] font-bold text-sm shrink-0">✗</span>
+                      <span className="text-sm font-medium text-foreground truncate">{item.label}</span>
+                    </div>
+                    <span className="text-[11px] text-muted-foreground shrink-0 text-right">{item.why}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Right column */}
-            <div className="flex flex-col gap-4 min-h-0">
-
-              <div className="bg-card border-2 border-[#ED1C24]/40 rounded-xl p-4 flex flex-col gap-2">
-                <h3 className="font-bold text-foreground flex items-center gap-2">
-                  <span className="size-7 rounded-lg bg-[#ED1C24]/20 flex items-center justify-center text-sm">🚧</span>
-                  What You Simply Cannot Do on Bitcoin
-                </h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { label: 'Complex smart contracts', why: 'No loops, no state' },
-                    { label: 'Decentralised apps (dApps)', why: 'No persistent logic' },
-                    { label: 'On-chain tokens & NFTs', why: 'No native token standard' },
-                    { label: 'Autonomous on-chain rules', why: 'Script too restrictive' },
-                  ].map(item => (
-                    <div key={item.label} className="bg-muted/50 rounded-lg p-2">
-                      <div className="text-xs font-bold text-foreground">✗ {item.label}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5">{item.why}</div>
-                    </div>
-                  ))}
+            {/* The pivot — Vitalik & Ethereum */}
+            <div className="bg-gradient-to-br from-[#627EEA]/15 to-[#39B54A]/10 border border-[#627EEA]/40 rounded-xl p-4 flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <span className="size-7 rounded-lg bg-[#627EEA]/20 flex items-center justify-center text-sm">💡</span>
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-[#627EEA]">The pivot</div>
+                  <h3 className="font-bold text-foreground leading-tight">A new blockchain instead of patching this one</h3>
                 </div>
               </div>
-
-              <div className="bg-gradient-to-br from-[#627EEA]/15 to-[#39B54A]/10 border border-[#627EEA]/40 rounded-xl p-4 flex flex-col gap-2 flex-1">
-                <h3 className="font-bold text-foreground flex items-center gap-2">
-                  <span className="size-7 rounded-lg bg-[#627EEA]/20 flex items-center justify-center text-sm">💡</span>
-                  The Question That Started Everything
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  In 2013, a 19-year-old named <span className="text-foreground font-medium">Vitalik Buterin</span> asked: <em>"What if instead of adding features on top of Bitcoin, we built a new blockchain designed from the ground up to run any program?"</em>
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Bitcoin's core community largely rejected adding more programmability — they wanted to keep it simple and focused. That rejection became the direct motivation for <span className="text-foreground font-medium">Ethereum</span>.
-                </p>
-                <div className="mt-auto px-3 py-2 bg-[#627EEA]/10 border border-[#627EEA]/30 rounded-lg text-xs text-[#627EEA] font-medium text-center">
-                  → The story continues in Section 3
-                </div>
+              <p className="text-sm text-muted-foreground">
+                In 2013, a 19-year-old named <span className="text-foreground font-medium">Vitalik Buterin</span> asked: <em>"What if, instead of adding features on top of Bitcoin, we built a new blockchain designed from the ground up to run any program?"</em>
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Bitcoin's core community largely rejected adding more programmability — they wanted to keep it simple and focused. That rejection became the direct motivation for <span className="text-foreground font-medium">Ethereum</span>.
+              </p>
+              <div className="mt-auto px-3 py-2 bg-[#627EEA]/10 border border-[#627EEA]/30 rounded-lg text-xs text-[#627EEA] font-medium text-center">
+                → The story continues in Section 3
               </div>
-
             </div>
 
           </div>
