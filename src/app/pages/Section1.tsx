@@ -28,19 +28,32 @@ import { SectionNav } from '../components/navigation/SectionNav';
 import { Blocks, ExternalLink } from 'lucide-react';
 
 const section1Chapters = [
+  { kind: 'group' as const, id: 'g-s1-problem',    label: '🤔 The Problem' },
   { id: 's1-trust',     label: 'The Trust Problem' },
   { id: 's1-ledger',    label: 'The Shared Ledger' },
+
+  { kind: 'group' as const, id: 'g-s1-basics',     label: '🧱 What is a Blockchain?' },
   { id: 's1-what-is',   label: 'What is Blockchain?' },
   { id: 's1-transaction', label: 'Transactions' },
+
+  { kind: 'group' as const, id: 'g-s1-crypto',     label: '🔐 Cryptography' },
   { id: 's1-hashing',   label: 'Hashing' },
   { id: 's1-chain',     label: 'Linking Blocks' },
   { id: 's1-cascade',   label: 'The Cascade' },
+
+  { kind: 'group' as const, id: 'g-s1-network',    label: '🌐 Network & Consensus' },
   { id: 's1-network',      label: 'The Network' },
   { id: 's1-network-sort', label: 'Sort the Systems' },
   { id: 's1-consensus',    label: 'Consensus' },
   { id: 's1-protocols', label: 'The Protocol Zoo' },
+
+  { kind: 'group' as const, id: 'g-s1-mining',     label: '⛏️ Mining' },
   { id: 's1-mining',    label: 'Mining Race' },
+
+  { kind: 'group' as const, id: 'g-s1-wallet',     label: '👛 Identity' },
   { id: 's1-wallet',    label: 'Meet MetaMask' },
+
+  { kind: 'group' as const, id: 'g-s1-wrap',       label: '✅ Wrap Up' },
   { id: 's1-takeaways', label: 'Takeaways' },
 ];
 

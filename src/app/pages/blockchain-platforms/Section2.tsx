@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import anime from 'animejs';
 import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
@@ -10,26 +11,263 @@ import { GasCalculator } from '../../components/ethereum/GasCalculator';
 import { Eip1559Demo } from '../../components/ethereum/Eip1559Demo';
 
 const chapters = [
+  { kind: 'group' as const, id: 'g-s2-intro',     label: '🚪 Why Ethereum?' },
   { id: 's2-why', label: 'Why Ethereum?' },
+
+  { kind: 'group' as const, id: 'g-s2-accounts',  label: '👤 Accounts' },
   { id: 's2-accounts-visual', label: 'Accounts Visual' },
   { id: 's2-accounts', label: 'Accounts' },
+
+  { kind: 'group' as const, id: 'g-s2-machine',   label: '⚙️ The Machine' },
   { id: 's2-evm', label: 'EVM' },
   { id: 's2-transaction', label: 'Transaction' },
   { id: 's2-gas', label: '🧩 Gas' },
   { id: 's2-eip1559', label: '🧩 EIP-1559' },
   { id: 's2-smartcontracts', label: 'Smart Contracts' },
+
+  { kind: 'group' as const, id: 'g-s2-consensus', label: '🔄 Consensus & Ecosystem' },
   { id: 's2-consensus', label: 'PoW → PoS' },
   { id: 's2-evmecosystem', label: 'EVM Everywhere' },
-  { id: 's2-rollups', label: 'Rollups & L2s' },
+
+  { kind: 'group' as const, id: 'g-s2-scaling',   label: '📈 Scaling' },
+  { id: 's2-rollups',     label: 'Rollups & L2s' },
+  { id: 's2-rollups-anim',label: '🧩 L1 ↔ L2 Flow' },
+
+  { kind: 'group' as const, id: 'g-s2-apps',      label: '💰 DeFi & Apps' },
   { id: 's2-defi',        label: 'DeFi Mechanics' },
   { id: 's2-stablecoins', label: 'Stablecoins' },
   { id: 's2-apps',        label: 'Apps Beyond DeFi (1)' },
   { id: 's2-apps-2',      label: 'Apps Beyond DeFi (2)' },
+
+  { kind: 'group' as const, id: 'g-s2-compare',   label: '🆚 Comparison' },
   { id: 's2-comparison',  label: 'BTC vs ETH' },
+
+  { kind: 'group' as const, id: 'g-s2-fit',       label: '🎯 Fit Analysis' },
+  { id: 's2-bestfits',    label: '🎯 Best Fits' },
+  { id: 's2-worstfits',   label: '🚫 Worst Fits' },
+
+  { kind: 'group' as const, id: 'g-s2-wrap',      label: '✅ Wrap Up' },
   { id: 's2-quiz', label: 'Quiz' },
   { id: 's2-takeaways', label: 'Takeaways' },
   { id: 's2-summary', label: 'Summary' },
 ];
+
+/* ──────────────────── Rollups L1 ↔ L2 — animated flow ─────────────────────
+   Visualises what happens between Layer 1 and a Layer 2 rollup:
+     1. Users send many small txs on L2
+     2. The sequencer orders + executes them in a batch
+     3. The batch is COMPRESSED into a small blob
+     4. The blob is posted to L1 along with the new state root (+ proof)
+     5. L1 verifies and finalises — L2 inherits L1 security
+   Auto-plays on scroll-in + manual replay.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+function RollupsL1L2Animation() {
+  const rootRef     = useRef<HTMLDivElement | null>(null);
+  const stepRef     = useRef<HTMLDivElement | null>(null);
+  const userTxRefs  = useRef<(SVGGElement | null)[]>([]);
+  const batchBoxRef = useRef<SVGGElement | null>(null);
+  const blobRef     = useRef<SVGGElement | null>(null);
+  const l1BlockRef  = useRef<SVGGElement | null>(null);
+  const [phase, setPhase] = useState<'idle' | 'playing'>('idle');
+  const playedRef   = useRef(false);
+
+  const STEPS = [
+    { label: '1. Users send L2 transactions — fast, cheap, confirmed in ~1 s',                  color: '#8b5cf6' },
+    { label: '2. The Sequencer orders + executes them in a batch',                              color: '#f59e0b' },
+    { label: '3. The batch is COMPRESSED (calldata → blob) ~10–100× smaller',                   color: '#06b6d4' },
+    { label: '4. Compressed blob + new state root posted to L1 (EIP-4844 blob lane)',           color: '#3b82f6' },
+    { label: '5. L1 verifies the proof and finalises — L2 inherits Ethereum security',          color: '#10b981' },
+  ];
+
+  const setStep = (i: number) => {
+    if (!stepRef.current) return;
+    stepRef.current.textContent = STEPS[i].label;
+    stepRef.current.style.color = STEPS[i].color;
+    stepRef.current.style.borderColor = STEPS[i].color + 'AA';
+    stepRef.current.style.backgroundColor = STEPS[i].color + '14';
+  };
+
+  const play = () => {
+    if (phase === 'playing') return;
+    setPhase('playing');
+
+    userTxRefs.current.forEach(t => {
+      if (!t) return;
+      t.style.opacity = '0';
+      t.style.transform = 'translate(0, 0)';
+    });
+    if (batchBoxRef.current) batchBoxRef.current.style.opacity = '0';
+    if (blobRef.current)     { blobRef.current.style.opacity = '0'; blobRef.current.style.transform = 'translate(0, 0) scale(1)'; }
+    if (l1BlockRef.current)  l1BlockRef.current.style.opacity = '0';
+
+    const tl = anime.timeline({ easing: 'easeInOutCubic', complete: () => setPhase('idle') });
+
+    tl.add({
+      targets: userTxRefs.current.filter(Boolean),
+      opacity: [0, 1],
+      translateY: [-12, 0],
+      duration: 350,
+      delay: anime.stagger(80),
+      changeBegin: () => setStep(0),
+    })
+    .add({
+      targets: userTxRefs.current.filter(Boolean),
+      translateY: 30,
+      scale: 0.85,
+      duration: 600,
+      delay: anime.stagger(60),
+      changeBegin: () => setStep(1),
+    })
+    .add({
+      targets: batchBoxRef.current,
+      opacity: [0, 1],
+      scale: [0.6, 1],
+      duration: 500,
+      easing: 'easeOutQuad',
+      changeBegin: () => setStep(2),
+    })
+    .add({
+      targets: userTxRefs.current.filter(Boolean),
+      opacity: 0,
+      duration: 250,
+    }, '-=250')
+    .add({
+      targets: batchBoxRef.current,
+      scale: [1, 0.45],
+      duration: 600,
+      easing: 'easeInQuad',
+    })
+    .add({
+      targets: batchBoxRef.current,
+      opacity: 0,
+      duration: 200,
+    }, '-=100')
+    .add({
+      targets: blobRef.current,
+      opacity: [0, 1],
+      scale: [0.4, 1],
+      duration: 350,
+      easing: 'easeOutQuad',
+    }, '-=100')
+    .add({
+      targets: blobRef.current,
+      translateY: 110,
+      duration: 900,
+      changeBegin: () => setStep(3),
+    })
+    .add({
+      targets: l1BlockRef.current,
+      opacity: [0, 1],
+      scale: [0.6, 1.15, 1],
+      duration: 700,
+      easing: 'easeOutQuad',
+      changeBegin: () => setStep(4),
+    })
+    .add({
+      targets: blobRef.current,
+      opacity: [1, 0],
+      duration: 300,
+    }, '-=300');
+  };
+
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const obs = new IntersectionObserver(es => {
+      for (const e of es) {
+        if (e.isIntersecting && !playedRef.current) {
+          playedRef.current = true;
+          setTimeout(play, 350);
+          break;
+        }
+      }
+    }, { threshold: 0.35 });
+    obs.observe(rootRef.current);
+    return () => obs.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div ref={rootRef} className="flex flex-col gap-3 min-h-0 h-full">
+      <div className="shrink-0 flex items-start justify-between gap-3">
+        <div>
+          <div className="text-[10px] font-black uppercase tracking-widest text-[#8b5cf6]">Live animation</div>
+          <div className="text-sm font-bold text-foreground">L2 user txs → Sequencer → Compression → L1 finalisation</div>
+        </div>
+        <button
+          onClick={play}
+          disabled={phase === 'playing'}
+          className="text-[11px] px-2.5 py-1 rounded-md bg-muted/60 hover:bg-muted text-foreground font-semibold disabled:opacity-50 transition-colors shrink-0"
+        >↻ Replay</button>
+      </div>
+
+      <div ref={stepRef} className="shrink-0 px-3 py-2 rounded-lg border-2 text-xs font-bold transition-all" style={{ borderColor: STEPS[0].color + 'AA', backgroundColor: STEPS[0].color + '14', color: STEPS[0].color }}>
+        {STEPS[0].label}
+      </div>
+
+      <div className="flex-1 min-h-[280px] rounded-xl border border-border bg-card/40 p-3">
+        <svg viewBox="0 0 520 280" className="w-full h-full" style={{ overflow: 'visible' }}>
+          <rect x="20" y="20" width="480" height="80" rx="8" fill="#8b5cf615" stroke="#8b5cf6" strokeWidth="1.2" />
+          <text x="40" y="42" fontSize="11" fontWeight="900" fill="#8b5cf6">LAYER 2 — ROLLUP</text>
+          <text x="40" y="56" fontSize="9" fill="hsl(var(--muted-foreground))">Where your txs actually run · fast · cheap</text>
+
+          {[0, 1, 2, 3].map(i => (
+            <g key={i} ref={el => { userTxRefs.current[i] = el; }} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: `${100 + i * 50}px 78px` }}>
+              <rect x={85 + i * 50} y="68" width="30" height="22" rx="3" fill="#8b5cf6" stroke="#4c1d95" strokeWidth="0.7" />
+              <text x={100 + i * 50} y="83" textAnchor="middle" fontSize="9" fontWeight="800" fill="#fff">tx{i + 1}</text>
+            </g>
+          ))}
+
+          <rect x="320" y="60" width="80" height="34" rx="4" fill="#f59e0b22" stroke="#f59e0b" strokeWidth="1.3" />
+          <text x="360" y="78" textAnchor="middle" fontSize="9" fontWeight="900" fill="#f59e0b">SEQUENCER</text>
+          <text x="360" y="89" textAnchor="middle" fontSize="7" fill="hsl(var(--muted-foreground))">orders + executes</text>
+
+          <g ref={batchBoxRef} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '420px 78px' }}>
+            <rect x="406" y="64" width="58" height="28" rx="3" fill="#06b6d422" stroke="#06b6d4" strokeWidth="1.3" />
+            <text x="435" y="82" textAnchor="middle" fontSize="9" fontWeight="900" fill="#06b6d4">BATCH</text>
+          </g>
+
+          <g ref={blobRef} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '420px 78px' }}>
+            <rect x="408" y="68" width="24" height="20" rx="3" fill="#3b82f6" stroke="#1e3a8a" strokeWidth="1.2" />
+            <text x="420" y="82" textAnchor="middle" fontSize="7" fontWeight="900" fill="#fff">blob</text>
+          </g>
+
+          <text x="260" y="135" textAnchor="middle" fontSize="9" fontWeight="700" fill="hsl(var(--muted-foreground))" opacity="0.6">↓ compress + post ↓</text>
+
+          <rect x="20" y="170" width="480" height="80" rx="8" fill="#627EEA15" stroke="#627EEA" strokeWidth="1.2" />
+          <text x="40" y="192" fontSize="11" fontWeight="900" fill="#627EEA">LAYER 1 — ETHEREUM</text>
+          <text x="40" y="206" fontSize="9" fill="hsl(var(--muted-foreground))">Settlement + data availability · slow · expensive · secure</text>
+
+          {[1, 2, 3, 4].map(i => (
+            <g key={i}>
+              <rect x={140 + i * 50} y="216" width="34" height="26" rx="2" fill="#627EEA25" stroke="#627EEA" strokeWidth="0.8" />
+              <text x={157 + i * 50} y="232" textAnchor="middle" fontSize="7" fontWeight="800" fill="#627EEA">#L1</text>
+            </g>
+          ))}
+          <g ref={l1BlockRef} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '375px 229px' }}>
+            <rect x="358" y="216" width="34" height="26" rx="2" fill="#10b98140" stroke="#10b981" strokeWidth="1.4" />
+            <text x="375" y="232" textAnchor="middle" fontSize="7" fontWeight="800" fill="#10b981">✓ blob</text>
+          </g>
+        </svg>
+      </div>
+
+      <div className="shrink-0 grid grid-cols-2 lg:grid-cols-4 gap-2 text-[10px]">
+        <div className="rounded-md p-1.5 border" style={{ borderColor: '#8b5cf655', backgroundColor: '#8b5cf610' }}>
+          <span className="font-black text-[#8b5cf6]">L2 tx</span> <span className="text-muted-foreground">— user op on the rollup</span>
+        </div>
+        <div className="rounded-md p-1.5 border" style={{ borderColor: '#f59e0b55', backgroundColor: '#f59e0b10' }}>
+          <span className="font-black text-[#f59e0b]">Sequencer</span> <span className="text-muted-foreground">— orders + batches</span>
+        </div>
+        <div className="rounded-md p-1.5 border" style={{ borderColor: '#06b6d455', backgroundColor: '#06b6d410' }}>
+          <span className="font-black text-[#06b6d4]">Compress</span> <span className="text-muted-foreground">— blob, ~10-100× smaller</span>
+        </div>
+        <div className="rounded-md p-1.5 border" style={{ borderColor: '#10b98155', backgroundColor: '#10b98110' }}>
+          <span className="font-black text-[#10b981]">L1 finalise</span> <span className="text-muted-foreground">— inherits Ethereum security</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function BP_Section2() {
   return (
@@ -209,8 +447,11 @@ export function BP_Section2() {
               <div className="flex items-center gap-4">
                 <div className="size-16 rounded-2xl flex items-center justify-center text-4xl" style={{ backgroundColor: '#627EEA18' }}>🔑</div>
                 <div>
-                  <div className="font-black text-xl text-foreground">EOA</div>
-                  <div className="text-sm text-muted-foreground">Externally Owned Account</div>
+                  <div className="font-black text-xl text-foreground flex items-baseline gap-2">
+                    EOA
+                    <span className="text-sm font-bold text-[#627EEA]">= your Wallet 👛</span>
+                  </div>
+                  <div className="text-sm text-muted-foreground">Externally Owned Account — the MetaMask / hardware wallet you use day-to-day</div>
                 </div>
               </div>
               <div className="flex flex-col gap-2 flex-1">
@@ -333,9 +574,25 @@ export function BP_Section2() {
 
         {/* ═══════ S2-EVM ═══════ */}
         <div id="s2-evm" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
+          <div className="shrink-0 mb-3">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">The Ethereum Virtual Machine</h2>
             <p className="text-muted-foreground text-sm mt-1">A deterministic, sandboxed runtime replicated on every Ethereum node</p>
+          </div>
+
+          {/* JVM analogy banner — anchor the concept in something familiar before EVM-specifics */}
+          <div className="shrink-0 mb-4 rounded-xl border-2 p-3" style={{ borderColor: '#627EEAAA', backgroundColor: '#627EEA0d' }}>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl shrink-0">☕</span>
+              <div className="flex-1 min-w-0">
+                <div className="text-[10px] font-black uppercase tracking-widest text-[#627EEA]">Before EVM, there was…</div>
+                <div className="text-sm text-foreground leading-snug mt-0.5">
+                  Remember the <strong>Java Virtual Machine</strong>? Since the 90s, Java's promise has been <em>write once, run anywhere</em> — you compile your <code className="text-[#627EEA] font-mono">.java</code> file to bytecode, and any device with a JVM runs it identically. Windows, Mac, Linux, ATMs, set-top boxes — same bytecode, same result.
+                </div>
+                <div className="text-sm text-foreground leading-snug mt-1.5">
+                  The <strong className="text-[#627EEA]">EVM is exactly the same idea — but every node in the world is the JVM, and the program is your smart contract.</strong> You compile Solidity to EVM bytecode, the network runs it identically on tens of thousands of machines, and they all agree on the result. JVM solved portability; EVM adds <em>trustless consensus</em> on top.
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -1243,6 +1500,20 @@ export function BP_Section2() {
           </div>
         </div>
 
+        {/* ═══════ S2-ROLLUPS ANIMATION — animated L1 ↔ L2 flow ═══════ */}
+        <div id="s2-rollups-anim" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-3">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#8b5cf6]/15 border border-[#8b5cf6]/40 text-[#8b5cf6] text-xs font-bold">🧩 Animated</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">What Actually Happens Between L1 and L2</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              You just read the steps. Now watch them: user tx → sequencer → batch → compressed blob → L1 finalisation.
+            </p>
+          </div>
+          <div className="flex-1 min-h-0">
+            <RollupsL1L2Animation />
+          </div>
+        </div>
+
         {/* ═══════ DEFI MECHANICS ═══════ */}
         <div id="s2-defi" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-4">
@@ -1413,6 +1684,12 @@ export function BP_Section2() {
                 color: '#3b82f6',
                 mechanism: 'A regulated issuer holds USD (or short-dated treasuries) 1:1 in a bank account. Users mint tokens by depositing fiat; redeem by burning tokens. Pegged because the issuer guarantees redemption.',
                 examples: 'USDT (Tether) · ~$140B — largest, opaque attestations · USDC (Circle) · ~$60B — monthly Big-Four attestations · PYUSD (PayPal) · ~$1B — newer, regulated.',
+                logos: [
+                  { sym: 'USDT', color: '#26A17B', tag: '~$140B' },
+                  { sym: 'USDC', color: '#2775CA', tag: '~$60B'  },
+                  { sym: 'RLUSD', color: '#00AAE4', tag: 'Ripple' },
+                  { sym: 'PYUSD', color: '#003087', tag: 'PayPal' },
+                ],
                 risk: 'You\'re trusting the issuer. USDC briefly depegged to $0.87 in March 2023 when Circle had $3.3B locked in collapsed Silicon Valley Bank. Tether has settled multiple lawsuits over reserve disclosures.',
               },
               {
@@ -1422,6 +1699,12 @@ export function BP_Section2() {
                 color: '#8b5cf6',
                 mechanism: 'Users lock crypto (ETH, wBTC) into a smart contract at a 150-200% collateral ratio and mint stablecoins. If collateral value drops, the contract auto-liquidates positions. No human issuer.',
                 examples: 'DAI (MakerDAO/Sky) · ~$5B — the original, since 2017 · GHO (Aave) · LUSD (Liquity) · crvUSD (Curve) — each with slightly different liquidation mechanics.',
+                logos: [
+                  { sym: 'DAI',   color: '#F4B731', tag: 'MakerDAO' },
+                  { sym: 'GHO',   color: '#B6509E', tag: 'Aave' },
+                  { sym: 'LUSD',  color: '#745DDF', tag: 'Liquity' },
+                  { sym: 'crvUSD',color: '#40649F', tag: 'Curve' },
+                ],
                 risk: 'Capital-inefficient (need $150 of crypto to mint $100). Collateral itself is volatile — a fast crash can outrun liquidations (DAI briefly traded over $1 in March 2020). Modern DAI now holds significant USDC reserves, partially re-introducing custodial risk.',
               },
               {
@@ -1431,6 +1714,11 @@ export function BP_Section2() {
                 color: '#ED1C24',
                 mechanism: 'Maintain the peg via supply-mint/burn algorithms or delta-neutral derivatives positions. Pure algorithmic versions have a documented failure mode; hybrids (Frax, Ethena) blend collateral with synthetic strategies.',
                 examples: 'TerraUSD (UST) · collapsed May 2022, wiped out ~$60B — death-spiral case study · Frax · ~$650M, partially-collateralised hybrid · Ethena USDe · synthetic delta-neutral, ~$5B+ in 2024.',
+                logos: [
+                  { sym: 'UST',   color: '#172852', tag: '💀 collapsed' },
+                  { sym: 'FRAX',  color: '#000000', tag: 'hybrid' },
+                  { sym: 'USDe',  color: '#0E1313', tag: 'Ethena' },
+                ],
                 risk: 'Pure algorithmic: every prior attempt has failed. Hybrid: Ethena depends on ETH-perp funding rates staying positive — works in bull markets, untested through a sustained bear cycle. Treat with extra caution.',
               },
             ].map(s => (
@@ -1448,6 +1736,26 @@ export function BP_Section2() {
                     <div className="font-black text-sm leading-tight" style={{ color: s.color }}>{s.title}</div>
                     <div className="text-[10px] text-muted-foreground leading-tight">{s.sub}</div>
                   </div>
+                </div>
+                {/* Logo strip — branded badges per token in this category */}
+                <div className="flex flex-wrap gap-1.5 shrink-0">
+                  {s.logos.map(l => (
+                    <div
+                      key={l.sym}
+                      className="flex items-center gap-1.5 rounded-md border bg-card px-1.5 py-1"
+                      style={{ borderColor: l.color + '55' }}
+                      title={`${l.sym} · ${l.tag}`}
+                    >
+                      <div
+                        className="size-5 rounded-full flex items-center justify-center text-[7px] font-black text-white shrink-0"
+                        style={{ background: l.color }}
+                      >$</div>
+                      <div className="flex flex-col leading-none">
+                        <span className="text-[10px] font-black" style={{ color: l.color }}>{l.sym}</span>
+                        <span className="text-[8px] text-muted-foreground">{l.tag}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 <div className="rounded-lg border bg-card/60 px-2 py-1.5" style={{ borderColor: s.color + '30' }}>
                   <div className="text-[9px] font-bold uppercase tracking-wider" style={{ color: s.color }}>How the peg works</div>
@@ -1505,6 +1813,13 @@ export function BP_Section2() {
                 color: '#8b5cf6',
                 what: 'A unique on-chain token whose tokenURI points to off-chain metadata (image, JSON). The token proves provenance; the bytes typically live on IPFS or a centralised server.',
                 examples: 'CryptoPunks (2017) · Bored Ape (2021) · Tickets: Liverpool FC, Coachella · Music: Sound.xyz · Brand IP: Nike RTFKT, Disney pilots.',
+                projects: [
+                  { sym: '🟧 OpenSea',   tag: 'largest marketplace' },
+                  { sym: '🐵 BAYC',       tag: 'PFPs · culture' },
+                  { sym: '🟪 Sound.xyz',  tag: 'music NFTs' },
+                  { sym: '👟 Nike RTFKT', tag: 'brand-IP' },
+                  { sym: '🎟️ POAP',       tag: 'attendance proofs' },
+                ],
                 limit: 'Most metadata is off-chain — if the URL or IPFS pin disappears, the "NFT" is a broken pointer. The 2021-22 speculation cycle collapsed; survivors pivoted to utility (tickets, rights, identity) rather than JPEG flipping.',
               },
               {
@@ -1514,6 +1829,13 @@ export function BP_Section2() {
                 color: '#10b981',
                 what: 'A Decentralized Autonomous Organization is a smart contract that controls a treasury and executes proposals approved by token-holder votes. The contract — not a CEO — moves the funds.',
                 examples: 'MakerDAO (DAI issuance) · Uniswap DAO (controls $7B+ in UNI) · ENS DAO (.eth registry) · Optimism Citizen House · Gitcoin grants.',
+                projects: [
+                  { sym: '🦄 Uniswap DAO', tag: '$7B treasury' },
+                  { sym: '⚖️ MakerDAO',    tag: 'DAI issuance' },
+                  { sym: '🌐 ENS DAO',     tag: '.eth registry' },
+                  { sym: '🔴 Optimism',    tag: 'Citizen House' },
+                  { sym: '💚 Gitcoin',     tag: 'public-goods grants' },
+                ],
                 limit: 'Voter turnout often 1–5%. Token-weighted votes mean whales decide. Most "DAOs" delegate decisions to small core teams. Legal status of DAOs is unsettled in most jurisdictions.',
               },
             ].map(app => (
@@ -1532,9 +1854,22 @@ export function BP_Section2() {
                     <div className="text-xs text-muted-foreground leading-tight">{app.sub}</div>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground leading-snug flex-1">{app.what}</p>
+                <p className="text-sm text-muted-foreground leading-snug">{app.what}</p>
+                {/* Project badges — replace the empty visual area with real names */}
+                <div className="flex flex-wrap gap-1.5 flex-1 content-start">
+                  {app.projects.map(p => (
+                    <div
+                      key={p.sym}
+                      className="rounded-md border bg-card px-2 py-1 flex flex-col leading-tight"
+                      style={{ borderColor: app.color + '55' }}
+                    >
+                      <span className="text-[11px] font-bold text-foreground">{p.sym}</span>
+                      <span className="text-[9px] text-muted-foreground">{p.tag}</span>
+                    </div>
+                  ))}
+                </div>
                 <div className="rounded-lg border bg-card/60 px-3 py-1.5 text-xs leading-snug" style={{ borderColor: app.color + '40' }}>
-                  <span className="font-bold" style={{ color: app.color }}>Examples: </span>
+                  <span className="font-bold" style={{ color: app.color }}>More examples: </span>
                   <span className="text-muted-foreground">{app.examples}</span>
                 </div>
                 <div className="rounded-lg border bg-card/60 px-3 py-1.5 text-xs leading-snug" style={{ borderColor: '#ED1C2440' }}>
@@ -1562,6 +1897,13 @@ export function BP_Section2() {
                 color: '#f59e0b',
                 what: 'Replace email logins with wallet-based identity. ENS gives you a human name (alice.eth) for your address. Sign-In With Ethereum (SIWE) authenticates without passwords. Lens and Farcaster build social graphs on-chain.',
                 examples: 'ENS: 3M+ names registered · SIWE: 200+ apps integrated · Farcaster: ~300k DAU (2024) · Worldcoin: 7M+ verified humans · Lens: built around composable feed graphs.',
+                projects: [
+                  { sym: '🌐 ENS',        tag: '3M+ .eth names' },
+                  { sym: '🔑 SIWE',       tag: 'wallet sign-in' },
+                  { sym: '🌿 Lens',       tag: 'social graph' },
+                  { sym: '🟪 Farcaster',  tag: '~300k DAU' },
+                  { sym: '🌍 Worldcoin',  tag: '7M+ verified' },
+                ],
                 limit: 'Still niche vs Web2 social. Wallet-and-gas onboarding blocks most users. ENS names cost gas to mint. Decentralised social hasn\'t solved spam or moderation as well as centralised platforms — yet.',
               },
               {
@@ -1571,6 +1913,13 @@ export function BP_Section2() {
                 color: '#ED1C24',
                 what: 'Game assets (skins, characters, items) as tokens players actually own and can trade. Ranges from "off-chain game with NFT cosmetics" to "fully on-chain games" where every game state lives in contracts (Dojo engine).',
                 examples: 'Immutable (zkEVM for games) · Ronin (Axie Infinity peaked $3B GMV in 2021) · Decentraland · Realms / Loot Survivor on Starknet · DFK Chain (Avalanche L1).',
+                projects: [
+                  { sym: '🟦 Immutable',    tag: 'zkEVM for games' },
+                  { sym: '🐉 Axie · Ronin', tag: '$3B GMV peak' },
+                  { sym: '🏝️ Decentraland', tag: 'metaverse / land' },
+                  { sym: '⚔️ Loot Survivor', tag: 'fully on-chain' },
+                  { sym: '🌌 The Sandbox',   tag: 'voxel UGC' },
+                ],
                 limit: 'Most "Web3 games" failed (poor gameplay, predatory tokenomics, Ponzi-shaped incentives). Wallet UX still blocks mainstream gaming. Serious studios increasingly land on "game first, blockchain optional".',
               },
             ].map(app => (
@@ -1589,9 +1938,21 @@ export function BP_Section2() {
                     <div className="text-xs text-muted-foreground leading-tight">{app.sub}</div>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground leading-snug flex-1">{app.what}</p>
+                <p className="text-sm text-muted-foreground leading-snug">{app.what}</p>
+                <div className="flex flex-wrap gap-1.5 flex-1 content-start">
+                  {app.projects.map(p => (
+                    <div
+                      key={p.sym}
+                      className="rounded-md border bg-card px-2 py-1 flex flex-col leading-tight"
+                      style={{ borderColor: app.color + '55' }}
+                    >
+                      <span className="text-[11px] font-bold text-foreground">{p.sym}</span>
+                      <span className="text-[9px] text-muted-foreground">{p.tag}</span>
+                    </div>
+                  ))}
+                </div>
                 <div className="rounded-lg border bg-card/60 px-3 py-1.5 text-xs leading-snug" style={{ borderColor: app.color + '40' }}>
-                  <span className="font-bold" style={{ color: app.color }}>Examples: </span>
+                  <span className="font-bold" style={{ color: app.color }}>More examples: </span>
                   <span className="text-muted-foreground">{app.examples}</span>
                 </div>
                 <div className="rounded-lg border bg-card/60 px-3 py-1.5 text-xs leading-snug" style={{ borderColor: '#ED1C2440' }}>
@@ -1630,6 +1991,80 @@ export function BP_Section2() {
               { feature: 'Main L2', option1: 'Lightning Network', option2: 'Arbitrum / Optimism / Base' },
             ]}
           />
+        </div>
+
+        {/* ═══════ BEST FITS — WHERE ETHEREUM WINS ═══════ */}
+        <div id="s2-bestfits" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-3">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#627EEA]/15 border border-[#627EEA]/40 text-[#627EEA] text-xs font-bold">🎯 Best Fits</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where Ethereum Wins — The Use Cases It Actually Owns</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              Ethereum's design choices (Turing-complete EVM, account model, deep liquidity, ERC standards, the L2 stack) make it the default for anything that needs <strong className="text-foreground">programmable state + composability + an open developer ecosystem</strong>.
+            </p>
+          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {[
+              { emoji: '💰', name: 'DeFi & on-chain finance',          why: 'Composable money legos — Uniswap, Aave, Compound interoperate by default. ~$50B TVL across L1 + L2.', example: 'Uniswap (DEX), Aave (lending), MakerDAO (DAI), Lido (staking), Curve (stable swaps).' },
+              { emoji: '🖼️', name: 'NFTs & creator economy',           why: 'ERC-721 / ERC-1155 are the de-facto standards. Royalty enforcement + provable provenance built in.', example: 'OpenSea, Blur, Sotheby\'s on-chain auctions · ENS domains · POAPs · proof-of-attendance.' },
+              { emoji: '🏛️', name: 'DAOs & on-chain governance',       why: 'Token-weighted voting, programmable treasuries, transparent proposals — battle-tested governance kits.', example: 'Uniswap DAO ($6B treasury), MakerDAO, Arbitrum DAO, Optimism, Gitcoin grants.' },
+              { emoji: '🪙', name: 'Stablecoins & tokenised RWAs',    why: 'Deepest liquidity for USD-backed tokens; RWA issuance via institutional rails (BlackRock BUIDL, Franklin Templeton).', example: 'USDC, USDT, DAI, RLUSD, PYUSD on Ethereum · BlackRock BUIDL ($2B+ AUM) · Ondo Finance.' },
+            ].map(uc => (
+              <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#627EEA55', backgroundColor: '#627EEA08' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl shrink-0">{uc.emoji}</span>
+                  <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
+                </div>
+                <div className="text-xs text-muted-foreground leading-snug">
+                  <span className="font-bold text-[#627EEA] uppercase tracking-widest text-[9px] mr-1">Why</span>
+                  {uc.why}
+                </div>
+                <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
+                  <span className="font-bold text-[#627EEA] uppercase tracking-widest text-[9px] mr-1">In the wild</span>
+                  {uc.example}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="shrink-0 mt-3 p-2.5 bg-[#ef4444]/08 border border-[#ef4444]/30 rounded-lg text-[11px] text-muted-foreground">
+            <strong className="text-[#ef4444]">Not a fit for:</strong> pure store-of-value at Bitcoin-level neutrality (use BTC), high-throughput retail payments without L2 (gas spikes), private enterprise consortia where data must stay off public view (use Fabric), use cases that don't need programmability or composability — extra cost for no benefit.
+          </div>
+        </div>
+
+        {/* ═══════ WORST FITS — WHERE ETHEREUM IS WRONG ═══════ */}
+        <div id="s2-worstfits" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-3">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#ef4444]/15 border border-[#ef4444]/40 text-[#ef4444] text-xs font-bold">🚫 Worst Fits</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where Ethereum is the <em>Wrong</em> Tool</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              Ethereum is the default for anything programmable — but defaults aren't free. There are jobs where its open programmability is the problem, not the solution.
+            </p>
+          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {[
+              { emoji: '₿', name: 'Pure store of value / digital gold', why: 'ETH has no hard cap, monetary policy changes (Merge, EIP-1559), and a much smaller "sound money" credibility budget vs Bitcoin.', alt: 'Use Bitcoin for neutral, scarce, time-tested SoV.' },
+              { emoji: '🏢', name: 'Private B2B consortia, regulated data', why: 'Mainnet Ethereum is fully public — bad for KYC data, supplier contracts, healthcare records. Privacy layers (Aztec) help but add complexity and trust assumptions.', alt: 'Use Hyperledger Fabric · Quorum · R3 Corda for permissioned channels.' },
+              { emoji: '🚀', name: 'Consumer-grade payments on L1', why: 'L1 finalises in ~12 min and fees spike on demand. Even with L2s, withdrawal latency and bridge UX still bite for retail.',     alt: 'Use Bitcoin Lightning · Solana · XRPL · Stellar for sub-second payment UX.' },
+              { emoji: '🎮', name: 'Latency-critical games / real-time apps', why: '~12-second blocks on L1, ~1-2 s on most rollups — still too slow for tick-based gaming or live trading. Order-book matching at gas cost is brutal.',                                alt: 'Use Solana · Sui · Aptos · purpose-built order-book chains (dYdX v4) for latency-bound apps.' },
+            ].map(uc => (
+              <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#ef444455', backgroundColor: '#ef444408' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl shrink-0">{uc.emoji}</span>
+                  <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
+                </div>
+                <div className="text-xs text-muted-foreground leading-snug">
+                  <span className="font-bold text-[#ef4444] uppercase tracking-widest text-[9px] mr-1">Why not</span>
+                  {uc.why}
+                </div>
+                <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
+                  <span className="font-bold text-[#10b981] uppercase tracking-widest text-[9px] mr-1">Use instead</span>
+                  {uc.alt}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="shrink-0 mt-3 p-2.5 bg-[#10b981]/08 border border-[#10b981]/30 rounded-lg text-[11px] text-muted-foreground">
+            <strong className="text-[#10b981]">Right tool, right job:</strong> Ethereum is unmatched for composable on-chain finance, NFTs, DAOs, identity, and stablecoin issuance. For anything else, ask whether you really need a public global VM — sometimes you don't.
+          </div>
         </div>
 
         {/* ═══════ QUIZ ═══════ */}

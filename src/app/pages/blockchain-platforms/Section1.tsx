@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import anime from 'animejs';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
@@ -8,18 +9,582 @@ import { Bitcoin, Zap } from 'lucide-react';
 import { CalloutBox } from '../../components/shared/CalloutBox';
 
 const chapters = [
+  { kind: 'group' as const, id: 'g-s1-arch',    label: '🏗️ Architecture' },
   { id: 's1-architecture', label: 'Architecture' },
   { id: 's1-transaction', label: 'Transaction' },
+  { id: 's1-tx-lifecycle', label: '🧩 Tx Lifecycle' },
   { id: 's1-utxo-exercise', label: 'UTXO Exercise' },
+
+  { kind: 'group' as const, id: 'g-s1-consensus', label: '⛏️ Consensus' },
   { id: 's1-pow', label: 'Proof of Work' },
   { id: 's1-trilemma', label: 'Trilemma' },
+
+  { kind: 'group' as const, id: 'g-s1-apps',    label: '💼 Apps & L2' },
   { id: 's1-apps', label: 'Apps' },
-  { id: 's1-lightning', label: 'Lightning Network' },
+  { id: 's1-lightning', label: '🧩 Lightning Network' },
+
+  { kind: 'group' as const, id: 'g-s1-fit',     label: '🎯 Fit Analysis' },
+  { id: 's1-bestfits', label: '🎯 Best Fits' },
+  { id: 's1-worstfits', label: '🚫 Worst Fits' },
+
+  { kind: 'group' as const, id: 'g-s1-wrap',    label: '✅ Wrap Up' },
   { id: 's1-quiz', label: 'Quiz' },
-  { id: 's1-tx-lifecycle', label: 'Tx Lifecycle' },
   { id: 's1-takeaways', label: 'Takeaways' },
   { id: 's1-summary', label: 'Summary' },
 ];
+
+/* ─────────────────── Lightning vault — animated demo ───────────────────
+   A 2-of-2 multisig "vault" between Alice and Bob. Open it → exchange
+   off-chain payments freely → Close it to settle balances back on-chain.
+   Interactions:
+     - Open Channel button   → an on-chain tx animates from Alice + Bob into the vault
+     - ⚡ Pay buttons         → fast Lightning flashes that update the channel state
+     - Close Vault button    → a settlement tx animates from the vault up to L1
+   ──────────────────────────────────────────────────────────────────────── */
+
+const VAULT_DEPOSIT = 1.0;                  // BTC each side commits
+
+function LightningVaultDemo() {
+  const rootRef       = useRef<HTMLDivElement | null>(null);
+  const stepRef       = useRef<HTMLDivElement | null>(null);
+  const openPacketA   = useRef<SVGGElement | null>(null);
+  const openPacketB   = useRef<SVGGElement | null>(null);
+  const settlePacketA = useRef<SVGGElement | null>(null);
+  const settlePacketB = useRef<SVGGElement | null>(null);
+  const lightningRef  = useRef<SVGGElement | null>(null);
+  const newBlockRef   = useRef<SVGGElement | null>(null);
+  const vaultBoxRef   = useRef<SVGGElement | null>(null);
+
+  type Phase = 'closed' | 'opening' | 'open' | 'closing' | 'settled';
+  const [phase,        setPhase]        = useState<Phase>('closed');
+  const [aliceLocked,  setAliceLocked]  = useState(0);     // committed to vault
+  const [bobLocked,    setBobLocked]    = useState(0);
+  const [aliceShare,   setAliceShare]   = useState(0);     // Alice's claim inside vault
+  const [bobShare,     setBobShare]     = useState(0);
+  const [paymentLog,   setPaymentLog]   = useState<{ dir: 'A→B' | 'B→A'; amt: number }[]>([]);
+  const [aliceWallet,  setAliceWallet]  = useState(5.0);   // off-vault L1 balance
+  const [bobWallet,    setBobWallet]    = useState(3.0);
+
+  const setStep = (label: string, color: string) => {
+    if (!stepRef.current) return;
+    stepRef.current.textContent = label;
+    stepRef.current.style.color = color;
+    stepRef.current.style.borderColor = color + 'AA';
+    stepRef.current.style.backgroundColor = color + '14';
+  };
+
+  /* OPEN CHANNEL — one on-chain tx, each side commits VAULT_DEPOSIT BTC. */
+  const openChannel = () => {
+    if (phase !== 'closed') return;
+    setPhase('opening');
+    setStep('1. On-chain OPEN tx — Alice and Bob each lock 1 BTC in a 2-of-2 vault', '#f59e0b');
+
+    // Reset packet positions
+    [openPacketA, openPacketB].forEach(ref => {
+      if (!ref.current) return;
+      ref.current.style.opacity = '0';
+      ref.current.style.transform = 'translate(0, 0)';
+    });
+
+    const tl = anime.timeline({ easing: 'easeInOutCubic' });
+
+    // Alice → vault (from 70 → 220 on x axis, slight downward arc)
+    tl.add({
+      targets: openPacketA.current,
+      opacity: [0, 1],
+      translateX: [0, 150],
+      duration: 900,
+    }, 0)
+    .add({
+      targets: openPacketB.current,
+      opacity: [0, 1],
+      translateX: [0, -150],
+      duration: 900,
+    }, 0)
+    .add({
+      targets: vaultBoxRef.current,
+      scale: [1, 1.15, 1],
+      duration: 500,
+      easing: 'easeOutQuad',
+    })
+    .add({
+      targets: [openPacketA.current, openPacketB.current],
+      opacity: 0,
+      duration: 300,
+      complete: () => {
+        setAliceLocked(VAULT_DEPOSIT);
+        setBobLocked(VAULT_DEPOSIT);
+        setAliceShare(VAULT_DEPOSIT);
+        setBobShare(VAULT_DEPOSIT);
+        setAliceWallet(w => +(w - VAULT_DEPOSIT).toFixed(4));
+        setBobWallet(w => +(w - VAULT_DEPOSIT).toFixed(4));
+        setPhase('open');
+        setStep('Channel OPEN — vault holds 2 BTC. Off-chain payments are now free and instant.', '#10b981');
+      },
+    });
+  };
+
+  /* PAY — pure off-chain balance update + Lightning bolt flash. */
+  const pay = (dir: 'A→B' | 'B→A', amount: number) => {
+    if (phase !== 'open') return;
+    if (dir === 'A→B' && aliceShare < amount) return;
+    if (dir === 'B→A' && bobShare   < amount) return;
+
+    setStep(`⚡ Off-chain payment — ${dir} ${amount} BTC (no Bitcoin tx, channel state updates)`, '#8b5cf6');
+    setPaymentLog(log => [{ dir, amt: amount }, ...log].slice(0, 6));
+
+    if (dir === 'A→B') {
+      setAliceShare(s => +(s - amount).toFixed(4));
+      setBobShare(s => +(s + amount).toFixed(4));
+    } else {
+      setBobShare(s => +(s - amount).toFixed(4));
+      setAliceShare(s => +(s + amount).toFixed(4));
+    }
+
+    // Flash the lightning bolt over the channel
+    if (lightningRef.current) {
+      lightningRef.current.style.opacity = '0';
+      const dx = dir === 'A→B' ? 1 : -1;
+      anime({
+        targets: lightningRef.current,
+        opacity: [0, 1, 0],
+        translateX: [-50 * dx, 50 * dx],
+        duration: 700,
+        easing: 'easeOutQuad',
+      });
+    }
+  };
+
+  /* CLOSE VAULT — one on-chain settlement tx. Final balances back to wallets. */
+  const closeChannel = () => {
+    if (phase !== 'open') return;
+    setPhase('closing');
+    setStep('2. On-chain CLOSE tx — vault releases final balances back to Alice and Bob', '#ED1C24');
+
+    [settlePacketA, settlePacketB].forEach(ref => {
+      if (!ref.current) return;
+      ref.current.style.opacity = '0';
+      ref.current.style.transform = 'translate(0, 0)';
+    });
+    if (newBlockRef.current) newBlockRef.current.style.opacity = '0';
+
+    const finalA = aliceShare;
+    const finalB = bobShare;
+
+    const tl = anime.timeline({ easing: 'easeInOutCubic' });
+
+    // Vault releases tx into the L1 chain
+    tl.add({
+      targets: newBlockRef.current,
+      opacity: [0, 1],
+      scale: [0.6, 1],
+      duration: 600,
+      easing: 'easeOutQuad',
+    })
+    // Settlement packets fly to each wallet
+    .add({
+      targets: settlePacketA.current,
+      opacity: [0, 1],
+      translateX: [0, -150],
+      duration: 800,
+    })
+    .add({
+      targets: settlePacketB.current,
+      opacity: [0, 1],
+      translateX: [0, 150],
+      duration: 800,
+    }, '-=800')
+    .add({
+      targets: [settlePacketA.current, settlePacketB.current],
+      opacity: 0,
+      duration: 300,
+      complete: () => {
+        setAliceWallet(w => +(w + finalA).toFixed(4));
+        setBobWallet(w   => +(w + finalB).toFixed(4));
+        setAliceLocked(0);
+        setBobLocked(0);
+        setAliceShare(0);
+        setBobShare(0);
+        setPhase('settled');
+        setStep(`✓ Settled — only 2 on-chain txs total: OPEN + CLOSE. ${paymentLog.length} off-chain payments cost ~$0.`, '#10b981');
+      },
+    });
+  };
+
+  const reset = () => {
+    setPhase('closed');
+    setAliceLocked(0); setBobLocked(0); setAliceShare(0); setBobShare(0);
+    setAliceWallet(5.0); setBobWallet(3.0); setPaymentLog([]);
+    if (newBlockRef.current) newBlockRef.current.style.opacity = '0';
+    setStep('Channel closed. Click Open Channel to begin.', '#737373');
+  };
+
+  useEffect(() => {
+    setStep('Channel closed. Click Open Channel to begin.', '#737373');
+    if (rootRef.current) {
+      const obs = new IntersectionObserver(es => {
+        for (const e of es) {
+          if (e.isIntersecting && phase === 'closed' && aliceWallet === 5.0) {
+            setTimeout(openChannel, 600);
+            break;
+          }
+        }
+      }, { threshold: 0.35 });
+      obs.observe(rootRef.current);
+      return () => obs.disconnect();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div ref={rootRef} className="h-full flex flex-col p-5 lg:p-8">
+      {/* Header */}
+      <div className="shrink-0 mb-3 flex items-start justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">🧩 Animated</span>
+            <Zap className="size-5 text-[#f59e0b]" />
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Lightning Network — The Vault Model</h2>
+            <span className="px-2 py-0.5 bg-[#f59e0b]/20 text-[#f59e0b] rounded text-[10px] font-bold border border-[#f59e0b]/30">LAYER 2</span>
+          </div>
+          <p className="text-sm text-muted-foreground max-w-3xl mt-1">
+            Alice + Bob open a <strong className="text-foreground">2-of-2 multisig vault</strong> on Bitcoin. Inside the vault they trade unlimited times instantly, off-chain. Closing the vault is the <em>only</em> other on-chain tx.
+          </p>
+        </div>
+        <div className="shrink-0 flex flex-col gap-1.5 items-end">
+          {phase === 'closed' && (
+            <button onClick={openChannel} className="px-3 py-1.5 rounded-md bg-[#f59e0b] text-white text-xs font-bold hover:bg-[#f59e0b]/90 transition-colors">🔓 Open Channel</button>
+          )}
+          {phase === 'open' && (
+            <>
+              <button onClick={() => pay('A→B', 0.1)} className="w-full px-3 py-1.5 rounded-md bg-[#6366f1] text-white text-xs font-bold hover:bg-[#6366f1]/90 transition-colors disabled:opacity-50" disabled={aliceShare < 0.1}>⚡ Alice → Bob 0.1 BTC</button>
+              <button onClick={() => pay('B→A', 0.05)} className="w-full px-3 py-1.5 rounded-md bg-[#39B54A] text-white text-xs font-bold hover:bg-[#39B54A]/90 transition-colors disabled:opacity-50" disabled={bobShare < 0.05}>⚡ Bob → Alice 0.05 BTC</button>
+              <button onClick={closeChannel} className="w-full px-3 py-1.5 rounded-md bg-[#ED1C24] text-white text-xs font-bold hover:bg-[#ED1C24]/90 transition-colors">🔒 Close Vault</button>
+            </>
+          )}
+          {phase === 'settled' && (
+            <button onClick={reset} className="px-3 py-1.5 rounded-md bg-muted text-foreground text-xs font-bold hover:bg-muted/80 transition-colors">↺ Reset Demo</button>
+          )}
+        </div>
+      </div>
+
+      {/* Step caption */}
+      <div ref={stepRef} className="shrink-0 mb-3 px-3 py-2 rounded-lg border-2 text-xs font-bold transition-all" style={{ borderColor: '#737373AA', backgroundColor: '#73737314', color: '#737373' }}>
+        Channel closed. Click Open Channel to begin.
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-4">
+        {/* SVG stage */}
+        <div className="rounded-xl border border-border bg-card/40 p-3 min-h-[340px]">
+          <svg viewBox="0 0 520 340" className="w-full h-full" style={{ overflow: 'visible' }}>
+            {/* L1 chain band */}
+            <rect x="20" y="20" width="480" height="64" rx="8" fill="#f7931a14" stroke="#f7931a" strokeWidth="1.2" />
+            <text x="40" y="42" fontSize="11" fontWeight="900" fill="#f7931a">BITCOIN L1</text>
+            <text x="40" y="56" fontSize="9" fill="hsl(var(--muted-foreground))">Two on-chain txs total: OPEN + CLOSE</text>
+
+            {/* OPEN block — labelled so it doesn't blend in with regular chain */}
+            <g>
+              <rect x="170" y="40" width="36" height="28" rx="2" fill="#10b98140" stroke="#10b981" strokeWidth="1.2" />
+              <text x="188" y="58" textAnchor="middle" fontSize="7" fontWeight="800" fill="#10b981">OPEN</text>
+            </g>
+            {/* Existing chain blocks (decorative) — shifted right so OPEN/CLOSE don't overlap them */}
+            {[1, 2, 3, 4].map((i) => (
+              <g key={i}>
+                <rect x={210 + i * 50} y="40" width="32" height="28" rx="2" fill="#f7931a25" stroke="#f7931a" strokeWidth="0.8" />
+                <text x={226 + i * 50} y="58" textAnchor="middle" fontSize="7" fontWeight="800" fill="#f7931a">#{900_000 + i}</text>
+              </g>
+            ))}
+            {/* New CLOSE block — flashes when channel closes, sits at the right edge */}
+            <g ref={newBlockRef} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '478px 54px' }}>
+              <rect x="460" y="40" width="36" height="28" rx="2" fill="#ED1C2440" stroke="#ED1C24" strokeWidth="1.2" />
+              <text x="478" y="58" textAnchor="middle" fontSize="7" fontWeight="800" fill="#ED1C24">CLOSE</text>
+            </g>
+
+            {/* Alice */}
+            <g>
+              <circle cx="70" cy="190" r="32" fill="#6366f120" stroke="#6366f1" strokeWidth="1.6" />
+              <text x="70" y="186" textAnchor="middle" fontSize="20">👩</text>
+              <text x="70" y="208" textAnchor="middle" fontSize="10" fontWeight="900" fill="#6366f1">Alice</text>
+              <text x="70" y="232" textAnchor="middle" fontSize="9" fontWeight="700" fill="hsl(var(--foreground))">{aliceWallet.toFixed(2)} BTC</text>
+              <text x="70" y="246" textAnchor="middle" fontSize="7" fill="hsl(var(--muted-foreground))">(L1 wallet)</text>
+            </g>
+
+            {/* Bob */}
+            <g>
+              <circle cx="450" cy="190" r="32" fill="#39B54A20" stroke="#39B54A" strokeWidth="1.6" />
+              <text x="450" y="186" textAnchor="middle" fontSize="20">👨</text>
+              <text x="450" y="208" textAnchor="middle" fontSize="10" fontWeight="900" fill="#39B54A">Bob</text>
+              <text x="450" y="232" textAnchor="middle" fontSize="9" fontWeight="700" fill="hsl(var(--foreground))">{bobWallet.toFixed(2)} BTC</text>
+              <text x="450" y="246" textAnchor="middle" fontSize="7" fill="hsl(var(--muted-foreground))">(L1 wallet)</text>
+            </g>
+
+            {/* Vault (center) */}
+            <g ref={vaultBoxRef} style={{ transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '260px 190px' }}>
+              <rect x="200" y="140" width="120" height="100" rx="10" fill={aliceLocked + bobLocked > 0 ? '#10b98118' : '#73737318'} stroke={aliceLocked + bobLocked > 0 ? '#10b981' : '#737373'} strokeWidth="1.6" />
+              <text x="260" y="160" textAnchor="middle" fontSize="22">{aliceLocked + bobLocked > 0 ? '🔓' : '🔒'}</text>
+              <text x="260" y="182" textAnchor="middle" fontSize="10" fontWeight="900" fill={aliceLocked + bobLocked > 0 ? '#10b981' : '#737373'}>VAULT (2-of-2)</text>
+              <text x="260" y="208" textAnchor="middle" fontSize="12" fontWeight="900" fill="hsl(var(--foreground))">{(aliceLocked + bobLocked).toFixed(2)} BTC</text>
+              <text x="260" y="223" textAnchor="middle" fontSize="8" fill="hsl(var(--muted-foreground))">Alice {aliceShare.toFixed(2)} · Bob {bobShare.toFixed(2)}</text>
+            </g>
+
+            {/* Channel lines — Alice ↔ Vault ↔ Bob */}
+            <line x1="102" y1="190" x2="200" y2="190" stroke={aliceLocked > 0 ? '#10b981' : '#737373'} strokeWidth="1.4" strokeDasharray={aliceLocked > 0 ? 'none' : '4 4'} />
+            <line x1="320" y1="190" x2="418" y2="190" stroke={bobLocked > 0 ? '#10b981' : '#737373'} strokeWidth="1.4" strokeDasharray={bobLocked > 0 ? 'none' : '4 4'} />
+
+            {/* Lightning bolt (flashes on payment) */}
+            <g ref={lightningRef} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '260px 190px' }}>
+              <text x="260" y="195" textAnchor="middle" fontSize="22" fontWeight="900" fill="#facc15">⚡</text>
+            </g>
+
+            {/* Open packets (Alice → vault, Bob → vault) */}
+            <g ref={openPacketA} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '70px 130px' }}>
+              <rect x="55" y="115" width="32" height="22" rx="3" fill="#6366f1" stroke="#1e1b4b" strokeWidth="0.8" />
+              <text x="71" y="131" textAnchor="middle" fontSize="9" fontWeight="900" fill="#fff">1 BTC</text>
+            </g>
+            <g ref={openPacketB} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '450px 130px' }}>
+              <rect x="434" y="115" width="32" height="22" rx="3" fill="#39B54A" stroke="#14532d" strokeWidth="0.8" />
+              <text x="450" y="131" textAnchor="middle" fontSize="9" fontWeight="900" fill="#fff">1 BTC</text>
+            </g>
+
+            {/* Settle packets (vault → Alice, vault → Bob) */}
+            <g ref={settlePacketA} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '230px 270px' }}>
+              <rect x="214" y="258" width="40" height="22" rx="3" fill="#6366f1" stroke="#1e1b4b" strokeWidth="0.8" />
+              <text x="234" y="274" textAnchor="middle" fontSize="9" fontWeight="900" fill="#fff">Alice ←</text>
+            </g>
+            <g ref={settlePacketB} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '290px 270px' }}>
+              <rect x="266" y="258" width="40" height="22" rx="3" fill="#39B54A" stroke="#14532d" strokeWidth="0.8" />
+              <text x="286" y="274" textAnchor="middle" fontSize="9" fontWeight="900" fill="#fff">→ Bob</text>
+            </g>
+          </svg>
+        </div>
+
+        {/* Side panel — channel state + log */}
+        <div className="flex flex-col gap-2 min-h-0 overflow-y-auto">
+          <div className="rounded-xl border-2 p-3" style={{ borderColor: phase === 'open' ? '#10b98155' : '#73737355', backgroundColor: phase === 'open' ? '#10b9810d' : '#73737308' }}>
+            <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: phase === 'open' ? '#10b981' : '#737373' }}>Channel state</div>
+            <div className="text-sm font-bold text-foreground mt-0.5">{phase === 'closed' ? 'Closed' : phase === 'opening' ? 'Opening…' : phase === 'open' ? '🟢 Open' : phase === 'closing' ? 'Closing…' : '✓ Settled'}</div>
+            <div className="grid grid-cols-2 gap-2 mt-2 text-[11px]">
+              <div className="bg-card border border-border rounded-md p-1.5">
+                <div className="text-[9px] text-muted-foreground uppercase tracking-widest">Alice</div>
+                <div className="font-mono font-bold text-[#6366f1]">{aliceShare.toFixed(2)} BTC</div>
+              </div>
+              <div className="bg-card border border-border rounded-md p-1.5">
+                <div className="text-[9px] text-muted-foreground uppercase tracking-widest">Bob</div>
+                <div className="font-mono font-bold text-[#39B54A]">{bobShare.toFixed(2)} BTC</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-border bg-card p-2.5 flex-1 min-h-[120px] overflow-y-auto">
+            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5">Payments ({paymentLog.length})</div>
+            {paymentLog.length === 0 ? (
+              <div className="text-[11px] text-muted-foreground italic">Open the channel and start paying.</div>
+            ) : (
+              <div className="flex flex-col gap-1">
+                {paymentLog.map((p, i) => (
+                  <div key={i} className="flex items-center gap-2 text-[11px]">
+                    <span className="text-[#facc15]">⚡</span>
+                    <span className="font-mono font-bold" style={{ color: p.dir === 'A→B' ? '#6366f1' : '#39B54A' }}>{p.dir}</span>
+                    <span className="text-foreground">{p.amt.toFixed(2)} BTC</span>
+                    <span className="ml-auto text-[9px] text-muted-foreground uppercase tracking-widest">off-chain</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-xl p-2.5 text-[11px] text-muted-foreground leading-snug" style={{ borderWidth: '1px', borderColor: '#f59e0b40', backgroundColor: '#f59e0b08' }}>
+            <strong className="text-[#f59e0b]">The trick:</strong> the vault holds the funds. Every payment is a signed agreement on how the vault's contents should be split. The on-chain blockchain only ever sees TWO transactions — OPEN and CLOSE — no matter how many payments happened in between.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────── Bitcoin Tx Lifecycle — live animated walkthrough ───────────────
+   8 stages from wallet to settled finality. A single tx packet rides through
+   each stage; the current step caption updates as it enters each. Auto-plays
+   on scroll-in. ↻ Replay always available.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+const TX_STAGES = [
+  { n: 1, emoji: '👛', zone: '#f59e0b', title: 'Construct & Sign',  what: 'Wallet picks UTXOs as inputs, sets outputs (recipient + change), signs each input with your private key (ECDSA).',                  note: 'Still 100% local — nothing on-chain yet.' },
+  { n: 2, emoji: '📡', zone: '#6366f1', title: 'Broadcast',         what: 'The signed raw transaction is pushed to your wallet\'s ~8 full-node peers.',                                                            note: 'txid = double-SHA256 of the tx bytes.' },
+  { n: 3, emoji: '🔁', zone: '#6366f1', title: 'Relay & Validate',  what: 'Each node checks signatures, that inputs exist & are unspent, no double-spend, and fee sanity — then gossips it onward.',              note: 'Reaches ~50k nodes in under a second.' },
+  { n: 4, emoji: '⏳', zone: '#06b6d4', title: 'Mempool',           what: 'Valid but unconfirmed. The tx waits in every node\'s mempool, ranked by fee rate (sat/vByte).',                                          note: 'Higher fee → picked sooner.' },
+  { n: 5, emoji: '⛏️', zone: '#8b5cf6', title: 'Mining',            what: 'A miner selects the highest-fee txs, builds a candidate block (Merkle root), and grinds the nonce until blockHash < target.',           note: 'Proof of Work · ~10 min on average.' },
+  { n: 6, emoji: '🧱', zone: '#39B54A', title: 'Block Propagated',  what: 'The winning miner broadcasts the block. Every node re-verifies the PoW and all txs, then appends it to its local chain.',               note: 'Your tx now has 1 confirmation.' },
+  { n: 7, emoji: '🔒', zone: '#16a34a', title: 'Confirmations',     what: 'Each new block stacked on top buries it deeper. Rewriting it means out-hashing the whole network from this point on.',                  note: '~6 confirmations (~60 min).' },
+  { n: 8, emoji: '✅', zone: '#10b981', title: 'Settled — Final',   what: 'The payment is economically irreversible. The recipient can safely release the goods or service.',                                       note: 'End of the journey.' },
+];
+
+function TxLifecycleAnimated() {
+  const rootRef    = useRef<HTMLDivElement | null>(null);
+  const packetRef  = useRef<HTMLDivElement | null>(null);
+  const stepRef    = useRef<HTMLDivElement | null>(null);
+  const cardRefs   = useRef<(HTMLDivElement | null)[]>([]);
+  const [phase, setPhase] = useState<'idle' | 'playing'>('idle');
+  const playedRef  = useRef(false);
+
+  const play = () => {
+    if (phase === 'playing') return;
+    setPhase('playing');
+
+    // Reset all stage cards
+    cardRefs.current.forEach((c) => {
+      if (!c) return;
+      c.style.boxShadow = 'none';
+      c.style.borderColor = 'hsl(var(--border))';
+    });
+    if (packetRef.current) {
+      packetRef.current.style.opacity = '0';
+      packetRef.current.style.transform = 'translate(0, 0)';
+    }
+    if (stepRef.current) {
+      stepRef.current.textContent = 'Starting…';
+    }
+
+    const tl = anime.timeline({
+      easing: 'easeInOutCubic',
+      complete: () => setPhase('idle'),
+    });
+
+    // Reveal packet at stage 1 position
+    tl.add({
+      targets: packetRef.current,
+      opacity: [0, 1],
+      scale: [0.6, 1],
+      duration: 350,
+      easing: 'easeOutQuad',
+      changeBegin: () => moveTo(0),
+    });
+
+    // For each subsequent stage, slide the packet over + highlight the card
+    for (let i = 1; i < TX_STAGES.length; i++) {
+      tl.add({
+        targets: packetRef.current,
+        translateX: i * 100, // each card is ~100px wide on the timeline
+        duration: 750,
+        changeBegin: () => moveTo(i),
+      });
+    }
+    // Final pulse
+    tl.add({
+      targets: packetRef.current,
+      scale: [1, 1.5, 1],
+      duration: 600,
+      easing: 'easeOutQuad',
+    });
+
+    function moveTo(i: number) {
+      const stage = TX_STAGES[i];
+      // Highlight current card
+      cardRefs.current.forEach((c, k) => {
+        if (!c) return;
+        if (k === i) {
+          c.style.boxShadow = `0 0 0 2px ${stage.zone}, 0 6px 18px ${stage.zone}40`;
+          c.style.borderColor = stage.zone;
+        } else {
+          c.style.boxShadow = 'none';
+          c.style.borderColor = 'hsl(var(--border))';
+        }
+      });
+      if (stepRef.current) {
+        stepRef.current.textContent = `${stage.n}. ${stage.title} — ${stage.what}`;
+        stepRef.current.style.color = stage.zone;
+        stepRef.current.style.borderColor = stage.zone + 'AA';
+        stepRef.current.style.backgroundColor = stage.zone + '14';
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const obs = new IntersectionObserver(es => {
+      for (const e of es) {
+        if (e.isIntersecting && !playedRef.current) {
+          playedRef.current = true;
+          setTimeout(play, 400);
+          break;
+        }
+      }
+    }, { threshold: 0.35 });
+    obs.observe(rootRef.current);
+    return () => obs.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div ref={rootRef} className="h-full flex flex-col p-5 lg:p-8">
+      {/* Header */}
+      <div className="shrink-0 mb-3 flex items-start justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">🧩 Animated</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">The Life of a Bitcoin Transaction</h2>
+          </div>
+          <p className="text-sm text-muted-foreground max-w-3xl mt-1">
+            Watch a single payment travel through every stage — wallet → mempool → mining → blockchain — until it's economically irreversible. Auto-plays; replay any time.
+          </p>
+        </div>
+        <button
+          onClick={play}
+          disabled={phase === 'playing'}
+          className="text-[11px] px-2.5 py-1 rounded-md bg-muted/60 hover:bg-muted text-foreground font-semibold disabled:opacity-50 transition-colors shrink-0"
+        >↻ Replay</button>
+      </div>
+
+      {/* Step caption */}
+      <div ref={stepRef} className="shrink-0 mb-3 px-3 py-2 rounded-lg border-2 text-xs font-bold transition-all min-h-[40px]" style={{ borderColor: '#737373AA', backgroundColor: '#73737314', color: '#737373' }}>
+        Starting…
+      </div>
+
+      {/* Stage rail with moving packet */}
+      <div className="flex-1 min-h-0 relative">
+        {/* Stage cards */}
+        <div className="grid grid-cols-4 lg:grid-cols-8 gap-2 h-full">
+          {TX_STAGES.map((s, i) => (
+            <div
+              key={s.n}
+              ref={el => { cardRefs.current[i] = el; }}
+              className="flex flex-col rounded-xl border bg-card p-2.5 transition-all min-h-0"
+              style={{ borderColor: 'hsl(var(--border))' }}
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="size-6 rounded-md flex items-center justify-center text-white text-[11px] font-black shrink-0" style={{ backgroundColor: s.zone }}>{s.n}</span>
+                <span className="text-base leading-none">{s.emoji}</span>
+              </div>
+              <div className="font-bold text-[11px] text-foreground leading-tight">{s.title}</div>
+              <div className="text-[10px] text-muted-foreground leading-snug flex-1 mt-1">{s.what}</div>
+              <div className="mt-2 text-[9px] font-medium leading-snug rounded-md px-1.5 py-1" style={{ backgroundColor: s.zone + '14', color: s.zone }}>{s.note}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Packet — anime.js translates it across the rail (only on lg, where 8 columns laid out) */}
+        <div
+          ref={packetRef}
+          className="absolute top-2 left-2 pointer-events-none z-20 hidden lg:flex items-center justify-center"
+          style={{ opacity: 0, width: '40px', height: '40px' }}
+        >
+          <div className="size-9 rounded-full bg-[#facc15] border-2 border-[#a16207] flex items-center justify-center shadow-lg">
+            <span className="text-[12px] font-black text-[#7c2d12]">tx</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Timing strip */}
+      <div className="shrink-0 mt-3 rounded-xl border border-border bg-card px-4 py-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px]">
+        <span className="font-black uppercase tracking-widest text-muted-foreground">⏱️ Typical timing</span>
+        <span className="text-muted-foreground">Sign &amp; broadcast: <span className="font-bold text-foreground">&lt; 1 s</span></span>
+        <span className="text-muted-foreground">Mempool wait: <span className="font-bold text-foreground">seconds → hours</span> (fee-driven)</span>
+        <span className="text-muted-foreground">1 block: <span className="font-bold text-foreground">~10 min</span></span>
+        <span className="text-muted-foreground">6 confirmations: <span className="font-bold text-foreground">~1 h ≈ settled</span></span>
+      </div>
+    </div>
+  );
+}
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -997,6 +1562,11 @@ export function BP_Section1() {
           </div>
         </div>
 
+        {/* ═══════ TRANSACTION LIFECYCLE — animated walkthrough, moved here from later ═══════ */}
+        <div id="s1-tx-lifecycle" className="h-full">
+          <TxLifecycleAnimated />
+        </div>
+
         {/* ═══════ UTXO EXERCISE ═══════ */}
         <div id="s1-utxo-exercise" className="h-full">
           <UTXOExercise />
@@ -1239,6 +1809,11 @@ export function BP_Section1() {
         {/* ═══════ LIGHTNING NETWORK ═══════ */}
         {/* ─── Lightning: Channel Lifecycle ─── */}
         <div id="s1-lightning" className="h-full">
+          <LightningVaultDemo />
+        </div>
+
+        {/* ─── (Old static 4-step channel grid removed in favour of the animated vault demo above) ─── */}
+        <div className="hidden">
           <div className="w-full h-full flex flex-col p-5 lg:p-8">
 
             {/* Header */}
@@ -1444,6 +2019,80 @@ export function BP_Section1() {
           </div>
         </div>
 
+        {/* ═══════ BEST FITS — WHERE BITCOIN WINS ═══════ */}
+        <div id="s1-bestfits" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-3">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#f7931a]/15 border border-[#f7931a]/40 text-[#f7931a] text-xs font-bold">🎯 Best Fits</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where Bitcoin Wins — The Use Cases It Actually Owns</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              Bitcoin's design choices (fixed supply, UTXO model, intentionally limited Script, PoW security) make it spectacularly good at a narrow set of jobs — and explicitly not the right tool for many others.
+            </p>
+          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {[
+              { emoji: '🏦', name: 'Store of Value / Digital Gold',  why: 'Fixed 21M supply + 15+ years of uptime + PoW security make it the most credible scarce digital asset.', example: 'MicroStrategy holds 450k+ BTC as treasury · El Salvador national reserve · BlackRock IBIT ETF ($50B+ AUM).' },
+              { emoji: '💸', name: 'Cross-border settlement',         why: 'Censorship-resistant, no intermediary, available 24/7. Settles in minutes vs days for SWIFT.', example: 'Used in inflationary economies (Argentina, Venezuela, Turkey) as USD-adjacent settlement rails.' },
+              { emoji: '⚡', name: 'Micropayments via Lightning',     why: 'L2 payment channels deliver instant, near-zero-fee payments without touching the base chain.', example: 'Strike, Cash App, Wallet of Satoshi · streaming sats per second for content (Fountain podcasts).' },
+              { emoji: '🛡️', name: 'Strategic reserve asset',         why: 'Verifiable scarcity + jurisdiction-neutral + carrier-grade infrastructure → attractive as a "neutral" reserve.', example: 'US Strategic Bitcoin Reserve (2025) · sovereign wealth fund allocations · corporate treasury policies.' },
+            ].map(uc => (
+              <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#f7931a55', backgroundColor: '#f7931a08' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl shrink-0">{uc.emoji}</span>
+                  <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
+                </div>
+                <div className="text-xs text-muted-foreground leading-snug">
+                  <span className="font-bold text-[#f7931a] uppercase tracking-widest text-[9px] mr-1">Why</span>
+                  {uc.why}
+                </div>
+                <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
+                  <span className="font-bold text-[#f7931a] uppercase tracking-widest text-[9px] mr-1">In the wild</span>
+                  {uc.example}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="shrink-0 mt-3 p-2.5 bg-[#ef4444]/08 border border-[#ef4444]/30 rounded-lg text-[11px] text-muted-foreground">
+            <strong className="text-[#ef4444]">Not a fit for:</strong> rich smart contracts (use Ethereum), high-throughput retail point-of-sale on the base layer (use Lightning or another chain), private enterprise consortia (use Fabric), on-chain identity / governance / DeFi composability.
+          </div>
+        </div>
+
+        {/* ═══════ WORST FITS — WHERE BITCOIN IS WRONG ═══════ */}
+        <div id="s1-worstfits" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-3">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#ef4444]/15 border border-[#ef4444]/40 text-[#ef4444] text-xs font-bold">🚫 Worst Fits</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where Bitcoin is the <em>Wrong</em> Tool</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              The same design choices that make Bitcoin great at digital scarcity make it actively bad at other jobs. If you find yourself fighting the protocol, you're using the wrong chain.
+            </p>
+          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {[
+              { emoji: '🤖', name: 'Complex smart contracts / dApps', why: 'Bitcoin Script is intentionally not Turing-complete — no loops, no persistent state, no rich logic. Workarounds (Counterparty, RGB) hit the same ceiling.',         alt: 'Use Ethereum (EVM) · Solana · Cosmos SDK · Starknet for any kind of programmable money or app.' },
+              { emoji: '🚀', name: 'High-throughput retail payments (on L1)', why: 'L1 sustains ~7 TPS with ~10-minute blocks. Even moderate adoption pushes fees into double digits; you cannot run a card-network on the base layer.', alt: 'Use Lightning (BTC L2) for sats-level payments · Solana / Base / Avalanche for stablecoin retail.' },
+              { emoji: '🏥', name: 'Private B2B consortia (healthcare, KYC, RWA)', why: 'Public on-chain visibility + no built-in identity = a non-starter for regulated data sharing between named organisations.',                alt: 'Use Hyperledger Fabric (channels) · R3 Corda · permissioned Ethereum forks (Quorum).' },
+              { emoji: '🌾', name: 'DeFi / NFTs / DAOs', why: 'No native tokens, no on-chain identity, no programmable governance. Every "Bitcoin DeFi" project ends up requiring Ethereum or a federated sidechain to actually compose.',     alt: 'Use Ethereum + L2s · Solana · Sui for DeFi composability and rich asset standards.' },
+            ].map(uc => (
+              <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#ef444455', backgroundColor: '#ef444408' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl shrink-0">{uc.emoji}</span>
+                  <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
+                </div>
+                <div className="text-xs text-muted-foreground leading-snug">
+                  <span className="font-bold text-[#ef4444] uppercase tracking-widest text-[9px] mr-1">Why not</span>
+                  {uc.why}
+                </div>
+                <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
+                  <span className="font-bold text-[#10b981] uppercase tracking-widest text-[9px] mr-1">Use instead</span>
+                  {uc.alt}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="shrink-0 mt-3 p-2.5 bg-[#10b981]/08 border border-[#10b981]/30 rounded-lg text-[11px] text-muted-foreground">
+            <strong className="text-[#10b981]">Right tool, right job:</strong> if the answer is "store of value", "neutral settlement layer", or "censorship resistance" — Bitcoin wins. For literally anything programmable, pick a different chain (and that's fine).
+          </div>
+        </div>
+
         {/* ═══════ QUIZ ═══════ */}
         <div id="s1-quiz" className="h-full">
           <QuizSlide
@@ -1486,8 +2135,9 @@ export function BP_Section1() {
           />
         </div>
 
-        {/* ═══════ TRANSACTION LIFECYCLE ═══════ */}
-        <div id="s1-tx-lifecycle" className="h-full flex flex-col p-6 lg:p-10">
+        {/* ═══════ TRANSACTION LIFECYCLE (LEGACY — moved earlier, kept hidden) ═══════ */}
+        <div id="s1-tx-lifecycle-legacy" className="hidden">
+          <div className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
             <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b]">Putting it all together</span>
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">The Life of a Bitcoin Transaction</h2>
@@ -1619,6 +2269,7 @@ export function BP_Section1() {
               A fee that's too low can leave it in the mempool for hours — or get evicted. <span className="font-semibold text-foreground">RBF</span> or <span className="font-semibold text-foreground">CPFP</span> can bump it.
             </motion.div>
           </div>
+        </div>
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}
