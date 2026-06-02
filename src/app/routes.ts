@@ -45,89 +45,137 @@ import { PM_Section4 } from "./pages/project-management/Section4";
 import { PM_Section5 } from "./pages/project-management/Section5";
 import { PM_Conclusion } from "./pages/project-management/Conclusion";
 import { PM_Bibliography } from "./pages/project-management/Bibliography";
+import { LocaleProvider, detectPreferredLang } from "../i18n/LocaleProvider";
+import { isSupportedLang } from "../i18n/config";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: AcademyRoot,
     children: [
-      // Academy landing — course selection
-      { index: true, Component: CourseSelection },
-
-      // Course 01 — Blockchain Fundamentals
+      // Root: detect preferred locale and redirect
       {
-        path: "blockchain-fundamentals",
-        Component: Root,
+        index: true,
+        loader: () => redirect(`/${detectPreferredLang()}`),
+      },
+
+      // Locale-prefixed routes
+      {
+        path: ":lang",
+        // Validate at the loader stage so an invalid :lang (e.g. a legacy
+        // path like "blockchain-platforms" matched as :lang) redirects with
+        // the rest of the path preserved BEFORE the inner catch-all greedily
+        // claims the remainder.
+        loader: ({ params, request }) => {
+          if (!isSupportedLang(params.lang)) {
+            const url = new URL(request.url);
+            return redirect(`/${detectPreferredLang()}${url.pathname}${url.search}`);
+          }
+          return null;
+        },
+        Component: LocaleProvider,
         children: [
-          { index: true, Component: Home },
-          { path: "learning-objectives", Component: LearningObjectives },
-          { path: "course-summary", Component: CourseSummary },
-          { path: "prologue", Component: Prologue },
-          { path: "section-1", Component: Section1 },
-          { path: "section-2", Component: Section2 },
-          { path: "section-3", Component: Section3 },
-          { path: "design-system", Component: DesignSystem },
-          { path: "quick-reference", Component: QuickReference },
-          { path: "bibliography", Component: Bibliography },
+          // Academy landing — course selection
+          { index: true, Component: CourseSelection },
+
+          // Course 01 — Blockchain Fundamentals
+          {
+            path: "blockchain-fundamentals",
+            Component: Root,
+            children: [
+              { index: true, Component: Home },
+              { path: "learning-objectives", Component: LearningObjectives },
+              { path: "course-summary", Component: CourseSummary },
+              { path: "prologue", Component: Prologue },
+              { path: "section-1", Component: Section1 },
+              { path: "section-2", Component: Section2 },
+              { path: "section-3", Component: Section3 },
+              { path: "design-system", Component: DesignSystem },
+              { path: "quick-reference", Component: QuickReference },
+              { path: "bibliography", Component: Bibliography },
+            ],
+          },
+
+          // Course 02 — Smart Contracts
+          {
+            path: "smart-contracts",
+            Component: SmartContractsRoot,
+            children: [
+              { index: true, Component: SmartContractsHome },
+              { path: "learning-objectives", Component: SC_LearningObjectives },
+              { path: "section-1", Component: SC_Section1 },
+              { path: "section-2", Component: SC_Section2 },
+              { path: "section-3", Component: SC_Section3 },
+              { path: "section-4", Component: SC_Section4 },
+              { path: "section-5", Component: SC_Section5 },
+              { path: "section-6", Component: SC_Section6 },
+              { path: "section-7", Component: SC_Section7 },
+              { path: "conclusion", Component: SC_Conclusion },
+              { path: "bibliography", Component: SC_Bibliography },
+            ],
+          },
+
+          // Course 03 — Blockchain Platforms
+          {
+            path: "blockchain-platforms",
+            Component: BlockchainPlatformsRoot,
+            children: [
+              { index: true, Component: BlockchainPlatformsHome },
+              { path: "learning-objectives", Component: BP_LearningObjectives },
+              { path: "section-0", Component: Section0 },
+              { path: "section-1", Component: BP_Section1 },
+              { path: "section-2", Component: BP_Section2 },
+              { path: "section-3", Component: BP_Section3 },
+              { path: "section-4", Component: BP_Section4 },
+              { path: "section-5", Component: BP_Section5 },
+              { path: "conclusion", Component: Conclusion },
+              { path: "bibliography", Component: BP_Bibliography },
+            ],
+          },
+
+          // Course 04 — Project Management for Blockchain Initiatives
+          {
+            path: "project-management",
+            Component: ProjectManagementRoot,
+            children: [
+              { index: true, Component: ProjectManagementHome },
+              { path: "learning-objectives", Component: PM_LearningObjectives },
+              { path: "section-1", Component: PM_Section1 },
+              { path: "section-2", Component: PM_Section2 },
+              { path: "section-3", Component: PM_Section3 },
+              { path: "section-4", Component: PM_Section4 },
+              { path: "section-5", Component: PM_Section5 },
+              { path: "conclusion", Component: PM_Conclusion },
+              { path: "bibliography", Component: PM_Bibliography },
+            ],
+          },
+
+          // Unknown path under a known locale -> locale landing.
+          // If :lang itself was actually a legacy path segment, the outer
+          // loader already redirected; this branch only runs for genuine
+          // typos under a valid locale.
+          {
+            path: "*",
+            loader: ({ params, request }) => {
+              if (!isSupportedLang(params.lang)) {
+                const url = new URL(request.url);
+                return redirect(`/${detectPreferredLang()}${url.pathname}${url.search}`);
+              }
+              return redirect(`/${params.lang}`);
+            },
+          },
         ],
       },
 
-      // Course 02 — Smart Contracts
+      // Catch-all for legacy non-prefixed URLs: prepend the preferred locale.
+      // /blockchain-platforms/section-2 -> /{preferredLang}/blockchain-platforms/section-2
       {
-        path: "smart-contracts",
-        Component: SmartContractsRoot,
-        children: [
-          { index: true, Component: SmartContractsHome },
-          { path: "learning-objectives", Component: SC_LearningObjectives },
-          { path: "section-1", Component: SC_Section1 },
-          { path: "section-2", Component: SC_Section2 },
-          { path: "section-3", Component: SC_Section3 },
-          { path: "section-4", Component: SC_Section4 },
-          { path: "section-5", Component: SC_Section5 },
-          { path: "section-6", Component: SC_Section6 },
-          { path: "section-7", Component: SC_Section7 },
-          { path: "conclusion", Component: SC_Conclusion },
-          { path: "bibliography", Component: SC_Bibliography },
-        ],
+        path: "*",
+        loader: ({ request }) => {
+          const url = new URL(request.url);
+          return redirect(`/${detectPreferredLang()}${url.pathname}${url.search}`);
+        },
       },
-
-      // Course 03 — Blockchain Platforms
-      {
-        path: "blockchain-platforms",
-        Component: BlockchainPlatformsRoot,
-        children: [
-          { index: true, Component: BlockchainPlatformsHome },
-          { path: "learning-objectives", Component: BP_LearningObjectives },
-          { path: "section-0", Component: Section0 },
-          { path: "section-1", Component: BP_Section1 },
-          { path: "section-2", Component: BP_Section2 },
-          { path: "section-3", Component: BP_Section3 },
-          { path: "section-4", Component: BP_Section4 },
-          { path: "section-5", Component: BP_Section5 },
-          { path: "conclusion", Component: Conclusion },
-          { path: "bibliography", Component: BP_Bibliography },
-        ],
-      },
-
-      // Course 04 — Project Management for Blockchain Initiatives
-      {
-        path: "project-management",
-        Component: ProjectManagementRoot,
-        children: [
-          { index: true, Component: ProjectManagementHome },
-          { path: "learning-objectives", Component: PM_LearningObjectives },
-          { path: "section-1", Component: PM_Section1 },
-          { path: "section-2", Component: PM_Section2 },
-          { path: "section-3", Component: PM_Section3 },
-          { path: "section-4", Component: PM_Section4 },
-          { path: "section-5", Component: PM_Section5 },
-          { path: "conclusion", Component: PM_Conclusion },
-          { path: "bibliography", Component: PM_Bibliography },
-        ],
-      },
-
-      // Catch-all: any unknown path redirects to the academy landing
-      { path: "*", loader: () => redirect("/") },
     ],
   },
 ]);

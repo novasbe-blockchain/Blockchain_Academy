@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import anime from 'animejs';
+import { useTranslation } from 'react-i18next';
 import { TitleSlide } from '../components/templates/TitleSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
@@ -9,30 +10,40 @@ import { ScrollText, ExternalLink, User } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
 import bitcoinPedigree from '../../assets/bf/bitcoin-academic-pedigree.png';
 
-const prologueChapters = [
-  { id: 'p-money',             label: 'What Is Money?' },
-  { id: 'p-money-value',       label: 'Why It Has Value' },
-  { id: 'p-cypherpunks',       label: 'The Cypherpunks' },
-  { id: 'p-cypherpunk-values', label: 'By the People' },
-  { id: 'p-timeline',          label: 'Timeline' },
-  { id: 'p-pedigree',          label: 'Academic Pedigree' },
-  { id: 'p-why',               label: 'Why It Matters' },
-  { id: 'p-who-controls',      label: 'Who Owns Your Money?' },
-  { id: 'p-takeaways',         label: 'Takeaways' },
-  { id: 'p-quiz',              label: 'Quizzes' },
+/** Sidebar shape — labels resolved at render time via i18n */
+const prologueChaptersShape: ReadonlyArray<{ id: string }> = [
+  { id: 'p-money' },
+  { id: 'p-money-value' },
+  { id: 'p-cypherpunks' },
+  { id: 'p-cypherpunk-values' },
+  { id: 'p-timeline' },
+  { id: 'p-pedigree' },
+  { id: 'p-why' },
+  { id: 'p-who-controls' },
+  { id: 'p-takeaways' },
+  { id: 'p-quiz' },
 ];
 
 /* ── Money Evolution Timeline (animated) ──────────────────────────────── */
-const MONEY_EVENTS = [
-  { era: '~9000 BCE', name: 'Barter',                        emoji: '🐄', color: '#8b5cf6', desc: 'Direct exchange of goods. Worked in small tribes — broke down the moment someone had grain and the other wanted a roof.' },
-  { era: '~3000 BCE', name: 'Commodity money',               emoji: '🐚', color: '#f59e0b', desc: 'Shells, salt, cattle, beads. The first abstract store of value — items everyone agreed had worth.' },
-  { era: '~600 BCE',  name: 'Coins (gold / silver)',         emoji: '🪙', color: '#ED1C24', desc: 'Stamped metal coins. Scarce, durable, divisible. Empires rose and fell controlling the mint.' },
-  { era: '~1000 CE',  name: 'Paper notes & banks',           emoji: '💵', color: '#39B54A', desc: 'IOUs redeemable for gold, then for trust in the issuer alone. The gold standard ended in 1971 — money became pure trust.' },
-  { era: '~1950',     name: 'Bank cards / digital ledgers',  emoji: '💳', color: '#6366f1', desc: 'Money becomes a database entry at a bank. Convenient — but every transaction passes through a gatekeeper.' },
-  { era: '2009',      name: 'Bitcoin',                       emoji: '₿', color: '#22d3ee', desc: 'Digital scarcity without a central issuer — the first form of money that nobody operates and nobody can switch off.' },
+const MONEY_EVENT_VISUAL = [
+  { emoji: '🐄', color: '#8b5cf6' },
+  { emoji: '🐚', color: '#f59e0b' },
+  { emoji: '🪙', color: '#ED1C24' },
+  { emoji: '💵', color: '#39B54A' },
+  { emoji: '💳', color: '#6366f1' },
+  { emoji: '₿',  color: '#22d3ee' },
 ];
 
 function MoneyEvolutionTimeline() {
+  const { t } = useTranslation('blockchain-fundamentals/prologue');
+  const MONEY_EVENTS = useMemo(
+    () => (t('moneyEvents', { returnObjects: true }) as Array<{ era: string; name: string; desc: string }>).map((ev, i) => ({
+      ...ev,
+      emoji: MONEY_EVENT_VISUAL[i].emoji,
+      color: MONEY_EVENT_VISUAL[i].color,
+    })),
+    [t],
+  );
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs     = useRef<(HTMLDivElement | null)[]>([]);
   const connectorRef = useRef<SVGPathElement | null>(null);
@@ -191,17 +202,26 @@ function MoneyEvolutionTimeline() {
 }
 
 /* ── Cypherpunks → Bitcoin timeline (compact, fits viewport) ─────────── */
-const CYPHERPUNK_EVENTS = [
-  { year: '1982', icon: '💰', title: 'David Chaum — DigiCash',                       desc: 'First anonymous digital cash system using blind signatures. Chaum proved private electronic payments were mathematically possible — the cryptographic foundation everyone else would later build on.', color: '#8b5cf6' },
-  { year: '1991', icon: '⏱️', title: 'Haber & Stornetta — Cryptographic Timestamps', desc: 'A cryptographically secured chain of blocks to timestamp digital documents. Without realizing it, they had invented the direct ancestor of every blockchain structure that followed.', color: '#f59e0b' },
-  { year: '1993', icon: '📜', title: "Eric Hughes — A Cypherpunk's Manifesto",       desc: 'The founding document of the cypherpunk movement. Privacy declared a fundamental right, to be defended with code instead of laws. The ideology Bitcoin would later embody.', color: '#ED1C24' },
-  { year: '1997', icon: '⛏️', title: 'Adam Back — Hashcash',                          desc: 'A proof-of-work system originally designed to combat email spam — forcing senders to burn small amounts of CPU. This exact concept became the direct inspiration for Bitcoin mining.', color: '#39B54A' },
-  { year: '1998', icon: '🥇', title: 'Wei Dai (B-Money) & Nick Szabo (Bit Gold)',     desc: 'Two independent proposals for decentralized digital currencies using cryptographic proofs and distributed consensus. Both are now considered the direct precursors to Bitcoin\'s design.', color: '#6366f1' },
-  { year: '2008', icon: '📄', title: 'Satoshi Nakamoto — The Bitcoin Whitepaper',     desc: '"Bitcoin: A Peer-to-Peer Electronic Cash System." An anonymous individual or group combines two decades of cypherpunk research — hashcash, chained timestamps, digital scarcity — into a single working protocol.', color: '#22d3ee' },
-  { year: '2009', icon: '🚀', title: 'The Genesis Block',                             desc: 'January 3, 2009 — Block #0 is mined. Embedded message: "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks". The ideological intent is written into the ledger itself.', color: '#ec4899' },
+const CYPHERPUNK_VISUAL = [
+  { icon: '💰', color: '#8b5cf6' },
+  { icon: '⏱️', color: '#f59e0b' },
+  { icon: '📜', color: '#ED1C24' },
+  { icon: '⛏️', color: '#39B54A' },
+  { icon: '🥇', color: '#6366f1' },
+  { icon: '📄', color: '#22d3ee' },
+  { icon: '🚀', color: '#ec4899' },
 ];
 
 function CypherpunksMovementTimeline() {
+  const { t } = useTranslation('blockchain-fundamentals/prologue');
+  const CYPHERPUNK_EVENTS = useMemo(
+    () => (t('cypherpunksTimeline.events', { returnObjects: true }) as Array<{ year: string; title: string; desc: string }>).map((ev, i) => ({
+      ...ev,
+      icon: CYPHERPUNK_VISUAL[i].icon,
+      color: CYPHERPUNK_VISUAL[i].color,
+    })),
+    [t],
+  );
   const containerRef = useRef<HTMLDivElement | null>(null);
   const lineRef      = useRef<HTMLDivElement | null>(null);
   const itemRefs     = useRef<(HTMLDivElement | null)[]>([]);
@@ -259,9 +279,9 @@ function CypherpunksMovementTimeline() {
   return (
     <div className="w-full h-full flex flex-col p-5 lg:p-8">
       <div className="shrink-0 mb-3">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">From Cypherpunks to Bitcoin</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('cypherpunksTimeline.heading')}</h2>
         <p className="text-sm lg:text-base text-muted-foreground mt-1">
-          Twenty-seven years from the first anonymous digital cash to the genesis block — each link made the next one possible.
+          {t('cypherpunksTimeline.lead')}
         </p>
       </div>
 
@@ -309,6 +329,11 @@ function CypherpunksMovementTimeline() {
 }
 
 export function Prologue() {
+  const { t } = useTranslation('blockchain-fundamentals/prologue');
+  const prologueChapters = useMemo(
+    () => prologueChaptersShape.map((ch) => ({ id: ch.id, label: t(`chapters.${ch.id}`) })),
+    [t],
+  );
   return (
     <div className="h-full w-full flex overflow-hidden">
       <SectionNav chapters={prologueChapters} />
@@ -318,9 +343,9 @@ export function Prologue() {
         {/* ═══════ TITLE ═══════ */}
         <div className="h-full">
           <TitleSlide
-            sectionNumber="PROLOGUE"
-            title="The History of Blockchain"
-            subtitle="How a movement for privacy and freedom gave birth to decentralized money"
+            sectionNumber={t('title.sectionNumber')}
+            title={t('title.title')}
+            subtitle={t('title.subtitle')}
             icon={<ScrollText className="size-20 text-[#8b5cf6]" />}
             gradient="from-[#8b5cf6] to-[#ED1C24]"
           />
@@ -330,17 +355,16 @@ export function Prologue() {
         <div id="p-money" className="h-full">
           <div className="w-full h-full flex flex-col p-5 lg:p-8">
             <div className="shrink-0 mb-4">
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">What Is Money?</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">{t('moneyHistory.heading')}</h2>
               <p className="text-sm lg:text-base text-muted-foreground max-w-3xl">
-                Before we get to Bitcoin, a quick look at the long road that got us here.
-                Every generation invented new money — and each form solved the limits of the last.
+                {t('moneyHistory.lead')}
               </p>
             </div>
             <div className="flex-1 min-h-0 overflow-y-auto">
               <MoneyEvolutionTimeline />
               <div className="max-w-3xl mx-auto mt-4">
-                <CalloutBox type="tip" title="The throughline">
-                  Each form of money fixed a problem with the last — portability, scarcity, divisibility, settlement speed. Bitcoin was an attempt to fix the trust assumption itself.
+                <CalloutBox type="tip" title={t('moneyHistory.calloutTitle')}>
+                  {t('moneyHistory.calloutBody')}
                 </CalloutBox>
               </div>
             </div>
@@ -350,37 +374,32 @@ export function Prologue() {
         {/* ═══════ WHY DOES MONEY HAVE VALUE ═══════ */}
         <div id="p-money-value" className="h-full">
           <ConceptSlide
-            title="Why Does Money Have Value?"
-            description="A piece of paper, a number in a database, a gold coin, a Bitcoin — none of them are intrinsically worth anything. Money works because four things are true at once."
+            title={t('moneyValue.title')}
+            description={t('moneyValue.description')}
             visual={
               <div className="space-y-4 w-full">
                 <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { emoji: '🤝', label: 'Shared trust',    color: '#8b5cf6', desc: 'Everyone in the network agrees this thing is worth something. The agreement is the value.' },
-                    { emoji: '🪨', label: 'Scarcity',        color: '#ED1C24', desc: 'You can\'t easily make more of it. Gold is rare. Dollars are limited by central banks. Bitcoin caps at 21 million.' },
-                    { emoji: '🔧', label: 'Utility',         color: '#39B54A', desc: 'You can use it — pay taxes, buy bread, settle a debt. A currency no one accepts is just a collectible.' },
-                    { emoji: '🌐', label: 'Network effect',  color: '#6366f1', desc: 'The more people accept it, the more useful it becomes. New money struggles, established money compounds.' },
-                  ].map(p => (
-                    <div key={p.label} className="flex items-start gap-3 p-4 bg-card rounded-xl border-2" style={{ borderColor: p.color + '50' }}>
-                      <div className="text-3xl shrink-0">{p.emoji}</div>
-                      <div>
-                        <div className="font-black text-sm" style={{ color: p.color }}>{p.label}</div>
-                        <div className="text-xs text-muted-foreground mt-1 leading-snug">{p.desc}</div>
+                  {(['#8b5cf6','#ED1C24','#39B54A','#6366f1']).map((color, i) => {
+                    const emoji = ['🤝','🪨','🔧','🌐'][i];
+                    const pillars = t('moneyValue.pillars', { returnObjects: true }) as Array<{ label: string; desc: string }>;
+                    const p = pillars[i];
+                    return (
+                      <div key={i} className="flex items-start gap-3 p-4 bg-card rounded-xl border-2" style={{ borderColor: color + '50' }}>
+                        <div className="text-3xl shrink-0">{emoji}</div>
+                        <div>
+                          <div className="font-black text-sm" style={{ color }}>{p.label}</div>
+                          <div className="text-xs text-muted-foreground mt-1 leading-snug">{p.desc}</div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
-                <CalloutBox type="important" title="A thought experiment">
-                  Tomorrow morning, every shop in your country decides not to accept euros. The notes in your wallet still exist — what are they worth? Money's value lives in <em>everyone else's</em> head, not in the paper.
+                <CalloutBox type="important" title={t('moneyValue.calloutTitle')}>
+                  {t('moneyValue.calloutBodyA')} <em>{t('moneyValue.calloutBodyEm')}</em> {t('moneyValue.calloutBodyTail')}
                 </CalloutBox>
               </div>
             }
-            keyPoints={[
-              'Money has value because we collectively decide it does — there is no objective number',
-              'When trust breaks (hyperinflation, bank runs, sanctions), the same notes lose worth overnight',
-              'Bitcoin\'s designers asked: can we engineer trust + scarcity + utility + network effects without any central authority?',
-              'This is the question the rest of this course tries to answer',
-            ]}
+            keyPoints={t('moneyValue.keyPoints', { returnObjects: true }) as string[]}
           />
         </div>
 
@@ -388,9 +407,9 @@ export function Prologue() {
         <div id="p-cypherpunks" className="h-full">
           <div className="w-full h-full flex flex-col p-5 lg:p-8">
             <div className="shrink-0 mb-3">
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">The Cypherpunks</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">{t('cypherpunks.heading')}</h2>
               <p className="text-sm lg:text-base text-muted-foreground max-w-3xl">
-                In the 1980s and 1990s, a loose group of cryptographers, hackers, and activists decided that privacy was not a luxury — it was a precondition for freedom.
+                {t('cypherpunks.lead')}
               </p>
             </div>
 
@@ -399,12 +418,12 @@ export function Prologue() {
               <div className="flex flex-col gap-3">
                 <div className="p-3 bg-gradient-to-br from-[#8b5cf6]/10 to-transparent rounded-xl border-2 border-[#8b5cf6]/40">
                   <p className="text-base italic text-foreground leading-relaxed mb-1">
-                    "Privacy is a precondition for freedom, not a luxury."
+                    {t('cypherpunks.quote')}
                   </p>
-                  <p className="text-[11px] text-muted-foreground">— Cypherpunk philosophy</p>
+                  <p className="text-[11px] text-muted-foreground">{t('cypherpunks.quoteAttribution')}</p>
                 </div>
-                <CalloutBox type="important" title="Core Cypherpunk Principle">
-                  "Privacy is necessary for an open society in the electronic age. We cannot expect governments, corporations, or other large, faceless organizations to grant us privacy out of their beneficence." — Eric Hughes, <em>A Cypherpunk's Manifesto</em> (1993)
+                <CalloutBox type="important" title={t('cypherpunks.calloutTitle')}>
+                  {t('cypherpunks.calloutBodyA')} <em>{t('cypherpunks.calloutBodyEm')}</em> {t('cypherpunks.calloutBodyTail')}
                 </CalloutBox>
               </div>
 
@@ -419,9 +438,9 @@ export function Prologue() {
                 </div>
                 <div className="flex flex-col gap-2 min-w-0">
                   <div>
-                    <div className="text-base font-bold text-foreground leading-tight">Eric Hughes</div>
+                    <div className="text-base font-bold text-foreground leading-tight">{t('cypherpunks.hughesName')}</div>
                     <div className="text-[10px] text-[#8b5cf6] font-semibold uppercase tracking-widest">
-                      Cypherpunk · Manifesto author
+                      {t('cypherpunks.hughesRole')}
                     </div>
                   </div>
                   <a
@@ -430,7 +449,7 @@ export function Prologue() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-br from-[#8b5cf6] to-[#ED1C24] text-white text-xs font-bold shadow-md shadow-[#8b5cf6]/40 hover:opacity-90 hover:scale-[1.02] transition-all w-fit"
                   >
-                    📄 Read the Manifesto
+                    {t('cypherpunks.readManifesto')}
                     <ExternalLink className="size-3" />
                   </a>
                 </div>
@@ -439,33 +458,29 @@ export function Prologue() {
 
             {/* BOTTOM — 4 principle cards filling the rest of the slide */}
             <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-              {[
-                { color: '#ED1C24', icon: '🔐', title: 'Privacy by Default',
-                  body: 'Systems should protect privacy without requiring trust in any authority — encryption is the default state, not a switch you have to find and turn on.' },
-                { color: '#39B54A', icon: '💻', title: 'Code is Law',
-                  body: 'Cryptographic mathematics, not legislation, should enforce rights. A law can be repealed; a published cryptographic protocol cannot be un-known.' },
-                { color: '#6366f1', icon: '🌐', title: 'Open Source',
-                  body: 'Tools must be public, auditable, and available to everyone — no gatekeepers. If the code is secret, the privacy it claims to give is unverifiable.' },
-                { color: '#f59e0b', icon: '🏗️', title: 'Build, Don\'t Beg',
-                  body: "Write code to change reality. Don't wait for permission from institutions, don't lobby — ship something that makes the lobbying irrelevant." },
-              ].map(p => (
-                <div
-                  key={p.title}
-                  className="flex flex-col p-4 lg:p-5 rounded-xl border-2 bg-gradient-to-br to-transparent transition-transform hover:scale-[1.02]"
-                  style={{
-                    borderColor: p.color + '55',
-                    background: `linear-gradient(to bottom right, ${p.color}15, transparent)`,
-                  }}
-                >
-                  <div className="text-3xl lg:text-4xl mb-2">{p.icon}</div>
-                  <h4 className="font-black mb-2 text-base lg:text-lg" style={{ color: p.color }}>
-                    {p.title}
-                  </h4>
-                  <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed flex-1">
-                    {p.body}
-                  </p>
-                </div>
-              ))}
+              {(['#ED1C24','#39B54A','#6366f1','#f59e0b']).map((color, i) => {
+                const icons = ['🔐','💻','🌐','🏗️'];
+                const principles = t('cypherpunks.principles', { returnObjects: true }) as Array<{ title: string; body: string }>;
+                const p = principles[i];
+                return (
+                  <div
+                    key={i}
+                    className="flex flex-col p-4 lg:p-5 rounded-xl border-2 bg-gradient-to-br to-transparent transition-transform hover:scale-[1.02]"
+                    style={{
+                      borderColor: color + '55',
+                      background: `linear-gradient(to bottom right, ${color}15, transparent)`,
+                    }}
+                  >
+                    <div className="text-3xl lg:text-4xl mb-2">{icons[i]}</div>
+                    <h4 className="font-black mb-2 text-base lg:text-lg" style={{ color }}>
+                      {p.title}
+                    </h4>
+                    <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed flex-1">
+                      {p.body}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -473,51 +488,46 @@ export function Prologue() {
         {/* ═══════ 2. CYPHERPUNK VALUES ═══════ */}
         <div id="p-cypherpunk-values" className="h-full">
           <ConceptSlide
-            title="Technology by the People, for the People"
-            description="The Cypherpunks weren't building products. They were building liberation tools — and they gave them away for free."
+            title={t('cypherpunkValues.title')}
+            description={t('cypherpunkValues.description')}
             visual={
               <div className="space-y-4 w-full">
                 <div className="p-5 bg-gradient-to-br from-[#8b5cf6]/15 to-[#ED1C24]/10 rounded-xl border-2 border-[#8b5cf6]/50">
-                  <p className="text-base font-bold text-foreground mb-1">The Manifesto in Three Words</p>
+                  <p className="text-base font-bold text-foreground mb-1">{t('cypherpunkValues.manifestoTitle')}</p>
                   <div className="flex gap-3 mt-3">
                     <div className="flex-1 text-center p-3 bg-[#8b5cf6]/20 rounded-lg border border-[#8b5cf6]/40">
-                      <div className="text-2xl font-black text-[#8b5cf6]">PRIVACY</div>
-                      <div className="text-xs text-muted-foreground mt-1">is a right, not a feature</div>
+                      <div className="text-2xl font-black text-[#8b5cf6]">{t('cypherpunkValues.wordPrivacy')}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{t('cypherpunkValues.wordPrivacySub')}</div>
                     </div>
                     <div className="flex-1 text-center p-3 bg-[#ED1C24]/20 rounded-lg border border-[#ED1C24]/40">
-                      <div className="text-2xl font-black text-[#ED1C24]">AUTONOMY</div>
-                      <div className="text-xs text-muted-foreground mt-1">over your own data and money</div>
+                      <div className="text-2xl font-black text-[#ED1C24]">{t('cypherpunkValues.wordAutonomy')}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{t('cypherpunkValues.wordAutonomySub')}</div>
                     </div>
                     <div className="flex-1 text-center p-3 bg-[#39B54A]/20 rounded-lg border border-[#39B54A]/40">
-                      <div className="text-2xl font-black text-[#39B54A]">CODE</div>
-                      <div className="text-xs text-muted-foreground mt-1">is the law that can't be lobbied</div>
+                      <div className="text-2xl font-black text-[#39B54A]">{t('cypherpunkValues.wordCode')}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{t('cypherpunkValues.wordCodeSub')}</div>
                     </div>
                   </div>
                 </div>
                 <div className="p-4 bg-card rounded-xl border border-border">
                   <p className="text-sm italic text-muted-foreground leading-relaxed">
-                    "We are writing code. We know that software can't be destroyed and that a widely dispersed system can't be shut down."
+                    {t('cypherpunkValues.secondQuote')}
                   </p>
-                  <p className="text-xs text-[#8b5cf6] font-bold mt-2">— Eric Hughes, A Cypherpunk's Manifesto (1993)</p>
+                  <p className="text-xs text-[#8b5cf6] font-bold mt-2">{t('cypherpunkValues.secondQuoteAttribution')}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-3 bg-muted/20 rounded-lg border border-border text-center">
                     <div className="text-lg font-black text-foreground">👤 → 🌍</div>
-                    <div className="text-xs text-muted-foreground mt-1">Individual tools with global reach</div>
+                    <div className="text-xs text-muted-foreground mt-1">{t('cypherpunkValues.indivSub')}</div>
                   </div>
                   <div className="p-3 bg-muted/20 rounded-lg border border-border text-center">
-                    <div className="text-lg font-black text-foreground">🔓 Free</div>
-                    <div className="text-xs text-muted-foreground mt-1">Open-source, no gatekeepers, no cost</div>
+                    <div className="text-lg font-black text-foreground">{t('cypherpunkValues.freeLabel')}</div>
+                    <div className="text-xs text-muted-foreground mt-1">{t('cypherpunkValues.freeSub')}</div>
                   </div>
                 </div>
               </div>
             }
-            keyPoints={[
-              "Anyone, anywhere could use or audit the tools — no permission needed",
-              "Designed to be censorship-resistant: no single point of shutdown",
-              "The enemy wasn't technology — it was centralised power over information",
-              "Bitcoin inherited this DNA: no CEO, no headquarters, no off switch",
-            ]}
+            keyPoints={t('cypherpunkValues.keyPoints', { returnObjects: true }) as string[]}
           />
         </div>
 
@@ -529,42 +539,39 @@ export function Prologue() {
         {/* ═══════ BITCOIN'S ACADEMIC PEDIGREE ═══════ */}
         <div id="p-pedigree" className="h-full flex flex-col p-6 lg:p-10 relative overflow-hidden">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Bitcoin's Academic Pedigree</h2>
-            <p className="text-muted-foreground text-sm mt-1">The concept of cryptocurrencies is built from forgotten ideas in research literature — every piece predates Bitcoin by decades.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('pedigree.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('pedigree.lead')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-[1.8fr_1fr] gap-6">
             <div className="flex items-center justify-center bg-white rounded-xl border border-border p-3 min-h-0">
               <img
                 src={bitcoinPedigree}
-                alt="Chronology of key ideas found in Bitcoin: a 1980-to-2015 grid mapping research strands (Linked Timestamping, Digital Cash, Proof of Work, Byzantine Fault Tolerance, Public Keys as Identities, Smart Contracts) to specific papers — Merkle Tree (1980), Ecash (1980s), Hashcash (1990s), Bit Gold (2005), Bitcoin (2008), Ethereum (2015)."
+                alt={t('pedigree.imageAlt')}
                 className="max-h-full max-w-full object-contain"
               />
             </div>
             <div className="flex flex-col gap-3">
               <div className="p-4 bg-card border border-[#8b5cf6]/30 rounded-xl">
-                <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest mb-2">The paper</div>
-                <div className="font-bold text-foreground text-sm leading-snug mb-1">Bitcoin's Academic Pedigree</div>
-                <div className="text-xs text-muted-foreground">Arvind Narayanan &amp; Jeremy Clark · ACM Queue, 2017</div>
+                <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest mb-2">{t('pedigree.paperKicker')}</div>
+                <div className="font-bold text-foreground text-sm leading-snug mb-1">{t('pedigree.paperTitle')}</div>
+                <div className="text-xs text-muted-foreground">{t('pedigree.paperAuthors')}</div>
               </div>
               <div className="p-4 bg-card border border-border rounded-xl flex-1">
-                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">Six research strands fed into Bitcoin</div>
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">{t('pedigree.strandsHeader')}</div>
                 <ul className="space-y-1.5 text-xs text-muted-foreground">
-                  {[
-                    { c: '#6366f1', l: 'Linked timestamping', s: 'Haber & Stornetta · 1990–91' },
-                    { c: '#39B54A', l: 'Digital cash',         s: 'Chaum · Ecash · 1982+' },
-                    { c: '#f59e0b', l: 'Proof of work',        s: 'Dwork–Naor · Hashcash · 1990s' },
-                    { c: '#22d3ee', l: 'Byzantine fault tolerance', s: 'Lamport · Paxos · PBFT' },
-                    { c: '#ED1C24', l: 'Public keys as identities', s: 'Chaum · Goldberg' },
-                    { c: '#8b5cf6', l: 'Smart contracts',      s: 'Szabo · 1994 essay' },
-                  ].map(r => (
-                    <li key={r.l} className="flex items-start gap-2">
-                      <span className="mt-1.5 size-1.5 rounded-full shrink-0" style={{ background: r.c }} />
-                      <div>
-                        <div className="font-semibold text-foreground">{r.l}</div>
-                        <div className="text-[10px]">{r.s}</div>
-                      </div>
-                    </li>
-                  ))}
+                  {(['#6366f1','#39B54A','#f59e0b','#22d3ee','#ED1C24','#8b5cf6']).map((color, i) => {
+                    const strands = t('pedigree.strands', { returnObjects: true }) as Array<{ label: string; source: string }>;
+                    const r = strands[i];
+                    return (
+                      <li key={i} className="flex items-start gap-2">
+                        <span className="mt-1.5 size-1.5 rounded-full shrink-0" style={{ background: color }} />
+                        <div>
+                          <div className="font-semibold text-foreground">{r.label}</div>
+                          <div className="text-[10px]">{r.source}</div>
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
               <a
@@ -573,7 +580,7 @@ export function Prologue() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-[#8b5cf6]/15 border border-[#8b5cf6]/40 text-[#8b5cf6] text-xs font-bold hover:bg-[#8b5cf6]/25 transition-colors"
               >
-                📄 Read the full paper
+                {t('pedigree.readPaper')}
                 <ExternalLink className="size-3.5" />
               </a>
             </div>
@@ -583,201 +590,108 @@ export function Prologue() {
         {/* ═══════ 4. WHY THIS HISTORY MATTERS ═══════ */}
         <div id="p-why" className="h-full">
           <ConceptSlide
-            title="Why This History Matters"
-            description="Bitcoin did not emerge from nothing. It was the culmination of 30 years of cryptographic research, failed experiments, and ideological conviction."
+            title={t('why.title')}
+            description={t('why.description')}
             visual={
               <div className="space-y-4 w-full">
                 <div className="p-5 bg-card rounded-xl border-2 border-[#ED1C24]">
-                  <h4 className="font-bold text-[#ED1C24] mb-3">🧩 What Satoshi Combined</h4>
+                  <h4 className="font-bold text-[#ED1C24] mb-3">{t('why.combinedTitle')}</h4>
                   <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                      <div className="font-bold text-foreground">Proof of Work</div>
-                      <div className="text-muted-foreground">From Hashcash (Adam Back)</div>
-                    </div>
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                      <div className="font-bold text-foreground">Chained Blocks</div>
-                      <div className="text-muted-foreground">From Haber & Stornetta</div>
-                    </div>
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                      <div className="font-bold text-foreground">Digital Scarcity</div>
-                      <div className="text-muted-foreground">From Bit Gold (Nick Szabo)</div>
-                    </div>
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                      <div className="font-bold text-foreground">P2P Distribution</div>
-                      <div className="text-muted-foreground">From B-Money (Wei Dai)</div>
-                    </div>
+                    {(t('why.components', { returnObjects: true }) as Array<{ title: string; source: string }>).map((c, i) => (
+                      <div key={i} className="p-3 bg-muted/30 rounded-lg">
+                        <div className="font-bold text-foreground">{c.title}</div>
+                        <div className="text-muted-foreground">{c.source}</div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <CalloutBox type="tip" title="Satoshi's Genius">
-                  Satoshi didn't invent any single component. The genius was in combining existing cryptographic primitives with economic incentive design into one coherent system that actually worked.
+                <CalloutBox type="tip" title={t('why.calloutTitle')}>
+                  {t('why.calloutBody')}
                 </CalloutBox>
               </div>
             }
-            keyPoints={[
-              "Every core concept (hashing, digital signatures, PoW) predates Bitcoin",
-              "Previous attempts (DigiCash, B-Money, Bit Gold) all failed or remained theoretical",
-              "Bitcoin succeeded because it aligned cryptography with economic incentives",
-              "Understanding the history helps you evaluate new blockchain projects critically"
-            ]}
+            keyPoints={t('why.keyPoints', { returnObjects: true }) as string[]}
           />
         </div>
 
         {/* ═══════ WHO CONTROLS YOUR MONEY? ═══════ */}
         <div id="p-who-controls" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5 text-center">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Who Controls Your Money?</h2>
-            <p className="text-muted-foreground text-sm mt-1">A side-by-side of what can actually happen to the value you hold, in each system.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('whoControls.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('whoControls.lead')}</p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-4 gap-3">
-            {[
-              {
-                name: 'Cash',
-                emoji: '💵',
-                color: '#f59e0b',
-                control: 'You',
-                rows: [
-                  ['Custody',       'Physical · only you hold it'],
-                  ['Can be frozen?', 'No — but can be lost, stolen, or seized in person'],
-                  ['Supply',        'Inflated by the central bank'],
-                  ['Censorship',    'None online · works face-to-face'],
-                  ['Cross-border',  'Hard · limits, declarations, FX desks'],
-                  ['Digital?',      'No — physical only'],
-                ],
-              },
-              {
-                name: 'Bank account',
-                emoji: '🏦',
-                color: '#ED1C24',
-                control: 'Your bank + government',
-                rows: [
-                  ['Custody',       'The bank holds it · you have a claim'],
-                  ['Can be frozen?', 'Yes · account freeze, sanctions, garnishment'],
-                  ['Supply',        'Fractional reserve + central-bank policy'],
-                  ['Censorship',    'Yes · bank can refuse transactions / clients'],
-                  ['Cross-border',  '3–5 days · SWIFT · 1–3% FX spread'],
-                  ['Digital?',      'Yes · via the bank\'s database'],
-                ],
-              },
-              {
-                name: 'Digital payment',
-                emoji: '📱',
-                color: '#8b5cf6',
-                control: 'The platform',
-                rows: [
-                  ['Custody',       'Platform holds · you have a balance'],
-                  ['Can be frozen?', 'Yes · de-platformed, chargebacks, terms of service'],
-                  ['Supply',        'Same as the underlying fiat'],
-                  ['Censorship',    'Yes · platform decides who transacts'],
-                  ['Cross-border',  'Restricted · region-locked · KYC tiers'],
-                  ['Digital?',      'Yes · proprietary rails'],
-                ],
-              },
-              {
-                name: 'Bitcoin',
-                emoji: '₿',
-                color: '#22d3ee',
-                control: 'You (if self-custody)',
-                rows: [
-                  ['Custody',       'Your keys, your coins (or a custodian, if you choose)'],
-                  ['Can be frozen?', 'Not at the protocol layer · custodians can freeze theirs'],
-                  ['Supply',        'Capped at 21 million · no human can change it'],
-                  ['Censorship',    'Permissionless · anyone can send / receive'],
-                  ['Cross-border',  'Same as a local transfer · minutes, no FX'],
-                  ['Digital?',      'Native-digital · settles on a public ledger'],
-                ],
-              },
-            ].map(c => (
-              <div key={c.name} className="flex flex-col rounded-xl border-2 overflow-hidden" style={{ borderColor: c.color + '50' }}>
-                <div className="p-3 text-center" style={{ backgroundColor: c.color + '15' }}>
-                  <div className="text-3xl mb-1">{c.emoji}</div>
-                  <div className="font-black text-foreground">{c.name}</div>
-                  <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: c.color }}>{c.control}</div>
+            {(['#f59e0b','#ED1C24','#8b5cf6','#22d3ee']).map((color, idx) => {
+              const emojis = ['💵','🏦','📱','₿'];
+              const columns = t('whoControls.columns', { returnObjects: true }) as Array<{
+                name: string; control: string; rows: Array<{ k: string; v: string }>;
+              }>;
+              const c = columns[idx];
+              return (
+                <div key={idx} className="flex flex-col rounded-xl border-2 overflow-hidden" style={{ borderColor: color + '50' }}>
+                  <div className="p-3 text-center" style={{ backgroundColor: color + '15' }}>
+                    <div className="text-3xl mb-1">{emojis[idx]}</div>
+                    <div className="font-black text-foreground">{c.name}</div>
+                    <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color }}>{c.control}</div>
+                  </div>
+                  <div className="flex-1 flex flex-col">
+                    {c.rows.map((row, i) => (
+                      <div key={i} className="px-3 py-2 text-[11px]" style={{ backgroundColor: i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)' }}>
+                        <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{row.k}</div>
+                        <div className="text-foreground leading-snug mt-0.5">{row.v}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex-1 flex flex-col">
-                  {c.rows.map(([k, v], i) => (
-                    <div key={k} className="px-3 py-2 text-[11px]" style={{ backgroundColor: i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)' }}>
-                      <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{k}</div>
-                      <div className="text-foreground leading-snug mt-0.5">{v}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="shrink-0 mt-4 p-4 bg-gradient-to-br from-[#8b5cf6]/10 via-[#ED1C24]/10 to-[#22d3ee]/10 border-2 border-[#8b5cf6]/40 rounded-xl text-center">
-            <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest mb-1">Question to sit with</div>
-            <div className="text-base font-semibold text-foreground">What does it mean to truly <em>own</em> something digital — if there is always someone who can take it back?</div>
+            <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest mb-1">{t('whoControls.questionKicker')}</div>
+            <div className="text-base font-semibold text-foreground">{t('whoControls.questionA')} <em>{t('whoControls.questionEm')}</em> {t('whoControls.questionTail')}</div>
           </div>
         </div>
 
         {/* ═══════ 5. TAKEAWAYS ═══════ */}
         <div id="p-takeaways" className="h-full">
           <TakeawaySlide
-            title="Prologue Takeaways"
-            takeaways={[
-              "Money is older than writing — its form keeps changing, its function (trust + scarcity + utility + network) does not",
-              "Value lives in collective agreement, not in the object — when trust breaks, the same notes become paper",
-              "The cypherpunk movement championed privacy as a fundamental right, defended through code rather than law",
-              "From the 1980s to 2008, cryptographers built the individual pieces that Bitcoin would later unify",
-              "Satoshi combined proof-of-work, chained blocks, digital scarcity, and P2P networking — none of which he invented",
-              "The Genesis Block message — 'Chancellor on brink of second bailout for banks' — reveals Bitcoin's ideological roots",
-              "Cash, bank accounts, and digital-payment platforms each hand control to someone else; Bitcoin asks: can you keep it yourself?",
-            ]}
+            title={t('takeaways.title')}
+            takeaways={t('takeaways.items', { returnObjects: true }) as string[]}
           />
         </div>
 
         {/* ═══════ 6. QUIZZES ═══════ */}
         <div id="p-quiz" className="h-full">
           <QuizSlide
-            question="Money has taken many forms — shells, coins, paper, bank-account entries, Bitcoin. What is the underlying reason any of them have value?"
-            options={[
-              { text: "The material they're made of (metal, paper, electrons) determines their worth", correct: false },
-              { text: "Governments declare them valuable through law", correct: false },
-              { text: "A network of people collectively agrees to accept them — trust, scarcity, utility, and network effects compound", correct: true },
-              { text: "Their value is fixed once a central authority decides on an exchange rate", correct: false },
-            ]}
-            explanation="Money's value is not in the object — it's in the shared agreement of everyone in the network. When that agreement breaks (hyperinflation, sanctions, platform bans), the same notes lose value overnight. The four foundations are: trust, scarcity, utility, and network effects. Bitcoin asks whether all four can be engineered without any single authority — that's the question this course explores."
+            question={t('quizMoney.question')}
+            options={(t('quizMoney.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
+            explanation={t('quizMoney.explanation')}
           />
         </div>
 
         <div className="h-full">
           <QuizSlide
-            question="What was the core belief of the Cypherpunk movement?"
-            options={[
-              { text: "Governments should regulate all digital communications", correct: false },
-              { text: "Privacy is a precondition for freedom and should be defended with code", correct: true },
-              { text: "Corporations should control encryption technology", correct: false },
-              { text: "Digital currencies should be managed by central banks", correct: false },
-            ]}
-            explanation="The Cypherpunks believed that privacy is not a luxury but a fundamental right, and that cryptographic code — not laws or institutions — should enforce it."
+            question={t('quizCypherpunks.question')}
+            options={(t('quizCypherpunks.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+            explanation={t('quizCypherpunks.explanation')}
           />
         </div>
 
         <div className="h-full">
           <QuizSlide
-            question="Which concept did Adam Back's Hashcash (1997) directly inspire in Bitcoin?"
-            options={[
-              { text: "Smart contracts", correct: false },
-              { text: "Blind signatures for anonymous payments", correct: false },
-              { text: "Proof-of-work mining", correct: true },
-              { text: "Peer-to-peer networking", correct: false },
-            ]}
-            explanation="Hashcash was a proof-of-work system originally designed to combat email spam. Satoshi Nakamoto adapted this concept as the foundation for Bitcoin's mining and consensus mechanism."
+            question={t('quizHashcash.question')}
+            options={(t('quizHashcash.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
+            explanation={t('quizHashcash.explanation')}
           />
         </div>
 
         <div className="h-full">
           <QuizSlide
-            question="What message did Satoshi Nakamoto embed in Bitcoin's Genesis Block?"
-            options={[
-              { text: "\"Hello World\"", correct: false },
-              { text: "\"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks\"", correct: true },
-              { text: "\"A Cypherpunk's Manifesto\"", correct: false },
-              { text: "\"In code we trust\"", correct: false },
-            ]}
-            explanation="The embedded headline from The Times newspaper reveals Bitcoin's ideological roots — it was created as a direct response to the failures of the traditional banking system during the 2008 financial crisis."
+            question={t('quizGenesis.question')}
+            options={(t('quizGenesis.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+            explanation={t('quizGenesis.explanation')}
           />
         </div>
 

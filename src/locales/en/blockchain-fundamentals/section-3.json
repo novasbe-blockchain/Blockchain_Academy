@@ -1,0 +1,577 @@
+{
+  "groups": {
+    "g-s3-eth":     "🦄 Ethereum",
+    "g-s3-world":   "🌍 Real World",
+    "g-s3-evol":    "📜 Web Evolution",
+    "g-s3-reflect": "⚖️ Reflection",
+    "g-s3-wrap":    "✅ Wrap Up"
+  },
+  "chapters": {
+    "s3-ethereum":         "Ethereum",
+    "s3-eth-accounts":     "Accounts & Gas",
+    "s3-eth-apps":         "DeFi · NFTs · DAOs",
+    "s3-usecases":         "Use Cases",
+    "s3-ecosystem":        "Web3 Ecosystem",
+    "s3-web3":             "Web1 → Web3",
+    "s3-dapp":             "App vs dApp",
+    "s3-ethics":           "Ethics",
+    "s3-future":           "Future Trends",
+    "s3-discussion":       "Discussion",
+    "s3-quiz":             "Quizzes",
+    "s3-takeaways":        "Takeaways",
+    "s3-recap":            "🧱 Knowledge Wall",
+    "s3-team-checkpoint":  "🤝 Team Checkpoint"
+  },
+  "title": {
+    "sectionNumber": "SECTION 03",
+    "title": "What's Next for Blockchain?",
+    "subtitle": "Applications, ecosystem, evolution of the web, and the future of decentralized technology"
+  },
+  "ethereum": {
+    "recapBadge": "↩ §2",
+    "recapA":     "Bitcoin Script was",
+    "recapStrong":"intentionally limited",
+    "recapTail":  ". Vitalik's response: don't patch Bitcoin — build a new chain with a real virtual machine.",
+    "heading":    "Ethereum — The Programmable Blockchain",
+    "lead":       "Bitcoin proved decentralised money was possible. Ethereum asked: what if you could run any program on a blockchain?",
+    "vitalikName":"Vitalik Buterin",
+    "vitalikRole":"Co-founder of Ethereum",
+    "vitalikBio": "Born 1994 in Russia, raised in Canada. Published the Ethereum whitepaper in late 2013 — aged",
+    "vitalikAge": "19",
+    "whyTitle":   "Why Ethereum Existed",
+    "whyP1A":     "Vitalik was an early Bitcoin contributor and journalist. He saw that Bitcoin's scripting language was",
+    "whyP1Strong":"deliberately limited",
+    "whyP1Tail":  "— great for currency, useless for building applications. Several projects had tried to layer features on top of Bitcoin (Colored Coins, Mastercoin) but all hit the same ceiling.",
+    "whyP2A":     "His proposal: a new blockchain with a",
+    "whyP2Strong1":"Turing-complete virtual machine",
+    "whyP2Mid":   "(the EVM) that could execute any arbitrary program — called a",
+    "whyP2Strong2":"smart contract",
+    "whyP2Tail":  ". Developers would finally be able to build decentralised applications without a trusted server.",
+    "events": [
+      { "year": "2013",   "label": "Whitepaper published" },
+      { "year": "2014",   "label": "Crowdsale raises $18M — largest at the time" },
+      { "year": "2015",   "label": "Ethereum mainnet launches (Frontier)" },
+      { "year": "2016",   "label": "The DAO hack — first major test of governance" },
+      { "year": "2022",   "label": "The Merge — switches from PoW to Proof of Stake" },
+      { "year": "2025",   "label": "Pectra upgrade — smart accounts, higher validator limits, blob scaling" },
+      { "year": "2026 →", "label": "Fusaka upgrade — full PeerDAS, EOF, and deeper L2 scaling" }
+    ],
+    "soonBadge":   "SOON",
+    "metamaskCta": "Create your first wallet",
+    "rank":        "#2",
+    "rankNote":    "Largest blockchain by market cap and developer activity",
+    "dappCount":   "4,000+",
+    "dappCountNote":"dApps live on Ethereum today"
+  },
+  "ethAccounts": {
+    "recapBadge": "↩ §2",
+    "recapA":     "Remember — a wallet holds keys, not coins. Ethereum runs the same idea, but with",
+    "recapStrong":"two flavours",
+    "recapTail":  "of account: one human-controlled, one code-controlled.",
+    "heading":    "Ethereum: Accounts & Gas",
+    "lead":       "Two concepts you must understand before touching any Ethereum application. Everything else is built on top of these.",
+    "accountsHeader": "Two Types of Account",
+    "eoaTitle":   "Externally Owned Account (EOA)",
+    "eoaPoints": [
+      { "leadA": "Controlled by a ", "strong": "private key", "tail": " — whoever holds the key owns the account" },
+      { "leadA": "Can ",             "strong": "initiate transactions", "tail": " — send ETH, deploy contracts, call functions" },
+      { "leadA": "Has a balance in ETH. No code stored.", "strong": "", "tail": "" },
+      { "leadA": "Examples: your MetaMask wallet, a hardware wallet, an exchange hot wallet", "strong": "", "tail": "" }
+    ],
+    "contractTitle": "Contract Account",
+    "contractPoints": [
+      { "leadA": "Controlled by ", "strong": "code", "tail": " — no private key, no human owner" },
+      { "strong": "Cannot initiate", "leadA": "", "tail": " transactions — only executes when called by an EOA or another contract" },
+      { "leadA": "Has a balance in ETH + stores code and state permanently on-chain", "strong": "", "tail": "" },
+      { "leadA": "Examples: Uniswap DEX, USDC token, an NFT collection", "strong": "", "tail": "" }
+    ],
+    "keyRuleStrong": "Key rule:",
+    "keyRuleBody":   "Every transaction on Ethereum originates from an EOA. Smart contracts cannot act spontaneously — they need a human (or a keeper bot) to trigger them.",
+    "gasHeader":  "Gas — The Fuel of the EVM",
+    "gasIntroA":  "Every operation on Ethereum costs",
+    "gasIntroStrong": "gas",
+    "gasIntroTail":   "— a unit that measures computational work. Gas prevents infinite loops and spam: you must pay for every instruction executed by the EVM.",
+    "gasExamplesTitle": "Gas cost examples",
+    "gasRows": [
+      { "op": "Read a public variable",     "gas": "FREE",       "note": "View call — never hits the chain" },
+      { "op": "Emit an event",              "gas": "~375 gas",   "note": "Cheap — stored in logs, not state" },
+      { "op": "Transfer ETH",               "gas": "21,000 gas", "note": "Base cost for every ETH transfer" },
+      { "op": "Write to storage",           "gas": "~22,100 gas","note": "Most expensive common operation" },
+      { "op": "Deploy a contract",          "gas": "500k+ gas",  "note": "Pays for every byte of bytecode" }
+    ],
+    "gasFormulaTitle": "Gas = Gas Units × Gas Price",
+    "gasFormulaPoints": [
+      { "strong": "Base fee:", "tail": " Set by the protocol, burned (EIP-1559, since 2021)" },
+      { "strong": "Priority fee (tip):", "tail": " You pay the validator to include your transaction faster" },
+      { "strong": "",                "tail": "Gas price is denominated in <strong>gwei</strong> (1 gwei = 0.000000001 ETH)" },
+      { "strong": "",                "tail": "If a transaction runs out of gas mid-execution — it reverts, but <em>you still pay for the work done</em>" }
+    ]
+  },
+  "ethApps": {
+    "recapBadge": "↩ just covered",
+    "recapBody":  "You've seen gas pay for computation. Time to look at what people actually build with it — every example below is a smart contract holding ETH and following rules.",
+    "heading":    "What Ethereum Enables: DeFi, NFTs, DAOs",
+    "lead":       "Three categories of applications that did not exist before programmable blockchains — each replacing or disrupting a traditional institution.",
+    "replacesLabel":"Replaces:",
+    "riskLabel":  "Risk:",
+    "apps": [
+      {
+        "title": "DeFi", "subtitle": "Decentralised Finance",
+        "replaces": "Banks, brokers, exchanges",
+        "description": "Financial services — lending, borrowing, trading, earning yield — running entirely in smart contracts. No KYC, no opening hours, no intermediary taking a cut.",
+        "examples": [
+          { "name": "Uniswap", "desc": "Decentralised exchange — swap any ERC-20 token via automated market maker (AMM)" },
+          { "name": "Aave",    "desc": "Lend and borrow crypto — interest rates set algorithmically by supply/demand" },
+          { "name": "MakerDAO / DAI", "desc": "Algorithmic stablecoin — mint DAI by locking ETH as collateral in a smart contract" }
+        ],
+        "risk": "Smart contract bugs, oracle manipulation, liquidation cascades",
+        "stat": "$40B+ Total Value Locked in DeFi protocols"
+      },
+      {
+        "title": "NFTs", "subtitle": "Non-Fungible Tokens",
+        "replaces": "Art dealers, certificate authorities, notaries",
+        "description": "Provable, transferable digital ownership on-chain. Each NFT is a unique token (ERC-721) whose ownership history is permanently recorded. No one can deny ownership — the blockchain is the title deed.",
+        "examples": [
+          { "name": "ENS (.eth domains)",       "desc": "Blockchain-native usernames — pay once, own forever. No renewal extortion." },
+          { "name": "Proof of attendance (POAPs)", "desc": "On-chain badges proving you attended events — cryptographic credentials" },
+          { "name": "Real estate deeds",         "desc": "Propy sold the first NFT property — immutable ownership transfer on-chain" }
+        ],
+        "risk": "Metadata stored off-chain (IPFS) can disappear — \"you don't own the image, you own the receipt\"",
+        "stat": "$41B traded in NFTs in 2021 — peak. Now utility-focused."
+      },
+      {
+        "title": "DAOs", "subtitle": "Decentralised Autonomous Organisations",
+        "replaces": "Companies, NGOs, cooperatives, funds",
+        "description": "An organisation governed by smart contracts and token votes instead of a board of directors. Anyone holding governance tokens can propose and vote on decisions — the outcome executes automatically on-chain.",
+        "examples": [
+          { "name": "MakerDAO",     "desc": "MKR holders vote on DAI stability parameters — billions in protocol policy decided on-chain" },
+          { "name": "Uniswap DAO",  "desc": "UNI holders control the $6B+ Uniswap treasury — voted to deploy to new chains" },
+          { "name": "Gitcoin DAO",  "desc": "Funds open-source development via quadratic voting — community decides who gets grants" }
+        ],
+        "risk": "Voter apathy, whale capture, slow governance for emergencies",
+        "stat": "DAOs collectively hold $20B+ in treasuries"
+      }
+    ]
+  },
+  "useCases": {
+    "recapBadge": "↩ §1",
+    "recapBody":  "Remember the village ledger — every trust problem you saw there shows up again, at industry scale.",
+    "heading":    "Blockchain Use Cases — Three Patterns, Twelve Industries",
+    "leadA":      "Zoom out from DeFi · NFTs · DAOs. The same",
+    "leadStrong": "three patterns",
+    "leadTail":   "show up across every sector — wherever there are middlemen, paper trails, or coordination headaches.",
+    "patternLabel": "Pattern",
+    "showsUpIn":    "Shows up in",
+    "groups": [
+      {
+        "pattern":  "Trust without intermediaries",
+        "tagline":  "Money, claims, and contracts settle directly between parties — banks, brokers, and clearing houses become optional.",
+        "industries": [
+          { "name": "Finance & DeFi",   "hook": "Lending, trading, payments — no bank, open 24/7" },
+          { "name": "Capital Markets",  "hook": "Tokenised securities settle in seconds, not T+2 days" },
+          { "name": "Insurance",        "hook": "Parametric policies auto-pay on verified events" },
+          { "name": "CBDCs",            "hook": "Programmable state money — power and peril (see Ethics)" }
+        ]
+      },
+      {
+        "pattern":  "Verifiable provenance",
+        "tagline":  "Anything that needs an unbroken chain of custody gets one — built in, not bolted on.",
+        "industries": [
+          { "name": "Supply Chain",         "hook": "Track & trace from raw material to consumer" },
+          { "name": "Global Trade",         "hook": "Digital letters of credit replace 5-day paper trails" },
+          { "name": "Healthcare",           "hook": "Drug-pack authentication, clinical trial integrity" },
+          { "name": "Media & Entertainment","hook": "Royalties to collaborators on every play, automatically" }
+        ]
+      },
+      {
+        "pattern":  "Self-sovereign coordination",
+        "tagline":  "People and organisations coordinate without a single platform or registrar in the middle.",
+        "industries": [
+          { "name": "Digital Identity",          "hook": "You own your credentials, prove age without revealing birthdate" },
+          { "name": "Government",                "hook": "Verifiable voting, immutable land registry, transparent procurement" },
+          { "name": "Energy & Sustainability",   "hook": "Carbon credits without double-counting, P2P energy trading" },
+          { "name": "Law & Real Estate",         "hook": "Escrow + title transfers auto-executed, fractional ownership" }
+        ]
+      }
+    ],
+    "noticeStrong": "Notice:",
+    "noticeBodyA":  "the same pattern (e.g.",
+    "noticeBodyEm": "verifiable provenance",
+    "noticeBodyTail":") shows up across supply chain, healthcare, and media. Industries are different surfaces; the underlying primitive is the same — which is why a Course-2 platform choice can serve multiple Course-3 business cases."
+  },
+  "ecosystem": {
+    "recapBadge": "↩ §1 + §2",
+    "recapBody":  "Each use case you just saw lives somewhere in this stack — same nodes from §1 at the bottom, same contracts as DeFi/NFTs in the middle, you at the top.",
+    "heading":    "The Blockchain & Web3 Ecosystem",
+    "lead":       "A layered stack — from raw infrastructure at the bottom to end users at the top.",
+    "users":      "Users",
+    "interfaces": "Interfaces",
+    "applications":"Applications & Protocols",
+    "blockchainLayer":"Blockchain Layer (L1 / L2)",
+    "infrastructure": "Infrastructure",
+    "userTags":   ["Developers", "Traders", "Creators", "Institutions", "Individuals"],
+    "interfaceTags":["Wallets (MetaMask, Phantom)", "dApps", "Exchanges (Uniswap, Binance)", "NFT Marketplaces", "Bridges"],
+    "appTags":    ["DeFi (Aave, Compound)", "NFTs (ERC-721)", "DAOs (Snapshot, Aragon)", "Gaming (Axie Infinity)", "Stablecoins (USDC, DAI)"],
+    "chainTags":  ["Bitcoin", "Ethereum", "Solana", "Polygon", "Arbitrum", "Optimism", "Avalanche"],
+    "infraTags":  ["Nodes", "Validators / Miners", "P2P Network", "Cryptography", "Consensus Mechanisms"]
+  },
+  "web3": {
+    "kickerBadge":"zoom out",
+    "kickerBodyA":"Quick historical context: how the web's",
+    "kickerStrong":"ownership model",
+    "kickerTail": "has shifted in 30 years — and why Web3 looks different from what came before.",
+    "heading":    "The Evolution of the Internet",
+    "lead":       "Each era defined by what users could do — and who owned the data.",
+    "web1": {
+      "label":     "Web 1.0",
+      "period":    "1991 – 2004",
+      "tagline":   "📖 READ ONLY",
+      "bullets": [
+        "Static HTML pages",
+        "No user interaction or accounts",
+        "Information flows one-way",
+        "Content owned by publishers only",
+        "Yahoo, GeoCities, early forums"
+      ],
+      "quote":     "\"The internet was a library. You could only look.\""
+    },
+    "web2": {
+      "label":     "Web 2.0",
+      "period":    "2004 – Present",
+      "tagline":   "✏️ READ + WRITE",
+      "bullets": [
+        "Social media & user-generated content",
+        "Platforms own and monetize your data",
+        "Free services — you are the product",
+        "Centralized cloud infrastructure",
+        "Google, Facebook, YouTube, Amazon"
+      ],
+      "quote":     "\"The internet became interactive. But platforms kept the keys.\""
+    },
+    "web3": {
+      "label":     "Web 3.0",
+      "period":    "Now → Future",
+      "tagline":   "🔑 READ + WRITE + OWN",
+      "bullets": [
+        "User-owned data & assets via wallets",
+        "Decentralized applications (dApps)",
+        "Token-based economies & governance",
+        "Self-sovereign identity",
+        "Ethereum, Solana, IPFS, DAOs"
+      ],
+      "quote":     "\"The internet becomes owned by its users. No platform can take it away.\""
+    }
+  },
+  "dappComparison": {
+    "title": "Today's App vs dApp",
+    "option1Label": "Traditional App",
+    "option2Label": "Decentralized App (dApp)",
+    "items": [
+      {
+        "feature": "Architecture",
+        "option1": "Centralized servers controlled by a company",
+        "option2": "Smart contracts on a blockchain + decentralized storage"
+      },
+      {
+        "feature": "Data Ownership",
+        "option1": "Company owns and controls user data",
+        "option2": "Users own their data and assets"
+      },
+      {
+        "feature": "Downtime",
+        "option1": "Server outage = entire service offline",
+        "option2": "No single point of failure — runs as long as the network exists"
+      },
+      {
+        "feature": "Censorship",
+        "option1": "Company can ban users, remove content, change terms",
+        "option2": "No entity can censor transactions once on-chain"
+      },
+      {
+        "feature": "Revenue Model",
+        "option1": "Ads, subscriptions, data monetization",
+        "option2": "Token incentives, protocol fees, community governance"
+      },
+      {
+        "feature": "Example",
+        "option1": "Spotify — company controls catalog, pays artists pennies",
+        "option2": "Audius — artists upload directly, fans pay via $AUDIO tokens"
+      }
+    ]
+  },
+  "ethics": {
+    "recapBadge": "↩ §2",
+    "recapA":     "The same",
+    "recapStrong":"immutability",
+    "recapTail":  "that protects the chain from tampering also protects bad rules from being undone. Same property, two faces.",
+    "heading":    "Ethical Considerations",
+    "lead":       "Blockchain is not inherently good or bad — its impact depends on how it is designed, governed, and used.",
+    "themes": [
+      { "title": "⚡ Energy",                  "desc": "Bitcoin PoW uses as much power as some countries. Ethereum's PoS cut its footprint by 99.95%." },
+      { "title": "👁️ Surveillance vs Privacy", "desc": "Public chains are transparent forever — accountability and privacy are in direct tension." },
+      { "title": "🔒 Irreversibility",         "desc": "\"Code is law\" has limits. Transactions can't be reversed, even when real people are harmed." },
+      { "title": "🌍 Access & Inclusion",      "desc": "1.4 billion unbanked adults could access financial services with just a smartphone and a wallet." }
+    ],
+    "goodHeader": "BLOCKCHAIN FOR GOOD",
+    "good": [
+      {
+        "title": "GiveDirectly — Transparent Humanitarian Aid",
+        "points": [
+          "NGO operating in Kenya and Uganda — sends cash directly to people in extreme poverty via blockchain wallets",
+          "Zero intermediaries — every transfer is traceable on-chain; donors can verify their money arrived",
+          "In traditional aid, up to 30% is lost to administration, NGO salaries, and corruption — blockchain cuts this to near zero",
+          "Recipients spend freely — no government or NGO can dictate what the money is used for",
+          "Smart contracts automate disbursements — no bank account required, just a mobile wallet"
+        ]
+      },
+      {
+        "title": "Proof of Humanity — Identity Without Institutions",
+        "points": [
+          "Ethereum-based registry: prove you are a real human via a short video + vouching by existing members",
+          "No government, bank, or company controls the list — no one can delete you",
+          "Foundation for UBI experiments: verified humans receive a monthly UBI token airdrop automatically",
+          "Enables bot-free social networks and one-person-one-vote governance on-chain",
+          "Used by Kleros (decentralised court) and other dApps as a sybil-resistance layer"
+        ]
+      }
+    ],
+    "controlHeader": "BLOCKCHAIN AS CONTROL",
+    "control": [
+      {
+        "title": "Digital Yuan (e-CNY) — Programmable Money, Programmable Control",
+        "points": [
+          "Expiry dates — government stimulus yuan must be spent within a deadline or it disappears",
+          "Geographic restrictions — funds can be locked to specific regions or districts",
+          "Category bans — purchases like alcohol, gambling, or political donations can be auto-blocked",
+          "Instant freezing — any wallet disabled in seconds, no court order needed",
+          "Full real-time surveillance — every transaction visible to the state by design"
+        ]
+      },
+      {
+        "title": "Digital Euro — Coming Soon, Questions Remain",
+        "points": [
+          "ECB plans to launch a CBDC — marketed as a convenient, modern form of cash",
+          "Proposed €3,000 holding cap prevents using it as savings — steering behaviour by design",
+          "Unlike physical cash — anonymous and unconditional — every CBDC transaction is permanently logged",
+          "Infrastructure built for \"features\" today can silently add restrictions tomorrow",
+          "Civil society groups and MEPs have raised formal concerns about financial sovereignty"
+        ]
+      }
+    ]
+  },
+  "future": {
+    "title": "Future Trends",
+    "description": "The next decade of blockchain will be shaped by convergence with other technologies and solutions to current limitations.",
+    "trends": [
+      { "title": "🤖 AI + Blockchain",            "desc": "Verifiable AI outputs, decentralized training data, provenance tracking for AI-generated content. Blockchain can prove what is real." },
+      { "title": "🔮 Zero-Knowledge Proofs",      "desc": "Prove something is true without revealing the underlying data. Enables privacy-preserving identity, voting, and transactions at scale." },
+      { "title": "🔗 Layer 0 & Interoperability", "desc": "Protocols like Polkadot and Cosmos connect different blockchains. The future is a network of networks, not one chain to rule them all." },
+      { "title": "🪪 Decentralized Identity (DID)","desc": "Self-sovereign identity lets you prove credentials without sharing personal data. One identity across all services, owned by you." },
+      { "title": "🧾 Account Abstraction",        "desc": "Makes crypto wallets work like normal accounts: social recovery, gas sponsoring, session keys. The UX revolution blockchain needs." },
+      { "title": "🏗️ Real-World Assets (RWAs)",  "desc": "Tokenizing real estate, bonds, commodities on-chain. BlackRock, Franklin Templeton, and others are already doing this at scale." }
+    ],
+    "keyPoints": [
+      "AI + blockchain solves the provenance and trust problem for digital content",
+      "ZK proofs unlock privacy without sacrificing verifiability",
+      "Interoperability protocols will connect isolated blockchain ecosystems",
+      "Account abstraction will make crypto accessible to mainstream users"
+    ]
+  },
+  "discussion": {
+    "prompt": "What industry do you think could benefit most from blockchain technology in the next 10 years?",
+    "guidingQuestions": [
+      "What problems exist in that industry that blockchain could solve?",
+      "What are the potential challenges to adoption?",
+      "How would blockchain improve transparency or efficiency?",
+      "What stakeholders might resist this change and why?"
+    ]
+  },
+  "quizWeb3": {
+    "question": "What is the fundamental shift that Web3 represents compared to Web2?",
+    "options": [
+      "Faster internet speeds and better streaming quality",
+      "Users own their data, identity, and digital assets instead of platforms",
+      "Free access to all premium content and services",
+      "Government control and regulation of all internet content"
+    ],
+    "explanation": "Web3 shifts ownership from platforms to users through decentralization and cryptographic keys. Instead of companies owning your data, you control your identity and assets via wallets and on-chain protocols."
+  },
+  "quizDapp": {
+    "question": "What is a key advantage of a dApp over a traditional centralized application?",
+    "options": [
+      "dApps are always faster and cheaper to use",
+      "dApps have no single point of failure — they run as long as the blockchain network exists",
+      "dApps don't require an internet connection to function",
+      "dApps are always free and generate no revenue"
+    ],
+    "explanation": "Because dApps run on decentralized blockchain networks via smart contracts, they have no central server that can fail or be shut down. As long as the underlying blockchain network operates, the dApp continues to function."
+  },
+  "quizLayers": {
+    "question": "Which layer of the Web3 ecosystem contains protocols like Ethereum, Solana, and Polygon?",
+    "options": [
+      "The Interface layer (wallets and dApps)",
+      "The Application layer (DeFi, NFTs, DAOs)",
+      "The Blockchain Layer (L1 / L2)",
+      "The Infrastructure layer (nodes and validators)"
+    ],
+    "explanation": "Ethereum, Solana, and Polygon are L1 blockchains or L2 scaling solutions. They sit between raw infrastructure (nodes, validators, P2P network) and the application protocols (DeFi, NFTs, DAOs) built on top of them."
+  },
+  "takeaways": {
+    "title": "Section 3 — Key Takeaways",
+    "items": [
+      "Blockchain use cases span 8+ industries: finance, healthcare, supply chain, voting, identity, real estate, sustainability, and digital art",
+      "The Web3 ecosystem is a layered stack — from nodes and validators at the bottom to wallets, dApps, and users at the top",
+      "Web3 = Read + Write + Own: the key shift is that users own their data and digital assets instead of platforms",
+      "dApps replace centralized servers with smart contracts — removing single points of failure and platform control",
+      "Ethical trade-offs are real: energy consumption, privacy vs transparency, irreversibility, and dual-use potential",
+      "Future trends — ZK proofs, AI integration, DID, account abstraction — will define blockchain's next decade"
+    ]
+  },
+  "knowledgeWall": {
+    "recapBadge": "🧱 Recap",
+    "heading":    "Knowledge Wall",
+    "leadA":      "Every term you've met across Sections 1, 2, and 3 — in one place. Hover any brick to recall its meaning.",
+    "leadStrong": "{{count}} bricks total.",
+    "firstMet":   "First met in",
+    "sectionNames": {
+      "1": "Intro",
+      "2": "Bitcoin",
+      "3": "What's Next"
+    },
+    "hoverHint": "Hover or tap a brick below to read its definition.",
+    "themes": {
+      "foundations": {
+        "name": "Foundations",
+        "bricks": [
+          { "term": "DLT",                "defn": "Distributed Ledger Technology — a database replicated across many independent computers, with no central authority." },
+          { "term": "Hash",               "defn": "A one-way function that turns any input into a fixed-size fingerprint. You can't reverse it; tiny input changes flip the output completely." },
+          { "term": "SHA-256",            "defn": "The specific hash function Bitcoin uses. Always produces 64 hex characters." },
+          { "term": "Avalanche effect",   "defn": "Changing one bit of input completely changes the hash output. The \"spread\" property that makes hashing useful." },
+          { "term": "Immutability",       "defn": "Once written into the chain, a record can't be silently altered without leaving evidence everywhere downstream." },
+          { "term": "Tamper-evidence",    "defn": "Stronger than \"tamper-proof\": any change breaks visible cryptographic links, so the tampering can't hide." },
+          { "term": "Trust-minimization", "defn": "Replacing trust in people or institutions with trust in math, code, and incentives." }
+        ]
+      },
+      "structure": {
+        "name": "Structure",
+        "bricks": [
+          { "term": "Block",             "defn": "A container of transactions with a header that cryptographically links to the previous block." },
+          { "term": "Chain",             "defn": "The sequence of blocks, each tied to its predecessor through a hash pointer." },
+          { "term": "Genesis block",     "defn": "The very first block. Has no predecessor — its prev-hash field is conventionally all zeros." },
+          { "term": "Block header",      "defn": "A block's metadata: version, prev hash, merkle root, timestamp, bits (difficulty), and nonce." },
+          { "term": "Merkle tree",       "defn": "A binary tree of hashes. Pairs are hashed together repeatedly until one root remains." },
+          { "term": "Merkle root",       "defn": "A single hash that summarises every transaction in a block. Change any tx → root changes." },
+          { "term": "Nonce",             "defn": "A number a miner cycles through until the block's hash meets the difficulty target." },
+          { "term": "Difficulty / Bits", "defn": "How many leading zeros the hash must have. Adjusts every 2,016 blocks to keep ~10 min block time." },
+          { "term": "Timestamp",         "defn": "Approximate time the miner stamped the block. Lives inside the header." }
+        ]
+      },
+      "identity": {
+        "name": "Identity & Custody",
+        "bricks": [
+          { "term": "Wallet",      "defn": "Software that holds your keys. It does NOT hold coins — coins live on-chain. The keys prove the coins are yours." },
+          { "term": "Private key", "defn": "The one secret that authorises spending. Like a PIN, like a house key. Lose it = lose the funds." },
+          { "term": "Public key",  "defn": "Derived from the private key one-way. Used by others to verify your signatures. Safe to share." },
+          { "term": "Address",     "defn": "A short hash of the public key. Like an IBAN or a mailbox slot — anyone can send to it." },
+          { "term": "Seed phrase", "defn": "12 or 24 ordinary English words encoding the master secret. Regenerates the entire wallet on any device." },
+          { "term": "Signature",   "defn": "Cryptographic proof a message was approved by the holder of a specific private key, without revealing the key." }
+        ]
+      },
+      "network": {
+        "name": "Network & Consensus",
+        "bricks": [
+          { "term": "Node",              "defn": "A computer running the blockchain software, storing the chain and validating new transactions/blocks." },
+          { "term": "P2P",               "defn": "Peer-to-peer. No central server — every node talks directly to other nodes." },
+          { "term": "Consensus",         "defn": "How thousands of independent nodes agree on the same state of the chain." },
+          { "term": "Proof of Work",     "defn": "Miners spend electricity guessing nonces. Whoever finds a valid hash first wins the right to add a block." },
+          { "term": "Proof of Stake",    "defn": "Validators stake tokens as collateral. Misbehave and the stake is slashed. Ethereum switched to PoS in 2022." },
+          { "term": "Mining",            "defn": "Running computers to solve PoW puzzles in exchange for newly minted coins + transaction fees." },
+          { "term": "51% attack",        "defn": "If one entity controls majority hash power, they can rewrite recent history. The reason chains want many nodes." },
+          { "term": "Byzantine Generals","defn": "The classic problem: how to reach agreement across a network where some participants may lie or fail." },
+          { "term": "Fork",              "defn": "A split in the chain. Soft fork = backward-compatible; hard fork = creates two incompatible chains." },
+          { "term": "Double-spend",      "defn": "Trying to send the same coin twice. Consensus + the longest-chain rule prevents it." }
+        ]
+      },
+      "bitcoin": {
+        "name": "Bitcoin",
+        "bricks": [
+          { "term": "Satoshi Nakamoto", "defn": "The pseudonymous creator of Bitcoin. Published the whitepaper Oct 2008, mined the genesis block Jan 2009, vanished 2010." },
+          { "term": "Whitepaper",       "defn": "Bitcoin's 9-page founding document. Surprisingly readable. Linked in the Bibliography." },
+          { "term": "21M cap",          "defn": "The absolute maximum number of bitcoins that will ever exist. Hard-coded by every full node." },
+          { "term": "Halving",          "defn": "Every ~4 years the block reward halves. Schedules supply decay; last halving expected around 2140." },
+          { "term": "UTXO",             "defn": "Unspent Transaction Output. Bitcoin tracks \"unspent coin chunks\", not account balances." },
+          { "term": "Bitcoin Script",   "defn": "Bitcoin's intentionally limited scripting language. Not Turing-complete — no loops, no persistent state." },
+          { "term": "Lightning Network","defn": "A Layer-2 network on top of Bitcoin for fast, cheap micropayments. Settles back to L1 periodically." },
+          { "term": "SPV",              "defn": "Simplified Payment Verification. Light clients use Merkle proofs to verify a tx is in a block without storing the chain." }
+        ]
+      },
+      "ethereum": {
+        "name": "Ethereum",
+        "bricks": [
+          { "term": "Ethereum",         "defn": "The first programmable blockchain. Launched 2015 by Vitalik Buterin. Where smart contracts became practical." },
+          { "term": "EVM",              "defn": "Ethereum Virtual Machine. The global computer that executes smart contracts identically on every node." },
+          { "term": "Smart contract",   "defn": "Code stored on a blockchain that runs deterministically when called. The data IS the code IS the rules." },
+          { "term": "Gas",              "defn": "The unit measuring computational work on the EVM. Every operation costs gas; you pay for what you use." },
+          { "term": "Gwei",             "defn": "1 gwei = 0.000 000 001 ETH. The unit gas prices are quoted in." },
+          { "term": "EOA",              "defn": "Externally Owned Account. An account controlled by a private key — your MetaMask wallet is one." },
+          { "term": "Contract Account", "defn": "An account controlled by code, not a key. Holds a smart contract's state. Can't initiate transactions on its own." },
+          { "term": "EIP-1559",         "defn": "The 2021 fee market upgrade. Base fee is burned, optional priority tip goes to the validator." },
+          { "term": "The Merge",        "defn": "Sept 2022 — Ethereum switched from PoW to PoS. Cut its energy use by 99.95%." }
+        ]
+      },
+      "web3": {
+        "name": "Web3 Ecosystem",
+        "bricks": [
+          { "term": "dApp",       "defn": "Decentralised application — a frontend talking to smart contracts on-chain instead of a company server." },
+          { "term": "DeFi",       "defn": "Decentralised Finance. Lending, trading, derivatives running entirely in smart contracts." },
+          { "term": "NFT",        "defn": "Non-Fungible Token. A unique on-chain asset (ERC-721) with a permanent ownership history." },
+          { "term": "DAO",        "defn": "Decentralised Autonomous Organisation. Governance by smart contract + token votes instead of a board." },
+          { "term": "ERC-20",     "defn": "The Ethereum standard for fungible tokens (every USDC, every DAI, every LINK)." },
+          { "term": "ERC-721",    "defn": "The Ethereum standard for non-fungible tokens (NFTs)." },
+          { "term": "Stablecoin", "defn": "A token pegged to a stable asset, usually the US dollar. USDC, USDT, DAI." },
+          { "term": "Oracle",     "defn": "A service that brings off-chain data on-chain (prices, sports scores, weather). Chainlink is the leading provider." },
+          { "term": "IPFS",       "defn": "InterPlanetary File System. Content-addressed decentralised storage often used to host NFT metadata." }
+        ]
+      },
+      "future": {
+        "name": "Future Trends",
+        "bricks": [
+          { "term": "Layer 1",              "defn": "A base-layer blockchain (Bitcoin, Ethereum, Solana). Where consensus + final settlement happens." },
+          { "term": "Layer 2",              "defn": "A network built on top of an L1 to scale throughput while inheriting its security. Arbitrum, Optimism, Base." },
+          { "term": "Rollup",               "defn": "An L2 that batches transactions off-chain and posts a compressed proof back to L1." },
+          { "term": "ZK proof",             "defn": "Zero-Knowledge Proof. Prove a statement is true without revealing the underlying data." },
+          { "term": "Account Abstraction",  "defn": "Wallets that behave like smart contracts: social recovery, gasless txs, session keys. UX upgrade." },
+          { "term": "RWA",                  "defn": "Real-World Assets. Tokenising real estate, bonds, commodities on-chain. BlackRock, Franklin Templeton are early." },
+          { "term": "CBDC",                 "defn": "Central Bank Digital Currency. State-issued digital money — programmable, traceable, sometimes restrictable." },
+          { "term": "DID",                  "defn": "Decentralised Identity. User-controlled digital identity, no central registry to revoke you." }
+        ]
+      }
+    }
+  },
+  "teamCheckpoint": {
+    "contextLabel": "Day 1 wrap · Course 01 → Course 02 / 03",
+    "title": "Form your team",
+    "subtitle": "The team project runs across all five courses. Find your teammates now — you'll start using the team in Day 2 and Day 3.",
+    "duration": "10–15 min",
+    "doNowLabel": "Do now",
+    "discussLabel": "Discuss together",
+    "bringLabel":   "Bring to Day 2",
+    "doNow": [
+      { "leadA": "Form a team of ", "strong": "3–4 members", "tail": ". Mix backgrounds where you can." },
+      { "leadA": "Exchange contact details — WhatsApp / Telegram / email — so you can coordinate between sessions.", "strong": "", "tail": "" },
+      { "leadA": "Pick a working name for your team and a primary point of contact.", "strong": "", "tail": "" }
+    ],
+    "discuss": [
+      { "leadA": "Each member shares ", "strong": "one industry", "tail": " you find interesting or work in." },
+      { "leadA": "Note any business pain points you've personally experienced — paper-heavy processes, slow settlements, trust gaps, etc.", "strong": "", "tail": "" },
+      { "leadA": "Sketch a few candidate problems freely. You can refine — or completely change direction — as you learn more across Days 2 and 3.", "strong": "", "tail": "" }
+    ],
+    "bring": [
+      { "leadA": "Your team's contact list — everyone in one chat group.", "strong": "", "tail": "" },
+      { "leadA": "A short list (~3) of pain points worth exploring.", "strong": "", "tail": "" },
+      { "leadA": "Curiosity about which blockchain platforms could fit them.", "strong": "", "tail": "" }
+    ],
+    "footnoteStrong": "What's next →",
+    "footnoteBody":   "Day 2 (Blockchain Platforms) will introduce platform trade-offs you'll need to choose between. Day 3 (Smart Contracts) is where your team's idea becomes a concrete design."
+  }
+}

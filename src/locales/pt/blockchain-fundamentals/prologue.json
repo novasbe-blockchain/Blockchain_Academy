@@ -1,0 +1,254 @@
+{
+  "chapters": {
+    "p-money":             "O que é o Dinheiro?",
+    "p-money-value":       "Porque Tem Valor",
+    "p-cypherpunks":       "Os Cypherpunks",
+    "p-cypherpunk-values": "Pelas Pessoas",
+    "p-timeline":          "Cronologia",
+    "p-pedigree":          "Linhagem Académica",
+    "p-why":               "Porque Importa",
+    "p-who-controls":      "Quem Possui o Teu Dinheiro?",
+    "p-takeaways":         "Conclusões",
+    "p-quiz":              "Quizzes"
+  },
+  "title": {
+    "sectionNumber": "PRÓLOGO",
+    "title": "A História da Blockchain",
+    "subtitle": "Como um movimento por privacidade e liberdade deu origem ao dinheiro descentralizado"
+  },
+  "moneyHistory": {
+    "heading": "O que é o Dinheiro?",
+    "lead": "Antes de chegarmos ao Bitcoin, um olhar rápido pelo longo caminho que aqui nos trouxe. Cada geração inventou um novo dinheiro — e cada forma resolveu os limites da anterior.",
+    "calloutTitle": "O fio condutor",
+    "calloutBody":  "Cada forma de dinheiro corrigiu um problema da anterior — portabilidade, escassez, divisibilidade, velocidade de liquidação. O Bitcoin foi uma tentativa de corrigir a própria suposição de confiança."
+  },
+  "moneyEvents": [
+    { "era": "~9000 a.C.", "name": "Troca direta",                       "desc": "Troca direta de bens. Funcionava em pequenas tribos — partia-se assim que alguém tinha grão e outro queria um telhado." },
+    { "era": "~3000 a.C.", "name": "Dinheiro-mercadoria",                "desc": "Conchas, sal, gado, contas. A primeira reserva abstrata de valor — itens que todos concordavam ter valor." },
+    { "era": "~600 a.C.",  "name": "Moedas (ouro / prata)",              "desc": "Moedas de metal cunhadas. Escassas, duráveis, divisíveis. Impérios subiram e caíram a controlar a casa da moeda." },
+    { "era": "~1000 d.C.", "name": "Notas de papel e bancos",            "desc": "Promessas resgatáveis em ouro, depois apenas pela confiança no emissor. O padrão-ouro acabou em 1971 — o dinheiro tornou-se pura confiança." },
+    { "era": "~1950",      "name": "Cartões / livros-razão digitais",   "desc": "O dinheiro torna-se uma entrada de base de dados num banco. Conveniente — mas cada transação passa por um porteiro." },
+    { "era": "2009",       "name": "Bitcoin",                            "desc": "Escassez digital sem emissor central — a primeira forma de dinheiro que ninguém opera e ninguém consegue desligar." }
+  ],
+  "moneyValue": {
+    "title": "Porque é que o Dinheiro Tem Valor?",
+    "description": "Um pedaço de papel, um número numa base de dados, uma moeda de ouro, um Bitcoin — nenhum vale intrinsecamente nada. O dinheiro funciona porque quatro coisas são verdadeiras ao mesmo tempo.",
+    "pillars": [
+      { "label": "Confiança partilhada", "desc": "Todos na rede concordam que esta coisa vale algo. O acordo é o valor." },
+      { "label": "Escassez",             "desc": "Não consegues facilmente fazer mais. O ouro é raro. Os dólares são limitados pelos bancos centrais. O Bitcoin é limitado a 21 milhões." },
+      { "label": "Utilidade",            "desc": "Podes usá-lo — pagar impostos, comprar pão, liquidar uma dívida. Uma moeda que ninguém aceita é apenas um colecionável." },
+      { "label": "Efeito de rede",       "desc": "Quantas mais pessoas aceitam, mais útil se torna. Dinheiro novo luta, dinheiro estabelecido cresce em composto." }
+    ],
+    "calloutTitle": "Uma experiência mental",
+    "calloutBodyA": "Amanhã de manhã, todas as lojas do teu país decidem não aceitar euros. As notas na tua carteira ainda existem — quanto valem? O valor do dinheiro vive na cabeça",
+    "calloutBodyEm": "de todos os outros",
+    "calloutBodyTail": ", não no papel.",
+    "keyPoints": [
+      "O dinheiro tem valor porque decidimos coletivamente que tem — não há número objetivo",
+      "Quando a confiança se parte (hiperinflação, corridas aos bancos, sanções), as mesmas notas perdem valor de um dia para o outro",
+      "Os designers do Bitcoin perguntaram: conseguimos engenheirar confiança + escassez + utilidade + efeitos de rede sem qualquer autoridade central?",
+      "É a esta pergunta que o resto do curso tenta responder"
+    ]
+  },
+  "cypherpunks": {
+    "heading": "Os Cypherpunks",
+    "lead": "Nas décadas de 1980 e 1990, um grupo informal de criptógrafos, hackers e ativistas decidiu que a privacidade não era um luxo — era uma pré-condição para a liberdade.",
+    "quote": "\"A privacidade é uma pré-condição para a liberdade, não um luxo.\"",
+    "quoteAttribution": "— Filosofia cypherpunk",
+    "calloutTitle": "Princípio Cypherpunk Fundamental",
+    "calloutBodyA": "\"A privacidade é necessária para uma sociedade aberta na era eletrónica. Não podemos esperar que governos, empresas ou outras grandes organizações sem rosto nos concedam privacidade por beneficência.\" — Eric Hughes,",
+    "calloutBodyEm": "A Cypherpunk's Manifesto",
+    "calloutBodyTail": "(1993)",
+    "hughesName": "Eric Hughes",
+    "hughesRole": "Cypherpunk · Autor do Manifesto",
+    "readManifesto": "📄 Ler o Manifesto",
+    "principles": [
+      { "title": "Privacidade por Defeito", "body": "Os sistemas devem proteger a privacidade sem exigir confiança em qualquer autoridade — a cifragem é o estado por defeito, não um interruptor que tens de encontrar e ligar." },
+      { "title": "O Código é a Lei",        "body": "A matemática criptográfica, não a legislação, deve impor direitos. Uma lei pode ser revogada; um protocolo criptográfico publicado não pode ser des-conhecido." },
+      { "title": "Código Aberto",           "body": "As ferramentas têm de ser públicas, auditáveis e disponíveis a todos — sem porteiros. Se o código é secreto, a privacidade que afirma dar não pode ser verificada." },
+      { "title": "Constrói, Não Implores",  "body": "Escreve código para mudar a realidade. Não esperes por permissão das instituições, não faças lobbying — lança algo que torne o lobbying irrelevante." }
+    ]
+  },
+  "cypherpunkValues": {
+    "title": "Tecnologia das Pessoas, para as Pessoas",
+    "description": "Os Cypherpunks não estavam a construir produtos. Estavam a construir ferramentas de libertação — e davam-nas de graça.",
+    "manifestoTitle": "O Manifesto em Três Palavras",
+    "wordPrivacy":    "PRIVACIDADE",
+    "wordPrivacySub": "é um direito, não uma funcionalidade",
+    "wordAutonomy":   "AUTONOMIA",
+    "wordAutonomySub":"sobre os teus dados e dinheiro",
+    "wordCode":       "CÓDIGO",
+    "wordCodeSub":    "é a lei que não pode ser lobbiada",
+    "secondQuote":    "\"Estamos a escrever código. Sabemos que o software não pode ser destruído e que um sistema amplamente disperso não pode ser desligado.\"",
+    "secondQuoteAttribution": "— Eric Hughes, A Cypherpunk's Manifesto (1993)",
+    "indivSub":       "Ferramentas individuais com alcance global",
+    "freeSub":        "Código aberto, sem porteiros, sem custo",
+    "freeLabel":      "🔓 Livre",
+    "keyPoints": [
+      "Qualquer pessoa, em qualquer lugar, podia usar ou auditar as ferramentas — sem precisar de permissão",
+      "Desenhadas para serem resistentes à censura: sem ponto único de desligamento",
+      "O inimigo não era a tecnologia — era o poder centralizado sobre a informação",
+      "O Bitcoin herdou este ADN: sem CEO, sem sede, sem botão de desligar"
+    ]
+  },
+  "cypherpunksTimeline": {
+    "heading": "Dos Cypherpunks ao Bitcoin",
+    "lead":    "Vinte e sete anos do primeiro dinheiro digital anónimo ao bloco génesis — cada elo tornou o seguinte possível.",
+    "events": [
+      { "year": "1982", "title": "David Chaum — DigiCash",                       "desc": "Primeiro sistema de dinheiro digital anónimo a usar assinaturas cegas. O Chaum provou que pagamentos eletrónicos privados eram matematicamente possíveis — a base criptográfica sobre a qual todos os outros viriam a construir." },
+      { "year": "1991", "title": "Haber e Stornetta — Timestamps Criptográficos","desc": "Uma cadeia de blocos criptograficamente segura para carimbar temporalmente documentos digitais. Sem se aperceberem, tinham inventado o ancestral direto de cada estrutura blockchain que viria a seguir." },
+      { "year": "1993", "title": "Eric Hughes — A Cypherpunk's Manifesto",       "desc": "O documento fundador do movimento cypherpunk. A privacidade declarada um direito fundamental, a ser defendido com código em vez de leis. A ideologia que o Bitcoin viria a incorporar." },
+      { "year": "1997", "title": "Adam Back — Hashcash",                          "desc": "Um sistema proof-of-work originalmente desenhado para combater o spam de email — obrigando os remetentes a queimar pequenas quantidades de CPU. Este conceito tornou-se a inspiração direta para a mineração do Bitcoin." },
+      { "year": "1998", "title": "Wei Dai (B-Money) e Nick Szabo (Bit Gold)",     "desc": "Duas propostas independentes para moedas digitais descentralizadas usando provas criptográficas e consenso distribuído. Ambas são agora consideradas precursoras diretas do design do Bitcoin." },
+      { "year": "2008", "title": "Satoshi Nakamoto — O Whitepaper do Bitcoin",    "desc": "\"Bitcoin: A Peer-to-Peer Electronic Cash System.\" Um indivíduo ou grupo anónimo combina duas décadas de investigação cypherpunk — hashcash, timestamps encadeados, escassez digital — num único protocolo funcional." },
+      { "year": "2009", "title": "O Bloco Génesis",                                "desc": "3 de janeiro de 2009 — o Bloco #0 é minerado. Mensagem incorporada: \"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks\". A intenção ideológica fica escrita no próprio livro-razão." }
+    ]
+  },
+  "pedigree": {
+    "heading": "A Linhagem Académica do Bitcoin",
+    "lead":    "O conceito das criptomoedas é construído a partir de ideias esquecidas na literatura de investigação — cada peça antecede o Bitcoin em décadas.",
+    "imageAlt":"Cronologia das ideias-chave encontradas no Bitcoin: uma grelha de 1980 a 2015 a mapear linhas de investigação (Timestamping Encadeado, Dinheiro Digital, Proof of Work, Tolerância a Falhas Bizantinas, Chaves Públicas como Identidades, Smart Contracts) para artigos específicos — Árvore de Merkle (1980), Ecash (anos 80), Hashcash (anos 90), Bit Gold (2005), Bitcoin (2008), Ethereum (2015).",
+    "paperKicker": "O artigo",
+    "paperTitle":  "Bitcoin's Academic Pedigree",
+    "paperAuthors":"Arvind Narayanan e Jeremy Clark · ACM Queue, 2017",
+    "strandsHeader":"Seis linhas de investigação alimentaram o Bitcoin",
+    "strands": [
+      { "label": "Timestamping encadeado",        "source": "Haber e Stornetta · 1990–91" },
+      { "label": "Dinheiro digital",              "source": "Chaum · Ecash · 1982+" },
+      { "label": "Proof of work",                 "source": "Dwork–Naor · Hashcash · anos 90" },
+      { "label": "Tolerância a falhas bizantinas","source": "Lamport · Paxos · PBFT" },
+      { "label": "Chaves públicas como identidades","source": "Chaum · Goldberg" },
+      { "label": "Smart contracts",               "source": "Szabo · ensaio de 1994" }
+    ],
+    "readPaper": "📄 Ler o artigo completo"
+  },
+  "why": {
+    "title": "Porque é que Esta História Importa",
+    "description": "O Bitcoin não surgiu do nada. Foi a culminação de 30 anos de investigação criptográfica, experiências falhadas e convicção ideológica.",
+    "combinedTitle": "🧩 O que o Satoshi Combinou",
+    "components": [
+      { "title": "Proof of Work",          "source": "Do Hashcash (Adam Back)" },
+      { "title": "Blocos Encadeados",      "source": "De Haber e Stornetta" },
+      { "title": "Escassez Digital",       "source": "Do Bit Gold (Nick Szabo)" },
+      { "title": "Distribuição P2P",       "source": "Do B-Money (Wei Dai)" }
+    ],
+    "calloutTitle": "O Génio do Satoshi",
+    "calloutBody":  "O Satoshi não inventou nenhum componente isolado. O génio esteve em combinar primitivas criptográficas existentes com design de incentivos económicos num único sistema coerente que realmente funcionou.",
+    "keyPoints": [
+      "Cada conceito central (hashing, assinaturas digitais, PoW) antecede o Bitcoin",
+      "Tentativas anteriores (DigiCash, B-Money, Bit Gold) falharam todas ou ficaram teóricas",
+      "O Bitcoin teve sucesso porque alinhou criptografia com incentivos económicos",
+      "Compreender a história ajuda-te a avaliar criticamente novos projetos blockchain"
+    ]
+  },
+  "whoControls": {
+    "heading": "Quem Controla o Teu Dinheiro?",
+    "lead":    "Um lado-a-lado do que pode realmente acontecer ao valor que tens, em cada sistema.",
+    "columns": [
+      {
+        "name": "Dinheiro vivo",
+        "control": "Tu",
+        "rows": [
+          { "k": "Custódia",        "v": "Física · só tu o tens" },
+          { "k": "Pode ser congelado?", "v": "Não — mas pode ser perdido, roubado ou apreendido em pessoa" },
+          { "k": "Oferta",          "v": "Inflacionada pelo banco central" },
+          { "k": "Censura",         "v": "Nenhuma online · funciona cara-a-cara" },
+          { "k": "Transfronteiriço","v": "Difícil · limites, declarações, casas de câmbio" },
+          { "k": "Digital?",        "v": "Não — apenas físico" }
+        ]
+      },
+      {
+        "name": "Conta bancária",
+        "control": "O teu banco + governo",
+        "rows": [
+          { "k": "Custódia",        "v": "O banco guarda · tu tens um direito" },
+          { "k": "Pode ser congelada?", "v": "Sim · congelamento de conta, sanções, penhora" },
+          { "k": "Oferta",          "v": "Reserva fracionária + política do banco central" },
+          { "k": "Censura",         "v": "Sim · o banco pode recusar transações / clientes" },
+          { "k": "Transfronteiriço","v": "3–5 dias · SWIFT · spread de câmbio 1–3%" },
+          { "k": "Digital?",        "v": "Sim · via a base de dados do banco" }
+        ]
+      },
+      {
+        "name": "Pagamento digital",
+        "control": "A plataforma",
+        "rows": [
+          { "k": "Custódia",        "v": "A plataforma guarda · tu tens um saldo" },
+          { "k": "Pode ser congelado?", "v": "Sim · expulsão da plataforma, chargebacks, termos de serviço" },
+          { "k": "Oferta",          "v": "Igual ao fiat subjacente" },
+          { "k": "Censura",         "v": "Sim · a plataforma decide quem transaciona" },
+          { "k": "Transfronteiriço","v": "Restrito · bloqueio por região · níveis de KYC" },
+          { "k": "Digital?",        "v": "Sim · trilhos proprietários" }
+        ]
+      },
+      {
+        "name": "Bitcoin",
+        "control": "Tu (se self-custody)",
+        "rows": [
+          { "k": "Custódia",        "v": "As tuas chaves, as tuas moedas (ou um custodiante, se escolheres)" },
+          { "k": "Pode ser congelado?", "v": "Não na camada do protocolo · os custodiantes podem congelar os seus" },
+          { "k": "Oferta",          "v": "Limitada a 21 milhões · nenhum humano pode mudar" },
+          { "k": "Censura",         "v": "Sem permissão · qualquer um pode enviar / receber" },
+          { "k": "Transfronteiriço","v": "Igual a uma transferência local · minutos, sem câmbio" },
+          { "k": "Digital?",        "v": "Nativamente digital · liquida num livro-razão público" }
+        ]
+      }
+    ],
+    "questionKicker": "Pergunta para refletir",
+    "questionA":     "O que significa verdadeiramente",
+    "questionEm":    "possuir",
+    "questionTail":  "algo digital — se há sempre alguém que te pode tirar?"
+  },
+  "takeaways": {
+    "title": "Conclusões do Prólogo",
+    "items": [
+      "O dinheiro é mais antigo do que a escrita — a sua forma vai mudando, a sua função (confiança + escassez + utilidade + rede) não",
+      "O valor vive no acordo coletivo, não no objeto — quando a confiança se parte, as mesmas notas tornam-se papel",
+      "O movimento cypherpunk defendeu a privacidade como direito fundamental, defendido através de código em vez de lei",
+      "Dos anos 80 a 2008, os criptógrafos construíram as peças individuais que o Bitcoin viria a unificar",
+      "O Satoshi combinou proof-of-work, blocos encadeados, escassez digital e rede P2P — nenhum dos quais ele inventou",
+      "A mensagem do Bloco Génesis — 'Chancellor on brink of second bailout for banks' — revela as raízes ideológicas do Bitcoin",
+      "Dinheiro vivo, contas bancárias e plataformas de pagamento digital entregam todos o controlo a outra pessoa; o Bitcoin pergunta: consegues mantê-lo contigo?"
+    ]
+  },
+  "quizMoney": {
+    "question": "O dinheiro assumiu muitas formas — conchas, moedas, papel, entradas de conta bancária, Bitcoin. Qual é a razão subjacente para qualquer um deles ter valor?",
+    "options": [
+      "O material de que são feitos (metal, papel, eletrões) determina o seu valor",
+      "Os governos declaram-nos valiosos por lei",
+      "Uma rede de pessoas concorda coletivamente em aceitá-los — confiança, escassez, utilidade e efeitos de rede compõem-se",
+      "O seu valor fica fixo assim que uma autoridade central decide uma taxa de câmbio"
+    ],
+    "explanation": "O valor do dinheiro não está no objeto — está no acordo partilhado de todos na rede. Quando esse acordo se parte (hiperinflação, sanções, bans de plataformas), as mesmas notas perdem valor de um dia para o outro. Os quatro fundamentos são: confiança, escassez, utilidade e efeitos de rede. O Bitcoin pergunta se os quatro podem ser engenheirados sem qualquer autoridade isolada — é essa a pergunta que este curso explora."
+  },
+  "quizCypherpunks": {
+    "question": "Qual era a crença central do movimento Cypherpunk?",
+    "options": [
+      "Os governos devem regular todas as comunicações digitais",
+      "A privacidade é uma pré-condição para a liberdade e deve ser defendida com código",
+      "As empresas devem controlar a tecnologia de cifragem",
+      "As moedas digitais devem ser geridas pelos bancos centrais"
+    ],
+    "explanation": "Os Cypherpunks acreditavam que a privacidade não é um luxo, mas um direito fundamental, e que o código criptográfico — não as leis ou instituições — devia impô-la."
+  },
+  "quizHashcash": {
+    "question": "Que conceito é que o Hashcash de Adam Back (1997) inspirou diretamente no Bitcoin?",
+    "options": [
+      "Smart contracts",
+      "Assinaturas cegas para pagamentos anónimos",
+      "Mineração proof-of-work",
+      "Rede peer-to-peer"
+    ],
+    "explanation": "O Hashcash era um sistema proof-of-work originalmente desenhado para combater o spam de email. O Satoshi Nakamoto adaptou este conceito como a base do mecanismo de mineração e consenso do Bitcoin."
+  },
+  "quizGenesis": {
+    "question": "Que mensagem é que o Satoshi Nakamoto incorporou no Bloco Génesis do Bitcoin?",
+    "options": [
+      "\"Hello World\"",
+      "\"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks\"",
+      "\"A Cypherpunk's Manifesto\"",
+      "\"In code we trust\""
+    ],
+    "explanation": "A manchete incorporada do jornal The Times revela as raízes ideológicas do Bitcoin — foi criado como uma resposta direta às falhas do sistema bancário tradicional durante a crise financeira de 2008."
+  }
+}

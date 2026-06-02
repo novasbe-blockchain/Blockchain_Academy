@@ -1,62 +1,69 @@
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { ArrowRight, Lock } from 'lucide-react';
 import logo from '../../blockchainptlogo.jpeg';
+import { useLang } from '../../i18n/useLang';
+import { LanguageSwitcher } from '../components/navigation/LanguageSwitcher';
 
 interface Course {
   number: string;
-  title: string;
-  description: string;
-  topics: string[];
+  /** i18n key under `courses.<key>` in common.json. Empty string means the
+   *  card uses hardcoded English (Course 4 is intentionally not translated). */
+  i18nKey: string;
+  /** Hardcoded fallback used when i18nKey is empty (Course 4). */
+  staticTitle?: string;
+  staticDescription?: string;
+  staticTopics?: string[];
   gradient: string;
   accentColor: string;
-  path: string;
+  slug: string;
   available: boolean;
 }
 
 const courses: Course[] = [
   {
     number: '01',
-    title: 'Blockchain Fundamentals',
-    description: 'Understand how blockchain technology works from the ground up — cryptography, consensus, Bitcoin, and the Web3 ecosystem.',
-    topics: ['DLT & Hashing', 'Bitcoin & Mining', 'Wallets & Transactions', 'Consensus Mechanisms', 'Web3 & dApps'],
+    i18nKey: 'blockchainFundamentals',
     gradient: 'from-[#ED1C24] to-[#f59e0b]',
     accentColor: '#ED1C24',
-    path: '/blockchain-fundamentals',
+    slug: 'blockchain-fundamentals',
     available: true,
   },
   {
     number: '02',
-    title: 'Blockchain Platforms',
-    description: 'Bitcoin, Ethereum, Hyperledger Fabric, and interoperability — understand the trade-offs of each platform and when to use which.',
-    topics: ['Bitcoin Architecture', 'Ethereum & EVM', 'Hyperledger Fabric', 'Interoperability', 'Cosmos & Layer 0'],
+    i18nKey: 'blockchainPlatforms',
     gradient: 'from-[#39B54A] to-[#22d3ee]',
     accentColor: '#39B54A',
-    path: '/blockchain-platforms',
+    slug: 'blockchain-platforms',
     available: true,
   },
   {
     number: '03',
-    title: 'Business Applications for Smart Contracts',
-    description: 'From theory to industry disruption — understand what smart contracts can and cannot do for your business, with real case studies and a team project.',
-    topics: ['Smart Contract Fundamentals', 'EVM & Web3 Landscape', 'Case Studies', 'Oracle Problem', 'Team Project'],
+    i18nKey: 'smartContracts',
     gradient: 'from-[#6366f1] to-[#8b5cf6]',
     accentColor: '#6366f1',
-    path: '/smart-contracts',
+    slug: 'smart-contracts',
     available: true,
   },
   {
+    // Course 04 stays in English (per decision — it's locked and not in the
+    // translation scope). Title/description/topics use the static fallback.
     number: '04',
-    title: 'Project Management for Blockchain Initiatives',
-    description: 'Plan, execute, and lead blockchain projects — from scoping and governance to risk management, team leadership, and measuring success.',
-    topics: ['Project Lifecycle', 'Scope & Governance', 'Risk & Audits', 'Communication', 'Team Leadership'],
+    i18nKey: '',
+    staticTitle: 'Project Management for Blockchain Initiatives',
+    staticDescription: 'Plan, execute, and lead blockchain projects — from scoping and governance to risk management, team leadership, and measuring success.',
+    staticTopics: ['Project Lifecycle', 'Scope & Governance', 'Risk & Audits', 'Communication', 'Team Leadership'],
     gradient: 'from-[#f97316] to-[#eab308]',
     accentColor: '#f97316',
-    path: '/project-management',
+    slug: 'project-management',
     available: false,
   },
 ];
 
 export function CourseSelection() {
+  const { t } = useTranslation();
+  const lang = useLang();
+
   return (
     <div className="size-full overflow-y-auto">
       {/* Hero */}
@@ -66,27 +73,45 @@ export function CourseSelection() {
         <div className="absolute top-1/4 right-1/4 size-96 bg-gradient-to-br from-[#ED1C24] to-[#6366f1] opacity-10 blur-3xl rounded-full" />
         <div className="absolute bottom-1/4 left-1/4 size-96 bg-gradient-to-br from-[#39B54A] to-[#f59e0b] opacity-10 blur-3xl rounded-full" />
 
+        {/* Floating language switcher — top-right of the hero */}
+        <div className="absolute top-6 right-6 z-20">
+          <LanguageSwitcher variant="floating" />
+        </div>
+
         <div className="relative z-10 w-full max-w-5xl">
           {/* Logo + Academy title */}
           <div className="text-center mb-12">
             <div className="flex justify-center mb-6">
-              <img src={logo} alt="Blockchain Academy" className="h-24 object-contain" />
+              <img src={logo} alt={t('academy.logoAlt')} className="h-24 object-contain" />
             </div>
             <h1 className="text-5xl lg:text-6xl font-black text-foreground mb-4">
-              Blockchain Academy
+              {t('academy.title')}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Four courses. One complete mastery path. Choose where to begin.
+              {t('academy.subtitle')}
             </p>
           </div>
 
           {/* Course cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-            {courses.map((course) => (
-              course.available ? (
+            {courses.map((course) => {
+              // Pull translated content where available; fall back to static
+              // English (used for Course 4).
+              const title = course.i18nKey
+                ? t(`courses.${course.i18nKey}.title`)
+                : course.staticTitle ?? '';
+              const description = course.i18nKey
+                ? t(`courses.${course.i18nKey}.description`)
+                : course.staticDescription ?? '';
+              const topics = course.i18nKey
+                ? (t(`courses.${course.i18nKey}.topics`, { returnObjects: true }) as string[])
+                : course.staticTopics ?? [];
+              const path = `/${lang}/${course.slug}`;
+
+              return course.available ? (
                 <Link
                   key={course.number}
-                  to={course.path}
+                  to={path}
                   className="group relative bg-card border border-border rounded-2xl p-6 flex flex-col hover:shadow-xl transition-all hover:-translate-y-1"
                   style={{ '--accent': course.accentColor } as React.CSSProperties}
                 >
@@ -96,27 +121,27 @@ export function CourseSelection() {
                   </div>
 
                   <h2 className="text-xl font-bold text-foreground mb-2 group-hover:text-[--accent] transition-colors">
-                    {course.title}
+                    {title}
                   </h2>
                   <p className="text-sm text-muted-foreground mb-5 flex-1">
-                    {course.description}
+                    {description}
                   </p>
 
                   {/* Topics */}
                   <div className="flex flex-wrap gap-1.5 mb-5">
-                    {course.topics.map(t => (
+                    {topics.map(topic => (
                       <span
-                        key={t}
+                        key={topic}
                         className="text-[10px] font-semibold px-2 py-0.5 rounded-full border"
                         style={{ color: course.accentColor, borderColor: course.accentColor + '40', backgroundColor: course.accentColor + '10' }}
                       >
-                        {t}
+                        {topic}
                       </span>
                     ))}
                   </div>
 
                   <div className="flex items-center gap-2 font-bold text-sm" style={{ color: course.accentColor }}>
-                    Start Course
+                    {t('common.startCourse')}
                     <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
                   </div>
 
@@ -138,23 +163,25 @@ export function CourseSelection() {
                     <span className="text-white font-black text-lg">{course.number}</span>
                   </div>
 
-                  <h2 className="text-xl font-bold text-foreground mb-2">{course.title}</h2>
-                  <p className="text-sm text-muted-foreground mb-5 flex-1">{course.description}</p>
+                  <h2 className="text-xl font-bold text-foreground mb-2">{title}</h2>
+                  <p className="text-sm text-muted-foreground mb-5 flex-1">{description}</p>
 
                   {/* Topics */}
                   <div className="flex flex-wrap gap-1.5 mb-5">
-                    {course.topics.map(t => (
+                    {topics.map(topic => (
                       <span
-                        key={t}
+                        key={topic}
                         className="text-[10px] font-semibold px-2 py-0.5 rounded-full border"
                         style={{ color: course.accentColor, borderColor: course.accentColor + '40', backgroundColor: course.accentColor + '10' }}
                       >
-                        {t}
+                        {topic}
                       </span>
                     ))}
                   </div>
 
                   <div className="flex items-center gap-2 font-bold text-sm" style={{ color: course.accentColor }}>
+                    {/* Course 4 keeps "Start Course" in English to stay consistent
+                        with the rest of its card, which is also not translated. */}
                     Start Course
                     <ArrowRight className="size-4" />
                   </div>
@@ -165,12 +192,12 @@ export function CourseSelection() {
                       <Lock className="size-6 text-foreground" />
                     </div>
                     <span className="px-3 py-1 rounded-full bg-background/80 border border-border text-xs font-semibold text-foreground">
-                      Coming Soon
+                      {t('common.comingSoon')}
                     </span>
                   </div>
                 </div>
-              )
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

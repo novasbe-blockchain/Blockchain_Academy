@@ -1,0 +1,322 @@
+{
+  "chapters": {
+    "s5-oracle":           "The Oracle Problem",
+    "s5-challenges":       "Challenges & Limits",
+    "s5-technical":        "Technical Challenges",
+    "s5-ex-oracle":        "🧩 Oracle Attack",
+    "s5-risks-security":   "Security Risks",
+    "s5-risks-cost":       "Cost Risks",
+    "s5-risks-regulatory": "Regulatory Risks",
+    "s5-quiz":             "Quiz",
+    "s5-takeaways":        "Takeaways",
+    "s5-summary":          "Summary"
+  },
+  "title": {
+    "sectionNumber": "SECTION 05",
+    "title": "Limitations & Risks",
+    "subtitle": "An honest look at the oracle problem, real limitations, and where smart contracts fall short"
+  },
+  "oracle": {
+    "heading": "The Oracle Problem",
+    "subtitle": "Smart contracts are closed and deterministic — reaching the outside world is the hard part.",
+    "cards": [
+      {
+        "label": "The Problem",
+        "what": "Chains are closed & deterministic",
+        "body": "A contract can't fetch a price, score or delivery status itself — an external call would return different results on different nodes and break consensus.",
+        "tag": "The chain knows nothing outside itself"
+      },
+      {
+        "label": "The Fix — Oracles",
+        "what": "Signed real-world data, posted on-chain",
+        "body": "An off-chain service fetches the data and submits it as a signed transaction. The contract then reads it like any other on-chain value. Chainlink is the dominant network.",
+        "tag": "A data bridge: world → blockchain"
+      },
+      {
+        "label": "The Catch",
+        "what": "Oracles reintroduce trust",
+        "body": "A single controlled or hacked oracle becomes the point of manipulation — and can drain every contract that depends on it.",
+        "tag": "Only as decentralised as its weakest data source"
+      }
+    ],
+    "example": {
+      "label": "Example — parametric crop insurance",
+      "bodyA": "Premium paid → contract holds \"if rainfall < X by date Z → pay $5k\" → ",
+      "bodyStrong": "Chainlink + NOAA",
+      "bodyB": " posts daily rainfall → condition met → payout fires automatically. No claims adjuster — but a broken oracle stalls everything."
+    },
+    "networks": {
+      "label": "Oracle networks in practice",
+      "items": [
+        { "n": "Chainlink", "d": "Decentralised, many-node aggregation" },
+        { "n": "Pyth", "d": "Sub-second institutional price feeds" },
+        { "n": "API3", "d": "First-party — providers run the node" },
+        { "n": "UMA", "d": "Optimistic — correct unless disputed" }
+      ]
+    }
+  },
+  "challenges": {
+    "heading": "Challenges & Limitations",
+    "subtitle": "Smart contracts inherit their chain's constraints — four that shape every design decision.",
+    "whyLabel": "Why",
+    "fixLabel": "What helps",
+    "items": [
+      {
+        "title": "Throughput",
+        "what": "L1 can't match Web2 volume",
+        "why": "Consensus is the bottleneck — every node re-executes every transaction, so raw L1 throughput stays low.",
+        "fix": "L2 rollups push it to thousands of TPS without giving up L1 security.",
+        "stat": "BTC 7 · ETH ~15 · Visa ~24,000 TPS"
+      },
+      {
+        "title": "Latency",
+        "what": "Block times vs millisecond web",
+        "why": "A tx waits for the next block and several confirmations before it is safe to rely on.",
+        "fix": "Use an L2 for instant UX; settle on L1 underneath.",
+        "stat": "ETH block 12s · BTC ~10 min · L2 ~250 ms"
+      },
+      {
+        "title": "Storage Cost",
+        "what": "On-chain bytes are extraordinarily pricey",
+        "why": "Every full node stores it forever, so the protocol prices storage to discourage bloat.",
+        "fix": "Keep only a hash on-chain; put the data on IPFS / Arweave.",
+        "stat": "~$1,000/MB on-chain vs ~$0.02 on S3 — 50,000×"
+      },
+      {
+        "title": "Computation Limits",
+        "what": "Gas caps what a tx can compute",
+        "why": "Each block has a gas ceiling, so ML inference or heavy loops simply can't run on-chain.",
+        "fix": "Compute off-chain, post the result + a ZK proof the chain can verify.",
+        "stat": "~30M gas/block · on-chain ~1,000,000× pricier"
+      }
+    ]
+  },
+  "technical": {
+    "heading": "Technical Challenges & Limitations",
+    "subtitle": "Four structural problems — what they are, why they happen, and how the field is fixing them.",
+    "whyLabel": "Why",
+    "fixLabel": "What helps",
+    "items": [
+      {
+        "title": "MEV — Maximal Extractable Value",
+        "what": "Block producers reorder transactions for profit",
+        "why": "They decide which txs go in and in what order — so they can front-run or sandwich a trade they see waiting in the mempool.",
+        "fix": "Private mempools, commit-reveal, MEV-aware DEXs (CoW Protocol, Flashbots SUAVE).",
+        "stat": "$1.3B+ extracted from users since 2020"
+      },
+      {
+        "title": "Upgradability",
+        "what": "Immutable code can't be patched",
+        "why": "Deployed code is permanent. A critical bug stays exploitable forever — The DAO lost $60M and forced an Ethereum hard fork.",
+        "fix": "Audit before deploy; add upgrade proxies only when essential, behind a timelock + multisig.",
+        "stat": "Proxy admin key = a centralisation point"
+      },
+      {
+        "title": "The Blockchain Trilemma",
+        "what": "Security · scalability · decentralisation — pick 2",
+        "why": "Maximising all three at L1 isn't possible; every chain deliberately trades one away.",
+        "fix": "Ethereum keeps security + decentralisation and pushes scale to L2 rollups.",
+        "stat": "BTC → 7 TPS · Solana → fewer validators"
+      },
+      {
+        "title": "State Growth",
+        "what": "The chain grows ~50 GB/year — forever",
+        "why": "History is append-only and every full node must keep all of it, so eventually only datacenters can run one.",
+        "fix": "EIP-4444 history expiry, stateless clients, and Verkle trees decouple storage from running a node.",
+        "stat": "ETH full ~1.2 TB · archive 15+ TB"
+      }
+    ]
+  },
+  "exercise": {
+    "badge": "🧩 Exercise",
+    "title": "Oracle Attack — Step by Step",
+    "subtitle": "A crop insurance contract is hacked via its oracle. Click through each step — and see how to prevent it.",
+    "stepsLabel": "steps",
+    "reset": "↺ Reset",
+    "whatHappened": "What happened",
+    "howToPrevent": "How to prevent it",
+    "unknownEvent": "···",
+    "revealNext": "Reveal next step →",
+    "rows": [
+      {
+        "actor": "Farmer",
+        "event": "Pays $500 premium into smart contract",
+        "consequence": "Contract stores: if rainfall < 50mm in June → pay out $5,000 automatically."
+      },
+      {
+        "actor": "Oracle Provider",
+        "event": "A single company runs the only weather oracle",
+        "consequence": "The smart contract trusts this oracle completely. It's the only source of truth for rainfall data.",
+        "mitigation": {
+          "title": "Decentralised Oracle (Chainlink)",
+          "desc": "Aggregate from 15+ independent nodes — attacker must compromise a majority simultaneously."
+        }
+      },
+      {
+        "actor": "Attacker",
+        "event": "Hacker compromises the oracle's API key",
+        "consequence": "The attacker can now submit any rainfall figure they want — the blockchain has no way to verify it.",
+        "mitigation": {
+          "title": "Multiple Data Sources",
+          "desc": "Cross-check NOAA + Weather.com + satellite data — one compromised source is caught by the others."
+        }
+      },
+      {
+        "actor": "Attacker",
+        "event": "Submits fake data: \"rainfall = 10mm\"",
+        "consequence": "The smart contract reads this value, sees the condition is met (10 < 50), and executes automatically.",
+        "mitigation": {
+          "title": "Dispute Window",
+          "desc": "Add a 24h challenge period before payout — observers can flag suspicious oracle data."
+        }
+      },
+      {
+        "actor": "Smart Contract",
+        "event": "Releases $5,000 to the attacker's wallet",
+        "consequence": "The contract behaved exactly as coded. It did nothing wrong. The vulnerability was the oracle — not the contract.",
+        "mitigation": {
+          "title": "Multisig Oracle Control",
+          "desc": "Require 3-of-5 oracle operators to sign the data — no single point of control."
+        }
+      },
+      {
+        "actor": "Farmer",
+        "event": "Tries to dispute the payout",
+        "consequence": "The transaction is immutable. The code has already executed. There is no appeals process, no reversal."
+      }
+    ]
+  },
+  "security": {
+    "heading": "Security Risks",
+    "subtitle": "Bugs are public, permanent, and exploited within hours. The most expensive ones are the simplest.",
+    "fixLabel": "Fix: ",
+    "items": [
+      {
+        "title": "Reentrancy",
+        "what": "Calls out before updating its own state — attacker calls back in and drains it.",
+        "fix": "Checks-Effects-Interactions · ReentrancyGuard",
+        "stat": "The DAO (2016): $60M"
+      },
+      {
+        "title": "Flash Loan Attacks",
+        "what": "Borrow millions uncollateralised, bend a price oracle, exploit, repay — one atomic tx.",
+        "fix": "TWAP prices · decentralised, multi-source oracles",
+        "stat": "Harvest (2020): $34M"
+      },
+      {
+        "title": "Access Control",
+        "what": "Critical functions (mint, withdraw, upgrade) miss the right modifier.",
+        "fix": "Role-based access (OZ AccessControl) · audits",
+        "stat": "Parity (2017): $30M frozen"
+      },
+      {
+        "title": "Over/Underflow",
+        "what": "Pre-0.8 Solidity wraps silently — balance − x underflows to a huge number.",
+        "fix": "Solidity ≥0.8 (checked) or SafeMath",
+        "stat": "Fixed by default since 0.8"
+      },
+      {
+        "title": "Logic Bugs",
+        "what": "Code runs as written, but the logic is wrong — off-by-one, bad sign, wrong arg.",
+        "fix": "Independent audits · formal verification",
+        "stat": "Tools miss these — humans catch them"
+      },
+      {
+        "title": "Cumulative Loss",
+        "what": "Thousands of incidents — usually a missing modifier or a copy-paste slip.",
+        "fix": "Audits are a discipline, not a checkbox",
+        "stat": "$6B+ lost since 2016"
+      }
+    ]
+  },
+  "cost": {
+    "heading": "Cost Risks",
+    "subtitle": "Smart contracts are not plug-and-play — budget for the upfront and the ongoing.",
+    "whyLabel": "Why",
+    "fixLabel": "Manage it",
+    "items": [
+      {
+        "title": "Immutability & Redeployment",
+        "what": "You can't patch — you redeploy",
+        "why": "A fix means deploying a new contract and migrating users + state. Ship-and-iterate does not apply.",
+        "fix": "Heavy testing and secure design before launch; plan a v1→v2 migration path."
+      },
+      {
+        "title": "Development & Maintenance",
+        "what": "Scarce, expensive expertise",
+        "why": "Solidity is complex and fast-moving; even strong devs ship bugs, and immutability blocks normal patching.",
+        "fix": "Budget premium rates for auditors and security engineers as a line item, not an afterthought."
+      },
+      {
+        "title": "Gas & Execution",
+        "what": "Fees vary and compound",
+        "why": "Costs spike 10–100× under congestion, and inefficient code taxes every future user forever.",
+        "fix": "Optimise storage writes and external calls; reconsider micro-payment economics."
+      },
+      {
+        "title": "Security vs Performance",
+        "what": "Every safety check costs gas",
+        "why": "Defensive checks trade off against efficiency, and audit cost scales with code complexity.",
+        "fix": "A ~$50K audit per ~500 lines is normal; bug bounties add cost but cut catastrophic risk."
+      }
+    ]
+  },
+  "regulatory": {
+    "heading": "Regulatory Risks",
+    "subtitle": "Smart contracts blur code and law — and the law has not caught up.",
+    "items": [
+      {
+        "title": "Legal Adjudication",
+        "what": "May not count as a valid contract",
+        "body": "Often no signatures or mutual assent, so court enforcement is uncertain — and \"code is law\" gets overruled when stakes are high (The DAO fork).",
+        "tag": "Pair on-chain logic with a legal wrapper"
+      },
+      {
+        "title": "Privacy vs Transparency",
+        "what": "Public by design clashes with GDPR",
+        "body": "Every tx is visible to all nodes — colliding with the right to be forgotten and HIPAA. Even hashes leak via metadata and linkability.",
+        "tag": "ZK proofs · permissioned chains · off-chain encryption"
+      },
+      {
+        "title": "Tech Outpaces Law",
+        "what": "Rules lag the technology by years",
+        "body": "Use cases shift in months while frameworks take years; a contract legal in Singapore may be illegal in the US.",
+        "tag": "EU's MiCA (2024) is the first comprehensive exception"
+      }
+    ]
+  },
+  "quiz": {
+    "question": "A DeFi lending protocol uses a single on-chain DEX spot price as its collateral oracle. An attacker takes a $50M flash loan, manipulates the DEX price, borrows against inflated collateral, and repays the loan — all in one transaction. Which property of flash loans makes this attack unique compared to a standard market manipulation?",
+    "options": [
+      "Flash loans are anonymous — the attacker cannot be traced or prosecuted.",
+      "Flash loans require no capital — the entire attack is atomic and self-financing within a single block, leaving no trace between blocks.",
+      "Flash loans exploit a bug in the Ethereum protocol itself, making them impossible to prevent at the contract level.",
+      "Flash loans allow attackers to bypass gas fees, making the attack economically viable even for small protocols."
+    ],
+    "explanation": "Traditional market manipulation requires large capital held at risk over time. Flash loans change the economics completely: the attacker borrows an enormous amount, executes the attack, and repays everything within a single atomic transaction. If any step fails, the entire transaction reverts — the attacker risks only gas fees. This means any protocol using a single on-chain spot price is vulnerable to an adversary with virtually zero capital. The fix: time-weighted average prices (TWAP) cannot be manipulated within a single block, and decentralized oracle networks aggregate from multiple independent sources."
+  },
+  "takeaways": {
+    "title": "Section 05 — Key Takeaways",
+    "items": [
+      "The oracle problem: smart contracts cannot access external data trustlessly — bridges introduce new attack surfaces",
+      "Immutability is a double-edged sword — bugs are permanent unless upgrade patterns are used",
+      "\"Code is law\" means users have no recourse when code behaves correctly but harmfully",
+      "Gas costs make complex on-chain logic economically impractical for many use cases",
+      "Smart contracts are not always the answer — a database is faster, cheaper, and easier in many contexts",
+      "Security audits are not optional — $6B+ lost since 2016; treat smart contract security as a discipline",
+      "Regulatory uncertainty: laws move in years, contracts move in months — privacy, enforceability, and jurisdiction all matter"
+    ]
+  },
+  "summary": {
+    "heading": "Section Summary",
+    "subtitle": "Limitations and risks — at a glance",
+    "cards": [
+      { "title": "Reentrancy", "summary": "Attacker re-enters function before state updates — The DAO hack ($60M, 2016). Fix: Checks-Effects-Interactions pattern" },
+      { "title": "Oracle Attacks", "summary": "Flash loan → manipulate AMM price → drain protocol — Harvest Finance ($34M, 2020). Fix: multi-oracle, TWAP" },
+      { "title": "Gas & Scale", "summary": "Computation is metered and expensive on L1 — L2 rollups (Arbitrum, Optimism) reduce cost 10–100×" },
+      { "title": "Legal & Regulatory", "summary": "Enforceability uncertain · GDPR conflicts · jurisdictional differences · \"code is law\" rejected by courts" },
+      { "title": "Cost Realities", "summary": "Audit costs · gas optimisation discipline · maintenance is expensive · migrations are projects" },
+      { "title": "Mitigations", "summary": "Audits + formal verification · multi-oracle design · timelocks · upgrade proxy patterns · bug bounties" }
+    ]
+  }
+}

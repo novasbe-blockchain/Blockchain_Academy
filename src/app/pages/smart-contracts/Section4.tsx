@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
@@ -11,63 +12,66 @@ import imgDaoTimeline   from '../../../assets/sc/dao-timeline.png';
 import imgAsxAsic       from '../../../assets/sc/asx-asic.jpg';
 import imgDecisionChart from '../../../assets/sc/decision-flowchart.png';
 
-const chapters = [
-  { kind: 'group' as const, id: 'g-decide',  label: '🤔 Decide' },
-  { id: 's4-decision-intro',     label: 'Should You Use SC?' },
-  { id: 's4-decision-chart',     label: 'Decision Tree' },
-  { id: 's4-decision-flow',      label: '🧩 Decision Flow' },
-  { id: 's4-team-framework',     label: '🤝 Run Your Problem' },
-  { id: 's4-decision-yes',       label: 'When SC Make Sense' },
-  { id: 's4-decision-no',        label: 'When to Rethink' },
+// Language-neutral shape — IDs + kind only. Labels resolved via t() at render time.
+const chapterShape = [
+  { kind: 'group' as const, id: 'g-decide' },
+  { id: 's4-decision-intro' },
+  { id: 's4-decision-chart' },
+  { id: 's4-decision-flow' },
+  { id: 's4-team-framework' },
+  { id: 's4-decision-yes' },
+  { id: 's4-decision-no' },
 
-  { kind: 'group' as const, id: 'g-cases',   label: '📁 Three Lessons' },
-  { id: 's4-cases-intro',        label: 'Examples Overview' },
-  { id: 's4-case-success',       label: '✅ Estonia eRes' },
-  { id: 's4-case-sc-fail',       label: '⚠️ The DAO' },
-  { id: 's4-case-org-fail',      label: '❌ ASX CHESS' },
-  { id: 's4-case-dao-quiz',      label: 'Quiz · DAO' },
-  { id: 's4-case-asx-quiz',      label: 'Quiz · ASX' },
+  { kind: 'group' as const, id: 'g-cases' },
+  { id: 's4-cases-intro' },
+  { id: 's4-case-success' },
+  { id: 's4-case-sc-fail' },
+  { id: 's4-case-org-fail' },
+  { id: 's4-case-dao-quiz' },
+  { id: 's4-case-asx-quiz' },
 
-  { kind: 'group' as const, id: 'g-adopt',   label: '🛠 Adoption' },
-  { id: 's4-adoption-intro',     label: 'Adoption Considerations' },
-  { id: 's4-adoption-strategy',  label: 'Strategic Alignment' },
-  { id: 's4-adoption-tech',      label: 'Tech Infrastructure' },
-  { id: 's4-adoption-legal',     label: 'Legal & Regulatory' },
-  { id: 's4-adoption-risk',      label: 'Risk Management' },
-  { id: 's4-adoption-finance',   label: 'Financial Planning' },
+  { kind: 'group' as const, id: 'g-adopt' },
+  { id: 's4-adoption-intro' },
+  { id: 's4-adoption-strategy' },
+  { id: 's4-adoption-tech' },
+  { id: 's4-adoption-legal' },
+  { id: 's4-adoption-risk' },
+  { id: 's4-adoption-finance' },
 
-  { kind: 'group' as const, id: 'g-strat',   label: '📈 Strategy' },
-  { id: 's4-opportunities',      label: 'Opportunities' },
-  { id: 's4-challenges-academic',label: 'Challenges' },
-  { id: 's4-strategies',         label: 'Competitive Strategy' },
+  { kind: 'group' as const, id: 'g-strat' },
+  { id: 's4-opportunities' },
+  { id: 's4-challenges-academic' },
+  { id: 's4-strategies' },
 
-  { kind: 'group' as const, id: 'g-close',   label: '✅ Wrap Up' },
-  { id: 's4-quiz',               label: 'Quiz' },
-  { id: 's4-takeaways',          label: 'Takeaways' },
-];
+  { kind: 'group' as const, id: 'g-close' },
+  { id: 's4-quiz' },
+  { id: 's4-takeaways' },
+] as const;
 
 // ─── Interactive Decision Flow ───────────────────────────────────────────────
 
 type Verdict = 'sc' | 'hybrid' | 'db';
 
+// Language-neutral: question ids + branch targets. Prompt text resolved via t().
 const QUESTIONS = [
-  { id: 'parties',   q: 'Multiple distrusting parties need shared data?',                yes: 'sc',     no: 'db' },
-  { id: 'auto',      q: 'Does automation create significant value (cost, speed, fraud)?', yes: 'sc',     no: 'db' },
-  { id: 'inter',     q: 'Are intermediary costs high or disintermediation desirable?',    yes: 'sc',     no: 'db' },
-  { id: 'immut',     q: 'Is immutability a feature, not a bug?',                          yes: 'sc',     no: 'hybrid' },
-  { id: 'trans',     q: 'Is transparency important to all stakeholders?',                 yes: 'sc',     no: 'hybrid' },
-  { id: 'priv',      q: 'Is privacy paramount (GDPR, HIPAA, sensitive data)?',            yes: 'hybrid', no: 'sc' },
-  { id: 'reg',       q: 'Is your regulatory environment hostile or unclear?',             yes: 'hybrid', no: 'sc' },
-  { id: 'flex',      q: 'Do you need flexibility to change rules frequently?',            yes: 'db',     no: 'sc' },
+  { id: 'parties', yes: 'sc',     no: 'db' },
+  { id: 'auto',    yes: 'sc',     no: 'db' },
+  { id: 'inter',   yes: 'sc',     no: 'db' },
+  { id: 'immut',   yes: 'sc',     no: 'hybrid' },
+  { id: 'trans',   yes: 'sc',     no: 'hybrid' },
+  { id: 'priv',    yes: 'hybrid', no: 'sc' },
+  { id: 'reg',     yes: 'hybrid', no: 'sc' },
+  { id: 'flex',    yes: 'db',     no: 'sc' },
 ] as const;
 
-const VERDICTS: Record<Verdict, { emoji: string; title: string; color: string; desc: string }> = {
-  sc:     { emoji: '✅', title: 'Smart Contract',  color: '#39B54A', desc: 'Your use case fits the smart-contract pattern. Multi-party, automation-heavy, immutability-friendly. Proceed — but audit obsessively.' },
-  hybrid: { emoji: '⚠️', title: 'Hybrid Approach',  color: '#f59e0b', desc: 'Pure on-chain is risky here. Use a hybrid: on-chain hashes + off-chain encrypted data, or permissioned chain with off-chain governance overrides.' },
-  db:     { emoji: '❌', title: 'Traditional DB',    color: '#ED1C24', desc: 'A traditional database (with audit logs and proper access control) will be faster, cheaper, and more flexible. Skip blockchain — you don\'t need it.' },
+const VERDICT_META: Record<Verdict, { emoji: string; color: string }> = {
+  sc:     { emoji: '✅', color: '#39B54A' },
+  hybrid: { emoji: '⚠️', color: '#f59e0b' },
+  db:     { emoji: '❌', color: '#ED1C24' },
 };
 
 function DecisionFlow() {
+  const { t } = useTranslation('smart-contracts/section-4');
   const [answers, setAnswers] = useState<Record<string, 'yes' | 'no'>>({});
   const [done,    setDone]    = useState(false);
   const idx = Object.keys(answers).length;
@@ -101,9 +105,9 @@ function DecisionFlow() {
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
       <div className="shrink-0 mb-3">
-        <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">🧩 Interactive</span>
-        <h2 className="text-2xl font-bold text-foreground mt-1">Should you use a smart contract?</h2>
-        <p className="text-muted-foreground text-sm">Answer 8 questions about your use case. Get a verdict — and the reasoning behind it.</p>
+        <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">{t('decisionFlow.badge')}</span>
+        <h2 className="text-2xl font-bold text-foreground mt-1">{t('decisionFlow.heading')}</h2>
+        <p className="text-muted-foreground text-sm">{t('decisionFlow.subtitle')}</p>
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col gap-4">
@@ -121,16 +125,16 @@ function DecisionFlow() {
           {!done && current ? (
             <motion.div key={current.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
               className="max-w-2xl w-full p-6 bg-card border border-[#6366f1]/30 rounded-2xl flex flex-col gap-5">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">Question {idx + 1}</div>
-              <div className="text-2xl font-bold text-foreground">{current.q}</div>
+              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('decisionFlow.questionLabel', { num: idx + 1 })}</div>
+              <div className="text-2xl font-bold text-foreground">{t(`decisionFlow.questions.${current.id}`)}</div>
               <div className="grid grid-cols-2 gap-3">
                 <button onClick={() => answer('yes')}
                   className="px-5 py-3 rounded-xl bg-[#39B54A] text-white font-bold hover:bg-[#39B54A]/90 transition-colors">
-                  ✓ Yes
+                  {t('decisionFlow.yes')}
                 </button>
                 <button onClick={() => answer('no')}
                   className="px-5 py-3 rounded-xl bg-[#ED1C24] text-white font-bold hover:bg-[#ED1C24]/90 transition-colors">
-                  ✗ No
+                  {t('decisionFlow.no')}
                 </button>
               </div>
             </motion.div>
@@ -138,14 +142,14 @@ function DecisionFlow() {
             <AnimatePresence>
               <motion.div key="verdict" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
                 className="max-w-3xl w-full p-8 bg-card border-4 rounded-2xl flex flex-col gap-4 text-center"
-                style={{ borderColor: VERDICTS[verdict].color }}>
-                <div className="text-6xl">{VERDICTS[verdict].emoji}</div>
-                <div className="text-xs font-bold uppercase tracking-widest" style={{ color: VERDICTS[verdict].color }}>Verdict</div>
-                <div className="text-3xl font-black text-foreground">{VERDICTS[verdict].title}</div>
-                <p className="text-sm text-muted-foreground leading-relaxed max-w-xl mx-auto">{VERDICTS[verdict].desc}</p>
+                style={{ borderColor: VERDICT_META[verdict].color }}>
+                <div className="text-6xl">{VERDICT_META[verdict].emoji}</div>
+                <div className="text-xs font-bold uppercase tracking-widest" style={{ color: VERDICT_META[verdict].color }}>{t('decisionFlow.verdictLabel')}</div>
+                <div className="text-3xl font-black text-foreground">{t(`decisionFlow.verdicts.${verdict}.title`)}</div>
+                <p className="text-sm text-muted-foreground leading-relaxed max-w-xl mx-auto">{t(`decisionFlow.verdicts.${verdict}.desc`)}</p>
                 <button onClick={reset}
                   className="self-center mt-3 px-5 py-2 rounded-xl bg-muted text-sm font-semibold text-muted-foreground hover:bg-muted/80 transition-colors">
-                  ↺ Start over
+                  {t('decisionFlow.startOver')}
                 </button>
               </motion.div>
             </AnimatePresence>
@@ -157,7 +161,114 @@ function DecisionFlow() {
   );
 }
 
+interface TitleDesc { title: string; desc: string }
+interface ChartStep { q: string; verdict: string }
+interface CaseCard { verdict: string; name: string; tag: string; desc: string; lesson: string }
+interface ResultStat { value: string; label: string }
+interface PillarItem { label: string; desc: string }
+interface CostItem { label: string; range: string; desc: string }
+interface OppItem { label: string; desc: string }
+interface StrategyItem { name: string; moat: string; desc: string }
+interface RichItem { a: string; strong?: string; b?: string; em?: string; c?: string }
+
+const YES_EMOJI = ['👥', '⚡', '🔍', '💰', '🔓', '🔒', '🌍'];
+const NO_EMOJI = ['🏢', '⚡', '🔄', '📦', '🤐', '⚖️', '🧑', '💸'];
+const CASE_COLORS = ['#39B54A', '#f59e0b', '#ED1C24'];
+const PILLAR_META = [
+  { num: '01', emoji: '🎯', color: '#6366f1' },
+  { num: '02', emoji: '🏗', color: '#8b5cf6' },
+  { num: '03', emoji: '⚖️', color: '#22d3ee' },
+  { num: '04', emoji: '🛡', color: '#ED1C24' },
+  { num: '05', emoji: '💰', color: '#39B54A' },
+];
+const STRATEGY_META = [
+  { color: '#6366f1' }, { color: '#8b5cf6' }, { color: '#39B54A' },
+  { color: '#22d3ee' }, { color: '#f59e0b' }, { color: '#ec4899' },
+];
+const ADOPTION_STRATEGY_COLORS = ['#6366f1', '#8b5cf6', '#22d3ee', '#39B54A'];
+const ADOPTION_TECH_META = [
+  { emoji: '⚡', color: '#8b5cf6' }, { emoji: '🔌', color: '#6366f1' }, { emoji: '🛠', color: '#22d3ee' },
+  { emoji: '🔐', color: '#39B54A' }, { emoji: '💾', color: '#f59e0b' }, { emoji: '📊', color: '#ec4899' },
+];
+const RISK_META = [
+  { emoji: '🔍', color: '#ED1C24' }, { emoji: '🧮', color: '#f59e0b' }, { emoji: '💰', color: '#8b5cf6' },
+  { emoji: '⚙️', color: '#6366f1' }, { emoji: '🚨', color: '#22d3ee' }, { emoji: '📡', color: '#39B54A' },
+];
+const CHALLENGE_META = [
+  { emoji: '⚙️', color: '#6366f1' }, { emoji: '⚖️', color: '#8b5cf6' }, { emoji: '🐛', color: '#ED1C24' },
+  { emoji: '⚡', color: '#f59e0b' }, { emoji: '🤝', color: '#22d3ee' }, { emoji: '🧑', color: '#39B54A' },
+];
+const STRATEGY_EMOJI = ['🏦', '🌐', '🦄', '🏡', '✈️', '🛠'];
+
+// Rebuild a rich-text bullet (text + bold/italic spans) from a structured item.
+function renderRich(item: RichItem) {
+  return (
+    <>
+      {item.a}
+      {item.strong && <strong>{item.strong}</strong>}
+      {item.b}
+      {item.em && <em>{item.em}</em>}
+      {item.c}
+    </>
+  );
+}
+
 export function SC_Section4() {
+  const { t } = useTranslation('smart-contracts/section-4');
+
+  const chapters = useMemo(
+    () => chapterShape.map((c) =>
+      'kind' in c
+        ? { kind: 'group' as const, id: c.id, label: t(`groups.${c.id}`) }
+        : { id: c.id, label: t(`chapters.${c.id}`) }
+    ),
+    [t]
+  );
+
+  const chartSteps   = t('decisionChart.steps', { returnObjects: true }) as ChartStep[];
+  const yesItems     = t('decisionYes.items', { returnObjects: true }) as TitleDesc[];
+  const noItems      = t('decisionNo.items', { returnObjects: true }) as TitleDesc[];
+  const caseCards    = t('casesIntro.items', { returnObjects: true }) as CaseCard[];
+
+  const successBg    = t('caseSuccess.background', { returnObjects: true }) as string[];
+  const successUse   = t('caseSuccess.useCases', { returnObjects: true }) as string[];
+  const successRes   = t('caseSuccess.results', { returnObjects: true }) as ResultStat[];
+
+  const scFailVision   = t('caseScFail.vision', { returnObjects: true }) as string[];
+  const scFailHack     = t('caseScFail.hack', { returnObjects: true }) as string[];
+  const scFailResponse = t('caseScFail.response', { returnObjects: true }) as string[];
+
+  const orgFailBg       = t('caseOrgFail.background', { returnObjects: true }) as string[];
+  const orgFailHappened = t('caseOrgFail.happened', { returnObjects: true }) as string[];
+  const orgFailWhy      = t('caseOrgFail.why', { returnObjects: true }) as string[];
+
+  const daoQuizOptions = t('daoQuiz.options', { returnObjects: true }) as string[];
+  const asxQuizOptions = t('asxQuiz.options', { returnObjects: true }) as string[];
+
+  const pillars        = t('adoptionIntro.pillars', { returnObjects: true }) as PillarItem[];
+  const strategyItems  = t('adoptionStrategy.items', { returnObjects: true }) as TitleDesc[];
+  const techItems      = t('adoptionTech.items', { returnObjects: true }) as TitleDesc[];
+  const legalEngage    = t('adoptionLegal.engage', { returnObjects: true }) as string[];
+  const legalCross     = t('adoptionLegal.crossPoints', { returnObjects: true }) as string[];
+  const riskItems      = t('adoptionRisk.items', { returnObjects: true }) as TitleDesc[];
+  const upfrontCosts   = t('adoptionFinance.upfront', { returnObjects: true }) as CostItem[];
+  const ongoingCosts   = t('adoptionFinance.ongoing', { returnObjects: true }) as CostItem[];
+
+  const opsOpps        = t('opportunities.operational', { returnObjects: true }) as OppItem[];
+  const stratOpps      = t('opportunities.strategic', { returnObjects: true }) as OppItem[];
+  const challengeItems = t('challenges.items', { returnObjects: true }) as TitleDesc[];
+  const competitive    = t('strategies.items', { returnObjects: true }) as StrategyItem[];
+
+  const tfMethod  = t('teamFramework.method', { returnObjects: true }) as RichItem[];
+  const tfDiscuss = t('teamFramework.discuss', { returnObjects: true }) as RichItem[];
+  const tfCapture = t('teamFramework.capture', { returnObjects: true }) as RichItem[];
+
+  const daoQuizOptionsTyped = daoQuizOptions.map((text, i) => ({ text, correct: i === 0 }));
+  const asxQuizOptionsTyped = asxQuizOptions.map((text, i) => ({ text, correct: i === 2 }));
+  const mainQuizOptions = (t('quiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
+
+  const takeaways = t('takeaways.items', { returnObjects: true }) as string[];
+
   return (
     <div className="h-full w-full flex overflow-hidden">
       <SectionNav chapters={chapters} accentColor="#6366f1" />
@@ -166,9 +277,9 @@ export function SC_Section4() {
 
         <div className="h-full">
           <TitleSlide
-            sectionNumber="SECTION 04"
-            title="Critical Thinking"
-            subtitle="When to use a smart contract — and when not to. Adoption considerations for serious business deployment."
+            sectionNumber={t('title.sectionNumber')}
+            title={t('title.title')}
+            subtitle={t('title.subtitle')}
             icon={<Brain className="size-20 text-[#6366f1]" />}
             gradient="from-[#6366f1] to-[#8b5cf6]"
           />
@@ -177,28 +288,28 @@ export function SC_Section4() {
         {/* ═══════ DECISION INTRO ═══════ */}
         <div id="s4-decision-intro" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">The Most Important Question</h2>
-            <p className="text-muted-foreground text-sm mt-1">Before writing a single line of Solidity, answer this honestly.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('decisionIntro.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('decisionIntro.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 flex items-center justify-center">
             <div className="max-w-3xl text-center space-y-6">
               <div className="text-5xl lg:text-6xl font-black text-foreground leading-tight">
-                Should you<br/>
-                <span className="text-[#6366f1]">actually</span> use a<br/>
-                smart contract?
+                {t('decisionIntro.bigA')}<br/>
+                <span className="text-[#6366f1]">{t('decisionIntro.bigEmph')}</span> {t('decisionIntro.bigB')}<br/>
+                {t('decisionIntro.bigC')}
               </div>
               <div className="grid grid-cols-2 gap-4 mt-8">
                 <div className="p-5 bg-card border border-[#6366f1]/30 rounded-xl">
                   <div className="text-2xl mb-2">🚫</div>
-                  <div className="font-bold text-foreground mb-1">Not every problem needs blockchain.</div>
+                  <div className="font-bold text-foreground mb-1">{t('decisionIntro.card1')}</div>
                 </div>
                 <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl">
                   <div className="text-2xl mb-2">🚫</div>
-                  <div className="font-bold text-foreground mb-1">Not every blockchain needs smart contracts.</div>
+                  <div className="font-bold text-foreground mb-1">{t('decisionIntro.card2')}</div>
                 </div>
               </div>
               <p className="text-muted-foreground text-sm italic">
-                Build a decision framework. Develop critical thinking. Next: the canonical decision tree — then our interactive version.
+                {t('decisionIntro.footnote')}
               </p>
             </div>
           </div>
@@ -207,37 +318,33 @@ export function SC_Section4() {
         {/* ═══════ DECISION TREE — CANONICAL CHART ═══════ */}
         <div id="s4-decision-chart" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-3">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">The Decision Tree</h2>
-            <p className="text-muted-foreground text-sm mt-1">Walk down the questions. Each branch eliminates a category — only one path lands on a smart contract.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('decisionChart.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('decisionChart.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-[2fr_1fr] gap-5">
             {/* Chart */}
             <div className="flex items-center justify-center bg-white rounded-xl border border-border p-3 min-h-0">
               <img
                 src={imgDecisionChart}
-                alt="Decision tree starting at 'Do you need a shared database?'. NO → Traditional Database. YES → 'Do multiple parties need write access?' NO → Traditional Database. YES → 'Do the parties fully trust each other?' YES → Traditional Database with Access Controls. NO → 'Is there a trusted third party everyone accepts?' YES → Third-Party Managed Database. NO → 'Do you need complex business logic?' NO → Simple Blockchain (Bitcoin-like). YES → Smart Contract Platform."
+                alt={t('decisionChart.imgAlt')}
                 className="max-h-full max-w-full object-contain"
               />
             </div>
             {/* Walkthrough */}
             <div className="flex flex-col gap-2 overflow-y-auto">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">How to read it</div>
-              {[
-                { q: 'Need a shared database?',                 verdict: 'NO → Traditional DB',                   color: '#ED1C24' },
-                { q: 'Multiple parties need write access?',     verdict: 'NO → Traditional DB',                   color: '#ED1C24' },
-                { q: 'Parties fully trust each other?',         verdict: 'YES → DB with Access Controls',         color: '#f59e0b' },
-                { q: 'A trusted third party everyone accepts?', verdict: 'YES → Third-Party Managed DB',          color: '#f59e0b' },
-                { q: 'Need complex business logic?',            verdict: 'NO → Simple Blockchain (Bitcoin-like)', color: '#22d3ee' },
-                { q: 'All of the above?',                       verdict: '✅ Smart Contract Platform',            color: '#39B54A' },
-              ].map((step, i) => (
-                <div key={i} className="p-2 bg-card border border-border rounded-lg" style={{ borderColor: step.color + '40' }}>
-                  <div className="text-[10px] text-muted-foreground">Q{i + 1}</div>
-                  <div className="font-semibold text-xs text-foreground">{step.q}</div>
-                  <div className="text-[10px] font-bold mt-0.5" style={{ color: step.color }}>{step.verdict}</div>
-                </div>
-              ))}
+              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('decisionChart.howToRead')}</div>
+              {chartSteps.map((step, i) => {
+                const color = ['#ED1C24', '#ED1C24', '#f59e0b', '#f59e0b', '#22d3ee', '#39B54A'][i];
+                return (
+                  <div key={i} className="p-2 bg-card border border-border rounded-lg" style={{ borderColor: color + '40' }}>
+                    <div className="text-[10px] text-muted-foreground">Q{i + 1}</div>
+                    <div className="font-semibold text-xs text-foreground">{step.q}</div>
+                    <div className="text-[10px] font-bold mt-0.5" style={{ color }}>{step.verdict}</div>
+                  </div>
+                );
+              })}
               <div className="mt-auto p-2 bg-[#6366f1]/10 border border-[#6366f1]/30 rounded-lg text-[11px] text-muted-foreground">
-                <span className="font-semibold text-foreground">The point:</span> most paths end at a database. Smart contracts are the answer only when every other option falls short.
+                <span className="font-semibold text-foreground">{t('decisionChart.pointLabel')}</span>{t('decisionChart.pointBody')}
               </div>
             </div>
           </div>
@@ -251,42 +358,31 @@ export function SC_Section4() {
         {/* ═══════ TEAM CHECKPOINT — RUN YOUR PROBLEM ═══════ */}
         <div id="s4-team-framework" className="h-full">
           <TeamCheckpoint
-            contextLabel="Day 3 · after the Decision Flow"
-            title="Run your problem through the framework"
-            subtitle="Take the problem statement you brought from Day 2 and answer the 8 questions on the previous slide — together, as a team. Treat this as a real go/no-go gate for your project."
-            duration="15 min"
+            contextLabel={t('teamFramework.contextLabel')}
+            title={t('teamFramework.title')}
+            subtitle={t('teamFramework.subtitle')}
+            duration={t('teamFramework.duration')}
             sections={[
               {
-                label: 'Method',
+                label: t('teamFramework.methodLabel'),
                 color: '#22d3ee',
-                items: [
-                  <>Open the interactive decision flow on the previous slide. Answer each question <strong>honestly for your specific problem</strong> — not the optimistic answer.</>,
-                  <>Disagree as a team if you must — note the disagreements as open questions to research.</>,
-                  <>Record your verdict: ✅ Smart Contract · ⚠️ Hybrid · ❌ Database.</>,
-                ],
+                items: tfMethod.map((item, i) => <span key={i}>{renderRich(item)}</span>),
               },
               {
-                label: 'Then discuss',
+                label: t('teamFramework.discussLabel'),
                 color: '#6366f1',
-                items: [
-                  <>If <strong>✅ Smart Contract</strong>: great — continue with conviction. Note <em>why</em> (multi-party? trust gap? automation?).</>,
-                  <>If <strong>⚠️ Hybrid</strong>: figure out what part is on-chain vs off-chain. Most real-world deployments live here.</>,
-                  <>If <strong>❌ Database</strong>: that's a perfectly valid project too. Your deliverable becomes <em>"we investigated X and concluded blockchain isn't the right tool because Y, Z"</em> — backed by the analysis. The rubric rewards critical thinking, not blockchain enthusiasm.</>,
-                ],
+                items: tfDiscuss.map((item, i) => <span key={i}>{renderRich(item)}</span>),
               },
               {
-                label: 'Capture',
+                label: t('teamFramework.captureLabel'),
                 color: '#39B54A',
-                items: [
-                  <>Your verdict + a 2-sentence justification.</>,
-                  <>One specific risk the framework surfaced (privacy concern? flexibility need? single trusted party lurking?).</>,
-                  <>This goes into <strong>Part 1 of the project deliverable</strong> — keep your notes.</>,
-                ],
+                items: tfCapture.map((item, i) => <span key={i}>{renderRich(item)}</span>),
               },
             ]}
             footnote={
               <span className="text-muted-foreground">
-                <strong className="text-foreground">A useful rule:</strong> if your team can't convince a sceptical reviewer in two sentences <em>why</em> blockchain is the right tool, the verdict probably isn't ✅ — and that's fine. A clear-eyed "no, here's why" earns the same Problem-Solution-fit points as a strong "yes". The Three Lessons coming up (Estonia / The DAO / ASX) make all three outcomes concrete.
+                <strong className="text-foreground">{t('teamFramework.footnote.strong')}</strong>
+                {t('teamFramework.footnote.a')}<em>{t('teamFramework.footnote.em')}</em>{t('teamFramework.footnote.b')}
               </span>
             }
           />
@@ -295,21 +391,13 @@ export function SC_Section4() {
         {/* ═══════ WHEN SC MAKE SENSE ═══════ */}
         <div id="s4-decision-yes" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">When Smart Contracts Make Sense ✅</h2>
-            <p className="text-muted-foreground text-sm mt-1">If most of these are true, blockchain is worth the engineering cost.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('decisionYes.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('decisionYes.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-2 gap-4 content-center">
-            {[
-              { emoji: '👥', title: 'Multiple parties with trust issues', desc: 'No single entity is trusted by all. A shared, neutral source of truth pays for itself.' },
-              { emoji: '⚡', title: 'Automation creates significant value', desc: 'Manual reconciliation, escrow, or settlement is the bottleneck — not just a nuisance.' },
-              { emoji: '🔍', title: 'Transparency matters to stakeholders', desc: 'Customers, regulators, or investors need to verify behavior themselves — not take your word for it.' },
-              { emoji: '💰', title: 'Intermediary costs are high', desc: 'Brokers, lawyers, escrow agents, clearinghouses — disintermediation produces real savings.' },
-              { emoji: '🔓', title: 'Disintermediation is desirable', desc: 'Removing a gatekeeper improves the product (e.g. global DEXs vs centralized brokers).' },
-              { emoji: '🔒', title: 'Immutability is a feature', desc: 'Audit trails, ownership records, votes — you WANT them to be unchangeable forever.' },
-              { emoji: '🌍', title: 'Asset ownership needs to be portable', desc: 'Users move between platforms, jurisdictions, or wallets. Their assets shouldn\'t be locked in.' },
-            ].map(p => (
+            {yesItems.map((p, i) => (
               <div key={p.title} className="flex items-start gap-3 p-4 bg-card border border-[#39B54A]/25 rounded-xl">
-                <div className="size-10 rounded-xl bg-[#39B54A]/15 flex items-center justify-center text-2xl shrink-0">{p.emoji}</div>
+                <div className="size-10 rounded-xl bg-[#39B54A]/15 flex items-center justify-center text-2xl shrink-0">{YES_EMOJI[i]}</div>
                 <div>
                   <div className="font-bold text-sm text-foreground mb-1">{p.title}</div>
                   <div className="text-xs text-muted-foreground">{p.desc}</div>
@@ -322,22 +410,13 @@ export function SC_Section4() {
         {/* ═══════ WHEN TO RETHINK ═══════ */}
         <div id="s4-decision-no" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">When to Rethink Smart Contracts ❌</h2>
-            <p className="text-muted-foreground text-sm mt-1">Any of these is a red flag. Multiple = a database is almost certainly the better answer.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('decisionNo.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('decisionNo.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-2 gap-4 content-center">
-            {[
-              { emoji: '🏢', title: 'Single party can be trusted', desc: 'You ARE the trusted intermediary — like a stock exchange clearing trades. A database is simpler.' },
-              { emoji: '⚡', title: 'Centralized is cheaper and faster', desc: 'For internal workflows, a Postgres database with proper audit logs beats a blockchain on every metric.' },
-              { emoji: '🔄', title: 'Flexibility to change rules is critical', desc: 'If business logic evolves weekly, immutability becomes a liability rather than an asset.' },
-              { emoji: '📦', title: 'Off-chain data drives most logic', desc: 'If 80% of your inputs come from oracles or APIs, the trust assumption sits there — not on-chain.' },
-              { emoji: '🤐', title: 'Privacy is paramount', desc: 'Public chains expose everything. GDPR, HIPAA, trade secrets — these conflict directly with public ledgers.' },
-              { emoji: '⚖️', title: 'Regulatory environment is hostile', desc: 'If your jurisdiction prohibits or heavily restricts on-chain operations, fighting that is a strategic mistake.' },
-              { emoji: '🧑', title: 'Users aren\'t tech-savvy enough', desc: 'Wallet UX, gas fees, seed phrases — these still cripple adoption for mainstream consumers.' },
-              { emoji: '💸', title: 'No one will pay for development', desc: 'Smart contract dev + audit costs are 5–10× a typical web app. If there\'s no clear ROI, don\'t start.' },
-            ].map(p => (
+            {noItems.map((p, i) => (
               <div key={p.title} className="flex items-start gap-3 p-4 bg-card border border-[#ED1C24]/25 rounded-xl">
-                <div className="size-10 rounded-xl bg-[#ED1C24]/15 flex items-center justify-center text-2xl shrink-0">{p.emoji}</div>
+                <div className="size-10 rounded-xl bg-[#ED1C24]/15 flex items-center justify-center text-2xl shrink-0">{NO_EMOJI[i]}</div>
                 <div>
                   <div className="font-bold text-sm text-foreground mb-1">{p.title}</div>
                   <div className="text-xs text-muted-foreground">{p.desc}</div>
@@ -354,96 +433,73 @@ export function SC_Section4() {
         {/* Lessons intro — overview of the 3 outcomes */}
         <div id="s4-cases-intro" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Three Lessons from the Field</h2>
-            <p className="text-muted-foreground text-sm mt-1">The decision framework on the previous slides is abstract. These three real projects make it concrete — one per outcome.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('casesIntro.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('casesIntro.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-5 content-center">
-            {[
-              {
-                emoji: '✅', verdict: 'Right tool · right org', name: 'Estonia · e-Residency',
-                color: '#39B54A', tag: 'Success',
-                desc: 'Government as the trust anchor + blockchain for record integrity. The use case fit perfectly: many users, need for tamper-proof history, hybrid of institutional trust and mathematical guarantees.',
-                lesson: 'When the framework says yes AND the organization is ready, blockchain delivers durable value at national scale.',
-              },
-              {
-                emoji: '⚠️', verdict: 'Right tool · wrong contract', name: 'The DAO',
-                color: '#f59e0b', tag: 'Smart-Contract Failure',
-                desc: 'A legitimate DAO use case (decentralised VC) but the smart contract had a known reentrancy bug. Once exploited, immutability meant nothing could pause it. Ethereum forked to recover funds.',
-                lesson: '"Code is law" cuts both ways. Without audits, kill-switches, or upgrade paths, immutability becomes liability — not feature.',
-              },
-              {
-                emoji: '❌', verdict: 'Wrong tool entirely', name: 'ASX · CHESS',
-                color: '#ED1C24', tag: 'Organisational Failure',
-                desc: 'Securities clearing is run by a single trusted intermediary (ASX itself). Blockchain solves multi-party trust gaps — but ASX was the trusted party. A database would have been faster, cheaper, simpler.',
-                lesson: 'Asking "who do we not trust?" before "how do we use blockchain?" prevents $255M mistakes. Hype is not a justification.',
-              },
-            ].map(c => (
-              <div key={c.name} className="p-5 bg-card border-2 rounded-xl flex flex-col gap-3" style={{ borderColor: c.color + '50' }}>
-                <div className="flex items-center gap-3">
-                  <div className="text-4xl">{c.emoji}</div>
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: c.color }}>{c.tag}</div>
-                    <div className="font-black text-foreground">{c.name}</div>
+            {caseCards.map((c, i) => {
+              const color = CASE_COLORS[i];
+              const emoji = ['✅', '⚠️', '❌'][i];
+              return (
+                <div key={c.name} className="p-5 bg-card border-2 rounded-xl flex flex-col gap-3" style={{ borderColor: color + '50' }}>
+                  <div className="flex items-center gap-3">
+                    <div className="text-4xl">{emoji}</div>
+                    <div>
+                      <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color }}>{c.tag}</div>
+                      <div className="font-black text-foreground">{c.name}</div>
+                    </div>
+                  </div>
+                  <div className="text-[10px] font-semibold text-muted-foreground italic">{c.verdict}</div>
+                  <p className="text-xs text-muted-foreground leading-relaxed flex-1">{c.desc}</p>
+                  <div className="p-2 rounded-lg text-xs" style={{ backgroundColor: color + '15' }}>
+                    <span className="font-bold" style={{ color }}>{t('casesIntro.lessonLabel')}</span>
+                    <span className="text-muted-foreground">{c.lesson}</span>
                   </div>
                 </div>
-                <div className="text-[10px] font-semibold text-muted-foreground italic">{c.verdict}</div>
-                <p className="text-xs text-muted-foreground leading-relaxed flex-1">{c.desc}</p>
-                <div className="p-2 rounded-lg text-xs" style={{ backgroundColor: c.color + '15' }}>
-                  <span className="font-bold" style={{ color: c.color }}>Lesson: </span>
-                  <span className="text-muted-foreground">{c.lesson}</span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="shrink-0 mt-4 p-3 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">Watch for the pattern:</span> the three cases differ on two axes — was this the right tool for the problem, and was the organisation ready to wield it. Both must be true for success.
+            <span className="font-semibold text-foreground">{t('casesIntro.patternLabel')}</span>{t('casesIntro.patternBody')}
           </div>
         </div>
 
         {/* ═══════ CASE: ESTONIA — SUCCESS ═══════ */}
         <div id="s4-case-success" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-1">
-            <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-1">Lesson 01 · ✅ Success — right tool, right organisation</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Estonia · e-Residency</h2>
-            <p className="text-muted-foreground text-sm mt-1">Blockchain-backed digital identity since 2014. The framework says yes — and the organisation was ready to deliver.</p>
+            <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-1">{t('caseSuccess.kicker')}</div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('caseSuccess.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('caseSuccess.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
             <div className="p-4 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest">Background</div>
+              <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest">{t('caseSuccess.backgroundLabel')}</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>e-Residency program launched in <span className="font-semibold text-foreground">2014</span></li>
-                <li className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>Built on KSI blockchain (Guardtime) for record integrity</li>
-                <li className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>National ID infrastructure → digital signatures with legal weight</li>
-                <li className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>X-Road system connects state databases for citizens and residents</li>
+                {successBg.map((item, i) => (
+                  <li key={i} className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>{item}</li>
+                ))}
               </ul>
             </div>
             <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">Use Cases</div>
+              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('caseSuccess.useCasesLabel')}</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Sign documents legally — any contract, anywhere</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Access EU banking remotely</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Establish an EU company without setting foot in Estonia</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Healthcare records integrity assured via on-chain anchors</li>
+                {successUse.map((item, i) => (
+                  <li key={i} className="flex gap-1.5"><span className="text-[#6366f1]">›</span>{item}</li>
+                ))}
               </ul>
             </div>
             <div className="p-4 bg-gradient-to-br from-[#39B54A]/10 to-transparent border border-[#39B54A]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">Results</div>
+              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('caseSuccess.resultsLabel')}</div>
               <div className="grid grid-cols-1 gap-2">
-                <div className="p-2 bg-card border border-border rounded-lg">
-                  <div className="font-mono font-black text-base text-[#39B54A]">100,000+</div>
-                  <div className="text-[10px] text-muted-foreground">e-residents from 170+ countries</div>
-                </div>
-                <div className="p-2 bg-card border border-border rounded-lg">
-                  <div className="font-mono font-black text-base text-[#39B54A]">99%</div>
-                  <div className="text-[10px] text-muted-foreground">Public services available online</div>
-                </div>
-                <div className="p-2 bg-card border border-border rounded-lg">
-                  <div className="font-mono font-black text-base text-[#39B54A]">~1% GDP</div>
-                  <div className="text-[10px] text-muted-foreground">Saved annually via digital government</div>
-                </div>
+                {successRes.map((r, i) => (
+                  <div key={i} className="p-2 bg-card border border-border rounded-lg">
+                    <div className="font-mono font-black text-base text-[#39B54A]">{r.value}</div>
+                    <div className="text-[10px] text-muted-foreground">{r.label}</div>
+                  </div>
+                ))}
               </div>
               <div className="text-xs text-muted-foreground p-2 bg-[#39B54A]/10 rounded-lg mt-auto">
-                <span className="font-semibold text-foreground">Why it works:</span> government as the trust anchor + blockchain for record integrity. Hybrid of institutional trust and mathematical guarantees.
+                <span className="font-semibold text-foreground">{t('caseSuccess.whyLabel')}</span>{t('caseSuccess.whyBody')}
               </div>
             </div>
           </div>
@@ -452,42 +508,39 @@ export function SC_Section4() {
         {/* ═══════ CASE: THE DAO — SMART CONTRACT FAILURE ═══════ */}
         <div id="s4-case-sc-fail" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-1 flex items-start gap-4">
-            <img src={imgDaoTimeline} alt="The DAO timeline: idea → launch → hack → fork" className="hidden lg:block h-24 rounded-lg object-contain shrink-0 bg-white p-1" />
+            <img src={imgDaoTimeline} alt={t('caseScFail.imgAlt')} className="hidden lg:block h-24 rounded-lg object-contain shrink-0 bg-white p-1" />
             <div>
-              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest mb-1">Lesson 02 · ⚠️ Smart-contract failure — right tool, wrong contract design</div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">The DAO · Decentralized Autonomous Organization</h2>
-              <p className="text-muted-foreground text-sm mt-1">$150M raised, $60M drained. The use case fit blockchain. The contract didn't.</p>
+              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest mb-1">{t('caseScFail.kicker')}</div>
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('caseScFail.heading')}</h2>
+              <p className="text-muted-foreground text-sm mt-1">{t('caseScFail.subtitle')}</p>
             </div>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
             <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">The Vision (2016)</div>
+              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('caseScFail.visionLabel')}</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span><span className="font-semibold text-foreground">$150M raised</span> via crowdfunding — largest crowdfund of its time</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Governed entirely by smart contract — no executives, no board</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Token holders vote on investment proposals</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Promised: democratized VC, global, transparent collaboration</li>
+                {scFailVision.map((item, i) => (
+                  <li key={i} className="flex gap-1.5"><span className="text-[#6366f1]">›</span>{item}</li>
+                ))}
               </ul>
             </div>
             <div className="p-4 bg-gradient-to-br from-[#ED1C24]/10 to-transparent border border-[#ED1C24]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">The Hack</div>
+              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">{t('caseScFail.hackLabel')}</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>Reentrancy vulnerability in the withdraw function</li>
-                <li className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>Attacker drained <span className="font-semibold text-foreground">$60M</span> (40% of all funds)</li>
-                <li className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>Contract was immutable — couldn't be paused or patched</li>
-                <li className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>"Child DAO" delay gave the community 27 days to react</li>
+                {scFailHack.map((item, i) => (
+                  <li key={i} className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>{item}</li>
+                ))}
               </ul>
             </div>
             <div className="p-4 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest">The Response</div>
+              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest">{t('caseScFail.responseLabel')}</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>Ethereum community executed a <span className="font-semibold text-foreground">hard fork</span> to reverse the attack</li>
-                <li className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>Chain split into Ethereum (ETH, post-fork) and Ethereum Classic (ETC, original)</li>
-                <li className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>"Code is law" — rejected when stakes were existential</li>
-                <li className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>Governance proved messier than the contract assumed</li>
+                {scFailResponse.map((item, i) => (
+                  <li key={i} className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>{item}</li>
+                ))}
               </ul>
               <div className="p-2 bg-[#f59e0b]/10 rounded-lg text-xs text-muted-foreground mt-auto">
-                <span className="font-semibold text-foreground">Lessons:</span> immutability is a double-edged sword. Audit obsessively. Have a kill-switch, multisig, or upgrade pattern for safety-critical contracts.
+                <span className="font-semibold text-foreground">{t('caseScFail.lessonsLabel')}</span>{t('caseScFail.lessonsBody')}
               </div>
             </div>
           </div>
@@ -496,44 +549,39 @@ export function SC_Section4() {
         {/* ═══════ CASE: ASX — ORGANISATIONAL FAILURE ═══════ */}
         <div id="s4-case-org-fail" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-1 flex items-start gap-4">
-            <img src={imgAsxAsic} alt="ASIC vs ASX with a gavel" className="hidden lg:block h-24 rounded-lg object-cover shrink-0" />
+            <img src={imgAsxAsic} alt={t('caseOrgFail.imgAlt')} className="hidden lg:block h-24 rounded-lg object-cover shrink-0" />
             <div>
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest mb-1">Lesson 03 · ❌ Organisational failure — wrong tool entirely</div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">ASX · CHESS Replacement Project</h2>
-              <p className="text-muted-foreground text-sm mt-1">$255M+ AUD spent, six years of work — abandoned in 2022. The framework would have flagged this on day one.</p>
+              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest mb-1">{t('caseOrgFail.kicker')}</div>
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('caseOrgFail.heading')}</h2>
+              <p className="text-muted-foreground text-sm mt-1">{t('caseOrgFail.subtitle')}</p>
             </div>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
             <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">Background</div>
+              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('caseOrgFail.backgroundLabel')}</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>ASX (Australian Securities Exchange) launched the project in <span className="font-semibold text-foreground">2017</span></li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Goal: replace 25-year-old CHESS clearing system with blockchain</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Partner: Digital Asset Holdings</li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Initial budget: <span className="font-semibold text-foreground">$250M AUD (~€142M)</span></li>
-                <li className="flex gap-1.5"><span className="text-[#6366f1]">›</span>Original target completion: 2023</li>
+                {orgFailBg.map((item, i) => (
+                  <li key={i} className="flex gap-1.5"><span className="text-[#6366f1]">›</span>{item}</li>
+                ))}
               </ul>
             </div>
             <div className="p-4 bg-gradient-to-br from-[#ED1C24]/10 to-transparent border border-[#ED1C24]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">What Happened</div>
+              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">{t('caseOrgFail.happenedLabel')}</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>Cancelled in <span className="font-semibold text-foreground">November 2022</span> after 6 years of work</li>
-                <li className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>Costs exceeded <span className="font-semibold text-foreground">$255M AUD</span></li>
-                <li className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>System failed to meet performance and functional requirements</li>
-                <li className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>Fell behind faster, cheaper traditional database alternatives</li>
-                <li className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>Major reputational hit to ASX and the entire enterprise blockchain narrative</li>
+                {orgFailHappened.map((item, i) => (
+                  <li key={i} className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>{item}</li>
+                ))}
               </ul>
             </div>
             <div className="p-4 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest">Why It Failed</div>
+              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest">{t('caseOrgFail.whyLabel')}</div>
               <ul className="text-xs text-muted-foreground space-y-1.5">
-                <li className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>Complexity dramatically underestimated — production-grade DLT is hard</li>
-                <li className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>A traditional database would have been faster and cheaper</li>
-                <li className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>Stakeholder misalignment between ASX, brokers, and tech vendor</li>
-                <li className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>"Blockchain for blockchain's sake" — the underlying need didn't actually require DLT</li>
+                {orgFailWhy.map((item, i) => (
+                  <li key={i} className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>{item}</li>
+                ))}
               </ul>
               <div className="p-2 bg-[#f59e0b]/10 rounded-lg text-xs text-muted-foreground mt-auto">
-                <span className="font-semibold text-foreground">The lesson:</span> just because you CAN use blockchain doesn't mean you SHOULD. The discipline of asking "is a database better?" matters more than the technology hype.
+                <span className="font-semibold text-foreground">{t('caseOrgFail.lessonLabel')}</span>{t('caseOrgFail.lessonBody')}
               </div>
             </div>
           </div>
@@ -542,142 +590,120 @@ export function SC_Section4() {
         {/* ═══════ QUIZ — DAO ═══════ */}
         <div id="s4-case-dao-quiz" className="h-full">
           <QuizSlide
-            question="The DAO hack of 2016 drained $60M via a reentrancy bug. The Ethereum community executed a hard fork to reverse the attack — splitting the chain into ETH and ETC. What is the most important LESSON for smart contract designers?"
-            options={[
-              { text: '"Code is law" is a flawed principle — when stakes are high enough, social consensus overrides immutability.', correct: true },
-              { text: 'Reentrancy attacks are impossible to prevent — every contract is fundamentally vulnerable.', correct: false },
-              { text: 'The Ethereum Foundation should be allowed to reverse all major exploits to protect users.', correct: false },
-              { text: 'Decentralized organizations are technically impossible and should not be attempted.', correct: false },
-            ]}
-            explanation="The DAO hack exposed a tension that still defines blockchain governance: pure immutability vs human values. The Ethereum community chose to fork because letting an attacker keep $60M was unacceptable — but doing so undermined the 'code is law' ideal that blockchain claims. The lesson for builders: 1) audit obsessively before deploying, especially safety-critical contracts; 2) consider upgrade patterns or kill-switches for value-holding contracts; 3) understand that 'immutability' is a feature with limits — extreme failures will be socially renegotiated. Reentrancy is preventable (Checks-Effects-Interactions, ReentrancyGuard); the DAO bug was a known anti-pattern, just deployed at scale."
+            question={t('daoQuiz.question')}
+            options={daoQuizOptionsTyped}
+            explanation={t('daoQuiz.explanation')}
           />
         </div>
 
         {/* ═══════ QUIZ — ASX ═══════ */}
         <div id="s4-case-asx-quiz" className="h-full">
           <QuizSlide
-            question="The Australian Securities Exchange (ASX) spent $255M+ AUD over 6 years trying to replace its CHESS clearing system with blockchain — and cancelled the project in 2022. What is the most likely root cause of this failure?"
-            options={[
-              { text: 'Blockchain technology is fundamentally incapable of handling securities clearing.', correct: false },
-              { text: 'The chosen vendor (Digital Asset Holdings) was technically incompetent.', correct: false },
-              { text: 'The use case did not actually require blockchain — a traditional database would have been simpler, faster, and cheaper.', correct: true },
-              { text: 'Australian regulators forced the project to be abandoned for political reasons.', correct: false },
-            ]}
-            explanation="The ASX CHESS replacement is the canonical case of 'blockchain for blockchain\\'s sake.' CHESS is operated by a single trusted entity (ASX) with a small known set of participants (brokers). Blockchain shines when you have multiple distrusting parties needing a single source of truth without a trusted intermediary — but ASX IS the trusted intermediary, by mandate. A modern database with proper audit logs would have delivered better performance, faster development, and lower cost. The lesson: before choosing blockchain, ask 'who do we not trust?' If the answer is 'no one — we are the trusted party,' a database is almost always better. Hype is not a justification."
+            question={t('asxQuiz.question')}
+            options={asxQuizOptionsTyped}
+            explanation={t('asxQuiz.explanation')}
           />
         </div>
 
         {/* ═══════ ADOPTION INTRO — 5 PILLARS ═══════ */}
         <div id="s4-adoption-intro" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Key Considerations for Business Adoption</h2>
-            <p className="text-muted-foreground text-sm mt-1">Introducing smart contracts isn't just a technology project — it's an organizational change.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionIntro.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('adoptionIntro.subtitle')}</p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-5 gap-3 content-center">
-            {[
-              { num: '01', emoji: '🎯', label: 'Strategic Alignment',     color: '#6366f1', desc: 'Use case clarity, success metrics, exec buy-in, staff training' },
-              { num: '02', emoji: '🏗', label: 'Technical Infrastructure', color: '#8b5cf6', desc: 'Scalable platform, legacy integration, IT readiness' },
-              { num: '03', emoji: '⚖️', label: 'Legal & Regulatory',       color: '#22d3ee', desc: 'Enforceability, jurisdictional compliance' },
-              { num: '04', emoji: '🛡', label: 'Risk Management',          color: '#ED1C24', desc: 'Audits, incident response, contract immutability planning' },
-              { num: '05', emoji: '💰', label: 'Financial Planning',       color: '#39B54A', desc: 'Upfront costs, ongoing gas, ROI timeline' },
-            ].map(p => (
-              <div key={p.num} className="p-4 bg-card border rounded-xl flex flex-col gap-2"
-                style={{ borderColor: p.color + '40' }}>
-                <div className="flex items-center gap-2">
-                  <div className="size-8 rounded-lg flex items-center justify-center text-white text-xs font-black" style={{ backgroundColor: p.color }}>{p.num}</div>
-                  <div className="text-2xl">{p.emoji}</div>
+            {pillars.map((p, i) => {
+              const meta = PILLAR_META[i];
+              return (
+                <div key={meta.num} className="p-4 bg-card border rounded-xl flex flex-col gap-2"
+                  style={{ borderColor: meta.color + '40' }}>
+                  <div className="flex items-center gap-2">
+                    <div className="size-8 rounded-lg flex items-center justify-center text-white text-xs font-black" style={{ backgroundColor: meta.color }}>{meta.num}</div>
+                    <div className="text-2xl">{meta.emoji}</div>
+                  </div>
+                  <div className="font-bold text-sm text-foreground">{p.label}</div>
+                  <div className="text-xs text-muted-foreground leading-snug">{p.desc}</div>
                 </div>
-                <div className="font-bold text-sm text-foreground">{p.label}</div>
-                <div className="text-xs text-muted-foreground leading-snug">{p.desc}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="shrink-0 mt-4 p-3 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground italic">
-            Smart Contracts have huge market potential. But they are not plug-and-play — businesses need strategic purpose, infrastructure, skills, compliance, risk controls, and resources. The next 5 chapters cover each pillar.
+            {t('adoptionIntro.footnote')}
           </div>
         </div>
 
         {/* ═══════ STRATEGIC ALIGNMENT ═══════ */}
         <div id="s4-adoption-strategy" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest mb-1">Pillar 01</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Strategic Alignment</h2>
-            <p className="text-muted-foreground text-sm mt-1">Adopting smart contracts must serve a clear business purpose and align with company strategy.</p>
+            <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest mb-1">{t('adoptionStrategy.kicker')}</div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionStrategy.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('adoptionStrategy.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            {[
-              { title: 'Clarify the use case', desc: 'Pinpoint where a smart contract solves a real pain point — automating a manual workflow, removing a costly intermediary, or building shared truth across distrusting parties. Align this with the company\'s strategic priorities — not the other way around.', color: '#6366f1' },
-              { title: 'Define success metrics', desc: 'Set specific, measurable targets: cost reduction (e.g. 30% in dispute resolution), speed improvement (e.g. days → minutes), error rate reduction. Forms the basis of a business case for stakeholders.', color: '#8b5cf6' },
-              { title: 'Secure executive buy-in', desc: 'Demonstrate how smart contracts support the broader business vision — disintermediation, transparency, automation. Without C-suite support, projects stall when the first technical hurdle hits.', color: '#22d3ee' },
-              { title: 'Train staff', desc: 'Educate employees about blockchain basics and the specifics of the chosen platform/tooling. Provide hands-on training for those directly using or supporting smart contracts. This is non-trivial — budget for it.', color: '#39B54A' },
-            ].map(c => (
-              <div key={c.title} className="p-5 bg-card border rounded-xl flex flex-col gap-3" style={{ borderColor: c.color + '30' }}>
-                <div className="font-bold text-sm" style={{ color: c.color }}>{c.title}</div>
-                <p className="text-xs text-muted-foreground leading-relaxed flex-1">{c.desc}</p>
-              </div>
-            ))}
+            {strategyItems.map((c, i) => {
+              const color = ADOPTION_STRATEGY_COLORS[i];
+              return (
+                <div key={c.title} className="p-5 bg-card border rounded-xl flex flex-col gap-3" style={{ borderColor: color + '30' }}>
+                  <div className="font-bold text-sm" style={{ color }}>{c.title}</div>
+                  <p className="text-xs text-muted-foreground leading-relaxed flex-1">{c.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* ═══════ TECHNICAL INFRASTRUCTURE ═══════ */}
         <div id="s4-adoption-tech" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest mb-1">Pillar 02</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Technical Infrastructure</h2>
-            <p className="text-muted-foreground text-sm mt-1">Implementing smart contracts demands a solid technical foundation — platform, integration, and IT capacity.</p>
+            <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest mb-1">{t('adoptionTech.kicker')}</div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionTech.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('adoptionTech.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
-            {[
-              { title: 'Scalable platform', emoji: '⚡', desc: 'Choose a chain that meets your throughput, latency, and finality needs (Section 6 covers this in depth). EVM compatibility = vast tooling ecosystem.', color: '#8b5cf6' },
-              { title: 'Legacy integration', emoji: '🔌', desc: 'Smart contracts must talk to ERPs, CRMs, and SaaS systems. Plan middleware (The Graph, Moralis), event listeners, and data sync from day one.', color: '#6366f1' },
-              { title: 'IT capacity & ops', emoji: '🛠', desc: 'You need on-call engineers who understand blockchain incident response. Hiring or training them takes months — start before you deploy.', color: '#22d3ee' },
-              { title: 'Identity & access', emoji: '🔐', desc: 'On-chain != anonymous in business contexts. Plan KYC, role-based access, and key management (HSMs, multisigs) ahead of any real deployment.', color: '#39B54A' },
-              { title: 'Data architecture', emoji: '💾', desc: 'Decide on-chain vs off-chain split early. Sensitive data NEVER lives on a public chain — use hashes + IPFS + encryption.', color: '#f59e0b' },
-              { title: 'Monitoring & analytics', emoji: '📊', desc: 'Block explorers, indexers, and dashboards (Dune, The Graph) — these are the prod tools. Set them up like you would any SRE stack.', color: '#ec4899' },
-            ].map(c => (
-              <div key={c.title} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: c.color + '30' }}>
-                <div className="flex items-center gap-2">
-                  <div className="size-9 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: c.color + '15' }}>{c.emoji}</div>
-                  <div className="font-bold text-sm" style={{ color: c.color }}>{c.title}</div>
+            {techItems.map((c, i) => {
+              const meta = ADOPTION_TECH_META[i];
+              return (
+                <div key={c.title} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: meta.color + '30' }}>
+                  <div className="flex items-center gap-2">
+                    <div className="size-9 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: meta.color + '15' }}>{meta.emoji}</div>
+                    <div className="font-bold text-sm" style={{ color: meta.color }}>{c.title}</div>
+                  </div>
+                  <div className="text-xs text-muted-foreground leading-snug">{c.desc}</div>
                 </div>
-                <div className="text-xs text-muted-foreground leading-snug">{c.desc}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* ═══════ LEGAL & REGULATORY ═══════ */}
         <div id="s4-adoption-legal" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest mb-1">Pillar 03</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Legal & Regulatory</h2>
-            <p className="text-muted-foreground text-sm mt-1">Smart contracts blend code and law — raising challenges around enforceability, jurisdiction, and compliance.</p>
+            <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest mb-1">{t('adoptionLegal.kicker')}</div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionLegal.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('adoptionLegal.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#22d3ee]">Things to engage legal counsel on early</div>
+              <div className="font-bold text-sm text-[#22d3ee]">{t('adoptionLegal.engageLabel')}</div>
               <ul className="text-xs text-muted-foreground space-y-2 flex-1">
-                <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Is this contract a "contract" under your jurisdiction's law?</li>
-                <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Does the token issued constitute a security (Howey test in US, MiCA in EU)?</li>
-                <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>How do you handle disputes? Is there a "kill switch" or arbitration mechanism?</li>
-                <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>What jurisdictions can users come from? KYC/AML implications?</li>
-                <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Data privacy: does the chain store anything that triggers GDPR?</li>
-                <li className="flex gap-2"><span className="text-[#22d3ee]">›</span>Tax treatment: where does revenue accrue? Where do users owe taxes?</li>
+                {legalEngage.map((item, i) => (
+                  <li key={i} className="flex gap-2"><span className="text-[#22d3ee]">›</span>{item}</li>
+                ))}
               </ul>
             </div>
             <div className="p-5 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#22d3ee]">Cross-jurisdictional reality</div>
+              <div className="font-bold text-sm text-[#22d3ee]">{t('adoptionLegal.crossLabel')}</div>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                With global transactions, what's valid in one country may be illegal in another. A token sale legal in Singapore may attract SEC enforcement in the US. A contract enforceable in the EU may be unenforceable in countries with no DLT framework.
+                {t('adoptionLegal.crossBody')}
               </p>
               <ul className="text-xs text-muted-foreground space-y-1.5 mt-1">
-                <li className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>Geo-fence cautiously — sanctions compliance is non-negotiable</li>
-                <li className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>EU MiCA (2024) sets a global precedent — expect emulation</li>
-                <li className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>"Code is law" was rejected by courts in The DAO — plan for human override paths</li>
+                {legalCross.map((item, i) => (
+                  <li key={i} className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>{item}</li>
+                ))}
               </ul>
               <div className="p-2 bg-[#22d3ee]/10 rounded-lg text-xs text-muted-foreground mt-auto">
-                <span className="font-semibold text-foreground">Practical:</span> early legal review is cheaper than late legal fixes. Engage counsel before you write the first line of contract code.
+                <span className="font-semibold text-foreground">{t('adoptionLegal.practicalLabel')}</span>{t('adoptionLegal.practicalBody')}
               </div>
             </div>
           </div>
@@ -686,47 +712,37 @@ export function SC_Section4() {
         {/* ═══════ RISK MANAGEMENT ═══════ */}
         <div id="s4-adoption-risk" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest mb-1">Pillar 04</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Risk Management</h2>
-            <p className="text-muted-foreground text-sm mt-1">Once deployed, smart contracts are typically immutable and execute automatically. There is little room for error.</p>
+            <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest mb-1">{t('adoptionRisk.kicker')}</div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionRisk.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('adoptionRisk.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
-            {[
-              { title: 'Pre-deployment audits', emoji: '🔍', desc: 'At least one — ideally two independent — security audits before mainnet. Budget $20k–$100k+ depending on contract complexity.', color: '#ED1C24' },
-              { title: 'Formal verification', emoji: '🧮', desc: 'For high-value contracts, formal verification (Certora, Halmos) proves properties mathematically — beyond what audits catch.', color: '#f59e0b' },
-              { title: 'Bug bounty program', emoji: '💰', desc: 'Immunefi and similar programs offer ongoing crowd-sourced security review. Treat bounties as a cost of doing business.', color: '#8b5cf6' },
-              { title: 'Upgrade pattern (carefully)', emoji: '⚙️', desc: 'Proxy contracts allow logic upgrades — but introduce admin keys. Use only when necessary; protect with timelocks and multisig.', color: '#6366f1' },
-              { title: 'Incident response plan', emoji: '🚨', desc: 'When (not if) something goes wrong, who pauses the contract, contacts users, communicates with media, and coordinates with exchanges?', color: '#22d3ee' },
-              { title: 'Monitor in production', emoji: '📡', desc: 'Set up real-time alerts for suspicious flows, unusual gas patterns, or governance attacks. Forta, OpenZeppelin Defender automate this.', color: '#39B54A' },
-            ].map(c => (
-              <div key={c.title} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: c.color + '30' }}>
-                <div className="flex items-center gap-2">
-                  <div className="size-9 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: c.color + '15' }}>{c.emoji}</div>
-                  <div className="font-bold text-sm" style={{ color: c.color }}>{c.title}</div>
+            {riskItems.map((c, i) => {
+              const meta = RISK_META[i];
+              return (
+                <div key={c.title} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: meta.color + '30' }}>
+                  <div className="flex items-center gap-2">
+                    <div className="size-9 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: meta.color + '15' }}>{meta.emoji}</div>
+                    <div className="font-bold text-sm" style={{ color: meta.color }}>{c.title}</div>
+                  </div>
+                  <div className="text-xs text-muted-foreground leading-snug flex-1">{c.desc}</div>
                 </div>
-                <div className="text-xs text-muted-foreground leading-snug flex-1">{c.desc}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* ═══════ FINANCIAL PLANNING ═══════ */}
         <div id="s4-adoption-finance" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-1">Pillar 05</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Financial / Resource Planning</h2>
-            <p className="text-muted-foreground text-sm mt-1">Smart contract adoption demands solid financial planning. Long-term automation savings can be significant — but upfront costs are real.</p>
+            <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-1">{t('adoptionFinance.kicker')}</div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionFinance.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('adoptionFinance.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">Upfront costs (one-time)</div>
-              {[
-                { label: 'Infrastructure setup', range: '$5k–$50k', desc: 'Nodes, monitoring, deployment pipeline, dev environments' },
-                { label: 'Smart contract development', range: '$30k–$300k', desc: 'Architecture, Solidity dev, testing — depends heavily on complexity' },
-                { label: 'Security audits', range: '$20k–$150k', desc: 'Independent firms (Trail of Bits, OpenZeppelin, ConsenSys Diligence)' },
-                { label: 'Legal & regulatory consultation', range: '$10k–$100k+', desc: 'Especially for regulated industries — financial, healthcare, government' },
-                { label: 'Staff training', range: '$5k–$50k', desc: 'Workshops, certifications, time-off-task during onboarding' },
-              ].map(c => (
+              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('adoptionFinance.upfrontLabel')}</div>
+              {upfrontCosts.map((c) => (
                 <div key={c.label} className="p-3 bg-card border border-[#39B54A]/25 rounded-xl">
                   <div className="flex items-center justify-between">
                     <div className="font-bold text-sm text-foreground">{c.label}</div>
@@ -737,14 +753,8 @@ export function SC_Section4() {
               ))}
             </div>
             <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">Ongoing costs (recurring)</div>
-              {[
-                { label: 'Gas fees', range: 'Variable', desc: 'Pay-per-transaction; can spike 10–100× during congestion. L2s help significantly.' },
-                { label: 'Node infrastructure', range: '$200–$5k/mo', desc: 'Self-hosted full nodes, or managed (Infura, Alchemy, QuickNode)' },
-                { label: 'Maintenance & monitoring', range: '$5k–$30k/mo', desc: 'On-call engineers, alerts, incident response retainer' },
-                { label: 'Bug bounty program', range: '$10k–$1M+ pool', desc: 'Funded reserve to pay out responsibly disclosed vulnerabilities' },
-                { label: 'Compliance & reporting', range: '$5k–$50k/mo', desc: 'KYC providers, AML monitoring, tax reporting tools' },
-              ].map(c => (
+              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('adoptionFinance.ongoingLabel')}</div>
+              {ongoingCosts.map((c) => (
                 <div key={c.label} className="p-3 bg-card border border-[#6366f1]/25 rounded-xl">
                   <div className="flex items-center justify-between">
                     <div className="font-bold text-sm text-foreground">{c.label}</div>
@@ -756,25 +766,20 @@ export function SC_Section4() {
             </div>
           </div>
           <div className="shrink-0 mt-3 p-3 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground italic">
-            Ranges are illustrative and vary widely by region, complexity, and specific requirements. Use them as a starting point for conversations with vendors and finance.
+            {t('adoptionFinance.footnote')}
           </div>
         </div>
 
         {/* ═══════ OPPORTUNITIES ═══════ */}
         <div id="s4-opportunities" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Opportunities</h2>
-            <p className="text-muted-foreground text-sm mt-1">Where smart contracts demonstrably outperform legacy approaches — backed by academic research.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('opportunities.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('opportunities.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
             <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">Operational opportunities</div>
-              {[
-                { label: 'Cost reduction', desc: 'Eliminate intermediaries, automate manual reconciliation, reduce escrow and dispute costs' },
-                { label: 'Speed of execution', desc: 'Settle in seconds rather than days. Cross-border value moves at internet speed.' },
-                { label: 'Transparency & auditability', desc: 'Every state change is recorded permanently — regulatory examinations become simpler.' },
-                { label: 'Programmable cash flows', desc: 'Encode business rules directly into payments — escrow, royalties, and milestones automate themselves.' },
-              ].map(o => (
+              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('opportunities.operationalLabel')}</div>
+              {opsOpps.map((o) => (
                 <div key={o.label} className="p-3 bg-card border border-[#39B54A]/25 rounded-xl">
                   <div className="font-bold text-sm text-foreground">{o.label}</div>
                   <div className="text-xs text-muted-foreground mt-1">{o.desc}</div>
@@ -782,13 +787,8 @@ export function SC_Section4() {
               ))}
             </div>
             <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">Strategic opportunities</div>
-              {[
-                { label: 'New business models', desc: 'DAOs, tokenized assets, fractional ownership, and machine-to-machine payments — none possible without smart contracts.' },
-                { label: 'Network effects', desc: 'Composability: each new contract amplifies the value of every other contract on the same chain.' },
-                { label: 'Global reach', desc: 'Permissionless markets reach users in any jurisdiction with internet — no banking partnerships required.' },
-                { label: 'Trust without intermediaries', desc: 'Multi-party agreements between strangers — fundamentally new economic primitive.' },
-              ].map(o => (
+              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('opportunities.strategicLabel')}</div>
+              {stratOpps.map((o) => (
                 <div key={o.label} className="p-3 bg-card border border-[#6366f1]/25 rounded-xl">
                   <div className="font-bold text-sm text-foreground">{o.label}</div>
                   <div className="text-xs text-muted-foreground mt-1">{o.desc}</div>
@@ -797,99 +797,76 @@ export function SC_Section4() {
             </div>
           </div>
           <div className="shrink-0 mt-3 text-[10px] text-muted-foreground italic">
-            Sources: Nzuva (2019); Perlman (2019); Dal Mas, Dicuonzo, Massaro & Dell'Atti (2019).
+            {t('opportunities.sources')}
           </div>
         </div>
 
         {/* ═══════ CHALLENGES (ACADEMIC) ═══════ */}
         <div id="s4-challenges-academic" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Challenges</h2>
-            <p className="text-muted-foreground text-sm mt-1">The systemic obstacles to mainstream smart contract adoption — as documented in research.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('challenges.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('challenges.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
-            {[
-              { emoji: '⚙️', title: 'Technical complexity', desc: 'Solidity, EVM gas mechanics, and asynchronous execution flatten the developer pool. Few engineers know this stack deeply.', color: '#6366f1' },
-              { emoji: '⚖️', title: 'Regulatory uncertainty', desc: 'Securities, tax, KYC, and consumer-protection laws are still evolving. Compliance is a moving target across jurisdictions.', color: '#8b5cf6' },
-              { emoji: '🐛', title: 'Security vulnerabilities', desc: 'Reentrancy, oracle manipulation, and access-control bugs have led to billions in losses. Audits are mandatory, not optional.', color: '#ED1C24' },
-              { emoji: '⚡', title: 'Scalability limits', desc: 'Public L1s cap throughput. L2s help but introduce their own complexity (sequencers, fraud proofs, withdrawal delays).', color: '#f59e0b' },
-              { emoji: '🤝', title: 'Interoperability', desc: 'Cross-chain bridges remain fragile and have been a major source of exploits. Single-chain ecosystems are siloed.', color: '#22d3ee' },
-              { emoji: '🧑', title: 'User experience', desc: 'Wallet setup, key management, gas fees, and confirmation times all create friction that mainstream users won\'t tolerate.', color: '#39B54A' },
-            ].map(c => (
-              <div key={c.title} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: c.color + '30' }}>
-                <div className="text-3xl">{c.emoji}</div>
-                <div className="font-bold text-sm" style={{ color: c.color }}>{c.title}</div>
-                <div className="text-xs text-muted-foreground leading-snug">{c.desc}</div>
-              </div>
-            ))}
+            {challengeItems.map((c, i) => {
+              const meta = CHALLENGE_META[i];
+              return (
+                <div key={c.title} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: meta.color + '30' }}>
+                  <div className="text-3xl">{meta.emoji}</div>
+                  <div className="font-bold text-sm" style={{ color: meta.color }}>{c.title}</div>
+                  <div className="text-xs text-muted-foreground leading-snug">{c.desc}</div>
+                </div>
+              );
+            })}
           </div>
           <div className="shrink-0 mt-3 text-[10px] text-muted-foreground italic">
-            Sources: Khan et al. (2021); Virani (2024); Perlman (2019).
+            {t('challenges.sources')}
           </div>
         </div>
 
         {/* ═══════ STRATEGIES — APPLIED ═══════ */}
         <div id="s4-strategies" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Strategies for Competitive Advantage</h2>
-            <p className="text-muted-foreground text-sm mt-1">How real companies turn smart contracts into a durable strategic moat — applied examples.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('strategies.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('strategies.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
-            {[
-              { name: 'Compound', emoji: '🏦', moat: 'Trustless lending', desc: 'Eliminates intermediaries; on-chain interest rates set algorithmically. Capital efficiency that legacy banks cannot match.', color: '#6366f1' },
-              { name: 'We.trade', emoji: '🌐', moat: 'B2B trade finance', desc: 'Bank consortium platform built on Hyperledger Fabric for SME cross-border trade. Eventually shut down — illustrating that "consortium" governance is hard.', color: '#8b5cf6' },
-              { name: 'Uniswap', emoji: '🦄', moat: 'Permissionless liquidity', desc: 'Anyone can list any token instantly. AMM model removes order-book complexity. Deepest moat: composability with the rest of DeFi.', color: '#39B54A' },
-              { name: 'Propy', emoji: '🏡', moat: 'Real-estate friction', desc: 'NFT deeds for legitimate property sales. Compresses 30-day closing into hours where law allows.', color: '#22d3ee' },
-              { name: 'AXA Fizzy', emoji: '✈️', moat: 'Parametric insurance', desc: 'Flight delay insurance with automatic payouts via Ethereum + flight oracle. Eventually wound down — but proved the parametric pattern.', color: '#f59e0b' },
-              { name: 'Home Depot', emoji: '🛠', moat: 'Supply chain truth', desc: 'Hyperledger Fabric for supplier disputes. Reduced resolution time from weeks to hours — competitive advantage in operating margin.', color: '#ec4899' },
-            ].map(s => (
-              <div key={s.name} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: s.color + '30' }}>
-                <div className="flex items-center gap-2">
-                  <div className="text-3xl">{s.emoji}</div>
-                  <div>
-                    <div className="font-black text-sm text-foreground">{s.name}</div>
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-widest">{s.moat}</div>
+            {competitive.map((s, i) => {
+              const color = STRATEGY_META[i].color;
+              const emoji = STRATEGY_EMOJI[i];
+              return (
+                <div key={s.name} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: color + '30' }}>
+                  <div className="flex items-center gap-2">
+                    <div className="text-3xl">{emoji}</div>
+                    <div>
+                      <div className="font-black text-sm text-foreground">{s.name}</div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-widest">{s.moat}</div>
+                    </div>
                   </div>
+                  <div className="text-xs text-muted-foreground leading-snug flex-1">{s.desc}</div>
                 </div>
-                <div className="text-xs text-muted-foreground leading-snug flex-1">{s.desc}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="shrink-0 mt-3 text-[10px] text-muted-foreground italic">
-            Sources: IBM (2017, 2019); Gemini Cryptopedia (2025); Eurofinance (2024).
+            {t('strategies.sources')}
           </div>
         </div>
 
         {/* ═══════ QUIZ ═══════ */}
         <div id="s4-quiz" className="h-full">
           <QuizSlide
-            question="A bank wants to issue digital bonds. Their internal audit team holds the master record. They have 5 trusted institutional buyers, all KYC'd. Settlement is currently T+2. Which is the strongest reason to STILL choose a smart contract on a public blockchain?"
-            options={[
-              { text: 'Reduces internal audit costs because the blockchain replaces the audit team entirely.', correct: false },
-              { text: 'Cross-border interoperability — buyers in different jurisdictions can settle without correspondent banks, even if all are KYC\'d.', correct: true },
-              { text: 'Public blockchains are cheaper than databases for any volume of transactions.', correct: false },
-              { text: 'Smart contracts cannot be hacked, so they\'re inherently more secure than the bank\'s database.', correct: false },
-            ]}
-            explanation="The first three options reflect common misconceptions: (1) blockchains do NOT replace audit functions — auditors still verify business logic, just with better evidence. (2) Public chains have ongoing gas costs that exceed databases for high-volume internal use. (3) Smart contracts are routinely hacked — security is a discipline, not a property. The legitimate reason in this scenario is cross-jurisdictional settlement: even with KYC'd parties, removing correspondent banks reduces friction, FX costs, and time. This is exactly why Santander chose Ethereum for their $20M bond. If the bond stayed entirely within one jurisdiction with one issuer and trusted buyers, a database would win — but the moment you span borders, blockchain unlocks real value."
+            question={t('quiz.question')}
+            options={mainQuizOptions}
+            explanation={t('quiz.explanation')}
           />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}
         <div id="s4-takeaways" className="h-full">
           <TakeawaySlide
-            title="Section 04 — Key Takeaways"
-            takeaways={[
-              'Not every problem needs blockchain — start by asking "who do we not trust?" If the answer is "no one," use a database',
-              '7 signals favoring smart contracts: multi-party, automation value, transparency, intermediary cost, disintermediation, immutability-as-feature, portable ownership',
-              '8 red flags: single trusted party, centralized is faster/cheaper, flexibility critical, off-chain data dominates, privacy paramount, hostile regulation, low user tech literacy, no clear ROI',
-              'Three field lessons — ✅ Estonia (right tool + right org), ⚠️ The DAO (right tool, wrong contract design), ❌ ASX CHESS (wrong tool entirely)',
-              '5-pillar adoption framework: Strategic Alignment · Technical Infrastructure · Legal & Regulatory · Risk Management · Financial Planning',
-              'Strategic: clear use case, success metrics, exec buy-in, staff training — without these, the project will stall',
-              'Legal: engage counsel BEFORE writing code. Securities classification, jurisdictional reach, GDPR all matter from day one',
-              'Risk: audits are non-optional. Bug bounties, formal verification, incident response — all baseline requirements',
-              'Cost reality: $50k–$500k+ to deploy a serious contract. Plan for ongoing gas, monitoring, and maintenance',
-              'Real strategic advantage comes from removing genuine intermediation pain — not from "doing blockchain"',
-            ]}
+            title={t('takeaways.title')}
+            takeaways={takeaways}
           />
         </div>
 

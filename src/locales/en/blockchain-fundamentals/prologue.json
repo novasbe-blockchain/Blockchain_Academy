@@ -1,0 +1,254 @@
+{
+  "chapters": {
+    "p-money":             "What Is Money?",
+    "p-money-value":       "Why It Has Value",
+    "p-cypherpunks":       "The Cypherpunks",
+    "p-cypherpunk-values": "By the People",
+    "p-timeline":          "Timeline",
+    "p-pedigree":          "Academic Pedigree",
+    "p-why":               "Why It Matters",
+    "p-who-controls":      "Who Owns Your Money?",
+    "p-takeaways":         "Takeaways",
+    "p-quiz":              "Quizzes"
+  },
+  "title": {
+    "sectionNumber": "PROLOGUE",
+    "title": "The History of Blockchain",
+    "subtitle": "How a movement for privacy and freedom gave birth to decentralized money"
+  },
+  "moneyHistory": {
+    "heading": "What Is Money?",
+    "lead": "Before we get to Bitcoin, a quick look at the long road that got us here. Every generation invented new money — and each form solved the limits of the last.",
+    "calloutTitle": "The throughline",
+    "calloutBody":  "Each form of money fixed a problem with the last — portability, scarcity, divisibility, settlement speed. Bitcoin was an attempt to fix the trust assumption itself."
+  },
+  "moneyEvents": [
+    { "era": "~9000 BCE", "name": "Barter",                        "desc": "Direct exchange of goods. Worked in small tribes — broke down the moment someone had grain and the other wanted a roof." },
+    { "era": "~3000 BCE", "name": "Commodity money",               "desc": "Shells, salt, cattle, beads. The first abstract store of value — items everyone agreed had worth." },
+    { "era": "~600 BCE",  "name": "Coins (gold / silver)",         "desc": "Stamped metal coins. Scarce, durable, divisible. Empires rose and fell controlling the mint." },
+    { "era": "~1000 CE",  "name": "Paper notes & banks",           "desc": "IOUs redeemable for gold, then for trust in the issuer alone. The gold standard ended in 1971 — money became pure trust." },
+    { "era": "~1950",     "name": "Bank cards / digital ledgers",  "desc": "Money becomes a database entry at a bank. Convenient — but every transaction passes through a gatekeeper." },
+    { "era": "2009",      "name": "Bitcoin",                       "desc": "Digital scarcity without a central issuer — the first form of money that nobody operates and nobody can switch off." }
+  ],
+  "moneyValue": {
+    "title": "Why Does Money Have Value?",
+    "description": "A piece of paper, a number in a database, a gold coin, a Bitcoin — none of them are intrinsically worth anything. Money works because four things are true at once.",
+    "pillars": [
+      { "label": "Shared trust",   "desc": "Everyone in the network agrees this thing is worth something. The agreement is the value." },
+      { "label": "Scarcity",       "desc": "You can't easily make more of it. Gold is rare. Dollars are limited by central banks. Bitcoin caps at 21 million." },
+      { "label": "Utility",        "desc": "You can use it — pay taxes, buy bread, settle a debt. A currency no one accepts is just a collectible." },
+      { "label": "Network effect", "desc": "The more people accept it, the more useful it becomes. New money struggles, established money compounds." }
+    ],
+    "calloutTitle": "A thought experiment",
+    "calloutBodyA": "Tomorrow morning, every shop in your country decides not to accept euros. The notes in your wallet still exist — what are they worth? Money's value lives in",
+    "calloutBodyEm": "everyone else's",
+    "calloutBodyTail": "head, not in the paper.",
+    "keyPoints": [
+      "Money has value because we collectively decide it does — there is no objective number",
+      "When trust breaks (hyperinflation, bank runs, sanctions), the same notes lose worth overnight",
+      "Bitcoin's designers asked: can we engineer trust + scarcity + utility + network effects without any central authority?",
+      "This is the question the rest of this course tries to answer"
+    ]
+  },
+  "cypherpunks": {
+    "heading": "The Cypherpunks",
+    "lead": "In the 1980s and 1990s, a loose group of cryptographers, hackers, and activists decided that privacy was not a luxury — it was a precondition for freedom.",
+    "quote": "\"Privacy is a precondition for freedom, not a luxury.\"",
+    "quoteAttribution": "— Cypherpunk philosophy",
+    "calloutTitle": "Core Cypherpunk Principle",
+    "calloutBodyA": "\"Privacy is necessary for an open society in the electronic age. We cannot expect governments, corporations, or other large, faceless organizations to grant us privacy out of their beneficence.\" — Eric Hughes,",
+    "calloutBodyEm": "A Cypherpunk's Manifesto",
+    "calloutBodyTail": "(1993)",
+    "hughesName": "Eric Hughes",
+    "hughesRole": "Cypherpunk · Manifesto author",
+    "readManifesto": "📄 Read the Manifesto",
+    "principles": [
+      { "title": "Privacy by Default", "body": "Systems should protect privacy without requiring trust in any authority — encryption is the default state, not a switch you have to find and turn on." },
+      { "title": "Code is Law",        "body": "Cryptographic mathematics, not legislation, should enforce rights. A law can be repealed; a published cryptographic protocol cannot be un-known." },
+      { "title": "Open Source",        "body": "Tools must be public, auditable, and available to everyone — no gatekeepers. If the code is secret, the privacy it claims to give is unverifiable." },
+      { "title": "Build, Don't Beg",   "body": "Write code to change reality. Don't wait for permission from institutions, don't lobby — ship something that makes the lobbying irrelevant." }
+    ]
+  },
+  "cypherpunkValues": {
+    "title": "Technology by the People, for the People",
+    "description": "The Cypherpunks weren't building products. They were building liberation tools — and they gave them away for free.",
+    "manifestoTitle": "The Manifesto in Three Words",
+    "wordPrivacy":    "PRIVACY",
+    "wordPrivacySub": "is a right, not a feature",
+    "wordAutonomy":   "AUTONOMY",
+    "wordAutonomySub":"over your own data and money",
+    "wordCode":       "CODE",
+    "wordCodeSub":    "is the law that can't be lobbied",
+    "secondQuote":    "\"We are writing code. We know that software can't be destroyed and that a widely dispersed system can't be shut down.\"",
+    "secondQuoteAttribution": "— Eric Hughes, A Cypherpunk's Manifesto (1993)",
+    "indivSub":       "Individual tools with global reach",
+    "freeSub":        "Open-source, no gatekeepers, no cost",
+    "freeLabel":      "🔓 Free",
+    "keyPoints": [
+      "Anyone, anywhere could use or audit the tools — no permission needed",
+      "Designed to be censorship-resistant: no single point of shutdown",
+      "The enemy wasn't technology — it was centralised power over information",
+      "Bitcoin inherited this DNA: no CEO, no headquarters, no off switch"
+    ]
+  },
+  "cypherpunksTimeline": {
+    "heading": "From Cypherpunks to Bitcoin",
+    "lead":    "Twenty-seven years from the first anonymous digital cash to the genesis block — each link made the next one possible.",
+    "events": [
+      { "year": "1982", "title": "David Chaum — DigiCash",                       "desc": "First anonymous digital cash system using blind signatures. Chaum proved private electronic payments were mathematically possible — the cryptographic foundation everyone else would later build on." },
+      { "year": "1991", "title": "Haber & Stornetta — Cryptographic Timestamps", "desc": "A cryptographically secured chain of blocks to timestamp digital documents. Without realizing it, they had invented the direct ancestor of every blockchain structure that followed." },
+      { "year": "1993", "title": "Eric Hughes — A Cypherpunk's Manifesto",       "desc": "The founding document of the cypherpunk movement. Privacy declared a fundamental right, to be defended with code instead of laws. The ideology Bitcoin would later embody." },
+      { "year": "1997", "title": "Adam Back — Hashcash",                          "desc": "A proof-of-work system originally designed to combat email spam — forcing senders to burn small amounts of CPU. This exact concept became the direct inspiration for Bitcoin mining." },
+      { "year": "1998", "title": "Wei Dai (B-Money) & Nick Szabo (Bit Gold)",     "desc": "Two independent proposals for decentralized digital currencies using cryptographic proofs and distributed consensus. Both are now considered the direct precursors to Bitcoin's design." },
+      { "year": "2008", "title": "Satoshi Nakamoto — The Bitcoin Whitepaper",     "desc": "\"Bitcoin: A Peer-to-Peer Electronic Cash System.\" An anonymous individual or group combines two decades of cypherpunk research — hashcash, chained timestamps, digital scarcity — into a single working protocol." },
+      { "year": "2009", "title": "The Genesis Block",                             "desc": "January 3, 2009 — Block #0 is mined. Embedded message: \"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks\". The ideological intent is written into the ledger itself." }
+    ]
+  },
+  "pedigree": {
+    "heading": "Bitcoin's Academic Pedigree",
+    "lead":    "The concept of cryptocurrencies is built from forgotten ideas in research literature — every piece predates Bitcoin by decades.",
+    "imageAlt":"Chronology of key ideas found in Bitcoin: a 1980-to-2015 grid mapping research strands (Linked Timestamping, Digital Cash, Proof of Work, Byzantine Fault Tolerance, Public Keys as Identities, Smart Contracts) to specific papers — Merkle Tree (1980), Ecash (1980s), Hashcash (1990s), Bit Gold (2005), Bitcoin (2008), Ethereum (2015).",
+    "paperKicker": "The paper",
+    "paperTitle":  "Bitcoin's Academic Pedigree",
+    "paperAuthors":"Arvind Narayanan & Jeremy Clark · ACM Queue, 2017",
+    "strandsHeader":"Six research strands fed into Bitcoin",
+    "strands": [
+      { "label": "Linked timestamping",          "source": "Haber & Stornetta · 1990–91" },
+      { "label": "Digital cash",                 "source": "Chaum · Ecash · 1982+" },
+      { "label": "Proof of work",                "source": "Dwork–Naor · Hashcash · 1990s" },
+      { "label": "Byzantine fault tolerance",    "source": "Lamport · Paxos · PBFT" },
+      { "label": "Public keys as identities",    "source": "Chaum · Goldberg" },
+      { "label": "Smart contracts",              "source": "Szabo · 1994 essay" }
+    ],
+    "readPaper": "📄 Read the full paper"
+  },
+  "why": {
+    "title": "Why This History Matters",
+    "description": "Bitcoin did not emerge from nothing. It was the culmination of 30 years of cryptographic research, failed experiments, and ideological conviction.",
+    "combinedTitle": "🧩 What Satoshi Combined",
+    "components": [
+      { "title": "Proof of Work",     "source": "From Hashcash (Adam Back)" },
+      { "title": "Chained Blocks",    "source": "From Haber & Stornetta" },
+      { "title": "Digital Scarcity",  "source": "From Bit Gold (Nick Szabo)" },
+      { "title": "P2P Distribution",  "source": "From B-Money (Wei Dai)" }
+    ],
+    "calloutTitle": "Satoshi's Genius",
+    "calloutBody":  "Satoshi didn't invent any single component. The genius was in combining existing cryptographic primitives with economic incentive design into one coherent system that actually worked.",
+    "keyPoints": [
+      "Every core concept (hashing, digital signatures, PoW) predates Bitcoin",
+      "Previous attempts (DigiCash, B-Money, Bit Gold) all failed or remained theoretical",
+      "Bitcoin succeeded because it aligned cryptography with economic incentives",
+      "Understanding the history helps you evaluate new blockchain projects critically"
+    ]
+  },
+  "whoControls": {
+    "heading": "Who Controls Your Money?",
+    "lead":    "A side-by-side of what can actually happen to the value you hold, in each system.",
+    "columns": [
+      {
+        "name": "Cash",
+        "control": "You",
+        "rows": [
+          { "k": "Custody",       "v": "Physical · only you hold it" },
+          { "k": "Can be frozen?", "v": "No — but can be lost, stolen, or seized in person" },
+          { "k": "Supply",         "v": "Inflated by the central bank" },
+          { "k": "Censorship",     "v": "None online · works face-to-face" },
+          { "k": "Cross-border",   "v": "Hard · limits, declarations, FX desks" },
+          { "k": "Digital?",       "v": "No — physical only" }
+        ]
+      },
+      {
+        "name": "Bank account",
+        "control": "Your bank + government",
+        "rows": [
+          { "k": "Custody",        "v": "The bank holds it · you have a claim" },
+          { "k": "Can be frozen?", "v": "Yes · account freeze, sanctions, garnishment" },
+          { "k": "Supply",         "v": "Fractional reserve + central-bank policy" },
+          { "k": "Censorship",     "v": "Yes · bank can refuse transactions / clients" },
+          { "k": "Cross-border",   "v": "3–5 days · SWIFT · 1–3% FX spread" },
+          { "k": "Digital?",       "v": "Yes · via the bank's database" }
+        ]
+      },
+      {
+        "name": "Digital payment",
+        "control": "The platform",
+        "rows": [
+          { "k": "Custody",        "v": "Platform holds · you have a balance" },
+          { "k": "Can be frozen?", "v": "Yes · de-platformed, chargebacks, terms of service" },
+          { "k": "Supply",         "v": "Same as the underlying fiat" },
+          { "k": "Censorship",     "v": "Yes · platform decides who transacts" },
+          { "k": "Cross-border",   "v": "Restricted · region-locked · KYC tiers" },
+          { "k": "Digital?",       "v": "Yes · proprietary rails" }
+        ]
+      },
+      {
+        "name": "Bitcoin",
+        "control": "You (if self-custody)",
+        "rows": [
+          { "k": "Custody",        "v": "Your keys, your coins (or a custodian, if you choose)" },
+          { "k": "Can be frozen?", "v": "Not at the protocol layer · custodians can freeze theirs" },
+          { "k": "Supply",         "v": "Capped at 21 million · no human can change it" },
+          { "k": "Censorship",     "v": "Permissionless · anyone can send / receive" },
+          { "k": "Cross-border",   "v": "Same as a local transfer · minutes, no FX" },
+          { "k": "Digital?",       "v": "Native-digital · settles on a public ledger" }
+        ]
+      }
+    ],
+    "questionKicker": "Question to sit with",
+    "questionA":     "What does it mean to truly",
+    "questionEm":    "own",
+    "questionTail":  "something digital — if there is always someone who can take it back?"
+  },
+  "takeaways": {
+    "title": "Prologue Takeaways",
+    "items": [
+      "Money is older than writing — its form keeps changing, its function (trust + scarcity + utility + network) does not",
+      "Value lives in collective agreement, not in the object — when trust breaks, the same notes become paper",
+      "The cypherpunk movement championed privacy as a fundamental right, defended through code rather than law",
+      "From the 1980s to 2008, cryptographers built the individual pieces that Bitcoin would later unify",
+      "Satoshi combined proof-of-work, chained blocks, digital scarcity, and P2P networking — none of which he invented",
+      "The Genesis Block message — 'Chancellor on brink of second bailout for banks' — reveals Bitcoin's ideological roots",
+      "Cash, bank accounts, and digital-payment platforms each hand control to someone else; Bitcoin asks: can you keep it yourself?"
+    ]
+  },
+  "quizMoney": {
+    "question": "Money has taken many forms — shells, coins, paper, bank-account entries, Bitcoin. What is the underlying reason any of them have value?",
+    "options": [
+      "The material they're made of (metal, paper, electrons) determines their worth",
+      "Governments declare them valuable through law",
+      "A network of people collectively agrees to accept them — trust, scarcity, utility, and network effects compound",
+      "Their value is fixed once a central authority decides on an exchange rate"
+    ],
+    "explanation": "Money's value is not in the object — it's in the shared agreement of everyone in the network. When that agreement breaks (hyperinflation, sanctions, platform bans), the same notes lose value overnight. The four foundations are: trust, scarcity, utility, and network effects. Bitcoin asks whether all four can be engineered without any single authority — that's the question this course explores."
+  },
+  "quizCypherpunks": {
+    "question": "What was the core belief of the Cypherpunk movement?",
+    "options": [
+      "Governments should regulate all digital communications",
+      "Privacy is a precondition for freedom and should be defended with code",
+      "Corporations should control encryption technology",
+      "Digital currencies should be managed by central banks"
+    ],
+    "explanation": "The Cypherpunks believed that privacy is not a luxury but a fundamental right, and that cryptographic code — not laws or institutions — should enforce it."
+  },
+  "quizHashcash": {
+    "question": "Which concept did Adam Back's Hashcash (1997) directly inspire in Bitcoin?",
+    "options": [
+      "Smart contracts",
+      "Blind signatures for anonymous payments",
+      "Proof-of-work mining",
+      "Peer-to-peer networking"
+    ],
+    "explanation": "Hashcash was a proof-of-work system originally designed to combat email spam. Satoshi Nakamoto adapted this concept as the foundation for Bitcoin's mining and consensus mechanism."
+  },
+  "quizGenesis": {
+    "question": "What message did Satoshi Nakamoto embed in Bitcoin's Genesis Block?",
+    "options": [
+      "\"Hello World\"",
+      "\"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks\"",
+      "\"A Cypherpunk's Manifesto\"",
+      "\"In code we trust\""
+    ],
+    "explanation": "The embedded headline from The Times newspaper reveals Bitcoin's ideological roots — it was created as a direct response to the failures of the traditional banking system during the 2008 financial crisis."
+  }
+}

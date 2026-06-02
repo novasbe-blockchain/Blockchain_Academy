@@ -14,8 +14,9 @@
  *   • Blockchain Trilemma exercise — moves to Course 3
  *   • 6 of 8 quizzes — move with their parent topics
  */
-import { useState, useEffect, useCallback, useRef, type CSSProperties } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, type CSSProperties } from 'react';
 import anime from 'animejs';
+import { useTranslation } from 'react-i18next';
 import { TitleSlide } from '../components/templates/TitleSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { DiagramSlide } from '../components/templates/DiagramSlide';
@@ -27,34 +28,35 @@ import { ConsensusVisualization } from '../components/blockchain/ConsensusVisual
 import { SectionNav } from '../components/navigation/SectionNav';
 import { Blocks, ExternalLink } from 'lucide-react';
 
-const section1Chapters = [
-  { kind: 'group' as const, id: 'g-s1-problem',    label: '🤔 The Problem' },
-  { id: 's1-trust',     label: 'The Trust Problem' },
-  { id: 's1-ledger',    label: 'The Shared Ledger' },
+/** Sidebar shape — labels resolved at render time via i18n */
+const section1ChaptersShape: ReadonlyArray<{ id: string; kind?: 'group' }> = [
+  { kind: 'group', id: 'g-s1-problem' },
+  { id: 's1-trust' },
+  { id: 's1-ledger' },
 
-  { kind: 'group' as const, id: 'g-s1-basics',     label: '🧱 What is a Blockchain?' },
-  { id: 's1-what-is',   label: 'What is Blockchain?' },
-  { id: 's1-transaction', label: 'Transactions' },
+  { kind: 'group', id: 'g-s1-basics' },
+  { id: 's1-what-is' },
+  { id: 's1-transaction' },
 
-  { kind: 'group' as const, id: 'g-s1-crypto',     label: '🔐 Cryptography' },
-  { id: 's1-hashing',   label: 'Hashing' },
-  { id: 's1-chain',     label: 'Linking Blocks' },
-  { id: 's1-cascade',   label: 'The Cascade' },
+  { kind: 'group', id: 'g-s1-crypto' },
+  { id: 's1-hashing' },
+  { id: 's1-chain' },
+  { id: 's1-cascade' },
 
-  { kind: 'group' as const, id: 'g-s1-network',    label: '🌐 Network & Consensus' },
-  { id: 's1-network',      label: 'The Network' },
-  { id: 's1-network-sort', label: 'Sort the Systems' },
-  { id: 's1-consensus',    label: 'Consensus' },
-  { id: 's1-protocols', label: 'The Protocol Zoo' },
+  { kind: 'group', id: 'g-s1-network' },
+  { id: 's1-network' },
+  { id: 's1-network-sort' },
+  { id: 's1-consensus' },
+  { id: 's1-protocols' },
 
-  { kind: 'group' as const, id: 'g-s1-mining',     label: '⛏️ Mining' },
-  { id: 's1-mining',    label: 'Mining Race' },
+  { kind: 'group', id: 'g-s1-mining' },
+  { id: 's1-mining' },
 
-  { kind: 'group' as const, id: 'g-s1-wallet',     label: '👛 Identity' },
-  { id: 's1-wallet',    label: 'Meet MetaMask' },
+  { kind: 'group', id: 'g-s1-wallet' },
+  { id: 's1-wallet' },
 
-  { kind: 'group' as const, id: 'g-s1-wrap',       label: '✅ Wrap Up' },
-  { id: 's1-takeaways', label: 'Takeaways' },
+  { kind: 'group', id: 'g-s1-wrap' },
+  { id: 's1-takeaways' },
 ];
 
 /* ── SHA-256 helper ─────────────────────────────────── */
@@ -68,6 +70,7 @@ async function sha256(text: string): Promise<string> {
 
 /* ── Interactive SHA-256 input ─────────────────────────────────── */
 function InteractiveHash() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const [input, setInput] = useState('');
   const [hash, setHash] = useState('');
 
@@ -86,21 +89,21 @@ function InteractiveHash() {
 
   return (
     <div className="p-5 bg-card rounded-xl border-2 border-[#39B54A]">
-      <div className="text-sm font-bold text-[#39B54A] mb-3">🔬 Try it yourself</div>
+      <div className="text-sm font-bold text-[#39B54A] mb-3">{t('interactiveHash.tryYourself')}</div>
       <input
         type="text"
         value={input}
         onChange={e => setInput(e.target.value)}
-        placeholder="Type anything here..."
+        placeholder={t('interactiveHash.placeholder')}
         className="w-full px-4 py-2 bg-muted rounded-lg border border-border text-foreground font-mono text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-[#39B54A]/50"
       />
       {hash ? (
         <>
-          <div className="text-sm text-muted-foreground mb-1">SHA-256 Hash:</div>
+          <div className="text-sm text-muted-foreground mb-1">{t('interactiveHash.outputLabel')}</div>
           <div className="font-mono text-xs text-[#39B54A] break-all">{hash}</div>
         </>
       ) : (
-        <div className="text-sm text-muted-foreground italic">Enter text above to see its SHA-256 hash in real time</div>
+        <div className="text-sm text-muted-foreground italic">{t('interactiveHash.empty')}</div>
       )}
     </div>
   );
@@ -108,9 +111,10 @@ function InteractiveHash() {
 
 /* ── Village Ledger visual (NEW) ─────────────────────────────────── */
 function VillageLedgerVisual() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   return (
     <div className="w-full flex flex-col items-center gap-4 py-4">
-      <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">Same notebook, ten copies</p>
+      <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">{t('villageLedger.subhead')}</p>
       <div className="grid grid-cols-5 gap-3">
         {Array.from({ length: 10 }).map((_, i) => {
           const isMallory = i === 7;
@@ -127,14 +131,14 @@ function VillageLedgerVisual() {
             >
               <div className="text-2xl mb-1">📓</div>
               <div className="text-[10px] font-mono text-muted-foreground">
-                {isMallory ? 'Mallory' : `Villager ${i < 7 ? i + 1 : i}`}
+                {isMallory ? 'Mallory' : `${t('villageLedger.villager')} ${i < 7 ? i + 1 : i}`}
               </div>
             </div>
           );
         })}
       </div>
-      <CalloutBox type="warning" title="The flaw">
-        Nine villagers hold identical entries. Mallory has secretly altered hers. <span className="font-mono">How would the others know?</span>
+      <CalloutBox type="warning" title={t('villageLedger.calloutTitle')}>
+        {t('villageLedger.calloutLead')} <span className="font-mono">{t('villageLedger.calloutQuestion')}</span>
       </CalloutBox>
     </div>
   );
@@ -142,54 +146,19 @@ function VillageLedgerVisual() {
 
 /* ── Inside-a-Block Anatomy (animated) ─────────────────────────────────── */
 const ANATOMY_FIELDS = [
-  {
-    id: 'prev-hash',
-    label: 'Previous Hash',
-    value: '0x1a2b3c…',
-    color: '#8b5cf6',
-    icon: '🔗',
-    desc: "The fingerprint of the block before this one. Change anything in that earlier block and this reference no longer matches — the link breaks immediately.",
-  },
-  {
-    id: 'data',
-    label: 'Data',
-    value: '25 BTC → Bob',
-    color: '#22d3ee',
-    icon: '📦',
-    desc: 'What this block records. For Bitcoin: a batch of transactions. For other chains: votes, asset transfers, contract instructions — anything you want preserved.',
-  },
-  {
-    id: 'timestamp',
-    label: 'Timestamp',
-    value: 'Jan 4 2009, 10:45',
-    color: '#10b981',
-    icon: '⏰',
-    desc: "When this block was created. Becomes part of the hash, so editing the timestamp after the fact would also break the chain.",
-  },
-  {
-    id: 'nonce',
-    label: 'Nonce',
-    value: '2,083,236,893',
-    color: '#39B54A',
-    icon: '🎲',
-    desc: "A number the miner found by brute force. It's the one input that gets adjusted until the resulting hash meets the difficulty target.",
-  },
-  {
-    id: 'hash',
-    label: 'Block Hash',
-    value: '0x4d5e6f…',
-    color: '#ED1C24',
-    icon: '🔐',
-    desc: "This block's own fingerprint — computed from everything above. Becomes the \"Previous Hash\" of the next block.",
-  },
+  { id: 'prev-hash', value: '0x1a2b3c…',         color: '#8b5cf6', icon: '🔗' },
+  { id: 'data',      value: '25 BTC → Bob',      color: '#22d3ee', icon: '📦' },
+  { id: 'timestamp', value: 'Jan 4 2009, 10:45', color: '#10b981', icon: '⏰' },
+  { id: 'nonce',     value: '2,083,236,893',     color: '#39B54A', icon: '🎲' },
+  { id: 'hash',      value: '0x4d5e6f…',         color: '#ED1C24', icon: '🔐' },
 ];
 
 /* ── Transaction Flow (NEW) ────────────────────────────────────────────── */
 const TX_USERS = [
-  { name: 'Alice', emoji: '👩‍💼', color: '#ED1C24' },
-  { name: 'Bob',   emoji: '👨‍🚀', color: '#6366f1' },
-  { name: 'Carol', emoji: '👩‍🎨', color: '#f59e0b' },
-  { name: 'Dave',  emoji: '👨‍⚕️', color: '#39B54A' },
+  { key: 'alice', emoji: '👩‍💼', color: '#ED1C24' },
+  { key: 'bob',   emoji: '👨‍🚀', color: '#6366f1' },
+  { key: 'carol', emoji: '👩‍🎨', color: '#f59e0b' },
+  { key: 'dave',  emoji: '👨‍⚕️', color: '#39B54A' },
 ];
 
 const TX_BLOCK_CAPACITY = 8;
@@ -219,6 +188,7 @@ interface TxFlowItem {
 }
 
 function TransactionFlow() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const [transactions, setTransactions] = useState<TxFlowItem[]>([]);
   const [blockNum, setBlockNum] = useState(8421);
 
@@ -342,11 +312,9 @@ function TransactionFlow() {
   return (
     <div className="w-full max-w-[1280px]">
       <div className="text-center mb-4">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">What is a transaction?</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">{t('transactionFlow.heading')}</h2>
         <p className="text-sm lg:text-base text-muted-foreground max-w-3xl mx-auto">
-          The basic unit of activity on a blockchain. Every transaction is signed by its sender,
-          broadcast to the network, queues up in the <strong className="text-foreground">mempool</strong>,
-          and waits to be picked by a miner and bundled into the next block.
+          {t('transactionFlow.leadA')} <strong className="text-foreground">{t('transactionFlow.leadMempool')}</strong>{t('transactionFlow.leadB')}
         </p>
       </div>
 
@@ -355,33 +323,33 @@ function TransactionFlow() {
         <div className="w-full lg:w-[290px] shrink-0">
           <div className="rounded-xl border-2 border-[#6366f1] bg-card p-5 shadow-lg shadow-[#6366f1]/20">
             <div className="text-[10px] uppercase tracking-widest font-bold text-[#6366f1] mb-3 text-center">
-              Example transaction
+              {t('transactionFlow.exampleHeader')}
             </div>
             <div className="space-y-2.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground text-xs">From</span>
+                <span className="text-muted-foreground text-xs">{t('transactionFlow.from')}</span>
                 <span className="font-mono text-foreground text-xs">0xa3b1…f02</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground text-xs">To</span>
+                <span className="text-muted-foreground text-xs">{t('transactionFlow.to')}</span>
                 <span className="font-mono text-foreground text-xs">0x9c4d…7e1</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground text-xs">Amount</span>
+                <span className="text-muted-foreground text-xs">{t('transactionFlow.amount')}</span>
                 <span className="font-mono text-foreground font-bold">0.5 BTC</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground text-xs">Fee</span>
+                <span className="text-muted-foreground text-xs">{t('transactionFlow.fee')}</span>
                 <span className="font-mono text-foreground text-xs">0.0001 BTC</span>
               </div>
               <div className="flex justify-between border-t border-border pt-2.5">
-                <span className="text-muted-foreground text-xs">Signed</span>
-                <span className="text-[#39B54A] font-bold text-xs">✓ by Alice</span>
+                <span className="text-muted-foreground text-xs">{t('transactionFlow.signed')}</span>
+                <span className="text-[#39B54A] font-bold text-xs">{t('transactionFlow.signedBy')}</span>
               </div>
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-3 italic text-center leading-relaxed">
-            Most transactions are payments, but anything can be one — votes, asset transfers, contract calls.
+            {t('transactionFlow.cardCaption')}
           </p>
         </div>
 
@@ -394,7 +362,7 @@ function TransactionFlow() {
             {/* Users */}
             {TX_USERS.map((u, i) => (
               <div
-                key={u.name}
+                key={u.key}
                 className="absolute flex items-center gap-2 px-2 py-1.5 rounded-lg border-2 bg-card text-xs"
                 style={{
                   left: USER_X,
@@ -407,8 +375,8 @@ function TransactionFlow() {
               >
                 <span className="text-xl">{u.emoji}</span>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[10px] font-bold" style={{ color: u.color }}>{u.name}</div>
-                  <div className="text-[9px] text-muted-foreground">sender</div>
+                  <div className="text-[10px] font-bold" style={{ color: u.color }}>{t(`transactionFlow.users.${u.key}`)}</div>
+                  <div className="text-[9px] text-muted-foreground">{t('transactionFlow.sender')}</div>
                 </div>
               </div>
             ))}
@@ -419,7 +387,7 @@ function TransactionFlow() {
               style={{ left: MEMPOOL_X, top: MEMPOOL_Y, width: MEMPOOL_W, height: MEMPOOL_H }}
             >
               <div className="absolute -top-3 left-3 px-2 py-0.5 bg-background text-[10px] font-bold text-[#f59e0b] uppercase tracking-widest border border-[#f59e0b]/60 rounded-md">
-                Mempool
+                {t('transactionFlow.mempool')}
               </div>
             </div>
 
@@ -439,7 +407,7 @@ function TransactionFlow() {
                   color: isBlockFull ? '#39B54A' : '#6366f1',
                 }}
               >
-                {isBlockFull ? `✓ Block #${blockNum} full` : `Block #${blockNum}`}
+                {isBlockFull ? t('transactionFlow.blockFull', { n: blockNum }) : t('transactionFlow.blockLabel', { n: blockNum })}
               </div>
               <div className="absolute bottom-2 left-2 right-2">
                 <div className="flex items-center gap-1.5">
@@ -487,10 +455,8 @@ function TransactionFlow() {
           </div>
 
           <p className="text-xs text-muted-foreground text-center mt-3 italic max-w-md">
-            Transactions accumulate in the <span className="text-[#f59e0b] font-semibold not-italic">mempool</span>.
-            Miners pick the next batch (highest-fee first, usually) to fill a{' '}
-            <span className="text-[#6366f1] font-semibold not-italic">block</span> — then mine it. When the block
-            is full, it ships and a new one starts.
+            {t('transactionFlow.footerA')} <span className="text-[#f59e0b] font-semibold not-italic">{t('transactionFlow.footerMempoolWord')}</span>{t('transactionFlow.footerB')}{' '}
+            <span className="text-[#6366f1] font-semibold not-italic">{t('transactionFlow.footerBlockWord')}</span> {t('transactionFlow.footerC')}
           </p>
         </div>
       </div>
@@ -500,12 +466,13 @@ function TransactionFlow() {
 
 /* ── Linked Blocks Reveal — improved "Each Block Points Back" ────────────── */
 const LINKED_BLOCKS = [
-  { n: 0, data: 'Genesis Block',  prevHash: null,        hash: '0x8b5cf6', color: '#8b5cf6' },
-  { n: 1, data: '50 BTC → Alice', prevHash: '0x8b5cf6',  hash: '0x10b981', color: '#10b981' },
-  { n: 2, data: '25 BTC → Bob',   prevHash: '0x10b981',  hash: '0xED1C24', color: '#ED1C24' },
+  { n: 0, prevHash: null,        hash: '0x8b5cf6', color: '#8b5cf6' },
+  { n: 1, prevHash: '0x8b5cf6',  hash: '0x10b981', color: '#10b981' },
+  { n: 2, prevHash: '0x10b981',  hash: '0xED1C24', color: '#ED1C24' },
 ];
 
 function LinkedBlocksReveal() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const containerRef = useRef<HTMLDivElement | null>(null);
   const blockRefs    = useRef<(HTMLDivElement | null)[]>([]);
   const arrowRefs    = useRef<(HTMLDivElement | null)[]>([]);
@@ -561,12 +528,11 @@ function LinkedBlocksReveal() {
   return (
     <div className="max-w-6xl w-full">
       <div className="text-center mb-6">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">Each Block Points Back</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">{t('linkedBlocks.heading')}</h2>
         <p className="text-sm text-muted-foreground max-w-3xl mx-auto">
-          A block stores data plus the <em className="text-foreground not-italic font-semibold">fingerprint of the previous block</em>.
-          That single field is what links the chain together. Look at the colors — every block's{' '}
-          <span className="font-mono">Hash</span> appears again as the next block's{' '}
-          <span className="font-mono">Prev Hash</span>.
+          {t('linkedBlocks.leadA')} <em className="text-foreground not-italic font-semibold">{t('linkedBlocks.leadEm')}</em>{t('linkedBlocks.leadB')}{' '}
+          <span className="font-mono">{t('linkedBlocks.leadHashWord')}</span> {t('linkedBlocks.leadC')}{' '}
+          <span className="font-mono">{t('linkedBlocks.leadPrevHashWord')}</span>{t('linkedBlocks.leadTail')}
         </p>
       </div>
 
@@ -586,23 +552,23 @@ function LinkedBlocksReveal() {
                 className="absolute -top-3 left-5 px-3 py-1 rounded-full text-xs font-mono font-bold text-white shadow-md"
                 style={{ backgroundColor: b.color }}
               >
-                Block #{b.n}
+                {t('linkedBlocks.blockLabel', { n: b.n })}
               </div>
 
               <div className="mt-2 space-y-3">
                 <div>
-                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-0.5 font-semibold">Data</div>
-                  <div className="font-mono text-sm text-foreground">{b.data}</div>
+                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-0.5 font-semibold">{t('linkedBlocks.dataLabel')}</div>
+                  <div className="font-mono text-sm text-foreground">{t(`linkedBlocks.data.${b.n}`)}</div>
                 </div>
 
                 <div className="border-t border-border pt-3">
                   <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-0.5 font-semibold flex items-center gap-1">
-                    Prev Hash
+                    {t('linkedBlocks.prevHashLabel')}
                     {i > 0 && (
                       <span
                         className="size-2 rounded-full"
                         style={{ backgroundColor: LINKED_BLOCKS[i - 1].color }}
-                        title="matches the previous block's hash"
+                        title={t('linkedBlocks.matchesTitle')}
                       />
                     )}
                   </div>
@@ -613,13 +579,13 @@ function LinkedBlocksReveal() {
                       : { color: LINKED_BLOCKS[i - 1].color, backgroundColor: LINKED_BLOCKS[i - 1].color + '15', padding: '2px 6px', borderRadius: '4px', display: 'inline-block' }
                     }
                   >
-                    {b.prevHash ?? '— (genesis)'}
+                    {b.prevHash ?? t('linkedBlocks.genesisDash')}
                   </div>
                 </div>
 
                 <div>
                   <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-0.5 font-semibold flex items-center gap-1">
-                    Hash
+                    {t('linkedBlocks.hashLabel')}
                     <span
                       className="size-2 rounded-full"
                       style={{ backgroundColor: b.color }}
@@ -651,7 +617,7 @@ function LinkedBlocksReveal() {
                   <polygon points="44,22 56,30 44,38" fill={b.color} />
                 </svg>
                 <div className="text-[10px] font-bold mt-1 whitespace-nowrap uppercase tracking-wider" style={{ color: b.color }}>
-                  matches
+                  {t('linkedBlocks.matches')}
                 </div>
               </div>
             )}
@@ -661,9 +627,7 @@ function LinkedBlocksReveal() {
 
       <div className="mt-8 max-w-2xl mx-auto p-4 bg-muted/40 rounded-xl border border-border text-center">
         <p className="text-xs text-foreground leading-relaxed">
-          <strong className="font-bold">Same color = same value.</strong> If anyone changed the data in Block #1,
-          its hash would change — and Block #2's Prev Hash wouldn't match it anymore.
-          The chain breaks the instant anything upstream moves.
+          <strong className="font-bold">{t('linkedBlocks.footerA')}</strong> {t('linkedBlocks.footerB')}
         </p>
       </div>
     </div>
@@ -671,6 +635,7 @@ function LinkedBlocksReveal() {
 }
 
 function InsideBlockAnatomy() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const containerRef = useRef<HTMLDivElement | null>(null);
   const blockRef     = useRef<HTMLDivElement | null>(null);
   const fieldRefs    = useRef<(HTMLDivElement | null)[]>([]);
@@ -737,9 +702,9 @@ function InsideBlockAnatomy() {
   return (
     <div className="max-w-6xl w-full">
       <div className="text-center mb-6">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Inside a Single Block</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{t('insideBlock.heading')}</h2>
         <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-          Five fields. That's it. Each one earns its place — together they make every block tamper-evident.
+          {t('insideBlock.lead')}
         </p>
       </div>
 
@@ -754,7 +719,7 @@ function InsideBlockAnatomy() {
             className="relative bg-card rounded-2xl border-2 border-[#6366f1] shadow-xl shadow-[#6366f1]/20 p-5 mt-4"
           >
             <div className="absolute -top-3.5 left-5 bg-[#6366f1] text-white px-3 py-1 rounded-full text-xs font-mono font-bold shadow">
-              Block #2
+              {t('insideBlock.blockTag')}
             </div>
             <div className="space-y-3 mt-2">
               {ANATOMY_FIELDS.map((f, i) => (
@@ -771,7 +736,7 @@ function InsideBlockAnatomy() {
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-base">{f.icon}</span>
                     <span className="text-[10px] uppercase tracking-widest font-bold" style={{ color: f.color }}>
-                      {f.label}
+                      {t(`insideBlock.fields.${f.id}.label`)}
                     </span>
                   </div>
                   <div className="font-mono text-sm text-foreground">{f.value}</div>
@@ -798,10 +763,10 @@ function InsideBlockAnatomy() {
               <div className="flex items-baseline gap-2 mb-1">
                 <span className="text-xs">{f.icon}</span>
                 <span className="text-[10px] uppercase tracking-widest font-bold" style={{ color: f.color }}>
-                  {f.label}
+                  {t(`insideBlock.fields.${f.id}.label`)}
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">{t(`insideBlock.fields.${f.id}.desc`)}</p>
             </div>
           ))}
         </div>
@@ -812,7 +777,7 @@ function InsideBlockAnatomy() {
           onClick={runReveal}
           className="px-4 py-2 rounded-xl border border-border text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
         >
-          ↺ Replay animation
+          {t('insideBlock.replay')}
         </button>
       </div>
     </div>
@@ -821,48 +786,15 @@ function InsideBlockAnatomy() {
 
 /* ── PrevHashExercise — chain the blocks ─────────────────────────────────── */
 const CHAIN_BLOCKS = [
-  {
-    number: 0,
-    label: 'Genesis Block',
-    data: 'Chancellor on brink...',
-    hash: '0x000000',
-    prevHash: '—',
-    prevHashRevealed: true,
-  },
-  {
-    number: 1,
-    label: '50 BTC → Alice',
-    data: 'Alice receives 50 BTC',
-    hash: '0x1a2b3c',
-    prevHash: '0x000000',
-    prevHashRevealed: false,
-  },
-  {
-    number: 2,
-    label: '25 BTC → Bob',
-    data: 'Bob receives 25 BTC',
-    hash: '0x4d5e6f',
-    prevHash: '0x1a2b3c',
-    prevHashRevealed: false,
-  },
+  { number: 0, hash: '0x000000', prevHash: '—',        prevHashRevealed: true  },
+  { number: 1, hash: '0x1a2b3c', prevHash: '0x000000', prevHashRevealed: false },
+  { number: 2, hash: '0x4d5e6f', prevHash: '0x1a2b3c', prevHashRevealed: false },
 ];
 
-const PREV_HASH_OPTIONS: Record<number, { value: string; label: string }[]> = {
-  1: [
-    { value: '0x000000', label: '0x000000  (Block #0 hash)' },
-    { value: '0x1a2b3c', label: '0x1a2b3c  (Block #1 hash)' },
-    { value: '0x4d5e6f', label: '0x4d5e6f  (Block #2 hash)' },
-    { value: '0x9f3c21', label: '0x9f3c21  (random)' },
-  ],
-  2: [
-    { value: '0x000000', label: '0x000000  (Block #0 hash)' },
-    { value: '0x1a2b3c', label: '0x1a2b3c  (Block #1 hash)' },
-    { value: '0x4d5e6f', label: '0x4d5e6f  (Block #2 hash)' },
-    { value: '0x9f3c21', label: '0x9f3c21  (random)' },
-  ],
-};
+const PREV_HASH_OPTION_VALUES = ['0x000000', '0x1a2b3c', '0x4d5e6f', '0x9f3c21'];
 
 function PrevHashExercise() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const [answers, setAnswers]   = useState<Record<number, string>>({ 1: '', 2: '' });
   const [checked, setChecked]   = useState(false);
 
@@ -888,10 +820,10 @@ function PrevHashExercise() {
         <div className="size-14 rounded-full bg-[#ED1C24]/20 flex items-center justify-center mx-auto mb-4">
           <span className="text-2xl">🔗</span>
         </div>
-        <h2 className="text-3xl font-bold text-foreground mb-2">Chain the Blocks</h2>
+        <h2 className="text-3xl font-bold text-foreground mb-2">{t('prevHashExercise.heading')}</h2>
         <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-          Each block must reference the <span className="text-[#ED1C24] font-semibold">exact hash of the previous block</span>.
-          Select the correct <span className="text-[#ED1C24] font-semibold">Prev Hash</span> for Blocks #1 and #2.
+          {t('prevHashExercise.leadA')} <span className="text-[#ED1C24] font-semibold">{t('prevHashExercise.leadStrong')}</span>{t('prevHashExercise.leadB')}{' '}
+          <span className="text-[#ED1C24] font-semibold">{t('prevHashExercise.leadPrev')}</span> {t('prevHashExercise.leadC')}
         </p>
       </div>
 
@@ -900,7 +832,7 @@ function PrevHashExercise() {
           <div key={block.number} className="flex items-center flex-1">
             <div className={`flex-1 rounded-xl border-2 bg-card transition-colors overflow-hidden ${blockBorder(block.number)}`}>
               <div className="px-4 py-2 bg-muted/40 border-b border-border flex items-center justify-between">
-                <span className="font-mono text-xs font-bold text-muted-foreground">BLOCK #{block.number}</span>
+                <span className="font-mono text-xs font-bold text-muted-foreground">{t('prevHashExercise.blockLabel', { n: block.number })}</span>
                 {checked && !block.prevHashRevealed && (
                   <span className="text-sm">{isCorrect(block.number) ? '✓' : '✗'}</span>
                 )}
@@ -908,17 +840,17 @@ function PrevHashExercise() {
 
               <div className="p-4 space-y-2.5 text-xs">
                 <div>
-                  <span className="text-muted-foreground uppercase tracking-widest text-[10px]">Data</span>
-                  <div className="font-mono text-foreground mt-0.5 truncate">{block.label}</div>
+                  <span className="text-muted-foreground uppercase tracking-widest text-[10px]">{t('prevHashExercise.dataLabel')}</span>
+                  <div className="font-mono text-foreground mt-0.5 truncate">{t(`prevHashExercise.blocks.${block.number}`)}</div>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground uppercase tracking-widest text-[10px]">Hash</span>
+                  <span className="text-muted-foreground uppercase tracking-widest text-[10px]">{t('prevHashExercise.hashLabel')}</span>
                   <div className="font-mono text-[#39B54A] mt-0.5">{block.hash}</div>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground uppercase tracking-widest text-[10px]">Prev Hash</span>
+                  <span className="text-muted-foreground uppercase tracking-widest text-[10px]">{t('prevHashExercise.prevHashLabel')}</span>
                   {block.prevHashRevealed ? (
                     <div className="font-mono text-[#6366f1] mt-0.5">{block.prevHash}</div>
                   ) : (
@@ -937,9 +869,9 @@ function PrevHashExercise() {
                             : 'border-border'
                         }`}
                     >
-                      <option value="" disabled>— pick prev hash —</option>
-                      {PREV_HASH_OPTIONS[block.number].map(opt => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      <option value="" disabled>{t('prevHashExercise.pickPrev')}</option>
+                      {PREV_HASH_OPTION_VALUES.map(v => (
+                        <option key={v} value={v}>{t(`prevHashExercise.options.${v}`)}</option>
                       ))}
                     </select>
                   )}
@@ -952,8 +884,8 @@ function PrevHashExercise() {
                       : 'bg-[#ef4444]/10 text-[#ef4444]'
                   }`}>
                     {isCorrect(block.number)
-                      ? `✓ Correct — matches Block #${block.number - 1}'s hash`
-                      : `✗ Wrong — should be ${block.prevHash} (Block #${block.number - 1}'s hash)`
+                      ? t('prevHashExercise.correctMsg', { prev: block.number - 1 })
+                      : t('prevHashExercise.wrongMsg', { expected: block.prevHash, prev: block.number - 1 })
                     }
                   </div>
                 )}
@@ -983,7 +915,7 @@ function PrevHashExercise() {
                 : 'bg-muted text-muted-foreground cursor-not-allowed'
             }`}
           >
-            Check answers ✓
+            {t('prevHashExercise.checkAnswers')}
           </button>
         )}
         {checked && (
@@ -996,14 +928,14 @@ function PrevHashExercise() {
                 {score}/2
               </div>
               <div className="text-xs text-muted-foreground mt-0.5">
-                {score === 2 ? 'Perfect chain!' : 'Review the hashes above'}
+                {score === 2 ? t('prevHashExercise.perfectChain') : t('prevHashExercise.reviewHashes')}
               </div>
             </div>
             <button
               onClick={reset}
               className="px-4 py-2 rounded-xl border border-border text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
             >
-              Try again
+              {t('prevHashExercise.tryAgain')}
             </button>
           </div>
         )}
@@ -1011,8 +943,7 @@ function PrevHashExercise() {
 
       {checked && (
         <div className="mt-6 p-4 rounded-xl bg-[#6366f1]/10 border border-[#6366f1]/30 text-sm text-center text-muted-foreground max-w-xl mx-auto">
-          💡 <span className="font-semibold text-[#6366f1]">The key insight:</span> if you change anything in Block #1,
-          its hash changes — and Block #2's Prev Hash would no longer match, breaking the chain instantly.
+          {t('prevHashExercise.insightIcon')} <span className="font-semibold text-[#6366f1]">{t('prevHashExercise.insightStrong')}</span> {t('prevHashExercise.insightBody')}
         </div>
       )}
     </div>
@@ -1020,14 +951,7 @@ function PrevHashExercise() {
 }
 
 /* ── Tamper Cascade (NEW) ─────────────────────────────────── */
-const CASCADE_INITIAL = [
-  'My first blockchain',
-  'Alice → Bob: 10 BTC',
-  'Bob → Carol: 5 BTC',
-  'Carol → Dave: 3 BTC',
-];
 const ZERO_HASH = '0'.repeat(64);
-const CASCADE_IDLE = "Edit any block's data below. Watch the chain react.";
 
 interface CascadeBlock {
   index: number;
@@ -1079,12 +1003,6 @@ function chainValidity(blocks: CascadeBlock[]): { blocks: ('valid' | 'invalid')[
   return { blocks: blockValidity, links: linkValidity };
 }
 
-function cascadeMsg(editedIndex: number, total: number): string {
-  const affected = total - 1 - editedIndex;
-  if (affected <= 0) return 'Hash recomputed. Nothing downstream to break.';
-  return `You changed Block #${editedIndex}. Its hash recomputed — but the ${affected} block${affected === 1 ? '' : 's'} after it still reference the old value. The chain caught you.`;
-}
-
 function CascadeBlockCard({
   block,
   validity,
@@ -1096,19 +1014,20 @@ function CascadeBlockCard({
   editable: boolean;
   onChange: (v: string) => void;
 }) {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const invalid = validity === 'invalid';
   return (
     <div className={`flex-1 min-w-0 rounded-xl border-2 bg-card overflow-hidden transition-colors duration-300 ${
       invalid ? 'border-[#ef4444]' : 'border-[#39B54A]'
     }`}>
       <div className="px-3 py-1.5 bg-muted/40 border-b border-border flex items-center justify-between">
-        <span className="font-mono text-[10px] font-bold text-muted-foreground">BLOCK #{block.index}</span>
+        <span className="font-mono text-[10px] font-bold text-muted-foreground">{t('cascade.blockLabel', { n: block.index })}</span>
         {invalid && <span className="text-xs text-[#ef4444]">✗</span>}
-        {!editable && <span className="text-[9px] text-muted-foreground uppercase">read-only</span>}
+        {!editable && <span className="text-[9px] text-muted-foreground uppercase">{t('cascade.readOnly')}</span>}
       </div>
       <div className="p-3 space-y-2 text-xs">
         <div>
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Data</span>
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{t('cascade.dataLabel')}</span>
           {editable ? (
             <input
               type="text"
@@ -1122,7 +1041,7 @@ function CascadeBlockCard({
           )}
         </div>
         <div>
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Prev Hash</span>
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{t('cascade.prevHashLabel')}</span>
           <div
             className={`font-mono text-[10px] mt-0.5 truncate ${invalid ? 'text-[#ef4444] line-through' : 'text-[#6366f1]'}`}
             title={block.prevHash}
@@ -1131,7 +1050,7 @@ function CascadeBlockCard({
           </div>
         </div>
         <div>
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Hash</span>
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{t('cascade.hashLabel')}</span>
           <div
             className="font-mono text-[10px] text-[#39B54A] mt-0.5 truncate"
             title={block.hash}
@@ -1145,11 +1064,21 @@ function CascadeBlockCard({
 }
 
 function TamperCascade() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
+  const cascadeInitial = useMemo(() => t('cascade.initialData', { returnObjects: true }) as string[], [t]);
+  const cascadeIdle = t('cascade.idleMessage');
+  const cascadeMsg = useCallback((editedIndex: number, total: number): string => {
+    const affected = total - 1 - editedIndex;
+    if (affected <= 0) return t('cascade.nothingDownstream');
+    return affected === 1
+      ? t('cascade.brokenMessageSingular', { n: editedIndex, count: affected })
+      : t('cascade.brokenMessagePlural',   { n: editedIndex, count: affected });
+  }, [t]);
   const [blocks, setBlocks] = useState<CascadeBlock[]>([]);
   const [actualValidity, setActualValidity] = useState<('valid' | 'invalid')[]>([]);
   const [actualLinks, setActualLinks] = useState<boolean[]>([]);
   const [revealedUpTo, setRevealedUpTo] = useState(-1);
-  const [sideMsg, setSideMsg] = useState(CASCADE_IDLE);
+  const [sideMsg, setSideMsg] = useState(cascadeIdle);
 
   const blocksRef = useRef<CascadeBlock[]>([]);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -1166,7 +1095,7 @@ function TamperCascade() {
 
   useEffect(() => {
     let cancelled = false;
-    buildCascadeChain(CASCADE_INITIAL).then(chain => {
+    buildCascadeChain(cascadeInitial).then(chain => {
       if (cancelled) return;
       const v = chainValidity(chain);
       setBlocks(chain);
@@ -1174,7 +1103,7 @@ function TamperCascade() {
       setActualLinks(v.links);
     });
     return () => { cancelled = true; };
-  }, []);
+  }, [cascadeInitial]);
 
   const clearTimers = useCallback(() => {
     timersRef.current.forEach(t => clearTimeout(t));
@@ -1187,7 +1116,7 @@ function TamperCascade() {
 
     if (firstBroken === -1) {
       setRevealedUpTo(-1);
-      setSideMsg('Hash recomputed. The chain still links cleanly — nothing else moved.');
+      setSideMsg(t('cascade.cleanMessage'));
       return;
     }
 
@@ -1228,13 +1157,13 @@ function TamperCascade() {
   async function handleReset() {
     clearTimers();
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    const chain = await buildCascadeChain(CASCADE_INITIAL);
+    const chain = await buildCascadeChain(cascadeInitial);
     const v = chainValidity(chain);
     setBlocks(chain);
     setActualValidity(v.blocks);
     setActualLinks(v.links);
     setRevealedUpTo(-1);
-    setSideMsg(CASCADE_IDLE);
+    setSideMsg(cascadeIdle);
   }
 
   const displayValidity = actualValidity.map((v, i) =>
@@ -1245,16 +1174,16 @@ function TamperCascade() {
   );
 
   if (blocks.length === 0) {
-    return <div className="text-muted-foreground text-center py-12">Computing genesis…</div>;
+    return <div className="text-muted-foreground text-center py-12">{t('cascade.computingGenesis')}</div>;
   }
 
   return (
     <div className="max-w-5xl w-full">
       <div className="text-center mb-5">
         <div className="size-12 rounded-full bg-[#ED1C24]/20 flex items-center justify-center mx-auto mb-3 text-xl">⚡</div>
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">Try to cheat the chain</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{t('cascade.heading')}</h2>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-          Edit any block's data. The chain will show you what breaks.
+          {t('cascade.lead')}
         </p>
       </div>
 
@@ -1290,21 +1219,21 @@ function TamperCascade() {
 
       <div className="flex gap-4 items-start max-w-3xl mx-auto">
         <div className="flex-1 p-4 rounded-xl bg-[#6366f1]/10 border-l-4 border-[#6366f1]">
-          <div className="text-[10px] font-bold text-[#6366f1] uppercase tracking-widest mb-1">What just happened?</div>
+          <div className="text-[10px] font-bold text-[#6366f1] uppercase tracking-widest mb-1">{t('cascade.whatHappened')}</div>
           <p className="text-sm text-foreground/90 leading-relaxed">{sideMsg}</p>
         </div>
         <button
           onClick={handleReset}
           className="shrink-0 px-4 py-2 rounded-xl border border-border text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
         >
-          ↺ Reset
+          {t('cascade.reset')}
         </button>
       </div>
 
       <div className="mt-6 text-center max-w-2xl mx-auto">
         <p className="text-sm italic text-foreground">
-          <span className="font-semibold not-italic">Tamper-evident — not tamper-proof.</span>{' '}
-          The chain doesn't stop you from changing data; it makes the change visible everywhere downstream.
+          <span className="font-semibold not-italic">{t('cascade.moralStrong')}</span>{' '}
+          {t('cascade.moralBody')}
         </p>
       </div>
     </div>
@@ -1383,25 +1312,10 @@ const TOPOLOGIES: Record<TopoMode, Topology> = {
   },
 };
 
-const MODE_INFO: Record<TopoMode, { color: string; label: string; tagline: string; lesson: string }> = {
-  centralized: {
-    color: '#ED1C24',
-    label: 'Centralized',
-    tagline: 'One server holds everything. Fast and simple — but if it goes down, the whole network goes down.',
-    lesson: 'Try clicking the centre node. Then try clicking one satellite. Same act, very different blast radius.',
-  },
-  decentralized: {
-    color: '#f59e0b',
-    label: 'Decentralized',
-    tagline: 'Several hubs share authority. No single hub controls everything, but each hub still rules its cluster.',
-    lesson: 'Click a hub — its leaves are orphaned because they only reach the network through it. The other clusters keep working.',
-  },
-  distributed: {
-    color: '#39B54A',
-    label: 'Distributed',
-    tagline: 'Every node is a peer with the same role. No single failure can take the network down.',
-    lesson: 'Try clicking several nodes. The mesh routes around the gaps — this is what blockchain inherits.',
-  },
+const MODE_COLORS: Record<TopoMode, string> = {
+  centralized:   '#ED1C24',
+  decentralized: '#f59e0b',
+  distributed:   '#39B54A',
 };
 
 function largestConnected(topo: Topology, failed: Set<string>): Set<string> {
@@ -1428,11 +1342,16 @@ function largestConnected(topo: Topology, failed: Set<string>): Set<string> {
 }
 
 function NetworkTopologyDemo() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const [mode, setMode] = useState<TopoMode>('centralized');
   const [failed, setFailed] = useState<Set<string>>(new Set());
 
   const topo = TOPOLOGIES[mode];
-  const info = MODE_INFO[mode];
+  const infoColor   = MODE_COLORS[mode];
+  const infoLabel   = t(`networkTopo.modes.${mode}.label`);
+  const infoTagline = t(`networkTopo.modes.${mode}.tagline`);
+  const infoLesson  = t(`networkTopo.modes.${mode}.lesson`);
+  const info = { color: infoColor, label: infoLabel, tagline: infoTagline, lesson: infoLesson };
   const total = topo.nodes.length;
   const aliveCount = total - failed.size;
   const main = largestConnected(topo, failed);
@@ -1440,10 +1359,10 @@ function NetworkTopologyDemo() {
   const isolated = aliveCount - connected;
 
   let status: { color: string; label: string };
-  if (aliveCount === 0)              status = { color: '#ED1C24', label: 'Network down — all nodes offline' };
-  else if (connected === aliveCount) status = { color: '#39B54A', label: `Operational · ${connected}/${total} reachable` };
-  else if (connected / aliveCount <= 0.5) status = { color: '#ED1C24', label: `Down · only ${connected}/${total} reachable, ${isolated} isolated` };
-  else                               status = { color: '#f59e0b', label: `Degraded · ${connected}/${total} reachable, ${isolated} isolated` };
+  if (aliveCount === 0)              status = { color: '#ED1C24', label: t('networkTopo.status.down') };
+  else if (connected === aliveCount) status = { color: '#39B54A', label: t('networkTopo.status.operational', { connected, total }) };
+  else if (connected / aliveCount <= 0.5) status = { color: '#ED1C24', label: t('networkTopo.status.broken', { connected, total, isolated }) };
+  else                               status = { color: '#f59e0b', label: t('networkTopo.status.degraded', { connected, total, isolated }) };
 
   const toggleNode = (id: string) => {
     setFailed(prev => {
@@ -1469,7 +1388,7 @@ function NetworkTopologyDemo() {
       <div className="grid grid-cols-3 gap-1.5">
         {(['centralized','decentralized','distributed'] as TopoMode[]).map(m => {
           const active = m === mode;
-          const c = MODE_INFO[m];
+          const c = { color: MODE_COLORS[m], label: t(`networkTopo.modes.${m}.label`) };
           return (
             <button
               key={m}
@@ -1488,7 +1407,7 @@ function NetworkTopologyDemo() {
       </div>
 
       <div className="bg-card rounded-xl border border-border p-2">
-        <svg viewBox="0 0 320 280" className="w-full h-auto" role="img" aria-label={`${info.label} network topology`}>
+        <svg viewBox="0 0 320 280" className="w-full h-auto" role="img" aria-label={`${info.label} ${t('networkTopo.ariaSuffix')}`}>
           {topo.edges.map((e, i) => {
             const a = topo.nodes.find(n => n.id === e.a)!;
             const b = topo.nodes.find(n => n.id === e.b)!;
@@ -1536,7 +1455,7 @@ function NetworkTopologyDemo() {
           disabled={failed.size === 0}
           className="px-2.5 py-2 rounded-lg bg-muted text-xs font-semibold text-muted-foreground hover:bg-muted/80 disabled:opacity-40 transition-colors"
         >
-          ↺ Reset
+          {t('networkTopo.reset')}
         </button>
       </div>
 
@@ -1554,31 +1473,30 @@ type NetworkCategory = 'centralized' | 'decentralized' | 'distributed';
 
 interface SortItem {
   id: string;
-  label: string;
   icon: string;
   correct: NetworkCategory;
-  hint?: string;
 }
 
 const SORT_ITEMS: SortItem[] = [
-  { id: 'bofa',       label: 'Bank of America', icon: '🏦', correct: 'centralized',   hint: 'One company owns the ledger' },
-  { id: 'google',     label: 'Google',          icon: '🔍', correct: 'centralized',   hint: 'One company runs the servers' },
-  { id: 'visa',       label: 'Visa',            icon: '💳', correct: 'centralized',   hint: 'Single processor in the middle' },
-  { id: 'email',      label: 'Email (SMTP)',    icon: '📧', correct: 'decentralized', hint: 'Many independent providers' },
-  { id: 'mastodon',   label: 'Mastodon',        icon: '🐘', correct: 'decentralized', hint: 'Federated instances' },
-  { id: 'dns',        label: 'DNS',             icon: '🌐', correct: 'decentralized', hint: 'Hierarchical root servers' },
-  { id: 'bitcoin',    label: 'Bitcoin',         icon: '₿',  correct: 'distributed',   hint: 'Every node holds the full chain' },
-  { id: 'ipfs',       label: 'IPFS',            icon: '📦', correct: 'distributed',   hint: 'Peer-to-peer file storage' },
-  { id: 'bittorrent', label: 'BitTorrent',      icon: '⬇️', correct: 'distributed',   hint: 'Every peer is also a seeder' },
+  { id: 'bofa',       icon: '🏦', correct: 'centralized'   },
+  { id: 'google',     icon: '🔍', correct: 'centralized'   },
+  { id: 'visa',       icon: '💳', correct: 'centralized'   },
+  { id: 'email',      icon: '📧', correct: 'decentralized' },
+  { id: 'mastodon',   icon: '🐘', correct: 'decentralized' },
+  { id: 'dns',        icon: '🌐', correct: 'decentralized' },
+  { id: 'bitcoin',    icon: '₿',  correct: 'distributed'   },
+  { id: 'ipfs',       icon: '📦', correct: 'distributed'   },
+  { id: 'bittorrent', icon: '⬇️', correct: 'distributed'   },
 ];
 
-const SORT_CATEGORIES: { id: NetworkCategory; label: string; color: string; desc: string }[] = [
-  { id: 'centralized',   label: 'Centralized',   color: '#ED1C24', desc: 'One operator owns the system. Single point of control.' },
-  { id: 'decentralized', label: 'Decentralized', color: '#f59e0b', desc: 'Many hubs share authority. Each rules its cluster.' },
-  { id: 'distributed',   label: 'Distributed',   color: '#39B54A', desc: 'Every peer is equal. No central authority at all.' },
+const SORT_CATEGORIES: { id: NetworkCategory; color: string }[] = [
+  { id: 'centralized',   color: '#ED1C24' },
+  { id: 'decentralized', color: '#f59e0b' },
+  { id: 'distributed',   color: '#39B54A' },
 ];
 
 function NetworkTypeSorter() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const [placements, setPlacements] = useState<Record<string, NetworkCategory | null>>(() =>
     Object.fromEntries(SORT_ITEMS.map(i => [i.id, null]))
   );
@@ -1627,20 +1545,20 @@ function NetworkTypeSorter() {
       {/* Header */}
       <div className="text-center mb-5">
         <div className="size-12 rounded-full bg-[#6366f1]/20 flex items-center justify-center mx-auto mb-3 text-xl">🧩</div>
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">Sort the Systems</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">{t('sortSystems.heading')}</h2>
         <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-          Each system below sits somewhere on the spectrum. Click a system, then click the category it belongs to.
+          {t('sortSystems.lead')}
         </p>
       </div>
 
       {/* Pool */}
       <div className="mb-5">
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold text-center mb-2">
-          {checked ? 'Items' : pool.length > 0 ? `Pick a system (${pool.length} left)` : 'All placed — check your answers'}
+          {checked ? t('sortSystems.items') : pool.length > 0 ? t('sortSystems.pickN', { n: pool.length }) : t('sortSystems.allPlacedHeader')}
         </p>
         <div className="flex flex-wrap justify-center gap-2 min-h-[56px]">
           {pool.length === 0 && !checked && (
-            <div className="text-xs text-muted-foreground italic py-3">All systems placed ✓</div>
+            <div className="text-xs text-muted-foreground italic py-3">{t('sortSystems.allPlacedNote')}</div>
           )}
           {pool.map(item => {
             const isSelected = selectedId === item.id;
@@ -1656,8 +1574,8 @@ function NetworkTypeSorter() {
                 }`}
               >
                 <span className="text-base">{item.icon}</span>
-                <span className="text-foreground">{item.label}</span>
-                {isSelected && <span className="text-[10px] text-[#6366f1]">✦ selected</span>}
+                <span className="text-foreground">{t(`sortSystems.items_.${item.id}.label`)}</span>
+                {isSelected && <span className="text-[10px] text-[#6366f1]">{t('sortSystems.selected')}</span>}
               </button>
             );
           })}
@@ -1687,9 +1605,9 @@ function NetworkTypeSorter() {
                 className="px-3 py-2 border-b font-bold text-center"
                 style={{ borderColor: cat.color + '40', color: cat.color }}
               >
-                <div className="text-sm">{cat.label}</div>
+                <div className="text-sm">{t(`sortSystems.categories.${cat.id}.label`)}</div>
                 <div className="text-[10px] font-normal text-muted-foreground mt-0.5 leading-snug">
-                  {cat.desc}
+                  {t(`sortSystems.categories.${cat.id}.desc`)}
                 </div>
               </div>
 
@@ -1697,7 +1615,7 @@ function NetworkTypeSorter() {
               <div className="p-3 flex flex-wrap gap-1.5 min-h-[100px] items-start content-start">
                 {placed.length === 0 && !selectedId && (
                   <div className="text-[11px] text-muted-foreground/50 italic w-full text-center pt-4">
-                    drop here
+                    {t('sortSystems.dropHere')}
                   </div>
                 )}
                 {placed.length === 0 && selectedId && (
@@ -1705,7 +1623,7 @@ function NetworkTypeSorter() {
                     className="text-[11px] font-bold w-full text-center pt-4"
                     style={{ color: cat.color }}
                   >
-                    ← place here
+                    {t('sortSystems.placeHere')}
                   </div>
                 )}
                 {placed.map(item => {
@@ -1724,7 +1642,7 @@ function NetworkTypeSorter() {
                       }}
                     >
                       <span className="text-sm">{item.icon}</span>
-                      <span className="text-foreground">{item.label}</span>
+                      <span className="text-foreground">{t(`sortSystems.items_.${item.id}.label`)}</span>
                       {checked && (
                         <span style={{ color: isRight ? '#10b981' : '#ef4444' }}>
                           {isRight ? '✓' : '✗'}
@@ -1751,7 +1669,7 @@ function NetworkTypeSorter() {
                 : 'bg-muted text-muted-foreground cursor-not-allowed'
             }`}
           >
-            Check answers ✓
+            {t('sortSystems.checkAnswers')}
           </button>
         ) : (
           <div className="flex items-center gap-5">
@@ -1760,14 +1678,14 @@ function NetworkTypeSorter() {
                 {correctCount}/{SORT_ITEMS.length}
               </div>
               <div className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">
-                {correctCount === SORT_ITEMS.length ? 'Perfect!' : correctCount >= 6 ? 'Almost there' : 'Review the slides'}
+                {correctCount === SORT_ITEMS.length ? t('sortSystems.results.perfect') : correctCount >= 6 ? t('sortSystems.results.almost') : t('sortSystems.results.review')}
               </div>
             </div>
             <button
               onClick={reset}
               className="px-4 py-2 rounded-xl border border-border text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
             >
-              ↺ Try again
+              {t('sortSystems.tryAgain')}
             </button>
           </div>
         )}
@@ -1775,9 +1693,8 @@ function NetworkTypeSorter() {
 
       {checked && correctCount < SORT_ITEMS.length && (
         <div className="mt-4 p-3 rounded-xl bg-[#6366f1]/10 border border-[#6366f1]/30 text-xs text-muted-foreground max-w-xl mx-auto">
-          <span className="font-semibold text-[#6366f1]">Hint:</span> The line is fuzzy. DNS is technically{' '}
-          <em>hierarchical</em> but spreads load across many servers. BitTorrent has no center at all — every peer
-          is equal. Bitcoin is the same idea applied to a ledger.
+          <span className="font-semibold text-[#6366f1]">{t('sortSystems.hintLabel')}</span> {t('sortSystems.hintBody')}{' '}
+          <em>{t('sortSystems.hintBodyEm')}</em> {t('sortSystems.hintBodyTail')}
         </div>
       )}
     </div>
@@ -1786,28 +1703,29 @@ function NetworkTypeSorter() {
 
 /* ── Chain Builder Exercise ─────────────────────────────────── */
 const BUILDER_BLOCKS = [
-  { id: 'b0', data: 'The Times 03/Jan/2009 — Genesis', hash: '0x0000ab', prevHash: '0x000000 (start of chain)' },
-  { id: 'b1', data: 'Alice → Bob: 10 BTC',              hash: '0x1a2b3c', prevHash: '0x0000ab' },
-  { id: 'b2', data: 'Bob → Carol: 5 BTC',                hash: '0x4d5e6f', prevHash: '0x1a2b3c' },
-  { id: 'b3', data: 'Carol → Dave: 3 BTC',               hash: '0x7c8d9e', prevHash: '0x4d5e6f' },
+  { id: 'b0', hash: '0x0000ab' },
+  { id: 'b1', hash: '0x1a2b3c' },
+  { id: 'b2', hash: '0x4d5e6f' },
+  { id: 'b3', hash: '0x7c8d9e' },
 ] as const;
 
 type BuilderBlockId = typeof BUILDER_BLOCKS[number]['id'];
 const SCRAMBLED_IDS: BuilderBlockId[] = ['b2', 'b0', 'b3', 'b1'];
 
 function BuilderBlockCard({ block }: { block: typeof BUILDER_BLOCKS[number] }) {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   return (
     <div className="p-3 space-y-2.5 text-xs">
       <div>
-        <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-0.5">Data</div>
-        <div className="font-mono text-foreground truncate">{block.data}</div>
+        <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-0.5">{t('chainBuilder.cardDataLabel')}</div>
+        <div className="font-mono text-foreground truncate">{t(`chainBuilder.blocks.${block.id}.data`)}</div>
       </div>
       <div>
-        <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-0.5">Prev Hash</div>
-        <div className="font-mono text-[#6366f1]">{block.prevHash}</div>
+        <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-0.5">{t('chainBuilder.cardPrevHashLabel')}</div>
+        <div className="font-mono text-[#6366f1]">{t(`chainBuilder.blocks.${block.id}.prevHash`)}</div>
       </div>
       <div>
-        <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-0.5">Hash</div>
+        <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-0.5">{t('chainBuilder.cardHashLabel')}</div>
         <div className="font-mono text-[#39B54A]">{block.hash}</div>
       </div>
     </div>
@@ -1815,6 +1733,7 @@ function BuilderBlockCard({ block }: { block: typeof BUILDER_BLOCKS[number] }) {
 }
 
 function ChainBuilderExercise() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const [placements, setPlacements] = useState<Partial<Record<number, BuilderBlockId>>>({});
   const [selected, setSelected]     = useState<BuilderBlockId | null>(null);
   const [checked, setChecked]       = useState(false);
@@ -1825,13 +1744,18 @@ function ChainBuilderExercise() {
   const allFilled = placedIds.length === BUILDER_BLOCKS.length;
 
   const getBlock = (id: BuilderBlockId) => BUILDER_BLOCKS.find(b => b.id === id)!;
+  /** Each block's expected prevHash is the previous block's hash (b0 is genesis = 0x000000) */
+  const expectedPrevHash = (id: BuilderBlockId): string => {
+    const idx = BUILDER_BLOCKS.findIndex(b => b.id === id);
+    return idx === 0 ? '0x000000' : BUILDER_BLOCKS[idx - 1].hash;
+  };
   const isSlotCorrect = (i: number) => placements[i] === `b${i}`;
 
   const isLinkValid = (i: number) => {
     const from = placements[i];
     const to   = placements[i + 1];
     if (!from || !to) return false;
-    return getBlock(to).prevHash === getBlock(from).hash;
+    return expectedPrevHash(to) === getBlock(from).hash;
   };
 
   const score = checked ? [0, 1, 2, 3].filter(i => isSlotCorrect(i)).length : 0;
@@ -1864,27 +1788,27 @@ function ChainBuilderExercise() {
 
   const resultColor = score === 4 ? '#10b981' : score >= 2 ? '#f59e0b' : '#ef4444';
   const resultMsg   = score === 4
-    ? 'Perfect — chain reconstructed!'
+    ? t('chainBuilder.resultPerfect')
     : score >= 2
-    ? 'Almost! One or more blocks are out of place.'
-    : 'Review how Prev Hash links blocks together.';
+    ? t('chainBuilder.resultClose')
+    : t('chainBuilder.resultReview');
 
   return (
     <div className="max-w-5xl w-full">
       <div className="text-center mb-6">
         <div className="size-14 rounded-full bg-[#6366f1]/20 flex items-center justify-center mx-auto mb-3 text-2xl">🔗</div>
-        <h2 className="text-3xl font-bold text-foreground mb-2">Reconstruct the Chain</h2>
+        <h2 className="text-3xl font-bold text-foreground mb-2">{t('chainBuilder.heading')}</h2>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-          These 4 blocks are <span className="text-[#ED1C24] font-semibold">scrambled</span>.
-          Use the <span className="font-mono text-[#6366f1] font-semibold">Prev Hash</span> and{' '}
-          <span className="font-mono text-[#39B54A] font-semibold">Hash</span> fields to figure out the correct order.
-          <br /><span className="text-muted-foreground/60 text-xs">Click a block to select it, then click a slot to place it.</span>
+          {t('chainBuilder.leadA')} <span className="text-[#ED1C24] font-semibold">{t('chainBuilder.leadScrambled')}</span>{t('chainBuilder.leadB')}{' '}
+          <span className="font-mono text-[#6366f1] font-semibold">{t('chainBuilder.leadPrev')}</span> {t('chainBuilder.leadAnd')}{' '}
+          <span className="font-mono text-[#39B54A] font-semibold">{t('chainBuilder.leadHash')}</span> {t('chainBuilder.leadC')}
+          <br /><span className="text-muted-foreground/60 text-xs">{t('chainBuilder.subLead')}</span>
         </p>
       </div>
 
       <div className="mb-1">
         <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-2 font-semibold text-center">
-          ← Place blocks here in the correct order →
+          {t('chainBuilder.placeHere')}
         </p>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[0, 1, 2, 3].map(slotIndex => {
@@ -1910,7 +1834,7 @@ function ChainBuilderExercise() {
               >
                 <div className="px-3 py-2 border-b border-border/50 flex items-center justify-between">
                   <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                    Slot {slotIndex + 1}
+                    {t('chainBuilder.slot', { n: slotIndex + 1 })}
                   </span>
                   {checked && isOccupied && (
                     <span className="text-sm font-bold" style={{ color: isRight ? '#10b981' : '#ef4444' }}>
@@ -1923,7 +1847,7 @@ function ChainBuilderExercise() {
                   ? <BuilderBlockCard block={getBlock(blockId)} />
                   : (
                     <div className="flex items-center justify-center h-24 text-xs text-muted-foreground/40">
-                      {selected ? '← drop here' : 'empty'}
+                      {selected ? t('chainBuilder.dropHere') : t('chainBuilder.empty')}
                     </div>
                   )
                 }
@@ -1938,7 +1862,7 @@ function ChainBuilderExercise() {
           {[0, 1, 2].map(i => {
             const valid    = isLinkValid(i);
             const fromHash = placements[i] ? getBlock(placements[i]!).hash : '—';
-            const toNext   = placements[i + 1] ? getBlock(placements[i + 1]!).prevHash : '—';
+            const toNext   = placements[i + 1] ? expectedPrevHash(placements[i + 1]!) : '—';
             return (
               <div key={i} className="flex items-center gap-1 text-[10px] font-mono" style={{ color: valid ? '#10b981' : '#ef4444' }}>
                 <span>{fromHash}</span>
@@ -1952,12 +1876,12 @@ function ChainBuilderExercise() {
 
       <div className="mb-4">
         <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-2 font-semibold text-center">
-          Block Pool — click to select
+          {t('chainBuilder.blockPool')}
         </p>
         <div className={`grid gap-3 min-h-[60px] ${pool.length > 0 ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-1'}`}>
           {pool.length === 0 ? (
             <div className="col-span-4 flex items-center justify-center text-sm text-muted-foreground/40 italic py-3">
-              All blocks placed ✓
+              {t('chainBuilder.allPlaced')}
             </div>
           ) : pool.map(id => {
             const isSelected = selected === id;
@@ -1975,7 +1899,7 @@ function ChainBuilderExercise() {
               >
                 <div className="px-3 py-2 border-b border-border/50">
                   <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                    {isSelected ? '✦ Selected' : 'Block'}
+                    {isSelected ? t('chainBuilder.selectedTag') : t('chainBuilder.blockTag')}
                   </span>
                 </div>
                 <BuilderBlockCard block={getBlock(id)} />
@@ -1991,19 +1915,19 @@ function ChainBuilderExercise() {
             onClick={() => setShowHint(h => !h)}
             className="text-xs text-muted-foreground hover:text-foreground border border-border rounded-lg px-4 py-2 transition-all"
           >
-            {showHint ? 'Hide hint ▲' : '💡 Show hint'}
+            {showHint ? t('chainBuilder.hideHint') : t('chainBuilder.showHint')}
           </button>
         </div>
       )}
       {showHint && !checked && (
         <div className="max-w-lg mx-auto mb-4 p-4 rounded-xl bg-[#f59e0b]/10 border border-[#f59e0b]/30 text-sm">
-          <p className="font-semibold text-[#f59e0b] mb-1">How to crack it:</p>
+          <p className="font-semibold text-[#f59e0b] mb-1">{t('chainBuilder.hintTitle')}</p>
           <p className="text-muted-foreground text-xs">
-            1. Find the <strong>Genesis block</strong> — its{' '}
-            <span className="font-mono text-[#6366f1]">Prev Hash</span> reads{' '}
-            <span className="font-mono bg-muted px-1 rounded">0x000000 (start)</span>.<br />
-            2. Match each block's <span className="font-mono text-[#6366f1]">Prev Hash</span> to
-            the previous block's <span className="font-mono text-[#39B54A]">Hash</span> — like connecting puzzle pieces.
+            {t('chainBuilder.hintStep1A')} <strong>{t('chainBuilder.hintStep1Genesis')}</strong> {t('chainBuilder.hintStep1B')}{' '}
+            <span className="font-mono text-[#6366f1]">{t('chainBuilder.hintStep1PrevHash')}</span> {t('chainBuilder.hintStep1Reads')}{' '}
+            <span className="font-mono bg-muted px-1 rounded">{t('chainBuilder.hintStep1Value')}</span>{t('chainBuilder.hintStep1End')}<br />
+            {t('chainBuilder.hintStep2A')} <span className="font-mono text-[#6366f1]">{t('chainBuilder.hintStep2PrevHash')}</span> {t('chainBuilder.hintStep2To')}{' '}
+            <span className="font-mono text-[#39B54A]">{t('chainBuilder.hintStep2Hash')}</span> {t('chainBuilder.hintStep2End')}
           </p>
         </div>
       )}
@@ -2019,7 +1943,7 @@ function ChainBuilderExercise() {
                 : 'bg-muted text-muted-foreground cursor-not-allowed'
             }`}
           >
-            Check chain ✓
+            {t('chainBuilder.checkChain')}
           </button>
         ) : (
           <div className="flex items-center gap-6">
@@ -2031,7 +1955,7 @@ function ChainBuilderExercise() {
               onClick={reset}
               className="px-4 py-2 rounded-xl border border-border text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
             >
-              Try again
+              {t('chainBuilder.tryAgain')}
             </button>
           </div>
         )}
@@ -2045,15 +1969,13 @@ function ChainBuilderExercise() {
         }`}>
           {score === 4 ? (
             <>
-              🎉 <span className="font-semibold text-[#10b981]">Chain reconstructed!</span>{' '}
-              Every Prev Hash matched the previous block's Hash exactly — that cryptographic
-              linkage is what makes blockchain tamper-evident and immutable.
+              {t('chainBuilder.perfectIcon')} <span className="font-semibold text-[#10b981]">{t('chainBuilder.perfectStrong')}</span>{' '}
+              {t('chainBuilder.perfectBody')}
             </>
           ) : (
             <>
-              💡 <span className="font-semibold text-[#6366f1]">Key insight:</span>{' '}
-              Start with the Genesis block (<span className="font-mono text-xs">Prev Hash = 0x000000</span>),
-              then trace each Hash → Prev Hash connection. The chain can only be assembled one way.
+              {t('chainBuilder.imperfectIcon')} <span className="font-semibold text-[#6366f1]">{t('chainBuilder.imperfectStrong')}</span>{' '}
+              {t('chainBuilder.imperfectBody')}
             </>
           )}
         </div>
@@ -2101,6 +2023,7 @@ const SIZE_CLASSES = {
 };
 
 function ConsensusProtocolsCloud() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const containerRef = useRef<HTMLDivElement | null>(null);
   const tagRefs      = useRef<(HTMLDivElement | null)[]>([]);
   const [revealed, setRevealed] = useState(false);
@@ -2158,11 +2081,9 @@ function ConsensusProtocolsCloud() {
   return (
     <div className="w-full max-w-[1280px]">
       <div className="text-center mb-4">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">Many ways for a network to agree</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">{t('protocols.heading')}</h2>
         <p className="text-sm lg:text-base text-muted-foreground max-w-3xl mx-auto">
-          Proof of Work is the most famous — and it's what we're about to watch. But it's far from
-          the only one. Each protocol below answers the same question (<em>which copy of the chain is the truth?</em>)
-          with different trade-offs in speed, energy, and decentralization.
+          {t('protocols.leadA')}<em>{t('protocols.leadQuestion')}</em>{t('protocols.leadB')}
         </p>
       </div>
 
@@ -2204,8 +2125,7 @@ function ConsensusProtocolsCloud() {
 
       <div className="mt-4 max-w-2xl mx-auto text-center">
         <p className="text-xs text-muted-foreground italic">
-          We'll dive into how <span className="font-semibold text-[#ED1C24] not-italic">Proof of Work</span> actually
-          runs on the next slide. The other approaches each deserve their own deep dive — that's a Course 3 conversation.
+          {t('protocols.footerA')} <span className="font-semibold text-[#ED1C24] not-italic">{t('protocols.footerPoW')}</span> {t('protocols.footerB')}
         </p>
       </div>
     </div>
@@ -2214,11 +2134,11 @@ function ConsensusProtocolsCloud() {
 
 /* ── Mining Race ─────────────────────────────────── */
 const MINERS = [
-  { name: 'Miner A', color: '#ED1C24', pos: { top: '6%',  left: '50%', transform: 'translateX(-50%)' } as CSSProperties },
-  { name: 'Miner B', color: '#6366f1', pos: { top: '34%', right: '3%' } as CSSProperties },
-  { name: 'Miner C', color: '#f59e0b', pos: { bottom: '4%', right: '18%' } as CSSProperties },
-  { name: 'Miner D', color: '#39B54A', pos: { bottom: '4%', left: '18%' } as CSSProperties },
-  { name: 'Miner E', color: '#8b5cf6', pos: { top: '34%', left: '3%' } as CSSProperties },
+  { letter: 'A', color: '#ED1C24', pos: { top: '6%',  left: '50%', transform: 'translateX(-50%)' } as CSSProperties },
+  { letter: 'B', color: '#6366f1', pos: { top: '34%', right: '3%' } as CSSProperties },
+  { letter: 'C', color: '#f59e0b', pos: { bottom: '4%', right: '18%' } as CSSProperties },
+  { letter: 'D', color: '#39B54A', pos: { bottom: '4%', left: '18%' } as CSSProperties },
+  { letter: 'E', color: '#8b5cf6', pos: { top: '34%', left: '3%' } as CSSProperties },
 ];
 
 const HEX = '0123456789abcdef';
@@ -2245,12 +2165,6 @@ const DATA_POOL = [
   'Grace → Alice: 9',
 ];
 
-const INITIAL_CHAIN: ConfirmedBlock[] = [
-  { n: 0, data: 'Genesis',     hash: '0x000000' },
-  { n: 1, data: '50 → Alice',  hash: '0x1a2b3c' },
-  { n: 2, data: '25 → Bob',    hash: '0x4d5e6f' },
-];
-
 interface ConfirmedBlock {
   n: number;
   data: string;
@@ -2258,6 +2172,13 @@ interface ConfirmedBlock {
 }
 
 function MiningRace() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
+  const minerName = useCallback((letter: string) => `${t('mining.minerName')} ${letter}`, [t]);
+  const INITIAL_CHAIN: ConfirmedBlock[] = useMemo(() => [
+    { n: 0, data: t('mining.genesisData'), hash: '0x000000' },
+    { n: 1, data: t('mining.data1'),       hash: '0x1a2b3c' },
+    { n: 2, data: t('mining.data2'),       hash: '0x4d5e6f' },
+  ], [t]);
   const [phase, setPhase] = useState<MiningPhase>('idle');
   const [winnerIdx, setWinnerIdx] = useState<number | null>(null);
   const [finalNonce, setFinalNonce] = useState('');
@@ -2347,7 +2268,7 @@ function MiningRace() {
     const txCount = pendingTxsRef.current.length || 1;
     setConfirmedBlocks(prev => [
       ...prev,
-      { n: pendingNumRef.current, data: `${txCount} tx${txCount === 1 ? '' : 's'}`, hash: thisFinalHash.slice(0, 8) },
+      { n: pendingNumRef.current, data: `${txCount} ${txCount === 1 ? t('mining.txSingular') : t('mining.txPlural')}`, hash: thisFinalHash.slice(0, 8) },
     ]);
 
     // Move to the next pending block
@@ -2532,12 +2453,11 @@ function MiningRace() {
       <div className="text-center mb-4">
         <div className="size-12 rounded-full bg-[#f59e0b]/20 flex items-center justify-center mx-auto mb-3 text-xl">⛏️</div>
         <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">
-          Mining — five computers race for Block #{pendingNum}
+          {t('mining.heading', { n: pendingNum })}
         </h2>
         <p className="text-sm lg:text-base text-muted-foreground max-w-3xl mx-auto">
-          Each miner tries millions of nonces per second, looking for one that produces a hash starting with{' '}
-          <span className="font-mono text-[#f59e0b] font-semibold">0000</span>. The first to find one wins —
-          then the next block starts, and the next, and the next.
+          {t('mining.leadA')}{' '}
+          <span className="font-mono text-[#f59e0b] font-semibold">{t('mining.leadCode')}</span>{t('mining.leadB')}
         </p>
       </div>
 
@@ -2546,7 +2466,7 @@ function MiningRace() {
         {hasMore && (
           <div className="flex items-center gap-2">
             <div className="px-2 py-1.5 text-[10px] text-muted-foreground italic">
-              …earlier ({confirmedBlocks.length - VISIBLE_CONFIRMED})
+              {t('mining.earlierTag', { n: confirmedBlocks.length - VISIBLE_CONFIRMED })}
             </div>
             <div className="text-[#6366f1] font-bold">→</div>
           </div>
@@ -2554,7 +2474,7 @@ function MiningRace() {
         {visibleConfirmed.map(b => (
           <div key={b.n} className="flex items-center gap-2">
             <div className="px-3 py-1.5 bg-card border-2 border-[#39B54A]/60 rounded-lg text-xs min-w-[100px]">
-              <div className="font-mono text-[10px] text-muted-foreground">BLOCK #{b.n}</div>
+              <div className="font-mono text-[10px] text-muted-foreground">{t('mining.blockTag', { n: b.n })}</div>
               <div className="font-mono text-xs text-foreground truncate">{b.data}</div>
               <div className="font-mono text-[10px] text-[#39B54A]">{b.hash}</div>
             </div>
@@ -2570,11 +2490,11 @@ function MiningRace() {
         >
           {/* Header */}
           <div className="px-2.5 py-1.5 border-b border-border/70 flex items-center justify-between">
-            <span className="font-mono text-[10px] text-muted-foreground font-bold">BLOCK #{pendingNum}</span>
+            <span className="font-mono text-[10px] text-muted-foreground font-bold">{t('mining.blockTag', { n: pendingNum })}</span>
             <span className="text-[9px] uppercase tracking-widest font-bold" style={{
               color: phase === 'added' ? '#39B54A' : phase === 'racing' ? '#f59e0b' : '#6366f1',
             }}>
-              {phase === 'added' ? '✓ mined' : phase === 'racing' ? 'filling' : 'awaiting'}
+              {phase === 'added' ? t('mining.status.mined') : phase === 'racing' ? t('mining.status.filling') : t('mining.status.awaiting')}
             </span>
           </div>
 
@@ -2627,7 +2547,7 @@ function MiningRace() {
             <div className={`font-mono text-[10px] truncate ${
               phase === 'added' ? 'text-[#39B54A] font-bold' : 'text-muted-foreground italic'
             }`}>
-              {phase === 'added' ? finalHash.slice(0, 14) + '…' : 'awaiting nonce…'}
+              {phase === 'added' ? finalHash.slice(0, 14) + '…' : t('mining.awaitingNonce')}
             </div>
           </div>
         </div>
@@ -2638,12 +2558,12 @@ function MiningRace() {
       <div className="relative w-full max-w-[820px] h-[440px] bg-muted/20 rounded-2xl border-2 border-dashed border-border/60">
         {/* Central target */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 px-4 py-3 bg-card border-2 border-[#f59e0b] rounded-xl shadow-lg shadow-[#f59e0b]/20 w-[200px]">
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground text-center mb-1">Target hash</div>
-          <div className="font-mono text-xs text-foreground text-center mb-2">starts with</div>
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground text-center mb-1">{t('mining.target')}</div>
+          <div className="font-mono text-xs text-foreground text-center mb-2">{t('mining.startsWith')}</div>
           <div className="font-mono text-2xl font-black text-[#f59e0b] text-center tracking-wider">0000…</div>
           <div className="text-[10px] text-muted-foreground text-center mt-2 leading-tight">
-            difficulty: 4 leading zeros<br />
-            (~1 in 65,536)
+            {t('mining.difficulty')}<br />
+            {t('mining.rarity')}
           </div>
         </div>
 
@@ -2655,7 +2575,7 @@ function MiningRace() {
           const dimLoser = isLoser && !isVerified && phase !== 'verifying';
           return (
             <div
-              key={m.name}
+              key={m.letter}
               ref={el => { minerRefs.current[i] = el; }}
               className={`absolute w-[150px] px-3 py-2 rounded-xl border-2 bg-card text-xs transition-all duration-500 ${
                 dimLoser ? 'opacity-50' : ''
@@ -2686,11 +2606,11 @@ function MiningRace() {
 
               <div className="flex items-center justify-between mb-1">
                 <span className="text-base">💻</span>
-                <span className="text-[10px] font-bold" style={{ color: m.color }}>{m.name}</span>
+                <span className="text-[10px] font-bold" style={{ color: m.color }}>{minerName(m.letter)}</span>
               </div>
               <div className="space-y-1">
                 <div>
-                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Nonce</div>
+                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">{t('mining.nonceLabel')}</div>
                   <div
                     ref={el => { nonceRefs.current[i] = el; }}
                     className="font-mono text-[11px] text-foreground"
@@ -2699,7 +2619,7 @@ function MiningRace() {
                   </div>
                 </div>
                 <div>
-                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Hash try</div>
+                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">{t('mining.hashTryLabel')}</div>
                   <div
                     ref={el => { hashRefs.current[i] = el; }}
                     className={`font-mono text-[10px] truncate ${isWinner ? 'text-[#39B54A] font-bold' : 'text-muted-foreground'}`}
@@ -2709,10 +2629,10 @@ function MiningRace() {
                 </div>
               </div>
               {isWinner && (
-                <div className="mt-1.5 text-center text-[10px] font-bold text-[#39B54A]">✓ FOUND IT</div>
+                <div className="mt-1.5 text-center text-[10px] font-bold text-[#39B54A]">{t('mining.foundIt')}</div>
               )}
               {isVerified && (
-                <div className="mt-1.5 text-center text-[10px] font-bold text-[#39B54A]">verified</div>
+                <div className="mt-1.5 text-center text-[10px] font-bold text-[#39B54A]">{t('mining.verified')}</div>
               )}
             </div>
           );
@@ -2722,14 +2642,15 @@ function MiningRace() {
       {/* Wallet sidebar — track each miner's session earnings */}
       <div className="w-full lg:w-[200px] bg-card border border-border rounded-xl p-3 self-stretch">
         <div className="text-[9px] uppercase tracking-widest font-bold text-muted-foreground mb-2 text-center">
-          Mined this session
+          {t('mining.minedSession')}
         </div>
         <div className="space-y-1.5">
           {MINERS.map((m, i) => {
             const isCurrentWinner = (phase === 'won' || phase === 'verifying' || phase === 'added') && winnerIdx === i;
+            const count = blocksMined[i] ?? 0;
             return (
               <div
-                key={m.name}
+                key={m.letter}
                 ref={el => { walletRefs.current[i] = el; }}
                 className="flex items-center gap-2 px-2 py-1.5 rounded-lg border transition-colors"
                 style={{
@@ -2739,9 +2660,9 @@ function MiningRace() {
               >
                 <span className="text-sm">💻</span>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[10px] font-bold truncate" style={{ color: m.color }}>{m.name}</div>
+                  <div className="text-[10px] font-bold truncate" style={{ color: m.color }}>{minerName(m.letter)}</div>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-[9px] text-muted-foreground font-mono">{blocksMined[i] ?? 0} block{(blocksMined[i] ?? 0) === 1 ? '' : 's'}</span>
+                    <span className="text-[9px] text-muted-foreground font-mono">{count} {count === 1 ? t('mining.blockSingular') : t('mining.blockPlural')}</span>
                   </div>
                 </div>
                 <div className="font-mono text-[11px] font-bold text-[#f7931a] tabular-nums">
@@ -2752,7 +2673,7 @@ function MiningRace() {
           })}
         </div>
         <div className="mt-3 pt-2 border-t border-border flex items-baseline justify-between">
-          <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold">Total mined</span>
+          <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold">{t('mining.totalMined')}</span>
           <span className="font-mono text-sm font-bold text-[#f7931a] tabular-nums">
             ₿{walletBalances.reduce((a, b) => a + b, 0).toFixed(3)}
           </span>
@@ -2768,13 +2689,13 @@ function MiningRace() {
             onClick={startLoop}
             className="px-6 py-2.5 rounded-xl bg-[#f59e0b] text-white text-sm font-bold hover:opacity-90 shadow-lg shadow-[#f59e0b]/30 transition-all"
           >
-            ▶ Start mining
+            {t('mining.startMining')}
           </button>
         )}
         {phase === 'racing' && (
           <div className="px-5 py-2 rounded-xl bg-[#f59e0b]/10 border border-[#f59e0b]/40 text-sm text-[#f59e0b] font-bold">
             <span className="inline-block animate-pulse mr-1">⛏️</span>
-            All five miners racing for Block #{pendingNum} — first valid hash wins
+            {t('mining.racingMsg', { n: pendingNum })}
           </div>
         )}
         {phase === 'won' && winnerIdx !== null && (
@@ -2786,21 +2707,21 @@ function MiningRace() {
               border: `1px solid ${MINERS[winnerIdx].color}40`,
             }}
           >
-            🎉 {MINERS[winnerIdx].name} found a valid hash — starts with{' '}
+            {t('mining.wonMsg', { name: minerName(MINERS[winnerIdx].letter) })}{' '}
             <code className="font-mono font-bold">0000</code>
           </div>
         )}
         {phase === 'verifying' && winnerIdx !== null && (
           <div className="px-5 py-2 rounded-xl bg-[#39B54A]/10 border border-[#39B54A]/40 text-sm text-[#39B54A] font-bold">
             <span className="inline-block animate-pulse mr-1">🔎</span>
-            Other miners verifying {MINERS[winnerIdx].name}'s work… {verifiedIdxs.length}/4
+            {t('mining.verifyingMsg', { name: minerName(MINERS[winnerIdx].letter), verified: verifiedIdxs.length })}
           </div>
         )}
         {phase === 'added' && winnerIdx !== null && (
           <div className="px-5 py-2 rounded-xl bg-[#39B54A]/10 border border-[#39B54A]/40 text-sm text-[#39B54A] font-bold">
-            ✓ Block #{pendingNum} added — {MINERS[winnerIdx].name} earns{' '}
+            {t('mining.addedMsg', { n: pendingNum, name: minerName(MINERS[winnerIdx].letter) })}{' '}
             <span className="text-[#f7931a]">₿ {BLOCK_REWARD_BTC} BTC</span>
-            {isLooping && <span className="ml-2 text-muted-foreground font-normal italic">· next block in 2s…</span>}
+            {isLooping && <span className="ml-2 text-muted-foreground font-normal italic">{t('mining.nextIn')}</span>}
           </div>
         )}
 
@@ -2809,9 +2730,9 @@ function MiningRace() {
           <button
             onClick={stopLoop}
             className="px-4 py-2 rounded-xl border border-[#ef4444]/50 bg-[#ef4444]/10 text-[#ef4444] text-sm font-bold hover:bg-[#ef4444]/15 transition-all"
-            title="Stop the loop after the current block finishes"
+            title={t('mining.stopLoopTitle')}
           >
-            ■ Stop loop
+            {t('mining.stopLoop')}
           </button>
         )}
         {!isLooping && phase !== 'idle' && (
@@ -2819,7 +2740,7 @@ function MiningRace() {
             onClick={startLoop}
             className="px-4 py-2 rounded-xl border border-[#39B54A]/50 bg-[#39B54A]/10 text-[#39B54A] text-sm font-bold hover:bg-[#39B54A]/15 transition-all"
           >
-            ▶ Resume
+            {t('mining.resume')}
           </button>
         )}
         {phase !== 'idle' && (
@@ -2827,7 +2748,7 @@ function MiningRace() {
             onClick={reset}
             className="px-4 py-2 rounded-xl border border-border text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
           >
-            ↺ Reset
+            {t('mining.reset')}
           </button>
         )}
       </div>
@@ -2835,9 +2756,7 @@ function MiningRace() {
       {/* Pedagogical caption */}
       <div className="mt-4 max-w-2xl mx-auto text-center">
         <p className="text-xs text-muted-foreground italic">
-          One miner finds the hash, the others verify it instantly (checking is cheap, finding is
-          expensive). The winner is paid in newly-issued bitcoin — currently <span className="text-[#f7931a] font-semibold not-italic">{BLOCK_REWARD_BTC} BTC</span> per block.
-          That reward is what funds the brute-force work that keeps cheating prohibitive.
+          {t('mining.footerA')} <span className="text-[#f7931a] font-semibold not-italic">{t('mining.footerReward', { reward: BLOCK_REWARD_BTC })}</span> {t('mining.footerB')}
         </p>
       </div>
     </div>
@@ -2846,6 +2765,7 @@ function MiningRace() {
 
 /* ── MetaMask Tease ─────────────────────────────────── */
 function MetaMaskTease() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
   const foxRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -2866,12 +2786,10 @@ function MetaMaskTease() {
   return (
     <div className="w-full max-w-5xl mx-auto text-center">
       <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-3">
-        Meet <span className="text-[#f6851b]">MetaMask</span>
+        {t('metamask.headPrefix')}<span className="text-[#f6851b]">{t('metamask.headBrand')}</span>
       </h2>
       <p className="text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
-        A wallet doesn't hold your coins. It holds the cryptographic keys that prove you
-        control an address on the chain. The most popular one by far lives as a small
-        browser extension — and it has a friendly fox.
+        {t('metamask.lead')}
       </p>
 
       {/* Fox card — clickable, goes to metamask.io */}
@@ -2880,7 +2798,7 @@ function MetaMaskTease() {
         target="_blank"
         rel="noopener noreferrer"
         className="inline-block group mb-6"
-        aria-label="Get MetaMask"
+        aria-label={t('metamask.ariaLabel')}
       >
         <div className="relative">
           {/* Glow */}
@@ -2902,24 +2820,19 @@ function MetaMaskTease() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-[#f6851b] hover:bg-[#e2761b] text-white text-base lg:text-lg font-bold shadow-lg shadow-[#f6851b]/40 hover:scale-[1.03] transition-all"
         >
-          Get MetaMask
+          {t('metamask.cta')}
           <ExternalLink className="size-5" />
         </a>
         <p className="text-xs text-muted-foreground italic mt-3 max-w-lg mx-auto">
-          We go deep on wallets, keys and signatures in{' '}
-          <strong className="not-italic text-foreground">Course 2 — Smart Contracts</strong>.
-          For now: install it, click around, see what an address looks like.
+          {t('metamask.ctaCaptionA')}{' '}
+          <strong className="not-italic text-foreground">{t('metamask.ctaCaptionCourse')}</strong>{t('metamask.ctaCaptionB')}
         </p>
       </div>
 
       {/* 3 quick facts */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-3xl mx-auto">
-        {[
-          { tag: 'Holds',    body: 'Your private keys — not your coins. Coins live on the chain; the wallet just proves who controls them.' },
-          { tag: 'Signs',    body: 'Transactions, using your private key — the cryptographic equivalent of a signature that says "this is from me".' },
-          { tag: 'Connects', body: 'Your browser to dApps — DeFi, NFTs, on-chain games, anything that lives on Ethereum and similar chains.' },
-        ].map(f => (
-          <div key={f.tag} className="p-4 bg-card rounded-xl border border-[#f6851b]/30 text-left">
+        {(t('metamask.facts', { returnObjects: true }) as Array<{ tag: string; body: string }>).map((f, i) => (
+          <div key={i} className="p-4 bg-card rounded-xl border border-[#f6851b]/30 text-left">
             <div className="text-[10px] font-bold uppercase tracking-widest text-[#f6851b] mb-1.5">{f.tag}</div>
             <p className="text-sm text-foreground leading-snug">{f.body}</p>
           </div>
@@ -2933,6 +2846,16 @@ function MetaMaskTease() {
 /* MAIN SECTION 1                                                          */
 /* ═══════════════════════════════════════════════════════════════════════ */
 export function Section1() {
+  const { t } = useTranslation('blockchain-fundamentals/section-1');
+  const section1Chapters = useMemo(
+    () =>
+      section1ChaptersShape.map((ch) =>
+        ch.kind === 'group'
+          ? { kind: 'group' as const, id: ch.id, label: t(`groups.${ch.id}`) }
+          : { id: ch.id, label: t(`chapters.${ch.id}`) },
+      ),
+    [t],
+  );
   return (
     <div className="size-full flex overflow-hidden">
       <SectionNav chapters={section1Chapters} />
@@ -2942,9 +2865,9 @@ export function Section1() {
           {/* ═══════ TITLE ═══════ */}
           <div className="h-full">
             <TitleSlide
-              sectionNumber="SECTION 01"
-              title="How a Blockchain Works"
-              subtitle="From the trust problem to a chain you can't cheat."
+              sectionNumber={t('title.sectionNumber')}
+              title={t('title.title')}
+              subtitle={t('title.subtitle')}
               icon={<Blocks className="size-20 text-[#ED1C24]" />}
             />
           </div>
@@ -2952,118 +2875,98 @@ export function Section1() {
           {/* ═══════ 01 — THE TRUST PROBLEM ═══════ */}
           <div id="s1-trust" className="h-full">
             <ConceptSlide
-              title="The Trust Problem"
-              description="Alice wants to send Bob $100 across borders. A simple-sounding act — that quietly relies on a long chain of middlemen, each of whom you have to trust."
+              title={t('trust.title')}
+              description={t('trust.description')}
               visual={
                 <div className="flex flex-col gap-4 w-full">
                   <div>
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">Who are the middlemen today?</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">{t('trust.middlemenHeader')}</p>
                     <div className="grid grid-cols-5 gap-2">
                       {[
-                        { emoji: '🏦', label: 'Banks', sub: 'Hold & move money' },
-                        { emoji: '⚖️', label: 'Notaries', sub: 'Certify documents' },
-                        { emoji: '🏛️', label: 'Land Registry', sub: 'Prove ownership' },
-                        { emoji: '💳', label: 'PayPal / Visa', sub: 'Process payments' },
-                        { emoji: '🔐', label: 'Certificate Auth.', sub: 'Verify identities' },
+                        { emoji: '🏦', key: 'banks' },
+                        { emoji: '⚖️', key: 'notaries' },
+                        { emoji: '🏛️', key: 'registry' },
+                        { emoji: '💳', key: 'paypal' },
+                        { emoji: '🔐', key: 'ca' },
                       ].map(ex => (
-                        <div key={ex.label} className="p-2.5 bg-muted rounded-lg text-center">
+                        <div key={ex.key} className="p-2.5 bg-muted rounded-lg text-center">
                           <div className="text-xl mb-1">{ex.emoji}</div>
-                          <div className="text-xs font-bold text-foreground">{ex.label}</div>
-                          <div className="text-[10px] text-muted-foreground mt-0.5">{ex.sub}</div>
+                          <div className="text-xs font-bold text-foreground">{t(`trust.middlemen.${ex.key}.label`)}</div>
+                          <div className="text-[10px] text-muted-foreground mt-0.5">{t(`trust.middlemen.${ex.key}.sub`)}</div>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <CalloutBox type="important" title="The double-spending problem">
-                    You can copy a digital photo a thousand times. Why can't you copy a digital dollar?
-                    Because <em>someone keeps score</em>. That someone is always a middleman.
+                  <CalloutBox type="important" title={t('trust.calloutTitle')}>
+                    {t('trust.calloutLead')} <em>{t('trust.calloutEm')}</em>{t('trust.calloutTail')}
                   </CalloutBox>
                 </div>
               }
-              keyPoints={[
-                "Every middleman takes a fee, adds delay, and can refuse the transaction",
-                "Without a referee, two people could spend the same digital dollar twice",
-                "Trust historically meant: trust an institution",
-                "What if the referee didn't have to be an institution at all?"
-              ]}
+              keyPoints={t('trust.keyPoints', { returnObjects: true }) as string[]}
             />
           </div>
 
           {/* ═══════ 02 — THE SHARED LEDGER (NEW) ═══════ */}
           <div id="s1-ledger" className="h-full">
             <ConceptSlide
-              title="The Shared Ledger"
-              description="Imagine ten villagers, no bank. They share a single notebook of transactions — except every villager keeps their own identical copy. When anyone writes a new entry, everyone copies it down."
+              title={t('ledger.title')}
+              description={t('ledger.description')}
               visual={<VillageLedgerVisual />}
-              keyPoints={[
-                "No central authority — no one is in charge of the notebook",
-                "No one can refuse to record a valid entry",
-                "Everyone can audit the full history at any time",
-                "But one villager could secretly edit her own copy. How would anyone know?"
-              ]}
+              keyPoints={t('ledger.keyPoints', { returnObjects: true }) as string[]}
             />
           </div>
 
           {/* ═══════ 03 — WHAT IS BLOCKCHAIN? ═══════ */}
           <div id="s1-what-is" className="h-full">
             <ConceptSlide
-              title="What is a blockchain?"
-              description="A blockchain is the answer to the problem we just sketched: a shared ledger that no single party controls, where every participant holds a copy, and where the history can be added to but never quietly rewritten."
+              title={t('whatIs.title')}
+              description={t('whatIs.description')}
               visual={
                 <div className="space-y-3 w-full">
                   <div className="p-4 bg-card rounded-xl border-2 border-[#6366f1]">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-semibold">Plain definition</p>
+                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-semibold">{t('whatIs.plainDefHeader')}</p>
                     <p className="text-foreground text-sm leading-relaxed">
-                      A blockchain is a form of{' '}
-                      <span className="font-semibold text-[#6366f1]">Distributed Ledger Technology (DLT)</span>{' '}
-                      — a record that's{' '}
-                      <span className="font-semibold text-foreground">shared</span>,{' '}
-                      <span className="font-semibold text-foreground">append-only</span>, and{' '}
-                      <span className="font-semibold text-foreground">cryptographically linked</span>,{' '}
-                      running on a network where no single party is in charge.
+                      {t('whatIs.plainDefLead')}{' '}
+                      <span className="font-semibold text-[#6366f1]">{t('whatIs.plainDefDLT')}</span>{' '}
+                      {t('whatIs.plainDefMidA')}{' '}
+                      <span className="font-semibold text-foreground">{t('whatIs.plainDefShared')}</span>{t('whatIs.plainDefMidB')}{' '}
+                      <span className="font-semibold text-foreground">{t('whatIs.plainDefAppendOnly')}</span>{t('whatIs.plainDefMidC')}{' '}
+                      <span className="font-semibold text-foreground">{t('whatIs.plainDefLinked')}</span>{t('whatIs.plainDefTail')}
                     </p>
                   </div>
-                  <CalloutBox type="important" title="Pseudonymous ≠ anonymous">
-                    On a public blockchain you act through an <span className="font-mono">address</span>{' '}
-                    like <span className="font-mono text-[#ED1C24]">0x4d9e…</span> — not your legal name.
-                    But every transaction you make from that address is visible to everyone, forever.
-                    Privacy comes from not linking the address to you — not from hiding the address itself.
+                  <CalloutBox type="important" title={t('whatIs.calloutTitle')}>
+                    {t('whatIs.calloutLead')} <span className="font-mono">{t('whatIs.calloutAddress')}</span>{' '}
+                    {t('whatIs.calloutMid')} <span className="font-mono text-[#ED1C24]">{t('whatIs.calloutHex')}</span> {t('whatIs.calloutTail')}
                   </CalloutBox>
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="p-2 bg-muted/40 rounded-lg">
                       <div className="text-base">🌐</div>
-                      <div className="text-[10px] font-bold text-foreground mt-0.5">Distributed</div>
+                      <div className="text-[10px] font-bold text-foreground mt-0.5">{t('whatIs.props.distributed')}</div>
                     </div>
                     <div className="p-2 bg-muted/40 rounded-lg">
                       <div className="text-base">⚖️</div>
-                      <div className="text-[10px] font-bold text-foreground mt-0.5">No central authority</div>
+                      <div className="text-[10px] font-bold text-foreground mt-0.5">{t('whatIs.props.noAuthority')}</div>
                     </div>
                     <div className="p-2 bg-muted/40 rounded-lg">
                       <div className="text-base">🎭</div>
-                      <div className="text-[10px] font-bold text-foreground mt-0.5">Pseudonymous</div>
+                      <div className="text-[10px] font-bold text-foreground mt-0.5">{t('whatIs.props.pseudonymous')}</div>
                     </div>
                     <div className="p-2 bg-muted/40 rounded-lg">
                       <div className="text-base">➕</div>
-                      <div className="text-[10px] font-bold text-foreground mt-0.5">Append-only</div>
+                      <div className="text-[10px] font-bold text-foreground mt-0.5">{t('whatIs.props.appendOnly')}</div>
                     </div>
                     <div className="p-2 bg-muted/40 rounded-lg">
                       <div className="text-base">👁️</div>
-                      <div className="text-[10px] font-bold text-foreground mt-0.5">Transparent</div>
+                      <div className="text-[10px] font-bold text-foreground mt-0.5">{t('whatIs.props.transparent')}</div>
                     </div>
                     <div className="p-2 bg-muted/40 rounded-lg">
                       <div className="text-base">🔐</div>
-                      <div className="text-[10px] font-bold text-foreground mt-0.5">Tamper-evident</div>
+                      <div className="text-[10px] font-bold text-foreground mt-0.5">{t('whatIs.props.tamperEvident')}</div>
                     </div>
                   </div>
                 </div>
               }
-              keyPoints={[
-                "Distributed — every participant holds a full copy of the ledger; no master server to take down",
-                "No control organs — no admin can freeze accounts, reverse transactions, or override the rules",
-                "Pseudonymous — you act through an address, not your legal name; trackable but not directly identifying",
-                "Append-only — you can write new entries, but old ones can't be quietly edited away",
-                "Blockchain is one kind of DLT, not the only one — Bitcoin and Ethereum are blockchains, Hyperledger Fabric and R3 Corda are non-chain DLTs"
-              ]}
+              keyPoints={t('whatIs.keyPoints', { returnObjects: true }) as string[]}
             />
           </div>
 
@@ -3075,22 +2978,22 @@ export function Section1() {
           {/* ═══════ 04 — HASHING ═══════ */}
           <div id="s1-hashing" className="h-full">
             <ConceptSlide
-              title="Hashing — A Fingerprint for Data"
-              description="A hash function takes any input — a word, a paragraph, a whole book — and returns a fixed-size fingerprint. The trick: change one character of the input, and the fingerprint changes completely."
+              title={t('hashing.title')}
+              description={t('hashing.description')}
               visual={
                 <div className="space-y-4 w-full">
                   <div className="p-4 bg-card rounded-xl border-2 border-[#6366f1]">
-                    <div className="text-sm text-muted-foreground mb-1">Input:</div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('hashing.inputLabel')}</div>
                     <div className="font-mono text-foreground mb-2">"Hello World"</div>
-                    <div className="text-sm text-muted-foreground mb-1">SHA-256 Hash:</div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('hashing.hashLabel')}</div>
                     <div className="font-mono text-xs text-[#6366f1] break-all">
                       a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e
                     </div>
                   </div>
                   <div className="p-4 bg-card rounded-xl border-2 border-[#8b5cf6]">
-                    <div className="text-sm text-muted-foreground mb-1">Input:</div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('hashing.inputLabel')}</div>
                     <div className="font-mono text-foreground mb-2">"Hello World!"</div>
-                    <div className="text-sm text-muted-foreground mb-1">SHA-256 Hash:</div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('hashing.hashLabel')}</div>
                     <div className="font-mono text-xs text-[#8b5cf6] break-all">
                       7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069
                     </div>
@@ -3098,26 +3001,16 @@ export function Section1() {
                   <InteractiveHash />
                 </div>
               }
-              keyPoints={[
-                "One-way: you can't reverse a hash to find the original input",
-                "Fixed-size: always 64 hex characters (for SHA-256), no matter how big the input",
-                "Deterministic: the same input always produces the same hash",
-                "Avalanche: change one character, the whole fingerprint changes"
-              ]}
+              keyPoints={t('hashing.keyPoints', { returnObjects: true }) as string[]}
             />
           </div>
 
           {/* ── Quick check: avalanche ── */}
           <div className="h-full">
             <QuizSlide
-              question="What happens if you change a single character in the input of a SHA-256 hash?"
-              options={[
-                { text: "Only the last few characters of the hash change", correct: false },
-                { text: "The hash changes slightly, proportional to the edit", correct: false },
-                { text: "The entire hash output changes unpredictably (avalanche effect)", correct: true },
-                { text: "The hash stays the same if the change is small enough", correct: false }
-              ]}
-              explanation="Cryptographic hash functions exhibit the avalanche effect: even a 1-bit change in the input produces a completely different output. This is what makes a hash a reliable fingerprint of data."
+              question={t('quizAvalanche.question')}
+              options={(t('quizAvalanche.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
+              explanation={t('quizAvalanche.explanation')}
             />
           </div>
 
@@ -3144,14 +3037,9 @@ export function Section1() {
           {/* ── Quick check: prev hash purpose ── */}
           <div className="h-full">
             <QuizSlide
-              question="What is the purpose of the 'previous hash' field in a block?"
-              options={[
-                { text: "It encrypts the block's transaction data", correct: false },
-                { text: "It links the block to the one before it, forming the chain", correct: true },
-                { text: "It stores the miner's identity", correct: false },
-                { text: "It determines the block reward amount", correct: false }
-              ]}
-              explanation="Each block stores the hash of the previous block. If anyone tampers with an earlier block, its hash changes — and every block that points back to it now points at a fingerprint that no longer exists."
+              question={t('quizPrevHash.question')}
+              options={(t('quizPrevHash.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+              explanation={t('quizPrevHash.explanation')}
             />
           </div>
 
@@ -3164,9 +3052,9 @@ export function Section1() {
           <div id="s1-network" className="h-full">
             <div className="slide-template w-full flex flex-col p-5 lg:p-8">
               <div className="shrink-0 mb-3">
-                <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">The Network</h2>
+                <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{t('network.heading')}</h2>
                 <p className="text-sm lg:text-base text-muted-foreground max-w-3xl">
-                  One machine holding a chain is fragile. But what if every machine on the network held its own copy? Switch between three network shapes below and click nodes to take them offline — watch what survives.
+                  {t('network.lead')}
                 </p>
               </div>
 
@@ -3176,27 +3064,26 @@ export function Section1() {
                 </div>
 
                 <div className="flex flex-col justify-center gap-3">
-                  {[
-                    { color: '#ED1C24', title: 'Centralized = single point of control', desc: 'One operator owns the system. Kill the centre and everything goes dark.' },
-                    { color: '#f59e0b', title: 'Decentralized = clusters of authority',  desc: 'Several hubs. Killing one breaks its cluster but leaves the rest intact.' },
-                    { color: '#39B54A', title: 'Distributed = every node is a peer',     desc: 'All nodes hold the data and route around failures. This is what blockchain inherits.' },
-                    { color: '#6366f1', title: 'Blockchain = distributed + agreed',      desc: 'A distributed network plus a way for the peers to agree on which chain is the truth.' },
-                  ].map((p, i) => (
-                    <div
-                      key={p.title}
-                      className="flex items-start gap-3 p-3 lg:p-4 bg-card rounded-lg border"
-                      style={{ borderColor: p.color + '40' }}
-                    >
-                      <div className="size-7 lg:size-8 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-sm"
-                           style={{ backgroundColor: p.color }}>
-                        {i + 1}
+                  {(['#ED1C24', '#f59e0b', '#39B54A', '#6366f1']).map((color, i) => {
+                    const rows = t('network.rows', { returnObjects: true }) as Array<{ title: string; desc: string }>;
+                    const p = rows[i];
+                    return (
+                      <div
+                        key={i}
+                        className="flex items-start gap-3 p-3 lg:p-4 bg-card rounded-lg border"
+                        style={{ borderColor: color + '40' }}
+                      >
+                        <div className="size-7 lg:size-8 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-sm"
+                             style={{ backgroundColor: color }}>
+                          {i + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-bold text-foreground leading-snug">{p.title}</div>
+                          <div className="text-xs lg:text-sm text-muted-foreground mt-0.5 leading-snug">{p.desc}</div>
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-foreground leading-snug">{p.title}</div>
-                        <div className="text-xs lg:text-sm text-muted-foreground mt-0.5 leading-snug">{p.desc}</div>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -3210,14 +3097,9 @@ export function Section1() {
           {/* ── Quick check: network resilience ── */}
           <div className="h-full">
             <QuizSlide
-              question="If a malicious actor controls 51% of the nodes in a public blockchain network, what can they do?"
-              options={[
-                { text: "They can read everyone's private keys", correct: false },
-                { text: "They can rewrite history and overrule honest nodes", correct: true },
-                { text: "They can shut down the protocol permanently", correct: false },
-                { text: "They can mint unlimited coins", correct: false }
-              ]}
-              explanation="The 51% attack is the threat model for any public blockchain. A majority of nodes can agree to a tampered version of history and the network has to accept it. That's why public chains want many independent participants — to make 51% expensive."
+              question={t('quiz51.question')}
+              options={(t('quiz51.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+              explanation={t('quiz51.explanation')}
             />
           </div>
 
@@ -3226,27 +3108,27 @@ export function Section1() {
             <div className="max-w-5xl w-full">
               <div className="flex items-center gap-3 mb-1">
                 <div className="size-10 rounded-full bg-[#ED1C24]/20 flex items-center justify-center text-xl">⛏️</div>
-                <h2 className="text-3xl font-bold text-foreground">Consensus — How the Network Agrees</h2>
+                <h2 className="text-3xl font-bold text-foreground">{t('consensus.heading')}</h2>
               </div>
               <p className="text-muted-foreground mb-6 ml-[52px] max-w-3xl">
-                A network of copies needs a rule for which copy is the truth. The most famous answer is <span className="text-[#ED1C24] font-semibold">Proof of Work</span>: nodes spend electricity racing to solve a puzzle, and the winner gets to add the next block. The cost makes cheating expensive.
+                {t('consensus.leadA')} <span className="text-[#ED1C24] font-semibold">{t('consensus.leadPoW')}</span>{t('consensus.leadB')}
               </p>
 
               <ConsensusVisualization mechanism="pow" />
 
               <div className="grid grid-cols-2 gap-3 mt-6">
                 <div className="p-3 bg-[#39B54A]/10 rounded-lg border border-[#39B54A]/30">
-                  <h4 className="text-xs font-bold text-[#39B54A] mb-1">✓ Why it works</h4>
+                  <h4 className="text-xs font-bold text-[#39B54A] mb-1">{t('consensus.whyTitle')}</h4>
                   <ul className="text-[11px] text-muted-foreground space-y-1">
-                    <li>• Cheating costs real energy — measurable, expensive</li>
-                    <li>• Anyone can participate, no permission needed</li>
-                    <li>• Battle-tested since 2009 by Bitcoin</li>
+                    {(t('consensus.why', { returnObjects: true }) as string[]).map((w, i) => (
+                      <li key={i}>• {w}</li>
+                    ))}
                   </ul>
                 </div>
                 <div className="p-3 bg-[#6366f1]/10 rounded-lg border border-[#6366f1]/30">
-                  <h4 className="text-xs font-bold text-[#6366f1] mb-1">↗ What about Proof of Stake?</h4>
+                  <h4 className="text-xs font-bold text-[#6366f1] mb-1">{t('consensus.altTitle')}</h4>
                   <p className="text-[11px] text-muted-foreground">
-                    Proof of Stake replaces electricity with locked tokens — validators put up collateral instead of burning power. We compare the alternatives in <span className="font-semibold text-foreground">Course 3 — Platforms</span>.
+                    {t('consensus.altLead')} <span className="font-semibold text-foreground">{t('consensus.altCourse')}</span>{t('consensus.altTail')}
                   </p>
                 </div>
               </div>
@@ -3271,15 +3153,8 @@ export function Section1() {
           {/* ═══════ 11 — TAKEAWAYS ═══════ */}
           <div id="s1-takeaways" className="h-full">
             <TakeawaySlide
-              title="Section 1 — Key Takeaways"
-              takeaways={[
-                "The trust problem: digital value historically relied on middlemen — banks, registries, payment networks",
-                "A shared ledger removes the middleman, but creates a new problem: how do you stop someone editing their own copy?",
-                "Hashing makes data tamper-evident — change one bit, the fingerprint changes completely",
-                "A chain stores each block's data plus the previous block's fingerprint, linking the history together",
-                "Any change upstream cascades downstream — every block after it goes invalid, instantly",
-                "A distributed network multiplies one machine's chain into thousands; consensus (e.g. Proof of Work) picks the truth"
-              ]}
+              title={t('takeaways.title')}
+              takeaways={t('takeaways.items', { returnObjects: true }) as string[]}
             />
           </div>
         </div>

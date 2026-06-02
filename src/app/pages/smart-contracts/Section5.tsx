@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
@@ -6,86 +7,96 @@ import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { ShieldAlert } from 'lucide-react';
 
-const chapters = [
-  { id: 's5-oracle',           label: 'The Oracle Problem' },
-  { id: 's5-challenges',       label: 'Challenges & Limits' },
-  { id: 's5-technical',        label: 'Technical Challenges' },
-  { id: 's5-ex-oracle',        label: '🧩 Oracle Attack' },
-  { id: 's5-risks-security',   label: 'Security Risks' },
-  { id: 's5-risks-cost',       label: 'Cost Risks' },
-  { id: 's5-risks-regulatory', label: 'Regulatory Risks' },
-  { id: 's5-quiz',             label: 'Quiz' },
-  { id: 's5-takeaways',        label: 'Takeaways' },
-  { id: 's5-summary',          label: 'Summary' },
-];
+// Language-neutral shape — only IDs. Labels come from t() at render time.
+const chapterIds = [
+  's5-oracle',
+  's5-challenges',
+  's5-technical',
+  's5-ex-oracle',
+  's5-risks-security',
+  's5-risks-cost',
+  's5-risks-regulatory',
+  's5-quiz',
+  's5-takeaways',
+  's5-summary',
+] as const;
 
 // ─── Exercise: Oracle Attack Scenario ───────────────────────────────────────
+// Language-neutral data: emoji + color + presence of a mitigation. Text via t().
 
-const ORACLE_ROWS = [
-  {
-    emoji: '🌾', actor: 'Farmer',           color: '#39B54A',
-    event: 'Pays $500 premium into smart contract',
-    consequence: 'Contract stores: if rainfall < 50mm in June → pay out $5,000 automatically.',
-    mitigation: null,
-  },
-  {
-    emoji: '🏢', actor: 'Oracle Provider',  color: '#6366f1',
-    event: 'A single company runs the only weather oracle',
-    consequence: "The smart contract trusts this oracle completely. It's the only source of truth for rainfall data.",
-    mitigation: { title: 'Decentralised Oracle (Chainlink)', desc: 'Aggregate from 15+ independent nodes — attacker must compromise a majority simultaneously.' },
-  },
-  {
-    emoji: '🔓', actor: 'Attacker',         color: '#ED1C24',
-    event: "Hacker compromises the oracle's API key",
-    consequence: "The attacker can now submit any rainfall figure they want — the blockchain has no way to verify it.",
-    mitigation: { title: 'Multiple Data Sources', desc: 'Cross-check NOAA + Weather.com + satellite data — one compromised source is caught by the others.' },
-  },
-  {
-    emoji: '📡', actor: 'Attacker',         color: '#ED1C24',
-    event: 'Submits fake data: "rainfall = 10mm"',
-    consequence: 'The smart contract reads this value, sees the condition is met (10 < 50), and executes automatically.',
-    mitigation: { title: 'Dispute Window', desc: 'Add a 24h challenge period before payout — observers can flag suspicious oracle data.' },
-  },
-  {
-    emoji: '💸', actor: 'Smart Contract',   color: '#f59e0b',
-    event: "Releases $5,000 to the attacker's wallet",
-    consequence: "The contract behaved exactly as coded. It did nothing wrong. The vulnerability was the oracle — not the contract.",
-    mitigation: { title: 'Multisig Oracle Control', desc: 'Require 3-of-5 oracle operators to sign the data — no single point of control.' },
-  },
-  {
-    emoji: '🔒', actor: 'Farmer',           color: '#ED1C24',
-    event: 'Tries to dispute the payout',
-    consequence: 'The transaction is immutable. The code has already executed. There is no appeals process, no reversal.',
-    mitigation: null,
-  },
-];
+const ORACLE_ROW_META = [
+  { emoji: '🌾', color: '#39B54A', hasMitigation: false },
+  { emoji: '🏢', color: '#6366f1', hasMitigation: true },
+  { emoji: '🔓', color: '#ED1C24', hasMitigation: true },
+  { emoji: '📡', color: '#ED1C24', hasMitigation: true },
+  { emoji: '💸', color: '#f59e0b', hasMitigation: true },
+  { emoji: '🔒', color: '#ED1C24', hasMitigation: false },
+] as const;
+
+interface OracleRowText {
+  actor: string;
+  event: string;
+  consequence: string;
+  mitigation?: { title: string; desc: string };
+}
+
+interface CardItem {
+  label: string;
+  what: string;
+  body: string;
+  tag: string;
+}
+
+interface WhyFixItem {
+  title: string;
+  what: string;
+  why: string;
+  fix: string;
+  stat?: string;
+}
+
+interface SecurityItem {
+  title: string;
+  what: string;
+  fix: string;
+  stat: string;
+}
+
+interface SummaryCard {
+  title: string;
+  summary: string;
+}
 
 function OracleAttackExercise() {
+  const { t } = useTranslation('smart-contracts/section-5');
   const [revealed, setRevealed] = useState(0);
-  const allDone = revealed >= ORACLE_ROWS.length;
+  const rows = t('exercise.rows', { returnObjects: true }) as OracleRowText[];
+  const allDone = revealed >= ORACLE_ROW_META.length;
   const reset = () => setRevealed(0);
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
       <div className="shrink-0 flex items-center justify-between mb-4">
         <div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#ED1C24]/15 border border-[#ED1C24]/40 text-[#ED1C24] text-xs font-bold">🧩 Exercise</span>
-          <h2 className="text-2xl font-bold text-foreground mt-1">Oracle Attack — Step by Step</h2>
-          <p className="text-muted-foreground text-sm">A crop insurance contract is hacked via its oracle. Click through each step — and see how to prevent it.</p>
+          <span className="px-2.5 py-0.5 rounded-full bg-[#ED1C24]/15 border border-[#ED1C24]/40 text-[#ED1C24] text-xs font-bold">{t('exercise.badge')}</span>
+          <h2 className="text-2xl font-bold text-foreground mt-1">{t('exercise.title')}</h2>
+          <p className="text-muted-foreground text-sm">{t('exercise.subtitle')}</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="text-xs text-muted-foreground">{Math.min(revealed, ORACLE_ROWS.length)} / {ORACLE_ROWS.length} steps</div>
-          {allDone && <button onClick={reset} className="px-3 py-1.5 rounded-lg bg-muted text-xs font-semibold text-muted-foreground hover:bg-muted/80 transition-colors">↺ Reset</button>}
+          <div className="text-xs text-muted-foreground">{Math.min(revealed, ORACLE_ROW_META.length)} / {ORACLE_ROW_META.length} {t('exercise.stepsLabel')}</div>
+          {allDone && <button onClick={reset} className="px-3 py-1.5 rounded-lg bg-muted text-xs font-semibold text-muted-foreground hover:bg-muted/80 transition-colors">{t('exercise.reset')}</button>}
         </div>
       </div>
 
       <div className="shrink-0 grid grid-cols-2 gap-4 mb-2 px-1">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">What happened</p>
-        <p className="text-xs font-semibold text-[#39B54A] uppercase tracking-widest">How to prevent it</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('exercise.whatHappened')}</p>
+        <p className="text-xs font-semibold text-[#39B54A] uppercase tracking-widest">{t('exercise.howToPrevent')}</p>
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col gap-2">
-        {ORACLE_ROWS.map((row, i) => (
+        {ORACLE_ROW_META.map((meta, i) => {
+          const row = rows[i];
+          return (
           <motion.div
             key={i}
             className="flex-1 grid grid-cols-2 gap-4 min-h-0"
@@ -95,18 +106,18 @@ function OracleAttackExercise() {
             <div
               className="flex items-start gap-2.5 p-3 rounded-xl border transition-colors"
               style={{
-                borderColor: i < revealed ? row.color + '40' : 'var(--border)',
-                backgroundColor: i < revealed ? row.color + '08' : 'transparent',
+                borderColor: i < revealed ? meta.color + '40' : 'var(--border)',
+                backgroundColor: i < revealed ? meta.color + '08' : 'transparent',
               }}
             >
               <div className="size-7 rounded-full flex items-center justify-center text-base shrink-0"
-                style={{ backgroundColor: i < revealed ? row.color + '20' : 'var(--muted)' }}>
-                {i < revealed ? row.emoji : '?'}
+                style={{ backgroundColor: i < revealed ? meta.color + '20' : 'var(--muted)' }}>
+                {i < revealed ? meta.emoji : '?'}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
-                  <span className="text-xs font-bold shrink-0" style={{ color: i < revealed ? row.color : 'var(--muted-foreground)' }}>{row.actor}</span>
-                  <span className="text-xs font-semibold text-foreground">{i < revealed ? row.event : '···'}</span>
+                  <span className="text-xs font-bold shrink-0" style={{ color: i < revealed ? meta.color : 'var(--muted-foreground)' }}>{row.actor}</span>
+                  <span className="text-xs font-semibold text-foreground">{i < revealed ? row.event : t('exercise.unknownEvent')}</span>
                 </div>
                 {i < revealed && <div className="text-xs text-muted-foreground leading-snug">{row.consequence}</div>}
               </div>
@@ -114,11 +125,11 @@ function OracleAttackExercise() {
 
             <div className="p-3 rounded-xl border transition-colors"
               style={{
-                borderColor: row.mitigation && allDone ? '#39B54A40' : 'transparent',
-                backgroundColor: row.mitigation && allDone ? '#39B54A08' : 'transparent',
+                borderColor: meta.hasMitigation && allDone ? '#39B54A40' : 'transparent',
+                backgroundColor: meta.hasMitigation && allDone ? '#39B54A08' : 'transparent',
               }}
             >
-              {row.mitigation && allDone && (
+              {meta.hasMitigation && allDone && row.mitigation && (
                 <motion.div initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
                   <div className="font-bold text-xs text-[#39B54A] mb-1">✓ {row.mitigation.title}</div>
                   <div className="text-xs text-muted-foreground leading-snug">{row.mitigation.desc}</div>
@@ -126,7 +137,8 @@ function OracleAttackExercise() {
               )}
             </div>
           </motion.div>
-        ))}
+          );
+        })}
       </div>
 
       {!allDone && (
@@ -135,7 +147,7 @@ function OracleAttackExercise() {
             onClick={() => setRevealed(r => r + 1)}
             className="px-4 py-2 rounded-lg bg-[#ED1C24] text-white text-xs font-bold hover:bg-[#ED1C24]/90 transition-colors"
           >
-            Reveal next step →
+            {t('exercise.revealNext')}
           </button>
         </div>
       )}
@@ -144,6 +156,69 @@ function OracleAttackExercise() {
 }
 
 export function SC_Section5() {
+  const { t } = useTranslation('smart-contracts/section-5');
+
+  const chapters = useMemo(
+    () => chapterIds.map((id) => ({ id, label: t(`chapters.${id}`) })),
+    [t]
+  );
+
+  const oracleCards = t('oracle.cards', { returnObjects: true }) as CardItem[];
+  const oracleColors = ['#ED1C24', '#6366f1', '#f59e0b'];
+  const oracleEmojis = ['🔒', '🌉', '⚠️'];
+  const oracleNetworks = t('oracle.networks.items', { returnObjects: true }) as { n: string; d: string }[];
+  const oracleNetworkColors = ['#375BD2', '#8b5cf6', '#6366f1', '#f59e0b'];
+
+  const challengeItems = t('challenges.items', { returnObjects: true }) as WhyFixItem[];
+  const challengeMeta = [
+    { emoji: '🚦', color: '#ED1C24' },
+    { emoji: '⏱️', color: '#f59e0b' },
+    { emoji: '💾', color: '#8b5cf6' },
+    { emoji: '⚙️', color: '#6366f1' },
+  ];
+
+  const technicalItems = t('technical.items', { returnObjects: true }) as WhyFixItem[];
+  const technicalMeta = [
+    { emoji: '🤖', color: '#ED1C24' },
+    { emoji: '🔧', color: '#f59e0b' },
+    { emoji: '🔺', color: '#6366f1' },
+    { emoji: '📈', color: '#39B54A' },
+  ];
+
+  const securityItems = t('security.items', { returnObjects: true }) as SecurityItem[];
+  const securityMeta = [
+    { emoji: '🔁', color: '#ED1C24' },
+    { emoji: '⚡', color: '#f59e0b' },
+    { emoji: '🔑', color: '#8b5cf6' },
+    { emoji: '🧮', color: '#6366f1' },
+    { emoji: '🐛', color: '#39B54A' },
+    { emoji: '💸', color: '#ED1C24' },
+  ];
+
+  const costItems = t('cost.items', { returnObjects: true }) as WhyFixItem[];
+  const costMeta = [
+    { emoji: '🧱', color: '#ED1C24' },
+    { emoji: '🛠️', color: '#f59e0b' },
+    { emoji: '⛽', color: '#8b5cf6' },
+    { emoji: '⚖️', color: '#6366f1' },
+  ];
+
+  const regulatoryItems = t('regulatory.items', { returnObjects: true }) as CardItem[];
+  const regulatoryMeta = [
+    { emoji: '⚖️', color: '#ED1C24' },
+    { emoji: '🔍', color: '#8b5cf6' },
+    { emoji: '🏃', color: '#f59e0b' },
+  ];
+
+  const quizOptionsText = t('quiz.options', { returnObjects: true }) as string[];
+  const quizCorrect = [false, true, false, false];
+  const quizOptions = quizOptionsText.map((text, i) => ({ text, correct: quizCorrect[i] }));
+
+  const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
+
+  const summaryCards = t('summary.cards', { returnObjects: true }) as SummaryCard[];
+  const summaryIcons = ['🔒', '🔮', '⛽', '⚖️', '💸', '🛡️'];
+
   return (
     <div className="h-full w-full flex overflow-hidden">
       <SectionNav chapters={chapters} accentColor="#6366f1" />
@@ -152,9 +227,9 @@ export function SC_Section5() {
 
         <div className="h-full">
           <TitleSlide
-            sectionNumber="SECTION 05"
-            title="Limitations & Risks"
-            subtitle="An honest look at the oracle problem, real limitations, and where smart contracts fall short"
+            sectionNumber={t('title.sectionNumber')}
+            title={t('title.title')}
+            subtitle={t('title.subtitle')}
             icon={<ShieldAlert className="size-20 text-[#6366f1]" />}
             gradient="from-[#ED1C24] to-[#6366f1]"
           />
@@ -163,25 +238,14 @@ export function SC_Section5() {
         {/* ═══════ THE ORACLE PROBLEM ═══════ */}
         <div id="s5-oracle" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">The Oracle Problem</h2>
-            <p className="text-muted-foreground text-sm mt-1">Smart contracts are closed and deterministic — reaching the outside world is the hard part.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('oracle.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('oracle.subtitle')}</p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
-            {[
-              { emoji: '🔒', color: '#ED1C24', label: 'The Problem',
-                what: 'Chains are closed & deterministic',
-                body: "A contract can't fetch a price, score or delivery status itself — an external call would return different results on different nodes and break consensus.",
-                tag: 'The chain knows nothing outside itself' },
-              { emoji: '🌉', color: '#6366f1', label: 'The Fix — Oracles',
-                what: 'Signed real-world data, posted on-chain',
-                body: 'An off-chain service fetches the data and submits it as a signed transaction. The contract then reads it like any other on-chain value. Chainlink is the dominant network.',
-                tag: 'A data bridge: world → blockchain' },
-              { emoji: '⚠️', color: '#f59e0b', label: 'The Catch',
-                what: 'Oracles reintroduce trust',
-                body: 'A single controlled or hacked oracle becomes the point of manipulation — and can drain every contract that depends on it.',
-                tag: 'Only as decentralised as its weakest data source' },
-            ].map(c => (
+            {oracleCards.map((c, i) => {
+              const color = oracleColors[i];
+              return (
               <motion.div
                 key={c.label}
                 initial={{ opacity: 0, y: 12 }}
@@ -189,39 +253,35 @@ export function SC_Section5() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.3 }}
                 className="flex flex-col gap-3 rounded-xl border-2 p-5 justify-center"
-                style={{ borderColor: c.color + '50', backgroundColor: c.color + '08' }}
+                style={{ borderColor: color + '50', backgroundColor: color + '08' }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: c.color + '18' }}>{c.emoji}</div>
+                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: color + '18' }}>{oracleEmojis[i]}</div>
                   <div>
                     <div className="font-black text-base text-foreground leading-tight">{c.label}</div>
-                    <div className="text-sm font-semibold mt-0.5" style={{ color: c.color }}>{c.what}</div>
+                    <div className="text-sm font-semibold mt-0.5" style={{ color }}>{c.what}</div>
                   </div>
                 </div>
                 <p className="text-sm text-foreground leading-relaxed flex-1">{c.body}</p>
-                <p className="text-xs italic text-muted-foreground border-l-2 pl-2" style={{ borderColor: c.color }}>{c.tag}</p>
+                <p className="text-xs italic text-muted-foreground border-l-2 pl-2" style={{ borderColor: color }}>{c.tag}</p>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="shrink-0 mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="rounded-xl border p-4" style={{ borderColor: '#6366f140', backgroundColor: '#6366f10a' }}>
-              <div className="text-xs font-black uppercase tracking-widest text-[#6366f1] mb-1">Example — parametric crop insurance</div>
+              <div className="text-xs font-black uppercase tracking-widest text-[#6366f1] mb-1">{t('oracle.example.label')}</div>
               <p className="text-sm text-foreground leading-snug">
-                Premium paid → contract holds "if rainfall &lt; X by date Z → pay $5k" → <span className="font-semibold">Chainlink + NOAA</span> posts daily rainfall → condition met → payout fires automatically. No claims adjuster — but a broken oracle stalls everything.
+                {t('oracle.example.bodyA')}<span className="font-semibold">{t('oracle.example.bodyStrong')}</span>{t('oracle.example.bodyB')}
               </p>
             </div>
             <div className="rounded-xl border bg-card p-4">
-              <div className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Oracle networks in practice</div>
+              <div className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">{t('oracle.networks.label')}</div>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                {[
-                  { n: 'Chainlink', d: 'Decentralised, many-node aggregation', c: '#375BD2' },
-                  { n: 'Pyth', d: 'Sub-second institutional price feeds', c: '#8b5cf6' },
-                  { n: 'API3', d: 'First-party — providers run the node', c: '#6366f1' },
-                  { n: 'UMA', d: 'Optimistic — correct unless disputed', c: '#f59e0b' },
-                ].map(o => (
+                {oracleNetworks.map((o, i) => (
                   <div key={o.n} className="flex items-baseline gap-1.5">
-                    <span className="font-bold shrink-0" style={{ color: o.c }}>{o.n}</span>
+                    <span className="font-bold shrink-0" style={{ color: oracleNetworkColors[i] }}>{o.n}</span>
                     <span className="text-muted-foreground leading-snug">{o.d}</span>
                   </div>
                 ))}
@@ -233,41 +293,14 @@ export function SC_Section5() {
         {/* ═══════ CHALLENGES & LIMITATIONS ═══════ */}
         <div id="s5-challenges" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Challenges & Limitations</h2>
-            <p className="text-muted-foreground text-sm mt-1">Smart contracts inherit their chain's constraints — four that shape every design decision.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('challenges.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('challenges.subtitle')}</p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-4">
-            {[
-              {
-                emoji: '🚦', color: '#ED1C24', title: 'Throughput',
-                what: "L1 can't match Web2 volume",
-                why: "Consensus is the bottleneck — every node re-executes every transaction, so raw L1 throughput stays low.",
-                fix: 'L2 rollups push it to thousands of TPS without giving up L1 security.',
-                stat: 'BTC 7 · ETH ~15 · Visa ~24,000 TPS',
-              },
-              {
-                emoji: '⏱️', color: '#f59e0b', title: 'Latency',
-                what: 'Block times vs millisecond web',
-                why: 'A tx waits for the next block and several confirmations before it is safe to rely on.',
-                fix: 'Use an L2 for instant UX; settle on L1 underneath.',
-                stat: 'ETH block 12s · BTC ~10 min · L2 ~250 ms',
-              },
-              {
-                emoji: '💾', color: '#8b5cf6', title: 'Storage Cost',
-                what: 'On-chain bytes are extraordinarily pricey',
-                why: 'Every full node stores it forever, so the protocol prices storage to discourage bloat.',
-                fix: 'Keep only a hash on-chain; put the data on IPFS / Arweave.',
-                stat: '~$1,000/MB on-chain vs ~$0.02 on S3 — 50,000×',
-              },
-              {
-                emoji: '⚙️', color: '#6366f1', title: 'Computation Limits',
-                what: 'Gas caps what a tx can compute',
-                why: "Each block has a gas ceiling, so ML inference or heavy loops simply can't run on-chain.",
-                fix: 'Compute off-chain, post the result + a ZK proof the chain can verify.',
-                stat: '~30M gas/block · on-chain ~1,000,000× pricier',
-              },
-            ].map(c => (
+            {challengeItems.map((c, i) => {
+              const color = challengeMeta[i].color;
+              return (
               <motion.div
                 key={c.title}
                 initial={{ opacity: 0, y: 12 }}
@@ -275,67 +308,41 @@ export function SC_Section5() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.3 }}
                 className="flex flex-col gap-3 rounded-xl border-2 p-5 justify-center"
-                style={{ borderColor: c.color + '50', backgroundColor: c.color + '08' }}
+                style={{ borderColor: color + '50', backgroundColor: color + '08' }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: c.color + '18' }}>{c.emoji}</div>
+                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: color + '18' }}>{challengeMeta[i].emoji}</div>
                   <div>
                     <div className="font-black text-base text-foreground leading-tight">{c.title}</div>
-                    <div className="text-sm font-semibold mt-0.5" style={{ color: c.color }}>{c.what}</div>
+                    <div className="text-sm font-semibold mt-0.5" style={{ color }}>{c.what}</div>
                   </div>
                 </div>
-                <div className="rounded-lg bg-card border p-3" style={{ borderColor: c.color + '25' }}>
-                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Why</span>
+                <div className="rounded-lg bg-card border p-3" style={{ borderColor: color + '25' }}>
+                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('challenges.whyLabel')}</span>
                   <p className="text-sm text-foreground leading-snug mt-0.5">{c.why}</p>
                 </div>
-                <div className="rounded-lg p-3 border-l-2" style={{ borderColor: c.color, backgroundColor: c.color + '12' }}>
-                  <span className="text-xs font-black uppercase tracking-widest" style={{ color: c.color }}>What helps</span>
+                <div className="rounded-lg p-3 border-l-2" style={{ borderColor: color, backgroundColor: color + '12' }}>
+                  <span className="text-xs font-black uppercase tracking-widest" style={{ color }}>{t('challenges.fixLabel')}</span>
                   <p className="text-sm text-foreground leading-snug mt-0.5">{c.fix}</p>
                 </div>
                 <p className="text-xs text-muted-foreground italic">{c.stat}</p>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* ═══════ TECHNICAL CHALLENGES ═══════ */}
         <div id="s5-technical" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Technical Challenges & Limitations</h2>
-            <p className="text-muted-foreground text-sm mt-1">Four structural problems — what they are, why they happen, and how the field is fixing them.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('technical.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('technical.subtitle')}</p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-4">
-            {[
-              {
-                emoji: '🤖', color: '#ED1C24', title: 'MEV — Maximal Extractable Value',
-                what: 'Block producers reorder transactions for profit',
-                why: 'They decide which txs go in and in what order — so they can front-run or sandwich a trade they see waiting in the mempool.',
-                fix: 'Private mempools, commit-reveal, MEV-aware DEXs (CoW Protocol, Flashbots SUAVE).',
-                stat: '$1.3B+ extracted from users since 2020',
-              },
-              {
-                emoji: '🔧', color: '#f59e0b', title: 'Upgradability',
-                what: "Immutable code can't be patched",
-                why: 'Deployed code is permanent. A critical bug stays exploitable forever — The DAO lost $60M and forced an Ethereum hard fork.',
-                fix: 'Audit before deploy; add upgrade proxies only when essential, behind a timelock + multisig.',
-                stat: 'Proxy admin key = a centralisation point',
-              },
-              {
-                emoji: '🔺', color: '#6366f1', title: 'The Blockchain Trilemma',
-                what: 'Security · scalability · decentralisation — pick 2',
-                why: "Maximising all three at L1 isn't possible; every chain deliberately trades one away.",
-                fix: 'Ethereum keeps security + decentralisation and pushes scale to L2 rollups.',
-                stat: 'BTC → 7 TPS · Solana → fewer validators',
-              },
-              {
-                emoji: '📈', color: '#39B54A', title: 'State Growth',
-                what: 'The chain grows ~50 GB/year — forever',
-                why: 'History is append-only and every full node must keep all of it, so eventually only datacenters can run one.',
-                fix: 'EIP-4444 history expiry, stateless clients, and Verkle trees decouple storage from running a node.',
-                stat: 'ETH full ~1.2 TB · archive 15+ TB',
-              },
-            ].map(c => (
+            {technicalItems.map((c, i) => {
+              const color = technicalMeta[i].color;
+              return (
               <motion.div
                 key={c.title}
                 initial={{ opacity: 0, y: 12 }}
@@ -343,26 +350,27 @@ export function SC_Section5() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.3 }}
                 className="flex flex-col gap-3 rounded-xl border-2 p-5 justify-center"
-                style={{ borderColor: c.color + '50', backgroundColor: c.color + '08' }}
+                style={{ borderColor: color + '50', backgroundColor: color + '08' }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: c.color + '18' }}>{c.emoji}</div>
+                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: color + '18' }}>{technicalMeta[i].emoji}</div>
                   <div>
                     <div className="font-black text-base text-foreground leading-tight">{c.title}</div>
-                    <div className="text-sm font-semibold mt-0.5" style={{ color: c.color }}>{c.what}</div>
+                    <div className="text-sm font-semibold mt-0.5" style={{ color }}>{c.what}</div>
                   </div>
                 </div>
-                <div className="rounded-lg bg-card border p-3" style={{ borderColor: c.color + '25' }}>
-                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Why</span>
+                <div className="rounded-lg bg-card border p-3" style={{ borderColor: color + '25' }}>
+                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('technical.whyLabel')}</span>
                   <p className="text-sm text-foreground leading-snug mt-0.5">{c.why}</p>
                 </div>
-                <div className="rounded-lg p-3 border-l-2" style={{ borderColor: c.color, backgroundColor: c.color + '12' }}>
-                  <span className="text-xs font-black uppercase tracking-widest" style={{ color: c.color }}>What helps</span>
+                <div className="rounded-lg p-3 border-l-2" style={{ borderColor: color, backgroundColor: color + '12' }}>
+                  <span className="text-xs font-black uppercase tracking-widest" style={{ color }}>{t('technical.fixLabel')}</span>
                   <p className="text-sm text-foreground leading-snug mt-0.5">{c.fix}</p>
                 </div>
                 <p className="text-xs text-muted-foreground italic">{c.stat}</p>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -374,31 +382,14 @@ export function SC_Section5() {
         {/* ═══════ SECURITY RISKS ═══════ */}
         <div id="s5-risks-security" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Security Risks</h2>
-            <p className="text-muted-foreground text-sm mt-1">Bugs are public, permanent, and exploited within hours. The most expensive ones are the simplest.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('security.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('security.subtitle')}</p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-3 grid-rows-2 gap-4">
-            {[
-              { title: 'Reentrancy', emoji: '🔁', color: '#ED1C24',
-                what: 'Calls out before updating its own state — attacker calls back in and drains it.',
-                fix: 'Checks-Effects-Interactions · ReentrancyGuard', stat: 'The DAO (2016): $60M' },
-              { title: 'Flash Loan Attacks', emoji: '⚡', color: '#f59e0b',
-                what: 'Borrow millions uncollateralised, bend a price oracle, exploit, repay — one atomic tx.',
-                fix: 'TWAP prices · decentralised, multi-source oracles', stat: 'Harvest (2020): $34M' },
-              { title: 'Access Control', emoji: '🔑', color: '#8b5cf6',
-                what: 'Critical functions (mint, withdraw, upgrade) miss the right modifier.',
-                fix: 'Role-based access (OZ AccessControl) · audits', stat: 'Parity (2017): $30M frozen' },
-              { title: 'Over/Underflow', emoji: '🧮', color: '#6366f1',
-                what: 'Pre-0.8 Solidity wraps silently — balance − x underflows to a huge number.',
-                fix: 'Solidity ≥0.8 (checked) or SafeMath', stat: 'Fixed by default since 0.8' },
-              { title: 'Logic Bugs', emoji: '🐛', color: '#39B54A',
-                what: 'Code runs as written, but the logic is wrong — off-by-one, bad sign, wrong arg.',
-                fix: 'Independent audits · formal verification', stat: 'Tools miss these — humans catch them' },
-              { title: 'Cumulative Loss', emoji: '💸', color: '#ED1C24',
-                what: 'Thousands of incidents — usually a missing modifier or a copy-paste slip.',
-                fix: 'Audits are a discipline, not a checkbox', stat: '$6B+ lost since 2016' },
-            ].map(r => (
+            {securityItems.map((r, i) => {
+              const color = securityMeta[i].color;
+              return (
               <motion.div
                 key={r.title}
                 initial={{ opacity: 0, y: 12 }}
@@ -406,49 +397,35 @@ export function SC_Section5() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.25 }}
                 className="flex flex-col gap-2.5 rounded-xl border-2 p-4 justify-center"
-                style={{ borderColor: r.color + '50', backgroundColor: r.color + '08' }}
+                style={{ borderColor: color + '50', backgroundColor: color + '08' }}
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="size-9 rounded-lg flex items-center justify-center text-lg shrink-0" style={{ backgroundColor: r.color + '18' }}>{r.emoji}</div>
+                  <div className="size-9 rounded-lg flex items-center justify-center text-lg shrink-0" style={{ backgroundColor: color + '18' }}>{securityMeta[i].emoji}</div>
                   <div className="font-black text-base text-foreground leading-tight">{r.title}</div>
                 </div>
                 <p className="text-sm text-foreground leading-snug flex-1">{r.what}</p>
-                <div className="rounded-lg p-2 border-l-2" style={{ borderColor: r.color, backgroundColor: r.color + '12' }}>
-                  <span className="text-[11px] font-bold" style={{ color: r.color }}>Fix: </span>
+                <div className="rounded-lg p-2 border-l-2" style={{ borderColor: color, backgroundColor: color + '12' }}>
+                  <span className="text-[11px] font-bold" style={{ color }}>{t('security.fixLabel')}</span>
                   <span className="text-[11px] text-muted-foreground">{r.fix}</span>
                 </div>
                 <p className="text-xs text-muted-foreground italic">{r.stat}</p>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* ═══════ COST RISKS ═══════ */}
         <div id="s5-risks-cost" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Cost Risks</h2>
-            <p className="text-muted-foreground text-sm mt-1">Smart contracts are not plug-and-play — budget for the upfront and the ongoing.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('cost.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('cost.subtitle')}</p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-4">
-            {[
-              { emoji: '🧱', color: '#ED1C24', title: 'Immutability & Redeployment',
-                what: "You can't patch — you redeploy",
-                why: 'A fix means deploying a new contract and migrating users + state. Ship-and-iterate does not apply.',
-                fix: 'Heavy testing and secure design before launch; plan a v1→v2 migration path.' },
-              { emoji: '🛠️', color: '#f59e0b', title: 'Development & Maintenance',
-                what: 'Scarce, expensive expertise',
-                why: 'Solidity is complex and fast-moving; even strong devs ship bugs, and immutability blocks normal patching.',
-                fix: 'Budget premium rates for auditors and security engineers as a line item, not an afterthought.' },
-              { emoji: '⛽', color: '#8b5cf6', title: 'Gas & Execution',
-                what: 'Fees vary and compound',
-                why: 'Costs spike 10–100× under congestion, and inefficient code taxes every future user forever.',
-                fix: 'Optimise storage writes and external calls; reconsider micro-payment economics.' },
-              { emoji: '⚖️', color: '#6366f1', title: 'Security vs Performance',
-                what: 'Every safety check costs gas',
-                why: 'Defensive checks trade off against efficiency, and audit cost scales with code complexity.',
-                fix: 'A ~$50K audit per ~500 lines is normal; bug bounties add cost but cut catastrophic risk.' },
-            ].map(c => (
+            {costItems.map((c, i) => {
+              const color = costMeta[i].color;
+              return (
               <motion.div
                 key={c.title}
                 initial={{ opacity: 0, y: 12 }}
@@ -456,50 +433,40 @@ export function SC_Section5() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.3 }}
                 className="flex flex-col gap-3 rounded-xl border-2 p-5 justify-center"
-                style={{ borderColor: c.color + '50', backgroundColor: c.color + '08' }}
+                style={{ borderColor: color + '50', backgroundColor: color + '08' }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: c.color + '18' }}>{c.emoji}</div>
+                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: color + '18' }}>{costMeta[i].emoji}</div>
                   <div>
                     <div className="font-black text-base text-foreground leading-tight">{c.title}</div>
-                    <div className="text-sm font-semibold mt-0.5" style={{ color: c.color }}>{c.what}</div>
+                    <div className="text-sm font-semibold mt-0.5" style={{ color }}>{c.what}</div>
                   </div>
                 </div>
-                <div className="rounded-lg bg-card border p-3" style={{ borderColor: c.color + '25' }}>
-                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Why</span>
+                <div className="rounded-lg bg-card border p-3" style={{ borderColor: color + '25' }}>
+                  <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('cost.whyLabel')}</span>
                   <p className="text-sm text-foreground leading-snug mt-0.5">{c.why}</p>
                 </div>
-                <div className="rounded-lg p-3 border-l-2" style={{ borderColor: c.color, backgroundColor: c.color + '12' }}>
-                  <span className="text-xs font-black uppercase tracking-widest" style={{ color: c.color }}>Manage it</span>
+                <div className="rounded-lg p-3 border-l-2" style={{ borderColor: color, backgroundColor: color + '12' }}>
+                  <span className="text-xs font-black uppercase tracking-widest" style={{ color }}>{t('cost.fixLabel')}</span>
                   <p className="text-sm text-foreground leading-snug mt-0.5">{c.fix}</p>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* ═══════ REGULATORY RISKS ═══════ */}
         <div id="s5-risks-regulatory" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Regulatory Risks</h2>
-            <p className="text-muted-foreground text-sm mt-1">Smart contracts blur code and law — and the law has not caught up.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('regulatory.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('regulatory.subtitle')}</p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
-            {[
-              { emoji: '⚖️', color: '#ED1C24', title: 'Legal Adjudication',
-                what: 'May not count as a valid contract',
-                body: 'Often no signatures or mutual assent, so court enforcement is uncertain — and "code is law" gets overruled when stakes are high (The DAO fork).',
-                tag: 'Pair on-chain logic with a legal wrapper' },
-              { emoji: '🔍', color: '#8b5cf6', title: 'Privacy vs Transparency',
-                what: 'Public by design clashes with GDPR',
-                body: 'Every tx is visible to all nodes — colliding with the right to be forgotten and HIPAA. Even hashes leak via metadata and linkability.',
-                tag: 'ZK proofs · permissioned chains · off-chain encryption' },
-              { emoji: '🏃', color: '#f59e0b', title: 'Tech Outpaces Law',
-                what: 'Rules lag the technology by years',
-                body: 'Use cases shift in months while frameworks take years; a contract legal in Singapore may be illegal in the US.',
-                tag: "EU's MiCA (2024) is the first comprehensive exception" },
-            ].map(c => (
+            {regulatoryItems.map((c, i) => {
+              const color = regulatoryMeta[i].color;
+              return (
               <motion.div
                 key={c.title}
                 initial={{ opacity: 0, y: 12 }}
@@ -507,65 +474,46 @@ export function SC_Section5() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.3 }}
                 className="flex flex-col gap-3 rounded-xl border-2 p-5 justify-center"
-                style={{ borderColor: c.color + '50', backgroundColor: c.color + '08' }}
+                style={{ borderColor: color + '50', backgroundColor: color + '08' }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: c.color + '18' }}>{c.emoji}</div>
+                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: color + '18' }}>{regulatoryMeta[i].emoji}</div>
                   <div>
                     <div className="font-black text-base text-foreground leading-tight">{c.title}</div>
-                    <div className="text-sm font-semibold mt-0.5" style={{ color: c.color }}>{c.what}</div>
+                    <div className="text-sm font-semibold mt-0.5" style={{ color }}>{c.what}</div>
                   </div>
                 </div>
                 <p className="text-sm text-foreground leading-relaxed flex-1">{c.body}</p>
-                <p className="text-xs italic text-muted-foreground border-l-2 pl-2" style={{ borderColor: c.color }}>{c.tag}</p>
+                <p className="text-xs italic text-muted-foreground border-l-2 pl-2" style={{ borderColor: color }}>{c.tag}</p>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* ═══════ QUIZ ═══════ */}
         <div id="s5-quiz" className="h-full">
           <QuizSlide
-            question="A DeFi lending protocol uses a single on-chain DEX spot price as its collateral oracle. An attacker takes a $50M flash loan, manipulates the DEX price, borrows against inflated collateral, and repays the loan — all in one transaction. Which property of flash loans makes this attack unique compared to a standard market manipulation?"
-            options={[
-              { text: 'Flash loans are anonymous — the attacker cannot be traced or prosecuted.', correct: false },
-              { text: 'Flash loans require no capital — the entire attack is atomic and self-financing within a single block, leaving no trace between blocks.', correct: true },
-              { text: 'Flash loans exploit a bug in the Ethereum protocol itself, making them impossible to prevent at the contract level.', correct: false },
-              { text: 'Flash loans allow attackers to bypass gas fees, making the attack economically viable even for small protocols.', correct: false },
-            ]}
-            explanation="Traditional market manipulation requires large capital held at risk over time. Flash loans change the economics completely: the attacker borrows an enormous amount, executes the attack, and repays everything within a single atomic transaction. If any step fails, the entire transaction reverts — the attacker risks only gas fees. This means any protocol using a single on-chain spot price is vulnerable to an adversary with virtually zero capital. The fix: time-weighted average prices (TWAP) cannot be manipulated within a single block, and decentralized oracle networks aggregate from multiple independent sources."
+            question={t('quiz.question')}
+            options={quizOptions}
+            explanation={t('quiz.explanation')}
           />
         </div>
 
         <div id="s5-takeaways" className="h-full">
           <TakeawaySlide
-            title="Section 05 — Key Takeaways"
-            takeaways={[
-              'The oracle problem: smart contracts cannot access external data trustlessly — bridges introduce new attack surfaces',
-              'Immutability is a double-edged sword — bugs are permanent unless upgrade patterns are used',
-              '"Code is law" means users have no recourse when code behaves correctly but harmfully',
-              'Gas costs make complex on-chain logic economically impractical for many use cases',
-              'Smart contracts are not always the answer — a database is faster, cheaper, and easier in many contexts',
-              'Security audits are not optional — $6B+ lost since 2016; treat smart contract security as a discipline',
-              'Regulatory uncertainty: laws move in years, contracts move in months — privacy, enforceability, and jurisdiction all matter',
-            ]}
+            title={t('takeaways.title')}
+            takeaways={takeawayItems}
           />
         </div>
 
         <div id="s5-summary" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Section Summary</h2>
-            <p className="text-sm text-muted-foreground mt-1">Limitations and risks — at a glance</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('summary.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t('summary.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-start">
-            {[
-              { icon: '🔒', title: 'Reentrancy', summary: 'Attacker re-enters function before state updates — The DAO hack ($60M, 2016). Fix: Checks-Effects-Interactions pattern' },
-              { icon: '🔮', title: 'Oracle Attacks', summary: 'Flash loan → manipulate AMM price → drain protocol — Harvest Finance ($34M, 2020). Fix: multi-oracle, TWAP' },
-              { icon: '⛽', title: 'Gas & Scale', summary: 'Computation is metered and expensive on L1 — L2 rollups (Arbitrum, Optimism) reduce cost 10–100×' },
-              { icon: '⚖️', title: 'Legal & Regulatory', summary: 'Enforceability uncertain · GDPR conflicts · jurisdictional differences · "code is law" rejected by courts' },
-              { icon: '💸', title: 'Cost Realities', summary: 'Audit costs · gas optimisation discipline · maintenance is expensive · migrations are projects' },
-              { icon: '🛡️', title: 'Mitigations', summary: 'Audits + formal verification · multi-oracle design · timelocks · upgrade proxy patterns · bug bounties' },
-            ].map((card, i) => (
+            {summaryCards.map((card, i) => (
               <motion.div
                 key={card.title}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -574,7 +522,7 @@ export function SC_Section5() {
                 className="flex flex-col gap-2 p-4 rounded-2xl border bg-card"
                 style={{ borderColor: '#6366f130' }}
               >
-                <div className="text-3xl">{card.icon}</div>
+                <div className="text-3xl">{summaryIcons[i]}</div>
                 <div className="font-bold text-sm text-foreground">{card.title}</div>
                 <div className="text-xs text-muted-foreground leading-relaxed">{card.summary}</div>
               </motion.div>
