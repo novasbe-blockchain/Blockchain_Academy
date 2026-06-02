@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 
 interface Resource {
   title: string;
@@ -330,6 +331,7 @@ export function BP_Bibliography() {
           </p>
         </div>
       </div>
+      <SiteFooter className="snap-start" />
     </div>
   );
 }

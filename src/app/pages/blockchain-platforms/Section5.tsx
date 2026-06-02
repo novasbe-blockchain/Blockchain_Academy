@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Zap } from 'lucide-react';
 import { TeamCheckpoint } from '../../components/TeamCheckpoint';
@@ -1516,6 +1517,7 @@ export function BP_Section5() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

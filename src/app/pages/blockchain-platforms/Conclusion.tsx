@@ -1,4 +1,5 @@
 import { TitleSlide } from '../../components/templates/TitleSlide';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { Flag } from 'lucide-react';
 import { Link } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
@@ -65,6 +66,7 @@ export function Conclusion() {
       </div>
 
       </div>
+      <SiteFooter className="snap-start" />
     </div>
   );
 }

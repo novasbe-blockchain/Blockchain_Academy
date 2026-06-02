@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SectionNav } from '../../components/navigation/SectionNav';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Users } from 'lucide-react';
@@ -429,6 +430,7 @@ export function SC_Section7() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

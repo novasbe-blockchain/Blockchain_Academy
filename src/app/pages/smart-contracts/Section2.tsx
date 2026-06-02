@@ -5,6 +5,7 @@ import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { Cog, Check, X } from 'lucide-react';
 
 import imgDisintermediation from '../../../assets/sc/disintermediation.png';
@@ -1320,6 +1321,7 @@ export function SC_Section2() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

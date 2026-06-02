@@ -1,11 +1,12 @@
 import { Link } from 'react-router';
 import { ArrowLeft, FileCode2 } from 'lucide-react';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 
 const ACCENT = '#6366f1';
 
 export function SC_Conclusion() {
   return (
-    <div className="h-full flex flex-col items-center justify-center p-8 lg:p-16 relative overflow-hidden">
+    <div className="h-full flex flex-col items-center justify-center p-8 lg:p-16 relative overflow-y-auto">
       {/* Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.04)_1px,transparent_1px)] bg-[size:50px_50px]" />
       <div className="absolute top-1/3 right-1/4 size-80 bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] opacity-10 blur-3xl rounded-full" />
@@ -56,6 +57,7 @@ export function SC_Conclusion() {
           Back to Course Home
         </Link>
       </div>
+      <SiteFooter className="snap-start" />
     </div>
   );
 }

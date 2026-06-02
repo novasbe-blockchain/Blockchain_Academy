@@ -1,7 +1,8 @@
 import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
-import logo from '../../../blockchainptlogo.jpeg';
 import { TeacherCard } from '../../components/shared/TeacherCard';
+import { BrandLogo } from '../../components/shared/BrandLogo';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { helder, shayan } from '../../data/instructors';
 
 const instructors = [helder, shayan];
@@ -64,7 +65,7 @@ export function BlockchainPlatformsHome() {
 
         <div className="relative z-10 text-center max-w-5xl">
           <div className="flex justify-center mb-8">
-            <img src={logo} alt="Blockchain.pt" className="h-36 object-contain" />
+            <BrandLogo className="h-36" />
           </div>
 
           <h1 className="text-5xl font-black text-foreground mb-3">Blockchain Platforms</h1>
@@ -131,6 +132,8 @@ export function BlockchainPlatformsHome() {
           ))}
         </div>
       </div>
+
+      <SiteFooter className="snap-start" />
     </div>
   );
 }

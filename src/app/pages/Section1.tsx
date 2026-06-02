@@ -26,6 +26,7 @@ import { CalloutBox } from '../components/shared/CalloutBox';
 import { BlockchainChain } from '../components/blockchain/BlockchainChain';
 import { ConsensusVisualization } from '../components/blockchain/ConsensusVisualization';
 import { SectionNav } from '../components/navigation/SectionNav';
+import { SiteFooter } from '../components/shared/SiteFooter';
 import { Blocks, ExternalLink } from 'lucide-react';
 
 /** Sidebar shape — labels resolved at render time via i18n */
@@ -3158,6 +3159,7 @@ export function Section1() {
             />
           </div>
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

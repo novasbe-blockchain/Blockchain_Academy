@@ -5,6 +5,7 @@ import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { FileCode2, Check, X } from 'lucide-react';
 
 import imgSzaboVending from '../../../assets/sc/szabo-vending-machine.png';
@@ -552,6 +553,7 @@ export function SC_Section1() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

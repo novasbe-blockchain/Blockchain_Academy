@@ -3,6 +3,7 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { DiscussionSlide } from '../../components/templates/DiscussionSlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { Trophy } from 'lucide-react';
 
 const chapters = [
@@ -484,6 +485,7 @@ export function PM_Section5() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

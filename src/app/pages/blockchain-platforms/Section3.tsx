@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { ComparisonSlide } from '../../components/templates/ComparisonSlide';
 import { ConceptSlide } from '../../components/templates/ConceptSlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
@@ -1926,6 +1927,7 @@ export function BP_Section3() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import { CalloutBox } from '../components/shared/CalloutBox';
 import { DefinitionBox } from '../components/shared/DefinitionBox';
 import { Bitcoin, ExternalLink, AlertTriangle, ShieldX } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
+import { SiteFooter } from '../components/shared/SiteFooter';
 
 /** Sidebar shape — labels resolved at render time via i18n */
 const section2ChaptersShape: ReadonlyArray<{ id: string; kind?: 'group' }> = [
@@ -2574,6 +2575,7 @@ export function Section2() {
           />
         </div>
       </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );
