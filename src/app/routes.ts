@@ -1,4 +1,4 @@
-import { createBrowserRouter, redirect } from "react-router";
+import { createHashRouter, redirect } from "react-router";
 import { AcademyRoot } from "./AcademyRoot";
 import { Root } from "./Root";
 import { BlockchainPlatformsRoot } from "./BlockchainPlatformsRoot";
@@ -48,7 +48,7 @@ import { PM_Bibliography } from "./pages/project-management/Bibliography";
 import { LocaleProvider, detectPreferredLang } from "../i18n/LocaleProvider";
 import { isSupportedLang } from "../i18n/config";
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: "/",
     Component: AcademyRoot,
