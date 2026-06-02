@@ -17,6 +17,12 @@
     "comingSoon": "Em Breve",
     "startCourse": "Começar Curso"
   },
+  "footer": {
+    "supportedBy": "Com o apoio de",
+    "visitBlockchainPt": "Visitar Blockchain.pt",
+    "visitPrr": "Plano de Recuperação e Resiliência (PRR)",
+    "visitNova": "NOVA — Data, Operations & Technology Knowledge Center"
+  },
   "courses": {
     "blockchainFundamentals": {
       "title": "Fundamentos de Blockchain",

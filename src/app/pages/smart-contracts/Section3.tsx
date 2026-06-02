@@ -5,6 +5,7 @@ import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { Building2 } from 'lucide-react';
 import { TeamCheckpoint } from '../../components/TeamCheckpoint';
 
@@ -2429,6 +2430,7 @@ export function SC_Section3() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import { QuizSlide } from '../components/templates/QuizSlide';
 import { CalloutBox } from '../components/shared/CalloutBox';
 import { Rocket, ExternalLink } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
+import { SiteFooter } from '../components/shared/SiteFooter';
 import { TeamCheckpoint } from '../components/TeamCheckpoint';
 import ethereumLogo from '../../ethereum-eth-logo.svg';
 import vitalikPhoto from '../../vitalik-buterin.jpg';
@@ -874,6 +875,7 @@ export function Section3() {
         </div>
 
       </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { TitleSlide } from '../../components/templates/TitleSlide';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { GraduationCap, CheckCircle, RefreshCw, ShieldAlert, Map, MessageSquare } from 'lucide-react';
 
 const objectives = [
@@ -80,6 +81,7 @@ export function PM_LearningObjectives() {
           </div>
         </div>
       </div>
+      <SiteFooter className="snap-start" />
     </div>
   );
 }

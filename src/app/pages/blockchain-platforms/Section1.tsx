@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Bitcoin, Zap } from 'lucide-react';
 import { CalloutBox } from '../../components/shared/CalloutBox';
@@ -2185,6 +2186,7 @@ export function BP_Section1() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

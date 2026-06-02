@@ -1,7 +1,8 @@
 import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
-import logo from '../../blockchainptlogo.jpeg';
 import { TeacherCard } from '../components/shared/TeacherCard';
+import { BrandLogo } from '../components/shared/BrandLogo';
+import { SiteFooter } from '../components/shared/SiteFooter';
 import { helder, shayan } from '../data/instructors';
 
 const instructors = [helder, shayan];
@@ -67,7 +68,7 @@ export function Home() {
         
         <div className="relative z-10 text-center max-w-5xl">
           <div className="flex justify-center mb-8">
-            <img src={logo} alt="Blockchain.pt" className="h-36 object-contain" />
+            <BrandLogo className="h-36" />
           </div>
           
           <p className="text-2xl text-muted-foreground mb-8">
@@ -140,6 +141,7 @@ export function Home() {
         </div>
       </div>
 
+      <SiteFooter className="snap-start" />
     </div>
   );
 }

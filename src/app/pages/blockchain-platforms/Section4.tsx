@@ -6,6 +6,7 @@ import { ConceptSlide } from '../../components/templates/ConceptSlide';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Network } from 'lucide-react';
 
@@ -1265,6 +1266,7 @@ export function BP_Section4() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

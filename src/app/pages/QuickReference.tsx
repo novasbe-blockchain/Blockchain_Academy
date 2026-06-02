@@ -1,4 +1,5 @@
 import { BookOpen } from 'lucide-react';
+import { SiteFooter } from '../components/shared/SiteFooter';
 
 export function QuickReference() {
   return (
@@ -242,6 +243,7 @@ import { Blocks } from 'lucide-react';
           </div>
         </section>
       </div>
+      <SiteFooter className="snap-start" />
     </div>
   );
 }

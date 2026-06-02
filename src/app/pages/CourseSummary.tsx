@@ -1,4 +1,5 @@
 import { TitleSlide } from '../components/templates/TitleSlide';
+import { SiteFooter } from '../components/shared/SiteFooter';
 import { Link } from 'react-router';
 import { Map, ScrollText, Blocks, Bitcoin, Rocket, ArrowRight } from 'lucide-react';
 
@@ -101,6 +102,7 @@ export function CourseSummary() {
           </div>
         </div>
       </div>
+      <SiteFooter className="snap-start" />
     </div>
   );
 }

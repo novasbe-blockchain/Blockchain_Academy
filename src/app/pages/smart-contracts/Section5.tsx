@@ -5,6 +5,7 @@ import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 import { ShieldAlert } from 'lucide-react';
 
 // Language-neutral shape — only IDs. Labels come from t() at render time.
@@ -531,6 +532,7 @@ export function SC_Section5() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Lock } from 'lucide-react';
-import logo from '../../blockchainptlogo.jpeg';
 import { useLang } from '../../i18n/useLang';
 import { LanguageSwitcher } from '../components/navigation/LanguageSwitcher';
+import { BrandLogo } from '../components/shared/BrandLogo';
+import { SiteFooter } from '../components/shared/SiteFooter';
 
 interface Course {
   number: string;
@@ -82,7 +83,7 @@ export function CourseSelection() {
           {/* Logo + Academy title */}
           <div className="text-center mb-12">
             <div className="flex justify-center mb-6">
-              <img src={logo} alt={t('academy.logoAlt')} className="h-24 object-contain" />
+              <BrandLogo alt={t('academy.logoAlt')} className="h-24" />
             </div>
             <h1 className="text-5xl lg:text-6xl font-black text-foreground mb-4">
               {t('academy.title')}
@@ -201,6 +202,8 @@ export function CourseSelection() {
           </div>
         </div>
       </div>
+
+      <SiteFooter />
     </div>
   );
 }

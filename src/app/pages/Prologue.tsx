@@ -8,6 +8,7 @@ import { QuizSlide } from '../components/templates/QuizSlide';
 import { CalloutBox } from '../components/shared/CalloutBox';
 import { ScrollText, ExternalLink, User } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
+import { SiteFooter } from '../components/shared/SiteFooter';
 import bitcoinPedigree from '../../assets/bf/bitcoin-academic-pedigree.png';
 
 /** Sidebar shape — labels resolved at render time via i18n */
@@ -696,6 +697,7 @@ export function Prologue() {
         </div>
 
         </div>
+        <SiteFooter className="snap-start" />
       </div>
     </div>
   );

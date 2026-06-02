@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { ArrowRight, ExternalLink, Mail } from 'lucide-react';
-import logo from '../../../blockchainptlogo.jpeg';
+import { BrandLogo } from '../../components/shared/BrandLogo';
+import { SiteFooter } from '../../components/shared/SiteFooter';
 
 const BASE = '/project-management';
 
@@ -60,7 +61,7 @@ export function ProjectManagementHome() {
 
         <div className="relative z-10 text-center max-w-5xl">
           <div className="flex justify-center mb-8">
-            <img src={logo} alt="Blockchain.pt" className="h-36 object-contain" />
+            <BrandLogo className="h-36" />
           </div>
 
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f97316]/10 border border-[#f97316]/30 mb-6">
@@ -188,6 +189,8 @@ export function ProjectManagementHome() {
           </div>
         </div>
       </div>
+
+      <SiteFooter />
     </div>
   );
 }

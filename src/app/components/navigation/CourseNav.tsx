@@ -2,9 +2,9 @@ import { Link, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Sun, Moon, ChevronLeft } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import logo from '../../../blockchainptlogo.jpeg';
 import { useLang } from '../../../i18n/useLang';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { BrandLogo } from '../shared/BrandLogo';
 
 interface Section {
   id: string;
@@ -54,7 +54,7 @@ export function CourseNav({ base, sections = [], accentColor = '#ED1C24' }: Cour
       <div className="h-6 w-px bg-border flex-shrink-0" />
 
       <Link to={effectiveBase} className="flex-shrink-0 mr-1 group">
-        <img src={logo} alt="Blockchain.pt" className="h-8 object-contain group-hover:scale-105 transition-transform" />
+        <BrandLogo className="h-8 group-hover:scale-105 transition-transform" />
       </Link>
 
       {/* ── MIDDLE: section squares share all available width equally.
