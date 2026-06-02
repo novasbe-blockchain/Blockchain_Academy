@@ -1,0 +1,242 @@
+{
+  "groups": {
+    "g-brief": "🎯 Briefing",
+    "g-plan": "📋 O Plano",
+    "g-submit": "📊 Fecho"
+  },
+  "chapters": {
+    "s7-overview": "Visão Geral & Calendário",
+    "s7-p1-analysis": "Parte 1 · Análise",
+    "s7-p2-technical": "Parte 2 · Técnica",
+    "s7-p3-governance": "Parte 3 · Governação",
+    "s7-p4-roadmap": "Parte 4 · Roadmap",
+    "s7-evaluation": "Avaliação & Entrega",
+    "s7-quiz": "Quiz"
+  },
+  "title": {
+    "sectionNumber": "SECÇÃO 07",
+    "title": "Projeto de Equipa",
+    "subtitle": "Desenha uma aplicação de negócio com smart contracts — desde o enunciado do problema, passando pelo desenho técnico, até a um PDF entregável e a uma apresentação."
+  },
+  "timeline": {
+    "items": [
+      { "date": "26 de maio de 2026", "label": "Apresentação do projeto + Q&A" },
+      { "date": "28 de maio de 2026", "label": "Material de leitura + Q&A do projeto" },
+      { "date": "2 de junho de 2026", "label": "Desenvolvimento com IA na prática" },
+      { "date": "5 de junho de 2026", "label": "Apresentações iniciais do projeto + Q&A" },
+      { "date": "9 de junho de 2026", "label": "Apresentações finais + entrega" }
+    ]
+  },
+  "overview": {
+    "heading": "Visão Geral do Projeto",
+    "subtitle": "Identifica um problema do mundo real, avalia se a blockchain é a ferramenta certa e desenha uma solução com smart contracts. Integra os cinco cursos da Academia.",
+    "teamSizeLabel": "Dimensão da equipa",
+    "teamSizeValue": "3 a 4 membros",
+    "deliverableLabel": "Entregável",
+    "deliverableValue": "PDF de 3 a 5 páginas",
+    "deliverableNote": "+ apresentação de 5 min",
+    "integratesTitle": "Este projeto integra",
+    "integrates": [
+      "Fundamentos de Blockchain — conceitos centrais e modelos de confiança",
+      "Aplicações de Negócio dos Smart Contracts — desenho e framework de decisão",
+      "Plataformas Blockchain — escolher a chain certa para o teu caso de uso",
+      "Governação e Conformidade — governação legal, regulatória e on-chain",
+      "Gestão de Projeto para Iniciativas Blockchain — transformar um desenho num roadmap"
+    ],
+    "mindsetLabel": "A mentalidade:",
+    "mindsetBody": " pensa como empreendedores e consultores de blockchain. Identifica oportunidades reais, desenha soluções viáveis, navega os compromissos entre tecnologia, negócio e regulação.",
+    "sessionsLabel": "Sessões online · 18h–20h",
+    "deadlineLabel": "Prazo:",
+    "deadlineBodyA": " as entregas encerram a ",
+    "deadlineDate": "10 de junho de 2026",
+    "deadlineBodyB": "."
+  },
+  "p1": {
+    "partLabel": "Parte 1 de 4",
+    "heading": "Definição & Análise do Problema",
+    "subtitle": "Antes de desenhares seja o que for, prova que existe um problema real que vale a pena resolver — e que a blockchain é a ferramenta certa para ele.",
+    "cards": [
+      {
+        "title": "Enunciado do Problema",
+        "items": [
+          "Que problema de negócio específico estás a resolver? Sê preciso — nomeia os atores, a atividade, o atrito.",
+          "Quais são os pontos de dor na solução ou processo atual?",
+          "Quem sofre estes pontos de dor e com que frequência?"
+        ]
+      },
+      {
+        "title": "Análise do Estado Atual",
+        "items": [
+          "Como é que este problema é abordado hoje (se é que é)?",
+          "Que ineficiências, custos ou problemas de confiança existem na abordagem atual?",
+          "Quantifica sempre que possível — custo, tempo, taxas de erro, horas manuais."
+        ]
+      },
+      {
+        "title": "Proposta de Valor da Blockchain & dos SC",
+        "items": [
+          "Que valor acrescenta um smart contract face a um sistema tradicional?",
+          "valueFramework",
+          "Justifica porque é que a blockchain é a solução certa — ou assinala honestamente os compromissos se for um caso limítrofe."
+        ]
+      },
+      {
+        "title": "Mapeamento de Stakeholders",
+        "items": [
+          "Quem são todos os stakeholders? Quem beneficia — e em que medida?",
+          "Quem é desestabilizado ou perde? Como vão reagir?",
+          "Que incentivos alinham (ou desalinham) o comportamento dos participantes?",
+          "Modelo de receita — taxas de transação, subscrição, economia de tokens ou híbrido?",
+          "Vantagem competitiva e defensabilidade — porquê a tua equipa, porquê agora?"
+        ]
+      }
+    ],
+    "valueFramework": {
+      "lead": "Passa-o pela framework de decisão: isto exige ",
+      "trustless": "execução sem necessidade de confiança",
+      "sep1": ", ",
+      "transparency": "transparência",
+      "sep2": ", ",
+      "immutability": "imutabilidade",
+      "sep3": " ou ",
+      "automated": "imposição automatizada",
+      "tail": "?"
+    }
+  },
+  "p2": {
+    "partLabel": "Parte 2 de 4",
+    "heading": "Desenho Técnico",
+    "subtitle": "Escolhe uma plataforma com uma justificação defensável, esboça o sistema de smart contracts e identifica onde vive cada dado.",
+    "platform": {
+      "title": "Seleção de Plataforma",
+      "item1": "Que plataforma blockchain? Ethereum, Polygon, Arbitrum, Solana, Hyperledger Fabric, Corda…",
+      "item2Strong": "Pública vs privada/consórcio",
+      "item2": " — toma a decisão e defende-a.",
+      "item3A": "Justifica face a: ",
+      "item3Em": "velocidade de transação · custo · segurança · maturidade do ecossistema · adequação ao caso de uso",
+      "item3B": ".",
+      "item4A": "Não digas apenas \"Ethereum\" — explica porque é melhor que as duas alternativas seguintes para o ",
+      "item4Em": "teu",
+      "item4B": " problema.",
+      "tipLabel": "Dica:",
+      "tipBody": " reaproveita o interativo de checklist de plataforma (Secção 6) — o teu veredito é a tua resposta aqui."
+    },
+    "architecture": {
+      "title": "Arquitetura do Smart Contract",
+      "item1A": "Desenho de alto nível da tua dApp / sistema de contratos — ",
+      "item1Strong": "diagramas são bem-vindos",
+      "item1B": ".",
+      "item2": "Que dados precisa o contrato? O que fica on-chain vs alimentado por oracle vs off-chain?",
+      "item3": "Eventos de gatilho, variáveis de estado, funções-chave — mostra a forma, não tens de escrever o código.",
+      "item4": "Considerações de segurança: reentrância? dependências de oracle? controlo de acessos? front-running? Aborda-as explicitamente.",
+      "bonusLabel": "Bónus:",
+      "bonusBody": " um contrato em pseudocódigo ou um esboço real em Solidity no anexo é bem pontuado."
+    }
+  },
+  "p3": {
+    "partLabel": "Parte 3 de 4",
+    "heading": "Governação & Conformidade",
+    "subtitle": "Os smart contracts combinam código e lei. Explica como as decisões são tomadas, que regulamentos se aplicam e que riscos estás a assumir.",
+    "cards": [
+      {
+        "title": "Framework de Governação",
+        "intro": "Decide como o sistema se conduz a si próprio depois de estar em produção.",
+        "points": [
+          "Como é governado o sistema de contratos no dia a dia?",
+          "On-chain vs off-chain — que decisões vivem onde?",
+          "DAOs, multisigs ou governação tradicional — qual encaixa?",
+          "Quem pode atualizar ou pausar o contrato e sob que controlos?"
+        ]
+      },
+      {
+        "title": "Regulatório & Legal",
+        "intro": "Mapeia as regras que se aplicam antes que te mordam.",
+        "points": [
+          "Jurisdição — onde vivem os utilizadores e os dados?",
+          "Regulamentos aplicáveis: MiCA, lei dos valores mobiliários, AML / KYC, regras setoriais.",
+          "Viabilidade legal hoje — que licenças ou aprovações são necessárias?",
+          "RGPD se tocares em dados pessoais — guarda hashes, não campos em bruto."
+        ]
+      },
+      {
+        "title": "Avaliação de Risco",
+        "intro": "Nomeia o que pode correr mal — em três camadas.",
+        "points": [
+          "Técnico · bugs no contrato, falhas de oracle, congestionamento, perda de chaves.",
+          "Negócio · adoção, concorrência, mudança regulatória, timing de mercado.",
+          "Operacional · dependências da equipa, custódia, resposta a incidentes.",
+          "Para cada linha: probabilidade × impacto + um plano de mitigação."
+        ]
+      }
+    ]
+  },
+  "p4": {
+    "partLabel": "Parte 4 de 4",
+    "heading": "Roadmap de Implementação",
+    "subtitle": "Transforma o desenho num plano por fases. Não precisamos de datas de calendário — precisamos de saber que pensaste sobre o que vem primeiro, o que depende de quê e como medirias o sucesso.",
+    "phasedPlanLabel": "Plano por fases",
+    "phases": [
+      { "tag": "MVP", "desc": "A menor versão que prova a proposta de valor. Um caso de uso, âmbito restrito, recursos manuais permitidos." },
+      { "tag": "v1", "desc": "Núcleo pronto para produção. Contrato auditado, UI básica, utilizadores reais, monitorização e resposta a incidentes." },
+      { "tag": "Full", "desc": "Produto completo em funcionalidades. Integrações com sistemas adjacentes, governação ativa, ganchos de ecossistema (oracles, indexadores, marketplaces)." }
+    ],
+    "eachPhaseLabel": "Para cada fase:",
+    "eachPhaseBodyA": " marcos principais, dependências entre eles, recursos necessários (composição da equipa + competências) e uma ",
+    "eachPhaseStrong": "estimativa de esforço",
+    "eachPhaseBodyB": " (pequeno / médio / grande — sem datas de calendário necessárias).",
+    "metricsLabel": "Métricas de sucesso",
+    "metricsIntro": "Como vais saber que cada fase teve sucesso? Escolhe métricas que mapeiem diretamente para os pontos de dor da Parte 1.",
+    "metrics": [
+      "Tempo até à ação (dias → minutos)",
+      "Custo por transação ou por disputa",
+      "Taxa de erro / fraude",
+      "Número de participantes / carteiras ativas",
+      "TVL ou valor a fluir pelo contrato",
+      "Achados de auditoria fechados"
+    ],
+    "metricsTip": "Escolhe 2 a 3 — não 10. Torna-as mensuráveis."
+  },
+  "evaluation": {
+    "heading": "Avaliação & Entrega",
+    "subtitle": "Como avaliamos o projeto — e exatamente o que entregar.",
+    "criteriaLabel": "Critérios de avaliação",
+    "criteria": [
+      { "label": "Adequação Problema-Solução", "weight": "20%", "sub": "A blockchain é genuinamente a solução certa? O problema está claramente definido?" },
+      { "label": "Realismo de Implementação & Solidez Técnica", "weight": "20%", "sub": "O roadmap é exequível? Os riscos estão devidamente avaliados? A arquitetura é sólida?" },
+      { "label": "Viabilidade de Negócio", "weight": "20%", "sub": "Caminho claro para a criação de valor e sustentabilidade. Bónus: plano de negócio & estratégia de entrada no mercado." },
+      { "label": "Governação & Conformidade", "weight": "15%", "sub": "Considerações legais e de governação adequadamente abordadas." },
+      { "label": "Qualidade da Apresentação", "weight": "15%", "sub": "Documento bem estruturado, claro, profissional." },
+      { "label": "Análise de Stakeholders", "weight": "10%", "sub": "Todos os stakeholders identificados com análise clara de benefício/custo." }
+    ],
+    "submissionLabel": "Requisitos de entrega",
+    "formatLabel": "Formato",
+    "formatValue": "PDF",
+    "formatNote": "idealmente",
+    "lengthLabel": "Extensão",
+    "lengthValue": "3 a 5 páginas",
+    "lengthNote": "excl. anexos",
+    "presentationLabel": "Apresentação",
+    "presentationValue": "5 min + Q&A",
+    "appendicesLabel": "Anexos",
+    "appendicesValue": "Opcional",
+    "appendicesNote": "diagramas · pseudocódigo · modelos",
+    "collaborationLabel": "Colaboração de equipa",
+    "collaboration": [
+      "Cada membro da equipa contribui para a investigação, a escrita e a apresentação.",
+      "Documenta as contribuições individuais num anexo.",
+      "Aplica princípios de gestão de projeto: atribui papéis, acompanha o progresso, faz revisões internas antes da entrega."
+    ],
+    "deadlineLabel": "Prazo:",
+    "deadlineBody": " 10 de junho de 2026 — as entregas encerram. Apresentações finais a 9 de junho."
+  },
+  "quiz": {
+    "question": "A tua equipa está a desenhar um smart contract para um pagamento de seguro de colheitas: um sensor deteta precipitação abaixo de um limiar e o contrato paga automaticamente ao agricultor. A proposta obtém nota máxima em Adequação Problema-Solução e em Análise de Stakeholders, mas o avaliador assinala-a como limítrofe. Que categoria de avaliação terá perdido pontos com maior probabilidade — e o que deves reforçar no entregável?",
+    "options": [
+      "Qualidade da Apresentação (15%) — a apresentação não estava suficientemente polida; reescreve o sumário executivo.",
+      "Realismo de Implementação & Solidez Técnica (20%) — a avaliação de risco deveria abordar explicitamente a dependência de oracle do sensor de precipitação, o problema da imutabilidade caso o sensor avarie e a escolha da plataforma para uma entrega fiável.",
+      "Viabilidade de Negócio (20%) — o projeto precisa de um plano de negócio e de uma estratégia de entrada no mercado, independentemente da solidez técnica.",
+      "Governação & Conformidade (15%) — os pagamentos automáticos exigem sempre aprovação regulatória prévia explícita antes de o projeto poder ser avaliado."
+    ],
+    "explanation": "A categoria Realismo de Implementação & Solidez Técnica (20%) cobre avaliação de risco, arquitetura e justificação de plataforma — exatamente as lacunas que este desenho tem. Em concreto: (1) Dependência de oracle — o sensor de precipitação é um ponto único de falha; o entregável tem de abordar como o projeto tolera o comprometimento ou a indisponibilidade do oracle. (2) Imutabilidade — se o sensor reportar dados errados e o contrato executar, o pagamento não pode ser revertido; que salvaguardas ou janelas de disputa existem? (3) Plataforma — a chain escolhida oferece a disponibilidade de dados e a finalidade que este caso de uso precisa? A Qualidade da Apresentação é sobre polimento, a Viabilidade de Negócio é sobre o caminho de criação de valor, e a Governação & Conformidade — embora importante — não assinalaria por si só um veredito limítrofe aqui. A jogada certa é reforçar a Parte 2 (Desenho Técnico) e a Parte 3.3 (Avaliação de Risco)."
+  }
+}

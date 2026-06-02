@@ -1,0 +1,518 @@
+{
+  "groups": {
+    "g-s1-problem":  "🤔 O Problema",
+    "g-s1-basics":   "🧱 O que é uma Blockchain?",
+    "g-s1-crypto":   "🔐 Criptografia",
+    "g-s1-network":  "🌐 Rede e Consenso",
+    "g-s1-mining":   "⛏️ Mineração",
+    "g-s1-wallet":   "👛 Identidade",
+    "g-s1-wrap":     "✅ Conclusão"
+  },
+  "chapters": {
+    "s1-trust":        "O Problema da Confiança",
+    "s1-ledger":       "O Livro-Razão Partilhado",
+    "s1-what-is":      "O que é a Blockchain?",
+    "s1-transaction":  "Transações",
+    "s1-hashing":      "Hashing",
+    "s1-chain":        "Ligar Blocos",
+    "s1-cascade":      "A Cascata",
+    "s1-network":      "A Rede",
+    "s1-network-sort": "Ordenar os Sistemas",
+    "s1-consensus":    "Consenso",
+    "s1-protocols":    "O Zoo de Protocolos",
+    "s1-mining":       "Corrida de Mineração",
+    "s1-wallet":       "Conhece a MetaMask",
+    "s1-takeaways":    "Conclusões"
+  },
+  "title": {
+    "sectionNumber": "SECÇÃO 01",
+    "title":    "Como Funciona uma Blockchain",
+    "subtitle": "Do problema da confiança a uma cadeia em que não consegues fazer batota."
+  },
+  "trust": {
+    "title": "O Problema da Confiança",
+    "description": "A Alice quer enviar 100$ ao Bob através de fronteiras. Um ato aparentemente simples — que silenciosamente depende de uma longa cadeia de intermediários, em cada um dos quais tens de confiar.",
+    "middlemenHeader": "Quem são os intermediários hoje?",
+    "middlemen": {
+      "banks":     { "label": "Bancos",            "sub": "Guardam e movem dinheiro" },
+      "notaries":  { "label": "Notários",          "sub": "Certificam documentos" },
+      "registry":  { "label": "Registo Predial",   "sub": "Provam propriedade" },
+      "paypal":    { "label": "PayPal / Visa",     "sub": "Processam pagamentos" },
+      "ca":        { "label": "Autor. Certif.",    "sub": "Verificam identidades" }
+    },
+    "calloutTitle": "O problema do gasto duplo",
+    "calloutLead":  "Podes copiar uma fotografia digital mil vezes. Porque não podes copiar um dólar digital? Porque",
+    "calloutEm":    "alguém leva a conta",
+    "calloutTail":  ". Esse alguém é sempre um intermediário.",
+    "keyPoints": [
+      "Cada intermediário cobra uma taxa, adiciona atraso e pode recusar a transação",
+      "Sem um árbitro, duas pessoas poderiam gastar o mesmo dólar digital duas vezes",
+      "Historicamente, confiar significou: confiar numa instituição",
+      "E se o árbitro não tivesse de ser uma instituição?"
+    ]
+  },
+  "ledger": {
+    "title": "O Livro-Razão Partilhado",
+    "description": "Imagina dez aldeãos, sem banco. Partilham um único caderno de transações — exceto que cada aldeão guarda a sua própria cópia idêntica. Quando alguém escreve uma nova entrada, todos a copiam.",
+    "keyPoints": [
+      "Sem autoridade central — ninguém manda no caderno",
+      "Ninguém pode recusar registar uma entrada válida",
+      "Todos podem auditar a história completa a qualquer momento",
+      "Mas um aldeão poderia editar secretamente a sua própria cópia. Como saberia alguém?"
+    ]
+  },
+  "villageLedger": {
+    "subhead": "Mesmo caderno, dez cópias",
+    "villager": "Aldeão",
+    "calloutTitle": "A falha",
+    "calloutLead": "Nove aldeãos têm entradas idênticas. A Mallory alterou secretamente as suas.",
+    "calloutQuestion": "Como saberiam os outros?"
+  },
+  "whatIs": {
+    "title": "O que é uma blockchain?",
+    "description": "Uma blockchain é a resposta ao problema que acabámos de esboçar: um livro-razão partilhado que nenhuma entidade isolada controla, onde cada participante tem uma cópia, e onde a história pode ser acrescentada mas nunca silenciosamente reescrita.",
+    "plainDefHeader": "Definição simples",
+    "plainDefLead":   "Uma blockchain é uma forma de",
+    "plainDefDLT":    "Tecnologia de Livro-Razão Distribuído (DLT)",
+    "plainDefMidA":   "— um registo que é",
+    "plainDefShared": "partilhado",
+    "plainDefMidB":   ",",
+    "plainDefAppendOnly": "apenas-acrescentar",
+    "plainDefMidC":   ", e",
+    "plainDefLinked": "criptograficamente ligado",
+    "plainDefTail":   ", a correr numa rede onde nenhuma entidade isolada manda.",
+    "calloutTitle":   "Pseudónimo ≠ anónimo",
+    "calloutLead":    "Numa blockchain pública atuas através de um",
+    "calloutAddress": "endereço",
+    "calloutMid":     "como",
+    "calloutHex":     "0x4d9e…",
+    "calloutTail":    "— não o teu nome legal. Mas cada transação que fazes desse endereço é visível para todos, para sempre. A privacidade vem de não ligares o endereço a ti — não de esconderes o próprio endereço.",
+    "props": {
+      "distributed":   "Distribuída",
+      "noAuthority":   "Sem autoridade central",
+      "pseudonymous":  "Pseudónima",
+      "appendOnly":    "Apenas-acrescentar",
+      "transparent":   "Transparente",
+      "tamperEvident": "Adulteração-evidente"
+    },
+    "keyPoints": [
+      "Distribuída — cada participante tem uma cópia completa do livro-razão; sem servidor mestre para derrubar",
+      "Sem órgãos de controlo — nenhum administrador pode congelar contas, reverter transações ou ignorar as regras",
+      "Pseudónima — atuas através de um endereço, não do teu nome legal; rastreável mas não diretamente identificadora",
+      "Apenas-acrescentar — podes escrever novas entradas, mas as antigas não podem ser silenciosamente editadas",
+      "A blockchain é um tipo de DLT, não o único — Bitcoin e Ethereum são blockchains, Hyperledger Fabric e R3 Corda são DLTs sem cadeia"
+    ]
+  },
+  "transactionFlow": {
+    "heading": "O que é uma transação?",
+    "leadA": "A unidade básica de atividade numa blockchain. Cada transação é assinada pelo remetente, transmitida à rede, fica em fila na",
+    "leadMempool": "mempool",
+    "leadB": ", e espera ser escolhida por um mineiro e empacotada no próximo bloco.",
+    "exampleHeader": "Transação de exemplo",
+    "from":   "De",
+    "to":     "Para",
+    "amount": "Quantia",
+    "fee":    "Taxa",
+    "signed": "Assinada",
+    "signedBy": "✓ pela Alice",
+    "cardCaption": "A maioria das transações são pagamentos, mas qualquer coisa pode ser uma — votos, transferências de ativos, chamadas a contratos.",
+    "users": {
+      "alice": "Alice",
+      "bob":   "Bob",
+      "carol": "Carol",
+      "dave":  "Dave"
+    },
+    "sender":  "remetente",
+    "mempool": "Mempool",
+    "blockFull":   "✓ Bloco #{{n}} cheio",
+    "blockLabel":  "Bloco #{{n}}",
+    "footerA": "As transações acumulam-se na",
+    "footerMempoolWord": "mempool",
+    "footerB": ". Os mineiros escolhem o próximo lote (normalmente, taxa mais alta primeiro) para encher um",
+    "footerBlockWord": "bloco",
+    "footerC": "— e depois minam-no. Quando o bloco fica cheio, parte e começa um novo."
+  },
+  "hashing": {
+    "title": "Hashing — Uma Impressão Digital para Dados",
+    "description": "Uma função de hash recebe qualquer input — uma palavra, um parágrafo, um livro inteiro — e devolve uma impressão digital de tamanho fixo. O truque: muda um caractere do input, e a impressão digital muda por completo.",
+    "inputLabel": "Input:",
+    "hashLabel":  "Hash SHA-256:",
+    "keyPoints": [
+      "De sentido único: não podes reverter um hash para encontrar o input original",
+      "Tamanho fixo: sempre 64 caracteres hexadecimais (para SHA-256), por maior que seja o input",
+      "Determinística: o mesmo input produz sempre o mesmo hash",
+      "Avalanche: muda um caractere, toda a impressão digital muda"
+    ]
+  },
+  "interactiveHash": {
+    "tryYourself": "🔬 Experimenta tu mesmo",
+    "placeholder": "Escreve qualquer coisa aqui...",
+    "outputLabel": "Hash SHA-256:",
+    "empty": "Introduz texto acima para veres o seu hash SHA-256 em tempo real"
+  },
+  "quizAvalanche": {
+    "question": "O que acontece se mudares um único caractere no input de um hash SHA-256?",
+    "options": [
+      "Apenas os últimos caracteres do hash mudam",
+      "O hash muda ligeiramente, proporcionalmente à edição",
+      "Todo o output do hash muda imprevisivelmente (efeito de avalanche)",
+      "O hash mantém-se igual se a alteração for suficientemente pequena"
+    ],
+    "explanation": "As funções de hash criptográficas exibem o efeito de avalanche: mesmo uma alteração de 1 bit no input produz um output completamente diferente. É isto que torna um hash uma impressão digital fiável dos dados."
+  },
+  "linkedBlocks": {
+    "heading": "Cada Bloco Aponta para Trás",
+    "leadA":   "Um bloco armazena dados mais a",
+    "leadEm":  "impressão digital do bloco anterior",
+    "leadB":   ". Esse campo único é o que liga a cadeia. Olha para as cores — o",
+    "leadHashWord": "Hash",
+    "leadC":   "de cada bloco volta a aparecer como",
+    "leadPrevHashWord": "Hash Anterior",
+    "leadTail":"do bloco seguinte.",
+    "blockLabel": "Bloco #{{n}}",
+    "data": {
+      "0":  "Bloco Génesis",
+      "1":  "50 BTC → Alice",
+      "2":  "25 BTC → Bob"
+    },
+    "dataLabel":     "Dados",
+    "prevHashLabel": "Hash Anterior",
+    "hashLabel":     "Hash",
+    "matchesTitle":  "corresponde ao hash do bloco anterior",
+    "matches":       "corresponde",
+    "genesisDash":   "— (génesis)",
+    "footerA":       "Mesma cor = mesmo valor.",
+    "footerB":       "Se alguém mudasse os dados no Bloco #1, o seu hash mudaria — e o Hash Anterior do Bloco #2 deixaria de corresponder. A cadeia parte-se no instante em que algo a montante se move."
+  },
+  "chainBuilder": {
+    "heading": "Reconstrói a Cadeia",
+    "leadA":   "Estes 4 blocos estão",
+    "leadScrambled": "baralhados",
+    "leadB":   ". Usa os campos",
+    "leadPrev": "Hash Anterior",
+    "leadAnd":  "e",
+    "leadHash": "Hash",
+    "leadC":    "para descobrir a ordem correta.",
+    "subLead":  "Clica num bloco para o selecionar, depois clica num lugar para o colocar.",
+    "placeHere": "← Coloca os blocos aqui na ordem correta →",
+    "slot": "Lugar {{n}}",
+    "dropHere": "← coloca aqui",
+    "empty": "vazio",
+    "blockPool": "Reservatório de Blocos — clica para selecionar",
+    "allPlaced": "Todos os blocos colocados ✓",
+    "selectedTag": "✦ Selecionado",
+    "blockTag":    "Bloco",
+    "showHint":  "💡 Mostrar dica",
+    "hideHint":  "Esconder dica ▲",
+    "hintTitle": "Como resolver:",
+    "hintStep1A": "1. Encontra o",
+    "hintStep1Genesis": "bloco Génesis",
+    "hintStep1B": "— o seu",
+    "hintStep1PrevHash": "Hash Anterior",
+    "hintStep1Reads": "diz",
+    "hintStep1Value": "0x000000 (início)",
+    "hintStep1End": ".",
+    "hintStep2A": "2. Faz corresponder o",
+    "hintStep2PrevHash": "Hash Anterior",
+    "hintStep2To": "de cada bloco ao",
+    "hintStep2Hash": "Hash",
+    "hintStep2End": "do bloco anterior — como ligar peças de um puzzle.",
+    "cardDataLabel": "Dados",
+    "cardPrevHashLabel": "Hash Anterior",
+    "cardHashLabel": "Hash",
+    "checkChain": "Verificar cadeia ✓",
+    "tryAgain": "Tentar novamente",
+    "resultPerfect":      "Perfeito — cadeia reconstruída!",
+    "resultClose":        "Quase! Um ou mais blocos estão fora do lugar.",
+    "resultReview":       "Revê como o Hash Anterior liga blocos.",
+    "perfectIcon":        "🎉",
+    "perfectStrong":      "Cadeia reconstruída!",
+    "perfectBody":        "Cada Hash Anterior correspondeu exatamente ao Hash do bloco anterior — essa ligação criptográfica é o que torna a blockchain à prova de adulteração e imutável.",
+    "imperfectIcon":      "💡",
+    "imperfectStrong":    "Ideia-chave:",
+    "imperfectBody":      "Começa pelo bloco Génesis (Hash Anterior = 0x000000), depois segue cada ligação Hash → Hash Anterior. A cadeia só pode ser montada de uma maneira.",
+    "blocks": {
+      "b0": { "data": "The Times 03/Jan/2009 — Génesis", "prevHash": "0x000000 (início da cadeia)" },
+      "b1": { "data": "Alice → Bob: 10 BTC",             "prevHash": "0x0000ab" },
+      "b2": { "data": "Bob → Carol: 5 BTC",               "prevHash": "0x1a2b3c" },
+      "b3": { "data": "Carol → Dave: 3 BTC",              "prevHash": "0x4d5e6f" }
+    }
+  },
+  "insideBlock": {
+    "heading": "Dentro de um Único Bloco",
+    "lead": "Cinco campos. Só isso. Cada um merece o seu lugar — juntos tornam cada bloco à prova de adulteração.",
+    "blockTag": "Bloco #2",
+    "replay": "↺ Repetir animação",
+    "fields": {
+      "prev-hash": {
+        "label": "Hash Anterior",
+        "desc":  "A impressão digital do bloco anterior a este. Muda algo nesse bloco e esta referência deixa de corresponder — a ligação parte-se de imediato."
+      },
+      "data": {
+        "label": "Dados",
+        "desc":  "O que este bloco regista. Para o Bitcoin: um lote de transações. Para outras cadeias: votos, transferências de ativos, instruções de contratos — qualquer coisa que queiras preservar."
+      },
+      "timestamp": {
+        "label": "Carimbo Temporal",
+        "desc":  "Quando este bloco foi criado. Faz parte do hash, portanto editar o carimbo a posteriori também parte a cadeia."
+      },
+      "nonce": {
+        "label": "Nonce",
+        "desc":  "Um número que o mineiro encontrou por força bruta. É o único input que vai sendo ajustado até o hash resultante cumprir o alvo de dificuldade."
+      },
+      "hash": {
+        "label": "Hash do Bloco",
+        "desc":  "A impressão digital do próprio bloco — calculada a partir de tudo o que está acima. Torna-se o \"Hash Anterior\" do próximo bloco."
+      }
+    }
+  },
+  "prevHashExercise": {
+    "heading": "Liga os Blocos",
+    "leadA":    "Cada bloco tem de referenciar o",
+    "leadStrong": "hash exato do bloco anterior",
+    "leadB":    ". Seleciona o",
+    "leadPrev": "Hash Anterior",
+    "leadC":    "correto para os Blocos #1 e #2.",
+    "blockLabel": "BLOCO #{{n}}",
+    "dataLabel":  "Dados",
+    "hashLabel":  "Hash",
+    "prevHashLabel": "Hash Anterior",
+    "pickPrev": "— escolhe hash anterior —",
+    "checkAnswers": "Verificar respostas ✓",
+    "tryAgain": "Tentar novamente",
+    "perfectChain": "Cadeia perfeita!",
+    "reviewHashes": "Revê os hashes acima",
+    "correctMsg": "✓ Correto — corresponde ao hash do Bloco #{{prev}}",
+    "wrongMsg":   "✗ Errado — devia ser {{expected}} (hash do Bloco #{{prev}})",
+    "insightIcon":   "💡",
+    "insightStrong": "A ideia-chave:",
+    "insightBody":   "se mudares algo no Bloco #1, o seu hash muda — e o Hash Anterior do Bloco #2 deixaria de corresponder, partindo a cadeia instantaneamente.",
+    "blocks": {
+      "0": "Chancellor on brink...",
+      "1": "Alice recebe 50 BTC",
+      "2": "Bob recebe 25 BTC"
+    },
+    "options": {
+      "0x000000": "0x000000  (hash do Bloco #0)",
+      "0x1a2b3c": "0x1a2b3c  (hash do Bloco #1)",
+      "0x4d5e6f": "0x4d5e6f  (hash do Bloco #2)",
+      "0x9f3c21": "0x9f3c21  (aleatório)"
+    }
+  },
+  "quizPrevHash": {
+    "question": "Qual é o propósito do campo 'hash anterior' num bloco?",
+    "options": [
+      "Encripta os dados de transação do bloco",
+      "Liga o bloco ao anterior, formando a cadeia",
+      "Armazena a identidade do mineiro",
+      "Determina o valor da recompensa do bloco"
+    ],
+    "explanation": "Cada bloco armazena o hash do bloco anterior. Se alguém adulterar um bloco anterior, o seu hash muda — e cada bloco que aponta para ele passa a apontar para uma impressão digital que já não existe."
+  },
+  "cascade": {
+    "heading": "Tenta enganar a cadeia",
+    "lead":    "Edita os dados de qualquer bloco. A cadeia vai mostrar-te o que parte.",
+    "blockLabel": "BLOCO #{{n}}",
+    "readOnly":   "só leitura",
+    "dataLabel":  "Dados",
+    "prevHashLabel": "Hash Anterior",
+    "hashLabel":     "Hash",
+    "whatHappened": "O que aconteceu?",
+    "reset": "↺ Reiniciar",
+    "moralStrong": "Adulteração-evidente — não à prova de adulteração.",
+    "moralBody":   "A cadeia não te impede de mudar os dados; torna a alteração visível em tudo o que vem a jusante.",
+    "computingGenesis": "A calcular génesis…",
+    "initialData": [
+      "A minha primeira blockchain",
+      "Alice → Bob: 10 BTC",
+      "Bob → Carol: 5 BTC",
+      "Carol → Dave: 3 BTC"
+    ],
+    "idleMessage": "Edita os dados de qualquer bloco abaixo. Observa a cadeia reagir.",
+    "cleanMessage": "Hash recalculado. A cadeia continua a ligar limpa — nada mais se mexeu.",
+    "nothingDownstream": "Hash recalculado. Nada a jusante para partir.",
+    "brokenMessageSingular": "Mudaste o Bloco #{{n}}. O seu hash recalculou — mas o {{count}} bloco a seguir continua a referenciar o valor antigo. A cadeia apanhou-te.",
+    "brokenMessagePlural":   "Mudaste o Bloco #{{n}}. O seu hash recalculou — mas os {{count}} blocos a seguir continuam a referenciar o valor antigo. A cadeia apanhou-te."
+  },
+  "network": {
+    "heading": "A Rede",
+    "lead": "Uma máquina sozinha a guardar uma cadeia é frágil. Mas e se cada máquina da rede tivesse a sua própria cópia? Alterna entre as três formas de rede abaixo e clica em nós para os tirar de linha — vê o que sobrevive.",
+    "rows": [
+      { "title": "Centralizada = ponto único de controlo",   "desc": "Um operador é dono do sistema. Mata o centro e tudo apaga." },
+      { "title": "Descentralizada = aglomerados de autoridade", "desc": "Vários hubs. Matar um parte o seu aglomerado mas deixa o resto intacto." },
+      { "title": "Distribuída = cada nó é um par",            "desc": "Todos os nós guardam os dados e contornam falhas. É isto que a blockchain herda." },
+      { "title": "Blockchain = distribuída + acordada",       "desc": "Uma rede distribuída mais uma forma de os pares concordarem em qual é a cadeia verdadeira." }
+    ]
+  },
+  "networkTopo": {
+    "ariaSuffix": "topologia de rede",
+    "modes": {
+      "centralized": {
+        "label":   "Centralizada",
+        "tagline": "Um servidor guarda tudo. Rápido e simples — mas se ele cair, toda a rede cai.",
+        "lesson":  "Tenta clicar no nó central. Depois tenta clicar num satélite. O mesmo ato, raio de explosão muito diferente."
+      },
+      "decentralized": {
+        "label":   "Descentralizada",
+        "tagline": "Vários hubs partilham a autoridade. Nenhum hub controla tudo, mas cada um continua a mandar no seu aglomerado.",
+        "lesson":  "Clica num hub — as suas folhas ficam órfãs porque só chegam à rede através dele. Os outros aglomerados continuam a funcionar."
+      },
+      "distributed": {
+        "label":   "Distribuída",
+        "tagline": "Cada nó é um par com o mesmo papel. Nenhuma falha isolada consegue derrubar a rede.",
+        "lesson":  "Tenta clicar em vários nós. A malha contorna as falhas — é isto que a blockchain herda."
+      }
+    },
+    "status": {
+      "down":       "Rede em baixo — todos os nós fora de linha",
+      "operational":"Operacional · {{connected}}/{{total}} acessíveis",
+      "broken":     "Em baixo · só {{connected}}/{{total}} acessíveis, {{isolated}} isolados",
+      "degraded":   "Degradada · {{connected}}/{{total}} acessíveis, {{isolated}} isolados"
+    },
+    "reset": "↺ Reiniciar"
+  },
+  "sortSystems": {
+    "heading": "Ordena os Sistemas",
+    "lead":    "Cada sistema abaixo está algures no espectro. Clica num sistema, depois clica na categoria a que pertence.",
+    "items": "Itens",
+    "pickN":  "Escolhe um sistema (faltam {{n}})",
+    "allPlacedHeader": "Tudo colocado — verifica as tuas respostas",
+    "allPlacedNote":   "Todos os sistemas colocados ✓",
+    "selected": "✦ selecionado",
+    "dropHere": "coloca aqui",
+    "placeHere": "← coloca aqui",
+    "checkAnswers": "Verificar respostas ✓",
+    "tryAgain": "↺ Tentar novamente",
+    "results": {
+      "perfect":  "Perfeito!",
+      "almost":   "Quase lá",
+      "review":   "Revê os slides"
+    },
+    "hintLabel":   "Dica:",
+    "hintBody":    "A linha é difusa. O DNS é tecnicamente",
+    "hintBodyEm":  "hierárquico",
+    "hintBodyTail":"mas distribui a carga por muitos servidores. O BitTorrent não tem centro nenhum — cada par é igual. A Bitcoin é a mesma ideia aplicada a um livro-razão.",
+    "items_": {
+      "bofa":       { "label": "Bank of America", "hint": "Uma empresa é dona do livro-razão" },
+      "google":     { "label": "Google",          "hint": "Uma empresa gere os servidores" },
+      "visa":       { "label": "Visa",            "hint": "Único processador no meio" },
+      "email":      { "label": "Email (SMTP)",    "hint": "Muitos fornecedores independentes" },
+      "mastodon":   { "label": "Mastodon",        "hint": "Instâncias federadas" },
+      "dns":        { "label": "DNS",             "hint": "Servidores raiz hierárquicos" },
+      "bitcoin":    { "label": "Bitcoin",         "hint": "Cada nó tem a cadeia completa" },
+      "ipfs":       { "label": "IPFS",            "hint": "Armazenamento peer-to-peer" },
+      "bittorrent": { "label": "BitTorrent",      "hint": "Cada par é também um seeder" }
+    },
+    "categories": {
+      "centralized":   { "label": "Centralizado",   "desc": "Um operador é dono do sistema. Ponto único de controlo." },
+      "decentralized": { "label": "Descentralizado", "desc": "Vários hubs partilham a autoridade. Cada um manda no seu aglomerado." },
+      "distributed":   { "label": "Distribuído",   "desc": "Cada par é igual. Sem autoridade central nenhuma." }
+    }
+  },
+  "quiz51": {
+    "question": "Se um agente malicioso controlar 51% dos nós de uma rede blockchain pública, o que pode fazer?",
+    "options": [
+      "Pode ler as chaves privadas de todos",
+      "Pode reescrever a história e sobrepor-se aos nós honestos",
+      "Pode desligar o protocolo permanentemente",
+      "Pode cunhar moedas ilimitadas"
+    ],
+    "explanation": "O ataque dos 51% é o modelo de ameaça para qualquer blockchain pública. Uma maioria de nós pode acordar uma versão adulterada da história e a rede tem de a aceitar. É por isso que as cadeias públicas querem muitos participantes independentes — para tornar os 51% caros."
+  },
+  "consensus": {
+    "heading": "Consenso — Como a Rede Concorda",
+    "leadA": "Uma rede de cópias precisa de uma regra para qual cópia é a verdade. A resposta mais famosa é",
+    "leadPoW": "Proof of Work",
+    "leadB":   ": os nós gastam eletricidade a competir para resolver um puzzle, e o vencedor adiciona o próximo bloco. O custo torna a batota cara.",
+    "whyTitle": "✓ Porque funciona",
+    "why": [
+      "Fazer batota custa energia real — mensurável, cara",
+      "Qualquer um pode participar, sem precisar de permissão",
+      "Testado em combate desde 2009 pelo Bitcoin"
+    ],
+    "altTitle": "↗ E o Proof of Stake?",
+    "altLead":  "O Proof of Stake substitui eletricidade por tokens bloqueados — os validadores depositam caução em vez de queimar energia. Comparamos as alternativas em",
+    "altCourse":"Curso 3 — Plataformas",
+    "altTail":  "."
+  },
+  "protocols": {
+    "heading": "Muitas formas de uma rede concordar",
+    "leadA":   "O Proof of Work é o mais famoso — e é o que estamos prestes a ver. Mas está longe de ser o único. Cada protocolo abaixo responde à mesma pergunta (",
+    "leadQuestion": "qual cópia da cadeia é a verdade?",
+    "leadB":   ") com diferentes compromissos em velocidade, energia e descentralização.",
+    "footerA": "Vamos mergulhar em como o",
+    "footerPoW": "Proof of Work",
+    "footerB": "realmente corre no próximo slide. Cada uma das outras abordagens merece o seu próprio aprofundamento — essa é uma conversa para o Curso 3."
+  },
+  "mining": {
+    "heading": "Mineração — cinco computadores competem pelo Bloco #{{n}}",
+    "leadA":   "Cada mineiro tenta milhões de nonces por segundo, à procura de um que produza um hash começado por",
+    "leadCode":"0000",
+    "leadB":   ". O primeiro a encontrar ganha — depois começa o próximo bloco, e o seguinte, e o seguinte.",
+    "earlierTag": "…anteriores ({{n}})",
+    "blockTag":   "BLOCO #{{n}}",
+    "minerName":  "Mineiro",
+    "status": {
+      "mined":     "✓ minado",
+      "filling":   "a encher",
+      "awaiting":  "à espera"
+    },
+    "awaitingNonce": "à espera de nonce…",
+    "target":  "Hash alvo",
+    "startsWith": "começa com",
+    "difficulty": "dificuldade: 4 zeros iniciais",
+    "rarity":     "(~1 em 65 536)",
+    "nonceLabel": "Nonce",
+    "hashTryLabel": "Tentativa de hash",
+    "foundIt": "✓ ENCONTRADO",
+    "verified": "verificado",
+    "minedSession": "Minado nesta sessão",
+    "blockSingular": "bloco",
+    "blockPlural":   "blocos",
+    "totalMined": "Total minado",
+    "startMining": "▶ Começar a minerar",
+    "racingMsg":   "Os cinco mineiros a competir pelo Bloco #{{n}} — o primeiro hash válido ganha",
+    "wonMsg":      "🎉 {{name}} encontrou um hash válido — começa por",
+    "verifyingMsg":"Outros mineiros a verificar o trabalho de {{name}}… {{verified}}/4",
+    "addedMsg":    "✓ Bloco #{{n}} adicionado — {{name}} ganha",
+    "nextIn":      "· próximo bloco em 2s…",
+    "stopLoop":    "■ Parar ciclo",
+    "stopLoopTitle":"Parar o ciclo depois de o bloco atual terminar",
+    "resume":      "▶ Retomar",
+    "reset":       "↺ Reiniciar",
+    "footerA":     "Um mineiro encontra o hash, os outros verificam-no instantaneamente (verificar é barato, encontrar é caro). O vencedor é pago em bitcoin recém-emitido — atualmente",
+    "footerReward":"{{reward}} BTC",
+    "footerB":     "por bloco. Essa recompensa é o que financia o trabalho de força bruta que mantém a batota proibitiva.",
+    "genesisData": "Génesis",
+    "data1":  "50 → Alice",
+    "data2":  "25 → Bob",
+    "txSingular": "tx",
+    "txPlural":   "txs"
+  },
+  "metamask": {
+    "headPrefix": "Conhece a ",
+    "headBrand":  "MetaMask",
+    "lead":  "Uma carteira não guarda as tuas moedas. Guarda as chaves criptográficas que provam que controlas um endereço na cadeia. A mais popular de longe vive como uma pequena extensão de browser — e tem uma raposa simpática.",
+    "ariaLabel": "Instalar MetaMask",
+    "cta": "Instalar MetaMask",
+    "ctaCaptionA": "Aprofundamos as carteiras, chaves e assinaturas no",
+    "ctaCaptionCourse": "Curso 2 — Smart Contracts",
+    "ctaCaptionB": ". Por agora: instala-a, clica à volta, vê com que se parece um endereço.",
+    "facts": [
+      { "tag": "Guarda",  "body": "As tuas chaves privadas — não as tuas moedas. As moedas vivem na cadeia; a carteira apenas prova quem as controla." },
+      { "tag": "Assina",  "body": "Transações, usando a tua chave privada — o equivalente criptográfico de uma assinatura que diz \"isto é de mim\"." },
+      { "tag": "Liga",    "body": "O teu browser a dApps — DeFi, NFTs, jogos on-chain, tudo o que vive na Ethereum e cadeias semelhantes." }
+    ]
+  },
+  "takeaways": {
+    "title": "Secção 1 — Conclusões-chave",
+    "items": [
+      "O problema da confiança: o valor digital dependeu historicamente de intermediários — bancos, registos, redes de pagamento",
+      "Um livro-razão partilhado remove o intermediário, mas cria um novo problema: como impedes alguém de editar a sua própria cópia?",
+      "O hashing torna os dados adulteração-evidentes — muda um bit, a impressão digital muda por completo",
+      "Uma cadeia armazena os dados de cada bloco mais a impressão digital do bloco anterior, ligando a história",
+      "Qualquer alteração a montante propaga-se em cascata para jusante — cada bloco seguinte fica inválido, instantaneamente",
+      "Uma rede distribuída multiplica a cadeia de uma máquina por milhares; o consenso (p.ex. Proof of Work) escolhe a verdade"
+    ]
+  }
+}

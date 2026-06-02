@@ -1,0 +1,466 @@
+{
+  "chapters": {
+    "s2-web3":         "O Panorama Web3",
+    "s2-dapp":         "dApp e Smart Contracts",
+    "s2-ex-stack":     "🧩 Exercício: Stack",
+    "s2-vs":           "Apps Web2 vs Web3",
+    "s2-vs-2":         "Tradicional vs Smart Contracts",
+    "s2-standards":    "Normas de Token",
+    "s2-components":   "Componentes Principais",
+    "s2-workflow":     "Fluxo de Trabalho",
+    "s2-solidity":     "Ler Solidity",
+    "s2-execution":    "Ambiente de Execução",
+    "s2-capabilities": "Novas Capacidades",
+    "s2-why":          "Porquê Construir com SC?",
+    "s2-gas":          "Gas e Economia de Tx",
+    "s2-ex-gas":       "🧩 Exercício: Gas",
+    "s2-reshape":      "Transformar o Negócio",
+    "s2-quiz":         "Questionários",
+    "s2-takeaways":    "Conclusões",
+    "s2-summary":      "Resumo"
+  },
+  "title": {
+    "sectionNumber": "SECÇÃO 02",
+    "title": "Como Funcionam os Smart Contracts",
+    "subtitle": "Fluxo de trabalho, EVM, panorama Web3, economia do gas e porque deves construir com eles"
+  },
+  "gasExercise": {
+    "badge": "🧩 Exercício",
+    "heading": "Desafio de Estimativa de Gas",
+    "instructionA": "Clica nas 5 operações por ordem, da ",
+    "cheapest": "mais barata",
+    "instructionB": " à ",
+    "expensive": "mais cara",
+    "instructionC": ".",
+    "tryAgain": "↺ Tentar de novo",
+    "operationsLabel": "Operações — clica para ordenar",
+    "correctRanking": "Ordenação correta",
+    "placed": "{{count}} / {{total}} colocadas",
+    "hideHint": "🙈 Ocultar dica",
+    "hint": "💡 Dica",
+    "perfect": "🏆 Perfeito!",
+    "reviewOrder": "📚 Revê a ordem acima",
+    "explanation": "Escritas em armazenamento são caras porque modificam o estado global em cada full node, de forma permanente.",
+    "ops": [
+      { "label": "Ler uma variável pública",            "detail": "Chamada view — nunca toca na chain",                "gasLabel": "GRÁTIS" },
+      { "label": "Emitir um evento",                     "detail": "Registado on-chain, mas não no estado",            "gasLabel": "~375 gas" },
+      { "label": "Transferir ETH (envio simples)",       "detail": "Custo base de mover ETH entre contas",             "gasLabel": "~21,000 gas" },
+      { "label": "Escrever num novo slot de armazenamento", "detail": "A operação regular mais cara na EVM",           "gasLabel": "~22,100 gas" },
+      { "label": "Fazer deploy de um novo contrato",     "detail": "Paga por cada byte de bytecode armazenado",        "gasLabel": "500k+ gas" }
+    ]
+  },
+  "stackExercise": {
+    "badge": "🧩 Exercício",
+    "heading": "Constrói a dApp Stack",
+    "promptIdle": "Clica num componente e depois clica na sua camada para o colocar.",
+    "promptSelectedA": "Agora clica numa camada para colocar ",
+    "checkAnswers": "Verificar respostas",
+    "tryAgain": "↺ Tentar de novo",
+    "infoHovered": "Passa o rato sobre qualquer componente colocado para ver o que é.",
+    "infoIdle": "Clica (ou passa o rato) num componente para ler o que faz e depois clica numa camada para o colocar.",
+    "componentsLabel": "Componentes",
+    "allPlaced": "Tudo colocado!",
+    "clickHereToPlace": "← Clica aqui para colocar",
+    "empty": "Vazio",
+    "clickToUnplace": "Clica para retirar",
+    "layers": {
+      "frontend":   { "label": "Camada Frontend",   "desc": "O que o utilizador vê e com que interage" },
+      "blockchain": { "label": "Camada Blockchain",  "desc": "Lógica on-chain, estado e consenso" },
+      "offchain":   { "label": "Camada Off-Chain",   "desc": "Dados externos, armazenamento e indexação" }
+    },
+    "items": {
+      "metamask":  { "label": "MetaMask",          "info": "Uma carteira em extensão de browser que guarda as tuas chaves e assina transações pelo utilizador. Corre inteiramente no frontend e nunca custodia fundos num servidor." },
+      "react":     { "label": "React / Next.js",   "info": "A framework de UI que renderiza a interface da dApp no browser. Não contém lógica on-chain — apenas chama os contratos através de uma carteira ou RPC." },
+      "infura":    { "label": "Infura RPC",        "info": "Um gateway RPC alojado que permite às apps ler o estado e difundir transações sem correr o seu próprio node. Expõe a blockchain através de um endpoint HTTPS normal." },
+      "solidity":  { "label": "Solidity Contract", "info": "O código-fonte do smart contract que define as regras e o estado on-chain da dApp. Depois de compilado e implementado, vive on-chain e corre em cada node." },
+      "evm":       { "label": "EVM",               "info": "A Ethereum Virtual Machine executa o bytecode do contrato de forma determinística. É o runtime integrado em cada node, por isso todos chegam ao mesmo resultado." },
+      "pos":       { "label": "PoS Validators",    "info": "Os validators fazem stake de ETH para propor e atestar blocos sob Proof of Stake. São a camada de consenso on-chain que ordena e finaliza as transações." },
+      "ipfs":      { "label": "IPFS",              "info": "Uma rede peer-to-peer para armazenar ficheiros grandes, como imagens e metadados, off-chain. Os contratos guardam apenas um hash de conteúdo, mantendo o armazenamento on-chain barato." },
+      "thegraph":  { "label": "The Graph",         "info": "Um protocolo de indexação que transforma eventos on-chain em APIs rápidas e consultáveis. Corre off-chain para que os frontends leiam dados sem percorrer toda a chain." },
+      "chainlink": { "label": "Chainlink Oracle",  "info": "Uma rede oracle que entrega dados externos, como preços e aleatoriedade, na chain. Liga informação off-chain a contratos que de outra forma não lhe conseguiriam aceder." }
+    }
+  },
+  "web3": {
+    "heading": "O Panorama Web3",
+    "subtitle": "Não é apenas uma mudança tecnológica — é uma mudança de paradigma na forma como a confiança é estabelecida.",
+    "before": {
+      "tag": "ANTES — Web2",
+      "title": "Confiar em intermediários",
+      "points": [
+        "🏦 Bancos — custódia do teu dinheiro",
+        "🏛️ Instituições — custódia dos teus dados",
+        "🏢 Plataformas — custódia da tua identidade"
+      ],
+      "note": "Confias que o intermediário é honesto, solvente e que não será atacado nem censurado."
+    },
+    "after": {
+      "tag": "DEPOIS — Web3",
+      "title": "Confiar na matemática e em código transparente",
+      "points": [
+        "📐 Matemática — provas criptográficas não conseguem mentir",
+        "📖 Código — lógica open-source e auditável",
+        "🔗 Blockchain — registo partilhado e à prova de adulteração"
+      ],
+      "note": "Confias no protocolo — não nas pessoas que o gerem."
+    },
+    "implication": {
+      "title": "Implicação: Desintermediação",
+      "body": "Quando a confiança é imposta por código em vez de instituições, os intermediários tornam-se opcionais. Os smart contracts podem substituir agentes de escrow, corretores, sistemas de liquidação e notários — automaticamente, 24/7, globalmente."
+    },
+    "buildingBlocksLabel": "Os blocos de construção da Web3",
+    "buildingBlocks": [
+      { "label": "dApps",           "desc": "Front-ends que interagem com smart contracts através de carteiras" },
+      { "label": "Smart Contracts", "desc": "Lógica de negócio implementada on-chain, executável de forma permanente" },
+      { "label": "Blockchain",      "desc": "Registo partilhado e VM — Ethereum, Solana, BNB Chain…" },
+      { "label": "Carteiras",       "desc": "Gestão de identidade + chave privada — o teu passaporte para a Web3" },
+      { "label": "Oracles",         "desc": "Pontes entre a lógica on-chain e os dados do mundo real" }
+    ]
+  },
+  "dapp": {
+    "heading": "dApps e Smart Contracts",
+    "subtitle": "Uma dApp não é apenas um smart contract — é uma stack completa em que a blockchain é uma camada.",
+    "pillars": [
+      {
+        "title": "Smart Contracts",
+        "subtitle": "Lógica e armazenamento na blockchain",
+        "items": [
+          "Lógica de negócio e regras condicionais",
+          "Estado: saldos, propriedade, votos",
+          "Funções chamáveis por qualquer endereço",
+          "Eventos emitidos para ouvintes off-chain"
+        ]
+      },
+      {
+        "title": "Frontend Tradicional",
+        "subtitle": "Interface web ou móvel",
+        "items": [
+          "React / Next.js / Vue — stack web padrão",
+          "Browser: liga a carteira (MetaMask, Rabby)",
+          "Carteiras: assinam transações, guardam chaves",
+          "Endpoints RPC: consultam o estado da blockchain (Infura, Alchemy)"
+        ]
+      },
+      {
+        "title": "Componentes Off-Chain",
+        "subtitle": "Infraestrutura fora da blockchain",
+        "items": [
+          "Armazenamento: IPFS, Arweave (ficheiros grandes, metadados de NFT)",
+          "Indexadores: The Graph — consultam dados da blockchain como uma BD",
+          "Bases de dados: preferências do utilizador, analítica, cache",
+          "APIs: oracles, meios de pagamento, serviços de notificação"
+        ]
+      }
+    ],
+    "stackLabel": "Stack completa da dApp",
+    "stackAlt": "Stack da dApp: Utilizador → Browser → Servidor Web (Front-end) → Smart Contracts → Ethereum Virtual Machine → Ethereum Blockchain",
+    "insightLabel": "Insight chave:",
+    "insightBody": " apenas a camada da blockchain é descentralizada. A maioria das dApps continua a depender de alojamento centralizado (Vercel, AWS) para o frontend — uma nuance muitas vezes ignorada."
+  },
+  "vsApp": {
+    "kicker": "Web3 vs Tradicional · 1 de 2",
+    "heading": "A App: Web2 vs Web3",
+    "subtitle": "O mesmo produto, construído sobre duas fundações muito diferentes.",
+    "propertyLabel": "Propriedade",
+    "colA": "🏛️ App Tradicional",
+    "colB": "⛓️ dApp",
+    "rows": [
+      { "prop": "🏗️ Infraestrutura", "a": "Servidores centralizados (AWS, GCP)", "b": "Nós distribuídos pelo mundo" },
+      { "prop": "🔐 Modelo de confiança", "a": "Confiar na empresa",              "b": "Confiar no protocolo e no código" },
+      { "prop": "⏱️ Disponibilidade",  "a": "Baseada em SLA, pode cair",          "b": "O protocolo corre 24/7/365" },
+      { "prop": "🗄️ Armazenamento de dados", "a": "Bases de dados privadas",      "b": "Estado on-chain + IPFS" },
+      { "prop": "💰 Modelo de custo",   "a": "Subscrição / anúncios",             "b": "Gas por transação" },
+      { "prop": "🚫 Censura",           "a": "A plataforma pode banir utilizadores", "b": "Ninguém pode bloquear txs válidas" }
+    ],
+    "takeawayLabel": "Conclusão: ",
+    "takeaway": "uma dApp troca uma empresa em que tens de confiar por um protocolo que qualquer pessoa pode verificar — ao custo de pagar gas por cada ação."
+  },
+  "vsContract": {
+    "kicker": "Web3 vs Tradicional · 2 de 2",
+    "heading": "O Acordo: Tradicional vs Smart Contract",
+    "subtitle": "A mesma intenção — imposta por pessoas e tribunais, ou por código.",
+    "propertyLabel": "Propriedade",
+    "colA": "📜 Contrato Tradicional",
+    "colB": "⚙️ Smart Contract",
+    "rows": [
+      { "prop": "⚙️ Execução",       "a": "Manual — exige ação humana",        "b": "Automática quando as condições se cumprem" },
+      { "prop": "⏱️ Velocidade",     "a": "Dias a semanas",                    "b": "Segundos a minutos" },
+      { "prop": "💸 Custo",          "a": "Honorários jurídicos, intermediários", "b": "Apenas a taxa de gas" },
+      { "prop": "🔐 Confiança",      "a": "Confiar em ambas as partes + tribunais", "b": "Confiar apenas no código" },
+      { "prop": "👁️ Transparência",  "a": "Privado, muitas vezes ambíguo",     "b": "Código público e determinístico" },
+      { "prop": "🌍 Geografia",      "a": "Dependente da jurisdição",          "b": "Sem fronteiras, sempre aplicável" }
+    ],
+    "takeawayLabel": "Conclusão: ",
+    "takeaway": "um smart contract elimina advogados, atrasos e ambiguidade — mas apenas para a lógica que pode ser expressa em código."
+  },
+  "standards": {
+    "kicker": "Secção 02",
+    "heading": "Normas de Token",
+    "subtitleA": "Uma norma é apenas uma ",
+    "subtitleStrong": "interface partilhada",
+    "subtitleB": " — um conjunto acordado de funções que um token promete ter, para que qualquer carteira, exchange ou app o possa usar sem código personalizado.",
+    "coreFunctions": "Funções principais",
+    "erc20": {
+      "title": "Fungível — cada unidade idêntica",
+      "desc": "Tokens semelhantes a dinheiro. 1 unidade = 1 unidade — sempre intermutáveis."
+    },
+    "erc721": {
+      "title": "Não fungível — cada um único",
+      "desc": "Tokens únicos. Cada um tem um ID e um dono únicos — não intermutáveis.",
+      "tagTitleDeeds": "Escrituras"
+    },
+    "erc1155": {
+      "title": "Multi-token — ambos, um contrato",
+      "descA": "Um contrato contém muitos tipos de token — fungíveis ",
+      "descEm": "e",
+      "descB": " únicos — com transferências em lote baratas.",
+      "tagGameItems": "Itens de jogo",
+      "tagTickets": "Bilhetes",
+      "tagEditions": "Edições"
+    },
+    "footerLabel": "Porque importam as normas: ",
+    "footerA": "A MetaMask consegue mostrar qualquer saldo ERC-20 e a OpenSea qualquer ERC-721 — sem conhecer o projeto — porque todos expõem as ",
+    "footerEm": "mesmas funções",
+    "footerB": "."
+  },
+  "components": {
+    "heading": "Anatomia de um Smart Contract",
+    "subtitle": "Todo o smart contract é feito de cinco blocos de construção — compreendê-los é compreender a linguagem da Web3.",
+    "cards": [
+      { "title": "Código",                  "desc": "A lógica de negócio e as instruções condicionais. Escrito em Solidity (Ethereum), Rust (Solana) ou Vyper. Depois do deploy, o código é imutável." },
+      { "title": "Estado",                  "desc": "Dados armazenados que o contrato mantém e modifica ao longo do tempo. Exemplos: saldos de tokens, registos de propriedade, contagens de votos. Persistidos on-chain." },
+      { "title": "Funções",                 "desc": "Operações específicas chamáveis por entidades externas ou por outros contratos. Podem ser só de leitura (grátis) ou alterar o estado (custa gas)." },
+      { "title": "Eventos",                 "desc": "Registos que documentam atividades importantes do contrato. Emitidos quando ocorrem ações chave — armazenados de forma barata e legíveis por sistemas off-chain." },
+      { "title": "Plataforma Blockchain",   "desc": "O ambiente de execução. Ethereum, Polygon, Solana, BNB Chain… Cada uma tem compromissos diferentes de desempenho, custo e ferramentas." }
+    ],
+    "annotatedLabel": "Contrato anotado",
+    "codeComments": {
+      "state": "// ─── Estado ──────────────────────",
+      "event": "// ─── Evento ──────────────────────",
+      "function": "// ─── Função ──────────────────────"
+    },
+    "tags": {
+      "state": "💾 Estado",
+      "event": "📡 Evento",
+      "function": "⚙️ Função"
+    },
+    "platformLabel": "A plataforma importa:",
+    "platformBody": " este contrato Solidity faz deploy em Ethereum, Polygon, Arbitrum, Base e em qualquer chain compatível com a EVM, sem alterações de código."
+  },
+  "workflow": {
+    "heading": "Como Funcionam os Smart Contracts",
+    "subtitle": "Cinco passos, do deploy à notificação — tudo on-chain, tudo automático.",
+    "steps": [
+      { "label": "Deploy",     "desc": "O código do contrato é compilado e carregado para a blockchain. Obtém um endereço permanente — imutável a partir deste ponto." },
+      { "label": "Acionar",    "desc": "Um utilizador ou sistema envia uma transação para o endereço do contrato, chamando uma função com os dados necessários." },
+      { "label": "Executar",   "desc": "A EVM (ou VM equivalente) corre o código do contrato em cada node da rede em simultâneo." },
+      { "label": "Atualizar",  "desc": "As alterações de estado são registadas na blockchain — permanentes, transparentes e acordadas por consenso." },
+      { "label": "Emitir",     "desc": "Os eventos são emitidos e registados on-chain, notificando os sistemas off-chain (front-ends, indexadores, oracles)." }
+    ],
+    "code": {
+      "cState": "// ← Variáveis de estado",
+      "cEmit": "// ← Emitir",
+      "cExecute": "// ← Executar: só o comprador pode libertar",
+      "cUpdate": "// ← Atualizar estado"
+    }
+  },
+  "solidity": {
+    "kicker": "Secção 02",
+    "heading": "Ler um Smart Contract",
+    "subtitle": "Não precisas de escrever Solidity — mas qualquer PM, auditor e analista tem de o conseguir ler. Aqui está um contrato de token ERC-20 mínimo, totalmente anotado.",
+    "annotations": [
+      { "title": "Declaração do Contrato",      "desc": "Como uma classe em POO. Todo o estado e funções vivem lá dentro. Depois do deploy, este código é imutável no seu endereço na blockchain." },
+      { "title": "Variáveis de Estado",         "desc": "Armazenadas permanentemente on-chain. public cria uma função getter automaticamente. Cada escrita custa gas — as leituras são grátis." },
+      { "title": "Mapping (Armazenamento Chave→Valor)", "desc": "mapping(address => uint256) é o equivalente on-chain de uma tabela de base de dados. Cada endereço Ethereum mapeia para um saldo de token. Não é iterável — tens de saber a chave." },
+      { "title": "Evento",                      "desc": "Registado na blockchain mas NÃO armazenado no estado. Barato de emitir (~375 gas). Os campos indexed permitem pesquisa off-chain eficiente. É assim que os exploradores de blocos mostram as transferências de tokens." },
+      { "title": "Constructor",                 "desc": "Corre exatamente uma vez no deploy. Define o nome, o símbolo e o fornecimento total do token. Depois disso, nunca mais corre — o estado fica bloqueado tal como implementado." },
+      { "title": "msg.sender",                  "desc": "O endereço que chamou esta função — no constructor, é o deployer. Todo o fornecimento inicial vai para ele. Uma variável de segurança crítica: valida sempre quem é o msg.sender." },
+      { "title": "Função",                      "desc": "external significa que só quem chama de fora pode invocar isto (não o próprio contrato). public permite chamadas externas e internas. Cada função que altera o estado custa gas." },
+      { "title": "require (Cláusula de Guarda)", "desc": "Se a condição for falsa, toda a transação reverte — sem alterações de estado, sem reembolso de gas pela execução já feita. Este é o passo Checks no Checks-Effects-Interactions." }
+    ]
+  },
+  "execution": {
+    "heading": "Ambiente de Execução",
+    "subtitle": "Porque é que os smart contracts correm da mesma forma, em todo o lado, sempre.",
+    "properties": [
+      {
+        "title": "Máquinas Virtuais",
+        "subtitle": "Ambientes de execução isolados",
+        "desc": "A EVM (Ethereum), a SVM (Solana), WASM (Polkadot, Near)… Cada VM é um ambiente em sandbox que não consegue aceder ao sistema de ficheiros, à rede ou à memória da máquina anfitriã. O código corre isolado — de forma segura e previsível.",
+        "examples": [
+          "EVM — Ethereum, Polygon, Arbitrum",
+          "SVM — Solana",
+          "MoveVM — Aptos, Sui",
+          "WASM — Polkadot, Near"
+        ]
+      },
+      {
+        "title": "Execução Distribuída",
+        "subtitle": "O mesmo código corre em milhares de nós",
+        "desc": "Quando uma transação aciona um smart contract, cada full node da rede corre o mesmo código de forma independente. Não há um servidor único — a execução é replicada por todo o globo.",
+        "examples": [
+          "Ethereum: ~7.000 full nodes",
+          "A redundância elimina pontos únicos de falha",
+          "Ninguém pode bloquear seletivamente a execução"
+        ]
+      },
+      {
+        "title": "Resultados Determinísticos",
+        "subtitle": "Dados idênticos produzem sempre resultados idênticos",
+        "desc": "Os smart contracts não podem usar aleatoriedade, relógios em tempo real ou dados externos sem ferramentas especiais. Esta restrição é o que torna o consenso distribuído possível — cada node tem de concordar no resultado.",
+        "examples": [
+          "Sem Math.random()",
+          "Sem Date.now()",
+          "Dados externos exigem oracles (Chainlink)",
+          "A aleatoriedade exige commit-reveal ou VRF"
+        ]
+      },
+      {
+        "title": "Requisito de Consenso",
+        "subtitle": "É preciso o acordo da maioria para alterar o estado",
+        "desc": "Depois da execução, os nós comparam resultados. Só se uma supermaioria concordar no resultado é que a alteração de estado é escrita na blockchain. Um único node malicioso não consegue afetar o desfecho.",
+        "examples": [
+          "PoS: os validators atestam os resultados de execução",
+          "As transações inválidas são rejeitadas em toda a rede",
+          "Double-spend ou estado inválido = rejeitado"
+        ]
+      }
+    ],
+    "ecosystemLabel": "Ecossistema compatível com a EVM",
+    "evmCore": {
+      "title": "Ethereum Virtual Machine (EVM)",
+      "desc": "A norma original — corre bytecode de Solidity e Vyper"
+    },
+    "compatibleWith": "↓ compatível com ↓",
+    "l1Label": "Chains L1 compatíveis com a EVM",
+    "l2Label": "L2s da Ethereum (compatíveis com a EVM)",
+    "nonEvmLabel": "VMs não-EVM",
+    "deployLabel": "Deploy uma vez, corre em qualquer lado:",
+    "deployBody": " as chains compatíveis com a EVM partilham a mesma norma de bytecode — um contrato Solidity funciona em mais de 30 chains."
+  },
+  "capabilities": {
+    "heading": "Novas Capacidades",
+    "subtitle": "Cinco coisas que os smart contracts tornam possíveis e que nenhuma tecnologia anterior conseguia.",
+    "realExample": "Exemplo real",
+    "items": [
+      {
+        "title": "Composability Sem Permissão",
+        "tagline": "Qualquer contrato pode ligar-se a outro — sem chaves de API, sem aprovação.",
+        "example": "Flash loan: pedir 10M$ emprestados em 3 protocolos e devolver, numa única tx atómica."
+      },
+      {
+        "title": "Transações Atómicas",
+        "tagline": "Operações com vários passos têm sucesso total ou revertem por completo — nunca ficam a meio.",
+        "example": "Swap em DEX: enviar ETH → verificar liquidez → transferir tokens — tudo ou nada."
+      },
+      {
+        "title": "Estado Global Partilhado",
+        "tagline": "Um estado sincronizado, legível em todo o mundo, sem servidor central.",
+        "example": "O dono de um NFT é instantaneamente visível para todos os marketplaces e jogos em todo o lado."
+      },
+      {
+        "title": "Dinheiro Programável",
+        "tagline": "Valor com regras incorporadas — \"paga apenas se a entrega for confirmada\".",
+        "example": "A Superfluid transmite salário ao segundo — sem departamento de processamento salarial."
+      },
+      {
+        "title": "Resistência à Censura",
+        "tagline": "Nenhum governo, empresa ou programador pode bloquear uma transação válida.",
+        "example": "O OFAC colocou o Tornado Cash na lista negra — o front-end morreu, o contrato continuou a correr."
+      }
+    ]
+  },
+  "why": {
+    "heading": "Porquê Construir com Smart Contracts?",
+    "subtitle": "O argumento para escolher smart contracts em vez de software tradicional.",
+    "coreLabel": "Razões principais para construir",
+    "core": [
+      { "title": "Eliminar Intermediários", "desc": "Sem necessidade de banco, notário ou agente de escrow. O contrato impõe as regras e liberta os fundos automaticamente — reduzindo o custo e o risco de contraparte." },
+      { "title": "Global por Defeito",      "desc": "Deploy uma vez, acessível a qualquer pessoa no planeta com ligação à internet. Sem restrições geográficas, sem atrito cambial, sem requisitos bancários." },
+      { "title": "Transparência Radical",   "desc": "Cada regra é pública, legível e auditável. Os utilizadores não têm de confiar nas promessas de uma empresa — podem verificar o código por si próprios." },
+      { "title": "Automação Sempre Ativa",  "desc": "O código executa no momento em que as condições se cumprem — sem horário de expediente, sem filas de aprovação, sem latência humana. Pagamentos, transferências e alterações de estado acontecem em segundos." }
+    ],
+    "impactLabel": "Impacto no negócio",
+    "impact": [
+      { "title": "Dinheiro Programável",       "desc": "Divisões de receita, royalties e pagamentos condicionais executam automaticamente em cada transação. A Superfluid transmite salário ao segundo. A Mirror divide a receita de publicação pela propriedade." },
+      { "title": "Ecossistema Componível",     "desc": "O teu contrato pode integrar-se instantaneamente com a Uniswap, a Aave, a Chainlink — sem parcerias, sem chaves de API. Este modelo de \"lego de dinheiro\" acelera o desenvolvimento de produto de forma exponencial." },
+      { "title": "Compromissos Imutáveis",     "desc": "Depois do deploy, as regras não podem ser alteradas por nenhuma parte — nem por ti. Isto remove o risco de alterações unilaterais de plataforma que destroem a confiança do utilizador da noite para o dia." },
+      { "title": "Governação por DAO",         "desc": "Os smart contracts permitem votação ponderada por tokens, tesourarias on-chain e execução automática de propostas de governação — organizações sem entidade legal nem conselho de administração." }
+    ]
+  },
+  "gas": {
+    "heading": "Gas e Economia das Transações",
+    "subtitle": "Toda a computação custa gas. Compreender isto é essencial para construir aplicações reais.",
+    "fundamentalsLabel": "Fundamentos do sistema de gas",
+    "fundamentals": [
+      { "term": "Gas",            "def": "Unidade que mede o trabalho computacional necessário para uma operação. Cada opcode da EVM tem um custo de gas fixo — armazenar dados custa mais do que lê-los." },
+      { "term": "Preço do Gas",   "def": "Custo por unidade de gas determinado pelo mercado (denominado em Gwei — 1 ETH = 1.000.000.000 Gwei). Definido pelo utilizador; preço mais alto = inclusão mais rápida." },
+      { "term": "Limite de Gas",  "def": "Gas máximo que o utilizador está disposto a gastar nesta transação. Funciona como um limite de segurança — evita que ciclos descontrolados esvaziem a tua carteira." },
+      { "term": "Taxa de Tx",     "def": "Gas Usado × Preço do Gas = Custo Total em ETH. O gas não usado (até ao limite) é reembolsado. Pagas pelo que a EVM realmente executa." }
+    ],
+    "formulaLabel": "Fórmula da taxa de transação",
+    "formulaGasUsed": "Gas Usado",
+    "formulaGasPrice": "Preço do Gas (Gwei)",
+    "formulaFee": "Taxa (ETH)",
+    "formulaExample": "ex.: 21.000 gas × 15 Gwei = 0,000315 ETH (~0,80$)",
+    "incentivesLabel": "Porquê gas? — incentivos económicos",
+    "incentives": [
+      { "who": "Utilizadores", "why": "Pagam pela computação e pelo armazenamento que consomem — não há almoço grátis, evita spam." },
+      { "who": "Validators",   "why": "Recebem taxas por processar transações — incentivo económico para manter a rede a funcionar." },
+      { "who": "Rede",         "why": "Taxas mais altas durante a congestão criam um estrangulamento natural — o mercado autorregula o débito." },
+      { "who": "EIP-1559",     "why": "A taxa base é queimada, não paga aos validators. Pressão deflacionária sobre o fornecimento de ETH durante uso intenso." }
+    ],
+    "impactLabel": "Impacto no mundo real",
+    "impact": [
+      { "label": "Picos de congestão",   "desc": "A congestão da rede pode aumentar os custos 10–100×. Durante o boom dos NFT de 2021, transferências simples custavam 50–200$." },
+      { "label": "Velocidade vs. custo", "desc": "Os utilizadores definem o preço do gas: mais alto = inclusão mais rápida, mais baixo = esperar. As carteiras mostram tempos estimados de confirmação." },
+      { "label": "Poupança em Layer 2",  "desc": "Arbitrum, Optimism e Base reduzem os custos 10–1000×. A mesma transação que custa 5$ na L1 custa 0,01$ na L2." }
+    ]
+  },
+  "reshape": {
+    "heading": "Como os Smart Contracts Transformam o Negócio Tradicional",
+    "subtitle": "Cinco mudanças estruturais que distinguem os negócios nativos de smart contracts dos tradicionais.",
+    "imgAlt": "Duas pessoas a trocar documentos diretamente — desintermediação",
+    "cards": [
+      { "title": "Desintermediação",          "desc": "Execução peer-to-peer. Sem necessidade de bancos, corretores ou serviços de escrow para que o acordo se concretize." },
+      { "title": "Automação de Processos",    "desc": "Regras autónomas \"se X, então Y\" executam no momento em que as condições se cumprem — sem passo de aprovação manual." },
+      { "title": "Sem Confiança e Transparente", "desc": "A confiança passa das pessoas para o código + consenso. Todas as ações são verificáveis, auditáveis e globais." },
+      { "title": "Redução de Custos",         "desc": "Elimina intermediários, papelada manual e supervisão jurídica contínua. Reduz custos de escrow, reconciliação e conformidade." },
+      { "title": "Novas Cadeias de Valor",    "desc": "Tornam-se possíveis modelos de negócio, produtos e ecossistemas inteiramente novos — DAOs, ativos tokenizados, pagamentos M2M." }
+    ],
+    "patternLabel": "O padrão:",
+    "patternBody": " os negócios tradicionais centralizam a confiança num intermediário. Os negócios nativos de smart contracts distribuem essa confiança em código + consenso e depois constroem novas primitivas económicas por cima — composability, atomicidade e alcance global. A próxima secção explora onde isto funciona na prática."
+  },
+  "quiz": {
+    "question": "No fluxo de execução de um smart contract, o que aciona a execução de um contrato?",
+    "options": [
+      "Uma tarefa cron agendada nos servidores da blockchain",
+      "Uma transação enviada para o endereço do contrato na blockchain",
+      "O programador a chamar manualmente o contrato a partir da sua máquina",
+      "A Ethereum Foundation a aprovar o pedido de execução"
+    ],
+    "explanation": "Os smart contracts são passivos — ficam na blockchain e não fazem nada até serem acionados. Uma transação enviada para o endereço do contrato dá início à execução na EVM. O contrato corre, atualiza o estado e emite eventos — tudo dentro dessa única transação."
+  },
+  "takeaways": {
+    "title": "Secção 02 — Conclusões Chave",
+    "items": [
+      "Os smart contracts correm dentro de uma máquina virtual determinística (EVM) — cada node obtém o mesmo resultado",
+      "Componentes principais: variáveis de estado, funções, eventos, modifiers e ABI",
+      "As dApps Web3 combinam um front-end com uma carteira e lógica de smart contract on-chain",
+      "Gas é o custo da computação — cada operação tem um preço em ETH",
+      "Os smart contracts permitem dinheiro programável, liquidação automática e governação sem necessidade de confiança"
+    ]
+  },
+  "summary": {
+    "heading": "Resumo da Secção",
+    "subtitle": "Tudo o que foi abordado nesta secção — num relance",
+    "cards": [
+      { "title": "Fluxo de Trabalho do Smart Contract", "summary": "Escrever → Compilar → Deploy → Interagir — quatro passos irreversíveis num registo imutável" },
+      { "title": "Gas e Economia de Tx",                "summary": "Gas = unidades de execução · Preço do gas (Gwei) = taxa de mercado · EIP-1559: taxa base queimada + gorjeta de prioridade" },
+      { "title": "dApp Stack",                          "summary": "Smart contract (lógica) + IPFS (armazenamento) + Infura RPC (acesso) + MetaMask (carteira) + React (UI)" },
+      { "title": "Web3 vs Tradicional",                 "summary": "Sem estado vs com estado · Sem necessidade de confiança vs servidor de confiança · Registo público vs base de dados privada" },
+      { "title": "Novas Capacidades",                   "summary": "Flash loans, composability, liquidação atómica, dinheiro programável, governação por DAO — impossíveis em TradFi" },
+      { "title": "Porquê Construir com SC?",            "summary": "Usar quando: várias partes + lógica condicional + sem intermediário de confiança + necessidade de auditabilidade" }
+    ],
+    "footer": "Avança para a Secção 3 para casos de estudo do mundo real e análise sem hype →"
+  }
+}

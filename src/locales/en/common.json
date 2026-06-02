@@ -1,0 +1,77 @@
+{
+  "academy": {
+    "title": "Blockchain Academy",
+    "subtitle": "Four courses. One complete mastery path. Choose where to begin.",
+    "logoAlt": "Blockchain Academy"
+  },
+  "nav": {
+    "courses": "Courses",
+    "coursesTitle": "All Courses",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "language": "Language",
+    "english": "English",
+    "portuguese": "Português"
+  },
+  "common": {
+    "comingSoon": "Coming Soon",
+    "startCourse": "Start Course"
+  },
+  "courses": {
+    "blockchainFundamentals": {
+      "title": "Blockchain Fundamentals",
+      "description": "Understand how blockchain technology works from the ground up — cryptography, consensus, Bitcoin, and the Web3 ecosystem.",
+      "topics": [
+        "DLT & Hashing",
+        "Bitcoin & Mining",
+        "Wallets & Transactions",
+        "Consensus Mechanisms",
+        "Web3 & dApps"
+      ]
+    },
+    "blockchainPlatforms": {
+      "title": "Blockchain Platforms",
+      "description": "Bitcoin, Ethereum, Hyperledger Fabric, and interoperability — understand the trade-offs of each platform and when to use which.",
+      "topics": [
+        "Bitcoin Architecture",
+        "Ethereum & EVM",
+        "Hyperledger Fabric",
+        "Interoperability",
+        "Cosmos & Layer 0"
+      ]
+    },
+    "smartContracts": {
+      "title": "Business Applications for Smart Contracts",
+      "description": "From theory to industry disruption — understand what smart contracts can and cannot do for your business, with real case studies and a team project.",
+      "topics": [
+        "Smart Contract Fundamentals",
+        "EVM & Web3 Landscape",
+        "Case Studies",
+        "Oracle Problem",
+        "Team Project"
+      ]
+    }
+  },
+  "sections": {
+    "home": "Home",
+    "objectives": "Objectives",
+    "summary": "Summary",
+    "prologue": "Prologue",
+    "intro": "Intro",
+    "bitcoin": "Bitcoin",
+    "whatsNext": "What's Next",
+    "bibliography": "Bibliography",
+    "howItWorks": "How It Works",
+    "industriesAndCases": "Industries & Cases",
+    "criticalThinking": "Critical Thinking",
+    "limitations": "Limitations",
+    "build": "Build",
+    "teamProject": "Team Project",
+    "conclusion": "Conclusion",
+    "recap": "Recap",
+    "ethereum": "Ethereum",
+    "hyperledger": "Hyperledger",
+    "interoperability": "Interoperability",
+    "newTrends": "New Trends"
+  }
+}

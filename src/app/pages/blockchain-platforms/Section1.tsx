@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import anime from 'animejs';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
@@ -8,30 +9,31 @@ import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Bitcoin, Zap } from 'lucide-react';
 import { CalloutBox } from '../../components/shared/CalloutBox';
 
-const chapters = [
-  { kind: 'group' as const, id: 'g-s1-arch',    label: '🏗️ Architecture' },
-  { id: 's1-architecture', label: 'Architecture' },
-  { id: 's1-transaction', label: 'Transaction' },
-  { id: 's1-tx-lifecycle', label: '🧩 Tx Lifecycle' },
-  { id: 's1-utxo-exercise', label: 'UTXO Exercise' },
+// Language-neutral shape — IDs + kind only. Labels resolved via t() at render.
+const chapterShape = [
+  { kind: 'group' as const, id: 'g-s1-arch' },
+  { id: 's1-architecture' },
+  { id: 's1-transaction' },
+  { id: 's1-tx-lifecycle' },
+  { id: 's1-utxo-exercise' },
 
-  { kind: 'group' as const, id: 'g-s1-consensus', label: '⛏️ Consensus' },
-  { id: 's1-pow', label: 'Proof of Work' },
-  { id: 's1-trilemma', label: 'Trilemma' },
+  { kind: 'group' as const, id: 'g-s1-consensus' },
+  { id: 's1-pow' },
+  { id: 's1-trilemma' },
 
-  { kind: 'group' as const, id: 'g-s1-apps',    label: '💼 Apps & L2' },
-  { id: 's1-apps', label: 'Apps' },
-  { id: 's1-lightning', label: '🧩 Lightning Network' },
+  { kind: 'group' as const, id: 'g-s1-apps' },
+  { id: 's1-apps' },
+  { id: 's1-lightning' },
 
-  { kind: 'group' as const, id: 'g-s1-fit',     label: '🎯 Fit Analysis' },
-  { id: 's1-bestfits', label: '🎯 Best Fits' },
-  { id: 's1-worstfits', label: '🚫 Worst Fits' },
+  { kind: 'group' as const, id: 'g-s1-fit' },
+  { id: 's1-bestfits' },
+  { id: 's1-worstfits' },
 
-  { kind: 'group' as const, id: 'g-s1-wrap',    label: '✅ Wrap Up' },
-  { id: 's1-quiz', label: 'Quiz' },
-  { id: 's1-takeaways', label: 'Takeaways' },
-  { id: 's1-summary', label: 'Summary' },
-];
+  { kind: 'group' as const, id: 'g-s1-wrap' },
+  { id: 's1-quiz' },
+  { id: 's1-takeaways' },
+  { id: 's1-summary' },
+] as const;
 
 /* ─────────────────── Lightning vault — animated demo ───────────────────
    A 2-of-2 multisig "vault" between Alice and Bob. Open it → exchange
@@ -45,6 +47,7 @@ const chapters = [
 const VAULT_DEPOSIT = 1.0;                  // BTC each side commits
 
 function LightningVaultDemo() {
+  const { t } = useTranslation('blockchain-platforms/section-1');
   const rootRef       = useRef<HTMLDivElement | null>(null);
   const stepRef       = useRef<HTMLDivElement | null>(null);
   const openPacketA   = useRef<SVGGElement | null>(null);
@@ -77,7 +80,7 @@ function LightningVaultDemo() {
   const openChannel = () => {
     if (phase !== 'closed') return;
     setPhase('opening');
-    setStep('1. On-chain OPEN tx — Alice and Bob each lock 1 BTC in a 2-of-2 vault', '#f59e0b');
+    setStep(t('lightning.steps.opening'), '#f59e0b');
 
     // Reset packet positions
     [openPacketA, openPacketB].forEach(ref => {
@@ -119,7 +122,7 @@ function LightningVaultDemo() {
         setAliceWallet(w => +(w - VAULT_DEPOSIT).toFixed(4));
         setBobWallet(w => +(w - VAULT_DEPOSIT).toFixed(4));
         setPhase('open');
-        setStep('Channel OPEN — vault holds 2 BTC. Off-chain payments are now free and instant.', '#10b981');
+        setStep(t('lightning.steps.open'), '#10b981');
       },
     });
   };
@@ -130,7 +133,7 @@ function LightningVaultDemo() {
     if (dir === 'A→B' && aliceShare < amount) return;
     if (dir === 'B→A' && bobShare   < amount) return;
 
-    setStep(`⚡ Off-chain payment — ${dir} ${amount} BTC (no Bitcoin tx, channel state updates)`, '#8b5cf6');
+    setStep(t('lightning.payStep', { dir, amount }), '#8b5cf6');
     setPaymentLog(log => [{ dir, amt: amount }, ...log].slice(0, 6));
 
     if (dir === 'A→B') {
@@ -159,7 +162,7 @@ function LightningVaultDemo() {
   const closeChannel = () => {
     if (phase !== 'open') return;
     setPhase('closing');
-    setStep('2. On-chain CLOSE tx — vault releases final balances back to Alice and Bob', '#ED1C24');
+    setStep(t('lightning.steps.closing'), '#ED1C24');
 
     [settlePacketA, settlePacketB].forEach(ref => {
       if (!ref.current) return;
@@ -206,7 +209,7 @@ function LightningVaultDemo() {
         setAliceShare(0);
         setBobShare(0);
         setPhase('settled');
-        setStep(`✓ Settled — only 2 on-chain txs total: OPEN + CLOSE. ${paymentLog.length} off-chain payments cost ~$0.`, '#10b981');
+        setStep(t('lightning.settledStep', { count: paymentLog.length }), '#10b981');
       },
     });
   };
@@ -216,11 +219,11 @@ function LightningVaultDemo() {
     setAliceLocked(0); setBobLocked(0); setAliceShare(0); setBobShare(0);
     setAliceWallet(5.0); setBobWallet(3.0); setPaymentLog([]);
     if (newBlockRef.current) newBlockRef.current.style.opacity = '0';
-    setStep('Channel closed. Click Open Channel to begin.', '#737373');
+    setStep(t('lightning.steps.idle'), '#737373');
   };
 
   useEffect(() => {
-    setStep('Channel closed. Click Open Channel to begin.', '#737373');
+    setStep(t('lightning.steps.idle'), '#737373');
     if (rootRef.current) {
       const obs = new IntersectionObserver(es => {
         for (const e of es) {
@@ -242,35 +245,35 @@ function LightningVaultDemo() {
       <div className="shrink-0 mb-3 flex items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">🧩 Animated</span>
+            <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">{t('lightning.badge')}</span>
             <Zap className="size-5 text-[#f59e0b]" />
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Lightning Network — The Vault Model</h2>
-            <span className="px-2 py-0.5 bg-[#f59e0b]/20 text-[#f59e0b] rounded text-[10px] font-bold border border-[#f59e0b]/30">LAYER 2</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('lightning.heading')}</h2>
+            <span className="px-2 py-0.5 bg-[#f59e0b]/20 text-[#f59e0b] rounded text-[10px] font-bold border border-[#f59e0b]/30">{t('lightning.layer2')}</span>
           </div>
           <p className="text-sm text-muted-foreground max-w-3xl mt-1">
-            Alice + Bob open a <strong className="text-foreground">2-of-2 multisig vault</strong> on Bitcoin. Inside the vault they trade unlimited times instantly, off-chain. Closing the vault is the <em>only</em> other on-chain tx.
+            {t('lightning.introA')}<strong className="text-foreground">{t('lightning.introStrong')}</strong>{t('lightning.introB')}<em>{t('lightning.introEm')}</em>{t('lightning.introC')}
           </p>
         </div>
         <div className="shrink-0 flex flex-col gap-1.5 items-end">
           {phase === 'closed' && (
-            <button onClick={openChannel} className="px-3 py-1.5 rounded-md bg-[#f59e0b] text-white text-xs font-bold hover:bg-[#f59e0b]/90 transition-colors">🔓 Open Channel</button>
+            <button onClick={openChannel} className="px-3 py-1.5 rounded-md bg-[#f59e0b] text-white text-xs font-bold hover:bg-[#f59e0b]/90 transition-colors">{t('lightning.openChannel')}</button>
           )}
           {phase === 'open' && (
             <>
-              <button onClick={() => pay('A→B', 0.1)} className="w-full px-3 py-1.5 rounded-md bg-[#6366f1] text-white text-xs font-bold hover:bg-[#6366f1]/90 transition-colors disabled:opacity-50" disabled={aliceShare < 0.1}>⚡ Alice → Bob 0.1 BTC</button>
-              <button onClick={() => pay('B→A', 0.05)} className="w-full px-3 py-1.5 rounded-md bg-[#39B54A] text-white text-xs font-bold hover:bg-[#39B54A]/90 transition-colors disabled:opacity-50" disabled={bobShare < 0.05}>⚡ Bob → Alice 0.05 BTC</button>
-              <button onClick={closeChannel} className="w-full px-3 py-1.5 rounded-md bg-[#ED1C24] text-white text-xs font-bold hover:bg-[#ED1C24]/90 transition-colors">🔒 Close Vault</button>
+              <button onClick={() => pay('A→B', 0.1)} className="w-full px-3 py-1.5 rounded-md bg-[#6366f1] text-white text-xs font-bold hover:bg-[#6366f1]/90 transition-colors disabled:opacity-50" disabled={aliceShare < 0.1}>{t('lightning.payAliceBob')}</button>
+              <button onClick={() => pay('B→A', 0.05)} className="w-full px-3 py-1.5 rounded-md bg-[#39B54A] text-white text-xs font-bold hover:bg-[#39B54A]/90 transition-colors disabled:opacity-50" disabled={bobShare < 0.05}>{t('lightning.payBobAlice')}</button>
+              <button onClick={closeChannel} className="w-full px-3 py-1.5 rounded-md bg-[#ED1C24] text-white text-xs font-bold hover:bg-[#ED1C24]/90 transition-colors">{t('lightning.closeVault')}</button>
             </>
           )}
           {phase === 'settled' && (
-            <button onClick={reset} className="px-3 py-1.5 rounded-md bg-muted text-foreground text-xs font-bold hover:bg-muted/80 transition-colors">↺ Reset Demo</button>
+            <button onClick={reset} className="px-3 py-1.5 rounded-md bg-muted text-foreground text-xs font-bold hover:bg-muted/80 transition-colors">{t('lightning.resetDemo')}</button>
           )}
         </div>
       </div>
 
       {/* Step caption */}
       <div ref={stepRef} className="shrink-0 mb-3 px-3 py-2 rounded-lg border-2 text-xs font-bold transition-all" style={{ borderColor: '#737373AA', backgroundColor: '#73737314', color: '#737373' }}>
-        Channel closed. Click Open Channel to begin.
+        {t('lightning.steps.idle')}
       </div>
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-4">
@@ -279,13 +282,13 @@ function LightningVaultDemo() {
           <svg viewBox="0 0 520 340" className="w-full h-full" style={{ overflow: 'visible' }}>
             {/* L1 chain band */}
             <rect x="20" y="20" width="480" height="64" rx="8" fill="#f7931a14" stroke="#f7931a" strokeWidth="1.2" />
-            <text x="40" y="42" fontSize="11" fontWeight="900" fill="#f7931a">BITCOIN L1</text>
-            <text x="40" y="56" fontSize="9" fill="hsl(var(--muted-foreground))">Two on-chain txs total: OPEN + CLOSE</text>
+            <text x="40" y="42" fontSize="11" fontWeight="900" fill="#f7931a">{t('lightning.svg.l1Title')}</text>
+            <text x="40" y="56" fontSize="9" fill="hsl(var(--muted-foreground))">{t('lightning.svg.l1Sub')}</text>
 
             {/* OPEN block — labelled so it doesn't blend in with regular chain */}
             <g>
               <rect x="170" y="40" width="36" height="28" rx="2" fill="#10b98140" stroke="#10b981" strokeWidth="1.2" />
-              <text x="188" y="58" textAnchor="middle" fontSize="7" fontWeight="800" fill="#10b981">OPEN</text>
+              <text x="188" y="58" textAnchor="middle" fontSize="7" fontWeight="800" fill="#10b981">{t('lightning.svg.open')}</text>
             </g>
             {/* Existing chain blocks (decorative) — shifted right so OPEN/CLOSE don't overlap them */}
             {[1, 2, 3, 4].map((i) => (
@@ -297,34 +300,34 @@ function LightningVaultDemo() {
             {/* New CLOSE block — flashes when channel closes, sits at the right edge */}
             <g ref={newBlockRef} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '478px 54px' }}>
               <rect x="460" y="40" width="36" height="28" rx="2" fill="#ED1C2440" stroke="#ED1C24" strokeWidth="1.2" />
-              <text x="478" y="58" textAnchor="middle" fontSize="7" fontWeight="800" fill="#ED1C24">CLOSE</text>
+              <text x="478" y="58" textAnchor="middle" fontSize="7" fontWeight="800" fill="#ED1C24">{t('lightning.svg.close')}</text>
             </g>
 
             {/* Alice */}
             <g>
               <circle cx="70" cy="190" r="32" fill="#6366f120" stroke="#6366f1" strokeWidth="1.6" />
               <text x="70" y="186" textAnchor="middle" fontSize="20">👩</text>
-              <text x="70" y="208" textAnchor="middle" fontSize="10" fontWeight="900" fill="#6366f1">Alice</text>
+              <text x="70" y="208" textAnchor="middle" fontSize="10" fontWeight="900" fill="#6366f1">{t('lightning.svg.alice')}</text>
               <text x="70" y="232" textAnchor="middle" fontSize="9" fontWeight="700" fill="hsl(var(--foreground))">{aliceWallet.toFixed(2)} BTC</text>
-              <text x="70" y="246" textAnchor="middle" fontSize="7" fill="hsl(var(--muted-foreground))">(L1 wallet)</text>
+              <text x="70" y="246" textAnchor="middle" fontSize="7" fill="hsl(var(--muted-foreground))">{t('lightning.svg.l1Wallet')}</text>
             </g>
 
             {/* Bob */}
             <g>
               <circle cx="450" cy="190" r="32" fill="#39B54A20" stroke="#39B54A" strokeWidth="1.6" />
               <text x="450" y="186" textAnchor="middle" fontSize="20">👨</text>
-              <text x="450" y="208" textAnchor="middle" fontSize="10" fontWeight="900" fill="#39B54A">Bob</text>
+              <text x="450" y="208" textAnchor="middle" fontSize="10" fontWeight="900" fill="#39B54A">{t('lightning.svg.bob')}</text>
               <text x="450" y="232" textAnchor="middle" fontSize="9" fontWeight="700" fill="hsl(var(--foreground))">{bobWallet.toFixed(2)} BTC</text>
-              <text x="450" y="246" textAnchor="middle" fontSize="7" fill="hsl(var(--muted-foreground))">(L1 wallet)</text>
+              <text x="450" y="246" textAnchor="middle" fontSize="7" fill="hsl(var(--muted-foreground))">{t('lightning.svg.l1Wallet')}</text>
             </g>
 
             {/* Vault (center) */}
             <g ref={vaultBoxRef} style={{ transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '260px 190px' }}>
               <rect x="200" y="140" width="120" height="100" rx="10" fill={aliceLocked + bobLocked > 0 ? '#10b98118' : '#73737318'} stroke={aliceLocked + bobLocked > 0 ? '#10b981' : '#737373'} strokeWidth="1.6" />
               <text x="260" y="160" textAnchor="middle" fontSize="22">{aliceLocked + bobLocked > 0 ? '🔓' : '🔒'}</text>
-              <text x="260" y="182" textAnchor="middle" fontSize="10" fontWeight="900" fill={aliceLocked + bobLocked > 0 ? '#10b981' : '#737373'}>VAULT (2-of-2)</text>
+              <text x="260" y="182" textAnchor="middle" fontSize="10" fontWeight="900" fill={aliceLocked + bobLocked > 0 ? '#10b981' : '#737373'}>{t('lightning.svg.vaultTitle')}</text>
               <text x="260" y="208" textAnchor="middle" fontSize="12" fontWeight="900" fill="hsl(var(--foreground))">{(aliceLocked + bobLocked).toFixed(2)} BTC</text>
-              <text x="260" y="223" textAnchor="middle" fontSize="8" fill="hsl(var(--muted-foreground))">Alice {aliceShare.toFixed(2)} · Bob {bobShare.toFixed(2)}</text>
+              <text x="260" y="223" textAnchor="middle" fontSize="8" fill="hsl(var(--muted-foreground))">{t('lightning.svg.aliceLabel')} {aliceShare.toFixed(2)} · {t('lightning.svg.bobLabel')} {bobShare.toFixed(2)}</text>
             </g>
 
             {/* Channel lines — Alice ↔ Vault ↔ Bob */}
@@ -349,11 +352,11 @@ function LightningVaultDemo() {
             {/* Settle packets (vault → Alice, vault → Bob) */}
             <g ref={settlePacketA} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '230px 270px' }}>
               <rect x="214" y="258" width="40" height="22" rx="3" fill="#6366f1" stroke="#1e1b4b" strokeWidth="0.8" />
-              <text x="234" y="274" textAnchor="middle" fontSize="9" fontWeight="900" fill="#fff">Alice ←</text>
+              <text x="234" y="274" textAnchor="middle" fontSize="9" fontWeight="900" fill="#fff">{t('lightning.svg.aliceArrow')}</text>
             </g>
             <g ref={settlePacketB} style={{ opacity: 0, transformBox: 'fill-box' as React.CSSProperties['transformBox'], transformOrigin: '290px 270px' }}>
               <rect x="266" y="258" width="40" height="22" rx="3" fill="#39B54A" stroke="#14532d" strokeWidth="0.8" />
-              <text x="286" y="274" textAnchor="middle" fontSize="9" fontWeight="900" fill="#fff">→ Bob</text>
+              <text x="286" y="274" textAnchor="middle" fontSize="9" fontWeight="900" fill="#fff">{t('lightning.svg.bobArrow')}</text>
             </g>
           </svg>
         </div>
@@ -361,24 +364,24 @@ function LightningVaultDemo() {
         {/* Side panel — channel state + log */}
         <div className="flex flex-col gap-2 min-h-0 overflow-y-auto">
           <div className="rounded-xl border-2 p-3" style={{ borderColor: phase === 'open' ? '#10b98155' : '#73737355', backgroundColor: phase === 'open' ? '#10b9810d' : '#73737308' }}>
-            <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: phase === 'open' ? '#10b981' : '#737373' }}>Channel state</div>
-            <div className="text-sm font-bold text-foreground mt-0.5">{phase === 'closed' ? 'Closed' : phase === 'opening' ? 'Opening…' : phase === 'open' ? '🟢 Open' : phase === 'closing' ? 'Closing…' : '✓ Settled'}</div>
+            <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: phase === 'open' ? '#10b981' : '#737373' }}>{t('lightning.panel.channelState')}</div>
+            <div className="text-sm font-bold text-foreground mt-0.5">{phase === 'closed' ? t('lightning.panel.stateClosed') : phase === 'opening' ? t('lightning.panel.stateOpening') : phase === 'open' ? t('lightning.panel.stateOpen') : phase === 'closing' ? t('lightning.panel.stateClosing') : t('lightning.panel.stateSettled')}</div>
             <div className="grid grid-cols-2 gap-2 mt-2 text-[11px]">
               <div className="bg-card border border-border rounded-md p-1.5">
-                <div className="text-[9px] text-muted-foreground uppercase tracking-widest">Alice</div>
+                <div className="text-[9px] text-muted-foreground uppercase tracking-widest">{t('lightning.panel.alice')}</div>
                 <div className="font-mono font-bold text-[#6366f1]">{aliceShare.toFixed(2)} BTC</div>
               </div>
               <div className="bg-card border border-border rounded-md p-1.5">
-                <div className="text-[9px] text-muted-foreground uppercase tracking-widest">Bob</div>
+                <div className="text-[9px] text-muted-foreground uppercase tracking-widest">{t('lightning.panel.bob')}</div>
                 <div className="font-mono font-bold text-[#39B54A]">{bobShare.toFixed(2)} BTC</div>
               </div>
             </div>
           </div>
 
           <div className="rounded-xl border border-border bg-card p-2.5 flex-1 min-h-[120px] overflow-y-auto">
-            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5">Payments ({paymentLog.length})</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5">{t('lightning.panel.payments', { count: paymentLog.length })}</div>
             {paymentLog.length === 0 ? (
-              <div className="text-[11px] text-muted-foreground italic">Open the channel and start paying.</div>
+              <div className="text-[11px] text-muted-foreground italic">{t('lightning.panel.noPayments')}</div>
             ) : (
               <div className="flex flex-col gap-1">
                 {paymentLog.map((p, i) => (
@@ -386,7 +389,7 @@ function LightningVaultDemo() {
                     <span className="text-[#facc15]">⚡</span>
                     <span className="font-mono font-bold" style={{ color: p.dir === 'A→B' ? '#6366f1' : '#39B54A' }}>{p.dir}</span>
                     <span className="text-foreground">{p.amt.toFixed(2)} BTC</span>
-                    <span className="ml-auto text-[9px] text-muted-foreground uppercase tracking-widest">off-chain</span>
+                    <span className="ml-auto text-[9px] text-muted-foreground uppercase tracking-widest">{t('lightning.panel.offChain')}</span>
                   </div>
                 ))}
               </div>
@@ -394,7 +397,7 @@ function LightningVaultDemo() {
           </div>
 
           <div className="rounded-xl p-2.5 text-[11px] text-muted-foreground leading-snug" style={{ borderWidth: '1px', borderColor: '#f59e0b40', backgroundColor: '#f59e0b08' }}>
-            <strong className="text-[#f59e0b]">The trick:</strong> the vault holds the funds. Every payment is a signed agreement on how the vault's contents should be split. The on-chain blockchain only ever sees TWO transactions — OPEN and CLOSE — no matter how many payments happened in between.
+            <strong className="text-[#f59e0b]">{t('lightning.panel.trickLabel')}</strong>{t('lightning.panel.trickBody')}
           </div>
         </div>
       </div>
@@ -408,18 +411,23 @@ function LightningVaultDemo() {
    on scroll-in. ↻ Replay always available.
    ───────────────────────────────────────────────────────────────────────────── */
 
+// Language-neutral stage metadata. Text (title/what/note) comes from t() by index.
 const TX_STAGES = [
-  { n: 1, emoji: '👛', zone: '#f59e0b', title: 'Construct & Sign',  what: 'Wallet picks UTXOs as inputs, sets outputs (recipient + change), signs each input with your private key (ECDSA).',                  note: 'Still 100% local — nothing on-chain yet.' },
-  { n: 2, emoji: '📡', zone: '#6366f1', title: 'Broadcast',         what: 'The signed raw transaction is pushed to your wallet\'s ~8 full-node peers.',                                                            note: 'txid = double-SHA256 of the tx bytes.' },
-  { n: 3, emoji: '🔁', zone: '#6366f1', title: 'Relay & Validate',  what: 'Each node checks signatures, that inputs exist & are unspent, no double-spend, and fee sanity — then gossips it onward.',              note: 'Reaches ~50k nodes in under a second.' },
-  { n: 4, emoji: '⏳', zone: '#06b6d4', title: 'Mempool',           what: 'Valid but unconfirmed. The tx waits in every node\'s mempool, ranked by fee rate (sat/vByte).',                                          note: 'Higher fee → picked sooner.' },
-  { n: 5, emoji: '⛏️', zone: '#8b5cf6', title: 'Mining',            what: 'A miner selects the highest-fee txs, builds a candidate block (Merkle root), and grinds the nonce until blockHash < target.',           note: 'Proof of Work · ~10 min on average.' },
-  { n: 6, emoji: '🧱', zone: '#39B54A', title: 'Block Propagated',  what: 'The winning miner broadcasts the block. Every node re-verifies the PoW and all txs, then appends it to its local chain.',               note: 'Your tx now has 1 confirmation.' },
-  { n: 7, emoji: '🔒', zone: '#16a34a', title: 'Confirmations',     what: 'Each new block stacked on top buries it deeper. Rewriting it means out-hashing the whole network from this point on.',                  note: '~6 confirmations (~60 min).' },
-  { n: 8, emoji: '✅', zone: '#10b981', title: 'Settled — Final',   what: 'The payment is economically irreversible. The recipient can safely release the goods or service.',                                       note: 'End of the journey.' },
+  { n: 1, emoji: '👛', zone: '#f59e0b' },
+  { n: 2, emoji: '📡', zone: '#6366f1' },
+  { n: 3, emoji: '🔁', zone: '#6366f1' },
+  { n: 4, emoji: '⏳', zone: '#06b6d4' },
+  { n: 5, emoji: '⛏️', zone: '#8b5cf6' },
+  { n: 6, emoji: '🧱', zone: '#39B54A' },
+  { n: 7, emoji: '🔒', zone: '#16a34a' },
+  { n: 8, emoji: '✅', zone: '#10b981' },
 ];
 
+interface TxStageText { title: string; what: string; note: string; }
+
 function TxLifecycleAnimated() {
+  const { t } = useTranslation('blockchain-platforms/section-1');
+  const stageText = t('txLifecycle.stages', { returnObjects: true }) as TxStageText[];
   const rootRef    = useRef<HTMLDivElement | null>(null);
   const packetRef  = useRef<HTMLDivElement | null>(null);
   const stepRef    = useRef<HTMLDivElement | null>(null);
@@ -442,7 +450,7 @@ function TxLifecycleAnimated() {
       packetRef.current.style.transform = 'translate(0, 0)';
     }
     if (stepRef.current) {
-      stepRef.current.textContent = 'Starting…';
+      stepRef.current.textContent = t('txLifecycle.starting');
     }
 
     const tl = anime.timeline({
@@ -479,6 +487,7 @@ function TxLifecycleAnimated() {
 
     function moveTo(i: number) {
       const stage = TX_STAGES[i];
+      const text = stageText[i];
       // Highlight current card
       cardRefs.current.forEach((c, k) => {
         if (!c) return;
@@ -491,7 +500,7 @@ function TxLifecycleAnimated() {
         }
       });
       if (stepRef.current) {
-        stepRef.current.textContent = `${stage.n}. ${stage.title} — ${stage.what}`;
+        stepRef.current.textContent = t('txLifecycle.stageCaption', { n: stage.n, title: text.title, what: text.what });
         stepRef.current.style.color = stage.zone;
         stepRef.current.style.borderColor = stage.zone + 'AA';
         stepRef.current.style.backgroundColor = stage.zone + '14';
@@ -521,23 +530,23 @@ function TxLifecycleAnimated() {
       <div className="shrink-0 mb-3 flex items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">🧩 Animated</span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">The Life of a Bitcoin Transaction</h2>
+            <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">{t('txLifecycle.badge')}</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('txLifecycle.heading')}</h2>
           </div>
           <p className="text-sm text-muted-foreground max-w-3xl mt-1">
-            Watch a single payment travel through every stage — wallet → mempool → mining → blockchain — until it's economically irreversible. Auto-plays; replay any time.
+            {t('txLifecycle.intro')}
           </p>
         </div>
         <button
           onClick={play}
           disabled={phase === 'playing'}
           className="text-[11px] px-2.5 py-1 rounded-md bg-muted/60 hover:bg-muted text-foreground font-semibold disabled:opacity-50 transition-colors shrink-0"
-        >↻ Replay</button>
+        >{t('txLifecycle.replay')}</button>
       </div>
 
       {/* Step caption */}
       <div ref={stepRef} className="shrink-0 mb-3 px-3 py-2 rounded-lg border-2 text-xs font-bold transition-all min-h-[40px]" style={{ borderColor: '#737373AA', backgroundColor: '#73737314', color: '#737373' }}>
-        Starting…
+        {t('txLifecycle.starting')}
       </div>
 
       {/* Stage rail with moving packet */}
@@ -555,9 +564,9 @@ function TxLifecycleAnimated() {
                 <span className="size-6 rounded-md flex items-center justify-center text-white text-[11px] font-black shrink-0" style={{ backgroundColor: s.zone }}>{s.n}</span>
                 <span className="text-base leading-none">{s.emoji}</span>
               </div>
-              <div className="font-bold text-[11px] text-foreground leading-tight">{s.title}</div>
-              <div className="text-[10px] text-muted-foreground leading-snug flex-1 mt-1">{s.what}</div>
-              <div className="mt-2 text-[9px] font-medium leading-snug rounded-md px-1.5 py-1" style={{ backgroundColor: s.zone + '14', color: s.zone }}>{s.note}</div>
+              <div className="font-bold text-[11px] text-foreground leading-tight">{stageText[i].title}</div>
+              <div className="text-[10px] text-muted-foreground leading-snug flex-1 mt-1">{stageText[i].what}</div>
+              <div className="mt-2 text-[9px] font-medium leading-snug rounded-md px-1.5 py-1" style={{ backgroundColor: s.zone + '14', color: s.zone }}>{stageText[i].note}</div>
             </div>
           ))}
         </div>
@@ -576,11 +585,11 @@ function TxLifecycleAnimated() {
 
       {/* Timing strip */}
       <div className="shrink-0 mt-3 rounded-xl border border-border bg-card px-4 py-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px]">
-        <span className="font-black uppercase tracking-widest text-muted-foreground">⏱️ Typical timing</span>
-        <span className="text-muted-foreground">Sign &amp; broadcast: <span className="font-bold text-foreground">&lt; 1 s</span></span>
-        <span className="text-muted-foreground">Mempool wait: <span className="font-bold text-foreground">seconds → hours</span> (fee-driven)</span>
-        <span className="text-muted-foreground">1 block: <span className="font-bold text-foreground">~10 min</span></span>
-        <span className="text-muted-foreground">6 confirmations: <span className="font-bold text-foreground">~1 h ≈ settled</span></span>
+        <span className="font-black uppercase tracking-widest text-muted-foreground">{t('txLifecycle.timing.label')}</span>
+        <span className="text-muted-foreground">{t('txLifecycle.timing.signLabel')} <span className="font-bold text-foreground">{t('txLifecycle.timing.signValue')}</span></span>
+        <span className="text-muted-foreground">{t('txLifecycle.timing.mempoolLabel')} <span className="font-bold text-foreground">{t('txLifecycle.timing.mempoolValue')}</span>{t('txLifecycle.timing.mempoolSuffix')}</span>
+        <span className="text-muted-foreground">{t('txLifecycle.timing.blockLabel')} <span className="font-bold text-foreground">{t('txLifecycle.timing.blockValue')}</span></span>
+        <span className="text-muted-foreground">{t('txLifecycle.timing.confLabel')} <span className="font-bold text-foreground">{t('txLifecycle.timing.confValue')}</span></span>
       </div>
     </div>
   );
@@ -588,54 +597,26 @@ function TxLifecycleAnimated() {
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
+// Language-neutral layer metadata. Text comes from t() keyed by id.
 const LAYERS = [
-  {
-    id: 'app',
-    label: 'Application Layer',
-    sublabel: 'Wallets · Exchanges · Block explorers',
-    color: '#6366f1',
-    icon: '💼',
-    description: 'The user-facing layer. Wallets (MetaMask, Ledger), exchanges, and explorers translate raw blockchain data into readable interfaces. They communicate with the network via RPC calls to nodes.',
-    examples: ['Bitcoin Core wallet', 'Electrum', 'Mempool.space'],
-  },
-  {
-    id: 'p2p',
-    label: 'Network Layer (P2P)',
-    sublabel: 'Gossip protocol · Node discovery · Mempool',
-    color: '#39B54A',
-    icon: '🌐',
-    description: 'Nodes find each other using DNS seeds and a gossip protocol. Every unconfirmed transaction is broadcast peer-to-peer and held in each node\'s mempool until mined into a block.',
-    examples: ['~50,000 reachable nodes', 'TCP port 8333', 'INV / GETDATA messages'],
-  },
-  {
-    id: 'consensus',
-    label: 'Consensus Layer',
-    sublabel: 'Proof of Work · Difficulty adjustment · Longest chain',
-    color: '#f59e0b',
-    icon: '⛏️',
-    description: 'Miners compete to find a nonce that makes the block hash start with enough leading zeros. Difficulty adjusts every 2,016 blocks (~2 weeks) to keep block time at ~10 minutes. The chain with the most accumulated work wins.',
-    examples: ['SHA-256 hashing', 'Target difficulty', 'Nakamoto consensus'],
-  },
-  {
-    id: 'data',
-    label: 'Data Layer',
-    sublabel: 'Blocks · UTXO set · Merkle trees',
-    color: '#ED1C24',
-    icon: '🗄️',
-    description: 'Blocks chain together via hash pointers. Each block contains a Merkle root of its transactions, enabling lightweight SPV proofs. The UTXO set is the minimal state needed to validate new transactions.',
-    examples: ['~600 GB full chain', 'Merkle proof in O(log n)', 'UTXO set ~6 GB'],
-  },
+  { id: 'app', color: '#6366f1', icon: '💼' },
+  { id: 'p2p', color: '#39B54A', icon: '🌐' },
+  { id: 'consensus', color: '#f59e0b', icon: '⛏️' },
+  { id: 'data', color: '#ED1C24', icon: '🗄️' },
 ];
 
 function BitcoinArchitectureSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-1');
   const [active, setActive] = useState<string | null>(null);
   const activeLayer = LAYERS.find(l => l.id === active);
+  const layerLabel = (id: string) => t(`architecture.layers.${id}.label`);
+  const layerSublabel = (id: string) => t(`architecture.layers.${id}.sublabel`);
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-4">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Bitcoin Architecture</h2>
-        <p className="text-muted-foreground text-sm mt-1">Four layers power the Bitcoin network — click any layer to explore it in detail.</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('architecture.heading')}</h2>
+        <p className="text-muted-foreground text-sm mt-1">{t('architecture.subtitle')}</p>
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col gap-4">
@@ -658,8 +639,8 @@ function BitcoinArchitectureSlide() {
               }}
             >
               <span className="text-4xl">{layer.icon}</span>
-              <div className="font-bold text-sm lg:text-base text-foreground">{layer.label}</div>
-              <div className="text-xs text-muted-foreground leading-snug">{layer.sublabel}</div>
+              <div className="font-bold text-sm lg:text-base text-foreground">{layerLabel(layer.id)}</div>
+              <div className="text-xs text-muted-foreground leading-snug">{layerSublabel(layer.id)}</div>
               <motion.div
                 className="w-12 h-1 rounded-full mt-1"
                 style={{ backgroundColor: layer.color }}
@@ -688,15 +669,15 @@ function BitcoinArchitectureSlide() {
                   <div className="flex items-center gap-4">
                     <span className="text-5xl">{activeLayer.icon}</span>
                     <div>
-                      <h3 className="text-xl font-black text-foreground">{activeLayer.label}</h3>
-                      <p className="text-xs text-muted-foreground">{activeLayer.sublabel}</p>
+                      <h3 className="text-xl font-black text-foreground">{layerLabel(activeLayer.id)}</h3>
+                      <p className="text-xs text-muted-foreground">{layerSublabel(activeLayer.id)}</p>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">{activeLayer.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">{t(`architecture.layers.${activeLayer.id}.description`)}</p>
                   <div>
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">Facts</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">{t('architecture.facts')}</p>
                     <div className="flex flex-col gap-1.5">
-                      {activeLayer.examples.map(ex => (
+                      {(t(`architecture.layers.${activeLayer.id}.examples`, { returnObjects: true }) as string[]).map(ex => (
                         <motion.span
                           key={ex}
                           initial={{ opacity: 0, x: -8 }}
@@ -716,7 +697,7 @@ function BitcoinArchitectureSlide() {
                 <div className="flex-1 min-w-0 flex flex-col justify-center gap-3">
                   {activeLayer.id === 'data' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="flex flex-col gap-3">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Block chain — hash linking</p>
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('architecture.dataVisual.title')}</p>
                       <div className="flex items-stretch gap-2">
                         {['#839,998', '#839,999', '#840,000', '#840,001'].map((num, idx) => (
                           <div key={num} className="flex items-center gap-2 flex-1">
@@ -727,7 +708,7 @@ function BitcoinArchitectureSlide() {
                               className="flex-1 rounded-xl border-2 p-3 text-center"
                               style={{ borderColor: '#ED1C2460', backgroundColor: '#ED1C2410' }}
                             >
-                              <div className="text-xs font-black text-[#ED1C24]">BLOCK</div>
+                              <div className="text-xs font-black text-[#ED1C24]">{t('architecture.dataVisual.block')}</div>
                               <div className="text-sm font-bold text-foreground mt-1">{num}</div>
                               <div className="text-[10px] text-muted-foreground mt-2 font-mono">prev: 0xa3f…</div>
                               <div className="text-[10px] text-muted-foreground font-mono">root: 0x7b2…</div>
@@ -743,19 +724,14 @@ function BitcoinArchitectureSlide() {
                           </div>
                         ))}
                       </div>
-                      <p className="text-xs text-muted-foreground">Each block header references the previous hash — altering any block breaks all subsequent blocks.</p>
+                      <p className="text-xs text-muted-foreground">{t('architecture.dataVisual.caption')}</p>
                     </motion.div>
                   )}
                   {activeLayer.id === 'p2p' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="flex flex-col gap-4">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Transaction propagation</p>
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('architecture.p2pVisual.title')}</p>
                       <div className="flex items-center gap-2">
-                        {[
-                          { label: 'Alice', emoji: '👩', desc: 'Signs & broadcasts tx to 8 peers' },
-                          { label: 'Peers', emoji: '🔁', desc: 'Each relays to their own peers' },
-                          { label: 'Network', emoji: '🌐', desc: 'Reaches ~50k nodes in <1 sec' },
-                          { label: 'Miner', emoji: '⛏️', desc: 'Picks from mempool & mines block' },
-                        ].map((step, idx) => (
+                        {(t('architecture.p2pVisual.steps', { returnObjects: true }) as { emoji: string; label: string; desc: string }[]).map((step, idx) => (
                           <div key={step.label} className="flex items-center gap-2 flex-1">
                             <motion.div
                               initial={{ opacity: 0, y: 10 }}
@@ -775,14 +751,14 @@ function BitcoinArchitectureSlide() {
                   )}
                   {activeLayer.id === 'consensus' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="flex flex-col gap-3">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Mining: find the nonce</p>
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('architecture.consensusVisual.title')}</p>
                       <div className="font-mono text-sm p-4 rounded-xl border border-border bg-card">
-                        <div className="text-muted-foreground">SHA256( block_header + <span className="text-[#f59e0b] font-bold">nonce</span> )</div>
+                        <div className="text-muted-foreground">SHA256( block_header + <span className="text-[#f59e0b] font-bold">{t('architecture.consensusVisual.nonce')}</span> )</div>
                         <div className="text-[#f59e0b] mt-2 font-bold">= 0000000000000000000abc… ✓</div>
-                        <div className="text-muted-foreground text-xs mt-2">Must start with enough leading zeros to meet current target difficulty</div>
+                        <div className="text-muted-foreground text-xs mt-2">{t('architecture.consensusVisual.targetNote')}</div>
                       </div>
                       <div className="grid grid-cols-3 gap-2">
-                        {['Adjusts every 2,016 blocks', '~2 weeks per adjustment', '10 min block target'].map(fact => (
+                        {(t('architecture.consensusVisual.facts', { returnObjects: true }) as string[]).map(fact => (
                           <div key={fact} className="p-2 rounded-lg border border-[#f59e0b]/40 text-center text-xs font-medium" style={{ backgroundColor: '#f59e0b0d', color: '#f59e0b' }}>{fact}</div>
                         ))}
                       </div>
@@ -790,21 +766,17 @@ function BitcoinArchitectureSlide() {
                   )}
                   {activeLayer.id === 'app' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="flex flex-col gap-3">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Applications on Bitcoin</p>
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('architecture.appVisual.title')}</p>
                       <div className="grid grid-cols-3 gap-3">
-                        {[
-                          { icon: '💼', name: 'Wallets', ex: 'Electrum, Ledger, Bitcoin Core' },
-                          { icon: '🔍', name: 'Explorers', ex: 'mempool.space, blockstream.info' },
-                          { icon: '🔄', name: 'Exchanges', ex: 'Coinbase, Kraken, Binance' },
-                        ].map(app => (
+                        {(t('architecture.appVisual.apps', { returnObjects: true }) as { name: string; ex: string }[]).map((app, idx) => (
                           <div key={app.name} className="p-3 rounded-xl border border-border bg-card text-center">
-                            <div className="text-2xl mb-1">{app.icon}</div>
+                            <div className="text-2xl mb-1">{['💼', '🔍', '🔄'][idx]}</div>
                             <div className="font-bold text-sm text-foreground">{app.name}</div>
                             <div className="text-xs text-muted-foreground mt-1">{app.ex}</div>
                           </div>
                         ))}
                       </div>
-                      <p className="text-xs text-muted-foreground">Apps communicate with the network via RPC calls to Bitcoin Core nodes (port 8332).</p>
+                      <p className="text-xs text-muted-foreground">{t('architecture.appVisual.caption')}</p>
                     </motion.div>
                   )}
                 </div>
@@ -817,7 +789,7 @@ function BitcoinArchitectureSlide() {
                 exit={{ opacity: 0 }}
                 className="h-full rounded-2xl border-2 border-dashed border-border flex items-center justify-center"
               >
-                <p className="text-muted-foreground text-sm">↑ Click a layer above to explore it</p>
+                <p className="text-muted-foreground text-sm">{t('architecture.emptyHint')}</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -830,43 +802,45 @@ function BitcoinArchitectureSlide() {
 
 // ─── UTXO Exercise ────────────────────────────────────────────────────────────
 
+// Language-neutral scenario metadata. Text (title/context/labels/explanation) from t() by index.
 const UTXO_SCENARIOS = [
   {
     id: 1,
-    title: 'Simple payment',
-    context: 'Alice wants to send 0.4 BTC to Bob. Fee: 0.01 BTC. Which UTXOs should she use?',
     target: 0.4,
     fee: 0.01,
     utxos: [
-      { id: 'u1', amount: 0.3, label: 'UTXO A — 0.3 BTC', from: 'Mining reward (2023)' },
-      { id: 'u2', amount: 0.5, label: 'UTXO B — 0.5 BTC', from: 'Payment received (2024)' },
-      { id: 'u3', amount: 0.1, label: 'UTXO C — 0.1 BTC', from: 'Change output (2024)' },
+      { id: 'u1', amount: 0.3 },
+      { id: 'u2', amount: 0.5 },
+      { id: 'u3', amount: 0.1 },
     ],
     bestInputs: ['u2'],
-    explanation: 'UTXO B (0.5 BTC) alone covers 0.4 + 0.01 BTC. Change = 0.5 − 0.4 − 0.01 = 0.09 BTC back to Alice. Using only 1 input keeps fees low.',
   },
   {
     id: 2,
-    title: 'Combining small UTXOs',
-    context: 'Alice wants to send 0.6 BTC to Carol. Fee: 0.01 BTC. No single UTXO covers it.',
     target: 0.6,
     fee: 0.01,
     utxos: [
-      { id: 'u1', amount: 0.35, label: 'UTXO A — 0.35 BTC', from: 'Previous sale (2024)' },
-      { id: 'u2', amount: 0.4, label: 'UTXO B — 0.40 BTC', from: 'Mining reward (2024)' },
-      { id: 'u3', amount: 0.15, label: 'UTXO C — 0.15 BTC', from: 'Tip received (2023)' },
+      { id: 'u1', amount: 0.35 },
+      { id: 'u2', amount: 0.4 },
+      { id: 'u3', amount: 0.15 },
     ],
     bestInputs: ['u1', 'u2'],
-    explanation: 'UTXO A + B = 0.75 BTC. Covers 0.6 + 0.01 BTC. Change = 0.75 − 0.6 − 0.01 = 0.14 BTC back to Alice. UTXO C is not needed.',
   },
 ];
 
+interface UtxoText { label: string; from: string; }
+interface ScenarioText { title: string; context: string; utxos: UtxoText[]; explanation: string; }
+
 function UTXOExercise() {
+  const { t } = useTranslation('blockchain-platforms/section-1');
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const [selected, setSelected] = useState<string[]>([]);
   const [revealed, setRevealed] = useState(false);
 
+  const scenarios = t('utxoExercise.scenarios', { returnObjects: true }) as ScenarioText[];
   const scenario = UTXO_SCENARIOS[scenarioIdx];
+  const scenarioText = scenarios[scenarioIdx];
+  const utxoText = (uid: string) => scenarioText.utxos[scenario.utxos.findIndex(x => x.id === uid)];
   const total = selected.reduce((acc, id) => {
     const u = scenario.utxos.find(x => x.id === id);
     return acc + (u ? u.amount : 0);
@@ -889,9 +863,9 @@ function UTXOExercise() {
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-4">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Exercise: Build a Bitcoin Transaction</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('utxoExercise.heading')}</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Select UTXOs to cover the payment + fee. The wallet must spend entire UTXOs — excess becomes change.
+          {t('utxoExercise.subtitle')}
         </p>
       </div>
 
@@ -902,28 +876,29 @@ function UTXOExercise() {
           {/* Scenario header */}
           <div className="shrink-0 p-4 rounded-xl border-2 border-[#f59e0b]/40" style={{ backgroundColor: '#f59e0b08' }}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#f59e0b]">Scenario {scenario.id} of {UTXO_SCENARIOS.length}</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#f59e0b]">{t('utxoExercise.scenarioLabel', { id: scenario.id, total: UTXO_SCENARIOS.length })}</span>
               <button
                 onClick={nextScenario}
                 className="text-xs px-2 py-1 rounded-lg border border-border text-muted-foreground hover:bg-card cursor-pointer transition-all"
               >
-                Next →
+                {t('utxoExercise.next')}
               </button>
             </div>
-            <div className="font-bold text-base text-foreground mb-1">{scenario.title}</div>
-            <div className="text-sm text-muted-foreground">{scenario.context}</div>
+            <div className="font-bold text-base text-foreground mb-1">{scenarioText.title}</div>
+            <div className="text-sm text-muted-foreground">{scenarioText.context}</div>
             <div className="flex gap-4 mt-3 text-sm">
-              <div><span className="text-muted-foreground">Send: </span><span className="font-bold text-foreground">{scenario.target} BTC</span></div>
-              <div><span className="text-muted-foreground">Fee: </span><span className="font-bold text-foreground">{scenario.fee} BTC</span></div>
-              <div><span className="text-muted-foreground">Need: </span><span className="font-bold text-[#f59e0b]">{needed} BTC total</span></div>
+              <div><span className="text-muted-foreground">{t('utxoExercise.send')}</span><span className="font-bold text-foreground">{scenario.target} BTC</span></div>
+              <div><span className="text-muted-foreground">{t('utxoExercise.fee')}</span><span className="font-bold text-foreground">{scenario.fee} BTC</span></div>
+              <div><span className="text-muted-foreground">{t('utxoExercise.need')}</span><span className="font-bold text-[#f59e0b]">{t('utxoExercise.needTotal', { amount: needed })}</span></div>
             </div>
           </div>
 
           {/* UTXO cards */}
           <div className="flex flex-col gap-2 flex-1">
-            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Alice's UTXOs — click to select</div>
+            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t('utxoExercise.pickerLabel')}</div>
             {scenario.utxos.map(u => {
               const isSelected = selected.includes(u.id);
+              const ut = utxoText(u.id);
               return (
                 <button
                   key={u.id}
@@ -941,8 +916,8 @@ function UTXOExercise() {
                     {isSelected && <span className="text-white text-xs font-bold">✓</span>}
                   </div>
                   <div className="flex-1">
-                    <div className="font-bold text-base text-foreground">{u.label}</div>
-                    <div className="text-xs text-muted-foreground">{u.from}</div>
+                    <div className="font-bold text-base text-foreground">{ut.label}</div>
+                    <div className="text-xs text-muted-foreground">{ut.from}</div>
                   </div>
                   <span className="font-mono font-bold text-sm" style={{ color: isSelected ? '#f59e0b' : 'var(--muted-foreground)' }}>
                     {u.amount} BTC
@@ -955,26 +930,26 @@ function UTXOExercise() {
 
         {/* Right — transaction summary */}
         <div className="flex flex-col gap-4">
-          <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider shrink-0">Transaction preview</div>
+          <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('utxoExercise.preview')}</div>
 
           {/* Inputs */}
           <div className="p-4 rounded-xl border border-border bg-card flex-1">
-            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">Inputs</div>
+            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">{t('utxoExercise.inputs')}</div>
             {selected.length === 0 ? (
-              <div className="text-sm text-muted-foreground italic">No UTXOs selected yet</div>
+              <div className="text-sm text-muted-foreground italic">{t('utxoExercise.noInputs')}</div>
             ) : (
               <div className="flex flex-col gap-2">
                 {selected.map(id => {
                   const u = scenario.utxos.find(x => x.id === id)!;
                   return (
                     <div key={id} className="flex items-center justify-between p-2 rounded-lg" style={{ backgroundColor: '#f59e0b0a', border: '1px solid #f59e0b30' }}>
-                      <span className="text-sm text-foreground">{u.label}</span>
+                      <span className="text-sm text-foreground">{utxoText(u.id).label}</span>
                       <span className="font-mono text-sm font-bold text-[#f59e0b]">+{u.amount} BTC</span>
                     </div>
                   );
                 })}
                 <div className="flex justify-between pt-2 border-t border-border">
-                  <span className="text-xs font-bold text-muted-foreground">Total inputs</span>
+                  <span className="text-xs font-bold text-muted-foreground">{t('utxoExercise.totalInputs')}</span>
                   <span className="font-mono font-bold text-sm text-foreground">{Math.round(total * 1000) / 1000} BTC</span>
                 </div>
               </div>
@@ -983,20 +958,20 @@ function UTXOExercise() {
             {/* Outputs */}
             {selected.length > 0 && (
               <div className="mt-4 pt-4 border-t border-border">
-                <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">Outputs</div>
+                <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">{t('utxoExercise.outputs')}</div>
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between p-2 rounded-lg" style={{ backgroundColor: '#39B54A0a', border: '1px solid #39B54A30' }}>
-                    <span className="text-sm text-foreground">→ Recipient</span>
+                    <span className="text-sm text-foreground">{t('utxoExercise.recipient')}</span>
                     <span className="font-mono text-sm font-bold text-[#39B54A]">{scenario.target} BTC</span>
                   </div>
                   <div className="flex items-center justify-between p-2 rounded-lg" style={{ backgroundColor: '#6366f10a', border: '1px solid #6366f130' }}>
-                    <span className="text-sm text-foreground">← Change to Alice</span>
+                    <span className="text-sm text-foreground">{t('utxoExercise.changeToAlice')}</span>
                     <span className="font-mono text-sm font-bold text-[#6366f1]">
                       {sufficient ? `${change} BTC` : '—'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between p-2 rounded-lg" style={{ backgroundColor: '#ED1C240a', border: '1px solid #ED1C2430' }}>
-                    <span className="text-sm text-foreground">⛏️ Miner fee</span>
+                    <span className="text-sm text-foreground">{t('utxoExercise.minerFee')}</span>
                     <span className="font-mono text-sm font-bold text-[#ED1C24]">{scenario.fee} BTC</span>
                   </div>
                 </div>
@@ -1016,8 +991,8 @@ function UTXOExercise() {
                 }}
               >
                 {sufficient
-                  ? `✓ Valid — inputs cover ${needed} BTC needed`
-                  : `✗ Insufficient — need ${needed} BTC, have ${Math.round(total * 1000) / 1000} BTC`
+                  ? t('utxoExercise.valid', { needed })
+                  : t('utxoExercise.insufficient', { needed, have: Math.round(total * 1000) / 1000 })
                 }
               </div>
               {sufficient && !revealed && (
@@ -1026,7 +1001,7 @@ function UTXOExercise() {
                   className="py-2 px-4 rounded-xl border-2 font-bold text-sm cursor-pointer transition-all"
                   style={{ borderColor: '#39B54A', backgroundColor: '#39B54A18', color: '#39B54A' }}
                 >
-                  Check optimal solution
+                  {t('utxoExercise.checkSolution')}
                 </button>
               )}
               {revealed && (
@@ -1036,8 +1011,8 @@ function UTXOExercise() {
                   className="p-3 rounded-xl border border-[#6366f1]/40"
                   style={{ backgroundColor: '#6366f10d' }}
                 >
-                  <div className="text-xs font-bold text-[#6366f1] mb-1">Optimal answer</div>
-                  <div className="text-xs text-muted-foreground">{scenario.explanation}</div>
+                  <div className="text-xs font-bold text-[#6366f1] mb-1">{t('utxoExercise.optimalAnswer')}</div>
+                  <div className="text-xs text-muted-foreground">{scenarioText.explanation}</div>
                 </motion.div>
               )}
             </div>
@@ -1050,70 +1025,34 @@ function UTXOExercise() {
 
 // ─── Trilemma ────────────────────────────────────────────────────────────────
 
+// Language-neutral vertex metadata. name/desc resolved via t() by vertex id.
 const TRILEMMA_VERTICES = {
-  security:         { color: '#f59e0b', icon: '🔒', name: 'Security',          desc: 'Resistant to attacks',         pos: { x: 270, y: 110 } },
-  decentralization: { color: '#39B54A', icon: '🌐', name: 'Decentralization',  desc: 'No single point of control',   pos: { x: 90,  y: 380 } },
-  scalability:      { color: '#ED1C24', icon: '⚡', name: 'Scalability',       desc: 'High throughput, low fees',    pos: { x: 450, y: 380 } },
+  security:         { color: '#f59e0b', icon: '🔒', pos: { x: 270, y: 110 } },
+  decentralization: { color: '#39B54A', icon: '🌐', pos: { x: 90,  y: 380 } },
+  scalability:      { color: '#ED1C24', icon: '⚡', pos: { x: 450, y: 380 } },
 } as const;
 
 type VertexId = keyof typeof TRILEMMA_VERTICES;
 
+// Language-neutral platform metadata. name/tagline/stats/detail from t() by id.
 const TRILEMMA_PLATFORMS: {
   id: string;
-  name: string;
   symbol: string;
   color: string;
   picks: VertexId[];
   sacrifices: VertexId | null;
-  tagline: string;
-  stats: { label: string; value: string }[];
-  detail: string;
 }[] = [
-  {
-    id: 'bitcoin',
-    name: 'Bitcoin',
-    symbol: '₿',
-    color: '#f59e0b',
-    picks: ['security', 'decentralization'],
-    sacrifices: 'scalability',
-    tagline: 'Security & decentralization first',
-    stats: [
-      { label: 'On-chain TPS', value: '~7' },
-      { label: 'Reachable nodes', value: '50k+' },
-    ],
-    detail: 'Every full node validates every transaction. Layer 2 (Lightning Network) handles micropayments off-chain.',
-  },
-  {
-    id: 'ethereum',
-    name: 'Ethereum + L2',
-    symbol: '◆',
-    color: '#6366f1',
-    picks: ['security', 'decentralization', 'scalability'],
-    sacrifices: null,
-    tagline: 'Modular: L1 secures, L2 scales',
-    stats: [
-      { label: 'L1 TPS', value: '~15' },
-      { label: 'Effective L2 TPS', value: '1000s' },
-    ],
-    detail: 'Rollups (Arbitrum, Optimism, zkSync) batch thousands of L2 transactions into a single L1 proof — inheriting Ethereum\'s security.',
-  },
-  {
-    id: 'solana',
-    name: 'Solana',
-    symbol: '◎',
-    color: '#ED1C24',
-    picks: ['security', 'scalability'],
-    sacrifices: 'decentralization',
-    tagline: 'Throughput first, fewer validators',
-    stats: [
-      { label: 'Theoretical TPS', value: '~65k' },
-      { label: 'Validators', value: '~2k' },
-    ],
-    detail: 'High hardware requirements concentrate the validator set. The network has experienced multiple outages.',
-  },
+  { id: 'bitcoin',  symbol: '₿', color: '#f59e0b', picks: ['security', 'decentralization'], sacrifices: 'scalability' },
+  { id: 'ethereum', symbol: '◆', color: '#6366f1', picks: ['security', 'decentralization', 'scalability'], sacrifices: null },
+  { id: 'solana',   symbol: '◎', color: '#ED1C24', picks: ['security', 'scalability'], sacrifices: 'decentralization' },
 ];
 
+interface PlatformStat { label: string; value: string; }
+
 function TrilemmaSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-1');
+  const vertexName = (id: VertexId) => t(`trilemma.vertices.${id}.name`);
+  const vertexDesc = (id: VertexId) => t(`trilemma.vertices.${id}.desc`);
   const [hovered, setHovered] = useState<string | null>(null);
   const active = TRILEMMA_PLATFORMS.find(p => p.id === hovered) ?? null;
 
@@ -1132,8 +1071,8 @@ function TrilemmaSlide() {
     <div className="h-full flex flex-col p-6 lg:p-10">
       {/* Header */}
       <div className="shrink-0 mb-5">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">The Blockchain Trilemma</h2>
-        <p className="text-muted-foreground text-sm mt-1">A blockchain can excel at any two of these — the third becomes a trade-off.</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('trilemma.heading')}</h2>
+        <p className="text-muted-foreground text-sm mt-1">{t('trilemma.subtitle')}</p>
       </div>
 
       <div className="flex-1 min-h-0 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] gap-6 lg:gap-8">
@@ -1209,8 +1148,8 @@ function TrilemmaSlide() {
               })}
 
               {/* Center label */}
-              <text x={270} y={258} textAnchor="middle" className="fill-muted-foreground" fontSize="11" letterSpacing="4" fontWeight="700">CHOOSE</text>
-              <text x={270} y={300} textAnchor="middle" className="fill-foreground" fontSize="44" fontWeight="900" letterSpacing="-1">TWO</text>
+              <text x={270} y={258} textAnchor="middle" className="fill-muted-foreground" fontSize="11" letterSpacing="4" fontWeight="700">{t('trilemma.chooseLabel')}</text>
+              <text x={270} y={300} textAnchor="middle" className="fill-foreground" fontSize="44" fontWeight="900" letterSpacing="-1">{t('trilemma.chooseTwo')}</text>
               {active && (
                 <motion.text
                   key={active.id}
@@ -1223,7 +1162,7 @@ function TrilemmaSlide() {
                   animate={{ opacity: 1, y: 0 }}
                   fill={active.color}
                 >
-                  {active.name.toUpperCase()}
+                  {t(`trilemma.platforms.${active.id}.name`).toUpperCase()}
                 </motion.text>
               )}
             </svg>
@@ -1255,12 +1194,12 @@ function TrilemmaSlide() {
                   >
                     <div className="flex items-center gap-1.5">
                       <span className="text-base">{v.icon}</span>
-                      <span className="font-black text-[13px] tracking-tight" style={{ color: v.color }}>{v.name}</span>
+                      <span className="font-black text-[13px] tracking-tight" style={{ color: v.color }}>{vertexName(id)}</span>
                     </div>
-                    <span className="text-[10px] text-muted-foreground leading-none">{v.desc}</span>
+                    <span className="text-[10px] text-muted-foreground leading-none">{vertexDesc(id)}</span>
                     {sacrificed && (
                       <span className="text-[9px] font-black uppercase tracking-[2px] mt-0.5 px-1.5 py-0.5 rounded" style={{ color: v.color, backgroundColor: v.color + '15' }}>
-                        ↓ traded off
+                        {t('trilemma.tradedOff')}
                       </span>
                     )}
                   </div>
@@ -1272,9 +1211,10 @@ function TrilemmaSlide() {
 
         {/* ── Platform cards column ── */}
         <div className="flex flex-col gap-3 min-h-0">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground shrink-0">Hover a platform to compare ↓</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground shrink-0">{t('trilemma.hoverHint')}</p>
           {TRILEMMA_PLATFORMS.map((p, i) => {
             const isHovered = hovered === p.id;
+            const pStats = t(`trilemma.platforms.${p.id}.stats`, { returnObjects: true }) as PlatformStat[];
             return (
               <motion.button
                 key={p.id}
@@ -1306,12 +1246,12 @@ function TrilemmaSlide() {
                       {p.symbol}
                     </div>
                     <div className="min-w-0">
-                      <div className="font-black text-sm text-foreground truncate">{p.name}</div>
-                      <div className="text-[10px] text-muted-foreground truncate">{p.tagline}</div>
+                      <div className="font-black text-sm text-foreground truncate">{t(`trilemma.platforms.${p.id}.name`)}</div>
+                      <div className="text-[10px] text-muted-foreground truncate">{t(`trilemma.platforms.${p.id}.tagline`)}</div>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-0.5 shrink-0">
-                    {p.stats.map(s => (
+                    {pStats.map(s => (
                       <div key={s.label} className="text-right leading-tight">
                         <span className="text-xs font-black text-foreground">{s.value}</span>
                         <span className="text-[9px] text-muted-foreground ml-1 uppercase tracking-wider">{s.label}</span>
@@ -1328,7 +1268,7 @@ function TrilemmaSlide() {
                       className="text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider"
                       style={{ backgroundColor: TRILEMMA_VERTICES[pick].color + '22', color: TRILEMMA_VERTICES[pick].color }}
                     >
-                      ✓ {TRILEMMA_VERTICES[pick].name}
+                      {t('trilemma.pickPrefix')}{vertexName(pick)}
                     </span>
                   ))}
                   {p.sacrifices && (
@@ -1341,13 +1281,13 @@ function TrilemmaSlide() {
                         opacity: 0.75,
                       }}
                     >
-                      {TRILEMMA_VERTICES[p.sacrifices].name}
+                      {vertexName(p.sacrifices)}
                     </span>
                   )}
                 </div>
 
                 {/* Detail */}
-                <p className="text-xs text-muted-foreground leading-relaxed pl-2">{p.detail}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed pl-2">{t(`trilemma.platforms.${p.id}.detail`)}</p>
               </motion.button>
             );
           })}
@@ -1358,6 +1298,18 @@ function TrilemmaSlide() {
 }
 
 export function BP_Section1() {
+  const { t } = useTranslation('blockchain-platforms/section-1');
+
+  const chapters = useMemo(
+    () =>
+      chapterShape.map((c) =>
+        'kind' in c
+          ? { kind: 'group' as const, id: c.id, label: t(`groups.${c.id}`) }
+          : { id: c.id, label: t(`chapters.${c.id}`) }
+      ),
+    [t]
+  );
+
   return (
     <div className="h-full w-full flex overflow-hidden">
       <SectionNav chapters={chapters} />
@@ -1367,9 +1319,9 @@ export function BP_Section1() {
         {/* ═══════ TITLE ═══════ */}
         <div className="h-full">
           <TitleSlide
-            sectionNumber="SECTION 01"
-            title="Bitcoin: The First Permissionless Blockchain"
-            subtitle="Architecture, transactions, Proof of Work, and the Blockchain Trilemma"
+            sectionNumber={t('title.sectionNumber')}
+            title={t('title.title')}
+            subtitle={t('title.subtitle')}
             icon={<Bitcoin className="size-20 text-[#f59e0b]" />}
             gradient="from-[#f59e0b] to-[#ED1C24]"
           />
@@ -1383,8 +1335,8 @@ export function BP_Section1() {
         {/* ═══════ TRANSACTION ═══════ */}
         <div id="s1-transaction" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Bitcoin Transaction &amp; UTXO Model</h2>
-            <p className="text-muted-foreground text-sm mt-1">Unspent Transaction Outputs — the accounting primitive behind every bitcoin transfer.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('transaction.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('transaction.subtitle')}</p>
           </div>
 
           <div className="flex-1 min-h-0 flex gap-6">
@@ -1394,30 +1346,30 @@ export function BP_Section1() {
               <div className="rounded-xl border-2 p-4" style={{ borderColor: '#f59e0b40', backgroundColor: '#f59e0b08' }}>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#f59e0b' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#f59e0b' }}>What is a UTXO?</span>
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#f59e0b' }}>{t('transaction.whatLabel')}</span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  A <span className="font-semibold text-foreground">UTXO (Unspent Transaction Output)</span> is a discrete chunk of bitcoin that has been received but not yet spent. There are no "account balances" — your wallet software sums up all UTXOs locked to your address.
+                  {t('transaction.whatA')}<span className="font-semibold text-foreground">{t('transaction.whatTerm')}</span>{t('transaction.whatB')}
                 </p>
               </div>
 
               <div className="rounded-xl border p-4 bg-card">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">How inputs &amp; outputs work</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">{t('transaction.ioTitle')}</p>
                 <div className="flex flex-col gap-2 text-sm text-muted-foreground">
                   <div className="flex items-start gap-2">
                     <div className="w-4 h-4 rounded shrink-0 mt-0.5" style={{ backgroundColor: '#f59e0b20', border: '1px solid #f59e0b60' }} />
-                    <span><span className="font-semibold text-foreground">Inputs</span> reference a previous UTXO by its transaction ID and output index (vout), and provide a scriptSig to prove ownership.</span>
+                    <span><span className="font-semibold text-foreground">{t('transaction.inputsTerm')}</span>{t('transaction.inputsBody')}</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <div className="w-4 h-4 rounded shrink-0 mt-0.5" style={{ backgroundColor: '#39B54A20', border: '1px solid #39B54A60' }} />
-                    <span><span className="font-semibold text-foreground">Outputs</span> create new UTXOs — each locked to a recipient's public key hash. Once spent, a UTXO is consumed in full.</span>
+                    <span><span className="font-semibold text-foreground">{t('transaction.outputsTerm')}</span>{t('transaction.outputsBody')}</span>
                   </div>
                 </div>
               </div>
 
               {/* UTXO visual */}
               <div className="rounded-xl border p-4 bg-card flex-1 min-h-0 flex flex-col justify-center">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">Visual: combining UTXOs</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">{t('transaction.visualTitle')}</p>
                 <div className="flex items-center justify-center gap-3 flex-wrap">
                   {/* Inputs */}
                   <div className="flex flex-col gap-2">
@@ -1429,7 +1381,7 @@ export function BP_Section1() {
                       style={{ backgroundColor: '#f59e0b20', border: '2px solid #f59e0b60', color: '#f59e0b' }}
                     >
                       0.3 BTC
-                      <div className="text-xs font-normal text-muted-foreground">UTXO #1</div>
+                      <div className="text-xs font-normal text-muted-foreground">{t('transaction.utxo1')}</div>
                     </motion.div>
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
@@ -1439,7 +1391,7 @@ export function BP_Section1() {
                       style={{ backgroundColor: '#f59e0b20', border: '2px solid #f59e0b60', color: '#f59e0b' }}
                     >
                       0.5 BTC
-                      <div className="text-xs font-normal text-muted-foreground">UTXO #2</div>
+                      <div className="text-xs font-normal text-muted-foreground">{t('transaction.utxo2')}</div>
                     </motion.div>
                   </div>
 
@@ -1455,7 +1407,7 @@ export function BP_Section1() {
                       <div className="rounded-md px-2 py-1 text-xs font-bold text-white" style={{ backgroundColor: '#f59e0b' }}>TX</div>
                       <div className="h-px w-6" style={{ backgroundColor: '#f59e0b' }} />
                     </motion.div>
-                    <div className="text-xs text-muted-foreground">fee: 0.1 BTC</div>
+                    <div className="text-xs text-muted-foreground">{t('transaction.fee')}</div>
                   </div>
 
                   {/* Outputs */}
@@ -1468,7 +1420,7 @@ export function BP_Section1() {
                       style={{ backgroundColor: '#39B54A20', border: '2px solid #39B54A60', color: '#39B54A' }}
                     >
                       0.6 BTC
-                      <div className="text-xs font-normal text-muted-foreground">Bob (new UTXO)</div>
+                      <div className="text-xs font-normal text-muted-foreground">{t('transaction.bobNewUtxo')}</div>
                     </motion.div>
                     <motion.div
                       initial={{ opacity: 0, x: 20 }}
@@ -1478,46 +1430,28 @@ export function BP_Section1() {
                       style={{ backgroundColor: '#6366f120', border: '2px solid #6366f160', color: '#6366f1' }}
                     >
                       0.1 BTC
-                      <div className="text-xs font-normal text-muted-foreground">Alice (change)</div>
+                      <div className="text-xs font-normal text-muted-foreground">{t('transaction.aliceChange')}</div>
                     </motion.div>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground text-center mt-3">Inputs (0.8 BTC) = Outputs (0.7 BTC) + Fee (0.1 BTC)</p>
+                <p className="text-xs text-muted-foreground text-center mt-3">{t('transaction.equation')}</p>
               </div>
             </div>
 
             {/* ── Right: Anatomy & Why UTXO ── */}
             <div className="flex-1 min-w-0 flex flex-col gap-3">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Anatomy of a Bitcoin Transaction</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('transaction.anatomyTitle')}</p>
 
               {[
-                {
-                  field: 'Version',
-                  color: '#6366f1',
-                  value: '2',
-                  desc: 'Protocol version — determines which rules apply (e.g. SegWit support).',
-                },
-                {
-                  field: 'Inputs [ ]',
-                  color: '#f59e0b',
-                  value: '{ txid, vout, scriptSig, sequence }',
-                  desc: 'Array of references to previous UTXOs being consumed. scriptSig (or witness) proves ownership.',
-                },
-                {
-                  field: 'Outputs [ ]',
-                  color: '#39B54A',
-                  value: '{ value (satoshis), scriptPubKey }',
-                  desc: 'Array of new UTXOs created. scriptPubKey locks the coins to the recipient\'s address.',
-                },
-                {
-                  field: 'Locktime',
-                  color: '#ED1C24',
-                  value: '0 (or block/timestamp)',
-                  desc: 'Earliest time/block the transaction can be mined. 0 means no delay.',
-                },
-              ].map((item, i) => (
+                { color: '#6366f1', value: '2' },
+                { color: '#f59e0b', value: '{ txid, vout, scriptSig, sequence }' },
+                { color: '#39B54A', value: '{ value (satoshis), scriptPubKey }' },
+                { color: '#ED1C24', value: '0 (or block/timestamp)' },
+              ].map((item, i) => {
+                const at = (t('transaction.anatomy', { returnObjects: true }) as { field: string; desc: string }[])[i];
+                return (
                 <motion.div
-                  key={item.field}
+                  key={at.field}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.1 }}
@@ -1525,12 +1459,13 @@ export function BP_Section1() {
                   style={{ borderLeftColor: item.color }}
                 >
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-sm font-bold text-foreground">{item.field}</span>
+                    <span className="text-sm font-bold text-foreground">{at.field}</span>
                     <code className="text-xs font-mono px-1.5 py-0.5 rounded" style={{ backgroundColor: item.color + '18', color: item.color }}>{item.value}</code>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{at.desc}</p>
                 </motion.div>
-              ))}
+                );
+              })}
 
               {/* Why UTXO callout */}
               <motion.div
@@ -1542,14 +1477,10 @@ export function BP_Section1() {
               >
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-base">💡</span>
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#f59e0b' }}>Why UTXO?</span>
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#f59e0b' }}>{t('transaction.whyTitle')}</span>
                 </div>
                 <div className="flex gap-4 flex-wrap">
-                  {[
-                    { label: 'No global balance', desc: 'No single mutable account state — reduces contention' },
-                    { label: 'Stateless validation', desc: 'Each UTXO can be verified independently' },
-                    { label: 'Parallel processing', desc: 'Non-overlapping UTXOs can be validated concurrently' },
-                  ].map(b => (
+                  {(t('transaction.whyBenefits', { returnObjects: true }) as { label: string; desc: string }[]).map(b => (
                     <div key={b.label} className="flex-1 min-w-24">
                       <div className="text-xs font-semibold text-foreground">{b.label}</div>
                       <div className="text-xs text-muted-foreground">{b.desc}</div>
@@ -1575,8 +1506,8 @@ export function BP_Section1() {
         {/* ═══════ PROOF OF WORK ═══════ */}
         <div id="s1-pow" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Proof of Work</h2>
-            <p className="text-muted-foreground text-sm mt-1">The cryptographic puzzle that makes Bitcoin's consensus tamper-proof.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('pow.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('pow.subtitle')}</p>
           </div>
 
           <div className="flex-1 min-h-0 flex gap-6">
@@ -1586,16 +1517,16 @@ export function BP_Section1() {
               <div className="rounded-xl border-2 p-4" style={{ borderColor: '#f59e0b40', backgroundColor: '#f59e0b08' }}>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#f59e0b' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#f59e0b' }}>The Hash Puzzle</span>
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#f59e0b' }}>{t('pow.puzzleLabel')}</span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Bitcoin uses <span className="font-semibold text-foreground">SHA-256</span> (applied twice) to produce a 256-bit digest. Miners must find a <span className="font-semibold text-foreground">nonce</span> such that the resulting block hash is below the current target — meaning it starts with enough leading zeros. This requires brute-force trial and error.
+                  {t('pow.puzzleA')}<span className="font-semibold text-foreground">{t('pow.puzzleSha')}</span>{t('pow.puzzleB')}<span className="font-semibold text-foreground">{t('pow.puzzleNonce')}</span>{t('pow.puzzleC')}
                 </p>
               </div>
 
               {/* Mock block header */}
               <div className="rounded-xl border p-4 bg-card flex-1 min-h-0 flex flex-col">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Block Header Fields</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">{t('pow.headerTitle')}</p>
                 <div className="flex flex-col gap-2 font-mono text-xs flex-1 justify-center">
                   {[
                     { field: 'version', value: '0x20000000', color: '#6366f1' },
@@ -1619,10 +1550,10 @@ export function BP_Section1() {
                   ))}
                 </div>
                 <div className="mt-3 rounded-lg px-3 py-2" style={{ backgroundColor: '#f59e0b12', border: '1px solid #f59e0b40' }}>
-                  <p className="font-mono text-xs" style={{ color: '#f59e0b' }}>SHA256(SHA256(header)) =</p>
+                  <p className="font-mono text-xs" style={{ color: '#f59e0b' }}>{t('pow.hashLabel')}</p>
                   <p className="font-mono text-xs text-foreground break-all">00000000000000000002<span className="text-muted-foreground">a7c4c1f8b9d3e6...</span></p>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2 text-center">Difficulty adjusts every <span className="font-semibold text-foreground">2,016 blocks (~2 weeks)</span> to maintain ~10 min block time.</p>
+                <p className="text-xs text-muted-foreground mt-2 text-center">{t('pow.difficultyA')}<span className="font-semibold text-foreground">{t('pow.difficultyStrong')}</span>{t('pow.difficultyB')}</p>
               </div>
             </div>
 
@@ -1631,7 +1562,7 @@ export function BP_Section1() {
               {[
                 {
                   icon: '⛏️',
-                  title: 'Mining Hardware Evolution',
+                  title: t('pow.cards.hardware.title'),
                   color: '#f59e0b',
                   content: (
                     <div className="flex items-center gap-2 flex-wrap mt-1">
@@ -1641,13 +1572,13 @@ export function BP_Section1() {
                           {i < arr.length - 1 && <span className="text-muted-foreground text-xs">→</span>}
                         </span>
                       ))}
-                      <span className="text-xs text-muted-foreground ml-1">Each generation ~1000× more efficient. ASICs now dominate.</span>
+                      <span className="text-xs text-muted-foreground ml-1">{t('pow.cards.hardware.note')}</span>
                     </div>
                   ),
                 },
                 {
                   icon: '₿',
-                  title: 'Block Reward & Halvings',
+                  title: t('pow.cards.reward.title'),
                   color: '#f59e0b',
                   content: (
                     <div className="mt-1">
@@ -1667,27 +1598,27 @@ export function BP_Section1() {
                           </div>
                         ))}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">Halving every 210,000 blocks. Supply hard-capped at 21 million BTC.</p>
+                      <p className="text-xs text-muted-foreground mt-1">{t('pow.cards.reward.note')}</p>
                     </div>
                   ),
                 },
                 {
                   icon: '🌍',
-                  title: 'The Energy Debate',
+                  title: t('pow.cards.energy.title'),
                   color: '#ED1C24',
                   content: (
                     <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                      PoW converts electricity into security — attacking is expensive in the real world. Critics note Bitcoin's energy use (~150 TWh/yr). Ethereum addressed this by moving to <span className="font-semibold text-foreground">Proof of Stake</span>, reducing energy consumption by <span className="font-semibold" style={{ color: '#ED1C24' }}>~99.95%</span>.
+                      {t('pow.cards.energy.bodyA')}<span className="font-semibold text-foreground">{t('pow.cards.energy.bodyStrong')}</span>{t('pow.cards.energy.bodyB')}<span className="font-semibold" style={{ color: '#ED1C24' }}>{t('pow.cards.energy.bodyPercent')}</span>{t('pow.cards.energy.bodyC')}
                     </p>
                   ),
                 },
                 {
                   icon: '🔒',
-                  title: 'Why It Works: 51% Attack Cost',
+                  title: t('pow.cards.attack.title'),
                   color: '#ED1C24',
                   content: (
                     <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                      To rewrite history an attacker needs &gt;50% of global hashrate. At current difficulty that would cost billions in ASIC hardware + electricity, and any successful attack would destroy the value of the coins being stolen — making honesty the dominant strategy.
+                      {t('pow.cards.attack.body')}
                     </p>
                   ),
                 },
@@ -1720,88 +1651,59 @@ export function BP_Section1() {
         {/* ═══════ APPS — Bitcoin's app layer ═══════ */}
         <div id="s1-apps" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-3">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Beyond payments — Bitcoin's app layer</h2>
-            <p className="text-sm text-muted-foreground mt-1">For most of its life Bitcoin only did one thing: send value. Since 2018 — and accelerating since 2023 — a real application layer has emerged on, around, and atop the base chain.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('apps.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t('apps.subtitle')}</p>
           </div>
 
           <div className="shrink-0 mb-4 rounded-xl border p-3" style={{ borderColor: '#f59e0b55', backgroundColor: '#f59e0b0d' }}>
-            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#f59e0b' }}>Where the apps actually live</p>
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#f59e0b' }}>{t('apps.whereLabel')}</p>
             <p className="text-sm text-foreground mt-0.5 leading-snug">
-              Bitcoin's base chain handles ~7 TPS and has no smart-contract VM. Apps live in <span className="font-semibold">payment channels</span> (Lightning), in <span className="font-semibold">satoshi inscriptions</span> (Ordinals · BRC-20 · Runes), on <span className="font-semibold">sidechains</span> (Stacks, Liquid, Rootstock), and in new <span className="font-semibold">Bitcoin staking</span> systems (Babylon).
+              {t('apps.whereBodyA')}<span className="font-semibold">{t('apps.whereChannels')}</span>{t('apps.whereBodyB')}<span className="font-semibold">{t('apps.whereInscriptions')}</span>{t('apps.whereBodyC')}<span className="font-semibold">{t('apps.whereSidechains')}</span>{t('apps.whereBodyD')}<span className="font-semibold">{t('apps.whereStaking')}</span>{t('apps.whereBodyE')}
             </p>
           </div>
 
           <div className="flex-1 min-h-0 overflow-y-auto grid grid-cols-1 lg:grid-cols-2 lg:auto-rows-fr gap-3">
             {[
-              {
-                icon: '⚡',
-                title: 'Lightning Network',
-                sub: 'L2 payment channels · 2018+',
-                color: '#f59e0b',
-                what: 'A network of payment channels. Two parties open a channel on-chain once, then exchange thousands of off-chain transactions instantly and almost free. Channels close on-chain to settle the final balance.',
-                adoption: 'Apps: Strike · Cash App (US Bitcoin) · Phoenix · Wallet of Satoshi · Cashu · Public capacity ~5,000 BTC · ~15,000 routing nodes.',
-                limit: 'Liquidity must be pre-allocated · routing failures common at the edge · custodial wallets dominate retail UX, eroding the self-sovereignty argument.',
-              },
-              {
-                icon: '📜',
-                title: 'Ordinals · BRC-20 · Runes',
-                sub: 'Inscriptions on satoshis · 2023+',
-                color: '#ef4444',
-                what: 'Casey Rodarmor\'s Ordinals (Jan 2023) numbers each satoshi and lets you "inscribe" arbitrary data onto it — images, JSON, code. BRC-20 reused this for fungible tokens; Runes (April 2024) added a more efficient native-token system.',
-                adoption: '~$4B+ Ordinals secondary market · BRC-20 momentum cooled in 2024 · Runes inherited the use case after the Halving.',
-                limit: 'Highly contested: bloats blockchain data, raises base-chain fees during inscription waves. Many node operators and core devs oppose it philosophically — "Bitcoin is for money".',
-              },
-              {
-                icon: '🔗',
-                title: 'Bitcoin sidechains & rollups',
-                sub: 'Stacks · Liquid · Rootstock · 2018+',
-                color: '#6366f1',
-                what: 'Programmable layers pegged to BTC. Stacks (Clarity language, settles via "Proof of Transfer"); Liquid (federation, fast confidential txs); Rootstock (EVM-compatible, merge-mined). New entrants 2024-25: BitVM-style rollups, BOB, Bitlayer.',
-                adoption: 'Stacks ~$1B TVL · Liquid powers confidential txs for major exchanges · Rootstock has steady DeFi activity.',
-                limit: 'Trust models vary widely: Liquid is federated (trust the signer set); Stacks settles to BTC but security remains debated; Rootstock pegs use merge-mining. None inherits Bitcoin\'s security as natively as ETH rollups inherit L1.',
-              },
-              {
-                icon: '🛡️',
-                title: 'Bitcoin staking — Babylon',
-                sub: 'Native BTC restaking · 2024+',
-                color: '#39B54A',
-                what: 'Babylon lets BTC holders stake their coins to provide economic security to PoS chains — without bridging or wrapping. If a validator equivocates, their staked BTC is slashed via a Bitcoin-native script.',
-                adoption: '~$5B+ BTC staked by late 2024 · backed by multiple PoS chains seeking shared security · mainnet launched 2024.',
-                limit: 'New and unproven at scale · introduces complex Bitcoin script · creates BTC-denominated yield, breaking with the long-held "Bitcoin doesn\'t pay yield" tradition.',
-              },
-            ].map(app => (
+              { icon: '⚡', color: '#f59e0b' },
+              { icon: '📜', color: '#ef4444' },
+              { icon: '🔗', color: '#6366f1' },
+              { icon: '🛡️', color: '#39B54A' },
+            ].map((appMeta, idx) => {
+              const app = (t('apps.items', { returnObjects: true }) as { title: string; sub: string; what: string; adoption: string; limit: string }[])[idx];
+              return (
               <motion.div
                 key={app.title}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
                 className="rounded-xl border-2 p-3 flex flex-col gap-2 min-h-0 overflow-hidden"
-                style={{ borderColor: app.color + '50', backgroundColor: app.color + '08' }}
+                style={{ borderColor: appMeta.color + '50', backgroundColor: appMeta.color + '08' }}
               >
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-xl shrink-0 leading-none">{app.icon}</span>
+                  <span className="text-xl shrink-0 leading-none">{appMeta.icon}</span>
                   <div className="min-w-0">
-                    <div className="font-black text-sm leading-tight" style={{ color: app.color }}>{app.title}</div>
+                    <div className="font-black text-sm leading-tight" style={{ color: appMeta.color }}>{app.title}</div>
                     <div className="text-[10px] text-muted-foreground leading-tight">{app.sub}</div>
                   </div>
                 </div>
                 <p className="text-[11px] text-muted-foreground leading-snug flex-1">{app.what}</p>
-                <div className="rounded-lg border bg-card/60 px-2 py-1 text-[10px] leading-snug" style={{ borderColor: app.color + '40' }}>
-                  <span className="font-bold" style={{ color: app.color }}>Adoption: </span>
+                <div className="rounded-lg border bg-card/60 px-2 py-1 text-[10px] leading-snug" style={{ borderColor: appMeta.color + '40' }}>
+                  <span className="font-bold" style={{ color: appMeta.color }}>{t('apps.adoptionLabel')}</span>
                   <span className="text-muted-foreground">{app.adoption}</span>
                 </div>
                 <div className="rounded-lg border bg-card/60 px-2 py-1 text-[10px] leading-snug" style={{ borderColor: '#ED1C2440' }}>
-                  <span className="font-bold" style={{ color: '#ED1C24' }}>Honest limit: </span>
+                  <span className="font-bold" style={{ color: '#ED1C24' }}>{t('apps.limitLabel')}</span>
                   <span className="text-muted-foreground">{app.limit}</span>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#f59e0b55', backgroundColor: '#f59e0b0d' }}>
             <p className="text-[11px] text-muted-foreground leading-snug">
-              <span className="font-bold" style={{ color: '#f59e0b' }}>Pedagogical caveat — </span>
-              Bitcoin's app layer is debated within the Bitcoin community. Purists want the base chain minimal ("digital gold"); builders push to use it as a settlement layer for richer apps. Be skeptical of hype on either side — both camps have legitimate concerns.
+              <span className="font-bold" style={{ color: '#f59e0b' }}>{t('apps.caveatLabel')}</span>
+              {t('apps.caveatBody')}
             </p>
           </div>
         </div>
@@ -1958,60 +1860,60 @@ export function BP_Section1() {
 
             <div className="flex items-center gap-3 mb-2">
               <Zap className="size-6 text-[#f59e0b]" />
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Lightning Network — Why It Matters</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('lightningWhy.heading')}</h2>
             </div>
             <p className="text-sm text-muted-foreground mb-3">
-              Bitcoin's base layer processes ~7 transactions per second and takes ~10 minutes to confirm. Lightning solves this without changing Bitcoin itself.
+              {t('lightningWhy.subtitle')}
             </p>
 
             <div className="grid grid-cols-3 gap-3 mb-3">
               <div className="bg-card rounded-xl border border-border p-4 text-center">
-                <div className="text-2xl lg:text-3xl font-black text-[#f59e0b]">~1ms</div>
-                <div className="text-sm font-semibold text-foreground mt-1">Settlement</div>
-                <div className="text-xs text-muted-foreground mt-0.5">vs ~10 min on-chain</div>
+                <div className="text-2xl lg:text-3xl font-black text-[#f59e0b]">{t('lightningWhy.stats.settlement.value')}</div>
+                <div className="text-sm font-semibold text-foreground mt-1">{t('lightningWhy.stats.settlement.label')}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{t('lightningWhy.stats.settlement.sub')}</div>
               </div>
               <div className="bg-card rounded-xl border border-border p-4 text-center">
-                <div className="text-2xl lg:text-3xl font-black text-[#39B54A]">&lt;$0.001</div>
-                <div className="text-sm font-semibold text-foreground mt-1">Fee per payment</div>
-                <div className="text-xs text-muted-foreground mt-0.5">vs $1–$50 on-chain</div>
+                <div className="text-2xl lg:text-3xl font-black text-[#39B54A]">{t('lightningWhy.stats.fee.value')}</div>
+                <div className="text-sm font-semibold text-foreground mt-1">{t('lightningWhy.stats.fee.label')}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{t('lightningWhy.stats.fee.sub')}</div>
               </div>
               <div className="bg-card rounded-xl border border-border p-4 text-center">
-                <div className="text-2xl lg:text-3xl font-black text-[#6366f1]">∞</div>
-                <div className="text-sm font-semibold text-foreground mt-1">Theoretical TPS</div>
-                <div className="text-xs text-muted-foreground mt-0.5">limited only by nodes</div>
+                <div className="text-2xl lg:text-3xl font-black text-[#6366f1]">{t('lightningWhy.stats.tps.value')}</div>
+                <div className="text-sm font-semibold text-foreground mt-1">{t('lightningWhy.stats.tps.label')}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{t('lightningWhy.stats.tps.sub')}</div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 flex-1 min-h-0">
               <div className="space-y-3">
                 <div className="bg-card rounded-xl border border-border p-4">
-                  <h4 className="font-bold text-foreground mb-1">🌍 Real-World Adoption</h4>
+                  <h4 className="font-bold text-foreground mb-1">{t('lightningWhy.adoption.title')}</h4>
                   <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• <span className="text-foreground font-medium">El Salvador</span> — national Bitcoin wallet (Chivo) runs on Lightning</li>
-                    <li>• <span className="text-foreground font-medium">Strike & Cash App</span> — millions of users send Lightning payments</li>
-                    <li>• <span className="text-foreground font-medium">Remittances</span> — &lt;0.1% fee vs 10–15% via Western Union</li>
+                    {(t('lightningWhy.adoption.items', { returnObjects: true }) as { strong: string; text: string }[]).map((item, i) => (
+                      <li key={i}>• <span className="text-foreground font-medium">{item.strong}</span>{item.text}</li>
+                    ))}
                   </ul>
                 </div>
                 <div className="bg-card rounded-xl border border-border p-4">
-                  <h4 className="font-bold text-foreground mb-1">⚡ New Use Cases</h4>
+                  <h4 className="font-bold text-foreground mb-1">{t('lightningWhy.useCases.title')}</h4>
                   <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• <span className="text-foreground font-medium">Streaming money</span> — pay per second for content or services</li>
-                    <li>• <span className="text-foreground font-medium">Micropayments</span> — tip 1 sat for an article or a tweet</li>
-                    <li>• <span className="text-foreground font-medium">Machine payments</span> — IoT devices paying each other autonomously</li>
+                    {(t('lightningWhy.useCases.items', { returnObjects: true }) as { strong: string; text: string }[]).map((item, i) => (
+                      <li key={i}>• <span className="text-foreground font-medium">{item.strong}</span>{item.text}</li>
+                    ))}
                   </ul>
                 </div>
               </div>
               <div className="space-y-3">
                 <div className="bg-card rounded-xl border border-border p-4">
-                  <h4 className="font-bold text-foreground mb-1">🔐 Security Guarantees</h4>
+                  <h4 className="font-bold text-foreground mb-1">{t('lightningWhy.security.title')}</h4>
                   <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Channels are enforced by <span className="text-foreground font-medium">Bitcoin smart contracts</span> — no middleman</li>
-                    <li>• A party trying to cheat with an old state gets their funds <span className="text-foreground font-medium">penalized</span></li>
-                    <li>• HTLCs ensure intermediaries can route but <span className="text-foreground font-medium">never steal</span></li>
+                    {(t('lightningWhy.security.items', { returnObjects: true }) as { preA: string; strong: string; preB: string }[]).map((item, i) => (
+                      <li key={i}>• {item.preA}<span className="text-foreground font-medium">{item.strong}</span>{item.preB}</li>
+                    ))}
                   </ul>
                 </div>
-                <CalloutBox type="tip" title="Key Insight">
-                  Lightning doesn't replace Bitcoin — it sits on top of it. The base layer provides the trust; Lightning provides the speed. Same model as the internet: TCP/IP underneath, HTTP on top.
+                <CalloutBox type="tip" title={t('lightningWhy.callout.title')}>
+                  {t('lightningWhy.callout.body')}
                 </CalloutBox>
               </div>
             </div>
@@ -2022,116 +1924,91 @@ export function BP_Section1() {
         {/* ═══════ BEST FITS — WHERE BITCOIN WINS ═══════ */}
         <div id="s1-bestfits" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-3">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#f7931a]/15 border border-[#f7931a]/40 text-[#f7931a] text-xs font-bold">🎯 Best Fits</span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where Bitcoin Wins — The Use Cases It Actually Owns</h2>
+            <span className="px-2.5 py-0.5 rounded-full bg-[#f7931a]/15 border border-[#f7931a]/40 text-[#f7931a] text-xs font-bold">{t('bestFits.badge')}</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('bestFits.heading')}</h2>
             <p className="text-sm text-muted-foreground max-w-3xl">
-              Bitcoin's design choices (fixed supply, UTXO model, intentionally limited Script, PoW security) make it spectacularly good at a narrow set of jobs — and explicitly not the right tool for many others.
+              {t('bestFits.subtitle')}
             </p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
-            {[
-              { emoji: '🏦', name: 'Store of Value / Digital Gold',  why: 'Fixed 21M supply + 15+ years of uptime + PoW security make it the most credible scarce digital asset.', example: 'MicroStrategy holds 450k+ BTC as treasury · El Salvador national reserve · BlackRock IBIT ETF ($50B+ AUM).' },
-              { emoji: '💸', name: 'Cross-border settlement',         why: 'Censorship-resistant, no intermediary, available 24/7. Settles in minutes vs days for SWIFT.', example: 'Used in inflationary economies (Argentina, Venezuela, Turkey) as USD-adjacent settlement rails.' },
-              { emoji: '⚡', name: 'Micropayments via Lightning',     why: 'L2 payment channels deliver instant, near-zero-fee payments without touching the base chain.', example: 'Strike, Cash App, Wallet of Satoshi · streaming sats per second for content (Fountain podcasts).' },
-              { emoji: '🛡️', name: 'Strategic reserve asset',         why: 'Verifiable scarcity + jurisdiction-neutral + carrier-grade infrastructure → attractive as a "neutral" reserve.', example: 'US Strategic Bitcoin Reserve (2025) · sovereign wealth fund allocations · corporate treasury policies.' },
-            ].map(uc => (
+            {(t('bestFits.items', { returnObjects: true }) as { emoji: string; name: string; why: string; example: string }[]).map(uc => (
               <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#f7931a55', backgroundColor: '#f7931a08' }}>
                 <div className="flex items-center gap-2">
                   <span className="text-2xl shrink-0">{uc.emoji}</span>
                   <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
                 </div>
                 <div className="text-xs text-muted-foreground leading-snug">
-                  <span className="font-bold text-[#f7931a] uppercase tracking-widest text-[9px] mr-1">Why</span>
+                  <span className="font-bold text-[#f7931a] uppercase tracking-widest text-[9px] mr-1">{t('bestFits.whyLabel')}</span>
                   {uc.why}
                 </div>
                 <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
-                  <span className="font-bold text-[#f7931a] uppercase tracking-widest text-[9px] mr-1">In the wild</span>
+                  <span className="font-bold text-[#f7931a] uppercase tracking-widest text-[9px] mr-1">{t('bestFits.wildLabel')}</span>
                   {uc.example}
                 </div>
               </div>
             ))}
           </div>
           <div className="shrink-0 mt-3 p-2.5 bg-[#ef4444]/08 border border-[#ef4444]/30 rounded-lg text-[11px] text-muted-foreground">
-            <strong className="text-[#ef4444]">Not a fit for:</strong> rich smart contracts (use Ethereum), high-throughput retail point-of-sale on the base layer (use Lightning or another chain), private enterprise consortia (use Fabric), on-chain identity / governance / DeFi composability.
+            <strong className="text-[#ef4444]">{t('bestFits.notFitLabel')}</strong>{t('bestFits.notFitBody')}
           </div>
         </div>
 
         {/* ═══════ WORST FITS — WHERE BITCOIN IS WRONG ═══════ */}
         <div id="s1-worstfits" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-3">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#ef4444]/15 border border-[#ef4444]/40 text-[#ef4444] text-xs font-bold">🚫 Worst Fits</span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where Bitcoin is the <em>Wrong</em> Tool</h2>
+            <span className="px-2.5 py-0.5 rounded-full bg-[#ef4444]/15 border border-[#ef4444]/40 text-[#ef4444] text-xs font-bold">{t('worstFits.badge')}</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('worstFits.headingA')}<em>{t('worstFits.headingEm')}</em>{t('worstFits.headingB')}</h2>
             <p className="text-sm text-muted-foreground max-w-3xl">
-              The same design choices that make Bitcoin great at digital scarcity make it actively bad at other jobs. If you find yourself fighting the protocol, you're using the wrong chain.
+              {t('worstFits.subtitle')}
             </p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
-            {[
-              { emoji: '🤖', name: 'Complex smart contracts / dApps', why: 'Bitcoin Script is intentionally not Turing-complete — no loops, no persistent state, no rich logic. Workarounds (Counterparty, RGB) hit the same ceiling.',         alt: 'Use Ethereum (EVM) · Solana · Cosmos SDK · Starknet for any kind of programmable money or app.' },
-              { emoji: '🚀', name: 'High-throughput retail payments (on L1)', why: 'L1 sustains ~7 TPS with ~10-minute blocks. Even moderate adoption pushes fees into double digits; you cannot run a card-network on the base layer.', alt: 'Use Lightning (BTC L2) for sats-level payments · Solana / Base / Avalanche for stablecoin retail.' },
-              { emoji: '🏥', name: 'Private B2B consortia (healthcare, KYC, RWA)', why: 'Public on-chain visibility + no built-in identity = a non-starter for regulated data sharing between named organisations.',                alt: 'Use Hyperledger Fabric (channels) · R3 Corda · permissioned Ethereum forks (Quorum).' },
-              { emoji: '🌾', name: 'DeFi / NFTs / DAOs', why: 'No native tokens, no on-chain identity, no programmable governance. Every "Bitcoin DeFi" project ends up requiring Ethereum or a federated sidechain to actually compose.',     alt: 'Use Ethereum + L2s · Solana · Sui for DeFi composability and rich asset standards.' },
-            ].map(uc => (
+            {(t('worstFits.items', { returnObjects: true }) as { emoji: string; name: string; why: string; alt: string }[]).map(uc => (
               <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#ef444455', backgroundColor: '#ef444408' }}>
                 <div className="flex items-center gap-2">
                   <span className="text-2xl shrink-0">{uc.emoji}</span>
                   <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
                 </div>
                 <div className="text-xs text-muted-foreground leading-snug">
-                  <span className="font-bold text-[#ef4444] uppercase tracking-widest text-[9px] mr-1">Why not</span>
+                  <span className="font-bold text-[#ef4444] uppercase tracking-widest text-[9px] mr-1">{t('worstFits.whyNotLabel')}</span>
                   {uc.why}
                 </div>
                 <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
-                  <span className="font-bold text-[#10b981] uppercase tracking-widest text-[9px] mr-1">Use instead</span>
+                  <span className="font-bold text-[#10b981] uppercase tracking-widest text-[9px] mr-1">{t('worstFits.useInsteadLabel')}</span>
                   {uc.alt}
                 </div>
               </div>
             ))}
           </div>
           <div className="shrink-0 mt-3 p-2.5 bg-[#10b981]/08 border border-[#10b981]/30 rounded-lg text-[11px] text-muted-foreground">
-            <strong className="text-[#10b981]">Right tool, right job:</strong> if the answer is "store of value", "neutral settlement layer", or "censorship resistance" — Bitcoin wins. For literally anything programmable, pick a different chain (and that's fine).
+            <strong className="text-[#10b981]">{t('worstFits.rightToolLabel')}</strong>{t('worstFits.rightToolBody')}
           </div>
         </div>
 
         {/* ═══════ QUIZ ═══════ */}
         <div id="s1-quiz" className="h-full">
           <QuizSlide
-            question="Alice has two UTXOs: 0.35 BTC and 0.40 BTC. She wants to send 0.60 BTC to Bob and pay a 0.01 BTC miner fee. What must happen in this transaction?"
-            options={[
-              { text: 'Use only the 0.40 BTC UTXO and ask Bob to cover the remaining 0.21 BTC himself.', correct: false },
-              { text: 'Combine both UTXOs (0.75 BTC total), send 0.60 BTC to Bob, pay 0.01 BTC fee, and receive 0.14 BTC as change back to Alice\'s wallet.', correct: true },
-              { text: 'Split the 0.40 BTC UTXO into two outputs of 0.20 BTC each to cover the payment over two transactions.', correct: false },
-              { text: 'Wait for a new mining reward UTXO before making the transaction, since the individual UTXOs are too small.', correct: false },
-            ]}
-            explanation="Bitcoin's UTXO model requires consuming whole UTXOs as inputs. Alice needs 0.61 BTC total (0.60 + 0.01 fee) — neither UTXO alone covers this, so both must be combined. The transaction spends both UTXOs (0.35 + 0.40 = 0.75 BTC) as inputs, creates an output of 0.60 BTC to Bob, and creates a change output of 0.14 BTC back to Alice's wallet. The 0.01 BTC difference between inputs and outputs is implicitly claimed by the miner. This is why wallet software tracks your UTXO set rather than a single balance."
+            question={t('quiz.question')}
+            options={(t('quiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+            explanation={t('quiz.explanation')}
           />
         </div>
 
         {/* ═══════ QUIZ 2 — Nakamoto consensus ═══════ */}
         <div id="s1-quiz-2" className="h-full">
           <QuizSlide
-            question="A miner finds a block whose SHA-256 hash satisfies the difficulty target. Just before broadcasting, another miner publishes a different valid block at the same height. The network briefly has two competing chains. How is the conflict resolved?"
-            options={[
-              { text: 'Both blocks are kept side-by-side; honest nodes choose whichever arrived first and a coordinator transaction merges the histories within 10 minutes.', correct: false },
-              { text: 'The fork is resolved by Nakamoto consensus: nodes follow the chain with the most cumulative proof-of-work. Whichever side first extends with another block wins; the other block is orphaned and its transactions return to the mempool.', correct: true },
-              { text: 'The orphaned block is included in a future block as an "uncle" and the miner still earns a partial block reward, similar to Ethereum pre-Merge.', correct: false },
-              { text: 'The two miners must broadcast a coordinated tie-breaker transaction signed by a 51% majority of the hash rate within the next epoch.', correct: false },
-            ]}
-            explanation="Bitcoin uses Nakamoto consensus — the chain with the highest cumulative proof-of-work always wins. When two valid blocks are found at the same height, the network temporarily forks; whichever side first extends with another block becomes the canonical chain, and the orphaned block's transactions return to the mempool to be re-included later. Bitcoin has no uncle-block reward (that was Ethereum's GHOST protocol pre-Merge); a stale block earns the miner nothing. There is no coordinator transaction or signaling — propagation latency and probability decide forks naturally."
+            question={t('quiz2.question')}
+            options={(t('quiz2.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+            explanation={t('quiz2.explanation')}
           />
         </div>
 
         {/* ═══════ QUIZ 3 — Difficulty adjustment ═══════ */}
         <div id="s1-quiz-3" className="h-full">
           <QuizSlide
-            question="Bitcoin's network hash rate doubles over six months as new miners deploy faster ASICs. What automatically keeps block intervals near the 10-minute target?"
-            options={[
-              { text: 'The block reward is halved early to discourage new miners from joining the network.', correct: false },
-              { text: 'Every 2,016 blocks (~2 weeks) each node independently recalculates the difficulty target from how long the previous 2,016 blocks took. With double the hash rate, the target shrinks (more leading zeros required) so finding a valid block becomes proportionally harder.', correct: true },
-              { text: 'Bitcoin nodes vote in real-time on a new difficulty using miner signaling encoded in coinbase transactions.', correct: false },
-              { text: 'A timestamp rule rejects any block published less than 10 minutes after its parent, enforcing the cadence directly.', correct: false },
-            ]}
-            explanation="Bitcoin's difficulty adjustment is automatic, trustless, and runs every 2,016 blocks (~2 weeks). Each node compares the actual time elapsed against the expected 14 days × 24 h × 6 blocks/h = 20,160 minutes and scales the target accordingly: faster blocks → harder target. Halvings happen every 210,000 blocks but are unrelated to hash-rate changes. There is no miner voting on difficulty and no minimum time between blocks — the target alone constrains them probabilistically."
+            question={t('quiz3.question')}
+            options={(t('quiz3.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+            explanation={t('quiz3.explanation')}
           />
         </div>
 
@@ -2275,32 +2152,19 @@ export function BP_Section1() {
         {/* ═══════ TAKEAWAYS ═══════ */}
         <div id="s1-takeaways" className="h-full">
           <TakeawaySlide
-            title="Section 01 — Key Takeaways"
-            takeaways={[
-              'Bitcoin is a permissionless, public blockchain — anyone can participate',
-              'Its architecture combines UTXO transactions, Merkle trees, and linked block headers',
-              'Proof of Work makes attacks prohibitively expensive — security through real-world energy cost',
-              'The Blockchain Trilemma: decentralization, security, and scalability cannot all be maximised simultaneously',
-              'Bitcoin prioritises security and decentralization — scalability is handled by Layer 2 (Lightning)',
-            ]}
+            title={t('takeaways.title')}
+            takeaways={t('takeaways.items', { returnObjects: true }) as string[]}
           />
         </div>
 
         {/* ═══════ SUMMARY ═══════ */}
         <div id="s1-summary" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Section Summary</h2>
-            <p className="text-sm text-muted-foreground mt-1">Everything covered in this section — at a glance</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('summary.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t('summary.subtitle')}</p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-start">
-            {[
-              { icon: '💼', title: 'Application Layer', summary: 'Wallets, exchanges, block explorers — communicate with the network via RPC calls to full nodes on port 8332' },
-              { icon: '🌐', title: 'P2P Network', summary: '~50k reachable nodes · Gossip protocol · Mempool holds unconfirmed txs · TCP port 8333' },
-              { icon: '⛏️', title: 'Proof of Work', summary: 'SHA-256 hash puzzle · 2016-block difficulty adjustment · 10-minute block target · First to find nonce wins' },
-              { icon: '🗄️', title: 'UTXO Model', summary: 'Inputs reference past UTXOs · Outputs create new UTXOs · No global balance · Change is a new output' },
-              { icon: '📊', title: 'Halving Schedule', summary: '50 → 25 → 12.5 → 6.25 BTC per block · Max supply 21M · Next halving ~2028 · Last coin mined ~2140' },
-              { icon: '⚖️', title: 'Trilemma Trade-off', summary: 'Bitcoin: Security + Decentralization · Scalability handled by Lightning Network (Layer 2) off-chain payments' },
-            ].map((card, i) => (
+            {(t('summary.cards', { returnObjects: true }) as { icon: string; title: string; summary: string }[]).map((card, i) => (
               <motion.div
                 key={card.title}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -2316,7 +2180,7 @@ export function BP_Section1() {
             ))}
           </div>
           <div className="shrink-0 mt-4 p-3 rounded-xl border border-border bg-card/50 text-center">
-            <span className="text-xs text-muted-foreground">Proceed to Section 2 to explore Ethereum and programmable blockchains →</span>
+            <span className="text-xs text-muted-foreground">{t('summary.footer')}</span>
           </div>
         </div>
 

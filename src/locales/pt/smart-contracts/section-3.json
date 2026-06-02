@@ -1,0 +1,1051 @@
+{
+  "chapters": {
+    "s3-team-pick": "🤝 Escolhe a Indústria",
+    "s3-industries-intro": "Visão das Indústrias",
+    "s3-defi-intro": "Introdução",
+    "s3-defi-dex": "Exemplos de DEX",
+    "s3-defi-amm": "🧩 Curva AMM",
+    "s3-defi-stablecoins-intro": "Stablecoins",
+    "s3-defi-stablecoins": "🧩 Simulador de Peg",
+    "s3-defi-borderless": "Sem Fronteiras",
+    "s3-defi-prosCons": "Prós e Contras",
+    "s3-nft-intro": "Introdução",
+    "s3-nft-economies": "Posse Real",
+    "s3-nft-p2e": "🧩 Play-to-Earn",
+    "s3-nft-p2e-real": "Exemplo Ubisoft",
+    "s3-nft-finance": "Finança NFT",
+    "s3-nft-prosCons": "Prós e Contras",
+    "s3-rwa-intro": "Introdução",
+    "s3-rwa-spectrum": "🧩 Espetro",
+    "s3-rwa-securitize": "BUIDL",
+    "s3-rwa-mortgages": "Hipotecas",
+    "s3-rwa-collateral": "Garantia",
+    "s3-rwa-property": "Imóveis",
+    "s3-rwa-prosCons": "Prós e Contras",
+    "s3-sc-intro": "Introdução",
+    "s3-sc-provenance": "🧩 Proveniência",
+    "s3-sc-prov-real": "LVMH e Carrefour",
+    "s3-sc-shipping": "Transporte",
+    "s3-sc-prosCons": "Prós e Contras",
+    "s3-cert-intro": "Introdução",
+    "s3-cert-howitworks": "🧩 Prova de Existência",
+    "s3-cert-law": "Estónia KSI",
+    "s3-cert-education": "MIT Blockcerts",
+    "s3-cert-products": "AURA Luxo",
+    "s3-cert-prosCons": "Prós e Contras",
+    "s3-cases-intro": "Visão Geral",
+    "s3-homedepot": "Home Depot",
+    "s3-realestate": "Propy",
+    "s3-dmv": "DMV da Califórnia",
+    "s3-walmart": "Walmart",
+    "s3-santander": "Santander",
+    "s3-exercise": "🧩 Cria o Teu",
+    "s3-quiz": "Quiz",
+    "s3-takeaways": "Conclusões",
+    "s3-summary": "Resumo"
+  },
+  "groups": {
+    "g-defi": "💸 DeFi",
+    "g-nft": "🎮 Jogos e NFTs",
+    "g-rwa": "🏢 RWA",
+    "g-sc": "🚚 Cadeia de Abastecimento",
+    "g-cert": "📜 Certificação",
+    "g-cases": "📁 Estudos de Caso",
+    "g-close": "✅ Conclusão"
+  },
+  "title": {
+    "sectionNumber": "SECÇÃO 03",
+    "title": "Indústrias e Estudos de Caso",
+    "subtitle": "Onde os smart contracts estão a transformar indústrias reais — e os estudos de caso que o comprovam (e os que falharam)"
+  },
+  "verticalDivider": {
+    "industryVertical": "Vertical da Indústria",
+    "scrollHint": "↓ Desliza para a vertical completa"
+  },
+  "prosCons": {
+    "prosLabel": "✓ Prós",
+    "consLabel": "✗ Contras"
+  },
+  "interactiveBadge": "🧩 Interativo",
+  "exerciseBadge": "🧩 Exercício",
+  "amm": {
+    "title": "Curva de Bonding AMM · ",
+    "subtitle": "Arrasta o cursor para simular negociação numa pool ao estilo da Uniswap. Observa como a curva, os preços e o slippage se movem em tempo real.",
+    "curveTitle": "Curva de produto constante",
+    "axisX": "x = reserva de ETH",
+    "axisY": "y = USDC",
+    "startLabel": "início",
+    "nowLabel": "agora",
+    "yourTrade": "A tua negociação",
+    "reset": "↺ repor",
+    "sellEth": "Vender ETH",
+    "buyEth": "Comprar ETH",
+    "noTrade": "sem negociação",
+    "buying": "A comprar {{amount}} ETH",
+    "selling": "A vender {{amount}} ETH",
+    "poolReserves": "Reservas da pool",
+    "ethLabel": "ETH (X)",
+    "usdcLabel": "USDC (Y)",
+    "was": "era {{value}}",
+    "pricing": "Preços",
+    "spotPrice": "Preço à vista (pré-negociação)",
+    "usdcPerEth": "USDC por ETH",
+    "effectivePrice": "Preço efetivo que pagas",
+    "slippage": "Slippage",
+    "slippageMassive": "Slippage enorme — a tua negociação é demasiado grande para esta pool.",
+    "slippageNoticeable": "Slippage percetível — típico de negociações médias em pools pouco profundas.",
+    "slippageMinimal": "Slippage mínimo — pequena negociação numa pool profunda.",
+    "invariantTitle": "O invariante",
+    "invariantA": "O produto ",
+    "invariantB": " mantém-se constante em ",
+    "invariantC": ". Comprar mais ETH → as reservas diminuem → o preço sobe hiperbolicamente. Não há livro de ordens — apenas a curva."
+  },
+  "rwaSpectrum": {
+    "title": "Espetro de Tokenização · Mais Fácil → Mais Difícil",
+    "subtitle": "Clica em qualquer classe de ativo para ver os fatores de complexidade e os exemplos de adoção atuais.",
+    "easier": "← Mais fácil de tokenizar",
+    "harder": "Mais difícil de tokenizar →",
+    "complexityUnit": "{{value}}/10",
+    "assetClass": "Classe de Ativo",
+    "whyScore": "Porquê esta pontuação de complexidade?",
+    "adoptionToday": "Adoção hoje",
+    "tiers": {
+      "sov": { "label": "Dívida Soberana", "desc": "Obrigações do tesouro e do governo. Menor complexidade legal, mercado mais profundo, maior apetite institucional.", "adoption": "BlackRock BUIDL, Franklin BENJI, Ondo OUSG" },
+      "pubeq": { "label": "Ações Cotadas", "desc": "Ações em bolsa. Necessitam de encapsulamento por broker-dealer; aplicam-se restrições da SEC.", "adoption": "Backed Finance (Suíça), Dinari" },
+      "corpbond": { "label": "Obrigações de Empresas", "desc": "Emitidas por empresas. A liquidação on-chain poupa um custo significativo face à Euroclear/DTCC.", "adoption": "Obrigação Santander na Ethereum ($20M, 2019), obrigação digital do BEI" },
+      "credit": { "label": "Crédito Privado", "desc": "Empréstimos a empresas privadas. Muito dependente de KYC; rentável mas ilíquido.", "adoption": "Maple, Centrifuge, Goldfinch" },
+      "struct": { "label": "Crédito Estruturado", "desc": "CLOs, CDOs. A divisão complexa em tranches → mais difícil de padronizar on-chain.", "adoption": "Securitize × BNY Mellon (crédito estruturado AAA)" },
+      "funds": { "label": "Fundos e Participações em Fundos", "desc": "Participações LP/GP tokenizadas. Permite o fracionamento de fundos historicamente ilíquidos.", "adoption": "Hamilton Lane na Securitize, parceria digital da Apollo" },
+      "commod": { "label": "Mercadorias", "desc": "Ouro, petróleo, agrícolas. Necessitam de custodiante + infraestrutura de auditoria.", "adoption": "PAXG (ouro), ouro tokenizado pela Tether (XAUT)" },
+      "trade": { "label": "Financiamento ao Comércio", "desc": "Cartas de crédito, factoring de faturas. Profundamente dependentes de papel; as redes eBL ajudam.", "adoption": "GSBN (eBL), Marco Polo, We.trade (extinta)" },
+      "realest": { "label": "Imobiliário", "desc": "Propriedade física. A transferência legal de título é a parte mais difícil.", "adoption": "Propy (escrituras em NFT), Brickblock, Bahnhofstrasse de Zurique" },
+      "infra": { "label": "Infraestruturas", "desc": "Estradas, energia, telecomunicações. Horizontes longos + partes interessadas complexas.", "adoption": "Exemplos on-chain raros; sobretudo conceptuais hoje" }
+    }
+  },
+  "poe": {
+    "title": "Prova de Existência · Experimenta tu mesmo",
+    "subtitle": "Faz o hash de uma credencial, ancora-a on-chain e depois verifica-a. A blockchain nunca vê o documento — apenas o hash.",
+    "defaultDoc": "Licenciatura em Ciências — Alice Smith — 2024-06-15",
+    "issueStep": "① Emitir e ancorar",
+    "credentialText": "Texto da credencial",
+    "hashLabel": "Hash SHA-256 (impressão digital)",
+    "anchorButton": "⛓ Ancorar hash na blockchain",
+    "anchored": "✓ Ancorado",
+    "blockTimestamp": "Carimbo temporal do bloco: {{ts}}",
+    "anchoredHash": "Hash ancorado: ",
+    "verifyStep": "② Verificar (qualquer pessoa, a qualquer momento)",
+    "verifyPlaceholderPrompt": "Ancora primeiro um hash e depois volta aqui para verificar uma credencial (possivelmente adulterada).",
+    "reenterCredential": "Reintroduz o texto da credencial",
+    "verifyTextareaPlaceholder": "Cola o documento que queres verificar…",
+    "computeHash": "Calcular hash",
+    "verifiedMatch": "✓ Verificado — os hashes coincidem",
+    "verifiedMismatch": "✗ Não coincide — o documento foi alterado",
+    "computedLabel": "Calculado: ",
+    "anchoredLabelShort": "Ancorado: ",
+    "whyWorksLabel": "Porque é que isto funciona:",
+    "whyWorksBody": " O SHA-256 é determinístico e resistente a colisões. Mesma entrada → mesmo hash. Qualquer alteração à entrada — mesmo um único caráter — produz um hash completamente diferente. Ancorar o hash on-chain prova que o documento existia naquele momento, sem revelar o seu conteúdo."
+  },
+  "pegSim": {
+    "title": "Simulador de Peg de Stablecoin",
+    "subtitle": "Escolhe um design de stablecoin e aplica stress de mercado. Observa o peg aguentar — ou quebrar.",
+    "design": "Design da stablecoin",
+    "shockLabel": "Choque de mercado — % da oferta vendida",
+    "shockDesc": "Pressão de venda súbita (um evento de \"corrida ao banco\"). 100% = toda a oferta atinge a procura em simultâneo.",
+    "lessonLabel": "Lição",
+    "currentPeg": "Peg atual",
+    "target": "Alvo: $1,00",
+    "deviation": "Desvio: ",
+    "pegRange": "$1,00 ← alvo",
+    "noteLabel": "Nota:",
+    "noteBody": " estas fórmulas são ilustrativas, não modelos de mercado. A dinâmica real do peg envolve cascatas de liquidação, profundidade de mercado, janelas de resgate e negociação reflexiva. O ponto: ",
+    "noteEmphasis": "cada design tem um modo de falha diferente",
+    "types": {
+      "fiat": { "name": "Garantida por fiat", "control": "% de reservas auditadas", "controlDesc": "Que percentagem da oferta em circulação está comprovadamente garantida num banco/obrigações do tesouro" },
+      "crypto": { "name": "Garantida por cripto", "control": "Rácio de garantia", "controlDesc": "Valor de ETH (ou outra cripto) bloqueado por cada $1 cunhado. 150% = $150 de ETH garantem $100 de DAI" },
+      "algo": { "name": "Algorítmica", "control": "Almofada do token nativo", "controlDesc": "Capitalização de mercado do token-irmão volátil (ao estilo LUNA) face à oferta da stablecoin" }
+    },
+    "regime": {
+      "stable": "✓ Estável",
+      "wobble": "⚠️ A oscilar",
+      "depeg": "⚠ A perder o peg",
+      "collapse": "💀 Espiral da morte"
+    },
+    "lessons": {
+      "fiat": "As stablecoins garantidas por fiat são tão fiáveis quanto o seu auditor. Se as reservas caírem abaixo de 100%, uma venda coordenada pode quebrar o peg — vê a USDC a perder brevemente o peg em março de 2023, quando o SVB detinha $3,3 mil milhões das suas reservas.",
+      "crypto": "As stablecoins garantidas por cripto sobrevivem a choques através de liquidações — mas apenas se o rácio de garantia estiver confortavelmente acima de 100%. Cai abaixo disso durante um flash crash e o protocolo não consegue liquidar com rapidez suficiente.",
+      "algo": "As stablecoins algorítmicas são vulneráveis a espirais da morte reflexivas: à medida que a stablecoin perde o peg, os traders despejam o token-irmão, que colapsa, removendo a almofada. A UST/LUNA aniquilou $40 mil milhões em maio de 2022."
+    }
+  },
+  "royalty": {
+    "title": "Cascata de Royalties · ERC-2981 em ação",
+    "subtitle": "Uma venda secundária fecha. Observa o smart contract pagar a cada parte — automaticamente, on-chain.",
+    "salePrice": "Preço da venda secundária",
+    "creatorRoyalty": "Royalty do criador",
+    "marketplaceFee": "Taxa do marketplace",
+    "futureResales": "Revendas futuras (este ativo)",
+    "splitForSale": "Divisão desta venda",
+    "sellerLabel": "Vendedor",
+    "creatorLabel": "Criador",
+    "marketplaceLabel": "Marketplace",
+    "cumulativeTitle": "Royalties cumulativos do criador",
+    "acrossResales_one": "ao longo de {{count}} revenda",
+    "acrossResales_other": "ao longo de {{count}} revendas",
+    "tradWeb2": "Web2 Tradicional",
+    "tradWeb2Desc": "o criador não ganha nada nas revendas",
+    "withErc2981": "Com ERC-2981",
+    "withErc2981Desc": "pago automaticamente pelo smart contract"
+  },
+  "provenance": {
+    "title": "Faz scan a um Frango BIO da Carrefour",
+    "subtitle": "Clica no código QR para obter a proveniência on-chain. Cada passo é assinado pela parte que manuseou o produto.",
+    "productLabel": "Carrefour BIO · Frango do campo",
+    "batchLabel": "lote #BIO-2026-0508",
+    "tapToScan": "📷 Toca para fazer scan",
+    "trailLoaded": "✓ Histórico carregado",
+    "handoffsLabel": "7 transferências",
+    "handoffsRest": " registadas numa cadeia permissionada. O QR resolve para um hash de conteúdo — os dados estão on-chain.",
+    "trailTitle": "Histórico de proveniência on-chain",
+    "scanPrompt": "← Faz scan ao QR para carregar o histórico",
+    "stepLabel": "Passo {{number}} · {{label}}",
+    "signedBy": "assinado por {{sig}}",
+    "steps": {
+      "0": { "label": "Nascido", "detail": "Certificado do campo · raça: Label Rouge ·  coorte #B-2401" },
+      "1": { "label": "Criado", "detail": "Ração biológica (sem OGM, sem antibióticos) · 81 dias de acesso ao exterior" },
+      "2": { "label": "Transportado", "detail": "Camião refrigerado · 3–5 °C mantidos · registos de sensores IoT anexados" },
+      "3": { "label": "Processado", "detail": "Matadouro certificado pela UE · inspeção veterinária aprovada" },
+      "4": { "label": "Embalado", "detail": "Rótulo Carrefour BIO aplicado · etiqueta QR impressa · lote #BIO-2026-0508" },
+      "5": { "label": "Distribuído", "detail": "Transporte em cadeia de frio para retalho · 1–4 °C mantidos" },
+      "6": { "label": "Em prateleira", "detail": "Validade: 5 dias · etiqueta de preço gerada · QR de rastreio por scan ativo" }
+    }
+  },
+  "exercise": {
+    "title": "Cria o Teu Próprio Smart Contract",
+    "subtitle": "Escolhe uma indústria e depois pensa em cada questão antes de revelar a resposta exemplo.",
+    "chooseIndustry": "Escolhe a indústria",
+    "selectPrompt": "Seleciona uma indústria para começar",
+    "stepCounter": "{{current}} / {{total}}",
+    "exampleAnswer": "Resposta exemplo — {{industry}}",
+    "previous": "← Anterior",
+    "next": "Seguinte →",
+    "complete": "✓ Resumo concluído! Agora experimenta outra indústria.",
+    "industries": {
+      "Finance": "Finanças",
+      "Supply Chain": "Cadeia de Abastecimento",
+      "Healthcare": "Saúde",
+      "Real Estate": "Imobiliário",
+      "Government": "Governo",
+      "Entertainment": "Entretenimento",
+      "Insurance": "Seguros",
+      "Gaming": "Jogos"
+    },
+    "stepLabels": {
+      "pain": "Ponto de Dor",
+      "parties": "Partes Envolvidas",
+      "trigger": "Acionador",
+      "output": "Resultado / Ação",
+      "risk": "Risco Principal"
+    },
+    "prompts": {
+      "0": "Que problema existe em {{industry}} que exige confiança num intermediário?",
+      "1": "Quem são as 2–3 partes envolvidas? Quem detém os fundos ou ativos?",
+      "2": "Que evento ou condição aciona a execução do smart contract?",
+      "3": "O que faz o contrato automaticamente quando acionado?",
+      "4": "O que pode correr mal? Qual é o ponto mais fraco deste design?"
+    },
+    "examples": {
+      "Finance": {
+        "pain": "Os pagamentos transfronteiriços demoram 3–5 dias e custam 5–8% em taxas",
+        "parties": "Banco emissor / Banco recetor / Blockchain",
+        "trigger": "O emissor deposita fundos + KYC do destinatário confirmado",
+        "output": "Fundos libertados instantaneamente ao destinatário em moeda local",
+        "risk": "É necessário um oracle para a taxa de câmbio — potencial manipulação"
+      },
+      "Supply Chain": {
+        "pain": "As disputas sobre faturas entre fornecedores e retalhistas demoram 3–5 semanas a resolver",
+        "parties": "Fornecedor / Retalhista / Operador logístico",
+        "trigger": "Scan de entrega confirmado + fatura correspondente à ordem de compra",
+        "output": "Pagamento libertado automaticamente ao fornecedor em 24 h",
+        "risk": "Os dados dos sensores IoT têm de vir de um oracle de confiança"
+      },
+      "Healthcare": {
+        "pain": "O consentimento do paciente para partilha de dados é em papel e lento",
+        "parties": "Paciente / Hospital A / Hospital B",
+        "trigger": "O paciente assina a transação de consentimento on-chain",
+        "output": "Token de acesso cunhado — o Hospital B pode ler registos específicos",
+        "risk": "Os próprios dados médicos têm de ficar off-chain (lei de privacidade)"
+      },
+      "Real Estate": {
+        "pain": "A transferência de título de propriedade demora 30–60 dias e custa 6% em taxas de intermediários",
+        "parties": "Comprador / Vendedor / Empresa de títulos",
+        "trigger": "Pagamento total recebido + pesquisa de título sem ónus",
+        "output": "Escritura NFT transferida ao comprador; fundos libertados ao vendedor",
+        "risk": "O reconhecimento legal do NFT como escritura exige legislação"
+      },
+      "Government": {
+        "pain": "Os pagamentos de subsídios são lentos e sujeitos a fraude",
+        "parties": "Governo / Cidadãos / Verificador",
+        "trigger": "Critérios de elegibilidade confirmados por credenciais verificadas",
+        "output": "Montante do subsídio enviado diretamente para a carteira do cidadão",
+        "risk": "A verificação de identidade off-chain é o ponto fraco"
+      },
+      "Entertainment": {
+        "pain": "Os royalties da música demoram 18 meses a chegar aos artistas através das editoras",
+        "parties": "Artista / Plataforma de streaming / Ouvinte",
+        "trigger": "Cada evento de reprodução registado on-chain",
+        "output": "Micropagamento dividido instantaneamente: artista 80%, editora 20%",
+        "risk": "Volume elevado de transações — exige L2 ou rollup"
+      },
+      "Insurance": {
+        "pain": "As reclamações por atraso de voo exigem submissão manual e pagamento em 2–4 semanas",
+        "parties": "Viajante / Seguradora / Oracle de dados de voo",
+        "trigger": "Atraso de voo > 2 h confirmado pelo oracle (FlightAware)",
+        "output": "Pagamento fixo enviado automaticamente para a carteira do viajante",
+        "risk": "A qualidade dos dados do oracle é o único ponto de falha"
+      },
+      "Gaming": {
+        "pain": "Os ativos do jogo podem ser eliminados ou alterados pelo programador a qualquer momento",
+        "parties": "Jogador / Programador do jogo / Marketplace",
+        "trigger": "O jogador compra ou ganha um item no jogo",
+        "output": "NFT cunhado para a carteira do jogador — transacionável e permanente",
+        "risk": "O servidor do jogo continua centralizado; o contrato cobre apenas a posse"
+      }
+    }
+  },
+  "teamPick": {
+    "contextLabel": "Dia 3 · antes do mergulho nas Indústrias",
+    "title": "Escolhe a tua indústria",
+    "subtitle": "Os próximos cinco capítulos percorrem DeFi, Jogos/NFTs, RWA, Cadeia de Abastecimento e Certificação Digital — escolhe aquele onde vive a declaração de problema da tua equipa, para o estudares com intenção.",
+    "duration": "10 min",
+    "haveLabel": "O que tens",
+    "have": {
+      "item1A": "A ",
+      "item1Strong": "declaração de problema",
+      "item1B": " que a tua equipa acordou no final do Dia 2.",
+      "item2": "Alguma noção de qual a indústria que toca (banca? retalho? logística? governo?)."
+    },
+    "discussLabel": "Discutir em equipa",
+    "discuss": {
+      "item1": "Qual das cinco verticais seguintes encaixa melhor no teu problema?",
+      "item2A": "Se várias encaixarem, escolhe aquela em que o padrão de smart contract está ",
+      "item2Strong": "mais estabelecido",
+      "item2B": " — terás mais referências.",
+      "item3": "Se nenhuma encaixar de forma clara, isso é um sinal a registar — o teu problema pode precisar de adaptação (ou pode não ser um bom encaixe para smart contracts)."
+    },
+    "duringLabel": "Durante os próximos capítulos",
+    "during": {
+      "item1": "Presta atenção extra à vertical que escolheste — anota os intervenientes existentes, as implementações reais e os prós/contras.",
+      "item2": "As outras verticais também importam — os padrões transferem-se. Capta tudo o que pareça adjacente ao teu problema.",
+      "item3A": "O ",
+      "item3Strong": "fluxo de decisão de Pensamento Crítico",
+      "item3B": " mais tarde no dia é onde testarás formalmente se a blockchain é a ferramenta certa."
+    }
+  },
+  "industriesIntro": {
+    "heading": "Smart Contracts em Várias Indústrias",
+    "subtitle": "Cinco verticais onde os smart contracts passaram da teoria para sistemas de produção implementados.",
+    "verticals": {
+      "defi": { "name": "DeFi", "tag": "Finança Descentralizada", "desc": "AMMs, empréstimos, stablecoins, transferências sem fronteiras" },
+      "nft": { "name": "Jogos e NFTs", "tag": "Posse Digital", "desc": "Posse real, economias P2E, royalties incorporados" },
+      "rwa": { "name": "Tokenização de RWA", "tag": "Ativos do Mundo Real", "desc": "Obrigações, hipotecas, imobiliário on-chain" },
+      "sc": { "name": "Cadeia de Abastecimento", "tag": "Proveniência e Logística", "desc": "Rastreio, redes eBL, anticontrafação" },
+      "cert": { "name": "Certificação Digital", "tag": "Registos de Confiança", "desc": "Diplomas, registos governamentais, autenticação de luxo" }
+    },
+    "commonThreadLabel": "Fio condutor:",
+    "commonThreadBody": " em cada vertical abaixo, os smart contracts substituem um processo lento e dependente de intermediários por uma execução imposta pelo código. Vamos examinar cada uma e depois ver cinco estudos de caso emblemáticos — incluindo dois que falharam."
+  },
+  "defiDivider": {
+    "title": "Finança Descentralizada",
+    "subtitle": "Aplicações financeiras baseadas em blockchain que operam sem bancos ou corretores — transações peer-to-peer impostas por smart contracts."
+  },
+  "defiWhat": {
+    "heading": "O que é DeFi?",
+    "subtitle": "Um sistema financeiro peer-to-peer emergente que usa criptomoedas e smart contracts.",
+    "coreIdeaTitle": "A Ideia Central",
+    "coreIdeaBody": "Remover os intermediários de terceiros. Em vez de um banco a impor um empréstimo ou uma câmara de compensação a liquidar uma negociação, um smart contract executa automaticamente essas funções quando as condições são cumpridas. Eliminar intermediários reduz taxas e tempos de liquidação e dá aos utilizadores mais controlo sobre os seus ativos.",
+    "valueCodeTitle": "\"Valor e Código ao mesmo nível\"",
+    "valueCodeBody": "Na finança tradicional, as regras de negociação vivem em documentos legais e sistemas de back-office separados do próprio dinheiro. Em DeFi, o valor (ETH, USDC, NFTs) e as regras que o governam (o código do contrato) ficam na mesma blockchain — componíveis, atómicos, transparentes.",
+    "primitivesLabel": "Primitivas DeFi",
+    "primitives": {
+      "dex": { "name": "DEXs / AMMs", "desc": "Exchanges descentralizadas que usam liquidity pools (Uniswap, CoW Swap, Curve)" },
+      "lending": { "name": "Empréstimos", "desc": "Empréstimos sobre-garantidos sem verificação de crédito (Aave, Compound)" },
+      "stablecoins": { "name": "Stablecoins", "desc": "Tokens indexados ao USD/EUR (USDC, DAI, USDT) — dinheiro global e programável" },
+      "yield": { "name": "Yield", "desc": "Estratégias automatizadas que encaminham depósitos para as pools de maior retorno (Yearn)" },
+      "derivatives": { "name": "Derivados", "desc": "Perpétuos, opções, sintéticos — negociação sem intermediários (dYdX, GMX)" }
+    }
+  },
+  "defiDex": {
+    "heading": "Exchanges Descentralizadas (DEXs)",
+    "subtitle": "Locais de negociação executados inteiramente por smart contracts — sem corretor central, sem câmara de compensação, sem risco de custódia.",
+    "uniswapName": "Uniswap",
+    "uniswapTag": "Trocas de tokens sem custódia",
+    "uniswapBody": "Permite a qualquer carteira trocar milhares de tokens numa única chamada on-chain. Os fornecedores de liquidez depositam pares de tokens; a AMM do smart contract cota a taxa, move os ativos e cobra 0,01–1% por pool, liquidando em cerca de 15 segundos.",
+    "uniswapStat1Value": "~$1,5 mil M",
+    "uniswapStat1Label": "Volume diário (07/2025)",
+    "uniswapStat2Value": "nunca",
+    "uniswapStat2Label": "Assume a custódia dos fundos do utilizador",
+    "cowName": "CoW Swap",
+    "cowTag": "Protegido de MEV, baseado em intenções",
+    "cowBodyA": "As carteiras negoceiam tokens submetendo ",
+    "cowBodyStrong": "intenções assinadas",
+    "cowBodyB": " em vez de transações de troca on-chain. Solvers off-chain agrupam ordens, fazem matching direto entre utilizadores através da Coincidência de Desejos e encaminham qualquer fluxo restante para liquidez on-chain. As negociações liquidam numa única transação com proteção de MEV incorporada.",
+    "cowStat1Value": "CoW",
+    "cowStat1Label": "Matching por Coincidência de Desejos",
+    "cowStat2Value": "sem MEV",
+    "cowStat2Label": "Front-running mitigado",
+    "whyMattersLabel": "Porque é que isto importa:",
+    "whyMattersBody": " uma DEX entrega liquidez à escala de uma exchange centralizada sem nunca assumir a custódia dos fundos do utilizador. O contrato impõe as regras; os utilizadores mantêm as suas chaves."
+  },
+  "stablecoinsIntro": {
+    "heading": "Stablecoins — Cripto que Mantém $1",
+    "subtitle": "O ativo on-chain mais utilizado: tokens concebidos para acompanhar uma referência estável, quase sempre 1 USD. Três designs, três modos de falha.",
+    "riskLabel": "Risco: ",
+    "cards": {
+      "fiat": {
+        "name": "Garantida por fiat",
+        "how": "Uma empresa detém dólares reais / obrigações do tesouro num banco e emite um token por dólar.",
+        "risk": "Tens de confiar no emissor e nas suas reservas."
+      },
+      "crypto": {
+        "name": "Garantida por cripto",
+        "how": "Os utilizadores bloqueiam cripto excedentária (ex.: $150 de ETH) num contrato para cunhar $100 de stablecoin.",
+        "risk": "Uma queda acentuada pode sub-garantir e acionar liquidações."
+      },
+      "algo": {
+        "name": "Algorítmica",
+        "how": "O código expande e contrai a oferta para perseguir o peg — sem ativos reais por trás.",
+        "risk": "Reflexiva: a perda de confiança entra em espiral. A UST/LUNA aniquilou ~$40 mil M em 2022."
+      }
+    },
+    "nextLabel": "A seguir: ",
+    "nextBody": "testa um peg ao stress tu mesmo — força a garantia e a procura até uma stablecoin quebrar."
+  },
+  "borderless": {
+    "imgAlt": "Um portátil com um escudo, uma carteira e uma nuvem segura — transferência de valor sem fronteiras",
+    "heading": "Transferências de Valor sem Fronteiras",
+    "subtitle": "Mover ativos digitais inteiramente por smart contract — sem bancos correspondentes, sem redes de compensação.",
+    "traditionalLabel": "Tradicional",
+    "traditionalTitle": "Transferência transfronteiriça SWIFT",
+    "traditionalItems": [
+      "3–5 dias úteis",
+      "Taxa fixa de $25–50 + spread cambial de 1–3%",
+      "Vários bancos correspondentes na cadeia",
+      "Transparência limitada sobre o estado"
+    ],
+    "scLabel": "Carris de Smart Contract",
+    "scTitle": "USDC sobre L2 (Base, Arbitrum)",
+    "scItems": [
+      "Liquida em segundos",
+      "$0,01–0,10 em taxas de rede",
+      "Sem correspondente — carteira a carteira diretamente",
+      "Explorador on-chain = total transparência"
+    ],
+    "tradeoffsLabel": "Compromissos",
+    "tradeoffsTitle": "Aquilo de que abdicas",
+    "tradeoffsItems": [
+      "Sem reversibilidade — enviado é enviado",
+      "Atrito de entrada/saída nas pontas (KYC + banco)",
+      "UX da carteira: seed phrases, gas, aprovações",
+      "Incerteza regulatória em algumas jurisdições"
+    ]
+  },
+  "defiProsCons": {
+    "title": "DeFi · Prós e Contras",
+    "pros": [
+      { "label": "Acesso Global 24/7", "desc": "Mercados, pagamentos e saldos indexados ao dólar permanecem abertos o dia todo — sem janelas de corte nem fronteiras." },
+      { "label": "Liquidação Instantânea", "desc": "Negociações e transferências compensam num único bloco (segundos), eliminando atrasos de compensação." },
+      { "label": "Custos Reduzidos", "desc": "Os smart contracts substituem bancos, redes de cartões e corretores — as taxas em trocas e pagamentos transfronteiriços caem drasticamente." },
+      { "label": "Auto-custódia", "desc": "Os utilizadores mantêm as suas próprias chaves. O valor move-se peer-to-peer sem contas congeladas nem limites de levantamento." },
+      { "label": "Valor Previsível", "desc": "As stablecoins permitem aos utilizadores deter e gastar um token que mantém uma paridade fiat (sobretudo USD)." },
+      { "label": "Fluxos de Caixa Programáveis", "desc": "O código automatiza trocas, pagamentos e transferências recorrentes quando condições predefinidas são cumpridas." },
+      { "label": "Mercados sem Permissão", "desc": "Qualquer pessoa pode listar e lançar um novo par de tokens ou liquidity pool. Sem porteiros." }
+    ],
+    "cons": [
+      { "label": "Incerteza Regulatória", "desc": "As regras sobre KYC, estatuto de valor mobiliário e garantia de stablecoins diferem por jurisdição e continuam a evoluir." },
+      { "label": "Bugs em Smart Contracts", "desc": "Vulnerabilidades técnicas ou exploits podem esvaziar pools, congelar fundos ou quebrar o peg de uma stablecoin." },
+      { "label": "Fragmentação de Liquidez", "desc": "Os ativos espalham-se por muitas cadeias e pools. Grandes negociações enfrentam slippage ou pouca profundidade." },
+      { "label": "Instabilidade do Peg", "desc": "Mesmo moedas \"estáveis\" podem perder o peg se as reservas, rácios de garantia ou algoritmos falharem." },
+      { "label": "Complexidade de UX", "desc": "Configurar carteiras, proteger seed phrases, pagar gas — tudo isto dissuade a adoção generalizada." },
+      { "label": "Atrito de Entrada/Saída", "desc": "Mover fundos entre bancos e carteiras de blockchain ainda depende de exchanges centralizadas e de KYC." }
+    ]
+  },
+  "nftDivider": {
+    "title": "Jogos e NFTs",
+    "subtitle": "Os Non-Fungible Tokens transformam itens digitais em ativos detidos pelos jogadores — com royalties incorporados e mercados secundários transacionáveis."
+  },
+  "nftIntro": {
+    "heading": "O que é um NFT?",
+    "subtitle": "Um ativo digital único registado on-chain que certifica a posse e a autenticidade.",
+    "unlikeTitle": "Ao contrário dos tokens fungíveis…",
+    "unlikeBodyA": "As criptomoedas (ETH, USDC) são ",
+    "unlikeBodyStrong": "intercambiáveis",
+    "unlikeBodyB": " — o teu 1 ETH é igual ao meu 1 ETH. Os NFTs não são. Cada NFT tem o seu próprio ID e metadados, registados no padrão ERC-721 (ou ERC-1155). Possuir o token significa possuir esse ativo específico.",
+    "standardLabel": "Padrão",
+    "multiTokenLabel": "Multi-token",
+    "gamingTitle": "Nos jogos…",
+    "gamingBody": "Os NFTs podem representar espadas, skins, personagens ou terrenos virtuais. Como o NFT está na carteira Web3 do jogador — e não no servidor do publisher — pode ser listado, transacionado ou alugado peer-to-peer. Surgem mercados abertos, controlados pelos jogadores.",
+    "gamingPoints": [
+      "Os itens sobrevivem ao encerramento de servidores",
+      "Transacionáveis em marketplaces de terceiros",
+      "Potencial de interoperabilidade entre jogos",
+      "Royalties incorporados para os criadores"
+    ]
+  },
+  "nftEconomies": {
+    "heading": "Posse Real, IP Digital e Economias Virtuais",
+    "subtitle": "Os smart contracts transformam linhas de base de dados do lado do servidor em ativos detidos pelos jogadores, transferíveis e programáveis.",
+    "cards": {
+      "before": {
+        "title": "Antes da Web3",
+        "points": [
+          "Os ativos digitais viviam em servidores centralizados, propriedade dos publishers",
+          "Conta banida = itens perdidos, sem recurso",
+          "Sem portabilidade entre jogos",
+          "Os criadores recebiam zero royalties nas revendas"
+        ]
+      },
+      "withNft": {
+        "title": "Com NFTs",
+        "points": [
+          "A posse do ativo vive na carteira do utilizador on-chain",
+          "Os royalties incorporados pagam aos criadores em cada venda secundária",
+          "Itens transacionáveis, emprestáveis, passíveis de staking e fracionáveis",
+          "Metadados do ativo transparentes e verificáveis"
+        ]
+      },
+      "parallels": {
+        "title": "Paralelos com o mundo real",
+        "points": [
+          "Vender itens por valor real (tal como bens físicos)",
+          "Emprestar NFTs para obter yield (como o arrendamento imobiliário)",
+          "Usar NFTs como garantia de empréstimos (hipotecar arte digital)",
+          "Vender participações fracionadas (REITs para ativos digitais)"
+        ]
+      }
+    }
+  },
+  "p2eReal": {
+    "imgAlt": "Ícones do ecossistema Play-to-Earn: jogos, NFTs, tokens, criaturas",
+    "heading": "Play-to-Earn em Produção",
+    "subtitle": "Os smart contracts ligam conquistas dentro do jogo a recompensas em tokens — e encaminham royalties perpétuos de volta aos criadores em cada revenda.",
+    "howTitle": "Como funciona",
+    "howPoints": [
+      "Ganha uma partida, cria uma criatura, conclui uma missão → o smart contract cunha/transfere recompensas em tokens para a tua carteira",
+      "Tokens trocáveis por stablecoins ou reinvestidos em melhor equipamento",
+      "Surgem guildas — detentores de NFTs emprestam ativos a novos jogadores com divisão de receita",
+      "Trabalho e capital combinam-se numa economia digital autogovernada"
+    ],
+    "ubisoftTitle": "Ubisoft · Champions Tactics: Grimoria Chronicles",
+    "ubisoftTag": "Strategic Innovation Lab · out. 2024",
+    "ubisoftPoints": [
+      { "a": "Lançado na blockchain ", "strong": "Oasys", "b": " (L1 EVM focada em jogos)" },
+      { "a": "", "strong": "75 000 Champion NFTs", "b": " cunhados num drop limitado — esgotados em horas, financiando as live-ops antecipadamente" },
+      { "a": "Os jogadores batalham com esquadrões em PvP; as vitórias dão tokens de recompensa on-chain trocáveis por equipamento", "strong": "", "b": "" },
+      { "a": "Cada venda secundária encaminha um ", "strong": "royalty de 5%", "b": " para a Ubisoft e artistas colaboradores — ciclo de receita perpétuo" }
+    ],
+    "ubisoftFootnote": "Um estúdio AAA convencional a usar NFTs e royalties de smart contract para alimentar uma economia de jogo ativa em 2025."
+  },
+  "nftFinance": {
+    "heading": "Finança NFT · Empréstimo, Aluguer, Yield",
+    "subtitle": "Se os ativos digitais têm valor, pode construir-se liquidez secundária à sua volta.",
+    "lendingTitle": "Empréstimo com garantia",
+    "lendingBody": "Os detentores de NFTs pedem emprestado contra os seus ativos sem os vender. O NFT fica bloqueado num smart contract; se o empréstimo entrar em incumprimento, o contrato leiloa ou transfere o NFT para o credor. Liquidez desbloqueada, posse preservada.",
+    "lendingExamples": "Exemplos: NFTfi, BendDAO, Zharta",
+    "rentalsTitle": "Alugueres e flywheels",
+    "rentalsBody": "Os NFTs podem ser alugados a novos jogadores com divisão de receita. À medida que os ativos circulam, a utilização cresce, os credores ganham yield garantido por colateral on-chain, a liquidez aprofunda-se, surge melhor formação de preços, atraindo mais capital — um flywheel autorreforçado.",
+    "rentalsPattern": "Padrão: pedir emprestado → usar no jogo → ganhar → dividir com o dono",
+    "zhartaLabel": "Exemplo real · Zharta",
+    "zhartaImgAlt": "Volume de empréstimos da Zharta — gráfico Borrow ao longo de um ano, +300 empréstimos, 13,6% TAEG",
+    "zhartaBodyA": "Pede emprestado contra o teu NFT — mantém 100% do potencial de valorização, conserva oportunidades de investimento, partilha o risco. Os smart contracts da Zharta cresceram para ",
+    "zhartaBodyStrong1": "mais de 300 empréstimos",
+    "zhartaBodyB": " a ",
+    "zhartaBodyStrong2": "13,6% TAEG",
+    "zhartaBodyC": ", com prazos de 2 anos — garantidos por colateral on-chain."
+  },
+  "nftProsCons": {
+    "title": "Jogos e NFTs · Prós e Contras",
+    "pros": [
+      { "label": "Posse Digital Real", "desc": "Os itens vivem na carteira do jogador, não podem ser revogados e sobrevivem ao encerramento de servidores." },
+      { "label": "Economias Geridas pelos Jogadores", "desc": "Mercados abertos on-chain definem preços; a oferta e a procura determinam o valor, não os publishers." },
+      { "label": "Fluxos de Caixa Programáveis", "desc": "Os smart contracts automatizam alugueres, partilha de receita, staking e empréstimos garantidos." },
+      { "label": "Royalties Perpétuos para Criadores", "desc": "Cada venda secundária encaminha automaticamente uma percentagem de volta a programadores e artistas, gerando rendimento contínuo." },
+      { "label": "Escassez Transparente", "desc": "Os limites de cunhagem e a oferta são públicos on-chain — evitando a inflação oculta de itens raros." },
+      { "label": "Mercados Globais 24/7", "desc": "Qualquer pessoa com uma carteira pode comprar, vender ou ganhar recompensas instantaneamente, além-fronteiras." },
+      { "label": "Componibilidade", "desc": "Os NFTs ligam-se a DeFi ou dApps sociais, desbloqueando governação, yield ou bónus de utilidade." }
+    ],
+    "cons": [
+      { "label": "Volatilidade de Preço", "desc": "Os valores de itens e tokens podem disparar ou colapsar — perturbando o equilíbrio do jogo e a confiança dos jogadores." },
+      { "label": "Zonas Cinzentas Regulatórias", "desc": "Drops ao estilo de loot box e recompensas em tokens podem enfrentar escrutínio de jogo ou de valores mobiliários." },
+      { "label": "Atrito de UX", "desc": "A configuração de carteiras, a gestão de chaves e as taxas de gas são barreiras para os jogadores convencionais." },
+      { "label": "Burlas e Contrafações", "desc": "Sites de phishing e coleções falsas enganam os jogadores, levando-os a assinar transações maliciosas." },
+      { "label": "Dependência da Saúde do Jogo", "desc": "O valor do ativo depende de uma base de jogadores ativa. Se o jogo desaparecer, os preços colapsam." },
+      { "label": "Saturação do Mercado", "desc": "Uma enxurrada de drops de baixa qualidade dilui a atenção e deprime a procura de revenda." }
+    ]
+  },
+  "rwaDivider": {
+    "title": "Tokenização de Ativos Reais",
+    "subtitle": "Converter direitos de posse em ativos físicos ou financeiros em tokens digitais — automatizado por smart contracts."
+  },
+  "rwaSecuritize": {
+    "heading": "Securitize · BlackRock BUIDL · BNY Mellon",
+    "subtitle": "Uma plataforma regulada de emissão e gestão de ativos digitais que faz a ponte entre o TradFi e a blockchain.",
+    "howTitle": "Como funciona",
+    "howPoints": [
+      "Empresas financeiras emitem valores mobiliários digitais em redes de blockchain (Ethereum, Polygon, Avalanche)",
+      "Cada token representa a posse de ativos off-chain — obrigações do tesouro, crédito privado, produtos estruturados",
+      "Os investidores recebem participações tokenizadas, transacionáveis e liquidáveis on-chain",
+      "KYC/AML automatizado através de módulos de conformidade on-chain"
+    ],
+    "regulatoryLabel": "Estatuto regulatório:",
+    "regulatoryBody": " Registada junto da SEC/FINRA — suporta a emissão de valores mobiliários digitais em conformidade com a lei dos EUA.",
+    "deploymentsLabel": "Implementações emblemáticas",
+    "buidlTitle": "BlackRock BUIDL",
+    "buidlBody": "USD Institutional Digital Liquidity Fund — exposição tokenizada ao mercado monetário para instituições.",
+    "bnyTitle": "Securitize × BNY Mellon",
+    "bnyBody": "Fundo tokenizado garantido por crédito estruturado com rating AAA — exposição a crédito institucional on-chain.",
+    "valueTitle": "Valor desbloqueado",
+    "valuePoints": [
+      "Acesso fracionado a ativos de nível institucional",
+      "Liquidação 24/7 vs T+1 / T+2 do legado",
+      "Onboarding de investidores simplificado"
+    ]
+  },
+  "rwaMortgages": {
+    "heading": "Hipotecas Automatizadas",
+    "subtitle": "Acordos de empréstimo executados inteiramente por smart contracts — sem necessidade de bancos nem de gestores de crédito.",
+    "contractTitle": "O que o contrato faz",
+    "contractPoints": [
+      "Detém e transfere fundos com base em condições pré-codificadas",
+      "Monitoriza o calendário de reembolso — calcula a divisão entre juros e capital",
+      "Aplica penalizações automaticamente em pagamentos atrasados",
+      "Gere a garantia — liquida se o empréstimo entrar em incumprimento"
+    ],
+    "whyTitle": "Porquê on-chain?",
+    "whyPoints": [
+      "Sem processo de originação de 30–60 dias",
+      "Termos transparentes — mutuário e credor veem o mesmo código",
+      "Custo mais baixo — sem back office bancário",
+      "Reembolsos programáveis — juros dinâmicos e diferimentos codificados"
+    ],
+    "limitationLabel": "Limitação:",
+    "limitationBody": " a própria propriedade ainda exige a transferência legal de título off-chain — por agora."
+  },
+  "rwaCollateral": {
+    "heading": "Empréstimos com Garantia em RWA",
+    "subtitle": "Pedir emprestado contra ativos do mundo real tokenizados sem os vender.",
+    "cards": [
+      { "title": "Eficiência de capital", "desc": "Os investidores pedem emprestado contra valores mobiliários tokenizados sem vender — mantendo a exposição ao mercado enquanto desbloqueiam liquidez." },
+      { "title": "Garantia programável", "desc": "Os valores mobiliários on-chain permitem avaliação em tempo real, ajuste de margem automatizado e gestão instantânea de garantia." },
+      { "title": "Menor risco para o credor", "desc": "Empréstimos garantidos por ativos regulados, com preço descoberto e direitos exigíveis ao abrigo da lei existente." },
+      { "title": "Liquidação mais rápida", "desc": "Chamadas de margem, reforços e liquidações executam-se instantaneamente — sem atraso T+1 ou T+2." },
+      { "title": "Camada de crédito escalável", "desc": "Um mercado de financiamento de valores mobiliários on-chain em conformidade — fazendo a ponte entre TradFi e DeFi." },
+      { "title": "Novas classes de investidores", "desc": "Investidores de retalho ganham acesso a instrumentos historicamente reservados a instituições." }
+    ]
+  },
+  "rwaProperty": {
+    "heading": "Vendas de Imóveis · Pilotos Reais",
+    "subtitle": "As transações imobiliárias envolvem escrow, título, notários — e semanas. Os pilotos de blockchain comprimem isto drasticamente.",
+    "sweden": {
+      "country": "Suécia",
+      "title": "Piloto do Registo Predial",
+      "bodyA": "Blockchain privada para a transmissão de imóveis envolvendo bancos e agências governamentais. O registo de título caiu de ",
+      "bodyStrong": "4 meses para alguns dias",
+      "bodyB": ". Todas as partes acedem aos mesmos registos invioláveis; assinatura e atualizações de título feitas digitalmente.",
+      "badgeStrong": "€100M+",
+      "badgeRest": " de poupança anual potencial (estimativa oficial sueca)"
+    },
+    "frankfurt": {
+      "country": "Frankfurt",
+      "title": "Brickblock",
+      "bodyA": "Plataforma de investimento imobiliário baseada em blockchain. Construída sobre ",
+      "bodyStrong": "Ethereum",
+      "bodyB": ". Tokens de propriedade emitidos ao abrigo da regulação alemã.",
+      "badgeStrong": "BaFin",
+      "badgeRest": " — operada sob o regulador financeiro da Alemanha"
+    },
+    "switzerland": {
+      "country": "Suíça",
+      "title": "Edifício na Bahnhofstrasse de Zurique",
+      "body": "Tokenização de um edifício prestigiado na rua mais cara de Zurique. Participações de posse emitidas como tokens digitais através de uma estrutura GmbH suíça. Os investidores recebem rendimento de arrendamento e transacionam tokens num mercado secundário.",
+      "badgeStrong": "FINMA",
+      "badgeRest": " — orientações suíças para DLT/tokens de valores mobiliários"
+    },
+    "micaLabel": "MiCA da UE · 2024:",
+    "micaBody": " o primeiro quadro regulatório abrangente para criptoativos em toda a UE — proporcionando clareza legal, proteção do consumidor e estabilidade de mercado nos 27 Estados-Membros."
+  },
+  "rwaProsCons": {
+    "title": "Tokenização de RWA · Prós e Contras",
+    "pros": [
+      { "label": "Posse Fracionada", "desc": "Pequenos investidores ganham acesso a imobiliário, arte ou fundos institucionais de elevado valor com pouco capital." },
+      { "label": "Maior Liquidez", "desc": "Os ativos tokenizados podem ser transacionados em mercados secundários — melhorando as opções de saída de posições historicamente ilíquidas." },
+      { "label": "Acesso Global 24/7", "desc": "Os investidores participam de qualquer lugar, a qualquer hora — sem horários de corretor nem restrições geográficas." },
+      { "label": "Custos Reduzidos", "desc": "Os smart contracts automatizam fluxos de conformidade, transferência e pagamento — cortando a sobrecarga administrativa." },
+      { "label": "Registos Transparentes", "desc": "A blockchain garante título, histórico de transações e trilhos de auditoria invioláveis." },
+      { "label": "Fluxos de Caixa Programáveis", "desc": "Rendimento de arrendamento, dividendos e cupões distribuem-se automaticamente via smart contracts." },
+      { "label": "Liquidação Mais Rápida", "desc": "As transferências de imóveis e a liquidação de valores mobiliários comprimem-se de semanas para minutos/dias." }
+    ],
+    "cons": [
+      { "label": "Incerteza Regulatória", "desc": "As regras variam por país e evoluem rapidamente — a conformidade pode tornar-se um alvo em movimento." },
+      { "label": "Baixa Maturidade do Mercado", "desc": "Poucas plataformas ativas; o volume do mercado secundário permanece reduzido face aos locais tradicionais." },
+      { "label": "Complexidade Técnica", "desc": "Os investidores precisam de entender carteiras, smart contracts e custódia — a UX ainda não é de nível de consumo." },
+      { "label": "Risco de Cibersegurança", "desc": "Vulnerabilidades em smart contracts ou plataformas podem expor os investidores a perda total." },
+      { "label": "Iliquidez Persistente", "desc": "Apesar da tokenização, alguns ativos imobiliários simplesmente não têm compradores — os encapsulamentos não criam procura." },
+      { "label": "Encapsulamentos de Custódia Necessários", "desc": "Os ativos do mundo real continuam a precisar de entidades legais (SPVs, fiduciários) para deter a propriedade subjacente." },
+      { "label": "Desvio de Avaliação", "desc": "Os preços dos tokens on-chain podem divergir do NAV do ativo subjacente — a fiabilidade do preço é um problema em aberto." }
+    ]
+  },
+  "scDivider": {
+    "title": "Cadeia de Abastecimento",
+    "subtitle": "Registar cada transferência de um bem físico — desde a recolha da matéria-prima até à prateleira de retalho — como um bloco inviolável."
+  },
+  "scProvReal": {
+    "heading": "Proveniência em Produção",
+    "subtitle": "Duas implementações emblemáticas — anticontrafação de luxo e rastreabilidade de alimentos biológicos.",
+    "lvmhTitle": "LVMH · Consórcio Aura",
+    "lvmhTag": "Coligação Louis Vuitton, Prada, Cartier",
+    "lvmhBodyA": "Cada mala, relógio ou frasco de perfume recebe um ",
+    "lvmhBodyStrong": "passaporte digital",
+    "lvmhBodyB": " numa blockchain permissionada — registando materiais, data de fabrico e mudanças de posse. Fazer scan à etiqueta NFC ou QR incorporada revela a proveniência aos compradores, enquanto as atualizações por smart contract garantem que plataformas de revenda e serviços pós-venda acedem a dados rigorosos e verificados pela marca ao longo de toda a vida do produto.",
+    "lvmhGoalLabel": "Objetivo:",
+    "lvmhGoalBody": " combater a contrafação e reforçar a confiança do cliente nas marcas de luxo.",
+    "carrefourTitle": "Carrefour BIO · Proveniência de frango biológico",
+    "carrefourTag": "Retalhista europeu, QR voltado para o consumidor",
+    "carrefourBody": "Cada frango Carrefour BIO traz um código QR. Fazer scan obtém um registo de blockchain que mostra raça, GPS da quinta, ração biológica, estatuto sem antibióticos, data de abate, central de embalagem e histórico de transporte com temperatura controlada. Dados carregados por agricultores, processadores e parceiros logísticos na transferência — fixados num registo permissionado.",
+    "carrefourFootnote": "Recolhas mais rápidas, maior confiança no rótulo biológico, prova de autenticidade instantânea e inviolável."
+  },
+  "scShipping": {
+    "heading": "Documentos de Transporte Global · GSBN eBL",
+    "subtitle": "Conhecimentos de Embarque e formulários alfandegários, enviados por estafeta durante séculos — agora tokenizados num registo partilhado.",
+    "legacyTitle": "O problema do legado",
+    "legacyPoints": [
+      "Conhecimentos de Embarque e Cartas de Crédito circulam em papel — enviados por estafeta através de oceanos",
+      "Documentos propensos a perda, fraude e atrasos de uma semana",
+      "Transportadores, portos, bancos e reguladores mantêm cada um registos separados",
+      "Reconciliar discrepâncias leva dias de chamadas telefónicas"
+    ],
+    "gsbnImgAlt": "Navio de contentores e um Conhecimento de Embarque eletrónico com código QR",
+    "gsbnTitle": "Global Shipping Business Network (GSBN)",
+    "gsbnTag": "COSCO · Hapag-Lloyd · OOCL · ONE + grandes portos",
+    "gsbnPoints": [
+      { "a": "Blockchain permissionada que emite Conhecimentos de Embarque eletrónicos (eBLs)", "strong": "", "b": "" },
+      { "a": "Cada documento digital assinado criptograficamente, partilhável em segundos, com deteção de adulteração", "strong": "", "b": "" },
+      { "a": "Os smart contracts notificam a alfândega no carregamento de carga, acionam a libertação de mercadorias na transferência de posse e liquidam taxas do transportador", "strong": "", "b": "" },
+      { "a": "Em funcionamento desde 2021 — mais de ", "strong": "2 milhões de contentores", "b": " processados" },
+      { "a": "A apontar a ", "strong": "50% de adoção de eBL até 2026", "b": "" }
+    ],
+    "gsbnFootnoteA": "Tempo de processamento de documentos comprimido de ",
+    "gsbnFootnoteStrong": "dias para horas",
+    "gsbnFootnoteB": "."
+  },
+  "scProsCons": {
+    "title": "Cadeia de Abastecimento · Prós e Contras",
+    "pros": [
+      { "label": "Transparência", "desc": "Todos os parceiros veem o mesmo registo inviolável — eliminando a assimetria de informação." },
+      { "label": "Rastreabilidade em Tempo Real", "desc": "A jornada completa de um produto pode ser localizada em segundos — não em dias." },
+      { "label": "Automação de Processos", "desc": "Os smart contracts acionam pagamentos, libertações e alertas sem verificações manuais." },
+      { "label": "Resolução de Disputas Mais Rápida", "desc": "Os dados partilhados eliminam o disse-que-disse — investigações e estornos encurtam drasticamente." },
+      { "label": "Redução de Custos", "desc": "Menos papelada, menos taxas de estafeta, auditorias simplificadas — a sobrecarga geral diminui." },
+      { "label": "Conformidade Regulatória", "desc": "Os registos imutáveis fornecem prova instantânea para inspeções alimentares, farmacêuticas e alfandegárias." },
+      { "label": "Confiança do Consumidor", "desc": "Os compradores fazem scan a um código para verificar origem, qualidade e condições de manuseamento." }
+    ],
+    "cons": [
+      { "label": "Integridade dos Dados de Entrada", "desc": "\"Lixo à entrada, lixo para sempre\" — dados de sensores incorretos continuam a escrever de forma imutável na cadeia." },
+      { "label": "Complexidade de Integração", "desc": "ERPs legados, dispositivos IoT e sistemas portuários exigem ligações dispendiosas e complicadas." },
+      { "label": "Fragmentação de Normas", "desc": "Consórcios concorrentes prejudicam os efeitos de rede e a interoperabilidade global." },
+      { "label": "Custo de Implementação", "desc": "Sensores, middleware e gestão da mudança exigem um investimento inicial significativo." },
+      { "label": "Escalabilidade", "desc": "As cadeias públicas podem ter dificuldade com volumes de transações ao nível dos contentores." },
+      { "label": "Coordenação entre Intervenientes", "desc": "Empresas rivais têm de cooperar. A adoção estagna se parceiros-chave recusarem participar." }
+    ]
+  },
+  "certDivider": {
+    "title": "Certificação Digital",
+    "subtitle": "Registos digitais invioláveis e facilmente verificáveis — diplomas, títulos de propriedade, autenticidade de produtos — emitidos e validados on-chain."
+  },
+  "certLaw": {
+    "heading": "Estónia · Blockchain KSI (Guardtime)",
+    "subtitle": "Integridade de registos governamentais, registos e dados de saúde desde 2012.",
+    "whatTitle": "O que a Estónia fez",
+    "whatPoints": [
+      { "a": "Blockchain permissionada (KSI da Guardtime) usada desde ", "strong": "2012", "b": "" },
+      { "a": "Impõe a integridade do registo predial, do registo comercial, do sistema judicial e dos registos de saúde", "strong": "", "b": "" },
+      { "a": "Assinaturas \"sem chave\" — baseiam-se em cadeias de hash, não em chaves privadas", "strong": "", "b": "" },
+      { "a": "Deteta qualquer adulteração de registos históricos", "strong": "", "b": "" }
+    ],
+    "principleTitle": "O princípio",
+    "principleQuote": "\"A história não pode ser reescrita por ninguém e a autenticidade dos dados eletrónicos pode ser garantida.\"",
+    "principleBody": "Ao usar a blockchain como espinha dorsal da integridade dos dados, a Estónia garante que os registos oficiais estão além de adulteração — mesmo por futuros insiders do governo. Isto é soberania digital por prova matemática em vez de confiança institucional.",
+    "whyLabel": "Porque é que importa:",
+    "whyBodyA": " A Estónia trata a blockchain como ",
+    "whyBodyEmphasis": "infraestrutura",
+    "whyBodyB": " — não como um produto. O mesmo princípio sustenta agora o seu programa de e-Residency e a troca de dados X-Road."
+  },
+  "certEducation": {
+    "heading": "Educação · MIT Blockcerts",
+    "subtitle": "Combater diplomas falsos e simplificar a verificação de credenciais.",
+    "problemTitle": "O problema",
+    "problemPoints": [
+      "Verificar um diploma exige tradicionalmente enviar e-mail à secretaria — dias de atraso",
+      "Históricos e credenciais falsos são um mercado de fraude de milhares de milhões",
+      "O reconhecimento internacional de credenciais é especialmente cheio de atrito",
+      "Os estudantes não detêm verdadeiramente o seu registo académico — as instituições é que detêm"
+    ],
+    "mitTitle": "Piloto do MIT · 2017",
+    "mitTag": "Norma aberta Blockcerts",
+    "mitPoints": [
+      { "a": "Emitiu certificados digitais baseados em blockchain a ", "strong": "mais de 100 licenciados", "b": "" },
+      { "a": "A aplicação permite aos licenciados partilhar um diploma digital inviolável e verificável", "strong": "", "b": "" },
+      { "a": "Os empregadores clicam num link ou fazem scan a um código QR → verificam instantaneamente on-chain", "strong": "", "b": "" },
+      { "a": "Acabou a burocracia dos pedidos de histórico", "strong": "", "b": "" }
+    ],
+    "footnote": "Norma aberta agora adotada por universidades em todo o mundo — os estudantes detêm verdadeiramente as suas credenciais."
+  },
+  "certProducts": {
+    "heading": "Autenticidade de Produtos · Bens de Luxo",
+    "subtitle": "\"Escrituras\" digitais de autenticidade para produtos físicos de elevado valor.",
+    "howTitle": "Como funciona",
+    "howBody": "Quando um cliente compra uma mala, relógio ou peça de joalharia de gama alta, faz scan a um código que obtém o certificado de blockchain do item. O certificado inclui origem, materiais, data de fabrico e histórico completo de posse.",
+    "howPoints": [
+      "Os compradores verificam a autenticidade instantaneamente",
+      "Os revendedores comprovam a proveniência",
+      "Os falsificadores não conseguem forjar o histórico on-chain",
+      "O serviço pós-venda fica associado à posse verificada"
+    ],
+    "auraTitle": "Consórcio AURA Blockchain",
+    "auraTag": "LVMH · Prada · Cartier (parceiros fundadores)",
+    "auraBody": "Cofundado pela LVMH (Louis Vuitton, Hublot, Bulgari, etc.) juntamente com a Prada e a Cartier. Emite um certificado digital único para cada item de luxo — mala, relógio, joia — registado numa blockchain segura. Os consumidores fazem scan para aceder à autenticidade, proveniência e histórico de posse.",
+    "auraFootnote": "Norma transversal à indústria para autenticação de luxo — infraestrutura colaborativa em vez de competitiva."
+  },
+  "certProsCons": {
+    "title": "Certificação Digital · Prós e Contras",
+    "pros": [
+      { "label": "Inviolável e Verificável", "desc": "Os certificados são alvo de hash e armazenados on-chain — tornando-os imutáveis." },
+      { "label": "Elimina a Falsificação", "desc": "Mesmo alterações de um único caráter são detetáveis. Reduz diplomas, licenças e credenciais falsos a ~zero." },
+      { "label": "Sem Intermediários", "desc": "Remove a necessidade de notários, conservatórias ou e-mails de verificação institucional." },
+      { "label": "Instantâneo e Global", "desc": "Os destinatários partilham credenciais digitalmente; os empregadores verificam-nas em segundos, em qualquer lugar." },
+      { "label": "Eficiência de Custo e Tempo", "desc": "Acabou a impressão, os portes, as verificações manuais. A emissão e a verificação aceleram drasticamente." },
+      { "label": "Auto-soberania", "desc": "Os utilizadores detêm as suas próprias credenciais — reduzindo o controlo institucional." }
+    ],
+    "cons": [
+      { "label": "Reconhecimento Legal", "desc": "Em muitos países, os registos baseados em blockchain não são legalmente reconhecidos como prova oficial." },
+      { "label": "Literacia do Utilizador", "desc": "Os utilizadores precisam de conhecimentos básicos de blockchain, carteiras ou ferramentas de verificação para participar." },
+      { "label": "Custo de Implementação", "desc": "Montar um sistema de certificação robusto exige conhecimento técnico e investimento inicial." },
+      { "label": "Preocupações de Privacidade", "desc": "Mesmo metadados alvo de hash podem expor informação pessoal se não forem cuidadosamente concebidos." },
+      { "label": "Complexidade de Revogação", "desc": "Uma vez escrito numa blockchain, é permanente. Revogar ou atualizar exige lógica de contrato adicional." },
+      { "label": "Dependência do Fornecedor", "desc": "Diferentes consórcios usam diferentes cadeias — a interoperabilidade ainda está a emergir." }
+    ]
+  },
+  "casesDivider": {
+    "title": "Estudos de Caso Transversais à Indústria",
+    "subtitle": "Oito implementações emblemáticas — cinco sucessos, dois casos de advertência, um hack notório. Lições reais para construtores reais."
+  },
+  "common": {
+    "theProblem": "O Problema",
+    "theSolution": "A Solução",
+    "theResults": "Os Resultados"
+  },
+  "homedepot": {
+    "kicker": "Estudo de Caso 01 — Cadeia de Abastecimento",
+    "heading": "Home Depot: Resolução de Disputas na Cadeia de Abastecimento",
+    "subtitle": "Como o maior retalhista de bricolage do mundo usou a blockchain para eliminar semanas de disputas com fornecedores.",
+    "problemBodyA": "A Home Depot gere ",
+    "problemBodyStrong": "milhares de fornecedores",
+    "problemBodyB": " ao longo de uma cadeia de abastecimento global. Quando os bens chegavam danificados, atrasados ou incorretos, resolver a disputa exigia:",
+    "problemPoints": [
+      "Semanas de e-mails de ida e volta entre comprador e fornecedor",
+      "Reconciliação manual de faturas em papel, ordens de compra e documentos de transporte",
+      "Sem fonte única de verdade — cada parte tinha registos diferentes",
+      "Tempo médio de resolução: 3–5 semanas, prendendo o fluxo de caixa"
+    ],
+    "problemCostLabel": "Custo:",
+    "problemCostBody": "Milhões em pagamentos atrasados, sobrecarga administrativa e relações tensas com fornecedores",
+    "solutionBodyA": "A Home Depot implementou uma ",
+    "solutionBodyStrong": "plataforma de cadeia de abastecimento baseada em blockchain",
+    "solutionBodyB": " em parceria com a IBM (Hyperledger Fabric):",
+    "solutionPoints": [
+      "Todas as ordens de compra, confirmações de envio e faturas registadas num registo partilhado em tempo real",
+      "Os smart contracts fazem matching automático das confirmações de entrega com as ordens de compra — assinalando discrepâncias instantaneamente",
+      "Tanto a Home Depot como os fornecedores veem os mesmos dados imutáveis — sem disse-que-disse",
+      "A resolução de disputas é acionada automaticamente quando as condições se desviam dos termos do contrato"
+    ],
+    "solutionFlow": "Entrega confirmada → Fatura aprovada automaticamente → Pagamento libertado",
+    "results": [
+      { "metric": "3–5 semanas → horas", "label": "Tempo de resolução de disputas" },
+      { "metric": "↓ significativamente", "label": "Sobrecarga administrativa" },
+      { "metric": "↑ melhorada", "label": "Relações com fornecedores" },
+      { "metric": "Fonte única de verdade", "label": "Dados partilhados por todas as partes" }
+    ],
+    "platformLabel": "Plataforma:",
+    "platformBody": " IBM Blockchain (Hyperledger Fabric) — permissionada, só a Home Depot e os seus fornecedores participam."
+  },
+  "propy": {
+    "kicker": "Estudo de Caso 02 — Imobiliário",
+    "heading": "Propy: Escrituras Imobiliárias em NFT",
+    "subtitle": "A primeira venda de imóvel legalmente reconhecida via NFT — e o que isso significa para o imobiliário a nível global.",
+    "problemBodyA": "As transações imobiliárias continuam a ser um dos processos com ",
+    "problemBodyStrong": "mais atrito",
+    "problemBodyB": " na economia moderna:",
+    "problemPoints": [
+      "Prazos de fecho de 30–60 dias: pesquisa de título, escrow, escritura, registo no concelho",
+      "Vários intermediários: agentes, advogados, empresas de títulos, bancos — cada um a ficar com uma fatia",
+      "Escrituras em papel guardadas em conservatórias locais — vulneráveis a perda, fraude e erros",
+      "Compras de imóveis transfronteiriças quase impossíveis sem representação legal local"
+    ],
+    "problemCostLabel": "Mercado dos EUA:",
+    "problemCostBody": "$1,7 biliões em vendas anuais de casas — ~6% em custos de transação",
+    "solutionBodyA": "A Propy coloca a escritura do imóvel dentro de um ",
+    "solutionBodyStrong": "NFT ERC-721",
+    "solutionBodyB": " (Ethereum). A posse do NFT = posse legal do imóvel:",
+    "solutionPoints": [
+      "O imóvel é detido dentro de uma LLC; o NFT representa a posse da LLC",
+      "Transferir o NFT = transferir a LLC = transferir o imóvel",
+      "O smart contract trata do escrow — fundos libertados apenas quando o título é confirmado",
+      "Transação registada na Ethereum: pública, permanente, acessível globalmente",
+      "Tempo de liquidação: horas em vez de semanas"
+    ],
+    "solutionFlow": "Transferência de NFT → Transferência de LLC → Transferência de imóvel",
+    "results": [
+      { "metric": "$215 000", "label": "Primeira venda de imóvel em NFT — Kiev, Ucrânia (2017)" },
+      { "metric": "$653 000", "label": "Primeira venda de casa em NFT nos EUA — Gulfport, Florida (2022)" },
+      { "metric": "Horas vs semanas", "label": "Redução do tempo de liquidação" },
+      { "metric": "Transfronteiriço", "label": "Qualquer comprador, em qualquer lugar — sem agente local necessário" }
+    ],
+    "caveatLabel": "Ressalva:",
+    "caveatBody": " o quadro legal ainda exige o encapsulamento por LLC. A escritura-como-NFT direta exige mudança legislativa na maioria das jurisdições."
+  },
+  "dmv": {
+    "kicker": "Estudo de Caso 03 — Governo",
+    "heading": "DMV da Califórnia: Títulos de Veículos na Avalanche",
+    "subtitle": "O maior DMV estadual dos EUA move 42 milhões de títulos de veículos para uma blockchain pública — em funcionamento em 2024.",
+    "problemBodyA": "O DMV da Califórnia gere ",
+    "problemBodyStrong": "42 milhões de títulos de veículos",
+    "problemBodyB": " em sistemas legados baseados em papel com décadas:",
+    "problemPoints": [
+      "Títulos em papel facilmente perdidos, danificados ou forjados — permitindo fraude de veículos no valor de milhares de milhões por ano",
+      "As transferências de título exigem visitas presenciais ao DMV — espera média: 2–3 horas",
+      "Os credores não conseguem verificar instantaneamente um título sem ónus antes de aprovar empréstimos automóvel",
+      "As transferências entre estados exigem papelada duplicada e semanas de processamento"
+    ],
+    "problemScaleLabel": "Escala:",
+    "problemScaleBody": "~42M de títulos, o maior registo estadual de veículos dos EUA",
+    "solutionBodyA": "Parceria com a ",
+    "solutionBodyStrong1": "Oxhead Alpha",
+    "solutionBodyB": " para migrar todos os títulos de veículos da Califórnia para a ",
+    "solutionBodyStrong2": "blockchain Avalanche",
+    "solutionBodyC": " como NFTs digitais:",
+    "solutionPoints": [
+      "Cada título de veículo torna-se um NFT único — representando a posse legal on-chain",
+      "Transferências de título executadas como transações de blockchain — instantâneas, invioláveis, auditáveis",
+      "Os titulares de ónus (bancos) podem verificar e libertar ónus digitalmente — sem papel, sem atraso",
+      "Avalanche escolhida por: compatibilidade EVM, taxas baixas, elevado débito e suporte de subnet personalizada",
+      "O DMV mantém o controlo através de uma subnet Avalanche permissionada"
+    ],
+    "solutionFlow": "NFT de título cunhado → Transferência = tx de blockchain → Ónus libertado on-chain",
+    "results": [
+      { "metric": "42 milhões", "label": "Títulos de veículos migrados para a blockchain (2024)" },
+      { "metric": "Minutos vs semanas", "label": "Tempo de processamento da transferência de título" },
+      { "metric": "Em tempo real", "label": "Verificação de ónus para credores" },
+      { "metric": "Primeiro nos EUA", "label": "Sistema governamental estadual de títulos em blockchain à escala" }
+    ],
+    "takeawayLabel": "Conclusão-chave:",
+    "takeawayBody": " até as instituições governamentais confiam na blockchain para a manutenção de registos legais — quando o caso de uso (posse imutável, auditável e partilhada) encaixa na perfeição."
+  },
+  "walmart": {
+    "imgAlt": "Walmart Food Trust — IBM Blockchain num telemóvel ao lado de uma caixa de laranjas",
+    "kicker": "Estudo de Caso 04 — Abastecimento Alimentar",
+    "heading": "Walmart · Food Trust",
+    "subtitle": "Rastrear a contaminação alimentar de 7 dias para 2,2 segundos — IBM Hyperledger Fabric em produção.",
+    "problemTitle": "O Problema",
+    "problemBodyA": "Os surtos de contaminação alimentar (E. coli em alface, 2018) demoravam ",
+    "problemBodyStrong": "7 dias",
+    "problemBodyB": " a rastrear até à origem. Categorias inteiras de produtos retiradas das prateleiras. Enormes danos colaterais para os fornecedores.",
+    "problemPoints": [
+      "Trilhos de papel manuais através de quintas, distribuidores, retalhistas",
+      "Várias partes, cada uma com sistemas isolados",
+      "Lacunas de confiança — quem é responsável pela contaminação?"
+    ],
+    "solutionTitle": "A Solução",
+    "solutionBodyStrong1": "IBM Food Trust",
+    "solutionBodyMid": " sobre ",
+    "solutionBodyStrong2": "Hyperledger Fabric",
+    "solutionBodyEnd": ". Cada passo registado numa blockchain permissionada — da quinta à prateleira. Todos os participantes veem os mesmos dados.",
+    "solutionPoints": [
+      "Agricultores, embaladores, distribuidores e lojas submetem todos dados na transferência",
+      "Códigos QR ligam produtos físicos à proveniência on-chain",
+      "Cadeia permissionada — só os membros da rede podem ler/escrever"
+    ],
+    "resultsTitle": "Os Resultados",
+    "results": [
+      { "metric": "7 dias → 2,2 segundos", "label": "Tempo de rastreio da origem do produto" },
+      { "metric": "25+", "label": "Categorias de produtos rastreadas" },
+      { "metric": "750+", "label": "Fornecedores integrados" }
+    ],
+    "whyLabel": "Porque é que funciona:",
+    "whyBody": " transparência de elevado valor, lacuna de confiança entre várias partes e uma rede com fortes incentivos para participar."
+  },
+  "santander": {
+    "imgAlt": "Montra de uma agência do Santander",
+    "kicker": "Estudo de Caso 05 — Banca",
+    "heading": "Santander · Obrigação em Blockchain de Ponta a Ponta",
+    "subtitle": "Obrigação de $20M emitida inteiramente na Ethereum — o primeiro grande banco a liquidar um valor mobiliário numa cadeia pública.",
+    "backgroundTitle": "Contexto",
+    "backgroundPoints": [
+      { "a": "", "strong": "Obrigação de $20M", "b": " emitida em 2019" },
+      { "a": "Inteiramente na mainnet da Ethereum — pública, sem permissão", "strong": "", "b": "" },
+      { "a": "Primeiro grande banco a emitir um valor mobiliário numa blockchain pública", "strong": "", "b": "" },
+      { "a": "A componente em numerário também tokenizada — liquidação on-chain completa de ponta a ponta", "strong": "", "b": "" }
+    ],
+    "backgroundQuote": "\"Uma questão de inovação tecnológica mais do que uma questão puramente financeira.\"",
+    "whyTitle": "Porque é que Funcionou",
+    "whyPoints": [
+      "Várias jurisdições envolvidas — a cadeia pública neutraliza a localização",
+      "Liquidação tradicional complexa → liquidação atómica on-chain",
+      "A imutabilidade cria um trilho de auditoria permanente para os reguladores",
+      "Valor da liquidação rápida > o custo do gas"
+    ],
+    "benefitsTitle": "Benefícios",
+    "benefits": [
+      { "metric": "T+2 → mesmo dia", "label": "Calendário de liquidação" },
+      { "metric": "~50%", "label": "Redução de custo estimada" },
+      { "metric": "Sem câmara de compensação", "label": "Intermediários reduzidos" }
+    ]
+  },
+  "quiz": {
+    "question": "O DMV da Califórnia digitalizou 42 milhões de títulos de veículos na blockchain. Qual é a principal vantagem da blockchain face ao sistema tradicional de títulos em papel?",
+    "options": [
+      "O armazenamento em blockchain é mais barato do que o arquivo em papel, reduzindo significativamente o orçamento operacional do DMV.",
+      "As transferências de título e a verificação de posse podem ocorrer em minutos sem contactar o DMV — eliminando a fraude através de registos de proveniência imutáveis.",
+      "Os títulos de veículos são agora publicamente visíveis para qualquer pessoa sem verificação de identidade, aumentando a transparência.",
+      "O furto de veículos torna-se impossível porque os títulos são armazenados on-chain e não podem ser clonados."
+    ],
+    "explanation": "A vantagem central da blockchain aqui é a verificação da posse sem necessidade de confiança no histórico de propriedade. Os títulos em papel tradicionais exigem transferência física, verificação manual e semanas de processamento. Com a blockchain, um comprador pode verificar instantaneamente toda a cadeia de posse, detetar fraude de quilometragem e confirmar que o vendedor tem o título sem ónus — tudo sem confiar na base de dados do DMV nem na palavra do vendedor. A imutabilidade torna a falsificação estruturalmente impossível em vez de meramente difícil. O armazenamento em blockchain é na verdade mais caro do que o papel — o valor está na rapidez de verificação e na eliminação de fraude, não no custo."
+  },
+  "takeaways": {
+    "title": "Secção 03 — Conclusões-Chave",
+    "items": [
+      "Cinco verticais de indústria — DeFi, Jogos/NFTs, RWA, Cadeia de Abastecimento, Certificação Digital — mostram todas smart contracts em produção atualmente",
+      "DeFi: AMMs, stablecoins e transferências sem fronteiras reformulam os carris financeiros (Uniswap $1,5 mil M/dia, Shopify USDC)",
+      "Os NFTs entregam posse digital real e royalties incorporados para criadores — o Champions Tactics da Ubisoft é convencional",
+      "A tokenização de RWA abrange o espetro desde a dívida soberana (BlackRock BUIDL) até ao imobiliário (Suécia, Brickblock, Zurique)",
+      "A cadeia de abastecimento vence quando várias partes precisam de uma verdade partilhada — o Walmart Food Trust rastreia de dias para segundos",
+      "A certificação digital funciona à escala — diplomas MIT Blockcerts (2017+), autenticação de luxo LVMH",
+      "O fio condutor do sucesso: muitas partes, sem autoridade de confiança, valor a partir da automação e da verdade partilhada",
+      "A seguir na Secção 4 — três lições do terreno: quando a blockchain vence (Estónia), quando se vira contra (The DAO), quando não deveria ter sido escolhida (ASX)"
+    ]
+  },
+  "summary": {
+    "heading": "Resumo da Secção",
+    "subtitle": "Indústrias e estudos de caso abordados — num relance",
+    "cards": [
+      { "title": "DeFi", "summary": "AMMs (Uniswap, CoW Swap) · stablecoins (Shopify/USDC) · transferências sem fronteiras (USDC em L2)" },
+      { "title": "Jogos e NFTs", "summary": "Posse real · P2E (Ubisoft Champions Tactics) · empréstimos com garantia em NFT" },
+      { "title": "Tokenização de RWA", "summary": "BlackRock BUIDL · registo predial da Suécia · Bahnhofstrasse de Zurique · quadro MiCA" },
+      { "title": "Cadeia de Abastecimento", "summary": "LVMH Aura · Carrefour BIO · Rede eBL GSBN (2M+ contentores)" },
+      { "title": "Certificação Digital", "summary": "Estónia KSI · MIT Blockcerts · autenticação de luxo LVMH AURA" },
+      { "title": "Home Depot", "summary": "Disputas com fornecedores de semanas → horas com Hyperledger Fabric" },
+      { "title": "Propy", "summary": "Escrituras imobiliárias em NFT — primeira venda de imóvel nos EUA on-chain" },
+      { "title": "DMV da Califórnia", "summary": "42M de títulos de veículos na Avalanche — primeiro estado dos EUA à escala" },
+      { "title": "Walmart", "summary": "Rastreio de alimentos de 7 dias → 2,2 segundos via IBM Food Trust" },
+      { "title": "Santander", "summary": "Obrigação de $20M na Ethereum de ponta a ponta — primeiro grande banco, T+2 → mesmo dia" }
+    ],
+    "footer": "Continua para a Secção 4 — Pensamento Crítico: quando usar um smart contract → e quando não →"
+  }
+}

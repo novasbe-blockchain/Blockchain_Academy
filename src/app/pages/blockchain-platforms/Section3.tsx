@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
@@ -8,83 +9,68 @@ import { ConceptSlide } from '../../components/templates/ConceptSlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Building2 } from 'lucide-react';
 
-const chapters = [
-  { kind: 'group' as const, id: 'g-s3-why',       label: '🤔 Why Permissioned?' },
-  { id: 's3-why', label: 'Why Permissioned?' },
-  { id: 's3-supplychains', label: 'Supply Chains' },
+// Language-neutral shape — only IDs + kind. Labels come from t() at render time.
+const chapterShape = [
+  { kind: 'group' as const, id: 'g-s3-why' },
+  { id: 's3-why' },
+  { id: 's3-supplychains' },
 
-  { kind: 'group' as const, id: 'g-s3-arch',      label: '🏗️ Architecture' },
-  { id: 's3-overview', label: 'Fabric Overview' },
-  { id: 's3-fabricx', label: 'Fabric Deep Dive' },
+  { kind: 'group' as const, id: 'g-s3-arch' },
+  { id: 's3-overview' },
+  { id: 's3-fabricx' },
 
-  { kind: 'group' as const, id: 'g-s3-consensus', label: '⚙️ Consensus' },
-  { id: 's3-consensus-evo', label: 'Consensus Evolution' },
-  { id: 's3-consensus', label: 'Pluggable Consensus' },
-  { id: 's3-raft', label: 'Raft Mechanics' },
-  { id: 's3-bft', label: 'BFT' },
+  { kind: 'group' as const, id: 'g-s3-consensus' },
+  { id: 's3-consensus-evo' },
+  { id: 's3-consensus' },
+  { id: 's3-raft' },
+  { id: 's3-bft' },
 
-  { kind: 'group' as const, id: 'g-s3-privacy',   label: '🔐 Privacy & Flow' },
-  { id: 's3-channels', label: 'Channels' },
-  { id: 's3-txflow', label: 'Transaction Flow' },
+  { kind: 'group' as const, id: 'g-s3-privacy' },
+  { id: 's3-channels' },
+  { id: 's3-txflow' },
 
-  { kind: 'group' as const, id: 'g-s3-exercises', label: '🧩 Exercises' },
-  { id: 's3-exercise-supply', label: 'Exercise: Supply Chain' },
-  { id: 's3-exercise-health', label: 'Exercise: Health Data' },
+  { kind: 'group' as const, id: 'g-s3-exercises' },
+  { id: 's3-exercise-supply' },
+  { id: 's3-exercise-health' },
 
-  { kind: 'group' as const, id: 'g-s3-prod',      label: '🏭 Production & Comparison' },
-  { id: 's3-production', label: 'In Production' },
-  { id: 's3-comparison', label: 'ETH vs Fabric' },
+  { kind: 'group' as const, id: 'g-s3-prod' },
+  { id: 's3-production' },
+  { id: 's3-comparison' },
 
-  { kind: 'group' as const, id: 'g-s3-fit',       label: '🎯 Fit Analysis' },
-  { id: 's3-bestfits',   label: '🎯 Best Fits' },
-  { id: 's3-worstfits',  label: '🚫 Worst Fits' },
-  { id: 's3-vocab',      label: '🧩 Fabric ↔ Public-chain glossary' },
+  { kind: 'group' as const, id: 'g-s3-fit' },
+  { id: 's3-bestfits' },
+  { id: 's3-worstfits' },
+  { id: 's3-vocab' },
 
-  { kind: 'group' as const, id: 'g-s3-wrap',      label: '✅ Wrap Up' },
-  { id: 's3-quiz', label: 'Quiz' },
-  { id: 's3-takeaways', label: 'Takeaways' },
-];
+  { kind: 'group' as const, id: 'g-s3-wrap' },
+  { id: 's3-quiz' },
+  { id: 's3-takeaways' },
+] as const;
 
 // ─── s3-why ───────────────────────────────────────────────────────────────────
 
+const WHY_PROBLEM_COLORS = ['#ED1C24', '#f59e0b', '#f59e0b', '#ED1C24'];
+
 function WhyPermissionedSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const problems = t('why.problems', { returnObjects: true }) as { emoji: string; label: string; desc: string }[];
+  const solutions = t('why.solutions', { returnObjects: true }) as { label: string; desc: string }[];
+  const adopters = ['Walmart', 'Maersk', 'HSBC', 'IBM Food Trust', 'TradeLens'];
+
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-5">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Why Permissioned Blockchains?</h2>
-        <p className="text-sm text-muted-foreground mt-1">Public chains fall short for enterprise — here is why permissioned networks exist.</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('why.heading')}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{t('why.subtitle')}</p>
       </div>
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left — problems */}
         <div className="flex flex-col gap-3">
-          <h3 className="text-base font-bold text-foreground shrink-0">When public chains fall short</h3>
-          {[
-            {
-              emoji: '🔒',
-              label: 'Privacy',
-              desc: 'Transaction data is visible to all competitors on public networks',
-              color: '#ED1C24',
-            },
-            {
-              emoji: '📋',
-              label: 'Compliance',
-              desc: 'GDPR, HIPAA, KYC/AML regulations require controlled data access',
-              color: '#f59e0b',
-            },
-            {
-              emoji: '⚡',
-              label: 'Performance',
-              desc: '7–15 TPS on public chains cannot handle enterprise transaction volumes',
-              color: '#f59e0b',
-            },
-            {
-              emoji: '🪪',
-              label: 'Identity',
-              desc: 'Anonymous addresses are not legal entities — accountability is impossible',
-              color: '#ED1C24',
-            },
-          ].map((item, i) => (
+          <h3 className="text-base font-bold text-foreground shrink-0">{t('why.problemsHeading')}</h3>
+          {problems.map((item, i) => {
+            const color = WHY_PROBLEM_COLORS[i];
+            return (
             <motion.div
               key={item.label}
               initial={{ opacity: 0, x: -24 }}
@@ -92,8 +78,8 @@ function WhyPermissionedSlide() {
               transition={{ delay: i * 0.1, duration: 0.35 }}
               className="flex items-start gap-3 p-3 rounded-xl border"
               style={{
-                borderColor: item.color + '50',
-                backgroundColor: item.color + '0d',
+                borderColor: color + '50',
+                backgroundColor: color + '0d',
               }}
             >
               <span className="text-xl shrink-0">{item.emoji}</span>
@@ -102,26 +88,13 @@ function WhyPermissionedSlide() {
                 <div className="text-xs text-muted-foreground">{item.desc}</div>
               </div>
             </motion.div>
-          ))}
+          );})}
         </div>
 
         {/* Right — solutions */}
         <div className="flex flex-col gap-3">
-          <h3 className="text-base font-bold text-foreground shrink-0">The enterprise case</h3>
-          {[
-            {
-              label: 'Known participants',
-              desc: 'All members are verified with legal accountability — no anonymity',
-            },
-            {
-              label: 'Configurable privacy',
-              desc: 'Channels isolate sensitive data so only relevant parties can see it',
-            },
-            {
-              label: 'High throughput',
-              desc: 'No mining required — 3,000+ TPS is achievable with Raft consensus',
-            },
-          ].map((item, i) => (
+          <h3 className="text-base font-bold text-foreground shrink-0">{t('why.solutionsHeading')}</h3>
+          {solutions.map((item, i) => (
             <motion.div
               key={item.label}
               initial={{ opacity: 0, x: 24 }}
@@ -149,9 +122,9 @@ function WhyPermissionedSlide() {
             transition={{ delay: 0.5, duration: 0.4 }}
             className="mt-auto p-3 rounded-xl border border-border bg-card"
           >
-            <div className="text-xs font-bold text-muted-foreground mb-2 uppercase tracking-wider">Real-world adopters</div>
+            <div className="text-xs font-bold text-muted-foreground mb-2 uppercase tracking-wider">{t('why.adoptersLabel')}</div>
             <div className="flex flex-wrap gap-2">
-              {['Walmart', 'Maersk', 'HSBC', 'IBM Food Trust', 'TradeLens'].map(name => (
+              {adopters.map(name => (
                 <span
                   key={name}
                   className="px-2 py-0.5 rounded-full text-xs font-medium border border-[#39B54A]/40 text-[#39B54A]"
@@ -169,62 +142,32 @@ function WhyPermissionedSlide() {
 
 // ─── s3-supplychains ──────────────────────────────────────────────────────────
 
-const SUPPLY_STEPS = [
-  {
-    label: 'Farmer',
-    icon: '🌾',
-    pre:  { tool: 'Paper logbook + fax',     issue: 'No timestamps · easy to forge · lost in transit' },
-    post: { fn: 'recordHarvest',  args: 'batch=B1, gps=37.4°N, date=2026-04-01' },
-  },
-  {
-    label: 'Processor',
-    icon: '🏭',
-    pre:  { tool: 'Excel + email attachments', issue: 'Re-keyed data · dropped fields · version drift' },
-    post: { fn: 'recordProcess',  args: 'batch=B1 → lotId=L42, temp=4°C' },
-  },
-  {
-    label: 'Distributor',
-    icon: '🚛',
-    pre:  { tool: 'ERP system (SAP)',         issue: 'Internal codes don’t match upstream IDs' },
-    post: { fn: 'recordTransport', args: 'lot=L42, route=Farm→Hub→Store, temp log' },
-  },
-  {
-    label: 'Retailer',
-    icon: '🏪',
-    pre:  { tool: 'POS — SKU only',           issue: 'No provenance · no upstream queries' },
-    post: { fn: 'recordReceipt',  args: 'lot=L42 ↔ sku=A123, store=NYC-12' },
-  },
-  {
-    label: 'Consumer',
-    icon: '👤',
-    pre:  { tool: 'Paper receipt',            issue: 'No origin info · must trust labels' },
-    post: { fn: 'queryProvenance', args: 'sku=A123 → full audit trail (2.2s)' },
-  },
-];
-
-const SUPPLY_DEPLOYMENTS = [
-  { label: 'Walmart × IBM Food Trust', detail: 'Live since 2018 — pork, leafy greens, mangoes · 100+ suppliers' },
-  { label: 'De Beers Tracr',           detail: 'Diamond provenance · conflict-free certification' },
-  { label: 'Maersk TradeLens',         detail: '⚠ Shut down 2022 — network-effect lesson, not tech failure' },
-];
-
-const SUPPLY_RESULTS = [
-  { metric: '7 days → 2.2 s', label: 'mango recall (Walmart)' },
-  { metric: '100%',           label: 'traceability across partners' },
-  { metric: '~$30B',          label: 'food fraud prevented / yr' },
+// Language-neutral: icons + code (chaincode fn/args are code identifiers, not translated).
+const SUPPLY_STEP_DATA = [
+  { icon: '🌾', post: { fn: 'recordHarvest',   args: 'batch=B1, gps=37.4°N, date=2026-04-01' } },
+  { icon: '🏭', post: { fn: 'recordProcess',   args: 'batch=B1 → lotId=L42, temp=4°C' } },
+  { icon: '🚛', post: { fn: 'recordTransport', args: 'lot=L42, route=Farm→Hub→Store, temp log' } },
+  { icon: '🏪', post: { fn: 'recordReceipt',   args: 'lot=L42 ↔ sku=A123, store=NYC-12' } },
+  { icon: '👤', post: { fn: 'queryProvenance', args: 'sku=A123 → full audit trail (2.2s)' } },
 ];
 
 function SupplyChainsSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const stepText = t('supplychains.steps', { returnObjects: true }) as { label: string; preTool: string; preIssue: string }[];
+  const steps = SUPPLY_STEP_DATA.map((s, i) => ({ ...s, ...stepText[i] }));
+  const deployments = t('supplychains.deployments', { returnObjects: true }) as { label: string; detail: string }[];
+  const results = t('supplychains.results', { returnObjects: true }) as { metric: string; label: string }[];
+
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-3">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Supply Chains: The Perfect Use Case</h2>
-        <p className="text-sm text-muted-foreground mt-1">Multi-party data sharing with no single point of trust — exactly what blockchain solves.</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('supplychains.heading')}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{t('supplychains.subtitle')}</p>
       </div>
 
       {/* Real-world deployments strip */}
       <div className="shrink-0 mb-4 grid grid-cols-1 lg:grid-cols-3 gap-2">
-        {SUPPLY_DEPLOYMENTS.map(d => (
+        {deployments.map(d => (
           <div key={d.label} className="px-3 py-1.5 rounded-lg border border-border bg-card">
             <div className="text-[11px] font-bold text-foreground leading-tight">{d.label}</div>
             <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{d.detail}</div>
@@ -241,12 +184,12 @@ function SupplyChainsSlide() {
               className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
               style={{ backgroundColor: '#ED1C2418', color: '#ED1C24', border: '1px solid #ED1C2450' }}
             >
-              ✕ Today — siloed
+              {t('supplychains.siloedBadge')}
             </span>
-            <span className="text-xs text-muted-foreground">Each party hoards data in its own system</span>
+            <span className="text-xs text-muted-foreground">{t('supplychains.siloedNote')}</span>
           </div>
           <div className="flex-1 min-h-0 grid auto-rows-fr gap-1.5">
-            {SUPPLY_STEPS.map((step) => (
+            {steps.map((step) => (
               <div
                 key={step.label}
                 className="rounded-xl border p-2.5 flex items-start gap-2.5 min-h-0"
@@ -256,16 +199,16 @@ function SupplyChainsSlide() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-2 flex-wrap">
                     <span className="font-bold text-sm text-foreground">{step.label}</span>
-                    <span className="text-[10px] font-mono text-muted-foreground truncate">{step.pre.tool}</span>
+                    <span className="text-[10px] font-mono text-muted-foreground truncate">{step.preTool}</span>
                   </div>
-                  <div className="text-[11px] leading-snug mt-0.5" style={{ color: '#ED1C24' }}>{step.pre.issue}</div>
+                  <div className="text-[11px] leading-snug mt-0.5" style={{ color: '#ED1C24' }}>{step.preIssue}</div>
                 </div>
               </div>
             ))}
           </div>
           <div className="shrink-0 rounded-lg p-2.5 text-[11px] leading-snug" style={{ backgroundColor: '#ED1C2412', border: '1px solid #ED1C2440' }}>
-            <span className="font-bold" style={{ color: '#ED1C24' }}>Walmart 2008 case — </span>
-            <span className="text-muted-foreground">tracing one contaminated mango required phoning 7 different systems and took ~7 days. Most of that was reconciling formats, not searching.</span>
+            <span className="font-bold" style={{ color: '#ED1C24' }}>{t('supplychains.walmartCaseLabel')}</span>
+            <span className="text-muted-foreground">{t('supplychains.walmartCaseBody')}</span>
           </div>
         </div>
 
@@ -276,12 +219,12 @@ function SupplyChainsSlide() {
               className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
               style={{ backgroundColor: '#39B54A18', color: '#39B54A', border: '1px solid #39B54A50' }}
             >
-              ✓ On a Fabric channel
+              {t('supplychains.fabricBadge')}
             </span>
-            <span className="text-xs text-muted-foreground">Every step writes to one shared, append-only ledger</span>
+            <span className="text-xs text-muted-foreground">{t('supplychains.fabricNote')}</span>
           </div>
           <div className="flex-1 min-h-0 grid auto-rows-fr gap-1.5">
-            {SUPPLY_STEPS.map((step) => (
+            {steps.map((step) => (
               <div
                 key={step.label}
                 className="rounded-xl border p-2.5 flex items-start gap-2.5 min-h-0"
@@ -291,7 +234,7 @@ function SupplyChainsSlide() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-2 flex-wrap">
                     <span className="font-bold text-sm text-foreground">{step.label}</span>
-                    <span className="text-[10px] font-medium" style={{ color: '#39B54A' }}>→ chaincode invoke</span>
+                    <span className="text-[10px] font-medium" style={{ color: '#39B54A' }}>{t('supplychains.chaincodeInvoke')}</span>
                   </div>
                   <div className="text-[11px] font-mono leading-snug mt-0.5 truncate">
                     <span style={{ color: '#39B54A' }}>{step.post.fn}</span>
@@ -304,7 +247,7 @@ function SupplyChainsSlide() {
             ))}
           </div>
           <div className="shrink-0 grid grid-cols-3 gap-2">
-            {SUPPLY_RESULTS.map(r => (
+            {results.map(r => (
               <div key={r.label} className="p-2 rounded-lg border text-center" style={{ borderColor: '#39B54A50', backgroundColor: '#39B54A0d' }}>
                 <div className="font-black text-xs leading-tight" style={{ color: '#39B54A' }}>{r.metric}</div>
                 <div className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{r.label}</div>
@@ -319,108 +262,67 @@ function SupplyChainsSlide() {
 
 // ─── s3-overview ─────────────────────────────────────────────────────────────
 
-const fabricOverviewCards = [
-  {
-    emoji: '🏛️',
-    title: 'Linux Foundation',
-    desc: 'Open source, governed by a consortium: IBM, Intel, SAP and many more.',
-  },
-  {
-    emoji: '🔧',
-    title: 'Modular Architecture',
-    desc: 'Swap consensus, membership services, and storage independently.',
-  },
-  {
-    emoji: '🔐',
-    title: 'Identity-First',
-    desc: 'Every participant holds a verified certificate issued by an MSP/CA.',
-  },
-  {
-    emoji: '⚡',
-    title: 'High Performance',
-    desc: 'Execute-order-validate enables parallel execution — 3,000+ TPS.',
-  },
-];
-
-const fabricOverviewVisual = (
-  <div className="grid grid-cols-2 gap-3 w-full">
-    {fabricOverviewCards.map(card => (
-      <div
-        key={card.title}
-        className="p-3 rounded-xl border border-[#39B54A]/40 flex flex-col gap-1"
-        style={{ backgroundColor: '#39B54A0d' }}
-      >
-        <span className="text-xl">{card.emoji}</span>
-        <div className="font-bold text-sm text-foreground">{card.title}</div>
-        <div className="text-xs text-muted-foreground">{card.desc}</div>
-      </div>
-    ))}
-  </div>
-);
+function FabricOverviewVisual() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const cards = t('overview.cards', { returnObjects: true }) as { emoji: string; title: string; desc: string }[];
+  return (
+    <div className="grid grid-cols-2 gap-3 w-full">
+      {cards.map(card => (
+        <div
+          key={card.title}
+          className="p-3 rounded-xl border border-[#39B54A]/40 flex flex-col gap-1"
+          style={{ backgroundColor: '#39B54A0d' }}
+        >
+          <span className="text-xl">{card.emoji}</span>
+          <div className="font-bold text-sm text-foreground">{card.title}</div>
+          <div className="text-xs text-muted-foreground">{card.desc}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 // ─── s3-fabricx ──────────────────────────────────────────────────────────────
 
-const FABRIC_COMPONENTS = [
-  {
-    emoji: '👥',
-    label: 'Organizations',
-    desc: 'Member companies — each with their own peers and MSP.',
-    color: '#6366f1',
-  },
-  {
-    emoji: '🖥️',
-    label: 'Peer Nodes',
-    desc: 'Hold ledger copies, execute chaincode, and endorse transactions.',
-    color: '#39B54A',
-  },
-  {
-    emoji: '📮',
-    label: 'Orderer',
-    desc: 'Creates block order via Raft/BFT — the consensus service.',
-    color: '#f59e0b',
-  },
-  {
-    emoji: '🔑',
-    label: 'MSP / CA',
-    desc: 'Certificate Authority — issues identities, proves who you are.',
-    color: '#ED1C24',
-  },
-  {
-    emoji: '📁',
-    label: 'Ledger',
-    desc: 'World State DB + blockchain log — the persistent record.',
-    color: '#22d3ee',
-  },
+// Language-neutral: colors + emoji only. Text resolved via t().
+const FABRIC_COMPONENT_STYLE = [
+  { emoji: '👥', color: '#6366f1' },
+  { emoji: '🖥️', color: '#39B54A' },
+  { emoji: '📮', color: '#f59e0b' },
+  { emoji: '🔑', color: '#ED1C24' },
+  { emoji: '📁', color: '#22d3ee' },
 ];
 
+const FABRIC_ORG_COLORS = ['#6366f1', '#39B54A', '#ED1C24'];
+
 function FabricDeepDiveSlide() {
-  const ORGS = [
-    { name: 'Producer',    color: '#6366f1' },
-    { name: 'Distributor', color: '#39B54A' },
-    { name: 'Retailer',    color: '#ED1C24' },
-  ];
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const componentText = t('fabricx.components', { returnObjects: true }) as { emoji: string; label: string; desc: string }[];
+  const components = FABRIC_COMPONENT_STYLE.map((s, i) => ({ ...s, ...componentText[i] }));
+  const orgNames = t('fabricx.orgs', { returnObjects: true }) as { name: string }[];
+  const ORGS = orgNames.map((o, i) => ({ name: o.name, color: FABRIC_ORG_COLORS[i] }));
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-3">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Fabric Architecture Deep Dive</h2>
-        <p className="text-sm text-muted-foreground mt-1">The five components and how they connect inside a single channel.</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('fabricx.heading')}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{t('fabricx.subtitle')}</p>
       </div>
 
       {/* Definition strip */}
       <div className="shrink-0 mb-4 rounded-xl border p-3" style={{ borderColor: '#39B54A55', backgroundColor: '#39B54A0d' }}>
-        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#39B54A' }}>In one line</p>
+        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#39B54A' }}>{t('fabricx.inOneLineLabel')}</p>
         <p className="text-sm text-foreground mt-0.5 leading-snug">
-          A Fabric network = several <span className="font-semibold">organizations</span>, each running their own <span className="font-semibold">peers</span> and <span className="font-semibold">MSP/CA</span>, sharing one or more <span className="font-semibold">channels</span> whose transactions are sequenced by an external <span className="font-semibold">ordering service</span>.
+          {t('fabricx.inOneLine.a')}<span className="font-semibold">{t('fabricx.inOneLine.organizations')}</span>{t('fabricx.inOneLine.b')}<span className="font-semibold">{t('fabricx.inOneLine.peers')}</span>{t('fabricx.inOneLine.c')}<span className="font-semibold">{t('fabricx.inOneLine.mspca')}</span>{t('fabricx.inOneLine.d')}<span className="font-semibold">{t('fabricx.inOneLine.channels')}</span>{t('fabricx.inOneLine.e')}<span className="font-semibold">{t('fabricx.inOneLine.ordering')}</span>{t('fabricx.inOneLine.f')}
         </p>
       </div>
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Left — components list */}
         <div className="flex flex-col gap-2 min-h-0">
-          <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">Key components</h3>
+          <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('fabricx.componentsHeading')}</h3>
           <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
-            {FABRIC_COMPONENTS.map((c, i) => (
+            {components.map((c, i) => (
               <motion.div
                 key={c.label}
                 initial={{ opacity: 0, x: -20 }}
@@ -441,7 +343,7 @@ function FabricDeepDiveSlide() {
 
         {/* Right — network diagram (channel scope) */}
         <div className="flex flex-col gap-2 min-h-0">
-          <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">Network diagram — one channel</h3>
+          <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('fabricx.diagramHeading')}</h3>
 
           {/* Channel scope */}
           <div
@@ -452,7 +354,7 @@ function FabricDeepDiveSlide() {
               className="absolute -top-2.5 left-4 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest"
               style={{ backgroundColor: 'hsl(var(--background))', color: '#6366f1', border: '1px solid #6366f180' }}
             >
-              📡 Channel · supply-chain
+              {t('fabricx.channelBadge')}
             </span>
 
             {/* Orderer (Raft cluster) */}
@@ -463,8 +365,8 @@ function FabricDeepDiveSlide() {
               >
                 <span className="text-base leading-none">📮</span>
                 <div>
-                  <div className="text-xs font-black leading-tight" style={{ color: '#f59e0b' }}>Ordering Service</div>
-                  <div className="text-[10px] text-muted-foreground leading-tight">Raft · 3-node cluster · sequences blocks</div>
+                  <div className="text-xs font-black leading-tight" style={{ color: '#f59e0b' }}>{t('fabricx.orderingServiceTitle')}</div>
+                  <div className="text-[10px] text-muted-foreground leading-tight">{t('fabricx.orderingServiceSub')}</div>
                 </div>
                 <div className="flex gap-1 ml-1">
                   {[1, 2, 3].map(n => (
@@ -476,9 +378,9 @@ function FabricDeepDiveSlide() {
 
             {/* Bidirectional flow indicator */}
             <div className="shrink-0 flex justify-center items-center gap-2 text-[10px] font-medium" style={{ color: '#f59e0b' }}>
-              <span>↑ proposals</span>
+              <span>{t('fabricx.flowUp')}</span>
               <span className="opacity-40">·</span>
-              <span>↓ ordered blocks</span>
+              <span>{t('fabricx.flowDown')}</span>
             </div>
 
             {/* 3 Orgs */}
@@ -503,9 +405,9 @@ function FabricDeepDiveSlide() {
                       style={{ borderColor: org.color + '50' }}
                     >
                       <span className="text-[10px] font-semibold text-foreground flex items-center gap-1">
-                        <span>🖥</span>Peer {p}
+                        <span>🖥</span>{t('fabricx.peerLabel')} {p}
                       </span>
-                      <span className="text-[9px] opacity-70" title="Chaincode + Ledger replica">📜📁</span>
+                      <span className="text-[9px] opacity-70" title={t('fabricx.peerTitle')}>📜📁</span>
                     </div>
                   ))}
 
@@ -513,7 +415,7 @@ function FabricDeepDiveSlide() {
                     className="rounded-md border border-dashed px-1.5 py-1 flex items-center justify-center gap-1 text-[10px] font-semibold"
                     style={{ borderColor: org.color + '60', color: org.color, backgroundColor: org.color + '08' }}
                   >
-                    🔑 MSP / CA
+                    {t('fabricx.mspCaLabel')}
                   </div>
                 </div>
               ))}
@@ -521,7 +423,7 @@ function FabricDeepDiveSlide() {
 
             {/* Footer note inside channel */}
             <div className="shrink-0 text-[10px] text-muted-foreground text-center leading-snug">
-              Every peer in the channel holds an <span className="font-semibold text-foreground">identical ledger copy</span> + <span className="font-semibold text-foreground">chaincode binary</span>. Each org's MSP issues its own identities; cross-org identities are validated via the channel's trust roots.
+              {t('fabricx.channelFooter.a')}<span className="font-semibold text-foreground">{t('fabricx.channelFooter.identical')}</span>{t('fabricx.channelFooter.b')}<span className="font-semibold text-foreground">{t('fabricx.channelFooter.binary')}</span>{t('fabricx.channelFooter.c')}
             </div>
           </div>
 
@@ -532,9 +434,9 @@ function FabricDeepDiveSlide() {
           >
             <span className="text-base leading-none mt-0.5">📜</span>
             <div className="min-w-0">
-              <div className="font-bold text-xs" style={{ color: '#39B54A' }}>Chaincode (Smart Contracts)</div>
+              <div className="font-bold text-xs" style={{ color: '#39B54A' }}>{t('fabricx.chaincodeNoteTitle')}</div>
               <div className="text-[11px] text-muted-foreground leading-snug">
-                Go / JavaScript / Java programs deployed to peers. Executed during endorsement; their read/write set is signed and forwarded to the orderer for sequencing.
+                {t('fabricx.chaincodeNoteBody')}
               </div>
             </div>
           </div>
@@ -546,49 +448,29 @@ function FabricDeepDiveSlide() {
 
 // ─── s3-consensus ─────────────────────────────────────────────────────────────
 
-const CONSENSUS_TABLE = [
-  { prop: 'Fault type tolerated', raft: 'Crashes', bft: 'Byzantine (malicious)' },
-  { prop: 'Minimum nodes', raft: '3', bft: '4' },
-  { prop: 'Performance', raft: 'High', bft: 'Medium' },
-  { prop: 'Trust assumption', raft: 'No malicious nodes', bft: 'Up to 1/3 malicious' },
-  { prop: 'Use case', raft: 'Consortium (known parties)', bft: 'High-security enterprise' },
-];
+const CONSENSUS_OPTION_COLORS = ['#39B54A', '#f59e0b', '#6366f1'];
 
 function PluggableConsensusSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const optionText = t('consensus.options', { returnObjects: true }) as { label: string; badge: string; desc: string }[];
+  const options = optionText.map((o, i) => ({ ...o, color: CONSENSUS_OPTION_COLORS[i] }));
+  const table = t('consensus.table', { returnObjects: true }) as { prop: string; raft: string; bft: string }[];
+
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-5">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Pluggable Consensus</h2>
-        <p className="text-sm text-muted-foreground mt-1">Different enterprise environments need different trust models — Fabric adapts.</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('consensus.heading')}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{t('consensus.subtitle')}</p>
       </div>
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left — why pluggable */}
         <div className="flex flex-col gap-3">
-          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Why pluggable?</h3>
+          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">{t('consensus.whyHeading')}</h3>
           <p className="text-sm text-muted-foreground">
-            A bank consortium with fully trusted members has very different needs from a supply chain with competing companies. Fabric's pluggable orderer means you pick the right tool.
+            {t('consensus.whyBody')}
           </p>
-          {[
-            {
-              label: 'Raft',
-              badge: 'Default · CFT',
-              desc: 'Crash Fault Tolerant. Simple leader-follower model — ideal for trusted, known environments.',
-              color: '#39B54A',
-            },
-            {
-              label: 'SmartBFT',
-              badge: 'Optional · BFT',
-              desc: 'Byzantine Fault Tolerant. Handles malicious nodes — heavier but necessary in hostile networks.',
-              color: '#f59e0b',
-            },
-            {
-              label: 'Custom',
-              badge: 'Pluggable',
-              desc: 'An open interface allows future consensus algorithms to be plugged in without rebuilding.',
-              color: '#6366f1',
-            },
-          ].map((opt, i) => (
+          {options.map((opt, i) => (
             <motion.div
               key={opt.label}
               initial={{ opacity: 0, y: 12 }}
@@ -613,18 +495,18 @@ function PluggableConsensusSlide() {
 
         {/* Right — comparison table */}
         <div className="flex flex-col gap-2">
-          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Raft vs SmartBFT</h3>
+          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">{t('consensus.tableHeading')}</h3>
 
           {/* Header */}
           <div className="grid grid-cols-3 gap-2">
-            <div className="p-2 rounded-lg bg-muted text-xs font-bold text-foreground">Property</div>
-            <div className="p-2 rounded-lg text-xs font-bold text-white text-center" style={{ backgroundColor: '#39B54A' }}>Raft</div>
-            <div className="p-2 rounded-lg text-xs font-bold text-white text-center" style={{ backgroundColor: '#f59e0b' }}>SmartBFT</div>
+            <div className="p-2 rounded-lg bg-muted text-xs font-bold text-foreground">{t('consensus.propertyLabel')}</div>
+            <div className="p-2 rounded-lg text-xs font-bold text-white text-center" style={{ backgroundColor: '#39B54A' }}>{t('consensus.raftLabel')}</div>
+            <div className="p-2 rounded-lg text-xs font-bold text-white text-center" style={{ backgroundColor: '#f59e0b' }}>{t('consensus.bftLabel')}</div>
           </div>
 
           {/* Rows */}
           <div className="flex flex-col gap-1.5 flex-1">
-            {CONSENSUS_TABLE.map((row, i) => (
+            {table.map((row, i) => (
               <motion.div
                 key={row.prop}
                 initial={{ opacity: 0 }}
@@ -646,13 +528,15 @@ function PluggableConsensusSlide() {
 
 // ─── s3-bft ───────────────────────────────────────────────────────────────────
 
-const BFT_TABLE = [
-  { faulty: 1,  needed: 4,  hint: 'minimum to tolerate 1 traitor' },
-  { faulty: 2,  needed: 7,  hint: 'most enterprise deployments' },
-  { faulty: 10, needed: 31, hint: 'large public consortiums' },
+// Language-neutral: numeric thresholds only. Hints resolved via t().
+const BFT_TABLE_NUMS = [
+  { faulty: 1,  needed: 4 },
+  { faulty: 2,  needed: 7 },
+  { faulty: 10, needed: 31 },
 ];
 
 function BFTThresholdDonut() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
   const r = 40;
   const c = 2 * Math.PI * r;        // ~251.3
   const honest = (2 / 3) * c;
@@ -679,13 +563,14 @@ function BFTThresholdDonut() {
         strokeLinecap="butt"
       />
       {/* Center text */}
-      <text x={50} y={47} textAnchor="middle" fontSize={9} fontWeight="800" className="fill-foreground">≤ ⅓</text>
-      <text x={50} y={58} textAnchor="middle" fontSize={5.5} className="fill-muted-foreground">malicious max</text>
+      <text x={50} y={47} textAnchor="middle" fontSize={9} fontWeight="800" className="fill-foreground">{t('bft.donutCenter')}</text>
+      <text x={50} y={58} textAnchor="middle" fontSize={5.5} className="fill-muted-foreground">{t('bft.donutSub')}</text>
     </svg>
   );
 }
 
 function EquivocationDiagram() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
   return (
     <svg viewBox="0 0 240 110" className="w-full h-28">
       <defs>
@@ -696,15 +581,15 @@ function EquivocationDiagram() {
       {/* Honest A (left) */}
       <circle cx={32} cy={55} r={16} fill="#39B54A30" stroke="#39B54A" strokeWidth={2} />
       <text x={32} y={59} textAnchor="middle" fontSize={11} fontWeight="800" fill="#39B54A">A</text>
-      <text x={32} y={88} textAnchor="middle" fontSize={8} className="fill-muted-foreground">honest</text>
+      <text x={32} y={88} textAnchor="middle" fontSize={8} className="fill-muted-foreground">{t('bft.honestLabel')}</text>
       {/* Byzantine center */}
       <circle cx={120} cy={55} r={20} fill="#ED1C2430" stroke="#ED1C24" strokeWidth={2.5} />
       <text x={120} y={60} textAnchor="middle" fontSize={14} fontWeight="800" fill="#ED1C24">✗</text>
-      <text x={120} y={92} textAnchor="middle" fontSize={8} fontWeight="700" fill="#ED1C24">byzantine</text>
+      <text x={120} y={92} textAnchor="middle" fontSize={8} fontWeight="700" fill="#ED1C24">{t('bft.byzantineLabel')}</text>
       {/* Honest C (right) */}
       <circle cx={208} cy={55} r={16} fill="#39B54A30" stroke="#39B54A" strokeWidth={2} />
       <text x={208} y={59} textAnchor="middle" fontSize={11} fontWeight="800" fill="#39B54A">C</text>
-      <text x={208} y={88} textAnchor="middle" fontSize={8} className="fill-muted-foreground">honest</text>
+      <text x={208} y={88} textAnchor="middle" fontSize={8} className="fill-muted-foreground">{t('bft.honestLabel')}</text>
       {/* Conflicting messages */}
       <line x1={102} y1={55} x2={50} y2={55} stroke="#ED1C24" strokeWidth={1.6} markerEnd="url(#bft-arrow)" />
       <line x1={138} y1={55} x2={190} y2={55} stroke="#ED1C24" strokeWidth={1.6} markerEnd="url(#bft-arrow)" />
@@ -715,20 +600,27 @@ function EquivocationDiagram() {
 }
 
 function BFTSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const tableHints = t('bft.table', { returnObjects: true }) as { hint: string }[];
+  const bftTable = BFT_TABLE_NUMS.map((row, i) => ({ ...row, hint: tableHints[i].hint }));
+  const scenarioText = t('bft.scenarios', { returnObjects: true }) as { emoji: string; label: string; desc: string }[];
+  const scenarioColors = ['#ED1C24', '#f59e0b', '#6366f1'];
+  const scenarios = scenarioText.map((s, i) => ({ ...s, color: scenarioColors[i] }));
+
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-3">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Byzantine Fault Tolerance in Fabric</h2>
-        <p className="text-sm text-muted-foreground mt-1">How distributed systems survive malicious — not just crashed — participants.</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('bft.heading')}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{t('bft.subtitle')}</p>
       </div>
 
       {/* Definition strip */}
       <div className="shrink-0 mb-3 rounded-xl border p-3" style={{ borderColor: '#f59e0b55', backgroundColor: '#f59e0b0d' }}>
         <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#f59e0b' }}>
-          The Byzantine Generals Problem · Lamport, Shostak &amp; Pease, 1982
+          {t('bft.defLabel')}
         </p>
         <p className="text-sm text-foreground mt-0.5 leading-snug">
-          A system is <span className="font-semibold">Byzantine Fault Tolerant</span> if it stays correct even when up to <span className="font-semibold">F</span> nodes lie, collude, or send <span className="italic">different answers to different peers</span> — not just go silent.
+          {t('bft.def.a')}<span className="font-semibold">{t('bft.def.bftTerm')}</span>{t('bft.def.b')}<span className="font-semibold">{t('bft.def.f')}</span>{t('bft.def.c')}<span className="italic">{t('bft.def.different')}</span>{t('bft.def.d')}
         </p>
       </div>
 
@@ -736,7 +628,7 @@ function BFTSlide() {
 
         {/* Left — Theory: threshold + formula + table */}
         <div className="flex flex-col gap-2 min-h-0">
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">The 1/3 threshold</p>
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('bft.thresholdLabel')}</p>
 
           {/* Donut + formula side by side */}
           <div className="shrink-0 grid grid-cols-[auto_1fr] gap-3 p-3 rounded-xl border border-border bg-card/50 items-center">
@@ -744,10 +636,10 @@ function BFTSlide() {
               <BFTThresholdDonut />
             </div>
             <div className="min-w-0">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">The formula</div>
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t('bft.formulaLabel')}</div>
               <div className="text-xl lg:text-2xl font-black text-foreground font-mono leading-none mt-0.5">N ≥ 3F + 1</div>
               <div className="text-[11px] text-muted-foreground mt-1.5 leading-snug">
-                <span className="text-[#39B54A] font-semibold">Honest ⅔</span> must out-vote <span className="text-[#ED1C24] font-semibold">malicious ⅓</span> twice — once to detect lying, once to converge. If <span className="font-semibold">F &gt; N/3</span>, BFT breaks.
+                <span className="text-[#39B54A] font-semibold">{t('bft.formulaNote.honest')}</span>{t('bft.formulaNote.a')}<span className="text-[#ED1C24] font-semibold">{t('bft.formulaNote.malicious')}</span>{t('bft.formulaNote.b')}<span className="font-semibold">{t('bft.formulaNote.fgt')}</span>{t('bft.formulaNote.c')}
               </div>
             </div>
           </div>
@@ -755,11 +647,11 @@ function BFTSlide() {
           {/* Table */}
           <div className="flex-1 min-h-0 grid auto-rows-fr gap-1.5">
             <div className="grid grid-cols-[auto_auto_1fr] gap-2 items-center px-2">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#ED1C24]">F malicious</div>
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#39B54A]">N nodes needed</div>
-              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">use case</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#ED1C24]">{t('bft.tableFCol')}</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#39B54A]">{t('bft.tableNCol')}</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{t('bft.tableUseCol')}</div>
             </div>
-            {BFT_TABLE.map(row => (
+            {bftTable.map(row => (
               <div key={row.faulty} className="grid grid-cols-[auto_auto_1fr] gap-2 items-center min-h-0">
                 <div className="px-3 py-1.5 rounded-lg border text-base font-black text-center" style={{ borderColor: '#ED1C2440', color: '#ED1C24', backgroundColor: '#ED1C240d', minWidth: 64 }}>
                   {row.faulty}
@@ -775,24 +667,20 @@ function BFTSlide() {
 
         {/* Right — Practice: what BFT prevents + enterprise scenarios */}
         <div className="flex flex-col gap-2 min-h-0">
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">What does a Byzantine fault look like?</p>
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('bft.faultLookLabel')}</p>
 
           {/* Equivocation diagram */}
           <div className="shrink-0 rounded-xl border p-3" style={{ borderColor: '#ED1C2440', backgroundColor: '#ED1C2408' }}>
             <EquivocationDiagram />
             <p className="text-[11px] text-muted-foreground leading-snug text-center mt-1">
-              <span className="font-semibold text-foreground">Equivocation</span> — one node sends conflicting facts to different peers. CFT (Raft) cannot detect this; BFT can.
+              <span className="font-semibold text-foreground">{t('bft.equivocationNote.term')}</span>{t('bft.equivocationNote.body')}
             </p>
           </div>
 
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0 mt-1">Why it matters for enterprise</p>
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0 mt-1">{t('bft.enterpriseLabel')}</p>
 
           <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
-            {[
-              { emoji: '🏢', label: 'Competitor on the network',  desc: 'Two rivals sharing one ledger. BFT prevents either from feeding manipulated data into shared state.', color: '#ED1C24' },
-              { emoji: '💻', label: 'Compromised peer',           desc: 'A hacked node sending different read/write sets to different validators is detected and outvoted.',     color: '#f59e0b' },
-              { emoji: '📋', label: 'Regulatory mandate',         desc: 'Finance, defense, and cross-jurisdiction networks often require BFT guarantees by compliance.',         color: '#6366f1' },
-            ].map((item, i) => (
+            {scenarios.map((item, i) => (
               <motion.div
                 key={item.label}
                 initial={{ opacity: 0, x: 20 }}
@@ -815,15 +703,15 @@ function BFTSlide() {
       {/* Bottom comparison strip */}
       <div className="shrink-0 mt-3 grid grid-cols-1 lg:grid-cols-2 gap-2">
         <div className="rounded-xl border p-2.5" style={{ borderColor: '#f59e0b55', backgroundColor: '#f59e0b0d' }}>
-          <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#f59e0b' }}>Raft (CFT) — default in Fabric</p>
+          <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#f59e0b' }}>{t('bft.raftStripLabel')}</p>
           <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">
-            Tolerates <span className="text-foreground font-semibold">crashes only</span>. Trusts orderer operators not to lie. Lighter, faster, simpler — fits most consortiums.
+            {t('bft.raftStrip.a')}<span className="text-foreground font-semibold">{t('bft.raftStrip.crashes')}</span>{t('bft.raftStrip.b')}
           </p>
         </div>
         <div className="rounded-xl border p-2.5" style={{ borderColor: '#39B54A55', backgroundColor: '#39B54A0d' }}>
-          <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#39B54A' }}>SmartBFT — Fabric v3 opt-in</p>
+          <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#39B54A' }}>{t('bft.bftStripLabel')}</p>
           <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">
-            Tolerates <span className="text-foreground font-semibold">malicious orderers</span>. Required when operators are competitors, regulated, or untrusted at the protocol level.
+            {t('bft.bftStrip.a')}<span className="text-foreground font-semibold">{t('bft.bftStrip.malicious')}</span>{t('bft.bftStrip.b')}
           </p>
         </div>
       </div>
@@ -833,50 +721,36 @@ function BFTSlide() {
 
 // ─── s3-channels ─────────────────────────────────────────────────────────────
 
-const CHANNEL_ORGS = [
-  { id: 'pharmaA', label: 'PharmaA', icon: '🔵', color: '#6366f1' },
-  { id: 'pharmaB', label: 'PharmaB', icon: '🟢', color: '#39B54A' },
-  { id: 'hospital', label: 'City Hospital', icon: '🏥', color: '#ED1C24' },
-  { id: 'regulator', label: 'Regulator', icon: '⚖️', color: '#f59e0b' },
+// Language-neutral: icons, colors, membership ids. Labels/data/why resolved via t().
+const CHANNEL_ORG_STYLE = [
+  { id: 'pharmaA', icon: '🔵', color: '#6366f1' },
+  { id: 'pharmaB', icon: '🟢', color: '#39B54A' },
+  { id: 'hospital', icon: '🏥', color: '#ED1C24' },
+  { id: 'regulator', icon: '⚖️', color: '#f59e0b' },
 ];
 
-const CHANNELS_DEF = [
-  {
-    id: 'ch1',
-    label: 'Joint R&D',
-    color: '#6366f1',
-    members: ['pharmaA', 'pharmaB'],
-    data: 'Shared drug research, trial data, patents',
-    why: 'Competitors collaborate on R&D but keep results hidden from hospitals and regulators until ready.',
-  },
-  {
-    id: 'ch2',
-    label: 'Drug Supply',
-    color: '#ED1C24',
-    members: ['pharmaA', 'hospital'],
-    data: 'Orders, shipments, cold-chain logs, invoices',
-    why: 'Supply chain between one pharma and one hospital — PharmaB should not see their competitor\'s sales volumes.',
-  },
-  {
-    id: 'ch3',
-    label: 'Compliance',
-    color: '#f59e0b',
-    members: ['pharmaA', 'pharmaB', 'hospital', 'regulator'],
-    data: 'Audit logs, regulatory filings, adverse event reports',
-    why: 'Regulator needs visibility into safety and compliance across the whole network.',
-  },
+const CHANNELS_DEF_STYLE = [
+  { id: 'ch1', color: '#6366f1', members: ['pharmaA', 'pharmaB'] },
+  { id: 'ch2', color: '#ED1C24', members: ['pharmaA', 'hospital'] },
+  { id: 'ch3', color: '#f59e0b', members: ['pharmaA', 'pharmaB', 'hospital', 'regulator'] },
 ];
 
 function ChannelsSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const orgText = t('channels.orgs', { returnObjects: true }) as { id: string; label: string }[];
+  const CHANNEL_ORGS = CHANNEL_ORG_STYLE.map((s) => ({ ...s, label: orgText.find(o => o.id === s.id)?.label ?? s.id }));
+  const channelText = t('channels.channels', { returnObjects: true }) as { id: string; label: string; data: string; why: string }[];
+  const CHANNELS_DEF = CHANNELS_DEF_STYLE.map((s) => ({ ...s, ...(channelText.find(c => c.id === s.id) ?? { label: s.id, data: '', why: '' }) }));
+
   const [activeChannel, setActiveChannel] = useState<string | null>(null);
   const active = CHANNELS_DEF.find(c => c.id === activeChannel);
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-4">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Channels: Selective Data Sharing</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('channels.heading')}</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Four companies on one Fabric network — three channels, each with different membership and data. Click a channel to see who can read it.
+          {t('channels.subtitle')}
         </p>
       </div>
 
@@ -939,12 +813,12 @@ function ChannelsSlide() {
                 className="flex flex-col gap-4 h-full"
               >
                 <div className="font-bold text-lg" style={{ color: active.color }}>
-                  Channel: {active.label}
+                  {t('channels.channelPrefix')}{active.label}
                 </div>
 
                 {/* Who sees what visual */}
                 <div className="flex-1 flex flex-col gap-3">
-                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Visibility per organisation</div>
+                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t('channels.visibilityHeading')}</div>
                   <div className="flex flex-col gap-2">
                     {CHANNEL_ORGS.map(org => {
                       const canSee = active.members.includes(org.id);
@@ -967,7 +841,7 @@ function ChannelsSlide() {
                                 : { backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)' }
                             }
                           >
-                            {canSee ? '✓ Can read & write' : '✗ No access'}
+                            {canSee ? t('channels.canRead') : t('channels.noAccess')}
                           </span>
                         </div>
                       );
@@ -977,14 +851,14 @@ function ChannelsSlide() {
                     className="mt-auto p-3 rounded-xl border text-xs text-muted-foreground"
                     style={{ borderColor: active.color + '40', backgroundColor: active.color + '08' }}
                   >
-                    <span className="font-semibold" style={{ color: active.color }}>Why this channel? </span>
+                    <span className="font-semibold" style={{ color: active.color }}>{t('channels.whyPrefix')}</span>
                     {active.why}
                   </div>
                 </div>
               </motion.div>
             ) : (
               <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-                ← Click a channel to see who has access
+                {t('channels.emptyHint')}
               </div>
             )}
           </div>
@@ -996,56 +870,31 @@ function ChannelsSlide() {
 
 // ─── s3-txflow ────────────────────────────────────────────────────────────────
 
-const TX_STEPS = [
-  {
-    num: 1,
-    emoji: '📝',
-    label: 'Propose',
-    desc: 'Client sends a transaction proposal to the designated endorsing peers.',
-    color: '#6366f1',
-  },
-  {
-    num: 2,
-    emoji: '✅',
-    label: 'Endorse',
-    desc: 'Peers simulate chaincode execution and return a signed endorsement. No ledger write yet.',
-    color: '#39B54A',
-  },
-  {
-    num: 3,
-    emoji: '📦',
-    label: 'Order',
-    desc: 'Client submits the endorsed transaction to the Orderer. Orderer batches transactions into a block.',
-    color: '#f59e0b',
-  },
-  {
-    num: 4,
-    emoji: '🔗',
-    label: 'Validate & Commit',
-    desc: 'All peers validate endorsement signatures and commit the block to their ledger copy.',
-    color: '#ED1C24',
-  },
-  {
-    num: 5,
-    emoji: '📢',
-    label: 'Notify',
-    desc: 'Events are emitted to the client confirming the transaction has been committed.',
-    color: '#22d3ee',
-  },
+// Language-neutral: num/emoji/color. label/desc resolved via t().
+const TX_STEP_STYLE = [
+  { num: 1, emoji: '📝', color: '#6366f1' },
+  { num: 2, emoji: '✅', color: '#39B54A' },
+  { num: 3, emoji: '📦', color: '#f59e0b' },
+  { num: 4, emoji: '🔗', color: '#ED1C24' },
+  { num: 5, emoji: '📢', color: '#22d3ee' },
 ];
 
 function TxFlowSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const stepText = t('txflow.steps', { returnObjects: true }) as { label: string; desc: string }[];
+  const steps = TX_STEP_STYLE.map((s, i) => ({ ...s, ...stepText[i] }));
+
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-4">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Transaction Flow in Fabric</h2>
-        <p className="text-sm text-muted-foreground mt-1">Five stages from proposal to confirmation — execute-order-validate model.</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('txflow.heading')}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{t('txflow.subtitle')}</p>
       </div>
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Steps — takes 2 cols */}
         <div className="lg:col-span-2 flex flex-col justify-center gap-1">
-          {TX_STEPS.map((step, i) => (
+          {steps.map((step, i) => (
             <div key={step.num} className="flex flex-col">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -1070,7 +919,7 @@ function TxFlowSlide() {
                 </div>
               </motion.div>
               {/* Connector */}
-              {i < TX_STEPS.length - 1 && (
+              {i < steps.length - 1 && (
                 <div className="ml-[22px] flex items-center">
                   <div className="w-0.5 h-3 bg-border" />
                   <svg className="size-2 -ml-0.5 text-muted-foreground" viewBox="0 0 8 8" fill="currentColor">
@@ -1085,23 +934,23 @@ function TxFlowSlide() {
         {/* Side note */}
         <div className="flex flex-col gap-4 justify-center">
           <div className="p-4 rounded-xl border border-[#39B54A]/40" style={{ backgroundColor: '#39B54A0d' }}>
-            <div className="font-bold text-sm text-foreground mb-2">Execute-Order-Validate</div>
+            <div className="font-bold text-sm text-foreground mb-2">{t('txflow.eovTitle')}</div>
             <div className="text-xs text-muted-foreground leading-relaxed">
-              Fabric runs chaincode <strong>before</strong> ordering. This means multiple transactions can be simulated in parallel by different peers simultaneously — unlocking high throughput.
+              {t('txflow.eovBodyA')}<strong>{t('txflow.eovBefore')}</strong>{t('txflow.eovBodyB')}
             </div>
           </div>
 
           <div className="p-4 rounded-xl border border-border bg-card">
-            <div className="font-bold text-sm text-foreground mb-2">vs. Order-Execute</div>
+            <div className="font-bold text-sm text-foreground mb-2">{t('txflow.oeTitle')}</div>
             <div className="text-xs text-muted-foreground leading-relaxed">
-              Traditional blockchains (Ethereum) order first, then all nodes execute sequentially. This creates a bottleneck. Fabric's approach avoids this entirely.
+              {t('txflow.oeBody')}
             </div>
           </div>
 
           <div className="p-3 rounded-xl border border-[#6366f1]/40" style={{ backgroundColor: '#6366f10d' }}>
             <div className="text-xs text-muted-foreground">
-              <span className="font-bold text-foreground">Result: </span>
-              3,000+ TPS achievable without sacrificing Byzantine resilience when SmartBFT is enabled.
+              <span className="font-bold text-foreground">{t('txflow.resultLabel')}</span>
+              {t('txflow.resultBody')}
             </div>
           </div>
         </div>
@@ -1112,13 +961,9 @@ function TxFlowSlide() {
 
 // ─── s3-consensus-evo ─────────────────────────────────────────────────────────
 
-type ConsensusVersion = {
-  version: string;
-  year: string;
+type ConsensusVersionText = {
   name: string;
-  color: string;
   status: string;
-  diagram: 'kafka' | 'raft' | 'bft';
   stats: { label: string; value: string }[];
   desc: string;
   limit: string;
@@ -1126,61 +971,15 @@ type ConsensusVersion = {
   adoption: string;
 };
 
-const CONSENSUS_VERSIONS: ConsensusVersion[] = [
-  {
-    version: 'v1.x',
-    year: '2017',
-    name: 'Apache Kafka',
-    color: '#ED1C24',
-    status: 'Deprecated (2.5+)',
-    diagram: 'kafka',
-    stats: [
-      { label: 'Min nodes',     value: '5+' },
-      { label: 'Fault tol.',    value: 'CFT' },
-      { label: 'Throughput',    value: '~1k TPS' },
-    ],
-    desc: 'External Kafka cluster handled block ordering, with Zookeeper for coordination. Reliable but operationally heavy — a non-blockchain dependency that consortiums had to provision and patch separately.',
-    limit: 'Not BFT · Kafka + ZK = a central operational chokepoint outside the blockchain layer.',
-    solved: 'First stable ordering after the v0.6 PBFT prototype — proved Fabric\'s execute-order-validate model worked at scale.',
-    adoption: 'Removed entirely in Fabric v2.5 (2021). Legacy networks only.',
-  },
-  {
-    version: 'v2.x',
-    year: '2019',
-    name: 'Raft (CFT)',
-    color: '#f59e0b',
-    status: 'Current default',
-    diagram: 'raft',
-    stats: [
-      { label: 'Min nodes',     value: '3' },
-      { label: 'Fault tol.',    value: '⌊(N-1)/2⌋ crashes' },
-      { label: 'Throughput',    value: '~3k TPS' },
-    ],
-    desc: 'Built-in Crash Fault Tolerant consensus. Orderer nodes elect a leader; the leader replicates an append-only log of blocks to followers. Simple, fast, and requires zero external infrastructure.',
-    limit: 'Assumes no malicious orderers — tolerates crashes, not Byzantine behavior.',
-    solved: 'Eliminated the Kafka + Zookeeper dependency · single binary deployment.',
-    adoption: 'Used by virtually every production Fabric consortium today (IBM Food Trust, we.trade, TradeLens, government registries).',
-  },
-  {
-    version: 'v3.x',
-    year: '2023',
-    name: 'SmartBFT',
-    color: '#39B54A',
-    status: 'Production-ready',
-    diagram: 'bft',
-    stats: [
-      { label: 'Min nodes',     value: '4 (N ≥ 3F+1)' },
-      { label: 'Fault tol.',    value: '⌊(N-1)/3⌋ Byzantine' },
-      { label: 'Throughput',    value: '~1.5–2k TPS' },
-    ],
-    desc: 'Byzantine Fault Tolerant ordering service. Handles both crashes AND malicious orderer nodes. Designed for adversarial consortiums where parties don\'t trust each other to operate orderers honestly.',
-    limit: 'Heavier than Raft · 3-phase consensus · need at least 4 orderers to tolerate 1 malicious one.',
-    solved: 'Removes the trust-the-orderer-operator assumption — enables truly adversarial enterprise networks.',
-    adoption: 'Picked when orderer operators are competitors or regulated entities (cross-bank settlement, defense, multi-jurisdiction).',
-  },
+// Language-neutral: version/year/color/diagram only. Text resolved via t().
+const CONSENSUS_VERSION_STYLE = [
+  { version: 'v1.x', year: '2017', color: '#ED1C24', diagram: 'kafka' as const },
+  { version: 'v2.x', year: '2019', color: '#f59e0b', diagram: 'raft' as const },
+  { version: 'v3.x', year: '2023', color: '#39B54A', diagram: 'bft' as const },
 ];
 
 function ConsensusMiniDiagram({ kind, color }: { kind: 'kafka' | 'raft' | 'bft'; color: string }) {
+  const { t } = useTranslation('blockchain-platforms/section-3');
   if (kind === 'kafka') {
     return (
       <svg viewBox="0 0 240 120" className="w-full h-28">
@@ -1194,8 +993,8 @@ function ConsensusMiniDiagram({ kind, color }: { kind: 'kafka' | 'raft' | 'bft';
         ))}
         {/* External Kafka box */}
         <rect x={50} y={70} width={140} height={38} rx={6} fill={color + '20'} stroke={color} strokeWidth={1.5} strokeDasharray="4 3" />
-        <text x={120} y={88} textAnchor="middle" fontSize={11} fontWeight="800" fill={color}>Kafka cluster</text>
-        <text x={120} y={102} textAnchor="middle" fontSize={9} fill="currentColor" className="text-muted-foreground">+ Zookeeper · external</text>
+        <text x={120} y={88} textAnchor="middle" fontSize={11} fontWeight="800" fill={color}>{t('consensusEvo.diagram.kafkaCluster')}</text>
+        <text x={120} y={102} textAnchor="middle" fontSize={9} fill="currentColor" className="text-muted-foreground">{t('consensusEvo.diagram.kafkaSub')}</text>
       </svg>
     );
   }
@@ -1204,7 +1003,7 @@ function ConsensusMiniDiagram({ kind, color }: { kind: 'kafka' | 'raft' | 'bft';
       <svg viewBox="0 0 240 120" className="w-full h-28">
         {/* Leader */}
         <circle cx={120} cy={28} r={16} fill={color + '40'} stroke={color} strokeWidth={2} />
-        <text x={120} y={32} textAnchor="middle" fontSize={10} fontWeight="800" fill={color}>LEAD</text>
+        <text x={120} y={32} textAnchor="middle" fontSize={10} fontWeight="800" fill={color}>{t('consensusEvo.diagram.raftLead')}</text>
         {/* Followers */}
         {[60, 180].map((x, i) => (
           <g key={i}>
@@ -1218,7 +1017,7 @@ function ConsensusMiniDiagram({ kind, color }: { kind: 'kafka' | 'raft' | 'bft';
             <polygon points="0 0, 7 3.5, 0 7" fill={color} />
           </marker>
         </defs>
-        <text x={120} y={114} textAnchor="middle" fontSize={9} fill="currentColor" className="text-muted-foreground">log replication</text>
+        <text x={120} y={114} textAnchor="middle" fontSize={9} fill="currentColor" className="text-muted-foreground">{t('consensusEvo.diagram.raftLogReplication')}</text>
       </svg>
     );
   }
@@ -1250,18 +1049,22 @@ function ConsensusMiniDiagram({ kind, color }: { kind: 'kafka' | 'raft' | 'bft';
       ].map(([x1, y1, x2, y2], i) => (
         <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={1.2} opacity={0.55} />
       ))}
-      <text x={120} y={114} textAnchor="middle" fontSize={9} fill="currentColor" className="text-muted-foreground">≥ 2f+1 honest agree</text>
+      <text x={120} y={114} textAnchor="middle" fontSize={9} fill="currentColor" className="text-muted-foreground">{t('consensusEvo.diagram.bftHonestAgree')}</text>
     </svg>
   );
 }
 
 function ConsensusEvolutionSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const versionText = t('consensusEvo.versions', { returnObjects: true }) as ConsensusVersionText[];
+  const CONSENSUS_VERSIONS = CONSENSUS_VERSION_STYLE.map((s, i) => ({ ...s, ...versionText[i] }));
+
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-3">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Consensus Evolution in Fabric</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('consensusEvo.heading')}</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Fabric's ordering layer evolved in three major steps — each removing the previous version's biggest constraint.
+          {t('consensusEvo.subtitle')}
         </p>
       </div>
 
@@ -1335,11 +1138,11 @@ function ConsensusEvolutionSlide() {
               {/* Limit / Solved */}
               <div className="shrink-0 space-y-1">
                 <div className="p-1.5 rounded text-[10px] leading-snug" style={{ backgroundColor: '#ED1C2410', borderLeft: '2px solid #ED1C24' }}>
-                  <span className="font-bold" style={{ color: '#ED1C24' }}>Limit: </span>
+                  <span className="font-bold" style={{ color: '#ED1C24' }}>{t('consensusEvo.limitLabel')}</span>
                   <span className="text-muted-foreground">{v.limit}</span>
                 </div>
                 <div className="p-1.5 rounded text-[10px] leading-snug" style={{ backgroundColor: '#39B54A10', borderLeft: '2px solid #39B54A' }}>
-                  <span className="font-bold" style={{ color: '#39B54A' }}>Solved: </span>
+                  <span className="font-bold" style={{ color: '#39B54A' }}>{t('consensusEvo.solvedLabel')}</span>
                   <span className="text-muted-foreground">{v.solved}</span>
                 </div>
               </div>
@@ -1354,13 +1157,13 @@ function ConsensusEvolutionSlide() {
 
         {/* Decision strip */}
         <div className="shrink-0 rounded-xl border p-2.5 flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-4" style={{ borderColor: '#6366f155', backgroundColor: '#6366f10d' }}>
-          <span className="text-[10px] font-black uppercase tracking-widest shrink-0" style={{ color: '#6366f1' }}>How to choose today</span>
+          <span className="text-[10px] font-black uppercase tracking-widest shrink-0" style={{ color: '#6366f1' }}>{t('consensusEvo.decisionLabel')}</span>
           <div className="flex flex-col lg:flex-row gap-2 lg:gap-5 text-[11px] text-muted-foreground leading-snug">
             <div>
-              <span className="font-bold" style={{ color: '#f59e0b' }}>Raft</span> — when orderer operators are <span className="text-foreground font-medium">trusted partners</span> (most consortiums). Fastest, simplest, lightest.
+              <span className="font-bold" style={{ color: '#f59e0b' }}>{t('consensusEvo.decisionRaft.term')}</span>{t('consensusEvo.decisionRaft.a')}<span className="text-foreground font-medium">{t('consensusEvo.decisionRaft.trusted')}</span>{t('consensusEvo.decisionRaft.b')}
             </div>
             <div>
-              <span className="font-bold" style={{ color: '#39B54A' }}>SmartBFT</span> — when orderer operators are <span className="text-foreground font-medium">competitors or regulated</span>. Pay the throughput cost for true Byzantine resilience.
+              <span className="font-bold" style={{ color: '#39B54A' }}>{t('consensusEvo.decisionBft.term')}</span>{t('consensusEvo.decisionBft.a')}<span className="text-foreground font-medium">{t('consensusEvo.decisionBft.competitors')}</span>{t('consensusEvo.decisionBft.b')}
             </div>
           </div>
         </div>
@@ -1371,61 +1174,27 @@ function ConsensusEvolutionSlide() {
 
 // ─── s3-raft ──────────────────────────────────────────────────────────────────
 
-const RAFT_PHASES = [
-  {
-    id: 'election',
-    label: 'Leader Election',
-    color: '#6366f1',
-    icon: '🗳️',
-    desc: 'On startup or after a leader crash, nodes become Candidates and request votes. The first to reach a majority becomes the new Leader.',
-    details: [
-      'Each node starts as a Follower',
-      'If no heartbeat from leader → becomes Candidate',
-      'Candidate sends RequestVote to all peers',
-      'First to get ⌊N/2⌋+1 votes wins the election',
-      'Term counter increments with every election',
-    ],
-  },
-  {
-    id: 'replication',
-    label: 'Log Replication',
-    color: '#39B54A',
-    icon: '📋',
-    desc: 'The Leader receives all client requests and appends them to its log. It then replicates this entry to all Followers before acknowledging the client.',
-    details: [
-      'Client sends transaction to Leader only',
-      'Leader appends entry to its own log',
-      'Leader sends AppendEntries RPC to all Followers',
-      'Followers append to their own logs and reply',
-      'Leader waits for majority acknowledgement',
-    ],
-  },
-  {
-    id: 'commit',
-    label: 'Commit',
-    color: '#f59e0b',
-    icon: '✅',
-    desc: 'Once a majority of followers have written the entry, the Leader marks it as committed and notifies all followers. The entry is now permanent.',
-    details: [
-      'Majority ACK received by Leader',
-      'Leader commits the entry in its state machine',
-      'Leader broadcasts commit in next AppendEntries',
-      'Followers also commit their copy',
-      'Client receives confirmation',
-    ],
-  },
+// Language-neutral: id/color/icon only. label/desc/details resolved via t().
+const RAFT_PHASE_STYLE = [
+  { id: 'election', color: '#6366f1', icon: '🗳️' },
+  { id: 'replication', color: '#39B54A', icon: '📋' },
+  { id: 'commit', color: '#f59e0b', icon: '✅' },
 ];
 
 function RaftMechanicsSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const phaseText = t('raft.phases', { returnObjects: true }) as { label: string; desc: string; details: string[] }[];
+  const RAFT_PHASES = RAFT_PHASE_STYLE.map((s, i) => ({ ...s, ...phaseText[i] }));
+
   const [activePhase, setActivePhase] = useState(0);
   const phase = RAFT_PHASES[activePhase];
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-5">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Raft: How It Works</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('raft.heading')}</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Raft breaks consensus into three phases — click each to explore.
+          {t('raft.subtitle')}
         </p>
       </div>
 
@@ -1452,15 +1221,15 @@ function RaftMechanicsSlide() {
 
           {/* Node diagram */}
           <div className="flex-1 rounded-xl border border-border bg-card/50 p-4 flex flex-col gap-3">
-            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider shrink-0">5-node Raft cluster</div>
+            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('raft.clusterLabel')}</div>
             <div className="flex-1 flex items-center justify-center">
               <div className="flex gap-4 items-center flex-wrap justify-center">
                 {[
-                  { role: 'Leader', color: phase.color, animate: activePhase === 0 || activePhase === 1 || activePhase === 2 },
-                  { role: 'Follower', color: '#6366f1', animate: activePhase === 1 || activePhase === 2 },
-                  { role: 'Follower', color: '#6366f1', animate: activePhase === 1 || activePhase === 2 },
-                  { role: activePhase === 0 ? 'Candidate' : 'Follower', color: activePhase === 0 ? '#f59e0b' : '#6366f1', animate: activePhase === 0 },
-                  { role: 'Follower', color: '#6366f1', animate: false },
+                  { role: 'leader', color: phase.color, animate: activePhase === 0 || activePhase === 1 || activePhase === 2 },
+                  { role: 'follower', color: '#6366f1', animate: activePhase === 1 || activePhase === 2 },
+                  { role: 'follower', color: '#6366f1', animate: activePhase === 1 || activePhase === 2 },
+                  { role: activePhase === 0 ? 'candidate' : 'follower', color: activePhase === 0 ? '#f59e0b' : '#6366f1', animate: activePhase === 0 },
+                  { role: 'follower', color: '#6366f1', animate: false },
                 ].map((node, i) => (
                   <motion.div
                     key={i}
@@ -1472,9 +1241,11 @@ function RaftMechanicsSlide() {
                       className="size-12 rounded-full border-2 flex items-center justify-center text-lg"
                       style={{ borderColor: node.color, backgroundColor: node.color + '18' }}
                     >
-                      {node.role === 'Leader' ? '👑' : node.role === 'Candidate' ? '✋' : '🖥️'}
+                      {node.role === 'leader' ? '👑' : node.role === 'candidate' ? '✋' : '🖥️'}
                     </div>
-                    <span className="text-xs font-medium" style={{ color: node.color }}>{node.role}</span>
+                    <span className="text-xs font-medium" style={{ color: node.color }}>
+                      {node.role === 'leader' ? t('raft.roleLeader') : node.role === 'candidate' ? t('raft.roleCandidate') : t('raft.roleFollower')}
+                    </span>
                   </motion.div>
                 ))}
               </div>
@@ -1485,7 +1256,7 @@ function RaftMechanicsSlide() {
 
         {/* Right — step list */}
         <div className="flex flex-col gap-3">
-          <div className="font-bold text-base text-foreground shrink-0">{phase.icon} {phase.label} — steps</div>
+          <div className="font-bold text-base text-foreground shrink-0">{phase.icon} {phase.label}{t('raft.stepsSuffix')}</div>
           {phase.details.map((step, i) => (
             <motion.div
               key={i}
@@ -1507,10 +1278,10 @@ function RaftMechanicsSlide() {
 
           {/* Quorum formula */}
           <div className="mt-auto p-3 rounded-xl border border-[#39B54A]/40" style={{ backgroundColor: '#39B54A0d' }}>
-            <div className="text-xs font-bold text-[#39B54A] mb-1">Quorum rule</div>
-            <div className="font-mono text-sm text-foreground">majority = ⌊N/2⌋ + 1</div>
+            <div className="text-xs font-bold text-[#39B54A] mb-1">{t('raft.quorumTitle')}</div>
+            <div className="font-mono text-sm text-foreground">{t('raft.quorumFormula')}</div>
             <div className="text-xs text-muted-foreground mt-1">
-              5 nodes → needs 3 votes · 3 nodes → needs 2 votes · Tolerates ⌊(N−1)/2⌋ failures
+              {t('raft.quorumNote')}
             </div>
           </div>
         </div>
@@ -1521,66 +1292,23 @@ function RaftMechanicsSlide() {
 
 // ─── s3-exercise-supply ───────────────────────────────────────────────────────
 
-const SUPPLY_EVENTS = [
-  {
-    id: 1,
-    label: 'Batch ID assigned at harvest',
-    context: 'A farm assigns a unique batch number to a crate of lettuce before it leaves the field.',
-    answer: true,
-    reason: 'Immutable origin record — enables full provenance traceability from field to store. This is the anchor for the entire chain.',
-  },
-  {
-    id: 2,
-    label: 'Farmer negotiates price with processor',
-    context: 'The farm owner and the processing plant agree on a price per kilogram over email.',
-    answer: false,
-    reason: 'Commercial negotiation is private and off-chain. Pricing data is competitive information and does not require multi-party immutability.',
-  },
-  {
-    id: 3,
-    label: 'Temperature logged during refrigerated transport',
-    context: 'IoT sensors record temperature every 30 minutes inside the refrigerated truck.',
-    answer: true,
-    reason: 'Cold-chain integrity evidence is critical for food safety and liability. Any tampering with this data could conceal contamination.',
-  },
-  {
-    id: 4,
-    label: 'Processing plant quality inspection passed',
-    context: 'A third-party inspector certifies the batch meets food safety standards.',
-    answer: true,
-    reason: 'Certification of compliance must be tamper-proof and instantly auditable by retailers and regulators — a perfect blockchain use case.',
-  },
-  {
-    id: 5,
-    label: 'Retail price set by supermarket',
-    context: 'The supermarket updates its POS system with the sale price for the product.',
-    answer: false,
-    reason: 'Pricing is a unilateral commercial decision. Competitors on the same supply network should not see each other\'s retail margins.',
-  },
-  {
-    id: 6,
-    label: 'Product recalled due to contamination alert',
-    context: 'A contamination is detected. A recall notice needs to reach all supply chain partners immediately.',
-    answer: true,
-    reason: 'Recall events must be immutable, timestamped, and instantly visible across all participants — blockchain enables 2.2-second full-chain alerts (Walmart case).',
-  },
-  {
-    id: 7,
-    label: 'Distributor updates internal ERP system',
-    context: 'The distributor enters the delivery into their own SAP system after the truck arrives.',
-    answer: false,
-    reason: 'Internal ERP updates are siloed operations. They do not require multi-party verification and may contain sensitive business data.',
-  },
-  {
-    id: 8,
-    label: 'Consumer scans QR code to verify product origin',
-    context: 'A shopper at the store scans the product QR code on their phone.',
-    answer: true,
-    reason: 'Reading from the ledger is always valid. The blockchain provides a public-facing provenance window while writing remains controlled.',
-  },
+// Language-neutral: id + correct answer. label/context/reason resolved via t().
+const SUPPLY_EVENT_ANSWERS = [
+  { id: 1, answer: true },
+  { id: 2, answer: false },
+  { id: 3, answer: true },
+  { id: 4, answer: true },
+  { id: 5, answer: false },
+  { id: 6, answer: true },
+  { id: 7, answer: false },
+  { id: 8, answer: true },
 ];
 
 function SupplyChainExercise() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const eventText = t('exerciseSupply.events', { returnObjects: true }) as { label: string; context: string; reason: string }[];
+  const SUPPLY_EVENTS = SUPPLY_EVENT_ANSWERS.map((e, i) => ({ ...e, ...eventText[i] }));
+
   const [answers, setAnswers] = useState<Record<number, boolean | null>>({});
   const [revealed, setRevealed] = useState<Record<number, boolean>>({});
   const allAnswered = SUPPLY_EVENTS.every(e => answers[e.id] !== undefined);
@@ -1601,9 +1329,9 @@ function SupplyChainExercise() {
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-4">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Exercise: What Goes On Chain?</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('exerciseSupply.heading')}</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Walmart wants to trace lettuce from farm to store on Hyperledger Fabric. For each event, decide: should it be recorded on the blockchain?
+          {t('exerciseSupply.subtitle')}
         </p>
       </div>
 
@@ -1641,7 +1369,7 @@ function SupplyChainExercise() {
                       color: chosen === val ? (val ? '#39B54A' : '#ED1C24') : 'var(--muted-foreground)',
                     }}
                   >
-                    {val ? '✅ On chain' : '❌ Off chain'}
+                    {val ? t('exerciseSupply.onChain') : t('exerciseSupply.offChain')}
                   </button>
                 ))}
                 {chosen !== undefined && !isRevealed && (
@@ -1649,7 +1377,7 @@ function SupplyChainExercise() {
                     onClick={() => reveal(ev.id)}
                     className="px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:bg-card transition-all cursor-pointer"
                   >
-                    Why?
+                    {t('exerciseSupply.why')}
                   </button>
                 )}
               </div>
@@ -1663,7 +1391,7 @@ function SupplyChainExercise() {
                     color: isRight ? '#39B54A' : '#ED1C24',
                   }}
                 >
-                  {isRight ? '✓ Correct — ' : '✗ Incorrect — '}{ev.reason}
+                  {isRight ? t('exerciseSupply.correctPrefix') : t('exerciseSupply.incorrectPrefix')}{ev.reason}
                 </motion.div>
               )}
             </div>
@@ -1679,8 +1407,8 @@ function SupplyChainExercise() {
           style={{ backgroundColor: '#39B54A0d' }}
         >
           <span className="font-bold text-[#39B54A]">
-            Score: {score}/{SUPPLY_EVENTS.length}
-            {score === SUPPLY_EVENTS.length ? ' — Perfect! 🎉' : score! >= 6 ? ' — Great work!' : ' — Review the explanations above.'}
+            {t('exerciseSupply.scorePrefix')}{score}/{SUPPLY_EVENTS.length}
+            {score === SUPPLY_EVENTS.length ? t('exerciseSupply.scorePerfect') : score! >= 6 ? t('exerciseSupply.scoreGreat') : t('exerciseSupply.scoreReview')}
           </span>
         </motion.div>
       )}
@@ -1690,43 +1418,30 @@ function SupplyChainExercise() {
 
 // ─── s3-exercise-health ───────────────────────────────────────────────────────
 
-const HEALTH_CHANNELS = [
-  {
-    id: 'clinical',
-    label: 'Clinical Channel',
-    icon: '🏥',
-    color: '#6366f1',
-    members: 'Hospital A · Hospital B · Doctors',
-    desc: 'Sensitive patient data. Strictly need-to-know.',
-  },
-  {
-    id: 'billing',
-    label: 'Billing Channel',
-    icon: '💳',
-    color: '#39B54A',
-    members: 'Hospitals · Insurance Companies',
-    desc: 'Financial claims and reimbursements. No clinical detail.',
-  },
-  {
-    id: 'compliance',
-    label: 'Compliance Channel',
-    icon: '📋',
-    color: '#f59e0b',
-    members: 'All parties + Regulator (HIPAA)',
-    desc: 'Audit logs and regulatory reporting only.',
-  },
+// Language-neutral: id/icon/color. label/members/desc resolved via t().
+const HEALTH_CHANNEL_STYLE = [
+  { id: 'clinical', icon: '🏥', color: '#6366f1' },
+  { id: 'billing', icon: '💳', color: '#39B54A' },
+  { id: 'compliance', icon: '📋', color: '#f59e0b' },
 ];
 
-const HEALTH_ITEMS = [
-  { id: 1, label: 'Diagnosis & treatment records', correct: 'clinical', icon: '🩺' },
-  { id: 2, label: 'Insurance claim submission', correct: 'billing', icon: '📄' },
-  { id: 3, label: 'Drug prescription history', correct: 'clinical', icon: '💊' },
-  { id: 4, label: 'HIPAA compliance audit log', correct: 'compliance', icon: '🔍' },
-  { id: 5, label: 'Hospital billing codes (DRG)', correct: 'billing', icon: '💰' },
-  { id: 6, label: 'Regulatory inspection result', correct: 'compliance', icon: '📊' },
+// Language-neutral: id/correct/icon. label resolved via t().
+const HEALTH_ITEM_DATA = [
+  { id: 1, correct: 'clinical', icon: '🩺' },
+  { id: 2, correct: 'billing', icon: '📄' },
+  { id: 3, correct: 'clinical', icon: '💊' },
+  { id: 4, correct: 'compliance', icon: '🔍' },
+  { id: 5, correct: 'billing', icon: '💰' },
+  { id: 6, correct: 'compliance', icon: '📊' },
 ];
 
 function HealthDataExercise() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const channelText = t('exerciseHealth.channels', { returnObjects: true }) as { id: string; label: string; members: string; desc: string }[];
+  const HEALTH_CHANNELS = HEALTH_CHANNEL_STYLE.map((s) => ({ ...s, ...(channelText.find(c => c.id === s.id) ?? { label: s.id, members: '', desc: '' }) }));
+  const itemText = t('exerciseHealth.items', { returnObjects: true }) as { label: string }[];
+  const HEALTH_ITEMS = HEALTH_ITEM_DATA.map((it, i) => ({ ...it, label: itemText[i].label }));
+
   const [selected, setSelected] = useState<number | null>(null);
   const [placed, setPlaced] = useState<Record<number, string>>({});
   const [checked, setChecked] = useState(false);
@@ -1750,17 +1465,17 @@ function HealthDataExercise() {
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-4">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Exercise: Design the Channel Structure</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('exerciseHealth.heading')}</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          A hospital network is deploying Hyperledger Fabric for private health data. Assign each data type to the correct channel.
-          <span className="ml-2 font-medium text-foreground">Select a card, then click a channel.</span>
+          {t('exerciseHealth.subtitle')}
+          <span className="ml-2 font-medium text-foreground">{t('exerciseHealth.subtitleHint')}</span>
         </p>
       </div>
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Left — data items */}
         <div className="flex flex-col gap-2">
-          <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider shrink-0">Data types to assign</div>
+          <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('exerciseHealth.dataTypesLabel')}</div>
           <div className="flex flex-col gap-2 flex-1 min-h-0 overflow-y-auto">
             {HEALTH_ITEMS.map(item => {
               const ch = HEALTH_CHANNELS.find(c => c.id === placed[item.id]);
@@ -1803,12 +1518,12 @@ function HealthDataExercise() {
                         className="text-xs mt-0.5 font-semibold"
                         style={{ color: isRight ? '#39B54A' : '#ED1C24' }}
                       >
-                        {isRight ? '✓ Correct' : `✗ Should be: ${HEALTH_CHANNELS.find(c => c.id === item.correct)?.label}`}
+                        {isRight ? t('exerciseHealth.correct') : `${t('exerciseHealth.shouldBePrefix')}${HEALTH_CHANNELS.find(c => c.id === item.correct)?.label}`}
                       </div>
                     )}
                   </div>
                   {selected === item.id && (
-                    <span className="text-xs text-[#6366f1] font-bold shrink-0">Selected</span>
+                    <span className="text-xs text-[#6366f1] font-bold shrink-0">{t('exerciseHealth.selected')}</span>
                   )}
                 </button>
               );
@@ -1818,7 +1533,7 @@ function HealthDataExercise() {
 
         {/* Right — channels */}
         <div className="flex flex-col gap-3">
-          <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider shrink-0">Channels</div>
+          <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('exerciseHealth.channelsLabel')}</div>
           {HEALTH_CHANNELS.map(ch => {
             const itemsHere = HEALTH_ITEMS.filter(it => placed[it.id] === ch.id);
             return (
@@ -1853,7 +1568,7 @@ function HealthDataExercise() {
                   </div>
                 )}
                 {selected !== null && itemsHere.length === 0 && (
-                  <div className="text-xs text-muted-foreground italic">Drop here</div>
+                  <div className="text-xs text-muted-foreground italic">{t('exerciseHealth.dropHere')}</div>
                 )}
               </button>
             );
@@ -1865,7 +1580,7 @@ function HealthDataExercise() {
               className="shrink-0 py-2 px-4 rounded-xl border-2 font-bold text-sm cursor-pointer transition-all"
               style={{ borderColor: '#39B54A', backgroundColor: '#39B54A18', color: '#39B54A' }}
             >
-              Check answers
+              {t('exerciseHealth.checkAnswers')}
             </button>
           )}
           {checked && (
@@ -1876,8 +1591,8 @@ function HealthDataExercise() {
               style={{ backgroundColor: '#39B54A0d' }}
             >
               <span className="font-bold text-[#39B54A]">
-                Score: {score}/{HEALTH_ITEMS.length}
-                {score === HEALTH_ITEMS.length ? ' — Perfect! 🎉' : score! >= 4 ? ' — Great work!' : ' — Check the correct channels above.'}
+                {t('exerciseHealth.scorePrefix')}{score}/{HEALTH_ITEMS.length}
+                {score === HEALTH_ITEMS.length ? t('exerciseHealth.scorePerfect') : score! >= 4 ? t('exerciseHealth.scoreGreat') : t('exerciseHealth.scoreReview')}
               </span>
             </motion.div>
           )}
@@ -1890,6 +1605,37 @@ function HealthDataExercise() {
 // ─── BP_Section3 ──────────────────────────────────────────────────────────────
 
 export function BP_Section3() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+
+  const chapters = useMemo(
+    () => chapterShape.map((c) =>
+      'kind' in c
+        ? { kind: 'group' as const, id: c.id, label: t(`groups.${c.id}`) }
+        : { id: c.id, label: t(`chapters.${c.id}`) }
+    ),
+    [t]
+  );
+
+  const overviewKeyPoints = t('overview.keyPoints', { returnObjects: true }) as string[];
+  const comparisonItems = t('comparison.items', { returnObjects: true }) as { feature: string; option1: string; option2: string }[];
+  const productionCases = t('production.cases', { returnObjects: true }) as {
+    statusLabel: string; name: string; sub: string; members: string; flow: string; outcome: string; lesson: string;
+  }[];
+  const productionColors = ['#39B54A', '#ED1C24', '#6366f1'];
+  const productionCaseList = productionCases.map((c, i) => ({ ...c, statusColor: productionColors[i] }));
+  const bestfitCases = t('bestfits.cases', { returnObjects: true }) as { emoji: string; name: string; why: string; example: string }[];
+  const worstfitCases = t('worstfits.cases', { returnObjects: true }) as { emoji: string; name: string; why: string; alt: string }[];
+  const vocabRows = t('vocab.rows', { returnObjects: true }) as { pub: string; fab: string; note: string }[];
+  const quizOptions = t('quiz.options', { returnObjects: true }) as { text: string }[];
+  const quiz2Options = t('quiz2.options', { returnObjects: true }) as { text: string }[];
+  const quiz3Options = t('quiz3.options', { returnObjects: true }) as { text: string }[];
+  const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
+
+  // Correct-answer flags stay in code (language-neutral); text comes from t().
+  const quizCorrect = [false, true, false, false];
+  const quiz2Correct = [false, true, false, false];
+  const quiz3Correct = [false, true, false, false];
+
   return (
     <div className="h-full w-full flex overflow-hidden">
       <SectionNav chapters={chapters} />
@@ -1899,9 +1645,9 @@ export function BP_Section3() {
         {/* ═══════ TITLE ═══════ */}
         <div className="h-full">
           <TitleSlide
-            sectionNumber="SECTION 03"
-            title="Permissioned Blockchains: Hyperledger Fabric"
-            subtitle="Enterprise blockchain design, supply chains, channels, and transaction flow"
+            sectionNumber={t('title.sectionNumber')}
+            title={t('title.title')}
+            subtitle={t('title.subtitle')}
             icon={<Building2 className="size-20 text-[#39B54A]" />}
             gradient="from-[#39B54A] to-[#22d3ee]"
           />
@@ -1920,15 +1666,10 @@ export function BP_Section3() {
         {/* ═══════ FABRIC OVERVIEW ═══════ */}
         <div id="s3-overview" className="h-full flex items-start">
           <ConceptSlide
-            title="Hyperledger Fabric"
-            description="An enterprise-grade permissioned blockchain framework by the Linux Foundation. Modular, private, and designed for business networks."
-            visual={fabricOverviewVisual}
-            keyPoints={[
-              'No mining — consensus by designated orderer nodes',
-              'Chaincode (smart contracts) written in Go, JavaScript, or Java',
-              'Channels create private sub-networks within the same Fabric network',
-              'Used by IBM Food Trust, TradeLens, HSBC, Maersk, Walmart',
-            ]}
+            title={t('overview.title')}
+            description={t('overview.description')}
+            visual={<FabricOverviewVisual />}
+            keyPoints={overviewKeyPoints}
           />
         </div>
 
@@ -1980,43 +1721,12 @@ export function BP_Section3() {
         {/* ═══════ PRODUCTION — Fabric in the wild ═══════ */}
         <div id="s3-production" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-3">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Fabric in production — three honest case studies</h2>
-            <p className="text-sm text-muted-foreground mt-1">What real Fabric networks look like at scale — including one that succeeded, one that shut down, and one quietly becoming critical infrastructure.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('production.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t('production.subtitle')}</p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-3">
-            {[
-              {
-                statusColor: '#39B54A',
-                statusLabel: '✓ Live · expanding',
-                name: 'IBM Food Trust',
-                sub: 'Food supply traceability · 2018+',
-                members: 'Walmart · Carrefour · Nestlé · Tyson · Unilever · Albertsons · 100+ orgs',
-                flow: 'Harvest → processing → shipping → retail. Each step writes provenance + cold-chain data to the channel.',
-                outcome: 'Walmart mango trace: 7 days → 2.2 sec. Used live in salmonella outbreak responses. Walmart now requires Food Trust onboarding for leafy-green suppliers.',
-                lesson: 'Worked because (a) Walmart could mandate adoption, and (b) the alternative was decades-old paper / EDI workflows that genuinely failed during recalls.',
-              },
-              {
-                statusColor: '#ED1C24',
-                statusLabel: '✗ Shut down 2022',
-                name: 'Maersk TradeLens',
-                sub: 'Global shipping container tracking · 2018-2022',
-                members: 'Maersk + IBM · select carriers · 50+ ports · 200M+ events / yr at peak',
-                flow: 'Shipping events (load, unload, customs, transhipment) written to the channel by carriers, ports, and customs authorities.',
-                outcome: 'Reduced docs processing time. But: rival carriers (MSC, CMA CGM, Hapag-Lloyd) refused to join a Maersk-branded network. Network effects collapsed. Both partners exited Q1 2022.',
-                lesson: 'Permissioned blockchain needs neutral governance OR a regulator mandate. A consortium owned by one competitor is a contradiction in terms — others won\'t feed data to a rival\'s ledger.',
-              },
-              {
-                statusColor: '#6366f1',
-                statusLabel: '◉ Critical infrastructure',
-                name: 'EU EBSI',
-                sub: 'European Blockchain Services Infrastructure · 2018+',
-                members: '27 EU member states + EEA · cross-border verifiable credentials · part of EU Digital Identity Wallet',
-                flow: 'Issues and verifies cross-border credentials: diplomas, professional licences, eIDAS attestations, customs documents — backed by member-state validators.',
-                outcome: 'Becomes mandatory infrastructure for the EU Digital Identity Wallet (eIDAS 2.0, member-state mandate by 2026). Universities issue Fabric-anchored diplomas verifiable across borders.',
-                lesson: 'Government-led consortiums sidestep the network-effect problem — participation is a regulatory obligation, not a market choice. The most boring Fabric deployments may end up the most consequential.',
-              },
-            ].map(p => (
+            {productionCaseList.map(p => (
               <motion.div
                 key={p.name}
                 initial={{ opacity: 0, y: 16 }}
@@ -2040,22 +1750,22 @@ export function BP_Section3() {
                 </div>
 
                 <div className="shrink-0 rounded-lg border bg-card/50 px-2 py-1.5" style={{ borderColor: p.statusColor + '30' }}>
-                  <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Consortium</div>
+                  <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">{t('production.consortiumLabel')}</div>
                   <div className="text-[10px] text-foreground leading-snug mt-0.5">{p.members}</div>
                 </div>
 
                 <div className="shrink-0 rounded-lg border bg-card/50 px-2 py-1.5" style={{ borderColor: p.statusColor + '30' }}>
-                  <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Data flow</div>
+                  <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">{t('production.dataFlowLabel')}</div>
                   <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{p.flow}</div>
                 </div>
 
                 <div className="rounded-lg border bg-card/50 px-2 py-1.5 flex-1 min-h-0" style={{ borderColor: p.statusColor + '30' }}>
-                  <div className="text-[9px] font-bold uppercase tracking-wider" style={{ color: p.statusColor }}>Outcome</div>
+                  <div className="text-[9px] font-bold uppercase tracking-wider" style={{ color: p.statusColor }}>{t('production.outcomeLabel')}</div>
                   <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{p.outcome}</div>
                 </div>
 
                 <div className="shrink-0 rounded-lg p-2 border-l-2" style={{ borderColor: p.statusColor, backgroundColor: p.statusColor + '12' }}>
-                  <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: p.statusColor }}>Lesson</div>
+                  <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: p.statusColor }}>{t('production.lessonLabel')}</div>
                   <div className="text-[10px] text-muted-foreground leading-snug mt-0.5">{p.lesson}</div>
                 </div>
               </motion.div>
@@ -2064,8 +1774,8 @@ export function BP_Section3() {
 
           <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#39B54A55', backgroundColor: '#39B54A0d' }}>
             <p className="text-[11px] text-muted-foreground leading-snug">
-              <span className="font-bold" style={{ color: '#39B54A' }}>The pattern — </span>
-              Permissioned blockchain succeeds where (a) a credible authority can require participation (Walmart's market power, the EU's regulatory mandate), and (b) the alternative process — paper, EDI, faxes, siloed ERP — has been demonstrably broken for years. Where the alternative is "good enough Excel", consortiums fail quietly.
+              <span className="font-bold" style={{ color: '#39B54A' }}>{t('production.patternLabel')}</span>
+              {t('production.patternBody')}
             </p>
           </div>
         </div>
@@ -2073,131 +1783,98 @@ export function BP_Section3() {
         {/* ═══════ COMPARISON ═══════ */}
         <div id="s3-comparison" className="h-full">
           <ComparisonSlide
-            title="Ethereum vs Hyperledger Fabric"
-            featureLabel="Property"
-            option1Label="Ethereum"
-            option2Label="Hyperledger Fabric"
-            items={[
-              { feature: 'Permission model', option1: 'Public permissionless', option2: 'Private permissioned' },
-              { feature: 'Participants', option1: 'Anonymous', option2: 'Known & verified' },
-              { feature: 'Consensus', option1: 'Proof of Stake', option2: 'Raft / SmartBFT' },
-              { feature: 'Smart contract language', option1: 'Solidity / Vyper', option2: 'Go / JavaScript / Java' },
-              { feature: 'TPS', option1: '~15 (L1)', option2: '3,000+' },
-              { feature: 'Data privacy', option1: 'All data public', option2: 'Channels for private data' },
-              { feature: 'Token required', option1: 'Yes — ETH for gas', option2: 'No native token' },
-              { feature: 'Governance', option1: 'Decentralized (EIP process)', option2: 'Consortium members' },
-              { feature: 'Best for', option1: 'DeFi, NFTs, public dApps', option2: 'Enterprise B2B, supply chain, finance' },
-            ]}
+            title={t('comparison.title')}
+            featureLabel={t('comparison.featureLabel')}
+            option1Label={t('comparison.option1Label')}
+            option2Label={t('comparison.option2Label')}
+            items={comparisonItems}
           />
         </div>
 
         {/* ═══════ BEST FITS — WHERE FABRIC WINS ═══════ */}
         <div id="s3-bestfits" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-3">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#0EA5E9]/15 border border-[#0EA5E9]/40 text-[#0EA5E9] text-xs font-bold">🎯 Best Fits</span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where Hyperledger Fabric Wins — The Use Cases It Actually Owns</h2>
+            <span className="px-2.5 py-0.5 rounded-full bg-[#0EA5E9]/15 border border-[#0EA5E9]/40 text-[#0EA5E9] text-xs font-bold">{t('bestfits.badge')}</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('bestfits.heading')}</h2>
             <p className="text-sm text-muted-foreground max-w-3xl">
-              Fabric's design choices (permissioned membership, channels for privacy, pluggable consensus, no native token) make it the default whenever the participants are <strong className="text-foreground">known organisations who need to share a ledger without sharing all their data publicly</strong>.
+              {t('bestfits.intro.a')}<strong className="text-foreground">{t('bestfits.intro.strong')}</strong>{t('bestfits.intro.b')}
             </p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
-            {[
-              { emoji: '🚚', name: 'Multi-party supply chain provenance', why: 'Every step (manufacturer → distributor → retailer) is recorded; channels keep commercial pricing private between specific pairs.', example: 'IBM Food Trust (Walmart, Carrefour, Nestlé) · Maersk TradeLens (deprecated but proof of pattern) · GSBN ocean shipping.' },
-              { emoji: '🏦', name: 'Inter-bank settlement & trade finance', why: 'KYC-by-design, regulator-friendly, ordering service guarantees finality without PoW costs.', example: 'we.trade · Marco Polo · Santander Onyx · Eurosystem TIPS pilots.' },
-              { emoji: '🏥', name: 'Healthcare records & pharma serialisation', why: 'Permissioned access + channels match HIPAA/GDPR requirements. Drug pedigree provable without exposing patient data.', example: 'MediLedger (US drug serialisation) · Change Healthcare claims · regional patient-record exchanges.' },
-              { emoji: '🪪', name: 'Identity & credential consortia',     why: 'No anonymous participants — every party signs with a credential issued by a trusted MSP. Fits regulated identity frameworks.', example: 'Sovrin-style verifiable credentials · government B2B portals · CBDC interbank rails (pilots).' },
-            ].map(uc => (
+            {bestfitCases.map(uc => (
               <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#0EA5E955', backgroundColor: '#0EA5E908' }}>
                 <div className="flex items-center gap-2">
                   <span className="text-2xl shrink-0">{uc.emoji}</span>
                   <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
                 </div>
                 <div className="text-xs text-muted-foreground leading-snug">
-                  <span className="font-bold text-[#0EA5E9] uppercase tracking-widest text-[9px] mr-1">Why</span>
+                  <span className="font-bold text-[#0EA5E9] uppercase tracking-widest text-[9px] mr-1">{t('bestfits.whyLabel')}</span>
                   {uc.why}
                 </div>
                 <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
-                  <span className="font-bold text-[#0EA5E9] uppercase tracking-widest text-[9px] mr-1">In the wild</span>
+                  <span className="font-bold text-[#0EA5E9] uppercase tracking-widest text-[9px] mr-1">{t('bestfits.inTheWildLabel')}</span>
                   {uc.example}
                 </div>
               </div>
             ))}
           </div>
           <div className="shrink-0 mt-3 p-2.5 bg-[#ef4444]/08 border border-[#ef4444]/30 rounded-lg text-[11px] text-muted-foreground">
-            <strong className="text-[#ef4444]">Not a fit for:</strong> permissionless DeFi (use Ethereum), digital scarcity / SoV (use Bitcoin), consumer apps requiring open self-custody, anything where censorship-resistance against the consortium itself is a requirement.
+            <strong className="text-[#ef4444]">{t('bestfits.notAFitLabel')}</strong>{t('bestfits.notAFitBody')}
           </div>
         </div>
 
         {/* ═══════ WORST FITS — WHERE FABRIC IS WRONG ═══════ */}
         <div id="s3-worstfits" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-3">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#ef4444]/15 border border-[#ef4444]/40 text-[#ef4444] text-xs font-bold">🚫 Worst Fits</span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Where Hyperledger Fabric is the <em>Wrong</em> Tool</h2>
+            <span className="px-2.5 py-0.5 rounded-full bg-[#ef4444]/15 border border-[#ef4444]/40 text-[#ef4444] text-xs font-bold">{t('worstfits.badge')}</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('worstfits.headingA')}<em>{t('worstfits.headingEm')}</em>{t('worstfits.headingB')}</h2>
             <p className="text-sm text-muted-foreground max-w-3xl">
-              Fabric's permissioned, no-token, channel-based design is brilliant for B2B consortia — and almost useless for anything that needs an open, public, value-bearing network.
+              {t('worstfits.intro')}
             </p>
           </div>
           <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
-            {[
-              { emoji: '🌍', name: 'Public consumer apps / dApps', why: 'Every participant needs an MSP-issued identity. No anonymous users, no permissionless onboarding — incompatible with the public-internet UX.',          alt: 'Use Ethereum (+ L2s) · Solana · Sui for open consumer apps and wallet-based onboarding.' },
-              { emoji: '💎', name: 'Censorship-resistant value / SoV', why: 'A consortium can vote to remove members, freeze assets, or change rules. By design — and exactly what you don\'t want for neutral money.',          alt: 'Use Bitcoin for trust-minimised, jurisdiction-neutral value storage.' },
-              { emoji: '💰', name: 'Composable DeFi / liquidity', why: 'No native token, no open liquidity pools, no shared accounts across organisations. DeFi composability requires permissionless writers + a public AMM.', alt: 'Use Ethereum + L2s · Solana · Sui · Cosmos for DeFi composability and shared liquidity.' },
-              { emoji: '🎨', name: 'NFT marketplaces / open creator economy', why: 'No global token standards (ERC-721/1155 don\'t exist), no public discoverability, no anonymous buyer/seller pairings. Cultural fit is wrong.',  alt: 'Use Ethereum · Polygon · Solana · Base for NFTs, marketplaces, royalties.' },
-            ].map(uc => (
+            {worstfitCases.map(uc => (
               <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#ef444455', backgroundColor: '#ef444408' }}>
                 <div className="flex items-center gap-2">
                   <span className="text-2xl shrink-0">{uc.emoji}</span>
                   <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
                 </div>
                 <div className="text-xs text-muted-foreground leading-snug">
-                  <span className="font-bold text-[#ef4444] uppercase tracking-widest text-[9px] mr-1">Why not</span>
+                  <span className="font-bold text-[#ef4444] uppercase tracking-widest text-[9px] mr-1">{t('worstfits.whyNotLabel')}</span>
                   {uc.why}
                 </div>
                 <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
-                  <span className="font-bold text-[#10b981] uppercase tracking-widest text-[9px] mr-1">Use instead</span>
+                  <span className="font-bold text-[#10b981] uppercase tracking-widest text-[9px] mr-1">{t('worstfits.useInsteadLabel')}</span>
                   {uc.alt}
                 </div>
               </div>
             ))}
           </div>
           <div className="shrink-0 mt-3 p-2.5 bg-[#10b981]/08 border border-[#10b981]/30 rounded-lg text-[11px] text-muted-foreground">
-            <strong className="text-[#10b981]">Right tool, right job:</strong> Fabric shines when participants are <em>known</em>, <em>regulated</em>, and need <em>selective data sharing</em> — supply chain consortia, inter-bank rails, healthcare exchanges. For everything else, pick a public chain.
+            <strong className="text-[#10b981]">{t('worstfits.rightToolLabel')}</strong>{t('worstfits.rightToolBody.a')}<em>{t('worstfits.rightToolBody.known')}</em>{t('worstfits.rightToolBody.b')}<em>{t('worstfits.rightToolBody.regulated')}</em>{t('worstfits.rightToolBody.c')}<em>{t('worstfits.rightToolBody.selective')}</em>{t('worstfits.rightToolBody.d')}
           </div>
         </div>
 
         {/* ═══════ FABRIC ↔ PUBLIC-CHAIN GLOSSARY ═══════ */}
         <div id="s3-vocab" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-3">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#0EA5E9]/15 border border-[#0EA5E9]/40 text-[#0EA5E9] text-xs font-bold">🧩 Translation</span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">Fabric ↔ Public Blockchain — Same Mechanism, Different Vocabulary</h2>
+            <span className="px-2.5 py-0.5 rounded-full bg-[#0EA5E9]/15 border border-[#0EA5E9]/40 text-[#0EA5E9] text-xs font-bold">{t('vocab.badge')}</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('vocab.heading')}</h2>
             <p className="text-sm text-muted-foreground max-w-3xl">
-              Most of Fabric is the public-blockchain primitives you already know, <strong className="text-foreground">renamed for enterprise marketing</strong>. Read the right column once and Fabric stops feeling like a different planet.
+              {t('vocab.intro.a')}<strong className="text-foreground">{t('vocab.intro.strong')}</strong>{t('vocab.intro.b')}
             </p>
           </div>
 
           <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3 overflow-y-auto">
-            {[
-              { pub: 'Wallet / EOA',                pubColor: '#627EEA', fab: 'MSP-issued identity (X.509 cert)',     fabColor: '#0EA5E9', note: 'Your "account" in Fabric is a certificate issued by the Membership Service Provider (MSP) for your org. The CA replaces the public-key infra you do yourself in a wallet.' },
-              { pub: 'Public/private key pair',     pubColor: '#627EEA', fab: 'X.509 cert + private key in MSP',       fabColor: '#0EA5E9', note: 'Same crypto, different distribution. CA issues, MSP revokes. The wallet primitive moves into a controlled enterprise PKI.' },
-              { pub: 'Smart contract',              pubColor: '#627EEA', fab: 'Chaincode',                              fabColor: '#0EA5E9', note: 'A program that runs against the world state and emits state writes. Go / Node.js / Java instead of Solidity, but the role is identical.' },
-              { pub: 'Address',                     pubColor: '#627EEA', fab: 'Identity hash / MSP ID + cert subject',  fabColor: '#0EA5E9', note: 'A canonical pointer to "who you are" on the chain. Fabric attaches it to your org rather than to a self-sovereign key.' },
-              { pub: 'Token (ERC-20 / ERC-721)',    pubColor: '#627EEA', fab: 'Token chaincode (Fabric Token SDK)',     fabColor: '#0EA5E9', note: 'No native token in Fabric. You write a chaincode that tracks balances or asset records yourself, often using the official Token SDK template.' },
-              { pub: 'Gas / Tx fee',                pubColor: '#627EEA', fab: '— none (permissioned)',                  fabColor: '#0EA5E9', note: 'Fabric has no economic spam pressure — participants are vetted. Compute is paid for off-chain by the consortium that runs the network.' },
-              { pub: 'Block',                       pubColor: '#627EEA', fab: 'Block',                                  fabColor: '#0EA5E9', note: 'Same thing. The Orderer assembles transactions into blocks and broadcasts them to channel members.' },
-              { pub: 'Miner / Validator',           pubColor: '#627EEA', fab: 'Endorser + Orderer',                     fabColor: '#0EA5E9', note: 'Fabric splits the role: Endorsers simulate + sign tx proposals; Orderers (Raft/BFT cluster) put them in deterministic order. No PoW, no PoS.' },
-              { pub: 'Consensus (PoW / PoS)',       pubColor: '#627EEA', fab: 'Raft (CFT) or BFT ordering service',     fabColor: '#0EA5E9', note: 'Crash-fault-tolerant ordering by default. BFT ordering exists for stronger trust assumptions. No PoW.' },
-              { pub: 'Mempool',                     pubColor: '#627EEA', fab: 'Tx proposal → endorsement → orderer',    fabColor: '#0EA5E9', note: 'Tx is first proposed to endorsers, then submitted to the orderer for sequencing. There is no global mempool — Fabric never had a fee market.' },
-              { pub: 'Layer 2 / Sidechain',         pubColor: '#627EEA', fab: 'Channel (private sub-ledger)',           fabColor: '#0EA5E9', note: 'A channel is a self-contained ledger with its own members, chaincode, and history — completely invisible to non-members on the same network.' },
-              { pub: 'On-chain governance / DAO',   pubColor: '#627EEA', fab: 'Channel config update (consortium vote)', fabColor: '#0EA5E9', note: 'Members vote off-chain or via signed config transactions. Fabric never adopted on-chain token-vote governance.' },
-            ].map(row => (
+            {vocabRows.map(row => (
               <div key={row.pub} className="rounded-xl border bg-card p-3 flex flex-col gap-1.5">
                 <div className="grid grid-cols-2 gap-2 items-start">
                   <div>
-                    <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: row.pubColor }}>Public blockchain</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: '#627EEA' }}>{t('vocab.pubLabel')}</div>
                     <div className="text-sm font-bold text-foreground mt-0.5">{row.pub}</div>
                   </div>
                   <div>
-                    <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: row.fabColor }}>Hyperledger Fabric</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: '#0EA5E9' }}>{t('vocab.fabLabel')}</div>
                     <div className="text-sm font-bold text-foreground mt-0.5">{row.fab}</div>
                   </div>
                 </div>
@@ -2209,64 +1886,42 @@ export function BP_Section3() {
           </div>
 
           <div className="shrink-0 mt-3 p-2.5 bg-[#0EA5E9]/08 border border-[#0EA5E9]/30 rounded-lg text-[11px] text-muted-foreground">
-            <strong className="text-[#0EA5E9]">Bottom line:</strong> Fabric is mostly the same primitives, packaged for a different buyer. Don't relearn cryptography — relearn the brand names. The pedagogical move is just to keep this glossary open the first few times you read a Fabric tutorial.
+            <strong className="text-[#0EA5E9]">{t('vocab.bottomLineLabel')}</strong>{t('vocab.bottomLineBody')}
           </div>
         </div>
 
         {/* ═══════ QUIZ ═══════ */}
         <div id="s3-quiz" className="h-full">
           <QuizSlide
-            question="In Hyperledger Fabric, three pharmaceutical companies (PharmaA, PharmaB, and a Hospital) are on the same network. PharmaA and PharmaB want to share pricing data that the Hospital must NOT see. What Fabric feature enables this?"
-            options={[
-              { text: 'Pluggable consensus — PharmaA and PharmaB use a separate Raft ordering service that excludes the Hospital.', correct: false },
-              { text: 'A private Channel — only PharmaA and PharmaB are members of this channel; the Hospital sees none of its transactions or ledger state.', correct: true },
-              { text: 'A separate MSP (Membership Service Provider) — the Hospital is issued a different certificate type that limits its read access.', correct: false },
-              { text: 'Zero-knowledge proofs — PharmaA and PharmaB submit proofs instead of raw data, hiding the pricing details from the Hospital.', correct: false },
-            ]}
-            explanation="Channels are Hyperledger Fabric's primary privacy mechanism. A Channel is a private sub-ledger with its own set of member organizations, chaincode, and transaction history — invisible to non-members on the same network. PharmaA and PharmaB create a channel that only they join; the Hospital cannot see its transactions, state, or even that it exists. This is fundamentally different from public blockchains where all data is visible to all participants. MSPs control identity and enrollment, not data visibility between enrolled members."
+            question={t('quiz.question')}
+            options={quizOptions.map((o, i) => ({ text: o.text, correct: quizCorrect[i] }))}
+            explanation={t('quiz.explanation')}
           />
         </div>
 
         {/* ═══════ QUIZ 2 — MSP / identity ═══════ */}
         <div id="s3-quiz-2" className="h-full">
           <QuizSlide
-            question="In a Fabric consortium between BankA and BankB, every peer must prove its identity when submitting a proposal or endorsement. Which Fabric component issues and validates these identities?"
-            options={[
-              { text: 'The Ordering Service — Raft nodes verify each transaction\'s identity before sequencing it into a block.', correct: false },
-              { text: 'The Membership Service Provider (MSP) — each organization runs its own MSP backed by a Certificate Authority that issues X.509 certificates to peers, clients and admins; remote peers validate signatures by trusting the issuer\'s root CA.', correct: true },
-              { text: 'The Channel Configuration Block — a static list of public keys committed at channel genesis is checked on every transaction.', correct: false },
-              { text: 'The Smart Contract (chaincode) — each chaincode must include identity-validation logic in its Init function.', correct: false },
-            ]}
-            explanation="Fabric is permissioned by design and relies on PKI. Every organization runs an MSP that maps cryptographic material (X.509 certificates issued by its CA) to roles (peer / client / admin / orderer). When a peer signs a proposal or endorsement, peers from other orgs validate the signature against the configured root certificate of the signer's MSP — listed in the channel configuration. The ordering service does NOT validate business identity; it only orders transactions that have already been endorsed. Identities are configured per-channel via the channel config, not hardcoded in chaincode, so adding a new org is a configuration change, not a redeployment."
+            question={t('quiz2.question')}
+            options={quiz2Options.map((o, i) => ({ text: o.text, correct: quiz2Correct[i] }))}
+            explanation={t('quiz2.explanation')}
           />
         </div>
 
         {/* ═══════ QUIZ 3 — Endorsement policy ═══════ */}
         <div id="s3-quiz-3" className="h-full">
           <QuizSlide
-            question="A supply-chain chaincode is deployed to a channel with three orgs (Producer, Distributor, Retailer) and an endorsement policy of AND('Producer.peer', 'Distributor.peer'). The Retailer submits a transaction proposal that updates a delivery record. What is required for this transaction to be committed to the ledger?"
-            options={[
-              { text: 'A single Retailer peer endorses the proposal — the Retailer is the submitter, so its endorsement is sufficient.', correct: false },
-              { text: 'The proposal must be endorsed by at least one peer from Producer AND at least one peer from Distributor before reaching the orderer; the Retailer\'s endorsement is irrelevant to the policy.', correct: true },
-              { text: 'All three orgs (Producer, Distributor, Retailer) must endorse — Fabric defaults to unanimous endorsement when the submitter is on the channel.', correct: false },
-              { text: 'The Raft orderer endorses on behalf of any unspecified org once a quorum of orderer nodes is reached.', correct: false },
-            ]}
-            explanation="Endorsement policy is enforced independently of the submitter. The client (Retailer here) sends the proposal directly to the peers listed in the policy — Producer and Distributor — collects their signed read/write sets, and only then forwards the endorsed transaction to the ordering service. The orderer batches and orders transactions but never endorses. Committing peers verify on receipt that the collected endorsements satisfy the policy before applying the state change; if the policy isn't met, the transaction is marked invalid in the block but still recorded (so the audit trail captures every attempt). Submitter identity gives no special endorsement power."
+            question={t('quiz3.question')}
+            options={quiz3Options.map((o, i) => ({ text: o.text, correct: quiz3Correct[i] }))}
+            explanation={t('quiz3.explanation')}
           />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}
         <div id="s3-takeaways" className="h-full">
           <TakeawaySlide
-            title="Section 03 — Key Takeaways"
-            takeaways={[
-              'Permissioned blockchains exist for regulated, multi-party environments where participants are known',
-              'Hyperledger Fabric is the leading enterprise blockchain — modular, flexible, and production-proven',
-              'Channels allow different subsets of participants to share private data on the same network',
-              'Smart contracts (chaincode) in Fabric automate business logic across supply chain partners',
-              'Pluggable consensus means Fabric can swap its ordering mechanism without rebuilding the network',
-              'BFT consensus tolerates Byzantine (malicious) failures — essential in adversarial environments',
-            ]}
+            title={t('takeaways.title')}
+            takeaways={takeawayItems}
           />
         </div>
 

@@ -1,0 +1,242 @@
+{
+  "groups": {
+    "g-brief": "🎯 Brief",
+    "g-plan": "📋 The Plan",
+    "g-submit": "📊 Wrap"
+  },
+  "chapters": {
+    "s7-overview": "Overview & Calendar",
+    "s7-p1-analysis": "Part 1 · Analysis",
+    "s7-p2-technical": "Part 2 · Technical",
+    "s7-p3-governance": "Part 3 · Governance",
+    "s7-p4-roadmap": "Part 4 · Roadmap",
+    "s7-evaluation": "Eval & Submission",
+    "s7-quiz": "Quiz"
+  },
+  "title": {
+    "sectionNumber": "SECTION 07",
+    "title": "Team Project",
+    "subtitle": "Design a smart-contract business application — from problem statement through technical design to a deliverable PDF and presentation."
+  },
+  "timeline": {
+    "items": [
+      { "date": "May 26, 2026", "label": "Project walkthrough + Q&A" },
+      { "date": "May 28, 2026", "label": "Reading material + Project Q&A" },
+      { "date": "June 2, 2026", "label": "AI development hands-on" },
+      { "date": "June 5, 2026", "label": "Early project presentations + Q&A" },
+      { "date": "June 9, 2026", "label": "Final presentations + submission" }
+    ]
+  },
+  "overview": {
+    "heading": "Project Overview",
+    "subtitle": "Identify a real-world problem, evaluate whether blockchain is the right tool, and design a smart-contract solution. Integrates all five courses of the Academy.",
+    "teamSizeLabel": "Team size",
+    "teamSizeValue": "3–4 members",
+    "deliverableLabel": "Deliverable",
+    "deliverableValue": "3–5 page PDF",
+    "deliverableNote": "+ 5-min presentation",
+    "integratesTitle": "This project integrates",
+    "integrates": [
+      "Blockchain Fundamentals — core concepts and trust models",
+      "Business Applications of Smart Contracts — design and decision framework",
+      "Blockchain Platforms — picking the right chain for your use case",
+      "Governance and Compliance — legal, regulatory, and on-chain governance",
+      "Project Management for Blockchain Initiatives — turning a design into a roadmap"
+    ],
+    "mindsetLabel": "The mindset:",
+    "mindsetBody": " think like blockchain entrepreneurs and consultants. Identify real opportunities, design viable solutions, navigate the trade-offs between technology, business, and regulation.",
+    "sessionsLabel": "Online sessions · 6–8 pm",
+    "deadlineLabel": "Deadline:",
+    "deadlineBodyA": " submissions close ",
+    "deadlineDate": "June 10, 2026",
+    "deadlineBodyB": "."
+  },
+  "p1": {
+    "partLabel": "Part 1 of 4",
+    "heading": "Problem Definition & Analysis",
+    "subtitle": "Before you design anything, prove there's a real problem worth solving — and that blockchain is the right tool for it.",
+    "cards": [
+      {
+        "title": "Problem Statement",
+        "items": [
+          "What specific business problem are you solving? Be precise — name the actors, the activity, the friction.",
+          "What are the pain points in the current solution or process?",
+          "Who experiences these pain points, and how frequently?"
+        ]
+      },
+      {
+        "title": "Current State Analysis",
+        "items": [
+          "How is this problem addressed today (if at all)?",
+          "What inefficiencies, costs, or trust issues exist in the current approach?",
+          "Quantify wherever possible — cost, time, error rates, manual hours."
+        ]
+      },
+      {
+        "title": "Blockchain & SC Value Proposition",
+        "items": [
+          "What value does a smart contract add vs. a traditional system?",
+          "valueFramework",
+          "Justify why blockchain is the right solution — or honestly flag the trade-offs if it's borderline."
+        ]
+      },
+      {
+        "title": "Stakeholder Mapping",
+        "items": [
+          "Who are all the stakeholders? Who benefits — and by how much?",
+          "Who is disrupted or loses? How will they react?",
+          "What incentives align (or misalign) participant behavior?",
+          "Revenue model — transaction fees, subscription, token economics, or hybrid?",
+          "Competitive advantage and defensibility — why your team, why now?"
+        ]
+      }
+    ],
+    "valueFramework": {
+      "lead": "Run it through the decision framework: does this require ",
+      "trustless": "trustless execution",
+      "sep1": ", ",
+      "transparency": "transparency",
+      "sep2": ", ",
+      "immutability": "immutability",
+      "sep3": ", or ",
+      "automated": "automated enforcement",
+      "tail": "?"
+    }
+  },
+  "p2": {
+    "partLabel": "Part 2 of 4",
+    "heading": "Technical Design",
+    "subtitle": "Pick a platform with a defensible rationale, sketch the smart-contract system, and identify what data lives where.",
+    "platform": {
+      "title": "Platform Selection",
+      "item1": "Which blockchain platform? Ethereum, Polygon, Arbitrum, Solana, Hyperledger Fabric, Corda…",
+      "item2Strong": "Public vs private/consortium",
+      "item2": " — make the call and defend it.",
+      "item3A": "Justify against: ",
+      "item3Em": "transaction speed · cost · security · ecosystem maturity · use-case fit",
+      "item3B": ".",
+      "item4A": "Don't just say \"Ethereum\" — explain why that's better than the next two alternatives for ",
+      "item4Em": "your",
+      "item4B": " problem.",
+      "tipLabel": "Tip:",
+      "tipBody": " reuse the platform-checklist interactive (Section 6) — your verdict is your answer here."
+    },
+    "architecture": {
+      "title": "Smart Contract Architecture",
+      "item1A": "High-level design of your dApp / contract system — ",
+      "item1Strong": "diagrams welcome",
+      "item1B": ".",
+      "item2": "What data does the contract need? What's on-chain vs oracle-fed vs off-chain?",
+      "item3": "Trigger events, state variables, key functions — show the shape, you don't have to write the code.",
+      "item4": "Security considerations: reentrancy? oracle dependencies? access control? front-running? Address explicitly.",
+      "bonusLabel": "Bonus:",
+      "bonusBody": " a pseudocode contract or a real Solidity sketch in the appendix scores well."
+    }
+  },
+  "p3": {
+    "partLabel": "Part 3 of 4",
+    "heading": "Governance & Compliance",
+    "subtitle": "Smart contracts blend code and law. Spell out how decisions get made, which regulations apply, and what risks you're carrying.",
+    "cards": [
+      {
+        "title": "Governance Framework",
+        "intro": "Decide how the system steers itself once it's live.",
+        "points": [
+          "How is the contract system governed day-to-day?",
+          "On-chain vs off-chain — which decisions live where?",
+          "DAOs, multisigs, or traditional governance — which fits?",
+          "Who can upgrade or pause the contract, and under what controls?"
+        ]
+      },
+      {
+        "title": "Regulatory & Legal",
+        "intro": "Map the rules that apply before they bite you.",
+        "points": [
+          "Jurisdiction — where do users and data live?",
+          "Applicable regulations: MiCA, securities law, AML / KYC, sector rules.",
+          "Legal viability today — what licenses or approvals are needed?",
+          "GDPR if you touch personal data — store hashes, not raw fields."
+        ]
+      },
+      {
+        "title": "Risk Assessment",
+        "intro": "Name what could go wrong — across three layers.",
+        "points": [
+          "Technical · contract bugs, oracle failures, congestion, key loss.",
+          "Business · adoption, competition, regulatory shift, market timing.",
+          "Operational · team dependencies, custody, incident response.",
+          "For each row: likelihood × impact + a mitigation plan."
+        ]
+      }
+    ]
+  },
+  "p4": {
+    "partLabel": "Part 4 of 4",
+    "heading": "Implementation Roadmap",
+    "subtitle": "Turn the design into a phased plan. We don't need calendar dates — we need to know you've thought through what comes first, what depends on what, and how you'd measure success.",
+    "phasedPlanLabel": "Phased plan",
+    "phases": [
+      { "tag": "MVP", "desc": "Smallest version that proves the value prop. One use case, narrow scope, manual fallbacks allowed." },
+      { "tag": "v1", "desc": "Production-ready core. Audited contract, basic UI, real users, monitoring and incident response." },
+      { "tag": "Full", "desc": "Feature-complete product. Integrations with adjacent systems, governance live, ecosystem hooks (oracles, indexers, marketplaces)." }
+    ],
+    "eachPhaseLabel": "For each phase:",
+    "eachPhaseBodyA": " key milestones, dependencies between them, resources required (team composition + skills), and an ",
+    "eachPhaseStrong": "effort estimate",
+    "eachPhaseBodyB": " (small / medium / large — no calendar dates required).",
+    "metricsLabel": "Success metrics",
+    "metricsIntro": "How will you know each phase succeeded? Pick metrics that map directly to the pain points in Part 1.",
+    "metrics": [
+      "Time-to-action (days → minutes)",
+      "Cost per transaction or per dispute",
+      "Error / fraud rate",
+      "Number of active participants / wallets",
+      "TVL or value flowing through the contract",
+      "Audit findings closed"
+    ],
+    "metricsTip": "Pick 2–3 — not 10. Make them measurable."
+  },
+  "evaluation": {
+    "heading": "Evaluation & Submission",
+    "subtitle": "How we grade the project — and exactly what to hand in.",
+    "criteriaLabel": "Evaluation criteria",
+    "criteria": [
+      { "label": "Problem-Solution fit", "weight": "20%", "sub": "Is blockchain genuinely the right solution? Is the problem clearly defined?" },
+      { "label": "Implementation Realism & Technical Soundness", "weight": "20%", "sub": "Is the roadmap achievable? Are risks properly assessed? Is the architecture sound?" },
+      { "label": "Business Viability", "weight": "20%", "sub": "Clear path to value creation and sustainability. Bonus: business plan & GTM strategy." },
+      { "label": "Governance & Compliance", "weight": "15%", "sub": "Legal and governance considerations adequately addressed." },
+      { "label": "Presentation Quality", "weight": "15%", "sub": "Document well-structured, clear, professional." },
+      { "label": "Stakeholder Analysis", "weight": "10%", "sub": "All stakeholders identified with clear benefit/cost analysis." }
+    ],
+    "submissionLabel": "Submission requirements",
+    "formatLabel": "Format",
+    "formatValue": "PDF",
+    "formatNote": "ideally",
+    "lengthLabel": "Length",
+    "lengthValue": "3–5 pages",
+    "lengthNote": "excl. appendices",
+    "presentationLabel": "Presentation",
+    "presentationValue": "5 min + Q&A",
+    "appendicesLabel": "Appendices",
+    "appendicesValue": "Optional",
+    "appendicesNote": "diagrams · pseudocode · models",
+    "collaborationLabel": "Team collaboration",
+    "collaboration": [
+      "Every team member contributes to research, writing, and presentation.",
+      "Document individual contributions in an appendix.",
+      "Apply project-management principles: assign roles, track progress, run internal reviews before submission."
+    ],
+    "deadlineLabel": "Deadline:",
+    "deadlineBody": " June 10, 2026 — submissions close. Final presentations on June 9."
+  },
+  "quiz": {
+    "question": "Your team is designing a smart contract for a crop-insurance payout: a sensor detects rainfall below a threshold, the contract automatically pays the farmer. The proposal earns full marks on Problem-Solution fit and Stakeholder Analysis, but the reviewer flags it as borderline. Which evaluation category most likely lost points — and what should you strengthen in the deliverable?",
+    "options": [
+      "Presentation Quality (15%) — the deck wasn't polished enough; rewrite the executive summary.",
+      "Implementation Realism & Technical Soundness (20%) — the risk assessment should explicitly address oracle dependency on the rainfall sensor, the immutability problem if the sensor malfunctions, and the platform choice for reliable delivery.",
+      "Business Viability (20%) — the project needs a business plan and go-to-market strategy regardless of technical soundness.",
+      "Governance & Compliance (15%) — automated payouts always require explicit regulatory pre-approval before the project can be evaluated."
+    ],
+    "explanation": "The Implementation Realism & Technical Soundness category (20%) covers risk assessment, architecture, and platform justification — exactly the gaps this design has. Specifically: (1) Oracle dependency — the rainfall sensor is a single point of failure; the deliverable must address how the project tolerates oracle compromise or downtime. (2) Immutability — if the sensor reports faulty data and the contract executes, the payout can't be reversed; what guard-rails or dispute windows exist? (3) Platform — does the chosen chain provide the data availability and finality this use case needs? Presentation Quality is about polish, Business Viability is about value-creation path, and Governance & Compliance — while important — wouldn't single-handedly flag a borderline verdict here. The right move is to strengthen Part 2 (Technical Design) and Part 3.3 (Risk Assessment)."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "academy": {
+    "title": "Blockchain Academy",
+    "subtitle": "Quatro cursos. Um percurso completo de domínio. Escolhe por onde começar.",
+    "logoAlt": "Blockchain Academy"
+  },
+  "nav": {
+    "courses": "Cursos",
+    "coursesTitle": "Todos os Cursos",
+    "lightMode": "Modo Claro",
+    "darkMode": "Modo Escuro",
+    "language": "Idioma",
+    "english": "English",
+    "portuguese": "Português"
+  },
+  "common": {
+    "comingSoon": "Em Breve",
+    "startCourse": "Começar Curso"
+  },
+  "courses": {
+    "blockchainFundamentals": {
+      "title": "Fundamentos de Blockchain",
+      "description": "Compreende como funciona a tecnologia blockchain desde a base — criptografia, consenso, Bitcoin e o ecossistema Web3.",
+      "topics": [
+        "DLT e Hashing",
+        "Bitcoin e Mineração",
+        "Carteiras e Transações",
+        "Mecanismos de Consenso",
+        "Web3 e dApps"
+      ]
+    },
+    "blockchainPlatforms": {
+      "title": "Plataformas de Blockchain",
+      "description": "Bitcoin, Ethereum, Hyperledger Fabric e interoperabilidade — compreende os compromissos de cada plataforma e quando utilizar cada uma.",
+      "topics": [
+        "Arquitetura do Bitcoin",
+        "Ethereum e EVM",
+        "Hyperledger Fabric",
+        "Interoperabilidade",
+        "Cosmos e Layer 0"
+      ]
+    },
+    "smartContracts": {
+      "title": "Aplicações Empresariais de Smart Contracts",
+      "description": "Da teoria à disrupção da indústria — compreende o que os smart contracts conseguem e não conseguem fazer pelo teu negócio, com casos de estudo reais e um projeto de equipa.",
+      "topics": [
+        "Fundamentos de Smart Contracts",
+        "EVM e Ecossistema Web3",
+        "Casos de Estudo",
+        "Problema do Oráculo",
+        "Projeto de Equipa"
+      ]
+    }
+  },
+  "sections": {
+    "home": "Início",
+    "objectives": "Objetivos",
+    "summary": "Resumo",
+    "prologue": "Prólogo",
+    "intro": "Intro",
+    "bitcoin": "Bitcoin",
+    "whatsNext": "Próximos Passos",
+    "bibliography": "Bibliografia",
+    "howItWorks": "Como Funciona",
+    "industriesAndCases": "Indústrias e Casos",
+    "criticalThinking": "Pensamento Crítico",
+    "limitations": "Limitações",
+    "build": "Construir",
+    "teamProject": "Projeto de Equipa",
+    "conclusion": "Conclusão",
+    "recap": "Revisão",
+    "ethereum": "Ethereum",
+    "hyperledger": "Hyperledger",
+    "interoperability": "Interoperabilidade",
+    "newTrends": "Novas Tendências"
+  }
+}

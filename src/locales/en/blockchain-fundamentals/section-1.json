@@ -1,0 +1,518 @@
+{
+  "groups": {
+    "g-s1-problem":  "🤔 The Problem",
+    "g-s1-basics":   "🧱 What is a Blockchain?",
+    "g-s1-crypto":   "🔐 Cryptography",
+    "g-s1-network":  "🌐 Network & Consensus",
+    "g-s1-mining":   "⛏️ Mining",
+    "g-s1-wallet":   "👛 Identity",
+    "g-s1-wrap":     "✅ Wrap Up"
+  },
+  "chapters": {
+    "s1-trust":        "The Trust Problem",
+    "s1-ledger":       "The Shared Ledger",
+    "s1-what-is":      "What is Blockchain?",
+    "s1-transaction":  "Transactions",
+    "s1-hashing":      "Hashing",
+    "s1-chain":        "Linking Blocks",
+    "s1-cascade":      "The Cascade",
+    "s1-network":      "The Network",
+    "s1-network-sort": "Sort the Systems",
+    "s1-consensus":    "Consensus",
+    "s1-protocols":    "The Protocol Zoo",
+    "s1-mining":       "Mining Race",
+    "s1-wallet":       "Meet MetaMask",
+    "s1-takeaways":    "Takeaways"
+  },
+  "title": {
+    "sectionNumber": "SECTION 01",
+    "title":    "How a Blockchain Works",
+    "subtitle": "From the trust problem to a chain you can't cheat."
+  },
+  "trust": {
+    "title": "The Trust Problem",
+    "description": "Alice wants to send Bob $100 across borders. A simple-sounding act — that quietly relies on a long chain of middlemen, each of whom you have to trust.",
+    "middlemenHeader": "Who are the middlemen today?",
+    "middlemen": {
+      "banks":     { "label": "Banks",             "sub": "Hold & move money" },
+      "notaries":  { "label": "Notaries",          "sub": "Certify documents" },
+      "registry":  { "label": "Land Registry",     "sub": "Prove ownership" },
+      "paypal":    { "label": "PayPal / Visa",     "sub": "Process payments" },
+      "ca":        { "label": "Certificate Auth.", "sub": "Verify identities" }
+    },
+    "calloutTitle": "The double-spending problem",
+    "calloutLead":  "You can copy a digital photo a thousand times. Why can't you copy a digital dollar? Because",
+    "calloutEm":    "someone keeps score",
+    "calloutTail":  ". That someone is always a middleman.",
+    "keyPoints": [
+      "Every middleman takes a fee, adds delay, and can refuse the transaction",
+      "Without a referee, two people could spend the same digital dollar twice",
+      "Trust historically meant: trust an institution",
+      "What if the referee didn't have to be an institution at all?"
+    ]
+  },
+  "ledger": {
+    "title": "The Shared Ledger",
+    "description": "Imagine ten villagers, no bank. They share a single notebook of transactions — except every villager keeps their own identical copy. When anyone writes a new entry, everyone copies it down.",
+    "keyPoints": [
+      "No central authority — no one is in charge of the notebook",
+      "No one can refuse to record a valid entry",
+      "Everyone can audit the full history at any time",
+      "But one villager could secretly edit her own copy. How would anyone know?"
+    ]
+  },
+  "villageLedger": {
+    "subhead": "Same notebook, ten copies",
+    "villager": "Villager",
+    "calloutTitle": "The flaw",
+    "calloutLead": "Nine villagers hold identical entries. Mallory has secretly altered hers.",
+    "calloutQuestion": "How would the others know?"
+  },
+  "whatIs": {
+    "title": "What is a blockchain?",
+    "description": "A blockchain is the answer to the problem we just sketched: a shared ledger that no single party controls, where every participant holds a copy, and where the history can be added to but never quietly rewritten.",
+    "plainDefHeader": "Plain definition",
+    "plainDefLead":   "A blockchain is a form of",
+    "plainDefDLT":    "Distributed Ledger Technology (DLT)",
+    "plainDefMidA":   "— a record that's",
+    "plainDefShared": "shared",
+    "plainDefMidB":   ",",
+    "plainDefAppendOnly": "append-only",
+    "plainDefMidC":   ", and",
+    "plainDefLinked": "cryptographically linked",
+    "plainDefTail":   ", running on a network where no single party is in charge.",
+    "calloutTitle":   "Pseudonymous ≠ anonymous",
+    "calloutLead":    "On a public blockchain you act through an",
+    "calloutAddress": "address",
+    "calloutMid":     "like",
+    "calloutHex":     "0x4d9e…",
+    "calloutTail":    "— not your legal name. But every transaction you make from that address is visible to everyone, forever. Privacy comes from not linking the address to you — not from hiding the address itself.",
+    "props": {
+      "distributed":   "Distributed",
+      "noAuthority":   "No central authority",
+      "pseudonymous":  "Pseudonymous",
+      "appendOnly":    "Append-only",
+      "transparent":   "Transparent",
+      "tamperEvident": "Tamper-evident"
+    },
+    "keyPoints": [
+      "Distributed — every participant holds a full copy of the ledger; no master server to take down",
+      "No control organs — no admin can freeze accounts, reverse transactions, or override the rules",
+      "Pseudonymous — you act through an address, not your legal name; trackable but not directly identifying",
+      "Append-only — you can write new entries, but old ones can't be quietly edited away",
+      "Blockchain is one kind of DLT, not the only one — Bitcoin and Ethereum are blockchains, Hyperledger Fabric and R3 Corda are non-chain DLTs"
+    ]
+  },
+  "transactionFlow": {
+    "heading": "What is a transaction?",
+    "leadA": "The basic unit of activity on a blockchain. Every transaction is signed by its sender, broadcast to the network, queues up in the",
+    "leadMempool": "mempool",
+    "leadB": ", and waits to be picked by a miner and bundled into the next block.",
+    "exampleHeader": "Example transaction",
+    "from":   "From",
+    "to":     "To",
+    "amount": "Amount",
+    "fee":    "Fee",
+    "signed": "Signed",
+    "signedBy": "✓ by Alice",
+    "cardCaption": "Most transactions are payments, but anything can be one — votes, asset transfers, contract calls.",
+    "users": {
+      "alice": "Alice",
+      "bob":   "Bob",
+      "carol": "Carol",
+      "dave":  "Dave"
+    },
+    "sender":  "sender",
+    "mempool": "Mempool",
+    "blockFull":   "✓ Block #{{n}} full",
+    "blockLabel":  "Block #{{n}}",
+    "footerA": "Transactions accumulate in the",
+    "footerMempoolWord": "mempool",
+    "footerB": ". Miners pick the next batch (highest-fee first, usually) to fill a",
+    "footerBlockWord": "block",
+    "footerC": "— then mine it. When the block is full, it ships and a new one starts."
+  },
+  "hashing": {
+    "title": "Hashing — A Fingerprint for Data",
+    "description": "A hash function takes any input — a word, a paragraph, a whole book — and returns a fixed-size fingerprint. The trick: change one character of the input, and the fingerprint changes completely.",
+    "inputLabel": "Input:",
+    "hashLabel":  "SHA-256 Hash:",
+    "keyPoints": [
+      "One-way: you can't reverse a hash to find the original input",
+      "Fixed-size: always 64 hex characters (for SHA-256), no matter how big the input",
+      "Deterministic: the same input always produces the same hash",
+      "Avalanche: change one character, the whole fingerprint changes"
+    ]
+  },
+  "interactiveHash": {
+    "tryYourself": "🔬 Try it yourself",
+    "placeholder": "Type anything here...",
+    "outputLabel": "SHA-256 Hash:",
+    "empty": "Enter text above to see its SHA-256 hash in real time"
+  },
+  "quizAvalanche": {
+    "question": "What happens if you change a single character in the input of a SHA-256 hash?",
+    "options": [
+      "Only the last few characters of the hash change",
+      "The hash changes slightly, proportional to the edit",
+      "The entire hash output changes unpredictably (avalanche effect)",
+      "The hash stays the same if the change is small enough"
+    ],
+    "explanation": "Cryptographic hash functions exhibit the avalanche effect: even a 1-bit change in the input produces a completely different output. This is what makes a hash a reliable fingerprint of data."
+  },
+  "linkedBlocks": {
+    "heading": "Each Block Points Back",
+    "leadA":   "A block stores data plus the",
+    "leadEm":  "fingerprint of the previous block",
+    "leadB":   ". That single field is what links the chain together. Look at the colors — every block's",
+    "leadHashWord": "Hash",
+    "leadC":   "appears again as the next block's",
+    "leadPrevHashWord": "Prev Hash",
+    "leadTail":".",
+    "blockLabel": "Block #{{n}}",
+    "data": {
+      "0":  "Genesis Block",
+      "1":  "50 BTC → Alice",
+      "2":  "25 BTC → Bob"
+    },
+    "dataLabel":     "Data",
+    "prevHashLabel": "Prev Hash",
+    "hashLabel":     "Hash",
+    "matchesTitle":  "matches the previous block's hash",
+    "matches":       "matches",
+    "genesisDash":   "— (genesis)",
+    "footerA":       "Same color = same value.",
+    "footerB":       "If anyone changed the data in Block #1, its hash would change — and Block #2's Prev Hash wouldn't match it anymore. The chain breaks the instant anything upstream moves."
+  },
+  "chainBuilder": {
+    "heading": "Reconstruct the Chain",
+    "leadA":   "These 4 blocks are",
+    "leadScrambled": "scrambled",
+    "leadB":   ". Use the",
+    "leadPrev": "Prev Hash",
+    "leadAnd":  "and",
+    "leadHash": "Hash",
+    "leadC":    "fields to figure out the correct order.",
+    "subLead":  "Click a block to select it, then click a slot to place it.",
+    "placeHere": "← Place blocks here in the correct order →",
+    "slot": "Slot {{n}}",
+    "dropHere": "← drop here",
+    "empty": "empty",
+    "blockPool": "Block Pool — click to select",
+    "allPlaced": "All blocks placed ✓",
+    "selectedTag": "✦ Selected",
+    "blockTag":    "Block",
+    "showHint":  "💡 Show hint",
+    "hideHint":  "Hide hint ▲",
+    "hintTitle": "How to crack it:",
+    "hintStep1A": "1. Find the",
+    "hintStep1Genesis": "Genesis block",
+    "hintStep1B": "— its",
+    "hintStep1PrevHash": "Prev Hash",
+    "hintStep1Reads": "reads",
+    "hintStep1Value": "0x000000 (start)",
+    "hintStep1End": ".",
+    "hintStep2A": "2. Match each block's",
+    "hintStep2PrevHash": "Prev Hash",
+    "hintStep2To": "to the previous block's",
+    "hintStep2Hash": "Hash",
+    "hintStep2End": "— like connecting puzzle pieces.",
+    "cardDataLabel": "Data",
+    "cardPrevHashLabel": "Prev Hash",
+    "cardHashLabel": "Hash",
+    "checkChain": "Check chain ✓",
+    "tryAgain": "Try again",
+    "resultPerfect":      "Perfect — chain reconstructed!",
+    "resultClose":        "Almost! One or more blocks are out of place.",
+    "resultReview":       "Review how Prev Hash links blocks together.",
+    "perfectIcon":        "🎉",
+    "perfectStrong":      "Chain reconstructed!",
+    "perfectBody":        "Every Prev Hash matched the previous block's Hash exactly — that cryptographic linkage is what makes blockchain tamper-evident and immutable.",
+    "imperfectIcon":      "💡",
+    "imperfectStrong":    "Key insight:",
+    "imperfectBody":      "Start with the Genesis block (Prev Hash = 0x000000), then trace each Hash → Prev Hash connection. The chain can only be assembled one way.",
+    "blocks": {
+      "b0": { "data": "The Times 03/Jan/2009 — Genesis", "prevHash": "0x000000 (start of chain)" },
+      "b1": { "data": "Alice → Bob: 10 BTC",             "prevHash": "0x0000ab" },
+      "b2": { "data": "Bob → Carol: 5 BTC",               "prevHash": "0x1a2b3c" },
+      "b3": { "data": "Carol → Dave: 3 BTC",              "prevHash": "0x4d5e6f" }
+    }
+  },
+  "insideBlock": {
+    "heading": "Inside a Single Block",
+    "lead": "Five fields. That's it. Each one earns its place — together they make every block tamper-evident.",
+    "blockTag": "Block #2",
+    "replay": "↺ Replay animation",
+    "fields": {
+      "prev-hash": {
+        "label": "Previous Hash",
+        "desc":  "The fingerprint of the block before this one. Change anything in that earlier block and this reference no longer matches — the link breaks immediately."
+      },
+      "data": {
+        "label": "Data",
+        "desc":  "What this block records. For Bitcoin: a batch of transactions. For other chains: votes, asset transfers, contract instructions — anything you want preserved."
+      },
+      "timestamp": {
+        "label": "Timestamp",
+        "desc":  "When this block was created. Becomes part of the hash, so editing the timestamp after the fact would also break the chain."
+      },
+      "nonce": {
+        "label": "Nonce",
+        "desc":  "A number the miner found by brute force. It's the one input that gets adjusted until the resulting hash meets the difficulty target."
+      },
+      "hash": {
+        "label": "Block Hash",
+        "desc":  "This block's own fingerprint — computed from everything above. Becomes the \"Previous Hash\" of the next block."
+      }
+    }
+  },
+  "prevHashExercise": {
+    "heading": "Chain the Blocks",
+    "leadA":    "Each block must reference the",
+    "leadStrong": "exact hash of the previous block",
+    "leadB":    ". Select the correct",
+    "leadPrev": "Prev Hash",
+    "leadC":    "for Blocks #1 and #2.",
+    "blockLabel": "BLOCK #{{n}}",
+    "dataLabel":  "Data",
+    "hashLabel":  "Hash",
+    "prevHashLabel": "Prev Hash",
+    "pickPrev": "— pick prev hash —",
+    "checkAnswers": "Check answers ✓",
+    "tryAgain": "Try again",
+    "perfectChain": "Perfect chain!",
+    "reviewHashes": "Review the hashes above",
+    "correctMsg": "✓ Correct — matches Block #{{prev}}'s hash",
+    "wrongMsg":   "✗ Wrong — should be {{expected}} (Block #{{prev}}'s hash)",
+    "insightIcon":   "💡",
+    "insightStrong": "The key insight:",
+    "insightBody":   "if you change anything in Block #1, its hash changes — and Block #2's Prev Hash would no longer match, breaking the chain instantly.",
+    "blocks": {
+      "0": "Chancellor on brink...",
+      "1": "Alice receives 50 BTC",
+      "2": "Bob receives 25 BTC"
+    },
+    "options": {
+      "0x000000": "0x000000  (Block #0 hash)",
+      "0x1a2b3c": "0x1a2b3c  (Block #1 hash)",
+      "0x4d5e6f": "0x4d5e6f  (Block #2 hash)",
+      "0x9f3c21": "0x9f3c21  (random)"
+    }
+  },
+  "quizPrevHash": {
+    "question": "What is the purpose of the 'previous hash' field in a block?",
+    "options": [
+      "It encrypts the block's transaction data",
+      "It links the block to the one before it, forming the chain",
+      "It stores the miner's identity",
+      "It determines the block reward amount"
+    ],
+    "explanation": "Each block stores the hash of the previous block. If anyone tampers with an earlier block, its hash changes — and every block that points back to it now points at a fingerprint that no longer exists."
+  },
+  "cascade": {
+    "heading": "Try to cheat the chain",
+    "lead":    "Edit any block's data. The chain will show you what breaks.",
+    "blockLabel": "BLOCK #{{n}}",
+    "readOnly":   "read-only",
+    "dataLabel":  "Data",
+    "prevHashLabel": "Prev Hash",
+    "hashLabel":     "Hash",
+    "whatHappened": "What just happened?",
+    "reset": "↺ Reset",
+    "moralStrong": "Tamper-evident — not tamper-proof.",
+    "moralBody":   "The chain doesn't stop you from changing data; it makes the change visible everywhere downstream.",
+    "computingGenesis": "Computing genesis…",
+    "initialData": [
+      "My first blockchain",
+      "Alice → Bob: 10 BTC",
+      "Bob → Carol: 5 BTC",
+      "Carol → Dave: 3 BTC"
+    ],
+    "idleMessage": "Edit any block's data below. Watch the chain react.",
+    "cleanMessage": "Hash recomputed. The chain still links cleanly — nothing else moved.",
+    "nothingDownstream": "Hash recomputed. Nothing downstream to break.",
+    "brokenMessageSingular": "You changed Block #{{n}}. Its hash recomputed — but the {{count}} block after it still references the old value. The chain caught you.",
+    "brokenMessagePlural":   "You changed Block #{{n}}. Its hash recomputed — but the {{count}} blocks after it still reference the old value. The chain caught you."
+  },
+  "network": {
+    "heading": "The Network",
+    "lead": "One machine holding a chain is fragile. But what if every machine on the network held its own copy? Switch between three network shapes below and click nodes to take them offline — watch what survives.",
+    "rows": [
+      { "title": "Centralized = single point of control",  "desc": "One operator owns the system. Kill the centre and everything goes dark." },
+      { "title": "Decentralized = clusters of authority",  "desc": "Several hubs. Killing one breaks its cluster but leaves the rest intact." },
+      { "title": "Distributed = every node is a peer",     "desc": "All nodes hold the data and route around failures. This is what blockchain inherits." },
+      { "title": "Blockchain = distributed + agreed",      "desc": "A distributed network plus a way for the peers to agree on which chain is the truth." }
+    ]
+  },
+  "networkTopo": {
+    "ariaSuffix": "network topology",
+    "modes": {
+      "centralized": {
+        "label":   "Centralized",
+        "tagline": "One server holds everything. Fast and simple — but if it goes down, the whole network goes down.",
+        "lesson":  "Try clicking the centre node. Then try clicking one satellite. Same act, very different blast radius."
+      },
+      "decentralized": {
+        "label":   "Decentralized",
+        "tagline": "Several hubs share authority. No single hub controls everything, but each hub still rules its cluster.",
+        "lesson":  "Click a hub — its leaves are orphaned because they only reach the network through it. The other clusters keep working."
+      },
+      "distributed": {
+        "label":   "Distributed",
+        "tagline": "Every node is a peer with the same role. No single failure can take the network down.",
+        "lesson":  "Try clicking several nodes. The mesh routes around the gaps — this is what blockchain inherits."
+      }
+    },
+    "status": {
+      "down":       "Network down — all nodes offline",
+      "operational":"Operational · {{connected}}/{{total}} reachable",
+      "broken":     "Down · only {{connected}}/{{total}} reachable, {{isolated}} isolated",
+      "degraded":   "Degraded · {{connected}}/{{total}} reachable, {{isolated}} isolated"
+    },
+    "reset": "↺ Reset"
+  },
+  "sortSystems": {
+    "heading": "Sort the Systems",
+    "lead":    "Each system below sits somewhere on the spectrum. Click a system, then click the category it belongs to.",
+    "items": "Items",
+    "pickN":  "Pick a system ({{n}} left)",
+    "allPlacedHeader": "All placed — check your answers",
+    "allPlacedNote":   "All systems placed ✓",
+    "selected": "✦ selected",
+    "dropHere": "drop here",
+    "placeHere": "← place here",
+    "checkAnswers": "Check answers ✓",
+    "tryAgain": "↺ Try again",
+    "results": {
+      "perfect":  "Perfect!",
+      "almost":   "Almost there",
+      "review":   "Review the slides"
+    },
+    "hintLabel":   "Hint:",
+    "hintBody":    "The line is fuzzy. DNS is technically",
+    "hintBodyEm":  "hierarchical",
+    "hintBodyTail":"but spreads load across many servers. BitTorrent has no center at all — every peer is equal. Bitcoin is the same idea applied to a ledger.",
+    "items_": {
+      "bofa":       { "label": "Bank of America", "hint": "One company owns the ledger" },
+      "google":     { "label": "Google",          "hint": "One company runs the servers" },
+      "visa":       { "label": "Visa",            "hint": "Single processor in the middle" },
+      "email":      { "label": "Email (SMTP)",    "hint": "Many independent providers" },
+      "mastodon":   { "label": "Mastodon",        "hint": "Federated instances" },
+      "dns":        { "label": "DNS",             "hint": "Hierarchical root servers" },
+      "bitcoin":    { "label": "Bitcoin",         "hint": "Every node holds the full chain" },
+      "ipfs":       { "label": "IPFS",            "hint": "Peer-to-peer file storage" },
+      "bittorrent": { "label": "BitTorrent",      "hint": "Every peer is also a seeder" }
+    },
+    "categories": {
+      "centralized":   { "label": "Centralized",   "desc": "One operator owns the system. Single point of control." },
+      "decentralized": { "label": "Decentralized", "desc": "Many hubs share authority. Each rules its cluster." },
+      "distributed":   { "label": "Distributed",   "desc": "Every peer is equal. No central authority at all." }
+    }
+  },
+  "quiz51": {
+    "question": "If a malicious actor controls 51% of the nodes in a public blockchain network, what can they do?",
+    "options": [
+      "They can read everyone's private keys",
+      "They can rewrite history and overrule honest nodes",
+      "They can shut down the protocol permanently",
+      "They can mint unlimited coins"
+    ],
+    "explanation": "The 51% attack is the threat model for any public blockchain. A majority of nodes can agree to a tampered version of history and the network has to accept it. That's why public chains want many independent participants — to make 51% expensive."
+  },
+  "consensus": {
+    "heading": "Consensus — How the Network Agrees",
+    "leadA": "A network of copies needs a rule for which copy is the truth. The most famous answer is",
+    "leadPoW": "Proof of Work",
+    "leadB":   ": nodes spend electricity racing to solve a puzzle, and the winner gets to add the next block. The cost makes cheating expensive.",
+    "whyTitle": "✓ Why it works",
+    "why": [
+      "Cheating costs real energy — measurable, expensive",
+      "Anyone can participate, no permission needed",
+      "Battle-tested since 2009 by Bitcoin"
+    ],
+    "altTitle": "↗ What about Proof of Stake?",
+    "altLead":  "Proof of Stake replaces electricity with locked tokens — validators put up collateral instead of burning power. We compare the alternatives in",
+    "altCourse":"Course 3 — Platforms",
+    "altTail":  "."
+  },
+  "protocols": {
+    "heading": "Many ways for a network to agree",
+    "leadA":   "Proof of Work is the most famous — and it's what we're about to watch. But it's far from the only one. Each protocol below answers the same question (",
+    "leadQuestion": "which copy of the chain is the truth?",
+    "leadB":   ") with different trade-offs in speed, energy, and decentralization.",
+    "footerA": "We'll dive into how",
+    "footerPoW": "Proof of Work",
+    "footerB": "actually runs on the next slide. The other approaches each deserve their own deep dive — that's a Course 3 conversation."
+  },
+  "mining": {
+    "heading": "Mining — five computers race for Block #{{n}}",
+    "leadA":   "Each miner tries millions of nonces per second, looking for one that produces a hash starting with",
+    "leadCode":"0000",
+    "leadB":   ". The first to find one wins — then the next block starts, and the next, and the next.",
+    "earlierTag": "…earlier ({{n}})",
+    "blockTag":   "BLOCK #{{n}}",
+    "minerName":  "Miner",
+    "status": {
+      "mined":     "✓ mined",
+      "filling":   "filling",
+      "awaiting":  "awaiting"
+    },
+    "awaitingNonce": "awaiting nonce…",
+    "target":  "Target hash",
+    "startsWith": "starts with",
+    "difficulty": "difficulty: 4 leading zeros",
+    "rarity":     "(~1 in 65,536)",
+    "nonceLabel": "Nonce",
+    "hashTryLabel": "Hash try",
+    "foundIt": "✓ FOUND IT",
+    "verified": "verified",
+    "minedSession": "Mined this session",
+    "blockSingular": "block",
+    "blockPlural":   "blocks",
+    "totalMined": "Total mined",
+    "startMining": "▶ Start mining",
+    "racingMsg":   "All five miners racing for Block #{{n}} — first valid hash wins",
+    "wonMsg":      "🎉 {{name}} found a valid hash — starts with",
+    "verifyingMsg":"Other miners verifying {{name}}'s work… {{verified}}/4",
+    "addedMsg":    "✓ Block #{{n}} added — {{name}} earns",
+    "nextIn":      "· next block in 2s…",
+    "stopLoop":    "■ Stop loop",
+    "stopLoopTitle":"Stop the loop after the current block finishes",
+    "resume":      "▶ Resume",
+    "reset":       "↺ Reset",
+    "footerA":     "One miner finds the hash, the others verify it instantly (checking is cheap, finding is expensive). The winner is paid in newly-issued bitcoin — currently",
+    "footerReward":"{{reward}} BTC",
+    "footerB":     "per block. That reward is what funds the brute-force work that keeps cheating prohibitive.",
+    "genesisData": "Genesis",
+    "data1":  "50 → Alice",
+    "data2":  "25 → Bob",
+    "txSingular": "tx",
+    "txPlural":   "txs"
+  },
+  "metamask": {
+    "headPrefix": "Meet ",
+    "headBrand":  "MetaMask",
+    "lead":  "A wallet doesn't hold your coins. It holds the cryptographic keys that prove you control an address on the chain. The most popular one by far lives as a small browser extension — and it has a friendly fox.",
+    "ariaLabel": "Get MetaMask",
+    "cta": "Get MetaMask",
+    "ctaCaptionA": "We go deep on wallets, keys and signatures in",
+    "ctaCaptionCourse": "Course 2 — Smart Contracts",
+    "ctaCaptionB": ". For now: install it, click around, see what an address looks like.",
+    "facts": [
+      { "tag": "Holds",    "body": "Your private keys — not your coins. Coins live on the chain; the wallet just proves who controls them." },
+      { "tag": "Signs",    "body": "Transactions, using your private key — the cryptographic equivalent of a signature that says \"this is from me\"." },
+      { "tag": "Connects", "body": "Your browser to dApps — DeFi, NFTs, on-chain games, anything that lives on Ethereum and similar chains." }
+    ]
+  },
+  "takeaways": {
+    "title": "Section 1 — Key Takeaways",
+    "items": [
+      "The trust problem: digital value historically relied on middlemen — banks, registries, payment networks",
+      "A shared ledger removes the middleman, but creates a new problem: how do you stop someone editing their own copy?",
+      "Hashing makes data tamper-evident — change one bit, the fingerprint changes completely",
+      "A chain stores each block's data plus the previous block's fingerprint, linking the history together",
+      "Any change upstream cascades downstream — every block after it goes invalid, instantly",
+      "A distributed network multiplies one machine's chain into thousands; consensus (e.g. Proof of Work) picks the truth"
+    ]
+  }
+}

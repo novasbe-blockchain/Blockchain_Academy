@@ -1,7 +1,10 @@
 import { Link, useLocation } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { Sun, Moon, ChevronLeft } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import logo from '../../../blockchainptlogo.jpeg';
+import { useLang } from '../../../i18n/useLang';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface Section {
   id: string;
@@ -10,27 +13,23 @@ interface Section {
   path: string;
 }
 
-const BF_BASE = '/blockchain-fundamentals';
-
-const BF_SECTIONS: Section[] = [
-  { id: 'home',  number: '🏠', label: 'Home',       path: `${BF_BASE}` },
-  { id: 'lo',    number: '🎯', label: 'Objectives', path: `${BF_BASE}/learning-objectives` },
-  { id: 'cs',    number: '🗺️', label: 'Summary',    path: `${BF_BASE}/course-summary` },
-  { id: '0',     number: '00', label: 'Prologue',   path: `${BF_BASE}/prologue` },
-  { id: '1',     number: '01', label: 'Intro',      path: `${BF_BASE}/section-1` },
-  { id: '2',     number: '02', label: 'Bitcoin',    path: `${BF_BASE}/section-2` },
-  { id: '3',     number: '03', label: "What's Next", path: `${BF_BASE}/section-3` },
-  { id: 'bib',   number: '📖', label: 'Bibliography', path: `${BF_BASE}/bibliography` },
-];
-
 interface CourseNavProps {
+  /** Base path WITHOUT the locale prefix (e.g. `/blockchain-fundamentals`).
+   *  CourseNav handles the `/<lang>` prefix internally. */
   base?: string;
   sections?: Section[];
   accentColor?: string;
 }
 
-export function CourseNav({ base = BF_BASE, sections = BF_SECTIONS, accentColor = '#ED1C24' }: CourseNavProps) {
+export function CourseNav({ base, sections = [], accentColor = '#ED1C24' }: CourseNavProps) {
   const location = useLocation();
+  const lang = useLang();
+  const { t } = useTranslation();
+
+  // The four course Roots all pass `base` already prefixed with `/{lang}` —
+  // if for some reason that's not the case, fall back to BF + prefix here.
+  const effectiveBase = base ?? `/${lang}/blockchain-fundamentals`;
+
   const [isDark, setIsDark] = useState(() =>
     document.documentElement.classList.contains('dark')
   );
@@ -40,32 +39,33 @@ export function CourseNav({ base = BF_BASE, sections = BF_SECTIONS, accentColor 
   }, [isDark]);
 
   return (
-    <nav className="w-full bg-sidebar border-b border-sidebar-border flex items-center px-3 py-2 gap-2 overflow-x-auto shrink-0">
+    <nav className="w-full bg-sidebar border-b border-sidebar-border flex items-center px-3 py-2 gap-2 shrink-0">
 
-      {/* Back to courses */}
+      {/* ── LEFT cluster (pinned, never scrolls) ── */}
       <Link
-        to="/"
-        title="All Courses"
+        to={`/${lang}`}
+        title={t('nav.coursesTitle')}
         className="flex-shrink-0 flex items-center gap-1 px-2 py-1.5 rounded-lg border border-transparent text-muted-foreground hover:text-foreground hover:border-border hover:bg-sidebar-accent transition-all"
       >
         <ChevronLeft className="size-3.5" />
-        <span className="text-[10px] font-semibold hidden sm:block">Courses</span>
+        <span className="text-[10px] font-semibold hidden sm:block">{t('nav.courses')}</span>
       </Link>
 
-      {/* Divider */}
       <div className="h-6 w-px bg-border flex-shrink-0" />
 
-      {/* Logo */}
-      <Link to={base} className="flex-shrink-0 mr-1 group">
+      <Link to={effectiveBase} className="flex-shrink-0 mr-1 group">
         <img src={logo} alt="Blockchain.pt" className="h-8 object-contain group-hover:scale-105 transition-transform" />
       </Link>
 
-      {/* Section squares */}
-      <div className="flex items-center gap-1 flex-1 min-w-0">
+      {/* ── MIDDLE: section squares share all available width equally.
+              flex-1 + min-w-0 on each link lets them distribute evenly,
+              while the right cluster's flex-shrink-0 keeps the language
+              switcher pinned upfront. ── */}
+      <div className="flex-1 min-w-0 flex items-center gap-1">
         {sections.map((section) => {
           const isActive =
-            section.path === base
-              ? location.pathname === base || location.pathname === `${base}/`
+            section.path === effectiveBase
+              ? location.pathname === effectiveBase || location.pathname === `${effectiveBase}/`
               : location.pathname.startsWith(section.path);
 
           return (
@@ -78,7 +78,7 @@ export function CourseNav({ base = BF_BASE, sections = BF_SECTIONS, accentColor 
                 borderColor: accentColor + '90',
                 boxShadow: `0 1px 3px ${accentColor}18`,
               } : undefined}
-              className={`flex-1 flex flex-col items-center justify-center py-1.5 rounded-lg transition-all text-center group border ${isActive ? '' : 'border-transparent hover:bg-sidebar-accent/60'}`}
+              className={`flex-1 min-w-0 flex flex-col items-center justify-center px-2 py-1.5 rounded-lg transition-all text-center group border ${isActive ? '' : 'border-transparent hover:bg-sidebar-accent/60'}`}
             >
               <span
                 className="text-sm font-bold leading-none mb-0.5"
@@ -94,11 +94,13 @@ export function CourseNav({ base = BF_BASE, sections = BF_SECTIONS, accentColor 
         })}
       </div>
 
-      {/* Dark mode toggle */}
+      {/* ── RIGHT cluster (pinned, never scrolls) — language switcher upfront ── */}
+      <div className="h-6 w-px bg-border flex-shrink-0 ml-1" />
+      <LanguageSwitcher variant="nav" />
       <button
         onClick={() => setIsDark(d => !d)}
         className="flex-shrink-0 size-9 flex items-center justify-center rounded-lg border border-border text-foreground hover:bg-sidebar-accent transition-all"
-        title={isDark ? 'Light Mode' : 'Dark Mode'}
+        title={isDark ? t('nav.lightMode') : t('nav.darkMode')}
       >
         {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
       </button>

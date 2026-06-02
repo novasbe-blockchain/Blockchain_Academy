@@ -1,0 +1,671 @@
+{
+  "groups": {
+    "g-s2-intro": "🚪 Porquê Ethereum?",
+    "g-s2-accounts": "👤 Contas",
+    "g-s2-machine": "⚙️ A Máquina",
+    "g-s2-consensus": "🔄 Consenso e Ecossistema",
+    "g-s2-scaling": "📈 Escalabilidade",
+    "g-s2-apps": "💰 DeFi e Apps",
+    "g-s2-compare": "🆚 Comparação",
+    "g-s2-fit": "🎯 Análise de Adequação",
+    "g-s2-wrap": "✅ Conclusão"
+  },
+  "chapters": {
+    "s2-why": "Porquê Ethereum?",
+    "s2-accounts-visual": "Contas (Visual)",
+    "s2-accounts": "Contas",
+    "s2-evm": "EVM",
+    "s2-transaction": "Transação",
+    "s2-gas": "🧩 Gas",
+    "s2-eip1559": "🧩 EIP-1559",
+    "s2-smartcontracts": "Smart Contracts",
+    "s2-consensus": "PoW → PoS",
+    "s2-evmecosystem": "EVM em Todo o Lado",
+    "s2-rollups": "Rollups e L2s",
+    "s2-rollups-anim": "🧩 Fluxo L1 ↔ L2",
+    "s2-defi": "Mecânica do DeFi",
+    "s2-stablecoins": "Stablecoins",
+    "s2-apps": "Apps Além do DeFi (1)",
+    "s2-apps-2": "Apps Além do DeFi (2)",
+    "s2-comparison": "BTC vs ETH",
+    "s2-bestfits": "🎯 Melhores Usos",
+    "s2-worstfits": "🚫 Piores Usos",
+    "s2-quiz": "Quiz",
+    "s2-takeaways": "Conclusões",
+    "s2-summary": "Resumo"
+  },
+  "rollupsAnim": {
+    "steps": [
+      "1. Os utilizadores enviam transações na L2 — rápidas, baratas, confirmadas em ~1 s",
+      "2. O Sequencer ordena e executa-as num lote",
+      "3. O lote é COMPRIMIDO (calldata → blob) ~10–100× mais pequeno",
+      "4. Blob comprimido + nova state root publicados na L1 (faixa de blobs EIP-4844)",
+      "5. A L1 verifica a prova e finaliza — a L2 herda a segurança da Ethereum"
+    ],
+    "liveLabel": "Animação ao vivo",
+    "heading": "Txs do utilizador na L2 → Sequencer → Compressão → Finalização na L1",
+    "replay": "↻ Repetir",
+    "svg": {
+      "l2Title": "LAYER 2 — ROLLUP",
+      "l2Sub": "Onde as tuas txs correm de facto · rápido · barato",
+      "sequencer": "SEQUENCER",
+      "sequencerSub": "ordena + executa",
+      "batch": "LOTE",
+      "blob": "blob",
+      "compressLabel": "↓ comprimir + publicar ↓",
+      "l1Title": "LAYER 1 — ETHEREUM",
+      "l1Sub": "Liquidação + disponibilidade de dados · lento · caro · seguro",
+      "verifiedBlob": "✓ blob"
+    },
+    "legend": {
+      "l2txTerm": "Tx na L2",
+      "l2txDesc": "— operação do utilizador no rollup",
+      "sequencerTerm": "Sequencer",
+      "sequencerDesc": "— ordena + agrupa em lotes",
+      "compressTerm": "Comprimir",
+      "compressDesc": "— blob, ~10-100× mais pequeno",
+      "finaliseTerm": "Finalização na L1",
+      "finaliseDesc": "— herda a segurança da Ethereum"
+    }
+  },
+  "title": {
+    "sectionNumber": "SECÇÃO 02",
+    "title": "Ethereum: Do Dinheiro à Blockchain Programável",
+    "subtitle": "Contas, EVM, smart contracts, evolução do consenso e o ecossistema EVM"
+  },
+  "why": {
+    "heading": "Porquê Ethereum?",
+    "subtitle": "Os Limites do Bitcoin → A Intuição de Vitalik",
+    "limitsHeading": "O que o Bitcoin não conseguia fazer",
+    "limits": [
+      { "title": "Sem ciclos no Script", "detail": "Intencional — evita ciclos infinitos mas limita a expressividade" },
+      { "title": "Sem estado além do UTXO", "detail": "Não consegue guardar dados arbitrários nem correr aplicações com estado" },
+      { "title": "Sem lógica personalizada", "detail": "Cada transação segue o mesmo modelo de gasto de outputs" },
+      { "title": "Cada dApp precisa da sua própria cadeia", "detail": "Sem ambiente partilhado — cada projeto tem de arrancar a segurança do zero" }
+    ],
+    "insightHeadingA": "A intuição de Vitalik ",
+    "insightHeadingB": "(2013, aos 19 anos)",
+    "quoteA": "\"E se construíssemos uma blockchain capaz de correr ",
+    "quoteHighlight": "QUALQUER programa",
+    "quoteB": "?\"",
+    "properties": [
+      { "label": "Linguagem de scripting Turing-completa", "desc": "Os smart contracts podem exprimir qualquer computação" },
+      { "label": "Estado global partilhado (contas)", "desc": "Um livro-razão universal para todos os endereços e contratos" },
+      { "label": "Ethereum Virtual Machine (EVM)", "desc": "Um runtime em sandbox replicado em cada node do mundo" }
+    ],
+    "callout": "Ethereum = modelo de segurança do Bitcoin + máquina de estados programável",
+    "teaserTextA": "…e em 2022, a Ethereum fez algo que o Bitcoin não consegue: ",
+    "teaserHighlight": "desligou a mineração por completo.",
+    "teaserNote": "vamos abordar The Merge em detalhe mais à frente ↓",
+    "powLabel": "⛏️ PoW (pré-2022)",
+    "powValue": "~73 TWh/ano",
+    "posLabel": "🌿 PoS (desde set. 2022)",
+    "posValueA": "~0,01 TWh/ano ",
+    "posValueHighlight": "(−99,95%)"
+  },
+  "accountsVisual": {
+    "heading": "EOA vs Conta de Contrato",
+    "subtitle": "A diferença arquitetural fundamental — quem inicia, quem responde",
+    "eoa": {
+      "title": "EOA",
+      "tag": "= a tua Carteira 👛",
+      "subtitle": "Externally Owned Account — a carteira MetaMask / hardware que usas no dia a dia",
+      "points": [
+        "Controlada por uma chave privada (um humano ou software)",
+        "O ÚNICO tipo que pode iniciar uma transação",
+        "Detém saldo em ETH — sem código, sem armazenamento",
+        "Paga sempre a taxa de gas"
+      ],
+      "examplesLabel": "Exemplos",
+      "examples": "Carteira MetaMask · Carteira de hardware · Hot wallet de exchange"
+    },
+    "contract": {
+      "title": "Conta de Contrato",
+      "subtitle": "Smart Contract",
+      "points": [
+        "Controlada por código — não existe chave privada",
+        "Só PODE responder a chamadas recebidas (nunca inicia)",
+        "Tem saldo em ETH + código executável + armazenamento persistente",
+        "O gas é pago pela EOA que a acionou"
+      ],
+      "examplesLabel": "Exemplos",
+      "examples": "Pool da Uniswap · Token USDC · Coleção de NFTs · Tesouraria de DAO"
+    },
+    "interactLabel": "Como interagem:",
+    "flow": [
+      { "label": "🔑 EOA", "sub": "assina e envia a tx" },
+      { "label": "📜 Contrato", "sub": "executa o código" },
+      { "label": "📜 Contrato B", "sub": "chama outro contrato" },
+      { "label": "🔑 EOA", "sub": "recebe ETH/token" }
+    ]
+  },
+  "accounts": {
+    "title": "Dois Tipos de Contas",
+    "featureLabel": "Propriedade",
+    "option1Label": "EOA (Externally Owned)",
+    "option2Label": "Conta de Contrato",
+    "items": [
+      { "feature": "Controlada por", "option1": "Chave privada", "option2": "Código / lógica" },
+      { "feature": "Tem saldo em ETH", "option1": "Sim", "option2": "Sim" },
+      { "feature": "Tem código", "option1": "Não", "option2": "Sim" },
+      { "feature": "Tem armazenamento", "option1": "Não", "option2": "Sim" },
+      { "feature": "Criada por", "option1": "Gerar um par de chaves", "option2": "Implementar uma transação" },
+      { "feature": "Pode iniciar tx", "option1": "Sim", "option2": "Não — só responde" },
+      { "feature": "Quem paga o gas", "option1": "A EOA", "option2": "A EOA que chama" }
+    ]
+  },
+  "evm": {
+    "heading": "A Ethereum Virtual Machine",
+    "subtitle": "Um runtime determinístico, em sandbox, replicado em cada node da Ethereum",
+    "jvmLabel": "Antes da EVM, havia…",
+    "jvmP1A": "Lembras-te da ",
+    "jvmP1Strong": "Java Virtual Machine",
+    "jvmP1B": "? Desde os anos 90, a promessa do Java tem sido ",
+    "jvmP1Em": "escreve uma vez, corre em qualquer lado",
+    "jvmP1C": " — compilas o teu ficheiro ",
+    "jvmP1D": " para bytecode, e qualquer dispositivo com uma JVM corre-o de forma idêntica. Windows, Mac, Linux, multibancos, set-top boxes — mesmo bytecode, mesmo resultado.",
+    "jvmP2Strong": "A EVM é exatamente a mesma ideia — só que cada node do mundo é a JVM, e o programa é o teu smart contract.",
+    "jvmP2A": " Compilas Solidity para bytecode da EVM, a rede corre-o de forma idêntica em dezenas de milhares de máquinas, e todas concordam no resultado. A JVM resolveu a portabilidade; a EVM acrescenta ",
+    "jvmP2Em": "consenso sem necessidade de confiança",
+    "jvmP2B": " por cima.",
+    "whatHeading": "O que é a EVM?",
+    "properties": [
+      { "label": "Em sandbox", "detail": "Completamente isolada da máquina anfitriã — sem sistema de ficheiros, sem acesso à rede" },
+      { "label": "Determinística", "detail": "Mesma entrada → mesma saída em todo o lado, em cada node, sempre" },
+      { "label": "Turing-completa", "detail": "Pode correr qualquer programa computável (dentro dos limites de gas)" },
+      { "label": "Medida por gas", "detail": "Cada opcode tem um custo de gas fixo — evita ciclos infinitos e spam" }
+    ],
+    "stackHeading": "Stack da EVM",
+    "stack": [
+      { "label": "Código Solidity", "sub": "ficheiro-fonte .sol" },
+      { "label": "Bytecode", "sub": "saída compilada" },
+      { "label": "Opcodes", "sub": "PUSH, ADD, SSTORE, CALL…" },
+      { "label": "Execução na EVM", "sub": "máquina de pilha processa os opcodes" },
+      { "label": "Mudança de Estado", "sub": "saldos das contas + armazenamento atualizados" }
+    ],
+    "compatLabel": "Cadeias compatíveis com a EVM"
+  },
+  "transaction": {
+    "heading": "Anatomia de uma Transação Ethereum",
+    "subtitle": "Toda a mudança de estado na Ethereum é desencadeada por uma transação",
+    "fieldsHeading": "Campos da transação",
+    "fieldsBadge": "Tipo 2 · EIP-1559",
+    "fields": [
+      { "field": "type", "value": "0x02", "comment": "// EIP-1559 (predefinição desde London, ago. 2021)" },
+      { "field": "chainId", "value": "1", "comment": "// mainnet · proteção contra replay EIP-155" },
+      { "field": "nonce", "value": "42", "comment": "// nº de txs deste endereço" },
+      { "field": "maxPriorityFeePerGas", "value": "1.5 Gwei", "comment": "// gorjeta paga ao validador" },
+      { "field": "maxFeePerGas", "value": "25 Gwei", "comment": "// limite total = base fee + limite da gorjeta" },
+      { "field": "gasLimit", "value": "21,000", "comment": "// máximo de unidades de gas a consumir" },
+      { "field": "to", "value": "0xAbC…F1d2", "comment": "// destinatário (null = implementação de contrato)" },
+      { "field": "value", "value": "1.5 ETH", "comment": "// ETH a transferir" },
+      { "field": "data", "value": "0x", "comment": "// calldata (vazio numa transferência simples)" },
+      { "field": "accessList", "value": "[]", "comment": "// pista de armazenamento EIP-2930 (opcional)" },
+      { "field": "yParity, r, s", "value": "…", "comment": "// assinatura ECDSA" }
+    ],
+    "typesHeading": "Tipos de transação",
+    "types": [
+      { "label": "Transferência simples de ETH", "detail": "to = EOA · data vazio · 21,000 de gas (custo fixo)" },
+      { "label": "Chamada de contrato", "detail": "to = endereço do contrato · data = seletor de função + parâmetros codificados" },
+      { "label": "Implementação de contrato", "detail": "to = null · data = bytecode compilado · custo de gas mais elevado" }
+    ],
+    "noteLabel": "Modelo de contas vs UTXO — ",
+    "noteBody": "A Ethereum regista o saldo diretamente em cada conta. Sem cadeias de input/output — basta somar/subtrair a um estado global."
+  },
+  "gas": {
+    "heading": "Gas — Pagar pela Computação",
+    "subtitle": "Cada operação custa gas. O gas liga a computação à economia — e trava ciclos infinitos por completo.",
+    "whatLabel": "O que é o gas?",
+    "whatBodyA": "Uma ",
+    "whatBodyStrong": "unidade de trabalho computacional.",
+    "whatBodyB": " Cada opcode da EVM tem um preço de gas fixo: ",
+    "whatBodyCode1": "ADD",
+    "whatBodyC": " custa 3, ",
+    "whatBodyCode2": "SSTORE",
+    "whatBodyD": " custa ~20.000. Quanto mais pesado o trabalho, mais gas queima.",
+    "whyLabel": "Porque existe o gas",
+    "why": [
+      { "strong": "Trava o problema da paragem:", "rest": " a EVM é Turing-completa — o gas garante que cada transação termina." },
+      { "strong": "Anti-spam:", "rest": " uma cadeia gratuita seria inundada de imediato." },
+      { "strong": "Coloca preço no espaço escasso do bloco:", "rest": " apenas ~30M de gas por bloco." }
+    ],
+    "formulaLabel": "A fórmula",
+    "formula": "custo = gasUsed × (baseFee + tip)",
+    "formulaGasUsed": "gasUsed",
+    "formulaGasUsedSub": "trabalho realizado",
+    "formulaBaseFee": "baseFee 🔥",
+    "formulaBaseFeeSub": "definida pela rede, queimada",
+    "formulaTip": "tip",
+    "formulaTipSub": "paga ao validador",
+    "footnoteA": "O gas mede-se em ",
+    "footnoteGwei": "Gwei",
+    "footnoteB": " (10⁻⁹ ETH). Se esgotar a meio da execução, a tua tx ",
+    "footnoteReverts": "reverte",
+    "footnoteC": " — mas continuas a pagar o gas já queimado."
+  },
+  "eip1559": {
+    "heading": "EIP-1559 — Tornar as Taxas Previsíveis",
+    "subtitle": "Hard fork London · agosto de 2021 · a atualização que corrigiu o mercado de taxas da Ethereum",
+    "beforeTitle": "Antes — Leilão de Primeiro Preço",
+    "beforeBody": "Os utilizadores adivinhavam às cegas quanto licitar. As taxas mais altas ganhavam espaço no bloco. Todos pagavam a mais por medo de ficar presos.",
+    "beforeOverpayTitle": "😰 Pagar a mais",
+    "beforeOverpaySub": "\"mais vale prevenir…\"",
+    "beforeStuckTitle": "⏳ Preso",
+    "beforeStuckSub": "licitou demasiado baixo",
+    "beforeMinerTitle": "💸 Só o minerador",
+    "beforeMinerSub": "100% para o minerador",
+    "afterTitle": "Depois — Base Fee + Gorjeta",
+    "baseFeeLabel": "Base fee",
+    "baseFeeBodyA": "Definida pelo protocolo. Ajusta-se automaticamente ",
+    "baseFeeBodyPct": "±12,5%",
+    "baseFeeBodyB": " por bloco para atingir 50% de ocupação. ",
+    "baseFeeBodyBurned": "Queimada",
+    "baseFeeBodyC": " — ninguém a recebe.",
+    "tipLabel": "Gorjeta de prioridade",
+    "tipBodyA": "Opcional. Paga pelo utilizador, fica para o ",
+    "tipBodyValidator": "validador",
+    "tipBodyB": ". Normalmente 1–2 Gwei — só dispara para inclusão urgente.",
+    "whyWorksLabel": "Porque funciona",
+    "whyWorks": [
+      { "strong": "Previsível:", "rest": " as carteiras mostram a base fee em tempo real — sem licitações às cegas." },
+      { "strong": "Pressão deflacionária:", "rest": " o ETH queimado compensa a nova emissão — por vezes líquido negativo." },
+      { "strong": "Os validadores mantêm-se honestos:", "rest": " não podem embolsar a base fee, por isso não têm incentivo para a manipular." }
+    ]
+  },
+  "smartContracts": {
+    "heading": "Smart Contracts na Ethereum",
+    "subtitle": "Programas guardados on-chain que executam de forma determinística quando acionados",
+    "codeHeading": "Solidity — Escrow Simples",
+    "lifecycleHeading": "Ciclo de vida do contrato",
+    "lifecycle": [
+      { "label": "Escrever", "detail": "Escrever código em Solidity (ou Vyper, Huff…)" },
+      { "label": "Compilar", "detail": "solc → ABI (descrição da interface) + bytecode" },
+      { "label": "Implementar", "detail": "Enviar tx para o endereço null com o bytecode como data" },
+      { "label": "Interagir", "detail": "Qualquer pessoa chama funções através da ABI" }
+    ],
+    "propertiesLabel": "Propriedades-chave",
+    "properties": [
+      "Imutável após implementação — o código não pode ser alterado depois de estar on-chain",
+      "Determinístico — as mesmas entradas produzem sempre as mesmas saídas",
+      "Transparente — o código-fonte é verificável no Etherscan"
+    ]
+  },
+  "consensus": {
+    "heading": "The Merge: PoW → PoS",
+    "subtitle": "15 de setembro de 2022 — a maior atualização da Ethereum",
+    "before": {
+      "title": "Antes (Proof of Work)",
+      "items": [
+        { "icon": "⛏️", "label": "Participantes", "value": "Mineradores" },
+        { "icon": "🔢", "label": "Mecanismo", "value": "Corrida de hashes SHA-256" },
+        { "icon": "⚡", "label": "Energia", "value": "~73 TWh / ano" },
+        { "icon": "🖥️", "label": "Requisito", "value": "Qualquer pessoa com hardware" }
+      ]
+    },
+    "after": {
+      "title": "Depois (Proof of Stake)",
+      "items": [
+        { "icon": "🏦", "label": "Participantes", "value": "Validadores" },
+        { "icon": "💎", "label": "Mecanismo", "value": "Stake de 32 ETH" },
+        { "icon": "🌿", "label": "Energia", "value": "~0,01 TWh / ano (−99,95%)" },
+        { "icon": "👤", "label": "Requisito", "value": "Qualquer pessoa com 32 ETH" }
+      ]
+    },
+    "howHeading": "Como funciona o Proof of Stake",
+    "steps": [
+      { "label": "Depositar", "detail": "O validador bloqueia 32 ETH no contrato oficial de depósito da beacon chain. Cada validador corre as suas próprias chaves e cliente.", "metric": "Mín. 32 ETH · levantamentos ativos desde Shapella (abr. 2023)" },
+      { "label": "Propor", "detail": "Selecionado pseudo-aleatoriamente via RANDAO para construir o bloco seguinte. Os slots correm num relógio fixo de 12 segundos — 32 slots = 1 época.", "metric": "1 slot = 12s · 1 época ≈ 6,4 min" },
+      { "label": "Atestar", "detail": "Comités de ~128 validadores assinam votos agregados por BLS sobre o topo da cadeia e sobre o checkpoint da época.", "metric": "Exige supermaioria ≥ 2/3" },
+      { "label": "Finalizar", "detail": "O Casper FFG finaliza um checkpoint após duas épocas justificadas consecutivas. Revertê-lo exigiria fazer slashing a ≥ 1/3 de todo o ETH em stake.", "metric": "Finalidade ≈ 12,8 min · economicamente irreversível" }
+    ],
+    "stats": [
+      { "value": "~1M+", "label": "validadores ativos" },
+      { "value": "~3–5%", "label": "APR de staking" },
+      { "value": "~28% do total", "label": "ETH em stake (~34M ETH)" },
+      { "value": "−99,95%", "label": "energia vs PoW" }
+    ],
+    "slashingTitle": "Slashing",
+    "slashingBody": "Assinatura dupla ou voto envolvente (surround voting) desencadeia uma queima imediata (mínimo de 1 ETH) mais uma penalização de correlação proporcional a outros slashings próximos — tornando ataques coordenados economicamente catastróficos.",
+    "liquidTitle": "Liquid Staking",
+    "liquidBody": "A Lido (stETH), a Rocket Pool (rETH) e outras permitem fazer stake de qualquer quantia de ETH através de tokens derivados. Só a Lido garante ~30% de todo o ETH em stake — aumentando o acesso ao custo da concentração do conjunto de validadores."
+  },
+  "evmEcosystem": {
+    "heading": "EVM em Todo o Lado",
+    "subtitle": "A EVM tornou-se a máquina virtual padrão de facto para blockchains",
+    "whyHeading": "Porque venceu a EVM",
+    "reasons": [
+      { "label": "Efeitos de rede", "detail": "A maior comunidade de programadores no espaço blockchain — milhões de programadores de Solidity, os contratos mais auditados, o ecossistema de protocolos mais rico" },
+      { "label": "Ferramentas", "detail": "Hardhat, Foundry, Remix, MetaMask, Ethers.js, Viem, OpenZeppelin — uma stack de desenvolvimento completa e madura" },
+      { "label": "Composabilidade", "detail": "Todas as cadeias EVM partilham padrões abertos: ERC-20 (tokens), ERC-721 (NFTs), ERC-4626 (cofres) — os protocolos interoperam sem atritos" }
+    ],
+    "ecosystemHeading": "O ecossistema EVM",
+    "l2Label": "Rollups Layer 2",
+    "l1Label": "L1s compatíveis com EVM",
+    "callout": "\"A EVM está a tornar-se o conjunto de instruções padrão das blockchains — como o x86 para os computadores\""
+  },
+  "rollups": {
+    "heading": "Rollups — Escalar Sem Confiar",
+    "subtitleA": "A L1 da Ethereum limita-se a ~15–30 TPS. Os ",
+    "subtitleStrong": "rollups",
+    "subtitleB": " agrupam milhares de transações off-chain e publicam uma única atualização comprimida na L1 — herdando a sua segurança.",
+    "howHeading": "Como funciona um rollup",
+    "steps": [
+      { "label": "Os utilizadores transacionam na L2", "detail": "Envias uma transação para o rollup — mesma carteira, mesma experiência. Confirmada em ~1–2 segundos. Taxas: cêntimos." },
+      { "label": "O sequencer agrupa-as", "detail": "Centenas a milhares de transações na L2 são ordenadas e executadas pelo sequencer do rollup." },
+      { "label": "Dados comprimidos publicados na L1", "detail": "Lote comprimido + nova state root → publicados na Ethereum (via blobs desde a EIP-4844). A L1 guarda os dados para qualquer pessoa poder verificar." },
+      { "label": "A L1 verifica e finaliza", "detail": "Uma prova (de validade / de fraude) diz à L1 que o lote está correto. Uma vez aceite na L1, o estado do rollup fica tão seguro quanto a própria Ethereum." }
+    ],
+    "securityNoteStrong": "Segurança herdada da L1",
+    "securityNoteRest": " · execução movida para off-chain · dados ainda on-chain",
+    "flavorsHeading": "Dois sabores: optimistic vs ZK",
+    "optimisticTitle": "Optimistic",
+    "optimistic": [
+      { "strong": "Assume válido", "rest": " por predefinição" },
+      { "pre": "Janela de contestação: ", "code": "~7 dias", "post": "" },
+      { "pre": "Se houver fraude: qualquer pessoa submete uma ", "strong": "prova de fraude", "post": "" },
+      { "text": "Equivalente à EVM — migração fácil" }
+    ],
+    "optimisticLiveLabel": "Ao vivo:",
+    "optimisticLive": " Arbitrum · Optimism · Base",
+    "zkTitle": "ZK (validade)",
+    "zk": [
+      { "pre": "Cada lote transporta uma ", "strong": "prova de conhecimento zero", "post": "" },
+      { "pre": "Levantamento: ", "code": "~horas", "post": " (limitado pela prova)" },
+      { "text": "A L1 verifica a matemática — sem necessidade de contestação" },
+      { "text": "Prover mais pesado · criptografia de ponta" }
+    ],
+    "zkLiveLabel": "Ao vivo:",
+    "zkLive": " zkSync · Starknet · Linea · Scroll",
+    "metricsLabel": "L1 vs L2 — o que muda para os utilizadores",
+    "metrics": [
+      { "label": "Débito", "l1": "~15–30 TPS", "l2": "→ milhares" },
+      { "label": "Taxa da tx", "l1": "~1–20 $", "l2": "→ ¢" },
+      { "label": "Finalidade", "l1": "~12 min", "l2": "→ ~1–2 s (soft)" }
+    ],
+    "eip4844Label": "A EIP-4844 (Dencun, mar. 2024) ",
+    "eip4844A": "introduziu os dados ",
+    "eip4844Code": "blob",
+    "eip4844B": " — uma faixa barata e efémera na L1 dedicada aos rollups. As taxas da L2 caíram ~10× de um dia para o outro."
+  },
+  "rollupsAnimSlide": {
+    "badge": "🧩 Animado",
+    "heading": "O Que Acontece Realmente Entre a L1 e a L2",
+    "subtitle": "Acabaste de ler os passos. Agora vê-os: tx do utilizador → sequencer → lote → blob comprimido → finalização na L1."
+  },
+  "defi": {
+    "sectionLabel": "Secção 02",
+    "heading": "DeFi — Três Primitivas, Uma Ideia",
+    "subtitleA": "O DeFi substitui os intermediários financeiros por smart contracts. Três primitivas explicam ~90% do que existe por aí. ",
+    "subtitleHighlight": "Vamos aprofundar no Curso 03 (Smart Contracts) — isto é a vista geral do terreno.",
+    "amm": {
+      "title": "AMM",
+      "subtitle": "Automated Market Maker",
+      "replacesPre": "Substitui as ",
+      "replaces": "bolsas de order book",
+      "body": "Dois tokens ficam numa pool. Uma fórmula define o preço automaticamente — sem compradores e vendedores para emparelhar.",
+      "formula": "x · y = k",
+      "formulaSub": "fórmula de produto constante",
+      "liveLabel": "Ao vivo: ",
+      "live": "Uniswap · Curve · Balancer"
+    },
+    "lending": {
+      "title": "Lending",
+      "subtitle": "Empréstimos Sobre-Colateralizados",
+      "replacesPre": "Substitui os ",
+      "replaces": "bancos (poupanças + empréstimos)",
+      "body": "Fornece cripto para ganhar juros. Pede emprestado contra colateral que vale mais do que o teu empréstimo. Sem pontuação de crédito, sem KYC. Se o teu colateral cair abaixo do limiar, um bot liquida-te.",
+      "supplyTitle": "Fornecer",
+      "supplySub": "ganhar rendimento",
+      "borrowTitle": "Pedir",
+      "borrowSub": "depositar colateral",
+      "liveLabel": "Ao vivo: ",
+      "live": "Aave · Compound · MakerDAO"
+    },
+    "yield": {
+      "title": "Yield",
+      "subtitle": "Tokens LP · Staking · Cofres",
+      "replacesPre": "Substitui os ",
+      "replaces": "market-makers + gestores de ativos",
+      "bodyA": "Qualquer pessoa pode ",
+      "bodyStrong": "fornecer liquidez",
+      "bodyB": " a um AMM, fazer stake de ETH para receber recompensas de validador, ou depositar em cofres de auto-compounding — ganhando uma parte das taxas.",
+      "ilStrong": "Perda impermanente",
+      "ilRest": " · a divergência de preços pode deixar os LPs em pior situação do que se apenas tivessem mantido os tokens.",
+      "liveLabel": "Ao vivo: ",
+      "live": "Lido · Yearn · Convex"
+    },
+    "hook": "Quase todos os produtos DeFi de que vais ouvir falar são uma composição destes três. O Curso 03 cobre a mecânica ao nível do contrato, os ataques e os casos de estudo."
+  },
+  "stablecoins": {
+    "heading": "Stablecoins — a categoria de app mais usada",
+    "subtitle": "Tokens concebidos para acompanhar uma referência estável (quase sempre 1 USD). Discretamente a maior categoria de dApp por volume — e a ponte entre as finanças tradicionais e a cripto.",
+    "whatLabel": "O que é uma stablecoin?",
+    "whatBodyA": "Um token on-chain cujo valor acompanha uma referência externa — quase sempre o dólar norte-americano. A questão interessante é ",
+    "whatBodyStrong": "o que sustenta o peg",
+    "whatBodyB": ": dólares reais num banco, colateral cripto on-chain, ou puro algoritmo. Cada modelo falha de forma diferente.",
+    "mechanismLabel": "Como funciona o peg",
+    "examplesLabel": "Exemplos reais",
+    "breakLabel": "Como pode quebrar",
+    "cards": [
+      {
+        "title": "Garantida por fiat",
+        "sub": "Custodial · reserva 1:1",
+        "mechanism": "Um emissor regulado detém USD (ou títulos do tesouro de curto prazo) 1:1 numa conta bancária. Os utilizadores cunham tokens depositando fiat; resgatam queimando tokens. Mantém o peg porque o emissor garante o resgate.",
+        "examples": "USDT (Tether) · ~140 mil M$ — a maior, atestações opacas · USDC (Circle) · ~60 mil M$ — atestações mensais das Big Four · PYUSD (PayPal) · ~1 mil M$ — mais recente, regulada.",
+        "logos": [
+          { "sym": "USDT", "tag": "~140 mil M$" },
+          { "sym": "USDC", "tag": "~60 mil M$" },
+          { "sym": "RLUSD", "tag": "Ripple" },
+          { "sym": "PYUSD", "tag": "PayPal" }
+        ],
+        "risk": "Estás a confiar no emissor. O USDC perdeu brevemente o peg para 0,87 $ em março de 2023, quando a Circle tinha 3,3 mil M$ presos no falido Silicon Valley Bank. A Tether já resolveu vários processos judiciais sobre divulgação de reservas."
+      },
+      {
+        "title": "Garantida por cripto",
+        "sub": "Descentralizada · sobre-colateralizada",
+        "mechanism": "Os utilizadores bloqueiam cripto (ETH, wBTC) num smart contract com um rácio de colateral de 150-200% e cunham stablecoins. Se o valor do colateral cair, o contrato liquida posições automaticamente. Sem emissor humano.",
+        "examples": "DAI (MakerDAO/Sky) · ~5 mil M$ — a original, desde 2017 · GHO (Aave) · LUSD (Liquity) · crvUSD (Curve) — cada uma com mecânicas de liquidação ligeiramente diferentes.",
+        "logos": [
+          { "sym": "DAI", "tag": "MakerDAO" },
+          { "sym": "GHO", "tag": "Aave" },
+          { "sym": "LUSD", "tag": "Liquity" },
+          { "sym": "crvUSD", "tag": "Curve" }
+        ],
+        "risk": "Ineficiente em capital (precisas de 150 $ de cripto para cunhar 100 $). O próprio colateral é volátil — uma queda rápida pode ultrapassar as liquidações (a DAI transacionou brevemente acima de 1 $ em março de 2020). A DAI moderna detém agora reservas significativas de USDC, reintroduzindo parcialmente o risco custodial."
+      },
+      {
+        "title": "Algorítmica e híbrida",
+        "sub": "Sem colateral (ou parcial)",
+        "mechanism": "Mantêm o peg através de algoritmos de cunhagem/queima de oferta ou de posições de derivados delta-neutras. As versões puramente algorítmicas têm um modo de falha documentado; as híbridas (Frax, Ethena) combinam colateral com estratégias sintéticas.",
+        "examples": "TerraUSD (UST) · colapsou em maio de 2022, eliminou ~60 mil M$ — caso de estudo de espiral de morte · Frax · ~650 M$, híbrida parcialmente colateralizada · Ethena USDe · delta-neutra sintética, ~5 mil M$+ em 2024.",
+        "logos": [
+          { "sym": "UST", "tag": "💀 colapsou" },
+          { "sym": "FRAX", "tag": "híbrida" },
+          { "sym": "USDe", "tag": "Ethena" }
+        ],
+        "risk": "Puramente algorítmica: todas as tentativas anteriores falharam. Híbrida: a Ethena depende de as taxas de financiamento dos perps de ETH se manterem positivas — funciona em mercados em alta, por testar ao longo de um ciclo de baixa prolongado. Trata com cuidado redobrado."
+      }
+    ],
+    "scaleLabel": "Escala",
+    "scaleBodyA": "Oferta total de stablecoins: ",
+    "scaleBodyStrong": "~200 mil M$",
+    "scaleBodyB": " · o volume diário de liquidação rivaliza com a Visa · só o USDT liquida, em alguns dias, mais volume on-chain do que o Bitcoin. As stablecoins são a dApp mais usada por número de transações.",
+    "regLabel": "Regulação a apertar",
+    "regBody": "A MiCA da UE (em vigor desde 2024) restringe stablecoins algorítmicas não denominadas em euros · enquadramentos dos EUA em debate no Congresso · sandbox de Hong Kong ativa. Transparência do emissor, auditorias de reservas e licenciamento são a nova base."
+  },
+  "apps1": {
+    "heading": "Além do DeFi — o que mais corre na Ethereum",
+    "subtitle": "O DeFi é a categoria de app mais discutida — mas não a única. A mesma EVM aloja propriedade, governação, identidade e jogos a uma escala relevante.",
+    "standardsLabel": "Os padrões de token por baixo de tudo",
+    "standardsA": "A maioria das apps fora do DeFi resume-se a três padrões de token: ",
+    "standardsErc20": "ERC-20",
+    "standardsB": " (fungível — moedas, ações, governação), ",
+    "standardsErc721": "ERC-721",
+    "standardsC": " (único — NFTs, identidade, escrituras), ",
+    "standardsErc1155": "ERC-1155",
+    "standardsD": " (misto — itens de jogo). A \"app\" é, na verdade, um smart contract que cunha, transfere ou consulta estes tokens.",
+    "moreExamplesLabel": "Mais exemplos: ",
+    "limitLabel": "Limite honesto: ",
+    "cards": [
+      {
+        "title": "NFTs e propriedade digital",
+        "sub": "ERC-721 / ERC-1155",
+        "what": "Um token único on-chain cujo tokenURI aponta para metadados off-chain (imagem, JSON). O token prova a proveniência; os bytes vivem tipicamente no IPFS ou num servidor centralizado.",
+        "examples": "CryptoPunks (2017) · Bored Ape (2021) · Bilhetes: Liverpool FC, Coachella · Música: Sound.xyz · IP de marca: Nike RTFKT, pilotos da Disney.",
+        "projects": [
+          { "sym": "🟧 OpenSea", "tag": "maior marketplace" },
+          { "sym": "🐵 BAYC", "tag": "PFPs · cultura" },
+          { "sym": "🟪 Sound.xyz", "tag": "NFTs de música" },
+          { "sym": "👟 Nike RTFKT", "tag": "IP de marca" },
+          { "sym": "🎟️ POAP", "tag": "provas de presença" }
+        ],
+        "limit": "A maioria dos metadados está off-chain — se o URL ou o pin do IPFS desaparecer, o \"NFT\" fica um apontador partido. O ciclo especulativo de 2021-22 colapsou; os sobreviventes viraram-se para a utilidade (bilhetes, direitos, identidade) em vez de revender JPEGs."
+      },
+      {
+        "title": "DAOs e governação on-chain",
+        "sub": "Votação ERC-20 · tesouraria controlada por contrato",
+        "what": "Uma Decentralized Autonomous Organization é um smart contract que controla uma tesouraria e executa propostas aprovadas por votos dos detentores de tokens. O contrato — e não um CEO — move os fundos.",
+        "examples": "MakerDAO (emissão de DAI) · Uniswap DAO (controla mais de 7 mil M$ em UNI) · ENS DAO (registo .eth) · Optimism Citizen House · subsídios da Gitcoin.",
+        "projects": [
+          { "sym": "🦄 Uniswap DAO", "tag": "tesouraria de 7 mil M$" },
+          { "sym": "⚖️ MakerDAO", "tag": "emissão de DAI" },
+          { "sym": "🌐 ENS DAO", "tag": "registo .eth" },
+          { "sym": "🔴 Optimism", "tag": "Citizen House" },
+          { "sym": "💚 Gitcoin", "tag": "subsídios de bens públicos" }
+        ],
+        "limit": "A afluência às votações é muitas vezes de 1–5%. Os votos ponderados por tokens significam que as baleias decidem. A maioria das \"DAOs\" delega as decisões em pequenas equipas centrais. O estatuto legal das DAOs continua por resolver na maioria das jurisdições."
+      }
+    ]
+  },
+  "apps2": {
+    "heading": "Além do DeFi — Identidade e Jogos",
+    "subtitle": "Mais dois verticais onde a programabilidade da Ethereum abre possibilidades que os sistemas centralizados ainda não conseguem replicar.",
+    "moreExamplesLabel": "Mais exemplos: ",
+    "limitLabel": "Limite honesto: ",
+    "cards": [
+      {
+        "title": "Identidade e social descentralizado",
+        "sub": "ENS · SIWE · Lens · Farcaster",
+        "what": "Substituir os logins por email por identidade baseada na carteira. O ENS dá-te um nome humano (alice.eth) para o teu endereço. O Sign-In With Ethereum (SIWE) autentica sem palavras-passe. A Lens e o Farcaster constroem grafos sociais on-chain.",
+        "examples": "ENS: mais de 3M de nomes registados · SIWE: mais de 200 apps integradas · Farcaster: ~300 mil DAU (2024) · Worldcoin: mais de 7M de humanos verificados · Lens: construída em torno de grafos de feed componíveis.",
+        "projects": [
+          { "sym": "🌐 ENS", "tag": "3M+ nomes .eth" },
+          { "sym": "🔑 SIWE", "tag": "login por carteira" },
+          { "sym": "🌿 Lens", "tag": "grafo social" },
+          { "sym": "🟪 Farcaster", "tag": "~300 mil DAU" },
+          { "sym": "🌍 Worldcoin", "tag": "7M+ verificados" }
+        ],
+        "limit": "Ainda de nicho face ao social da Web2. O onboarding com carteira e gas bloqueia a maioria dos utilizadores. Os nomes ENS custam gas a cunhar. O social descentralizado ainda não resolveu o spam ou a moderação tão bem como as plataformas centralizadas — para já."
+      },
+      {
+        "title": "Jogos on-chain e metaverso",
+        "sub": "A maioria dos ativos vive agora em L2s",
+        "what": "Ativos de jogo (skins, personagens, itens) como tokens que os jogadores possuem de facto e podem negociar. Vai desde \"jogo off-chain com cosméticos NFT\" até \"jogos totalmente on-chain\" onde todo o estado do jogo vive em contratos (motor Dojo).",
+        "examples": "Immutable (zkEVM para jogos) · Ronin (o Axie Infinity atingiu 3 mil M$ de GMV em 2021) · Decentraland · Realms / Loot Survivor na Starknet · DFK Chain (L1 da Avalanche).",
+        "projects": [
+          { "sym": "🟦 Immutable", "tag": "zkEVM para jogos" },
+          { "sym": "🐉 Axie · Ronin", "tag": "pico de 3 mil M$ GMV" },
+          { "sym": "🏝️ Decentraland", "tag": "metaverso / terrenos" },
+          { "sym": "⚔️ Loot Survivor", "tag": "totalmente on-chain" },
+          { "sym": "🌌 The Sandbox", "tag": "UGC em voxel" }
+        ],
+        "limit": "A maioria dos \"jogos Web3\" falhou (jogabilidade fraca, tokenomics predatória, incentivos em forma de Ponzi). A UX da carteira continua a bloquear o gaming mainstream. Os estúdios sérios assentam cada vez mais em \"jogo primeiro, blockchain opcional\"."
+      }
+    ],
+    "uriLabel": "A armadilha do URI — ",
+    "uriBody": "Os NFTs ERC-721 guardam tipicamente apenas um URL que aponta para metadados off-chain. O token on-chain prova que possuis um apontador; a imagem/ativo em si vive no IPFS, no Arweave, ou — demasiadas vezes — num único servidor web. Se o anfitrião desaparecer, o teu NFT fica em branco. Verifica sempre onde estão fixados os metadados antes de comprar."
+  },
+  "comparison": {
+    "title": "Bitcoin vs Ethereum",
+    "featureLabel": "Propriedade",
+    "option1Label": "Bitcoin ₿",
+    "option2Label": "Ethereum Ξ",
+    "items": [
+      { "feature": "Criada em", "option1": "2009", "option2": "2015" },
+      { "feature": "Criador", "option1": "Satoshi Nakamoto", "option2": "Vitalik Buterin" },
+      { "feature": "Propósito", "option1": "Ouro digital / reserva de valor", "option2": "Blockchain programável / computador mundial" },
+      { "feature": "Oferta", "option1": "Limite de 21M", "option2": "Sem limite rígido, ~120M em circulação" },
+      { "feature": "Consenso", "option1": "Proof of Work", "option2": "Proof of Stake desde 2022" },
+      { "feature": "Smart contracts", "option1": "Script limitado", "option2": "EVM Turing-completa" },
+      { "feature": "Tempo de bloco", "option1": "~10 min", "option2": "~12 segundos" },
+      { "feature": "TPS", "option1": "7", "option2": "~15 na L1 + milhares na L2" },
+      { "feature": "Token", "option1": "BTC", "option2": "ETH" },
+      { "feature": "L2 principal", "option1": "Lightning Network", "option2": "Arbitrum / Optimism / Base" }
+    ]
+  },
+  "bestFits": {
+    "badge": "🎯 Melhores Usos",
+    "heading": "Onde a Ethereum Vence — Os Casos de Uso que Domina de Facto",
+    "subtitleA": "As escolhas de design da Ethereum (EVM Turing-completa, modelo de contas, liquidez profunda, padrões ERC, a stack de L2) tornam-na a opção por defeito para tudo o que precise de ",
+    "subtitleStrong": "estado programável + composabilidade + um ecossistema aberto de programadores",
+    "subtitleB": ".",
+    "whyLabel": "Porquê",
+    "wildLabel": "Na prática",
+    "items": [
+      { "name": "DeFi e finanças on-chain", "why": "Peças de dinheiro componíveis — Uniswap, Aave e Compound interoperam por defeito. ~50 mil M$ de TVL em L1 + L2.", "example": "Uniswap (DEX), Aave (lending), MakerDAO (DAI), Lido (staking), Curve (trocas de stables)." },
+      { "name": "NFTs e economia de criadores", "why": "ERC-721 / ERC-1155 são os padrões de facto. Aplicação de royalties + proveniência comprovável incluídas.", "example": "OpenSea, Blur, leilões on-chain da Sotheby's · domínios ENS · POAPs · provas de presença." },
+      { "name": "DAOs e governação on-chain", "why": "Votação ponderada por tokens, tesourarias programáveis, propostas transparentes — kits de governação testados em batalha.", "example": "Uniswap DAO (tesouraria de 6 mil M$), MakerDAO, Arbitrum DAO, Optimism, subsídios da Gitcoin." },
+      { "name": "Stablecoins e RWAs tokenizados", "why": "Liquidez mais profunda para tokens garantidos por USD; emissão de RWA via canais institucionais (BlackRock BUIDL, Franklin Templeton).", "example": "USDC, USDT, DAI, RLUSD, PYUSD na Ethereum · BlackRock BUIDL (mais de 2 mil M$ de AUM) · Ondo Finance." }
+    ],
+    "notFitLabel": "Não é adequada para:",
+    "notFitBody": " reserva de valor pura com a neutralidade do Bitcoin (usa BTC), pagamentos de retalho de alto débito sem L2 (picos de gas), consórcios empresariais privados onde os dados têm de ficar fora da vista pública (usa Fabric), casos de uso que não precisam de programabilidade ou composabilidade — custo extra sem qualquer benefício."
+  },
+  "worstFits": {
+    "badge": "🚫 Piores Usos",
+    "headingA": "Onde a Ethereum é a Ferramenta ",
+    "headingEm": "Errada",
+    "headingB": "",
+    "subtitle": "A Ethereum é a opção por defeito para tudo o que seja programável — mas as opções por defeito não são gratuitas. Há tarefas em que a sua programabilidade aberta é o problema, não a solução.",
+    "whyNotLabel": "Porque não",
+    "useInsteadLabel": "Usa antes",
+    "items": [
+      { "name": "Reserva de valor pura / ouro digital", "why": "O ETH não tem limite rígido, a política monetária muda (Merge, EIP-1559), e tem um orçamento de credibilidade de \"sound money\" muito menor face ao Bitcoin.", "alt": "Usa Bitcoin para uma RdV neutra, escassa e testada pelo tempo." },
+      { "name": "Consórcios B2B privados, dados regulados", "why": "A mainnet da Ethereum é totalmente pública — má para dados de KYC, contratos com fornecedores, registos de saúde. As camadas de privacidade (Aztec) ajudam mas acrescentam complexidade e pressupostos de confiança.", "alt": "Usa Hyperledger Fabric · Quorum · R3 Corda para canais com permissão." },
+      { "name": "Pagamentos de consumo na L1", "why": "A L1 finaliza em ~12 min e as taxas disparam com a procura. Mesmo com L2s, a latência de levantamento e a UX das pontes ainda incomodam no retalho.", "alt": "Usa Bitcoin Lightning · Solana · XRPL · Stellar para uma UX de pagamento abaixo do segundo." },
+      { "name": "Jogos sensíveis à latência / apps em tempo real", "why": "Blocos de ~12 segundos na L1, ~1-2 s na maioria dos rollups — ainda demasiado lento para jogos por ticks ou negociação ao vivo. Emparelhar order books ao custo de gas é brutal.", "alt": "Usa Solana · Sui · Aptos · cadeias de order book dedicadas (dYdX v4) para apps limitadas pela latência." }
+    ],
+    "rightToolLabel": "Ferramenta certa, tarefa certa:",
+    "rightToolBody": " A Ethereum é imbatível para finanças on-chain componíveis, NFTs, DAOs, identidade e emissão de stablecoins. Para tudo o resto, pergunta se precisas mesmo de uma VM global pública — por vezes não precisas."
+  },
+  "quiz": {
+    "question": "Qual é a diferença fundamental entre uma Externally Owned Account (EOA) e uma Conta de Contrato na Ethereum?",
+    "options": [
+      "As EOAs podem guardar ETH; as Contas de Contrato só podem guardar código e não podem deter saldo.",
+      "As Contas de Contrato podem iniciar transações de forma independente; as EOAs só podem responder quando chamadas por um contrato.",
+      "As EOAs são controladas por uma chave privada e podem iniciar transações; as Contas de Contrato são controladas por código e só executam quando acionadas por uma EOA ou por outro contrato.",
+      "As EOAs existem apenas na mainnet da Ethereum; as Contas de Contrato funcionam automaticamente em todas as cadeias compatíveis com EVM."
+    ],
+    "explanation": "Esta é a distinção fundadora do modelo de contas da Ethereum. Uma EOA é o que um humano controla — tem uma chave privada, pode iniciar transações e paga gas. Uma Conta de Contrato não tem chave privada — é puro código implementado num endereço determinístico, e só corre quando outra conta lhe envia uma transação. Isto significa que uma Conta de Contrato não pode agir espontaneamente segundo um calendário — precisa de uma EOA (ou de um bot keeper que usa uma EOA) para a acionar. Toda a transação na Ethereum origina, em última análise, de uma EOA."
+  },
+  "quiz2": {
+    "question": "Uma transação EIP-1559 define maxFeePerGas = 30 Gwei e maxPriorityFeePerGas = 2 Gwei. A base fee atual é 25 Gwei. Quanto é que o remetente paga de facto por gas, e para onde vai cada parte?",
+    "options": [
+      "30 Gwei por gas, na totalidade pagos ao validador que inclui a transação.",
+      "25 Gwei de base fee (queimada, removida da oferta) + 2 Gwei de gorjeta (paga ao validador) = 27 Gwei por gas. A margem restante de 3 Gwei no maxFeePerGas é devolvida ao remetente.",
+      "25 Gwei de base fee paga ao validador + 2 Gwei de taxa de prioridade queimada. Total de 27 Gwei por gas.",
+      "30 Gwei (taxa máxima) + 2 Gwei (taxa de prioridade) = 32 Gwei por gas, pagos inteiramente ao validador."
+    ],
+    "explanation": "A EIP-1559 dividiu o preço do gas em dois componentes. A base fee determinada pelo protocolo é QUEIMADA (destruída permanentemente — é isto que torna o ETH deflacionário quando a atividade é alta). A taxa de prioridade é a gorjeta que o utilizador oferece ao validador. O preço efetivo por gas é min(maxFeePerGas, baseFee + maxPriorityFeePerGas) — aqui min(30, 25 + 2) = 27 Gwei. Qualquer margem não utilizada é devolvida. Assim, o remetente paga 27 Gwei × gasUsed: 25 queimados, 2 para o validador. O maxFeePerGas é um limite, não um alvo."
+  },
+  "quiz3": {
+    "question": "O Bob implementa um smart contract enviando uma transação com to = null e o bytecode compilado no campo data. Como é determinado o endereço do novo contrato?",
+    "options": [
+      "O Bob escolhe qualquer endereço de 20 bytes não utilizado e inclui-o no campo value da transação.",
+      "O protocolo da Ethereum gera um endereço aleatório de 20 bytes no momento da implementação, por isso o endereço é imprevisível até a transação ser minada.",
+      "Numa implementação CREATE normal, o endereço é derivado de forma determinística a partir de keccak256(senderAddress, senderNonce) — o Bob consegue calcular o futuro endereço do contrato antes de enviar a transação.",
+      "O endereço é igual a keccak256(bytecode), por isso duas implementações de contratos idênticos partilham sempre o mesmo endereço."
+    ],
+    "explanation": "O CREATE deriva o endereço do contrato a partir de rlp(senderAddress, senderNonce), tomando depois os últimos 20 bytes do seu hash keccak256. Isto significa que qualquer pessoa pode prever o futuro endereço do contrato antes da implementação — útil para canais de estado e instanciação contrafactual. O CREATE2 (introduzido no Constantinople) usa keccak256(0xff, deployer, salt, keccak256(initCode)), por isso o endereço depende de um salt e do código de inicialização, desacoplando-o do nonce — permitindo o pré-compromisso do endereço independentemente da ordem de implementação. Bytecode idêntico NÃO partilha um endereço com o CREATE; o CREATE2 distingue pelo salt."
+  },
+  "takeaways": {
+    "title": "Secção 02 — Conclusões-Chave",
+    "items": [
+      "A Ethereum estende o Bitcoin acrescentando uma máquina virtual Turing-completa — a EVM",
+      "Dois tipos de contas: Externally Owned Accounts (EOAs) e Contas de Contrato",
+      "Os smart contracts são programas guardados on-chain que executam de forma determinística quando acionados",
+      "The Merge (2022) substituiu o Proof of Work por Proof of Stake — reduzindo o consumo de energia em 99,95%",
+      "A EVM tornou-se um padrão da indústria — Polygon, Arbitrum, Base, Optimism e outras são compatíveis com EVM",
+      "O Bitcoin é dinheiro digital; a Ethereum é uma camada de liquidação programável"
+    ]
+  }
+}
