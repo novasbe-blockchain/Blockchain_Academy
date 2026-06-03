@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import helderPhoto from '../../Profile photos Helder.jpg';
 import shayanPhoto from '../../Profile photos Shayan.jpg';
 
@@ -43,3 +44,22 @@ export const shayan: InstructorData = {
     'CTO at a publicly traded company',
   ],
 };
+
+export type InstructorId = 'helder' | 'shayan';
+
+const INSTRUCTORS: Record<InstructorId, InstructorData> = { helder, shayan };
+
+/**
+ * Returns instructor data with the localized fields (nickname, role,
+ * highlights) resolved from the `common` namespace for the active language.
+ * Non-translatable fields (photo, name, colors) come from the static data.
+ */
+export function useInstructor(id: InstructorId): InstructorData {
+  const { t } = useTranslation();
+  return {
+    ...INSTRUCTORS[id],
+    nickname: t(`instructors.${id}.nickname`),
+    role: t(`instructors.${id}.role`),
+    highlights: t(`instructors.${id}.highlights`, { returnObjects: true }) as string[],
+  };
+}

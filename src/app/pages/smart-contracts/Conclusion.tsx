@@ -1,10 +1,17 @@
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, FileCode2 } from 'lucide-react';
 import { SiteFooter } from '../../components/shared/SiteFooter';
+import { useLang } from '../../../i18n/useLang';
 
 const ACCENT = '#6366f1';
 
+const tagKeys = ['trustless', 'immutable', 'oracle', 'security', 'integration'] as const;
+
 export function SC_Conclusion() {
+  const lang = useLang();
+  const { t } = useTranslation('smart-contracts/conclusion');
+
   return (
     <div className="h-full flex flex-col items-center justify-center p-8 lg:p-16 relative overflow-y-auto">
       {/* Background */}
@@ -19,42 +26,36 @@ export function SC_Conclusion() {
           </div>
         </div>
 
-        <div className="text-xs font-bold text-[#6366f1] tracking-widest uppercase mb-4">Course 02 — Conclusion</div>
+        <div className="text-xs font-bold text-[#6366f1] tracking-widest uppercase mb-4">{t('courseLabel')}</div>
 
         <blockquote className="text-3xl lg:text-4xl font-black text-foreground mb-6 leading-snug">
-          "Smart contracts are not magic.<br />
-          <span style={{ color: ACCENT }}>They are code.</span><br />
-          Their power and their risk<br />come from the same source."
+          {t('quote.line1')}<br />
+          <span style={{ color: ACCENT }}>{t('quote.emphasis')}</span><br />
+          {t('quote.line2')}<br />{t('quote.line3')}
         </blockquote>
 
         <p className="text-muted-foreground mb-10 text-base leading-relaxed max-w-xl mx-auto">
-          The most important thing you can do with this knowledge is think critically. Before deploying a smart contract, ask: does this actually need to be on-chain? Who audits it? What happens when it goes wrong?
+          {t('body')}
         </p>
 
         <div className="flex flex-wrap gap-3 justify-center mb-10">
-          {[
-            'Trustless execution',
-            'Immutable logic',
-            'Oracle dependencies',
-            'Security auditing',
-            'Business integration',
-          ].map(tag => (
+          {tagKeys.map(key => (
             <span
-              key={tag}
+              key={key}
               className="px-4 py-2 rounded-full border text-sm font-medium"
               style={{ color: ACCENT, borderColor: ACCENT + '40', backgroundColor: ACCENT + '10' }}
             >
-              {tag}
+              {t(`tags.${key}`)}
             </span>
           ))}
         </div>
 
         <Link
-          to="/smart-contracts"
+          to={`/${lang}/smart-contracts`}
           className="inline-flex items-center gap-2 px-6 py-3 bg-card border border-border rounded-lg font-medium text-muted-foreground hover:text-foreground hover:border-[#6366f1] transition-all"
         >
           <ArrowLeft className="size-4" />
-          Back to Course Home
+          {t('backToHome')}
         </Link>
       </div>
       <SiteFooter className="snap-start" />

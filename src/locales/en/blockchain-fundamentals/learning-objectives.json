@@ -1,0 +1,31 @@
+{
+  "title": {
+    "sectionNumber": "BEFORE WE BEGIN",
+    "title": "Learning Objectives",
+    "subtitle": "What you will learn in this course"
+  },
+  "heading": "By the End of This Course",
+  "intro": "You will be able to understand, explain, and critically analyze blockchain technology — its mechanics, its promise, and its limits.",
+  "objectives": {
+    "core": {
+      "title": "Core Blockchain Concepts",
+      "description": "Understand the fundamentals: DLT, hashing, cryptography, transactions, wallets, digital signatures, and consensus mechanisms."
+    },
+    "evolution": {
+      "title": "Evolution & Applications",
+      "description": "Trace the history from cypherpunks to Bitcoin, and understand how blockchain evolved into the industry it is today."
+    },
+    "benefits": {
+      "title": "Benefits & Advantages",
+      "description": "Identify blockchain's key strengths: transparency, immutability, decentralization, censorship resistance, and trustless operation."
+    },
+    "impact": {
+      "title": "Real-World Impact",
+      "description": "Analyze which industries are being transformed by blockchain — from finance and supply chain to healthcare and digital identity."
+    },
+    "challenges": {
+      "title": "Challenges & Limitations",
+      "description": "Evaluate the key obstacles blockchain still faces: scalability, energy consumption, regulation, usability, and ethical concerns."
+    }
+  }
+}

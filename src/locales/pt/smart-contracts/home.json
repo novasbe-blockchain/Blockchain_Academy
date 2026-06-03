@@ -1,0 +1,54 @@
+{
+  "hero": {
+    "courseBadge": "Curso 02",
+    "titleLine1": "Aplicações Empresariais",
+    "titleLine2": "de Smart Contracts",
+    "tagline": "Da teoria à disrupção da indústria — compreende o que os smart contracts conseguem e não conseguem fazer pelo teu negócio.",
+    "badges": {
+      "sections": "7 Secções",
+      "slides": "90+ Slides",
+      "verticals": "5 Verticais de Indústria",
+      "cases": "8 Casos de Estudo",
+      "demos": "7 Demos Interativas"
+    },
+    "startLearning": "Começar a Aprender"
+  },
+  "sectionsTitle": "Secções do Curso",
+  "explore": "Explorar",
+  "instructorTitle": "Conhece o Formador",
+  "instructorSubtitle": "A pessoa por trás deste curso",
+  "sections": {
+    "section1": {
+      "title": "Introdução aos Smart Contracts",
+      "description": "O que são smart contracts, o modelo da máquina de venda automática de Nick Szabo e a evolução histórica de 1994 até hoje."
+    },
+    "section2": {
+      "title": "Como Funcionam os Smart Contracts",
+      "description": "Fluxo de trabalho, componentes essenciais, ambiente de execução, o panorama Web3, dApps, economia do gas e porque deves construir com smart contracts."
+    },
+    "section3": {
+      "title": "Indústrias e Casos de Estudo",
+      "description": "Cinco verticais de indústria (DeFi, Gaming/NFTs, RWA, Cadeia de Abastecimento, Certificação Digital) mais oito casos emblemáticos, incluindo Walmart, Santander, Estónia, The DAO e ASX."
+    },
+    "section4": {
+      "title": "Pensamento Crítico",
+      "description": "Modelo de decisão: quando usar um smart contract — e quando não usar. Mais o modelo de adoção de 5 pilares para implementação empresarial séria."
+    },
+    "section5": {
+      "title": "Limitações e Riscos",
+      "description": "Problema do oráculo, trilema da blockchain, riscos de segurança (reentrância, flash loans, MEV), realidades de custo e incerteza regulatória."
+    },
+    "section6": {
+      "title": "Construção e Integração",
+      "description": "Normas ERC, processo EIP, frameworks (Hardhat / Foundry), comparação de 17 plataformas, padrões de integração e desenvolvimento com IA."
+    },
+    "section7": {
+      "title": "Projeto de Equipa",
+      "description": "Desenha uma aplicação empresarial com smart contracts, mapeia os stakeholders, identifica riscos e apresenta o teu caso à turma."
+    },
+    "conclusion": {
+      "title": "Conclusão",
+      "description": "Os smart contracts não são magia — são código. O seu poder e o seu risco vêm da mesma fonte."
+    }
+  }
+}

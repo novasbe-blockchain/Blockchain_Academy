@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "courseBadge": "Curso 04",
+    "titleLine1": "Gestão de Projetos para",
+    "titleLine2": "Iniciativas de Blockchain",
+    "tagline": "Planeia, executa e lidera projetos de blockchain — ligando a complexidade técnica aos resultados de negócio.",
+    "badges": {
+      "sessions": "5 Sessões",
+      "risk": "Frameworks de Risco",
+      "stakeholder": "Ferramentas de Stakeholders",
+      "leadership": "Modelos de Liderança"
+    },
+    "startLearning": "Começar a Aprender"
+  },
+  "sectionsTitle": "Sessões do Curso",
+  "explore": "Explorar",
+  "sections": {
+    "section1": {
+      "title": "Introdução à Gestão de Projetos de Blockchain",
+      "description": "O que torna os projetos de blockchain únicos, o ciclo de vida do projeto, os papéis-chave e o debate Agile vs Waterfall para equipas descentralizadas."
+    },
+    "section2": {
+      "title": "Planeamento e Definição de Âmbito de Projetos de Blockchain",
+      "description": "Frameworks de decisão, definição de âmbito, mapeamento de stakeholders, estruturas de decomposição do trabalho e modelos de governação."
+    },
+    "section3": {
+      "title": "Gestão de Risco em Projetos de Blockchain",
+      "description": "Riscos técnicos, regulatórios e de adoção — com frameworks de avaliação, processos de auditoria de smart contracts e estratégias de mitigação."
+    },
+    "section4": {
+      "title": "Comunicação e Colaboração para Equipas de Blockchain",
+      "description": "Comunicação multi-stakeholder, tradução do técnico para o negócio, práticas de documentação e governação descentralizada."
+    },
+    "section5": {
+      "title": "Liderar Equipas de Projetos de Blockchain",
+      "description": "Composição de equipas, liderança em contextos descentralizados, cerimónias Agile, gestão da mudança e medição do sucesso do projeto."
+    },
+    "conclusion": {
+      "title": "Conclusão",
+      "description": "O gestor de projetos de blockchain não é apenas um gestor de projetos — é o tradutor entre o técnico e o humano."
+    }
+  },
+  "instructor": {
+    "title": "Conhece o Formador",
+    "subtitle": "A pessoa por trás deste curso",
+    "badge": "FORMADOR",
+    "name": "Pedro Granate",
+    "role": "Cofundador, COO e CPO · Zharta",
+    "stats": {
+      "education": { "label": "Educação", "value": "Mestrado em Engenharia Mecânica, IST" },
+      "experience": { "label": "Experiência", "value": "10+ anos em Gestão de Projetos e Operações" },
+      "industry": { "label": "Indústria", "value": "Engenharia · Fabrico · Tecnologia" }
+    },
+    "highlights": [
+      "Mestrado em Engenharia Mecânica pelo IST (Instituto Superior Técnico)",
+      "Engenheiro de Desenvolvimento na Bosch Termotecnologia",
+      "Gestor de Projetos em funções de produção e desenvolvimento",
+      "Gestor de Projetos na Hovione (contexto CMO)",
+      "Cofundador, COO e CPO na Zharta — estratégia de produto e operacional"
+    ]
+  }
+}

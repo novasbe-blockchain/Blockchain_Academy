@@ -1,0 +1,54 @@
+{
+  "hero": {
+    "courseBadge": "Course 02",
+    "titleLine1": "Business Applications",
+    "titleLine2": "for Smart Contracts",
+    "tagline": "From theory to industry disruption — understand what smart contracts can and cannot do for your business.",
+    "badges": {
+      "sections": "7 Sections",
+      "slides": "90+ Slides",
+      "verticals": "5 Industry Verticals",
+      "cases": "8 Case Studies",
+      "demos": "7 Interactive Demos"
+    },
+    "startLearning": "Start Learning"
+  },
+  "sectionsTitle": "Course Sections",
+  "explore": "Explore",
+  "instructorTitle": "Meet the Instructor",
+  "instructorSubtitle": "The person behind this course",
+  "sections": {
+    "section1": {
+      "title": "Introduction to Smart Contracts",
+      "description": "What smart contracts are, the Nick Szabo vending machine model, and the historical evolution from 1994 to today."
+    },
+    "section2": {
+      "title": "How Smart Contracts Work",
+      "description": "Workflow, core components, execution environment, the Web3 landscape, dApps, gas economics, and why you should build with smart contracts."
+    },
+    "section3": {
+      "title": "Industries & Case Studies",
+      "description": "Five industry verticals (DeFi, Gaming/NFTs, RWA, Supply Chain, Digital Cert) plus eight flagship cases including Walmart, Santander, Estonia, The DAO, and ASX."
+    },
+    "section4": {
+      "title": "Critical Thinking",
+      "description": "Decision framework: when to use a smart contract — and when not to. Plus the 5-pillar adoption model for serious business deployment."
+    },
+    "section5": {
+      "title": "Limitations & Risks",
+      "description": "Oracle problem, blockchain trilemma, security risks (reentrancy, flash loans, MEV), cost realities, and regulatory uncertainty."
+    },
+    "section6": {
+      "title": "Build & Integration",
+      "description": "ERC standards, EIP process, frameworks (Hardhat / Foundry), 17-platform comparison, integration patterns, and AI-driven development."
+    },
+    "section7": {
+      "title": "Team Project",
+      "description": "Design a smart contract business application, map stakeholders, identify risks, and present your case to the class."
+    },
+    "conclusion": {
+      "title": "Conclusion",
+      "description": "Smart contracts are not magic — they are code. Their power and their risk come from the same source."
+    }
+  }
+}

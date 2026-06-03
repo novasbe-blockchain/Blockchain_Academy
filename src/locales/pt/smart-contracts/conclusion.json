@@ -1,0 +1,18 @@
+{
+  "courseLabel": "Curso 02 — Conclusão",
+  "quote": {
+    "line1": "\"Os smart contracts não são magia.",
+    "emphasis": "São código.",
+    "line2": "O seu poder e o seu risco",
+    "line3": "vêm da mesma fonte.\""
+  },
+  "body": "A coisa mais importante que podes fazer com este conhecimento é pensar criticamente. Antes de implementar um smart contract, pergunta: isto precisa mesmo de estar on-chain? Quem o audita? O que acontece quando corre mal?",
+  "tags": {
+    "trustless": "Execução sem confiança",
+    "immutable": "Lógica imutável",
+    "oracle": "Dependências de oráculos",
+    "security": "Auditoria de segurança",
+    "integration": "Integração empresarial"
+  },
+  "backToHome": "Voltar à Página Inicial do Curso"
+}

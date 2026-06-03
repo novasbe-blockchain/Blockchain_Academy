@@ -1,0 +1,31 @@
+{
+  "title": {
+    "sectionNumber": "BEFORE WE BEGIN",
+    "title": "Learning Objectives",
+    "subtitle": "What you will learn in this course"
+  },
+  "heading": "By the End of This Course",
+  "intro": "You will be able to compare, evaluate, and select blockchain platforms based on their architecture, consensus models, and real-world trade-offs.",
+  "objectives": {
+    "bitcoin": {
+      "title": "Bitcoin: The First Permissionless Blockchain",
+      "description": "Map Bitcoin's four-layer architecture, explain the UTXO transaction model, understand Proof of Work and the halving schedule, and analyze Bitcoin's trilemma trade-offs."
+    },
+    "ethereum": {
+      "title": "Ethereum: Programmable Blockchain",
+      "description": "Explain Ethereum accounts, the EVM execution model, smart contract deployment, and the Proof of Work → Proof of Stake transition and its implications."
+    },
+    "hyperledger": {
+      "title": "Permissioned Blockchains: Hyperledger Fabric",
+      "description": "Understand why enterprises choose permissioned blockchains, how channels and endorsement policies work, and where Hyperledger Fabric fits in the supply chain."
+    },
+    "comparing": {
+      "title": "Comparing Platforms & the Trilemma",
+      "description": "Apply the Blockchain Trilemma framework to compare Bitcoin, Ethereum, and Hyperledger — identifying which properties each platform prioritizes and sacrifices."
+    },
+    "interoperability": {
+      "title": "Interoperability & Emerging Trends",
+      "description": "Explore cross-chain communication protocols (Cosmos, IBC), Layer 0 architectures, ZK-rollup platforms like Starknet, and the future of blockchain interoperability."
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "hero": {
+    "title": "Plataformas de Blockchain",
+    "tagline": "Bitcoin · Ethereum · Hyperledger · Interoperabilidade",
+    "badges": {
+      "parts": "6 Partes",
+      "slides": "50+ Slides",
+      "interactive": "Interativo"
+    },
+    "startLearning": "Começar a Aprender"
+  },
+  "sectionsTitle": "Secções do Curso",
+  "explore": "Explorar",
+  "instructorsTitle": "Conhece os Formadores",
+  "instructorsSubtitle": "As pessoas por trás deste curso",
+  "sections": {
+    "recap": {
+      "title": "Revisão",
+      "description": "Centralização, tipos de blockchain, permissionada vs sem permissão — a base sobre a qual construímos."
+    },
+    "bitcoin": {
+      "title": "Bitcoin: A Primeira Blockchain Sem Permissão",
+      "description": "Arquitetura, transações, Proof of Work e o Trilema da Blockchain comparados entre plataformas."
+    },
+    "ethereum": {
+      "title": "Ethereum: Do Dinheiro à Blockchain Programável",
+      "description": "Contas, EVM, smart contracts, evolução PoW → PoS e o ecossistema EVM."
+    },
+    "hyperledger": {
+      "title": "Blockchains Permissionadas: Hyperledger Fabric",
+      "description": "Porque existem blockchains empresariais, smart contracts em cadeias de abastecimento, canais e fluxo de transações."
+    },
+    "interoperability": {
+      "title": "Interoperabilidade e Novas Tendências",
+      "description": "Ligar blockchains — Cosmos, protocolos Layer 0 e Starknet."
+    },
+    "conclusion": {
+      "title": "Conclusão",
+      "description": "Não existe a melhor blockchain — apenas blockchains otimizadas para diferentes restrições."
+    }
+  }
+}

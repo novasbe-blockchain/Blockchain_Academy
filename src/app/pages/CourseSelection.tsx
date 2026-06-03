@@ -47,13 +47,8 @@ const courses: Course[] = [
     available: true,
   },
   {
-    // Course 04 stays in English (per decision — it's locked and not in the
-    // translation scope). Title/description/topics use the static fallback.
     number: '04',
-    i18nKey: '',
-    staticTitle: 'Project Management for Blockchain Initiatives',
-    staticDescription: 'Plan, execute, and lead blockchain projects — from scoping and governance to risk management, team leadership, and measuring success.',
-    staticTopics: ['Project Lifecycle', 'Scope & Governance', 'Risk & Audits', 'Communication', 'Team Leadership'],
+    i18nKey: 'projectManagement',
     gradient: 'from-[#f97316] to-[#eab308]',
     accentColor: '#f97316',
     slug: 'project-management',
@@ -181,9 +176,7 @@ export function CourseSelection() {
                   </div>
 
                   <div className="flex items-center gap-2 font-bold text-sm" style={{ color: course.accentColor }}>
-                    {/* Course 4 keeps "Start Course" in English to stay consistent
-                        with the rest of its card, which is also not translated. */}
-                    Start Course
+                    {t('common.startCourse')}
                     <ArrowRight className="size-4" />
                   </div>
 

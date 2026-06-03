@@ -1,0 +1,31 @@
+{
+  "title": {
+    "sectionNumber": "ANTES DE COMEÇARMOS",
+    "title": "Objetivos de Aprendizagem",
+    "subtitle": "O que vais aprender neste curso"
+  },
+  "heading": "No Final Deste Curso",
+  "intro": "Vais ser capaz de compreender, explicar e analisar criticamente a tecnologia blockchain — os seus mecanismos, a sua promessa e os seus limites.",
+  "objectives": {
+    "core": {
+      "title": "Conceitos Fundamentais de Blockchain",
+      "description": "Compreender os fundamentos: DLT, hashing, criptografia, transações, carteiras, assinaturas digitais e mecanismos de consenso."
+    },
+    "evolution": {
+      "title": "Evolução e Aplicações",
+      "description": "Traçar a história desde os cypherpunks até ao Bitcoin e compreender como a blockchain evoluiu para a indústria que é hoje."
+    },
+    "benefits": {
+      "title": "Benefícios e Vantagens",
+      "description": "Identificar os principais pontos fortes da blockchain: transparência, imutabilidade, descentralização, resistência à censura e operação sem necessidade de confiança."
+    },
+    "impact": {
+      "title": "Impacto no Mundo Real",
+      "description": "Analisar que indústrias estão a ser transformadas pela blockchain — das finanças e cadeia de abastecimento à saúde e identidade digital."
+    },
+    "challenges": {
+      "title": "Desafios e Limitações",
+      "description": "Avaliar os principais obstáculos que a blockchain ainda enfrenta: escalabilidade, consumo de energia, regulação, usabilidade e preocupações éticas."
+    }
+  }
+}

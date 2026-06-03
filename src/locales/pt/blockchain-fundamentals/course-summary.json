@@ -1,0 +1,31 @@
+{
+  "title": {
+    "sectionNumber": "VISÃO GERAL",
+    "title": "Resumo do Curso",
+    "subtitle": "O teu mapa pela tecnologia blockchain"
+  },
+  "heading": "Mapa do Curso",
+  "intro": "Quatro partes. Uma jornada coerente da história ao futuro.",
+  "sections": {
+    "prologue": {
+      "label": "PRÓLOGO",
+      "title": "A História da Blockchain",
+      "description": "Do movimento cypherpunk ao nascimento do Bitcoin — os fundamentos ideológicos e técnicos que tornaram possível o dinheiro descentralizado."
+    },
+    "section1": {
+      "label": "SECÇÃO 1",
+      "title": "Introdução à Tecnologia Blockchain",
+      "description": "DLT, hashing, árvores de Merkle, blocos, carteiras, assinaturas digitais, transações e mecanismos de consenso — todos os blocos de construção explicados."
+    },
+    "section2": {
+      "label": "SECÇÃO 2",
+      "title": "Bitcoin e Mais Além",
+      "description": "Porque é que o Bitcoin foi uma revolução, o seu modelo de oferta, a mecânica da rede, a distribuição de nós, o modelo de segurança e a Lightning Network."
+    },
+    "section3": {
+      "label": "SECÇÃO 3",
+      "title": "O Que Vem a Seguir para a Blockchain?",
+      "description": "Impacto no mundo real, evolução da Web3, considerações éticas, consumo de energia e tendências futuras que moldarão a próxima década."
+    }
+  }
+}

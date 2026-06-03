@@ -1,0 +1,39 @@
+{
+  "title": {
+    "sectionNumber": "ANTES DE COMEÇARMOS",
+    "title": "Objetivos de Aprendizagem",
+    "subtitle": "O que vais aprender neste curso"
+  },
+  "heading": "No Final Deste Curso",
+  "intro": "Vais ser capaz de compreender, avaliar e desenhar aplicações empresariais usando a tecnologia de smart contracts — os seus mecanismos, os seus casos de uso e os seus limites.",
+  "objectives": {
+    "fundamentals": {
+      "title": "Fundamentos de Smart Contracts",
+      "description": "Definir smart contracts e explicar a auto-execução, a imutabilidade e a evolução do conceito de 1994 de Szabo, passando pelos Bitcoin Scripts, até à blockchain programável da Ethereum."
+    },
+    "howItWorks": {
+      "title": "Como Funcionam os Smart Contracts",
+      "description": "Mapear a stack Web3, explicar a economia do gas, distinguir a arquitetura de dApps dos sistemas tradicionais e identificar quando os smart contracts acrescentam valor real face a uma base de dados."
+    },
+    "industries": {
+      "title": "Indústrias e Casos de Estudo",
+      "description": "Percorrer cinco verticais de indústria (DeFi, Gaming/NFTs, RWA, Cadeia de Abastecimento, Certificação Digital) mais oito casos de estudo, incluindo Walmart, Santander, Estónia, o ataque ao The DAO e o falhanço da ASX."
+    },
+    "criticalThinking": {
+      "title": "Pensamento Crítico e Adoção",
+      "description": "Aplicar um modelo de decisão para determinar quando um smart contract é a ferramenta certa — e quando uma base de dados é melhor. Dominar o modelo de adoção de 5 pilares para implementação séria."
+    },
+    "limitations": {
+      "title": "Limitações e Segurança",
+      "description": "Compreender o problema do oráculo, o trilema da blockchain, os principais vetores de ataque (reentrância, flash loans, MEV) e as realidades de custo e regulação que condicionam a adoção generalizada."
+    },
+    "build": {
+      "title": "Construção e Integração",
+      "description": "Navegar pelas normas ERC, o processo EIP, frameworks (Hardhat / Foundry), comparação de 17 plataformas, padrões de integração e onde se enquadram as ferramentas de IA no desenvolvimento de smart contracts."
+    },
+    "design": {
+      "title": "Desenho de Aplicações Empresariais",
+      "description": "Aplicar o conhecimento do curso para desenhar uma solução com smart contracts: mapear stakeholders, identificar casos de uso, ponderar compromissos e apresentar um caso de negócio à turma."
+    }
+  }
+}
