@@ -1,0 +1,42 @@
+{
+  "hero": {
+    "title": "Blockchain Platforms",
+    "tagline": "Bitcoin · Ethereum · Hyperledger · Interoperability",
+    "badges": {
+      "parts": "6 Parts",
+      "slides": "50+ Slides",
+      "interactive": "Interactive"
+    },
+    "startLearning": "Start Learning"
+  },
+  "sectionsTitle": "Course Sections",
+  "explore": "Explore",
+  "instructorsTitle": "Meet the Instructors",
+  "instructorsSubtitle": "The people behind this course",
+  "sections": {
+    "recap": {
+      "title": "Recap",
+      "description": "Centralization, blockchain types, permissioned vs permissionless — the foundation we build on."
+    },
+    "bitcoin": {
+      "title": "Bitcoin: The First Permissionless Blockchain",
+      "description": "Architecture, transactions, Proof of Work, and the Blockchain Trilemma compared across platforms."
+    },
+    "ethereum": {
+      "title": "Ethereum: From Money to Programmable Blockchain",
+      "description": "Accounts, EVM, smart contracts, PoW → PoS evolution, and the EVM ecosystem."
+    },
+    "hyperledger": {
+      "title": "Permissioned Blockchains: Hyperledger Fabric",
+      "description": "Why enterprise blockchains exist, smart contracts in supply chains, channels, and transaction flow."
+    },
+    "interoperability": {
+      "title": "Interoperability & New Trends",
+      "description": "Connecting blockchains — Cosmos, Layer 0 protocols, and Starknet."
+    },
+    "conclusion": {
+      "title": "Conclusion",
+      "description": "There is no best blockchain — only blockchains optimised for different constraints."
+    }
+  }
+}

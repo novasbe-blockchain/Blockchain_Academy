@@ -1,0 +1,33 @@
+{
+  "title": {
+    "sectionNumber": "CONCLUSION",
+    "title": "There Is No Best Blockchain",
+    "subtitle": "There are only blockchains optimised for different constraints to solve real-world problems."
+  },
+  "quote": {
+    "line1": "\"There is no best blockchain.",
+    "emphasis": "There are only blockchains optimised for different constraints",
+    "line2": "to solve real-world problems.\""
+  },
+  "body1": "Bitcoin chooses security and decentralization. Ethereum adds programmability. Hyperledger Fabric chooses privacy and enterprise control. Cosmos connects them all.",
+  "body2": "The right platform depends on the problem you're solving.",
+  "platforms": {
+    "bitcoin": {
+      "name": "Bitcoin",
+      "tag": "Secure digital money"
+    },
+    "ethereum": {
+      "name": "Ethereum",
+      "tag": "Programmable settlement"
+    },
+    "hyperledger": {
+      "name": "Hyperledger",
+      "tag": "Enterprise & privacy"
+    },
+    "cosmos": {
+      "name": "Cosmos / L0",
+      "tag": "Interoperability"
+    }
+  },
+  "backToHome": "Back to Course Home"
+}

@@ -1,0 +1,31 @@
+{
+  "title": {
+    "sectionNumber": "ANTES DE COMEÇARMOS",
+    "title": "Objetivos de Aprendizagem",
+    "subtitle": "O que vais aprender neste curso"
+  },
+  "heading": "No Final Deste Curso",
+  "intro": "Vais ser capaz de comparar, avaliar e selecionar plataformas de blockchain com base na sua arquitetura, modelos de consenso e compromissos do mundo real.",
+  "objectives": {
+    "bitcoin": {
+      "title": "Bitcoin: A Primeira Blockchain Sem Permissão",
+      "description": "Mapear a arquitetura de quatro camadas do Bitcoin, explicar o modelo de transações UTXO, compreender o Proof of Work e o calendário de halving e analisar os compromissos do trilema do Bitcoin."
+    },
+    "ethereum": {
+      "title": "Ethereum: Blockchain Programável",
+      "description": "Explicar as contas Ethereum, o modelo de execução da EVM, a implementação de smart contracts e a transição de Proof of Work → Proof of Stake e as suas implicações."
+    },
+    "hyperledger": {
+      "title": "Blockchains Permissionadas: Hyperledger Fabric",
+      "description": "Compreender porque as empresas escolhem blockchains permissionadas, como funcionam os canais e as políticas de endosso e onde se enquadra o Hyperledger Fabric na cadeia de abastecimento."
+    },
+    "comparing": {
+      "title": "Comparar Plataformas e o Trilema",
+      "description": "Aplicar o modelo do Trilema da Blockchain para comparar Bitcoin, Ethereum e Hyperledger — identificando quais as propriedades que cada plataforma prioriza e sacrifica."
+    },
+    "interoperability": {
+      "title": "Interoperabilidade e Tendências Emergentes",
+      "description": "Explorar protocolos de comunicação entre cadeias (Cosmos, IBC), arquiteturas Layer 0, plataformas de ZK-rollup como a Starknet e o futuro da interoperabilidade entre blockchains."
+    }
+  }
+}

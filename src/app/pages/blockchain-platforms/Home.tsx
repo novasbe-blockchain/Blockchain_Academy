@@ -1,60 +1,27 @@
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { ArrowRight } from 'lucide-react';
 import { TeacherCard } from '../../components/shared/TeacherCard';
 import { BrandLogo } from '../../components/shared/BrandLogo';
 import { SiteFooter } from '../../components/shared/SiteFooter';
-import { helder, shayan } from '../../data/instructors';
+import { useInstructor } from '../../data/instructors';
+import { useLang } from '../../../i18n/useLang';
 
-const instructors = [helder, shayan];
-
-const BASE = '/blockchain-platforms';
-
-const sections = [
-  {
-    number: '00',
-    title: 'Recap',
-    description: 'Centralization, blockchain types, permissioned vs permissionless — the foundation we build on.',
-    path: `${BASE}/section-0`,
-    gradient: 'from-[#6366f1] to-[#8b5cf6]',
-  },
-  {
-    number: '01',
-    title: 'Bitcoin: The First Permissionless Blockchain',
-    description: 'Architecture, transactions, Proof of Work, and the Blockchain Trilemma compared across platforms.',
-    path: `${BASE}/section-1`,
-    gradient: 'from-[#f59e0b] to-[#ED1C24]',
-  },
-  {
-    number: '02',
-    title: 'Ethereum: From Money to Programmable Blockchain',
-    description: 'Accounts, EVM, smart contracts, PoW → PoS evolution, and the EVM ecosystem.',
-    path: `${BASE}/section-2`,
-    gradient: 'from-[#627EEA] to-[#8b5cf6]',
-  },
-  {
-    number: '03',
-    title: 'Permissioned Blockchains: Hyperledger Fabric',
-    description: 'Why enterprise blockchains exist, smart contracts in supply chains, channels, and transaction flow.',
-    path: `${BASE}/section-3`,
-    gradient: 'from-[#39B54A] to-[#22d3ee]',
-  },
-  {
-    number: '04',
-    title: 'Interoperability & New Trends',
-    description: 'Connecting blockchains — Cosmos, Layer 0 protocols, and Starknet.',
-    path: `${BASE}/section-4`,
-    gradient: 'from-[#22d3ee] to-[#6366f1]',
-  },
-  {
-    number: '🏁',
-    title: 'Conclusion',
-    description: 'There is no best blockchain — only blockchains optimised for different constraints.',
-    path: `${BASE}/conclusion`,
-    gradient: 'from-[#39B54A] to-[#ED1C24]',
-  },
+const sectionMeta = [
+  { key: 'recap',            number: '00', pathSuffix: '/section-0',   gradient: 'from-[#6366f1] to-[#8b5cf6]' },
+  { key: 'bitcoin',          number: '01', pathSuffix: '/section-1',   gradient: 'from-[#f59e0b] to-[#ED1C24]' },
+  { key: 'ethereum',         number: '02', pathSuffix: '/section-2',   gradient: 'from-[#627EEA] to-[#8b5cf6]' },
+  { key: 'hyperledger',      number: '03', pathSuffix: '/section-3',   gradient: 'from-[#39B54A] to-[#22d3ee]' },
+  { key: 'interoperability', number: '04', pathSuffix: '/section-4',   gradient: 'from-[#22d3ee] to-[#6366f1]' },
+  { key: 'conclusion',       number: '🏁', pathSuffix: '/conclusion',  gradient: 'from-[#39B54A] to-[#ED1C24]' },
 ];
 
 export function BlockchainPlatformsHome() {
+  const lang = useLang();
+  const { t } = useTranslation('blockchain-platforms/home');
+  const BASE = `/${lang}/blockchain-platforms`;
+  const instructors = [useInstructor('helder'), useInstructor('shayan')];
+
   return (
     <div id="section-scroll" className="size-full overflow-y-auto snap-y snap-mandatory">
       {/* Hero */}
@@ -68,20 +35,20 @@ export function BlockchainPlatformsHome() {
             <BrandLogo className="h-36" />
           </div>
 
-          <h1 className="text-5xl font-black text-foreground mb-3">Blockchain Platforms</h1>
+          <h1 className="text-5xl font-black text-foreground mb-3">{t('hero.title')}</h1>
           <p className="text-2xl text-muted-foreground mb-8">
-            Bitcoin · Ethereum · Hyperledger · Interoperability
+            {t('hero.tagline')}
           </p>
 
           <div className="flex items-center justify-center gap-4 mb-12">
             <div className="px-4 py-2 bg-card rounded-lg border border-border">
-              <span className="text-sm text-muted-foreground">6 Parts</span>
+              <span className="text-sm text-muted-foreground">{t('hero.badges.parts')}</span>
             </div>
             <div className="px-4 py-2 bg-card rounded-lg border border-border">
-              <span className="text-sm text-muted-foreground">50+ Slides</span>
+              <span className="text-sm text-muted-foreground">{t('hero.badges.slides')}</span>
             </div>
             <div className="px-4 py-2 bg-card rounded-lg border border-border">
-              <span className="text-sm text-muted-foreground">Interactive</span>
+              <span className="text-sm text-muted-foreground">{t('hero.badges.interactive')}</span>
             </div>
           </div>
 
@@ -89,7 +56,7 @@ export function BlockchainPlatformsHome() {
             to={`${BASE}/section-0`}
             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#39B54A] to-[#22d3ee] text-white rounded-lg font-bold hover:shadow-lg hover:shadow-[#39B54A]/30 transition-all"
           >
-            Start Learning
+            {t('hero.startLearning')}
             <ArrowRight className="size-5" />
           </Link>
         </div>
@@ -97,23 +64,23 @@ export function BlockchainPlatformsHome() {
 
       {/* Sections Overview */}
       <div className="min-h-screen snap-start max-w-7xl mx-auto px-12 py-16">
-        <h2 className="text-4xl font-bold text-foreground mb-12">Course Sections</h2>
+        <h2 className="text-4xl font-bold text-foreground mb-12">{t('sectionsTitle')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sections.map((section) => (
+          {sectionMeta.map((section) => (
             <Link
               key={section.number}
-              to={section.path}
+              to={`${BASE}${section.pathSuffix}`}
               className="group bg-card border border-border rounded-xl p-6 hover:border-[#39B54A] transition-all hover:shadow-lg hover:shadow-[#39B54A]/10"
             >
               <div className={`size-12 rounded-lg bg-gradient-to-br ${section.gradient} flex items-center justify-center mb-4`}>
                 <span className="text-white font-bold">{section.number}</span>
               </div>
               <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-[#39B54A] transition-colors">
-                {section.title}
+                {t(`sections.${section.key}.title`)}
               </h3>
-              <p className="text-sm text-muted-foreground mb-4">{section.description}</p>
+              <p className="text-sm text-muted-foreground mb-4">{t(`sections.${section.key}.description`)}</p>
               <div className="flex items-center gap-2 text-[#39B54A] text-sm font-bold">
-                Explore
+                {t('explore')}
                 <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
@@ -123,8 +90,8 @@ export function BlockchainPlatformsHome() {
 
       {/* Instructors */}
       <div className="min-h-screen snap-start max-w-7xl mx-auto px-12 py-16 border-t border-border">
-        <h2 className="text-4xl font-bold text-foreground mb-3">Meet the Instructor{instructors.length > 1 ? 's' : ''}</h2>
-        <p className="text-muted-foreground mb-10">The people behind this course</p>
+        <h2 className="text-4xl font-bold text-foreground mb-3">{t('instructorsTitle')}</h2>
+        <p className="text-muted-foreground mb-10">{t('instructorsSubtitle')}</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {instructors.map((instructor) => (

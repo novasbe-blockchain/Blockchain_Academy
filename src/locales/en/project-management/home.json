@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "courseBadge": "Course 04",
+    "titleLine1": "Project Management for",
+    "titleLine2": "Blockchain Initiatives",
+    "tagline": "Plan, execute, and lead blockchain projects — bridging technical complexity and business outcomes.",
+    "badges": {
+      "sessions": "5 Sessions",
+      "risk": "Risk Frameworks",
+      "stakeholder": "Stakeholder Tools",
+      "leadership": "Leadership Models"
+    },
+    "startLearning": "Start Learning"
+  },
+  "sectionsTitle": "Course Sessions",
+  "explore": "Explore",
+  "sections": {
+    "section1": {
+      "title": "Introduction to Blockchain Project Management",
+      "description": "What makes blockchain projects unique, the project lifecycle, key roles, and the Agile vs Waterfall debate for decentralized teams."
+    },
+    "section2": {
+      "title": "Project Planning & Scoping for Blockchain",
+      "description": "Decision frameworks, scope definition, stakeholder mapping, work breakdown structures, and governance models."
+    },
+    "section3": {
+      "title": "Risk Management in Blockchain Projects",
+      "description": "Technical, regulatory, and adoption risks — with assessment frameworks, smart contract audit processes, and mitigation strategies."
+    },
+    "section4": {
+      "title": "Communication & Collaboration for Blockchain Teams",
+      "description": "Multi-stakeholder communication, translating technical to business, documentation practices, and decentralized governance."
+    },
+    "section5": {
+      "title": "Leading Blockchain Project Teams",
+      "description": "Team composition, leadership in decentralized contexts, Agile ceremonies, change management, and measuring project success."
+    },
+    "conclusion": {
+      "title": "Conclusion",
+      "description": "The blockchain PM is not just a project manager — they are the translator between the technical and the human."
+    }
+  },
+  "instructor": {
+    "title": "Meet the Instructor",
+    "subtitle": "The person behind this course",
+    "badge": "INSTRUCTOR",
+    "name": "Pedro Granate",
+    "role": "Co-founder, COO & CPO · Zharta",
+    "stats": {
+      "education": { "label": "Education", "value": "MSc Mechanical Engineering, IST" },
+      "experience": { "label": "Experience", "value": "10+ years PM & Operations" },
+      "industry": { "label": "Industry", "value": "Engineering · Manufacturing · Tech" }
+    },
+    "highlights": [
+      "MSc in Mechanical Engineering from IST (Instituto Superior Técnico)",
+      "Development Engineer at Bosch Termotecnologia",
+      "Project Manager in production & development roles",
+      "Project Manager at Hovione (CMO context)",
+      "Co-founder, COO & CPO at Zharta — product and operational strategy"
+    ]
+  }
+}

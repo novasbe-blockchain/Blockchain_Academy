@@ -1,56 +1,28 @@
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { ArrowRight, ExternalLink, Mail } from 'lucide-react';
 import { BrandLogo } from '../../components/shared/BrandLogo';
 import { SiteFooter } from '../../components/shared/SiteFooter';
+import { useLang } from '../../../i18n/useLang';
 
-const BASE = '/project-management';
-
-const sections = [
-  {
-    number: '01',
-    title: 'Introduction to Blockchain Project Management',
-    description: 'What makes blockchain projects unique, the project lifecycle, key roles, and the Agile vs Waterfall debate for decentralized teams.',
-    path: `${BASE}/section-1`,
-    gradient: 'from-[#f97316] to-[#eab308]',
-  },
-  {
-    number: '02',
-    title: 'Project Planning & Scoping for Blockchain',
-    description: 'Decision frameworks, scope definition, stakeholder mapping, work breakdown structures, and governance models.',
-    path: `${BASE}/section-2`,
-    gradient: 'from-[#eab308] to-[#f97316]',
-  },
-  {
-    number: '03',
-    title: 'Risk Management in Blockchain Projects',
-    description: 'Technical, regulatory, and adoption risks — with assessment frameworks, smart contract audit processes, and mitigation strategies.',
-    path: `${BASE}/section-3`,
-    gradient: 'from-[#f97316] to-[#ef4444]',
-  },
-  {
-    number: '04',
-    title: 'Communication & Collaboration for Blockchain Teams',
-    description: 'Multi-stakeholder communication, translating technical to business, documentation practices, and decentralized governance.',
-    path: `${BASE}/section-4`,
-    gradient: 'from-[#eab308] to-[#22d3ee]',
-  },
-  {
-    number: '05',
-    title: 'Leading Blockchain Project Teams',
-    description: 'Team composition, leadership in decentralized contexts, Agile ceremonies, change management, and measuring project success.',
-    path: `${BASE}/section-5`,
-    gradient: 'from-[#f97316] to-[#8b5cf6]',
-  },
-  {
-    number: '🏁',
-    title: 'Conclusion',
-    description: 'The blockchain PM is not just a project manager — they are the translator between the technical and the human.',
-    path: `${BASE}/conclusion`,
-    gradient: 'from-[#f97316] to-[#ED1C24]',
-  },
+const sectionMeta = [
+  { key: 'section1',   number: '01', pathSuffix: '/section-1',   gradient: 'from-[#f97316] to-[#eab308]' },
+  { key: 'section2',   number: '02', pathSuffix: '/section-2',   gradient: 'from-[#eab308] to-[#f97316]' },
+  { key: 'section3',   number: '03', pathSuffix: '/section-3',   gradient: 'from-[#f97316] to-[#ef4444]' },
+  { key: 'section4',   number: '04', pathSuffix: '/section-4',   gradient: 'from-[#eab308] to-[#22d3ee]' },
+  { key: 'section5',   number: '05', pathSuffix: '/section-5',   gradient: 'from-[#f97316] to-[#8b5cf6]' },
+  { key: 'conclusion', number: '🏁', pathSuffix: '/conclusion',  gradient: 'from-[#f97316] to-[#ED1C24]' },
 ];
 
+const badgeKeys = ['sessions', 'risk', 'stakeholder', 'leadership'] as const;
+const statKeys = ['education', 'experience', 'industry'] as const;
+
 export function ProjectManagementHome() {
+  const lang = useLang();
+  const { t } = useTranslation('project-management/home');
+  const BASE = `/${lang}/project-management`;
+  const highlights = t('instructor.highlights', { returnObjects: true }) as string[];
+
   return (
     <div className="size-full overflow-y-auto">
       {/* Hero */}
@@ -65,25 +37,20 @@ export function ProjectManagementHome() {
           </div>
 
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f97316]/10 border border-[#f97316]/30 mb-6">
-            <span className="text-xs font-bold text-[#f97316] tracking-widest uppercase">Course 04</span>
+            <span className="text-xs font-bold text-[#f97316] tracking-widest uppercase">{t('hero.courseBadge')}</span>
           </div>
 
           <h1 className="text-5xl font-black text-foreground mb-3">
-            Project Management for<br />Blockchain Initiatives
+            {t('hero.titleLine1')}<br />{t('hero.titleLine2')}
           </h1>
           <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-            Plan, execute, and lead blockchain projects — bridging technical complexity and business outcomes.
+            {t('hero.tagline')}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
-            {[
-              { label: '5 Sessions' },
-              { label: 'Risk Frameworks' },
-              { label: 'Stakeholder Tools' },
-              { label: 'Leadership Models' },
-            ].map(b => (
-              <div key={b.label} className="px-4 py-2 bg-card rounded-lg border border-border">
-                <span className="text-sm text-muted-foreground">{b.label}</span>
+            {badgeKeys.map(key => (
+              <div key={key} className="px-4 py-2 bg-card rounded-lg border border-border">
+                <span className="text-sm text-muted-foreground">{t(`hero.badges.${key}`)}</span>
               </div>
             ))}
           </div>
@@ -92,7 +59,7 @@ export function ProjectManagementHome() {
             to={`${BASE}/section-1`}
             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#f97316] to-[#eab308] text-white rounded-lg font-bold hover:shadow-lg hover:shadow-[#f97316]/30 transition-all"
           >
-            Start Learning
+            {t('hero.startLearning')}
             <ArrowRight className="size-5" />
           </Link>
         </div>
@@ -100,23 +67,23 @@ export function ProjectManagementHome() {
 
       {/* Sections Overview */}
       <div className="max-w-7xl mx-auto px-12 py-16">
-        <h2 className="text-4xl font-bold text-foreground mb-12">Course Sessions</h2>
+        <h2 className="text-4xl font-bold text-foreground mb-12">{t('sectionsTitle')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sections.map((section) => (
+          {sectionMeta.map((section) => (
             <Link
               key={section.number}
-              to={section.path}
+              to={`${BASE}${section.pathSuffix}`}
               className="group bg-card border border-border rounded-xl p-6 hover:border-[#f97316] transition-all hover:shadow-lg hover:shadow-[#f97316]/10"
             >
               <div className={`size-12 rounded-lg bg-gradient-to-br ${section.gradient} flex items-center justify-center mb-4`}>
                 <span className="text-white font-bold">{section.number}</span>
               </div>
               <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-[#f97316] transition-colors">
-                {section.title}
+                {t(`sections.${section.key}.title`)}
               </h3>
-              <p className="text-sm text-muted-foreground mb-4">{section.description}</p>
+              <p className="text-sm text-muted-foreground mb-4">{t(`sections.${section.key}.description`)}</p>
               <div className="flex items-center gap-2 text-[#f97316] text-sm font-bold">
-                Explore
+                {t('explore')}
                 <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
@@ -126,41 +93,31 @@ export function ProjectManagementHome() {
 
       {/* Instructor */}
       <div className="max-w-7xl mx-auto px-12 py-16 border-t border-border">
-        <h2 className="text-4xl font-bold text-foreground mb-3">Meet the Instructor</h2>
-        <p className="text-muted-foreground mb-10">The person behind this course</p>
+        <h2 className="text-4xl font-bold text-foreground mb-3">{t('instructor.title')}</h2>
+        <p className="text-muted-foreground mb-10">{t('instructor.subtitle')}</p>
 
         <div className="max-w-2xl bg-card border border-border rounded-2xl p-6 flex gap-6 items-start">
           <div className="size-20 rounded-full bg-gradient-to-br from-[#f97316] to-[#eab308] flex items-center justify-center shrink-0 text-white text-2xl font-black">
             PG
           </div>
           <div>
-            <div className="text-xs font-bold text-[#f97316] tracking-widest mb-1">INSTRUCTOR</div>
-            <h3 className="text-xl font-black text-foreground mb-0.5">Pedro Granate</h3>
+            <div className="text-xs font-bold text-[#f97316] tracking-widest mb-1">{t('instructor.badge')}</div>
+            <h3 className="text-xl font-black text-foreground mb-0.5">{t('instructor.name')}</h3>
             <p className="text-sm text-[#f97316] font-medium mb-3">
-              Co-founder, COO & CPO · Zharta
+              {t('instructor.role')}
             </p>
 
             <div className="flex flex-wrap gap-2 mb-4">
-              {[
-                { label: 'Education', value: 'MSc Mechanical Engineering, IST' },
-                { label: 'Experience', value: '10+ years PM & Operations' },
-                { label: 'Industry', value: 'Engineering · Manufacturing · Tech' },
-              ].map(h => (
-                <div key={h.label} className="px-3 py-1 bg-[#f97316]/10 border border-[#f97316]/20 rounded-full">
-                  <span className="text-xs text-muted-foreground">{h.label}: </span>
-                  <span className="text-xs font-semibold text-[#f97316]">{h.value}</span>
+              {statKeys.map(key => (
+                <div key={key} className="px-3 py-1 bg-[#f97316]/10 border border-[#f97316]/20 rounded-full">
+                  <span className="text-xs text-muted-foreground">{t(`instructor.stats.${key}.label`)}: </span>
+                  <span className="text-xs font-semibold text-[#f97316]">{t(`instructor.stats.${key}.value`)}</span>
                 </div>
               ))}
             </div>
 
             <ul className="space-y-1.5 mb-4">
-              {[
-                'MSc in Mechanical Engineering from IST (Instituto Superior Técnico)',
-                'Development Engineer at Bosch Termotecnologia',
-                'Project Manager in production & development roles',
-                'Project Manager at Hovione (CMO context)',
-                'Co-founder, COO & CPO at Zharta — product and operational strategy',
-              ].map(h => (
+              {highlights.map((h) => (
                 <li key={h} className="flex gap-2 text-sm text-muted-foreground">
                   <span className="text-[#f97316] shrink-0">•</span>
                   {h}

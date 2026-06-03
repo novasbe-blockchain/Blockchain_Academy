@@ -1,0 +1,18 @@
+{
+  "courseLabel": "Course 02 — Conclusion",
+  "quote": {
+    "line1": "\"Smart contracts are not magic.",
+    "emphasis": "They are code.",
+    "line2": "Their power and their risk",
+    "line3": "come from the same source.\""
+  },
+  "body": "The most important thing you can do with this knowledge is think critically. Before deploying a smart contract, ask: does this actually need to be on-chain? Who audits it? What happens when it goes wrong?",
+  "tags": {
+    "trustless": "Trustless execution",
+    "immutable": "Immutable logic",
+    "oracle": "Oracle dependencies",
+    "security": "Security auditing",
+    "integration": "Business integration"
+  },
+  "backToHome": "Back to Course Home"
+}

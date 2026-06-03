@@ -56,6 +56,17 @@
         "Oracle Problem",
         "Team Project"
       ]
+    },
+    "projectManagement": {
+      "title": "Project Management for Blockchain Initiatives",
+      "description": "Plan, execute, and lead blockchain projects — from scoping and governance to risk management, team leadership, and measuring success.",
+      "topics": [
+        "Project Lifecycle",
+        "Scope & Governance",
+        "Risk & Audits",
+        "Communication",
+        "Team Leadership"
+      ]
     }
   },
   "sections": {
@@ -79,5 +90,30 @@
     "hyperledger": "Hyperledger",
     "interoperability": "Interoperability",
     "newTrends": "New Trends"
+  },
+  "instructors": {
+    "helder": {
+      "nickname": "The Crypto \"Jack of all trades\"",
+      "role": "Blockchain Engineer & Teacher",
+      "highlights": [
+        "Started in blockchain in 2017 / 2018, drawn in by the finance side of things",
+        "Now focused on user-centered use cases and real-world adoption",
+        "Directed a blockchain master programme in Paris",
+        "Explored the full stack — product owner, infrastructure, smart contracts",
+        "Won a hackathon prize at Hacking Paris 2025 by Chiliz (Content creation & interaction track)",
+        "Currently Blockchain Specialist @ NovaSBE"
+      ]
+    },
+    "shayan": {
+      "nickname": "Post Doc at NovaSBE",
+      "role": "Smart Contract Security Engineer",
+      "highlights": [
+        "Background in Information Systems Security and Engineering",
+        "PhD in Blockchain Technology and unforeseen consequences",
+        "Blockchain Engineer at Bitcoin ATM startup",
+        "Senior Smart Contract Security Engineer",
+        "CTO at a publicly traded company"
+      ]
+    }
   }
 }

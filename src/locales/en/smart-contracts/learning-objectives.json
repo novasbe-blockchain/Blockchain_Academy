@@ -1,0 +1,39 @@
+{
+  "title": {
+    "sectionNumber": "BEFORE WE BEGIN",
+    "title": "Learning Objectives",
+    "subtitle": "What you will learn in this course"
+  },
+  "heading": "By the End of This Course",
+  "intro": "You will be able to understand, evaluate, and design business applications using smart contract technology — its mechanics, its use cases, and its limits.",
+  "objectives": {
+    "fundamentals": {
+      "title": "Smart Contract Fundamentals",
+      "description": "Define smart contracts and explain self-execution, immutability, and the evolution from Szabo's 1994 concept through Bitcoin Scripts to Ethereum's programmable blockchain."
+    },
+    "howItWorks": {
+      "title": "How Smart Contracts Work",
+      "description": "Map the Web3 stack, explain gas economics, distinguish dApp architecture from traditional systems, and identify when smart contracts genuinely add value over a database."
+    },
+    "industries": {
+      "title": "Industries & Case Studies",
+      "description": "Tour five industry verticals (DeFi, Gaming/NFTs, RWA, Supply Chain, Digital Cert) plus eight case studies including Walmart, Santander, Estonia, The DAO hack, and the ASX failure."
+    },
+    "criticalThinking": {
+      "title": "Critical Thinking & Adoption",
+      "description": "Apply a decision framework to determine when a smart contract is the right tool — and when a database is better. Master the 5-pillar adoption model for serious deployment."
+    },
+    "limitations": {
+      "title": "Limitations & Security",
+      "description": "Understand the oracle problem, the blockchain trilemma, key attack vectors (reentrancy, flash loans, MEV), and the cost & regulatory realities that gate mainstream adoption."
+    },
+    "build": {
+      "title": "Build & Integration",
+      "description": "Navigate ERC standards, the EIP process, frameworks (Hardhat / Foundry), 17-platform comparison, integration patterns, and where AI tools belong in smart-contract development."
+    },
+    "design": {
+      "title": "Business Application Design",
+      "description": "Apply course knowledge to design a smart contract solution: map stakeholders, identify use cases, weigh trade-offs, and present a business case to the class."
+    }
+  }
+}

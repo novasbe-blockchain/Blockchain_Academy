@@ -56,6 +56,17 @@
         "Problema do Oráculo",
         "Projeto de Equipa"
       ]
+    },
+    "projectManagement": {
+      "title": "Gestão de Projetos para Iniciativas de Blockchain",
+      "description": "Planeia, executa e lidera projetos de blockchain — desde a definição de âmbito e governação até à gestão de risco, liderança de equipas e medição do sucesso.",
+      "topics": [
+        "Ciclo de Vida do Projeto",
+        "Âmbito e Governação",
+        "Risco e Auditorias",
+        "Comunicação",
+        "Liderança de Equipas"
+      ]
     }
   },
   "sections": {
@@ -79,5 +90,30 @@
     "hyperledger": "Hyperledger",
     "interoperability": "Interoperabilidade",
     "newTrends": "Novas Tendências"
+  },
+  "instructors": {
+    "helder": {
+      "nickname": "O \"Faz-Tudo\" da Cripto",
+      "role": "Engenheiro de Blockchain e Formador",
+      "highlights": [
+        "Começou na blockchain em 2017 / 2018, atraído pelo lado financeiro",
+        "Atualmente focado em casos de uso centrados no utilizador e na adoção no mundo real",
+        "Dirigiu um programa de mestrado em blockchain em Paris",
+        "Explorou toda a stack — product owner, infraestrutura, smart contracts",
+        "Venceu um prémio de hackathon no Hacking Paris 2025 da Chiliz (categoria de criação de conteúdo e interação)",
+        "Atualmente Blockchain Specialist na NovaSBE"
+      ]
+    },
+    "shayan": {
+      "nickname": "Pós-Doutoramento na NovaSBE",
+      "role": "Engenheiro de Segurança de Smart Contracts",
+      "highlights": [
+        "Formação em Segurança e Engenharia de Sistemas de Informação",
+        "Doutoramento em Tecnologia Blockchain e consequências imprevistas",
+        "Engenheiro de Blockchain numa startup de ATMs de Bitcoin",
+        "Engenheiro Sénior de Segurança de Smart Contracts",
+        "CTO numa empresa cotada em bolsa"
+      ]
+    }
   }
 }

@@ -1,0 +1,31 @@
+{
+  "title": {
+    "sectionNumber": "OVERVIEW",
+    "title": "Course Summary",
+    "subtitle": "Your roadmap through blockchain technology"
+  },
+  "heading": "Course Roadmap",
+  "intro": "Four parts. One coherent journey from history to the future.",
+  "sections": {
+    "prologue": {
+      "label": "PROLOGUE",
+      "title": "The History of Blockchain",
+      "description": "From the cypherpunk movement to the birth of Bitcoin — the ideological and technical foundations that made decentralized money possible."
+    },
+    "section1": {
+      "label": "SECTION 1",
+      "title": "Introduction to Blockchain Technology",
+      "description": "DLT, hashing, Merkle trees, blocks, wallets, digital signatures, transactions, and consensus mechanisms — all the building blocks explained."
+    },
+    "section2": {
+      "label": "SECTION 2",
+      "title": "Bitcoin and Beyond",
+      "description": "Why Bitcoin was a breakthrough, its supply model, network mechanics, node distribution, security model, and the Lightning Network."
+    },
+    "section3": {
+      "label": "SECTION 3",
+      "title": "What's Next for Blockchain?",
+      "description": "Real-world impact, Web3 evolution, ethical considerations, energy consumption, and future trends shaping the next decade."
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "hero": {
+    "tagline": "A comprehensive visual course on blockchain technology",
+    "badges": {
+      "parts": "6 Parts",
+      "slides": "45+ Slides",
+      "interactive": "Interactive"
+    },
+    "startLearning": "Start Learning"
+  },
+  "sectionsTitle": "Course Sections",
+  "explore": "Explore",
+  "instructorsTitle": "Meet the Instructors",
+  "instructorsSubtitle": "The people behind this course",
+  "sections": {
+    "objectives": {
+      "title": "Learning Objectives",
+      "description": "What you will learn and be able to do by the end of this course"
+    },
+    "summary": {
+      "title": "Course Summary",
+      "description": "Your roadmap through blockchain technology — four parts, one coherent journey"
+    },
+    "prologue": {
+      "title": "Prologue — The History of Blockchain",
+      "description": "From the cypherpunk movement to the birth of Bitcoin"
+    },
+    "intro": {
+      "title": "Introduction to Blockchain Technology",
+      "description": "DLT, hashing, Merkle trees, blocks, wallets, transactions, and consensus mechanisms"
+    },
+    "bitcoin": {
+      "title": "Bitcoin and Beyond",
+      "description": "A deep dive into the world's first cryptocurrency and its network"
+    },
+    "whatsNext": {
+      "title": "What's Next for Blockchain?",
+      "description": "Applications, Web3, ethics, and the future of decentralized technology"
+    }
+  }
+}

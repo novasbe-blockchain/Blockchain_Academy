@@ -1,0 +1,33 @@
+{
+  "title": {
+    "sectionNumber": "CONCLUSÃO",
+    "title": "Não Existe a Melhor Blockchain",
+    "subtitle": "Existem apenas blockchains otimizadas para diferentes restrições para resolver problemas do mundo real."
+  },
+  "quote": {
+    "line1": "\"Não existe a melhor blockchain.",
+    "emphasis": "Existem apenas blockchains otimizadas para diferentes restrições",
+    "line2": "para resolver problemas do mundo real.\""
+  },
+  "body1": "O Bitcoin escolhe segurança e descentralização. A Ethereum acrescenta programabilidade. O Hyperledger Fabric escolhe privacidade e controlo empresarial. O Cosmos liga-os a todos.",
+  "body2": "A plataforma certa depende do problema que estás a resolver.",
+  "platforms": {
+    "bitcoin": {
+      "name": "Bitcoin",
+      "tag": "Dinheiro digital seguro"
+    },
+    "ethereum": {
+      "name": "Ethereum",
+      "tag": "Liquidação programável"
+    },
+    "hyperledger": {
+      "name": "Hyperledger",
+      "tag": "Empresarial e privacidade"
+    },
+    "cosmos": {
+      "name": "Cosmos / L0",
+      "tag": "Interoperabilidade"
+    }
+  },
+  "backToHome": "Voltar à Página Inicial do Curso"
+}
