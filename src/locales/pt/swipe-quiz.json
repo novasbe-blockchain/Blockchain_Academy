@@ -1,0 +1,16 @@
+{
+  "badge": "Quiz",
+  "instruction": "Verdadeiro ou falso? Deslize para a direita para VERDADEIRO, para a esquerda para FALSO.",
+  "true": "Verdadeiro",
+  "false": "Falso",
+  "correct": "Certo",
+  "incorrect": "Errado",
+  "next": "Seguinte",
+  "finish": "Ver resultado",
+  "progress": "{{current}} / {{total}}",
+  "scoreLabel": "A sua pontuação",
+  "restart": "Tentar de novo",
+  "resultPerfect": "Pontuação perfeita — acertaste em tudo!",
+  "resultGood": "Muito bem — bom domínio.",
+  "resultMixed": "Bom esforço — revê e tenta outra vez."
+}

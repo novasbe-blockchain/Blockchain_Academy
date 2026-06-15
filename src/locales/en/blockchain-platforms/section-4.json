@@ -17,7 +17,6 @@
     "s4-cosmos-eco": "Cosmos Apps",
     "s4-xrp": "XRP Ledger",
     "s4-xrp-anim": "🧩 XRPL ↔ Axelar",
-    "s4-xrp-eco": "XRP Apps",
     "s4-quiz": "Quiz",
     "s4-takeaways": "Takeaways"
   },
@@ -363,131 +362,28 @@
   },
   "xrp": {
     "badgePartner": "🧩 Partner platform",
-    "badgeAnimated": "Animated",
-    "heading": "XRP Ledger — A Low-Level Payments Rail with Cross-Chain Reach",
-    "subA": "Live since 2012 — one of the longest-running blockchains. Its design is deliberately ",
-    "subStrong": "low-level and purpose-built",
-    "subB": ": DEX, payments, FX, and token issuance are ",
-    "subEm": "native protocol operations",
-    "subC": ", not smart contracts. That's the trade — faster, cheaper, more predictable; not as freely programmable as the EVM.",
-    "pillar1Label": "Pillar 1 — Native ops",
-    "pillar1Title": "DEX & payments are first-class",
-    "pillar1BodyA": "Order-book DEX has been in the protocol since 2012 (no smart contract). AMM (XLS-30) joined natively in 2024. Path payments auto-route across multi-asset hops. ",
-    "pillar1BodyStrong": "Optimised, but the rule-set is fixed.",
-    "pillar2Label": "Pillar 2 — Half-public",
-    "pillar2Title": "UNL — operators pick their validators",
-    "pillar2BodyA": "Anyone can read the chain, but each node maintains a ",
-    "pillar2BodyStrong1": "Unique Node List",
-    "pillar2BodyB": " of validators it trusts. Federated Byzantine Agreement, ≥ 80% UNL agree per round. ",
-    "pillar2BodyStrong2": "Permissionless to use, federated to validate.",
-    "pillar3Label": "Pillar 3 — Cross-chain",
-    "pillar3Title": "XRPL ↔ Axelar ↔ any chain",
-    "pillar3BodyA": "Axelar GMP gives XRPL apps a single API to reach 50+ chains (EVM, Cosmos, Sui, Stellar) — payment + message in one call. ",
-    "pillar3BodyStrong": "No bespoke bridge contract per pair.",
-    "designLabel": "Why the low-level design pays off",
-    "design": [
-      { "emoji": "⚡", "title": "~1,500 TPS · ~3-5 s finality", "desc": "Deterministic consensus rounds. No fee market spikes; XRP burn (~$0.0002 / tx) makes spam economically unviable." },
-      { "emoji": "🔗", "title": "Trust Lines / IOUs", "desc": "Issued tokens (RLUSD, stablecoins, RWA) live as balances on a Trust Line — a permission the holder grants the issuer. Different mental model from ERC-20." },
-      { "emoji": "🪝", "title": "Hooks — light WASM contracts", "desc": "Account-level hooks fire before / after transactions. Gas-metered, intentionally limited surface — predictable fees over Turing-complete freedom." },
-      { "emoji": "🔷", "title": "EVM sidechain (2025)", "desc": "A separate EVM-compatible chain bridged to XRPL so Solidity dApps can settle to XRPL and use XRP for gas. Widens the dev surface without changing the base L1." }
+    "heading": "XRP Ledger — a purpose-built settlement rail",
+    "takeawayLabel": "The one thing to remember",
+    "takeaway": "XRPL is a purpose-built rail for payments, FX and tokenised real-world assets — fast and cheap by design. It is not a general-purpose smart-contract platform, and that trade-off is deliberate.",
+    "pillars": [
+      { "label": "Native ops", "title": "DEX & payments are first-class", "body": "Order-book DEX has been in the protocol since 2012 (no smart contract); native AMM (XLS-30) joined in 2024. Optimised for these jobs — but the rule-set is fixed." },
+      { "label": "Federated validation", "title": "UNL — operators pick validators", "body": "Anyone can read and use the chain, but each node trusts a Unique Node List of validators (Federated Byzantine Agreement, ≥ 80% agree per round). Permissionless to use, federated to validate." },
+      { "label": "Cross-chain reach", "title": "One API to 50+ chains", "body": "Axelar GMP lets XRPL apps reach EVM, Cosmos, Sui and more — payment + message in a single call, with no bespoke bridge contract per pair." }
     ],
-    "shinesTitle": "Where XRPL actually shines (partner footprint)",
-    "shinesBodyA": "Cross-border payments, FX corridors, RWA tokenisation. ",
-    "shinesStrong1": "RippleNet ODL",
-    "shinesBodyB": " uses XRP as a bridge currency; ",
-    "shinesStrong2": "RLUSD",
-    "shinesBodyC": " (NYDFS-regulated, live Dec 2024) settles on XRPL and Ethereum. Central-bank pilots (Bhutan, Palau, Colombia) run on XRPL tech.",
+    "designLabel": "How it's built — and where the programmability lives",
+    "design": [
+      { "emoji": "⚡", "title": "Fast & cheap by design", "desc": "~1,500 tx/s in theory (a few hundred in practice), 3–5 s finality. A tiny XRP burn (~$0.0002/tx) makes spam uneconomic — and there is no fee-market spike." },
+      { "emoji": "🔗", "title": "Trust Lines / IOUs", "desc": "Issued tokens (RLUSD, stablecoins, RWA) live as balances on a Trust Line — a permission the holder grants the issuer. A different mental model from ERC-20." },
+      { "emoji": "🧩", "title": "Smart-contract logic lives off the base layer", "desc": "The XRPL mainnet has no general smart contracts — on purpose. Richer logic runs on separate chains: the XRPL EVM sidechain (Solidity, 2025) and Xahau, a sister network where 'Hooks' (small WASM snippets) execute. The base L1 stays deliberately simple." },
+      { "emoji": "🏦", "title": "Built for institutions", "desc": "RLUSD — an NYDFS-regulated stablecoin (live Dec 2024) settling on XRPL + Ethereum. RippleNet ODL uses XRP as a bridge currency, and CBDC pilots (Bhutan, Palau, Colombia) run on XRPL tech." }
+    ],
     "honestTitle": "Honest context — what you give up",
-    "honestBodyA": "Smaller smart-contract surface than EVM. UNL is federated — anyone can run a node but the default validator set ships with the software. The bet is ",
-    "honestStrong": "payments + RWA + cross-chain settlement",
-    "honestBodyB": ", not general-purpose dApps."
+    "honestBody": "A smaller smart-contract surface than the EVM, and validation that is federated: anyone can run a node, but the default validator set ships with the software. The bet is payments, RWA and cross-chain settlement — not general-purpose dApps."
   },
   "xrpAnim": {
     "badge": "🧩 Animated",
     "heading": "XRPL ↔ Axelar — One API to Reach Every Chain",
     "subtitle": "You just saw what XRPL is good at (payments, native DEX, RWA). Here's how it talks to the rest of the multi-chain world — without writing a bespoke bridge contract per pair."
-  },
-  "xrpEco": {
-    "heading": "XRP Ledger ecosystem — apps and partnerships",
-    "subtitle": "XRPL's footprint skews more toward enterprise rails and tokenised real-world assets than retail DeFi. Recent additions (AMM, RLUSD, EVM sidechain) are widening that footprint into 2024-26.",
-    "apps": [
-      {
-        "emoji": "💸",
-        "name": "RippleNet · ODL",
-        "category": "Payments",
-        "tag": "cross-border settlement",
-        "stats": "Banking partners worldwide · since 2018",
-        "items": [
-          { "name": "On-Demand Liquidity", "kind": "XRP as bridge currency for FX" },
-          { "name": "RippleNet", "kind": "Banking corridor messaging + settlement" },
-          { "name": "Travelex · SBI", "kind": "Live remittance integrations" },
-          { "name": "Central-bank pilots", "kind": "Bhutan, Palau, Colombia CBDC trials" }
-        ]
-      },
-      {
-        "emoji": "🪙",
-        "name": "RLUSD",
-        "category": "Stablecoin",
-        "tag": "Ripple's regulated stablecoin",
-        "stats": "Live Dec 2024 · USD-backed · NYDFS",
-        "items": [
-          { "name": "NYDFS-regulated", "kind": "New York Trust company issuance" },
-          { "name": "On both XRPL + ETH", "kind": "Mints natively on XRPL and Ethereum" },
-          { "name": "Treasury-backed", "kind": "Reserves: cash + short-dated US treasuries" },
-          { "name": "RippleNet integration", "kind": "Settles cross-border payments alongside XRP" }
-        ]
-      },
-      {
-        "emoji": "📈",
-        "name": "Sologenic",
-        "category": "RWA · tokenised stocks",
-        "tag": "tokenised equities & metals",
-        "stats": "Live since 2020 · SOLO token",
-        "items": [
-          { "name": "Tokenised stocks", "kind": "Apple, Tesla shares as XRPL IOUs" },
-          { "name": "Sologenic DEX", "kind": "Front-end on the native XRPL DEX" },
-          { "name": "Coinfield", "kind": "Sister exchange · tokenised metals" },
-          { "name": "NFT marketplace", "kind": "XLS-20 NFT trading" }
-        ]
-      },
-      {
-        "emoji": "👛",
-        "name": "Xaman (ex-Xumm)",
-        "category": "Wallet",
-        "tag": "leading XRPL wallet",
-        "stats": "Built by XRPL Labs · iOS / Android",
-        "items": [
-          { "name": "Self-custody", "kind": "Keys stay on the device" },
-          { "name": "xApps", "kind": "Mini-apps (DEX, NFT, payments) inside the wallet" },
-          { "name": "Hooks support", "kind": "Manage account-level hook code" },
-          { "name": "PayString", "kind": "Human-readable address aliases" }
-        ]
-      },
-      {
-        "emoji": "🔄",
-        "name": "Native DEX & AMM",
-        "category": "On-protocol DeFi",
-        "tag": "order book + AMM",
-        "stats": "DEX since 2012 · AMM (XLS-30) live 2024",
-        "items": [
-          { "name": "Order-book DEX", "kind": "Native, no smart contract needed" },
-          { "name": "AMM (XLS-30)", "kind": "Constant-product pools on protocol" },
-          { "name": "Path payments", "kind": "Auto-route through multi-asset hops" },
-          { "name": "Issued assets", "kind": "Trade any IOU side-by-side with XRP" }
-        ]
-      }
-    ],
-    "footerStrong": "Also worth knowing — ",
-    "footerA": "Bitstamp",
-    "footerAtext": " integrated XRP since 2017 · ",
-    "footerB": "XRPL Hooks",
-    "footerBtext": " mainnet activation expanded contract surface · ",
-    "footerC": "Coreum",
-    "footerCtext": " spun out of XRPL family with a Cosmos-SDK chain · ",
-    "footerD": "Flare",
-    "footerDtext": " connects to XRPL via FAssets · ",
-    "footerE": "EVM sidechain",
-    "footerEtext": " opening a Solidity-compatible footprint in 2025."
   },
   "quiz": {
     "question": "Cross-chain bridges have been responsible for the largest hacks in crypto history — Ronin ($625M), Wormhole ($320M), Nomad ($190M). What architectural property makes bridges such high-value targets?",

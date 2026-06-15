@@ -221,6 +221,16 @@
     ],
     "explanation": "Money's value is not in the object — it's in the shared agreement of everyone in the network. When that agreement breaks (hyperinflation, sanctions, platform bans), the same notes lose value overnight. The four foundations are: trust, scarcity, utility, and network effects. Bitcoin asks whether all four can be engineered without any single authority — that's the question this course explores."
   },
+  "cypherpunksTF": {
+    "prompt": "What did the Cypherpunks really stand for? Decide whether each claim is true or false.",
+    "statements": [
+      { "text": "The Cypherpunks believed privacy is a precondition for a free society.", "isTrue": true, "explanation": "This is the heart of the movement: without privacy, individuals cannot act freely. Eric Hughes' 1993 manifesto opens on exactly this idea." },
+      { "text": "The Cypherpunks wanted governments to manage encryption on citizens' behalf.", "isTrue": false, "explanation": "The opposite — they distrusted institutions and argued individuals should defend their own privacy directly, with cryptography rather than laws." },
+      { "text": "Their motto 'Cypherpunks write code' meant software, not legislation, would protect privacy.", "isTrue": true, "explanation": "They believed working code shipped into the world was more effective than lobbying for laws that could be ignored or reversed." },
+      { "text": "Bitcoin appeared from nowhere, with no roots in earlier Cypherpunk work.", "isTrue": false, "explanation": "Bitcoin built directly on decades of Cypherpunk research — Hashcash, b-money, digital signatures and more. It was an evolution, not a bolt from the blue." },
+      { "text": "To the Cypherpunks, privacy meant the power to selectively reveal yourself to the world.", "isTrue": true, "explanation": "Hughes defined privacy not as secrecy but as control: choosing what to reveal, to whom, and when." }
+    ]
+  },
   "quizCypherpunks": {
     "question": "What was the core belief of the Cypherpunk movement?",
     "options": [

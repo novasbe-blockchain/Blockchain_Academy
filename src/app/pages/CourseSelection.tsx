@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, Lock } from 'lucide-react';
+import { ArrowRight, Lock, Sparkles, Heart } from 'lucide-react';
 import { useLang } from '../../i18n/useLang';
 import { LanguageSwitcher } from '../components/navigation/LanguageSwitcher';
 import { BrandLogo } from '../components/shared/BrandLogo';
 import { SiteFooter } from '../components/shared/SiteFooter';
+import { BlockchainCheckGame } from '../components/blockchain/BlockchainCheckGame';
+import { useFitToViewport } from '../hooks/useFitToViewport';
 
 interface Course {
   number: string;
@@ -58,12 +61,17 @@ const courses: Course[] = [
 
 export function CourseSelection() {
   const { t } = useTranslation();
+  const { t: tg } = useTranslation('blockchain-check');
   const lang = useLang();
+  const [gameOpen, setGameOpen] = useState(false);
+  // Scale the hero content so the title, course cards and mini-game always fit
+  // within one viewport height — the footer is the only thing below the fold.
+  const { ref: fitRef, scale } = useFitToViewport(48);
 
   return (
     <div className="size-full overflow-y-auto">
-      {/* Hero */}
-      <div className="min-h-screen flex flex-col items-center justify-center p-12 relative overflow-hidden">
+      {/* Hero — pinned to exactly one viewport height */}
+      <div className="h-[100dvh] flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden">
         {/* Background grid */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(237,28,36,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(237,28,36,0.04)_1px,transparent_1px)] bg-[size:50px_50px]" />
         <div className="absolute top-1/4 right-1/4 size-96 bg-gradient-to-br from-[#ED1C24] to-[#6366f1] opacity-10 blur-3xl rounded-full" />
@@ -74,9 +82,13 @@ export function CourseSelection() {
           <LanguageSwitcher variant="floating" />
         </div>
 
-        <div className="relative z-10 w-full max-w-5xl">
+        <div
+          ref={fitRef}
+          className="relative z-10 w-full max-w-5xl origin-center will-change-transform"
+          style={{ transform: `scale(${scale})` }}
+        >
           {/* Logo + Academy title */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-8 lg:mb-10">
             <div className="flex justify-center mb-6">
               <BrandLogo alt={t('academy.logoAlt')} className="h-24" />
             </div>
@@ -193,8 +205,50 @@ export function CourseSelection() {
               );
             })}
           </div>
+
+          {/* Mini-game launcher — "Is blockchain right for you?" */}
+          <button
+            type="button"
+            onClick={() => setGameOpen(true)}
+            className="group relative mt-6 w-full overflow-hidden rounded-2xl border border-border bg-card p-6 text-left transition-all hover:-translate-y-1 hover:shadow-xl"
+          >
+            {/* Gradient wash */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#ED1C24]/10 via-[#6366f1]/10 to-[#39B54A]/10 opacity-80" />
+            <div className="absolute -right-12 -top-12 size-48 rounded-full bg-gradient-to-br from-[#ED1C24] to-[#6366f1] opacity-10 blur-3xl" />
+
+            <div className="relative z-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-5">
+              {/* Animated heart/spark icon */}
+              <div className="relative shrink-0">
+                <div className="size-14 rounded-2xl bg-gradient-to-br from-[#ED1C24] to-[#6366f1] flex items-center justify-center shadow-lg transition-transform group-hover:scale-105">
+                  <Heart className="size-7 text-white transition-transform group-hover:scale-110" fill="currentColor" />
+                </div>
+                <span className="absolute -right-1.5 -top-1.5 flex size-6 items-center justify-center rounded-full bg-[#39B54A] shadow">
+                  <Sparkles className="size-3.5 text-white" />
+                </span>
+              </div>
+
+              <div className="flex-1 text-center sm:text-left">
+                <span className="inline-block rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-primary">
+                  {tg('launch.badge')}
+                </span>
+                <h2 className="mt-1.5 text-xl font-bold text-foreground">
+                  {tg('launch.title')}
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {tg('launch.subtitle')}
+                </p>
+              </div>
+
+              <div className="flex shrink-0 items-center gap-2 rounded-xl bg-foreground px-5 py-3 font-bold text-background shadow-lg transition-transform group-hover:scale-105">
+                {tg('launch.cta')}
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              </div>
+            </div>
+          </button>
         </div>
       </div>
+
+      <BlockchainCheckGame open={gameOpen} onClose={() => setGameOpen(false)} />
 
       <SiteFooter />
     </div>

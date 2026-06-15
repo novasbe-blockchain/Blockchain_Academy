@@ -1,0 +1,99 @@
+{
+  "launch": {
+    "badge": "Mini-game",
+    "title": "Is blockchain right for you?",
+    "subtitle": "Swipe through a few quick questions and find out whether — and which — blockchain actually fits your project.",
+    "cta": "Take the test",
+    "duration": "~60 seconds"
+  },
+  "ui": {
+    "intro": {
+      "title": "Is blockchain right for you?",
+      "body": "Most projects don't need a blockchain. This quick test asks a handful of honest questions, then tells you whether one would genuinely help you — and if so, which kind.",
+      "rule1": "Swipe right or tap Yes",
+      "rule2": "Swipe left or tap No",
+      "start": "Start"
+    },
+    "progress": "Question {{current}} of {{total}}",
+    "yes": "Yes",
+    "no": "No",
+    "swipeHint": "Swipe the card, tap the buttons, or use ← / → keys",
+    "example": "Example",
+    "restart": "Retake the test",
+    "close": "Close",
+    "result": "Your result",
+    "scoreLabel": "Blockchain-fit score",
+    "why": "Why this result",
+    "recommendedCourse": "Recommended next step",
+    "goToCourse": "Explore this course"
+  },
+  "questions": {
+    "intermediary": {
+      "icon": "middleman",
+      "title": "The middleman",
+      "example": "Spotify keeps roughly 30% of every stream before the artist sees a cent. Blockchain can connect two parties directly, without that middleman.",
+      "question": "Is there an intermediary taking a cut or controlling access that you'd like to remove?"
+    },
+    "multiParty": {
+      "title": "Many hands, no boss",
+      "example": "Think of several banks, or competing logistics firms, that must agree on one shared record — but none of them trusts the others to keep the master copy.",
+      "question": "Do several organisations that don't fully trust each other need to share one single source of truth?"
+    },
+    "shareData": {
+      "title": "Data that must travel",
+      "example": "A patient's medical history scattered across hospitals — each visit re-asks the same questions. Shared, traceable records speed everything up.",
+      "question": "Do you need to share records between organisations reliably, with a clear trace of who changed what?"
+    },
+    "confidential": {
+      "title": "Eyes only",
+      "example": "Contract prices between two companies, or patient data, can't simply be posted on a public ledger for the whole world to read.",
+      "question": "Must your data stay private — visible only to authorised participants, not the whole world?"
+    },
+    "tokenize": {
+      "title": "Turning things into tokens",
+      "example": "A building, a bar of gold, or shares of a company split into digital tokens that anyone can buy, sell, or trade 24/7.",
+      "question": "Do you want to turn a real asset (real estate, gold, company shares) into tradable digital tokens?"
+    },
+    "publicVerify": {
+      "title": "Trust, but verify",
+      "example": "A charity that lets any donor follow their money on-chain, or a product anyone can trace from farm to shelf.",
+      "question": "Do you need anyone in the public to be able to verify your transactions independently?"
+    },
+    "immutable": {
+      "title": "Written in stone",
+      "example": "A diploma, a property title, or an audit log that no one — not even the administrator — can quietly rewrite later.",
+      "question": "Do you need a tamper-proof history that can never be altered after the fact?"
+    },
+    "centralDb": {
+      "title": "The honest question",
+      "example": "If one trusted organisation already controls the data and everyone is fine with that, a normal database is faster, cheaper and simpler than any blockchain.",
+      "question": "Would a normal database, under your organisation's sole control, already do the job?"
+    }
+  },
+  "results": {
+    "not-needed": {
+      "tag": "Blockchain optional",
+      "title": "A classic database is probably enough",
+      "summary": "Based on your answers, your project doesn't show the friction blockchain is built to solve — no untrusted parties, no middleman to remove, no need for public verifiability. A well-built traditional database would be faster, cheaper and simpler. That's a perfectly good answer.",
+      "why": "Blockchain earns its cost when multiple parties who don't trust each other must share a tamper-proof record. When one trusted owner runs the show, that overhead buys you nothing."
+    },
+    "permissioned": {
+      "tag": "Permissioned / consortium",
+      "title": "A permissioned blockchain (Hyperledger Fabric)",
+      "summary": "You have known partners who must share trustworthy data while keeping it confidential — classic territory for supply chains, healthcare and inter-bank settlement. A permissioned blockchain like Hyperledger Fabric gives you a shared, tamper-proof ledger that only authorised members can read and write.",
+      "why": "Your answers point to several known-but-not-fully-trusted organisations, confidential data and the need for a reliable shared trace — exactly what consortium blockchains are designed for, without exposing anything to the public."
+    },
+    "public-evm": {
+      "tag": "Public EVM",
+      "title": "A public EVM blockchain (Ethereum, Polygon)",
+      "summary": "You want to create or trade digital assets — tokenising property, gold, shares, or building open financial products. Public EVM chains (Ethereum and its Layer-2s like Polygon) are the most liquid, composable home for smart contracts and tokenised assets.",
+      "why": "Tokenisation and open, anyone-can-participate markets need a public chain with rich smart-contract tooling. The EVM ecosystem has the widest tooling, liquidity and standards (ERC-20, ERC-721) for exactly this."
+    },
+    "public-general": {
+      "tag": "Public blockchain",
+      "title": "A public blockchain (transparency & disintermediation)",
+      "summary": "Your value comes from removing a middleman and letting anyone verify what happened — public donations, traceability, censorship-resistant records. A public blockchain gives you that radical transparency and openness out of the box.",
+      "why": "You prioritised public verifiability and cutting out intermediaries over confidentiality. That openness is the whole point of a public chain — start from the fundamentals to choose the right one."
+    }
+  }
+}

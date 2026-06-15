@@ -1,0 +1,16 @@
+{
+  "badge": "Quiz",
+  "instruction": "True or false? Swipe right for TRUE, left for FALSE.",
+  "true": "True",
+  "false": "False",
+  "correct": "Correct",
+  "incorrect": "Incorrect",
+  "next": "Next",
+  "finish": "See result",
+  "progress": "{{current}} / {{total}}",
+  "scoreLabel": "You scored",
+  "restart": "Try again",
+  "resultPerfect": "Perfect score — you've nailed it!",
+  "resultGood": "Well done — strong understanding.",
+  "resultMixed": "Good effort — review and try again."
+}

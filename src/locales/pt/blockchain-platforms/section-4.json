@@ -17,7 +17,6 @@
     "s4-cosmos-eco": "Apps Cosmos",
     "s4-xrp": "XRP Ledger",
     "s4-xrp-anim": "🧩 XRPL ↔ Axelar",
-    "s4-xrp-eco": "Apps XRP",
     "s4-quiz": "Quiz",
     "s4-takeaways": "Conclusões"
   },
@@ -363,131 +362,28 @@
   },
   "xrp": {
     "badgePartner": "🧩 Plataforma parceira",
-    "badgeAnimated": "Animado",
-    "heading": "XRP Ledger — Um Rail de Pagamentos de Baixo Nível com Alcance Cross-Chain",
-    "subA": "Ativa desde 2012 — uma das blockchains a operar há mais tempo. O seu desenho é deliberadamente ",
-    "subStrong": "de baixo nível e feito à medida",
-    "subB": ": DEX, pagamentos, FX e emissão de tokens são ",
-    "subEm": "operações nativas do protocolo",
-    "subC": ", não smart contracts. É essa a troca — mais rápida, mais barata, mais previsível; não tão livremente programável como a EVM.",
-    "pillar1Label": "Pilar 1 — Operações nativas",
-    "pillar1Title": "DEX & pagamentos são de primeira classe",
-    "pillar1BodyA": "O DEX de order-book está no protocolo desde 2012 (sem smart contract). O AMM (XLS-30) juntou-se nativamente em 2024. Os pagamentos por caminho fazem auto-routing através de saltos multi-ativo. ",
-    "pillar1BodyStrong": "Otimizado, mas o conjunto de regras é fixo.",
-    "pillar2Label": "Pilar 2 — Semi-pública",
-    "pillar2Title": "UNL — os operadores escolhem os seus validadores",
-    "pillar2BodyA": "Qualquer pessoa pode ler a chain, mas cada nó mantém uma ",
-    "pillar2BodyStrong1": "Unique Node List",
-    "pillar2BodyB": " de validadores em que confia. Federated Byzantine Agreement, ≥ 80% da UNL concorda por ronda. ",
-    "pillar2BodyStrong2": "Sem permissão para usar, federada para validar.",
-    "pillar3Label": "Pilar 3 — Cross-chain",
-    "pillar3Title": "XRPL ↔ Axelar ↔ qualquer chain",
-    "pillar3BodyA": "O Axelar GMP dá às apps XRPL uma única API para alcançar mais de 50 chains (EVM, Cosmos, Sui, Stellar) — pagamento + mensagem numa só chamada. ",
-    "pillar3BodyStrong": "Sem um contrato de bridge à medida por cada par.",
-    "designLabel": "Porque o desenho de baixo nível compensa",
-    "design": [
-      { "emoji": "⚡", "title": "~1500 TPS · finalidade de ~3-5 s", "desc": "Rondas de consenso determinísticas. Sem picos no mercado de taxas; o burn de XRP (~0,0002 $ / transação) torna o spam economicamente inviável." },
-      { "emoji": "🔗", "title": "Trust Lines / IOUs", "desc": "Os tokens emitidos (RLUSD, stablecoins, RWA) existem como saldos numa Trust Line — uma permissão que o detentor concede ao emissor. Um modelo mental diferente do ERC-20." },
-      { "emoji": "🪝", "title": "Hooks — contratos WASM leves", "desc": "Os hooks ao nível da conta disparam antes / depois das transações. Medidos por gas, com uma superfície propositadamente limitada — taxas previsíveis em vez de liberdade Turing-completa." },
-      { "emoji": "🔷", "title": "Sidechain EVM (2025)", "desc": "Uma chain compatível com EVM separada, ligada por bridge à XRPL, para que as dApps em Solidity possam liquidar na XRPL e usar XRP para gas. Alarga a superfície de desenvolvimento sem alterar a L1 base." }
+    "heading": "XRP Ledger — um rail de liquidação feito à medida",
+    "takeawayLabel": "A única coisa a reter",
+    "takeaway": "A XRPL é um rail feito à medida para pagamentos, FX e ativos do mundo real tokenizados — rápida e barata por desenho. Não é uma plataforma de smart contracts de uso geral, e essa troca é deliberada.",
+    "pillars": [
+      { "label": "Operações nativas", "title": "DEX & pagamentos são de primeira classe", "body": "O DEX de order-book está no protocolo desde 2012 (sem smart contract); o AMM nativo (XLS-30) juntou-se em 2024. Otimizada para estas tarefas — mas o conjunto de regras é fixo." },
+      { "label": "Validação federada", "title": "UNL — os operadores escolhem os validadores", "body": "Qualquer pessoa pode ler e usar a chain, mas cada nó confia numa Unique Node List de validadores (Federated Byzantine Agreement, ≥ 80% concorda por ronda). Sem permissão para usar, federada para validar." },
+      { "label": "Alcance cross-chain", "title": "Uma API para mais de 50 chains", "body": "O Axelar GMP permite às apps XRPL alcançar EVM, Cosmos, Sui e mais — pagamento + mensagem numa só chamada, sem um contrato de bridge à medida por cada par." }
     ],
-    "shinesTitle": "Onde a XRPL realmente brilha (footprint do parceiro)",
-    "shinesBodyA": "Pagamentos transfronteiriços, corredores de FX, tokenização de RWA. O ",
-    "shinesStrong1": "RippleNet ODL",
-    "shinesBodyB": " usa o XRP como moeda-ponte; o ",
-    "shinesStrong2": "RLUSD",
-    "shinesBodyC": " (regulado pela NYDFS, ativo desde dez. 2024) liquida na XRPL e na Ethereum. Pilotos de bancos centrais (Butão, Palau, Colômbia) correm sobre tecnologia XRPL.",
+    "designLabel": "Como é construída — e onde vive a programabilidade",
+    "design": [
+      { "emoji": "⚡", "title": "Rápida e barata por desenho", "desc": "~1500 transações/s em teoria (umas centenas na prática), finalidade de 3–5 s. Um pequeno burn de XRP (~0,0002 $/transação) torna o spam inviável — e não há picos no mercado de taxas." },
+      { "emoji": "🔗", "title": "Trust Lines / IOUs", "desc": "Os tokens emitidos (RLUSD, stablecoins, RWA) existem como saldos numa Trust Line — uma permissão que o detentor concede ao emissor. Um modelo mental diferente do ERC-20." },
+      { "emoji": "🧩", "title": "A lógica de smart contracts vive fora da camada base", "desc": "A mainnet XRPL não tem smart contracts gerais — de propósito. A lógica mais rica corre em chains separadas: a sidechain EVM da XRPL (Solidity, 2025) e a Xahau, uma rede irmã onde os 'Hooks' (pequenos trechos WASM) executam. A L1 base mantém-se deliberadamente simples." },
+      { "emoji": "🏦", "title": "Feita para instituições", "desc": "RLUSD — uma stablecoin regulada pela NYDFS (ativa desde dez. 2024) que liquida na XRPL + Ethereum. O RippleNet ODL usa o XRP como moeda-ponte, e pilotos de bancos centrais (Butão, Palau, Colômbia) correm sobre tecnologia XRPL." }
+    ],
     "honestTitle": "Contexto honesto — o que abdicas",
-    "honestBodyA": "Uma superfície de smart contracts menor que a EVM. A UNL é federada — qualquer pessoa pode correr um nó, mas o conjunto de validadores por omissão vem com o software. A aposta é em ",
-    "honestStrong": "pagamentos + RWA + liquidação cross-chain",
-    "honestBodyB": ", não em dApps de uso geral."
+    "honestBody": "Uma superfície de smart contracts menor que a EVM, e validação que é federada: qualquer pessoa pode correr um nó, mas o conjunto de validadores por omissão vem com o software. A aposta é em pagamentos, RWA e liquidação cross-chain — não em dApps de uso geral."
   },
   "xrpAnim": {
     "badge": "🧩 Animado",
     "heading": "XRPL ↔ Axelar — Uma API para Alcançar Todas as Chains",
     "subtitle": "Acabaste de ver no que a XRPL é boa (pagamentos, DEX nativo, RWA). Eis como fala com o resto do mundo multi-chain — sem escrever um contrato de bridge à medida por cada par."
-  },
-  "xrpEco": {
-    "heading": "Ecossistema XRP Ledger — apps e parcerias",
-    "subtitle": "O footprint da XRPL inclina-se mais para os rails empresariais e ativos do mundo real tokenizados do que para a DeFi de retalho. As adições recentes (AMM, RLUSD, sidechain EVM) estão a alargar esse footprint para 2024-26.",
-    "apps": [
-      {
-        "emoji": "💸",
-        "name": "RippleNet · ODL",
-        "category": "Pagamentos",
-        "tag": "liquidação transfronteiriça",
-        "stats": "Parceiros bancários em todo o mundo · desde 2018",
-        "items": [
-          { "name": "On-Demand Liquidity", "kind": "XRP como moeda-ponte para FX" },
-          { "name": "RippleNet", "kind": "Mensagens + liquidação em corredores bancários" },
-          { "name": "Travelex · SBI", "kind": "Integrações de remessas em produção" },
-          { "name": "Pilotos de bancos centrais", "kind": "Ensaios de CBDC no Butão, Palau, Colômbia" }
-        ]
-      },
-      {
-        "emoji": "🪙",
-        "name": "RLUSD",
-        "category": "Stablecoin",
-        "tag": "stablecoin regulada da Ripple",
-        "stats": "Ativa em dez. 2024 · lastreada em USD · NYDFS",
-        "items": [
-          { "name": "Regulada pela NYDFS", "kind": "Emissão por uma Trust company de Nova Iorque" },
-          { "name": "Em XRPL + ETH", "kind": "Cunha nativamente na XRPL e na Ethereum" },
-          { "name": "Lastreada em tesouro", "kind": "Reservas: numerário + treasuries dos EUA de curto prazo" },
-          { "name": "Integração RippleNet", "kind": "Liquida pagamentos transfronteiriços ao lado do XRP" }
-        ]
-      },
-      {
-        "emoji": "📈",
-        "name": "Sologenic",
-        "category": "RWA · ações tokenizadas",
-        "tag": "ações e metais tokenizados",
-        "stats": "Ativa desde 2020 · token SOLO",
-        "items": [
-          { "name": "Ações tokenizadas", "kind": "Ações da Apple e Tesla como IOUs XRPL" },
-          { "name": "Sologenic DEX", "kind": "Front-end no DEX nativo da XRPL" },
-          { "name": "Coinfield", "kind": "Exchange irmã · metais tokenizados" },
-          { "name": "Mercado de NFTs", "kind": "Trading de NFTs XLS-20" }
-        ]
-      },
-      {
-        "emoji": "👛",
-        "name": "Xaman (ex-Xumm)",
-        "category": "Carteira",
-        "tag": "carteira XRPL líder",
-        "stats": "Construída pela XRPL Labs · iOS / Android",
-        "items": [
-          { "name": "Auto-custódia", "kind": "As chaves ficam no dispositivo" },
-          { "name": "xApps", "kind": "Mini-apps (DEX, NFT, pagamentos) dentro da carteira" },
-          { "name": "Suporte a Hooks", "kind": "Gere código de hooks ao nível da conta" },
-          { "name": "PayString", "kind": "Aliases de endereço legíveis por humanos" }
-        ]
-      },
-      {
-        "emoji": "🔄",
-        "name": "DEX & AMM Nativos",
-        "category": "DeFi no protocolo",
-        "tag": "order book + AMM",
-        "stats": "DEX desde 2012 · AMM (XLS-30) ativo em 2024",
-        "items": [
-          { "name": "DEX de order-book", "kind": "Nativo, sem necessidade de smart contract" },
-          { "name": "AMM (XLS-30)", "kind": "Pools de produto constante no protocolo" },
-          { "name": "Pagamentos por caminho", "kind": "Auto-routing através de saltos multi-ativo" },
-          { "name": "Ativos emitidos", "kind": "Negociar qualquer IOU lado a lado com o XRP" }
-        ]
-      }
-    ],
-    "footerStrong": "Também vale a pena saber — ",
-    "footerA": "Bitstamp",
-    "footerAtext": " integrou o XRP desde 2017 · ",
-    "footerB": "XRPL Hooks",
-    "footerBtext": " — a ativação na mainnet alargou a superfície de contratos · ",
-    "footerC": "Coreum",
-    "footerCtext": " saiu da família XRPL com uma chain em Cosmos-SDK · ",
-    "footerD": "Flare",
-    "footerDtext": " liga-se à XRPL via FAssets · ",
-    "footerE": "sidechain EVM",
-    "footerEtext": " a abrir um footprint compatível com Solidity em 2025."
   },
   "quiz": {
     "question": "As bridges cross-chain têm sido responsáveis pelos maiores ataques da história da cripto — Ronin (625 M$), Wormhole (320 M$), Nomad (190 M$). Que propriedade arquitetural torna as bridges alvos de tão elevado valor?",

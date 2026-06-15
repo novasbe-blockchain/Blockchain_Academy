@@ -221,6 +221,16 @@
     ],
     "explanation": "O valor do dinheiro não está no objeto — está no acordo partilhado de todos na rede. Quando esse acordo se parte (hiperinflação, sanções, bans de plataformas), as mesmas notas perdem valor de um dia para o outro. Os quatro fundamentos são: confiança, escassez, utilidade e efeitos de rede. O Bitcoin pergunta se os quatro podem ser engenheirados sem qualquer autoridade isolada — é essa a pergunta que este curso explora."
   },
+  "cypherpunksTF": {
+    "prompt": "Pelo que lutavam realmente os Cypherpunks? Decida se cada afirmação é verdadeira ou falsa.",
+    "statements": [
+      { "text": "Os Cypherpunks acreditavam que a privacidade é uma pré-condição para uma sociedade livre.", "isTrue": true, "explanation": "É o coração do movimento: sem privacidade, os indivíduos não podem agir livremente. O manifesto de Eric Hughes (1993) abre exatamente com esta ideia." },
+      { "text": "Os Cypherpunks queriam que os governos gerissem a cifragem em nome dos cidadãos.", "isTrue": false, "explanation": "Pelo contrário — desconfiavam das instituições e defendiam que cada indivíduo devia proteger a sua própria privacidade diretamente, com criptografia em vez de leis." },
+      { "text": "O lema 'Cypherpunks write code' significava que o software, e não a legislação, protegeria a privacidade.", "isTrue": true, "explanation": "Acreditavam que código a funcionar no mundo real era mais eficaz do que pressionar por leis que podiam ser ignoradas ou revertidas." },
+      { "text": "A Bitcoin surgiu do nada, sem raízes no trabalho anterior dos Cypherpunks.", "isTrue": false, "explanation": "A Bitcoin assentou diretamente em décadas de investigação Cypherpunk — Hashcash, b-money, assinaturas digitais e mais. Foi uma evolução, não um raio em céu limpo." },
+      { "text": "Para os Cypherpunks, privacidade era o poder de te revelares seletivamente ao mundo.", "isTrue": true, "explanation": "Hughes definiu privacidade não como segredo, mas como controlo: escolher o que revelar, a quem e quando." }
+    ]
+  },
   "quizCypherpunks": {
     "question": "Qual era a crença central do movimento Cypherpunk?",
     "options": [

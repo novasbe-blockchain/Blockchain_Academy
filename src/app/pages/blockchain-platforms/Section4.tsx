@@ -30,7 +30,6 @@ const chapterShape = [
   { kind: 'group' as const, id: 'g-s4-xrp' },
   { id: 's4-xrp' },
   { id: 's4-xrp-anim' },
-  { id: 's4-xrp-eco' },
 
   { kind: 'group' as const, id: 'g-s4-wrap' },
   { id: 's4-quiz' },
@@ -515,7 +514,7 @@ export function BP_Section4() {
   const cosmosApps = t('cosmosEco.apps', { returnObjects: true }) as EcoApp[];
 
   const xrpDesign = t('xrp.design', { returnObjects: true }) as EmojiCard[];
-  const xrpApps = t('xrpEco.apps', { returnObjects: true }) as EcoApp[];
+  const xrpPillars = t('xrp.pillars', { returnObjects: true }) as Array<{ label: string; title: string; body: string }>;
 
   const quizOptions = t('quiz.options', { returnObjects: true }) as string[];
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
@@ -537,7 +536,7 @@ export function BP_Section4() {
     { angle: -150, color: '#10b981' },
   ];
   const cosmosAppColors = ['#7B2BF9', '#6966FF', '#7E5CF7', '#FF414C', '#E91E63'];
-  const xrpAppColors = ['#06b6d4', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899'];
+  const xrpPillarColors = ['#06b6d4', '#f59e0b', '#10b981'];
 
   return (
     <div className="h-full w-full flex overflow-hidden">
@@ -1093,81 +1092,55 @@ export function BP_Section4() {
 
         {/* (Layer 0 slides moved to after Approaches Compared — see s4-layer0 and s4-layer0-2 above) */}
 
-        {/* ═══════ S4-XRP — XRP Ledger (redone) ═══════ */}
+        {/* ═══════ S4-XRP — XRP Ledger (focused, one takeaway) ═══════ */}
         <div id="s4-xrp" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-3">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-[#06b6d4]/15 border border-[#06b6d4]/40 text-[#06b6d4] text-xs font-bold">{t('xrp.badgePartner')}</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">{t('xrp.badgeAnimated')}</span>
-            </div>
+            <span className="px-2.5 py-0.5 rounded-full bg-[#06b6d4]/15 border border-[#06b6d4]/40 text-[#06b6d4] text-xs font-bold">{t('xrp.badgePartner')}</span>
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('xrp.heading')}</h2>
-            <p className="text-sm text-muted-foreground max-w-4xl">
-              {t('xrp.subA')}<strong className="text-foreground">{t('xrp.subStrong')}</strong>{t('xrp.subB')}<em>{t('xrp.subEm')}</em>{t('xrp.subC')}
-            </p>
           </div>
 
-          {/* Three premise pillars */}
+          {/* The one takeaway — anchors the whole sub-section */}
+          <div className="shrink-0 mb-3 rounded-xl border-2 p-3" style={{ borderColor: '#06b6d480', backgroundColor: '#06b6d412' }}>
+            <div className="text-[10px] font-black uppercase tracking-widest text-[#06b6d4] mb-0.5">💡 {t('xrp.takeawayLabel')}</div>
+            <p className="text-sm lg:text-base font-semibold text-foreground leading-snug">{t('xrp.takeaway')}</p>
+          </div>
+
+          {/* Three pillars */}
           <div className="shrink-0 grid grid-cols-1 lg:grid-cols-3 gap-2.5 mb-3">
-            <div className="rounded-xl border-2 p-3" style={{ borderColor: '#06b6d4AA', backgroundColor: '#06b6d40d' }}>
-              <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#06b6d4' }}>{t('xrp.pillar1Label')}</div>
-              <div className="text-sm font-bold text-foreground mt-0.5">{t('xrp.pillar1Title')}</div>
-              <div className="text-[11px] text-muted-foreground leading-snug mt-1">
-                {t('xrp.pillar1BodyA')}<strong className="text-foreground">{t('xrp.pillar1BodyStrong')}</strong>
-              </div>
-            </div>
-            <div className="rounded-xl border-2 p-3" style={{ borderColor: '#f59e0bAA', backgroundColor: '#f59e0b0d' }}>
-              <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#f59e0b' }}>{t('xrp.pillar2Label')}</div>
-              <div className="text-sm font-bold text-foreground mt-0.5">{t('xrp.pillar2Title')}</div>
-              <div className="text-[11px] text-muted-foreground leading-snug mt-1">
-                {t('xrp.pillar2BodyA')}<strong className="text-foreground">{t('xrp.pillar2BodyStrong1')}</strong>{t('xrp.pillar2BodyB')}<strong className="text-foreground">{t('xrp.pillar2BodyStrong2')}</strong>
-              </div>
-            </div>
-            <div className="rounded-xl border-2 p-3" style={{ borderColor: '#10b981AA', backgroundColor: '#10b9810d' }}>
-              <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#10b981' }}>{t('xrp.pillar3Label')}</div>
-              <div className="text-sm font-bold text-foreground mt-0.5">{t('xrp.pillar3Title')}</div>
-              <div className="text-[11px] text-muted-foreground leading-snug mt-1">
-                {t('xrp.pillar3BodyA')}<strong className="text-foreground">{t('xrp.pillar3BodyStrong')}</strong>
-              </div>
-            </div>
+            {xrpPillars.map((p, i) => {
+              const c = xrpPillarColors[i];
+              return (
+                <div key={p.title} className="rounded-xl border-2 p-3" style={{ borderColor: c + 'AA', backgroundColor: c + '0d' }}>
+                  <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: c }}>{p.label}</div>
+                  <div className="text-sm font-bold text-foreground mt-0.5">{p.title}</div>
+                  <div className="text-[11px] text-muted-foreground leading-snug mt-1">{p.body}</div>
+                </div>
+              );
+            })}
           </div>
 
-          {/* Main row: design properties (no animation here — moved to next slide) */}
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {/* Why-the-low-level-design-pays-off panel, expanded across full width */}
-            <div className="flex flex-col gap-2 min-h-0 overflow-y-auto">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('xrp.designLabel')}</p>
-              <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
-                {xrpDesign.map(card => (
-                  <div key={card.title} className="flex gap-2.5 p-2.5 bg-card rounded-lg border border-[#06b6d4]/25 min-h-0">
-                    <span className="text-base shrink-0 leading-none mt-0.5">{card.emoji}</span>
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-foreground leading-tight">{card.title}</p>
-                      <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{card.desc}</p>
-                    </div>
+          {/* How it's built — design cards in a 2-col grid */}
+          <div className="flex-1 min-h-0 flex flex-col gap-2">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('xrp.designLabel')}</p>
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 auto-rows-fr gap-2">
+              {xrpDesign.map(card => (
+                <div key={card.title} className="flex gap-2.5 p-2.5 bg-card rounded-lg border border-[#06b6d4]/25 min-h-0">
+                  <span className="text-base shrink-0 leading-none mt-0.5">{card.emoji}</span>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-foreground leading-tight">{card.title}</p>
+                    <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{card.desc}</p>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Footer — partnership + honest context */}
-          <div className="shrink-0 mt-3 grid grid-cols-1 lg:grid-cols-2 gap-2">
-            <div className="p-2.5 bg-[#06b6d4]/08 rounded-lg border border-[#06b6d4]/40">
-              <p className="text-[11px] font-bold text-[#06b6d4] mb-1 flex items-center gap-1.5">
-                <span>🤝</span> {t('xrp.shinesTitle')}
-              </p>
-              <p className="text-[11px] text-muted-foreground leading-snug">
-                {t('xrp.shinesBodyA')}<span className="text-foreground font-medium">{t('xrp.shinesStrong1')}</span>{t('xrp.shinesBodyB')}<span className="text-foreground font-medium">{t('xrp.shinesStrong2')}</span>{t('xrp.shinesBodyC')}
-              </p>
-            </div>
-            <div className="p-2.5 bg-[#f59e0b]/08 rounded-lg border border-[#f59e0b]/40">
-              <p className="text-[11px] font-bold text-[#f59e0b] mb-1 flex items-center gap-1.5">
-                <span>⚖️</span> {t('xrp.honestTitle')}
-              </p>
-              <p className="text-[11px] text-muted-foreground leading-snug">
-                {t('xrp.honestBodyA')}<strong className="text-foreground">{t('xrp.honestStrong')}</strong>{t('xrp.honestBodyB')}
-              </p>
-            </div>
+          {/* Honest context footer */}
+          <div className="shrink-0 mt-3 p-2.5 bg-[#f59e0b]/08 rounded-lg border border-[#f59e0b]/40">
+            <p className="text-[11px] font-bold text-[#f59e0b] mb-1 flex items-center gap-1.5">
+              <span>⚖️</span> {t('xrp.honestTitle')}
+            </p>
+            <p className="text-[11px] text-muted-foreground leading-snug">{t('xrp.honestBody')}</p>
           </div>
         </div>
 
@@ -1184,69 +1157,6 @@ export function BP_Section4() {
             <XrplAxelarFlow />
           </div>
         </div>
-
-        {/* ═══════ XRP APPS — ecosystem ═══════ */}
-        <div id="s4-xrp-eco" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-3">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('xrpEco.heading')}</h2>
-            <p className="text-sm text-muted-foreground mt-1">{t('xrpEco.subtitle')}</p>
-          </div>
-
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-5 gap-2.5">
-            {xrpApps.map((app, ai) => {
-              const color = xrpAppColors[ai];
-              return (
-                <motion.div
-                  key={app.name}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex flex-col gap-1.5 p-2.5 rounded-xl border-2 min-h-0"
-                  style={{ borderColor: color + '55', backgroundColor: color + '0a' }}
-                >
-                  <div className="shrink-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-base shrink-0 leading-none">{app.emoji}</span>
-                      <div className="font-black text-[12px] leading-tight" style={{ color }}>{app.name}</div>
-                    </div>
-                    <span
-                      className="inline-block text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded mt-1"
-                      style={{ backgroundColor: color + '20', color, border: `1px solid ${color}40` }}
-                    >
-                      {app.category}
-                    </span>
-                  </div>
-
-                  <div className="shrink-0">
-                    <div className="text-[10px] text-foreground font-medium leading-tight">{app.tag}</div>
-                    <div className="text-[9px] text-muted-foreground italic leading-snug mt-0.5">{app.stats}</div>
-                  </div>
-
-                  <div className="flex-1 min-h-0 flex flex-col gap-1">
-                    {app.items.map(item => (
-                      <div
-                        key={item.name}
-                        className="rounded-md border bg-card/60 px-1.5 py-1 min-h-0"
-                        style={{ borderColor: color + '35' }}
-                      >
-                        <div className="text-[10px] font-bold leading-tight" style={{ color }}>{item.name}</div>
-                        <div className="text-[9px] text-muted-foreground leading-snug mt-0.5">{item.kind}</div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <div className="shrink-0 mt-3 rounded-xl border p-2.5" style={{ borderColor: '#06b6d455', backgroundColor: '#06b6d40d' }}>
-            <p className="text-[11px] text-muted-foreground leading-snug">
-              <span className="font-bold" style={{ color: '#06b6d4' }}>{t('xrpEco.footerStrong')}</span>
-              <span className="font-medium text-foreground">{t('xrpEco.footerA')}</span>{t('xrpEco.footerAtext')}<span className="font-medium text-foreground">{t('xrpEco.footerB')}</span>{t('xrpEco.footerBtext')}<span className="font-medium text-foreground">{t('xrpEco.footerC')}</span>{t('xrpEco.footerCtext')}<span className="font-medium text-foreground">{t('xrpEco.footerD')}</span>{t('xrpEco.footerDtext')}<span className="font-medium text-foreground">{t('xrpEco.footerE')}</span>{t('xrpEco.footerEtext')}
-            </p>
-          </div>
-        </div>
-
 
         {/* ═══════ QUIZ ═══════ */}
         <div id="s4-quiz" className="h-full">

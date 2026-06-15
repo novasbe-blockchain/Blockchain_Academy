@@ -1,0 +1,98 @@
+{
+  "launch": {
+    "badge": "Mini-jogo",
+    "title": "A blockchain é para si?",
+    "subtitle": "Deslize por algumas perguntas rápidas e descubra se — e qual — blockchain faz realmente sentido para o seu projeto.",
+    "cta": "Fazer o teste",
+    "duration": "~60 segundos"
+  },
+  "ui": {
+    "intro": {
+      "title": "A blockchain é para si?",
+      "body": "A maioria dos projetos não precisa de blockchain. Este teste rápido faz algumas perguntas honestas e diz-lhe se uma blockchain o ajudaria de facto — e, se sim, qual.",
+      "rule1": "Deslize para a direita ou toque em Sim",
+      "rule2": "Deslize para a esquerda ou toque em Não",
+      "start": "Começar"
+    },
+    "progress": "Pergunta {{current}} de {{total}}",
+    "yes": "Sim",
+    "no": "Não",
+    "swipeHint": "Deslize o cartão, toque nos botões ou use as teclas ← / →",
+    "example": "Exemplo",
+    "restart": "Repetir o teste",
+    "close": "Fechar",
+    "result": "O seu resultado",
+    "scoreLabel": "Pontuação de adequação à blockchain",
+    "why": "Porquê este resultado",
+    "recommendedCourse": "Próximo passo recomendado",
+    "goToCourse": "Explorar este curso"
+  },
+  "questions": {
+    "intermediary": {
+      "title": "O intermediário",
+      "example": "O Spotify fica com cerca de 30% de cada reprodução antes de o artista receber um cêntimo. A blockchain pode ligar duas partes diretamente, sem esse intermediário.",
+      "question": "Existe um intermediário que cobra uma comissão ou controla o acesso e que gostaria de eliminar?"
+    },
+    "multiParty": {
+      "title": "Muitas mãos, sem chefe",
+      "example": "Pense em vários bancos, ou empresas de logística concorrentes, que têm de concordar com um único registo partilhado — mas nenhum confia no outro para guardar a cópia mestre.",
+      "question": "Várias organizações que não confiam totalmente umas nas outras precisam de partilhar uma única fonte de verdade?"
+    },
+    "shareData": {
+      "title": "Dados que têm de viajar",
+      "example": "O historial médico de um doente espalhado por vários hospitais — cada visita repete as mesmas perguntas. Registos partilhados e rastreáveis aceleram tudo.",
+      "question": "Precisa de partilhar registos entre organizações de forma fiável, com um rasto claro de quem alterou o quê?"
+    },
+    "confidential": {
+      "title": "Apenas para alguns",
+      "example": "Os preços de um contrato entre duas empresas, ou dados de doentes, não podem simplesmente ser publicados num registo público para o mundo inteiro ler.",
+      "question": "Os seus dados têm de permanecer privados — visíveis apenas para participantes autorizados, e não para todos?"
+    },
+    "tokenize": {
+      "title": "Transformar coisas em tokens",
+      "example": "Um edifício, uma barra de ouro ou ações de uma empresa divididas em tokens digitais que qualquer pessoa pode comprar, vender ou trocar 24/7.",
+      "question": "Quer transformar um ativo real (imóvel, ouro, ações de uma empresa) em tokens digitais negociáveis?"
+    },
+    "publicVerify": {
+      "title": "Confiar, mas verificar",
+      "example": "Uma instituição de caridade que permite a qualquer doador seguir o seu dinheiro na blockchain, ou um produto rastreável da origem até à prateleira.",
+      "question": "Precisa que qualquer pessoa do público consiga verificar as suas transações de forma independente?"
+    },
+    "immutable": {
+      "title": "Escrito em pedra",
+      "example": "Um diploma, um título de propriedade ou um registo de auditoria que ninguém — nem mesmo o administrador — possa reescrever discretamente mais tarde.",
+      "question": "Precisa de um histórico inviolável que nunca possa ser alterado a posteriori?"
+    },
+    "centralDb": {
+      "title": "A pergunta honesta",
+      "example": "Se uma organização de confiança já controla os dados e todos estão de acordo com isso, uma base de dados normal é mais rápida, barata e simples do que qualquer blockchain.",
+      "question": "Uma base de dados normal, sob o controlo exclusivo da sua organização, já resolveria o problema?"
+    }
+  },
+  "results": {
+    "not-needed": {
+      "tag": "Blockchain opcional",
+      "title": "Uma base de dados clássica é provavelmente suficiente",
+      "summary": "Com base nas suas respostas, o seu projeto não apresenta o atrito que a blockchain foi criada para resolver — sem partes que não confiam entre si, sem intermediário a eliminar, sem necessidade de verificação pública. Uma base de dados tradicional bem construída seria mais rápida, barata e simples. E isso é uma resposta perfeitamente válida.",
+      "why": "A blockchain justifica o seu custo quando várias partes que não confiam umas nas outras têm de partilhar um registo inviolável. Quando um único dono de confiança comanda tudo, esse custo adicional não traz benefício."
+    },
+    "permissioned": {
+      "tag": "Permissionada / consórcio",
+      "title": "Uma blockchain permissionada (Hyperledger Fabric)",
+      "summary": "Tem parceiros conhecidos que precisam de partilhar dados fiáveis mantendo-os confidenciais — território clássico das cadeias de abastecimento, saúde e liquidação interbancária. Uma blockchain permissionada como o Hyperledger Fabric dá-lhe um registo partilhado e inviolável que apenas membros autorizados podem ler e escrever.",
+      "why": "As suas respostas apontam para várias organizações conhecidas mas não totalmente confiáveis, dados confidenciais e a necessidade de um rasto partilhado fiável — exatamente aquilo para que as blockchains de consórcio foram concebidas, sem expor nada ao público."
+    },
+    "public-evm": {
+      "tag": "EVM pública",
+      "title": "Uma blockchain EVM pública (Ethereum, Polygon)",
+      "summary": "Quer criar ou negociar ativos digitais — tokenizar imóveis, ouro, ações ou construir produtos financeiros abertos. As cadeias EVM públicas (Ethereum e os seus Layer-2 como a Polygon) são o lar mais líquido e componível para contratos inteligentes e ativos tokenizados.",
+      "why": "A tokenização e os mercados abertos onde qualquer um participa precisam de uma cadeia pública com ferramentas ricas de contratos inteligentes. O ecossistema EVM tem as ferramentas, a liquidez e os padrões mais amplos (ERC-20, ERC-721) para isto mesmo."
+    },
+    "public-general": {
+      "tag": "Blockchain pública",
+      "title": "Uma blockchain pública (transparência e desintermediação)",
+      "summary": "O seu valor vem de eliminar um intermediário e permitir que qualquer pessoa verifique o que aconteceu — donativos públicos, rastreabilidade, registos resistentes à censura. Uma blockchain pública dá-lhe essa transparência e abertura radicais à partida.",
+      "why": "Deu prioridade à verificação pública e à eliminação de intermediários em vez da confidencialidade. Essa abertura é precisamente o propósito de uma cadeia pública — comece pelos fundamentos para escolher a certa."
+    }
+  }
+}

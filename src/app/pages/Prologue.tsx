@@ -5,6 +5,7 @@ import { TitleSlide } from '../components/templates/TitleSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
 import { QuizSlide } from '../components/templates/QuizSlide';
+import { SwipeQuiz, type SwipeStatement } from '../components/templates/SwipeQuiz';
 import { CalloutBox } from '../components/shared/CalloutBox';
 import { ScrollText, ExternalLink, User } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
@@ -673,10 +674,9 @@ export function Prologue() {
         </div>
 
         <div className="h-full">
-          <QuizSlide
-            question={t('quizCypherpunks.question')}
-            options={(t('quizCypherpunks.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizCypherpunks.explanation')}
+          <SwipeQuiz
+            question={t('cypherpunksTF.prompt')}
+            statements={t('cypherpunksTF.statements', { returnObjects: true }) as SwipeStatement[]}
           />
         </div>
 
