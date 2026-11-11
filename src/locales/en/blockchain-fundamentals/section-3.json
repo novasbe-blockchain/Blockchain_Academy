@@ -937,12 +937,12 @@
     }
   },
   "assignment": {
-    "ribbon":       "In-class Assignment #1",
-    "contextLabel": "Closing activity · in class, then homework",
+    "ribbon":       "Assignment #1",
+    "contextLabel": "Closing activity · individual write-up (online)",
     "title":        "Could a blockchain fix this?",
     "subtitle":     "Apply the course's recurring question, does this problem actually need a blockchain, to a real-world problem of your choice.",
-    "groupSize":    "Groups of 3–4",
-    "duration":     "15–20 min in class",
+    "groupSize":    "On your own",
+    "duration":     "~1 page · due end of week",
     "seedsLabel":   "Pick a real-world problem",
     "seedsIntro":   "Any industry, any scale. Examples:",
     "seeds": [
@@ -953,14 +953,14 @@
       { "emoji": "🎟️", "title": "Ticket scalping" },
       { "emoji": "🏠", "title": "Land registries" }
     ],
-    "stage1Label": "Stage 1 · In class · 15–20 min",
+    "stage1Label": "Stage 1 · Think it through (on your own)",
     "steps": [
-      { "time": "5 min",       "label": "Form a group of 3–4 and pick one real-world problem" },
-      { "time": "10 min",      "label": "Discuss: could a blockchain help? Sketch the solution, pros and cons" },
-      { "time": "1 min/group", "label": "Present your problem statement to the instructor" }
+      { "time": "Step 1",       "label": "Pick one real-world problem that interests you" },
+      { "time": "Step 2",      "label": "Decide: could a blockchain genuinely help? Sketch the solution, pros and cons" },
+      { "time": "Step 3", "label": "Jot your rough take, then write it up for Stage 2" }
     ],
-    "stage1Note": "Nothing is submitted in class; just a spoken problem statement.",
-    "stage2Label": "Stage 2 · Homework · one write-up per group",
+    "stage1Note": "No live group work — do this on your own. Nothing is submitted at this stage; just your own notes.",
+    "stage2Label": "Stage 2 · Write-up · one page per student",
     "deliverableLimit": "MAX 1 PAGE",
     "rules": [
       { "emoji": "📄", "text": "Max one page" },
@@ -976,6 +976,6 @@
       { "title": "Pros & cons",         "desc": "What a blockchain genuinely adds here — and what it costs. Would a spreadsheet or a trusted middleman do the job?" }
     ],
     "footerStrong": "Summary:",
-    "footerBody":   "a spoken problem statement in class; one page on Moodle by the end of the week."
+    "footerBody":   "Your own one-page write-up on Moodle by the end of the week."
   }
 }
