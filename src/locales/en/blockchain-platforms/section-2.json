@@ -24,6 +24,7 @@
     "s2-staking": "🧩 Staking",
     "s2-issuance": "🧩 ETH Issuance",
     "s2-evmecosystem": "EVM Everywhere",
+    "s2-why-l2": "Why L2?",
     "s2-rollups": "Rollups & L2s",
     "s2-rollups-2": "Optimistic vs ZK",
     "s2-defi": "DeFi Mechanics",
@@ -52,6 +53,9 @@
     "consensus": "RANDAO (random picker) · committees · BLS signature aggregation · slots (12 s) / epochs · Casper FFG finality",
     "staking": "validator keys · withdrawal credentials · slashing conditions · churn limit · stETH / rETH",
     "issuance": "EIP-1559 base-fee burn · PoS issuance curve (∝ √ staked ETH) · ultrasound.money",
+    "whyL2": "scalability trilemma · block gas limit",
+    "rollups": "sequencer · state root · L1 bridge",
+    "rollups2": "fraud proof · validity proof · blobs",
     "defi": "x·y=k · collateral ratio · liquidation bots · LP tokens · composability",
     "stablecoins": "ERC-20 mint/redeem · proof of reserves · liquidation ratio · delta-neutral hedge",
     "apps": "ERC-20 · ERC-721 · ERC-1155 · tokenURI · governor contracts · ENS · SIWE"
@@ -71,6 +75,7 @@
     "staking": "The return is real, but getting in and out takes time.",
     "issuance": "Bitcoin sells scarcity by rule; Ethereum sells scarcity by usage.",
     "evmEcosystem": "The EVM is the shared standard: build once, deploy on many chains.",
+    "whyL2": "Ethereum keeps L1 small and secure on purpose; Layer 2 is where the volume goes.",
     "rollups": "Rollups move execution off Ethereum while security stays on it.",
     "rollups2": "Optimistic rollups wait a week to be sure; ZK rollups prove it up front. Either way users pay cents.",
     "defi": "Swap, lend and earn recombine into almost every DeFi product.",
@@ -448,11 +453,42 @@
     "l2Label": "Layer 2 Rollups",
     "l1Label": "EVM-Compatible L1s"
   },
+  "whyL2": {
+    "heading": "Why L2? Ethereum's Scaling Problem",
+    "subtitle": "Ethereum's base layer (L1) is kept small on purpose. Popular apps hit that limit quickly.",
+    "problemHeading": "The problem on L1",
+    "problems": [
+      { "label": "Limited room", "detail": "Ethereum L1 handles roughly 15–30 transactions per second for the whole world. Card networks handle thousands." },
+      { "label": "Fees spike when the chain is busy", "detail": "Block space is limited, so users bid for it. In busy moments (a hyped NFT launch, a market crash) a simple transaction has cost $50 or more." },
+      { "label": "Bigger blocks are not free", "detail": "Larger, faster blocks need stronger computers to check them. Fewer people could run a node, so fewer people would be checking the chain." }
+    ],
+    "trilemmaHeading": "The trade-off: the blockchain trilemma",
+    "trilemmaStrong": "Three goals, and a chain cannot maximise all three at once: ",
+    "trilemmaRest": "decentralisation, security and scale. Ethereum keeps the first two on L1 and pushes raw scale to a second layer.",
+    "corners": [
+      { "label": "Decentralisation", "detail": "Anyone can run a node and check the chain.", "where": "Kept on L1" },
+      { "label": "Security", "detail": "Attacking or rewriting the chain is too costly.", "where": "Kept on L1" },
+      { "label": "Scale", "detail": "Many transactions, fast and cheap.", "where": "Pushed to L2" }
+    ],
+    "answerStrong": "Layer 2 (L2): ",
+    "answerRest": "a separate network that processes transactions cheaply, then reports back to Ethereum. The next slide shows how."
+  },
   "rollups": {
     "heading": "Rollups: Scaling Without New Trust",
     "subtitleA": "Ethereum's L1 caps at ~15–30 TPS. ",
     "subtitleStrong": "Rollups",
     "subtitleB": " batch thousands of transactions off-chain and post one compressed update to L1, inheriting its security.",
+    "analogyLabel": "In plain English: ",
+    "analogy": "a rollup is like a kitchen that takes 1,000 orders and hands Ethereum one summary ticket. L1 checks the summary, not every order.",
+    "viz": {
+      "aria": "Diagram: thousands of Layer 2 transactions are batched and compressed into one update, which is posted once into a single Ethereum block.",
+      "l2": "L2 · thousands of transactions",
+      "batch": "1 batch",
+      "batchSub": "compressed + state root",
+      "post": "posted once",
+      "l1": "L1 · Ethereum",
+      "block": "L1 block"
+    },
     "howHeading": "How a rollup works",
     "steps": [
       { "label": "Users transact on L2", "detail": "Same wallet, same experience. Confirmed in ~1–2 seconds for cents." },
@@ -494,7 +530,13 @@
   },
   "rollups2": {
     "heading": "Rollups: Two Flavours and What Users Notice",
-    "subtitle": "Optimistic and ZK rollups differ in how L1 checks the batch. Both move fees from dollars to cents."
+    "subtitle": "Optimistic and ZK rollups differ in how L1 checks the batch. Both move fees from dollars to cents.",
+    "optimisticMotto": "“Innocent until proven guilty”",
+    "optimisticModel": "Trusted by default. Withdrawing to L1 waits out a ~7-day challenge window.",
+    "zkMotto": "“Prove it upfront”",
+    "zkModel": "A validity proof comes with every batch. Withdraw to L1 in hours.",
+    "deeperLabel": "Going deeper: ",
+    "deeper": "ZK proofs, data availability and the full trilemma return in Section 5 (New Trends)."
   },
   "defi": {
     "heading": "DeFi: Three Primitives",

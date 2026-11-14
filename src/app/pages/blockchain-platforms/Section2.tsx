@@ -35,6 +35,7 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-s2-scaling' },
   { id: 's2-evmecosystem' },
+  { id: 's2-why-l2' },
   { id: 's2-rollups' },
   { id: 's2-rollups-2' },
 
@@ -292,6 +293,89 @@ function StakingSimulator() {
    Auto-plays on scroll-in + manual replay.
    ──────────────────────────────────────────────────────────────────────────── */
 
+/* ── "Rolling up": a Merkle tree in reverse. Many L2 transactions funnel into ONE batch, posted once to L1.
+      Colours follow the four "How a rollup works" steps (blue → purple → amber → green). ── */
+const RU = { w: 690, h: 100, mid: 58.5, txX: 10, txW: 36, txH: 7, txTop: 20, txPitch: 10, txCount: 8 };
+
+function RollupFunnel() {
+  const { t } = useTranslation('blockchain-platforms/section-2');
+  const muted = 'var(--muted-foreground)';
+  const fg = 'var(--foreground)';
+  const txRows = Array.from({ length: RU.txCount }, (_, i) => RU.txTop + i * RU.txPitch);
+  const fade = (delay: number) => ({
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { delay, duration: 0.3 } },
+  });
+  const draw = (delay: number) => ({
+    hidden: { pathLength: 0, opacity: 0 },
+    show: { pathLength: 1, opacity: 1, transition: { delay, duration: 0.5 } },
+  });
+
+  return (
+    <div className="rounded-xl border border-border bg-card px-3 py-1.5 flex items-center justify-center">
+      <motion.svg
+        viewBox={`0 0 ${RU.w} ${RU.h}`}
+        className="w-full h-[100px]"
+        role="img"
+        aria-label={t('rollups.viz.aria')}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.6 }}
+      >
+        {/* zone labels + L2 | L1 divider */}
+        <text x={RU.txX} y="11" fontSize="10.5" fontWeight="800" letterSpacing="1" fill={muted}>{t('rollups.viz.l2').toUpperCase()}</text>
+        <line x1="506" x2="506" y1="3" y2={RU.h - 3} stroke={muted} strokeOpacity="0.4" strokeDasharray="3 4" />
+        <text x="516" y="11" fontSize="10.5" fontWeight="800" letterSpacing="1" fill={muted}>{t('rollups.viz.l1').toUpperCase()}</text>
+
+        {/* 1 · individual L2 transactions (the leaves) */}
+        {txRows.map((y, i) => (
+          <motion.rect key={i} variants={fade(i * 0.05)} x={RU.txX} y={y} width={RU.txW} height={RU.txH} rx="1.5" fill="#627EEA" />
+        ))}
+
+        {/* 2 · every leaf converges on one node */}
+        {txRows.map((y, i) => {
+          const cy = y + RU.txH / 2;
+          return (
+            <motion.path
+              key={i}
+              variants={draw(0.4 + i * 0.04)}
+              d={`M${RU.txX + RU.txW + 2},${cy} C124,${cy} 134,${RU.mid} 196,${RU.mid}`}
+              fill="none"
+              stroke="#8b5cf6"
+              strokeOpacity="0.65"
+              strokeWidth="1.25"
+            />
+          );
+        })}
+
+        {/* 3 · the single compressed batch, posted once */}
+        <motion.g variants={fade(1.0)}>
+          <rect x="198" y={RU.mid - 25} width="160" height="50" rx="8" fill="#f59e0b" fillOpacity="0.12" stroke="#f59e0b" strokeWidth="1.5" />
+          <text x="278" y={RU.mid - 2} textAnchor="middle" fontSize="15" fontWeight="800" fill={fg}>{t('rollups.viz.batch')}</text>
+          <text x="278" y={RU.mid + 14} textAnchor="middle" fontSize="11" fill={muted}>{t('rollups.viz.batchSub')}</text>
+        </motion.g>
+        <motion.path variants={draw(1.3)} d={`M364,${RU.mid} L525,${RU.mid}`} fill="none" stroke="#f59e0b" strokeWidth="2" />
+        <motion.g variants={fade(1.7)}>
+          <polygon points={`524,${RU.mid - 5} 533,${RU.mid} 524,${RU.mid + 5}`} fill="#f59e0b" />
+          <text x="442" y={RU.mid - 8} textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#f59e0b">{t('rollups.viz.post')}</text>
+        </motion.g>
+
+        {/* 4 · one item inside one L1 block */}
+        <rect x="535" y="20" width="140" height="77" rx="8" fill="var(--card)" stroke="#627EEA" strokeWidth="1.5" />
+        <text x="605" y="35" textAnchor="middle" fontSize="11.5" fontWeight="700" fill={fg}>{t('rollups.viz.block')}</text>
+        {[42, 69, 81].map(y => (
+          <rect key={y} x="547" y={y} width="116" height="8" rx="2" fill={muted} fillOpacity="0.22" />
+        ))}
+        <motion.rect variants={fade(1.8)} x="547" y={RU.mid - 5} width="116" height="10" rx="2" fill="#f59e0b" />
+        <motion.g variants={fade(2.1)}>
+          <circle cx="675" cy="20" r="8" fill="#10b981" />
+          <path d="M671,20 L674,23 L679,17.5" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </motion.g>
+      </motion.svg>
+    </div>
+  );
+}
+
 interface WhyItem { title: string; detail: string; }
 interface LabelDesc { label: string; desc: string; }
 interface LabelDetail { label: string; detail: string; }
@@ -405,6 +489,10 @@ export function BP_Section2() {
     { name: 'Cronos', color: '#002D74' },
   ];
 
+  const whyL2Problems = t('whyL2.problems', { returnObjects: true }) as LabelDetail[];
+  const whyL2ProblemColors = ['#627EEA', '#f59e0b', '#8b5cf6'];
+  const whyL2Corners = t('whyL2.corners', { returnObjects: true }) as { label: string; detail: string; where: string }[];
+  const whyL2CornerColors = ['#627EEA', '#627EEA', '#10b981'];
   const rollupSteps = t('rollups.steps', { returnObjects: true }) as RollupStep[];
   const rollupStepColors = ['#627EEA', '#8b5cf6', '#f59e0b', '#10b981'];
   const rollupOptimistic = t('rollups.optimistic', { returnObjects: true }) as RollupBullet[];
@@ -1040,7 +1128,7 @@ export function BP_Section2() {
                 className="rounded-xl border border-border bg-card p-4"
               >
                 <div className="text-[10px] font-bold uppercase tracking-widest text-[#10b981] mb-1">{t('gas.whyLabel')}</div>
-                <ul className="text-sm text-muted-foreground space-y-1.5 leading-relaxed">
+                <ul className="text-base text-muted-foreground space-y-2 leading-relaxed">
                   {gasWhy.map((item, i) => (
                     <li key={i}><span className="text-foreground font-semibold">{item.strong}</span>{item.rest}</li>
                   ))}
@@ -1482,19 +1570,106 @@ export function BP_Section2() {
           <KeyPoint topic="evmEcosystem" className="mt-3" />
         </div>
 
-        {/* ═══════ S2-ROLLUPS — how a rollup works ═══════ */}
+        {/* ═══════ S2-WHY-L2 — the on-ramp: why Ethereum needs a second layer ═══════ */}
+        <div id="s2-why-l2" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-5">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('whyL2.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('whyL2.subtitle')}</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            {/* Left — the problem on L1 */}
+            <div className="flex flex-col gap-3">
+              <h3 className="text-base font-bold text-foreground shrink-0">{t('whyL2.problemHeading')}</h3>
+              <div className="flex flex-col gap-2 flex-1">
+                {whyL2Problems.map((p, i) => {
+                  const color = whyL2ProblemColors[i];
+                  return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.12, duration: 0.4 }}
+                    className="flex-1 flex items-center gap-4 p-4 rounded-xl border bg-card"
+                    style={{ borderColor: color + '40' }}
+                  >
+                    <div
+                      className="size-10 rounded-lg flex items-center justify-center text-white font-black text-base shrink-0"
+                      style={{ backgroundColor: color }}
+                    >{i + 1}</div>
+                    <div className="min-w-0">
+                      <div className="font-bold text-base text-foreground">{p.label}</div>
+                      <div className="text-sm text-muted-foreground leading-relaxed mt-0.5">{p.detail}</div>
+                    </div>
+                  </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Right — the trilemma and Ethereum's choice */}
+            <div className="flex flex-col gap-3">
+              <h3 className="text-base font-bold text-foreground shrink-0">{t('whyL2.trilemmaHeading')}</h3>
+              <div className="flex-1 flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
+                <p className="text-sm text-muted-foreground leading-relaxed shrink-0">
+                  <span className="text-foreground font-semibold">{t('whyL2.trilemmaStrong')}</span>{t('whyL2.trilemmaRest')}
+                </p>
+                <div className="flex-1 grid grid-cols-3 gap-3 text-center">
+                  {whyL2Corners.map((c, i) => {
+                    const color = whyL2CornerColors[i];
+                    return (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 + i * 0.1 }}
+                      className="rounded-lg border-2 px-3 py-4 flex flex-col justify-center gap-2"
+                      style={{ borderColor: color + '50', backgroundColor: color + '10' }}
+                    >
+                      <div className="font-bold text-sm lg:text-base text-foreground">{c.label}</div>
+                      <div className="text-xs text-muted-foreground leading-relaxed">{c.detail}</div>
+                      <div className="text-[10px] font-black uppercase tracking-widest" style={{ color }}>{c.where}</div>
+                    </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="shrink-0 rounded-xl border border-[#10b981]/30 px-4 py-3 text-sm leading-relaxed text-muted-foreground"
+                style={{ backgroundColor: '#10b98112' }}
+              >
+                <span className="font-bold text-[#10b981]">{t('whyL2.answerStrong')}</span>{t('whyL2.answerRest')}
+              </motion.div>
+            </div>
+
+          </div>
+          <KeyPoint topic="whyL2" hood="whyL2" className="mt-3" />
+        </div>
+
+        {/* ═══════ S2-ROLLUPS — how a rollup works, and what changes for users ═══════ */}
         <div id="s2-rollups" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-4">
+          <div className="shrink-0 mb-3">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('rollups.heading')}</h2>
             <p className="text-sm text-muted-foreground mt-1">
               {t('rollups.subtitleA')}<span className="text-foreground font-semibold">{t('rollups.subtitleStrong')}</span>{t('rollups.subtitleB')}
             </p>
           </div>
 
-          <div className="flex-1 min-h-0 flex flex-col gap-4">
+          <div className="flex-1 min-h-0 flex flex-col gap-3">
+            <div className="shrink-0 grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-3">
+              <div className="rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm leading-relaxed text-muted-foreground flex items-center">
+                <p><span className="font-bold text-foreground">{t('rollups.analogyLabel')}</span>{t('rollups.analogy')}</p>
+              </div>
+              <RollupFunnel />
+            </div>
+
             <h3 className="text-base font-bold text-foreground shrink-0">{t('rollups.howHeading')}</h3>
 
-            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-4 content-center">
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3 content-center">
               {rollupSteps.map((s, i) => {
                 const color = rollupStepColors[i];
                 return (
@@ -1503,7 +1678,7 @@ export function BP_Section2() {
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.08, duration: 0.3 }}
-                  className="flex items-start gap-4 p-5 rounded-xl border bg-card"
+                  className="flex items-start gap-4 p-4 rounded-xl border bg-card"
                   style={{ borderColor: color + '40' }}
                 >
                   <div
@@ -1523,13 +1698,32 @@ export function BP_Section2() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="shrink-0 rounded-xl border border-[#627EEA]/30 px-4 py-2.5 text-xs text-center"
+              className="shrink-0 rounded-xl border border-[#627EEA]/30 px-4 py-2 text-xs text-center"
               style={{ backgroundColor: '#627EEA12', color: '#627EEA' }}
             >
               <span className="font-bold">{t('rollups.securityNoteStrong')}</span>{t('rollups.securityNoteRest')}
             </motion.div>
+
+            {/* L1 vs L2 metrics */}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="rounded-xl border border-border bg-card px-4 py-3 shrink-0"
+            >
+              <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">{t('rollups.metricsLabel')}</div>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                {rollupMetrics.map((m, i) => (
+                  <div key={i} className="rounded-lg bg-muted/40 border border-border px-3 py-2 flex items-baseline justify-center gap-2 flex-wrap">
+                    <div className="text-muted-foreground text-xs">{m.label}</div>
+                    <div className="font-bold text-foreground text-base">{m.l1}</div>
+                    <div className="text-[#10b981] font-mono text-sm">{m.l2}</div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           </div>
-          <KeyPoint topic="rollups" className="mt-3" />
+          <KeyPoint topic="rollups" hood="rollups" className="mt-3" />
         </div>
 
         {/* ═══════ S2-ROLLUPS-2 — optimistic vs ZK, L1 vs L2 for users ═══════ */}
@@ -1545,11 +1739,13 @@ export function BP_Section2() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="rounded-xl border-2 border-[#FF0420]/40 p-4"
+                className="rounded-xl border-2 border-[#FF0420]/40 p-6"
                 style={{ backgroundColor: '#FF042010' }}
               >
-                <div className="font-black text-base text-[#FF0420] mb-2">{t('rollups.optimisticTitle')}</div>
-                <ul className="text-sm text-muted-foreground space-y-1.5 leading-relaxed">
+                <div className="font-black text-base text-[#FF0420]">{t('rollups.optimisticTitle')}</div>
+                <div className="text-lg lg:text-xl font-bold text-foreground mt-1">{t('rollups2.optimisticMotto')}</div>
+                <p className="text-sm text-muted-foreground leading-relaxed mt-1 mb-4">{t('rollups2.optimisticModel')}</p>
+                <ul className="text-base text-muted-foreground space-y-2 leading-relaxed">
                   {rollupOptimistic.map((b, i) => (
                     <li key={i}>
                       {b.text ?? <>
@@ -1570,11 +1766,13 @@ export function BP_Section2() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 }}
-                className="rounded-xl border-2 border-[#8C8DFC]/40 p-4"
+                className="rounded-xl border-2 border-[#8C8DFC]/40 p-6"
                 style={{ backgroundColor: '#8C8DFC10' }}
               >
-                <div className="font-black text-base text-[#8C8DFC] mb-2">{t('rollups.zkTitle')}</div>
-                <ul className="text-sm text-muted-foreground space-y-1.5 leading-relaxed">
+                <div className="font-black text-base text-[#8C8DFC]">{t('rollups.zkTitle')}</div>
+                <div className="text-lg lg:text-xl font-bold text-foreground mt-1">{t('rollups2.zkMotto')}</div>
+                <p className="text-sm text-muted-foreground leading-relaxed mt-1 mb-4">{t('rollups2.zkModel')}</p>
+                <ul className="text-base text-muted-foreground space-y-2 leading-relaxed">
                   {rollupZk.map((b, i) => (
                     <li key={i}>
                       {b.text ?? <>
@@ -1592,37 +1790,22 @@ export function BP_Section2() {
               </motion.div>
             </div>
 
-            {/* L1 vs L2 metrics */}
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 }}
-              className="rounded-xl border border-border bg-card p-4 shrink-0"
-            >
-              <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">{t('rollups.metricsLabel')}</div>
-              <div className="grid grid-cols-3 gap-3 text-center">
-                {rollupMetrics.map((m, i) => (
-                  <div key={i} className="rounded-lg bg-muted/40 border border-border px-3 py-4 flex flex-col justify-center gap-1">
-                    <div className="text-muted-foreground text-xs">{m.label}</div>
-                    <div className="font-bold text-foreground text-base">{m.l1}</div>
-                    <div className="text-[#10b981] font-mono text-sm">{m.l2}</div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="shrink-0 rounded-xl border border-[#f59e0b]/30 px-4 py-2.5 text-xs leading-relaxed"
+              transition={{ delay: 0.4 }}
+              className="shrink-0 rounded-xl border border-[#f59e0b]/30 px-4 py-3 text-sm leading-relaxed"
               style={{ backgroundColor: '#f59e0b12', color: 'var(--muted-foreground)' }}
             >
               <span className="font-bold text-[#f59e0b]">{t('rollups.eip4844Label')}</span>
               {t('rollups.eip4844A')}<span className="font-mono text-foreground">{t('rollups.eip4844Code')}</span>{t('rollups.eip4844B')}
             </motion.div>
+
+            <p className="shrink-0 text-xs text-muted-foreground text-center">
+              <span className="font-bold text-foreground">{t('rollups2.deeperLabel')}</span>{t('rollups2.deeper')}
+            </p>
           </div>
-          <KeyPoint topic="rollups2" className="mt-3" />
+          <KeyPoint topic="rollups2" hood="rollups2" className="mt-3" />
         </div>
 
         {/* ═══════ DEFI MECHANICS ═══════ */}
