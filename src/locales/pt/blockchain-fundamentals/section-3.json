@@ -938,7 +938,7 @@
   },
   "assignment": {
     "title":   "Assignment #1 — Could a blockchain fix this?",
-    "meta":    ["Individual", "1 page", "PDF on Moodle", "due Sun 15 Nov 23:59"],
+    "meta":    ["Individual", "1 page", "PDF on Moodle", "due Tue 17 Nov 23:59"],
     "framing": "Pick a problem — real or invented/fictional — and argue whether a blockchain is a good way to solve it.",
     "grading": "We grade how you reason about the problem, the solution and the technology together, not the yes/no. A well-argued \"no, a database is enough\" scores as well as a yes.",
     "parts": [
