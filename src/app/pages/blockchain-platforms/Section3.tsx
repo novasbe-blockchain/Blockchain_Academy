@@ -1293,6 +1293,7 @@ export function BP_Section3() {
             question={t('quiz.question')}
             options={quizOptions.map((o, i) => ({ text: o.text, correct: quizCorrect[i] }))}
             explanation={t('quiz.explanation')}
+            compact
           />
         </div>
 
@@ -1302,6 +1303,7 @@ export function BP_Section3() {
             question={t('quiz2.question')}
             options={quiz2Options.map((o, i) => ({ text: o.text, correct: quiz2Correct[i] }))}
             explanation={t('quiz2.explanation')}
+            compact
           />
         </div>
 
@@ -1311,6 +1313,7 @@ export function BP_Section3() {
             question={t('quiz3.question')}
             options={quiz3Options.map((o, i) => ({ text: o.text, correct: quiz3Correct[i] }))}
             explanation={t('quiz3.explanation')}
+            compact
           />
         </div>
 

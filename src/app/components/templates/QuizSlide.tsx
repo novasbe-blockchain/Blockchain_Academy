@@ -11,9 +11,16 @@ interface QuizSlideProps {
   question: string;
   options: QuizOption[];
   explanation?: string;
+  /**
+   * Dense layout for quizzes with long question / option text. Smaller type and
+   * tighter spacing so four multi-line options plus the explanation fit on one
+   * slide; if they still don't (short viewports), the slide scrolls instead of
+   * clipping.
+   */
+  compact?: boolean;
 }
 
-export function QuizSlide({ question, options, explanation }: QuizSlideProps) {
+export function QuizSlide({ question, options, explanation, compact = false }: QuizSlideProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showAnswer, setShowAnswer] = useState(false);
 
@@ -30,16 +37,34 @@ export function QuizSlide({ question, options, explanation }: QuizSlideProps) {
   const isCorrect = selectedIndex !== null && options[selectedIndex]?.correct;
 
   return (
-    <div className="slide-template w-full items-center justify-center p-5 lg:p-10">
-      <div className="max-w-4xl w-full">
-        <div className="mb-4 lg:mb-6 text-center">
-          <div className="inline-block px-4 py-2 rounded-full bg-[#6366f1]/20 border border-[#6366f1] mb-3 lg:mb-4">
+    <div
+      className={
+        compact
+          // min-h-0 + overflow-y-auto: scroll inside the slide rather than clip.
+          // Centering is done with m-auto on the child so overflow stays reachable.
+          ? 'slide-template w-full min-h-0 overflow-y-auto [overflow-anchor:none] p-5 lg:px-10 lg:py-6'
+          : 'slide-template w-full items-center justify-center p-5 lg:p-10'
+      }
+    >
+      <div className={compact ? 'max-w-5xl w-full m-auto' : 'max-w-4xl w-full'}>
+        <div className={compact ? 'mb-3 lg:mb-4 text-center' : 'mb-4 lg:mb-6 text-center'}>
+          <div
+            className={`inline-block rounded-full bg-[#6366f1]/20 border border-[#6366f1] ${
+              compact ? 'px-3 py-1 mb-2 lg:mb-3 text-sm' : 'px-4 py-2 mb-3 lg:mb-4'
+            }`}
+          >
             <span className="text-[#6366f1] font-bold">Quiz</span>
           </div>
-          <h2 className="text-xl lg:text-3xl font-bold text-foreground">{question}</h2>
+          <h2
+            className={`font-bold text-foreground ${
+              compact ? 'text-lg lg:text-2xl leading-snug text-balance' : 'text-xl lg:text-3xl'
+            }`}
+          >
+            {question}
+          </h2>
         </div>
 
-        <div className="space-y-2 lg:space-y-3 mb-4 lg:mb-6">
+        <div className={compact ? 'space-y-2 mb-3' : 'space-y-2 lg:space-y-3 mb-4 lg:mb-6'}>
           {options.map((option, index) => {
             const isSelected = selectedIndex === index;
             const showCorrect = showAnswer && option.correct;
@@ -61,10 +86,12 @@ export function QuizSlide({ question, options, explanation }: QuizSlideProps) {
                 key={index}
                 onClick={() => handleSelect(index)}
                 disabled={showAnswer}
-                className={`w-full p-3 lg:p-6 rounded-xl border-2 text-left transition-all flex items-center gap-3 lg:gap-4 ${stateClass}`}
+                className={`w-full rounded-xl border-2 text-left transition-all flex items-center ${
+                  compact ? 'px-3 py-2.5 lg:px-5 lg:py-3 gap-3' : 'p-3 lg:p-6 gap-3 lg:gap-4'
+                } ${stateClass}`}
               >
                 <div className={`
-                  size-6 lg:size-8 rounded-full border-2 flex items-center justify-center flex-shrink-0
+                  ${compact ? 'size-6 lg:size-7' : 'size-6 lg:size-8'} rounded-full border-2 flex items-center justify-center flex-shrink-0
                   ${showCorrect ? 'border-[#10b981] bg-[#10b981]' : ''}
                   ${showIncorrect ? 'border-[#ef4444] bg-[#ef4444]' : ''}
                   ${!showAnswer ? 'border-muted-foreground' : ''}
@@ -73,15 +100,15 @@ export function QuizSlide({ question, options, explanation }: QuizSlideProps) {
                   {showIncorrect && <X className="size-4 lg:size-5 text-white" strokeWidth={3} />}
                   {!showAnswer && <span className="text-xs lg:text-sm text-muted-foreground">{String.fromCharCode(65 + index)}</span>}
                 </div>
-                <span className="text-sm lg:text-lg text-foreground">{option.text}</span>
+                <span className={`text-foreground ${compact ? 'text-sm lg:text-base leading-snug' : 'text-sm lg:text-lg'}`}>{option.text}</span>
               </button>
             );
           })}
         </div>
 
         {showAnswer && explanation && (
-          <div className={`p-4 lg:p-6 rounded-xl border-2 ${isCorrect ? 'ex-correct' : 'ex-wrong'}`}>
-            <div className="flex items-center gap-2 mb-2">
+          <div className={`rounded-xl border-2 ${compact ? 'p-3 lg:p-4' : 'p-4 lg:p-6'} ${isCorrect ? 'ex-correct' : 'ex-wrong'}`}>
+            <div className={`flex items-center gap-2 ${compact ? 'mb-1' : 'mb-2'}`}>
               {isCorrect
                 ? <Check className="size-5 lg:size-6 text-[#10b981]" strokeWidth={3} />
                 : <X    className="size-5 lg:size-6 text-[#ef4444]" strokeWidth={3} />
@@ -90,7 +117,7 @@ export function QuizSlide({ question, options, explanation }: QuizSlideProps) {
                 {isCorrect ? 'Correct!' : 'Incorrect'}
               </span>
             </div>
-            <p className="text-sm lg:text-base text-foreground">{explanation}</p>
+            <p className={`text-foreground ${compact ? 'text-sm leading-snug' : 'text-sm lg:text-base'}`}>{explanation}</p>
           </div>
         )}
       </div>
