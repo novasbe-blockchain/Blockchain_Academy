@@ -5,7 +5,7 @@ import { TitleSlide } from '../components/templates/TitleSlide';
 import { DiscussionSlide } from '../components/templates/DiscussionSlide';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
 import { QuizSlide } from '../components/templates/QuizSlide';
-import { Rocket, ExternalLink, Telescope, Cpu, Landmark, Image as ImageIcon, Vote, Lightbulb, Server, Database, ServerCrash, Ban, Coins, Music, Users, FileText, Scale, Target } from 'lucide-react';
+import { Rocket, ExternalLink, Telescope, Cpu, Landmark, Image as ImageIcon, Vote, Lightbulb, Server, Database, ServerCrash, Ban, Coins, Music, Scale, Target } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
 import { SiteFooter } from '../components/shared/SiteFooter';
 import ethereumLogo from '../../ethereum-eth-logo.svg';
@@ -1369,117 +1369,79 @@ function KnowledgeWall() {
   );
 }
 
-// ─── In-class Assignment #1 — closing group activity ─────────────────────────
+// ─── Assignment #1 — individual one-page brief ───────────────────────────────
 
 function AssignmentSlide() {
   const { t } = useTranslation(NS);
-  const COLOR = '#f59e0b', STAGE1 = '#39B54A', STAGE2 = '#6366f1';
-  const seeds = t('assignment.seeds', { returnObjects: true }) as Array<{ emoji: string; title: string }>;
+  const COLOR = '#f59e0b';
+  const meta = t('assignment.meta', { returnObjects: true }) as string[];
   const parts = t('assignment.parts', { returnObjects: true }) as Array<{ title: string; desc: string }>;
-  const steps = t('assignment.steps', { returnObjects: true }) as Array<{ time: string; label: string }>;
   const rules = t('assignment.rules', { returnObjects: true }) as Array<{ emoji: string; text: string }>;
+  const seeds = t('assignment.seeds', { returnObjects: true }) as Array<{ emoji: string; title: string }>;
   const partIcons = [Target, Lightbulb, Scale];
   const partColors = ['#ED1C24', '#6366f1', '#39B54A'];
   return (
-    <div className="h-full flex flex-col p-6 lg:p-10 relative overflow-hidden">
+    <div className="h-full flex flex-col items-center justify-center p-6 lg:p-10 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-60"
         style={{ background: `radial-gradient(circle at 20% 0%, ${COLOR}1f, transparent 60%), radial-gradient(circle at 80% 100%, #ED1C2418, transparent 60%)` }} />
 
-      {/* Header */}
-      <div className="shrink-0 relative z-10 mb-4 flex items-start justify-between gap-4 flex-wrap">
-        <div className="flex items-start gap-4">
-          <div className="px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-white shadow-md shrink-0"
-            style={{ background: `linear-gradient(135deg, ${COLOR}, #ED1C24)` }}>
-            {t('assignment.ribbon')}
-          </div>
-          <div>
-            <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{t('assignment.contextLabel')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-0.5">{t('assignment.title')}</h2>
-            <p className="text-muted-foreground text-sm mt-1 max-w-3xl">{t('assignment.subtitle')}</p>
-          </div>
-        </div>
-        <div className="shrink-0 flex items-center gap-2 self-center">
-          <div className="px-3 py-1.5 rounded-full text-xs font-bold border-2 flex items-center gap-1.5"
-            style={{ borderColor: COLOR + '50', color: COLOR, backgroundColor: COLOR + '10' }}>
-            <Users className="size-3.5" /> {t('assignment.groupSize')}
-          </div>
-          <div className="px-3 py-1.5 rounded-full text-xs font-bold border-2"
-            style={{ borderColor: COLOR + '50', color: COLOR, backgroundColor: COLOR + '10' }}>
-            ⏱ {t('assignment.duration')}
-          </div>
-        </div>
-      </div>
-
-      {/* Panes */}
-      <div className="flex-1 min-h-0 relative z-10 grid grid-cols-12 gap-4">
-        {/* Left: pick a problem + Stage 1 (in class, spoken) */}
-        <div className="col-span-5 flex flex-col gap-4 min-h-0">
-          <div className="flex-1 p-4 bg-card border-2 rounded-2xl flex flex-col gap-3 min-h-0" style={{ borderColor: COLOR + '50' }}>
-            <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: COLOR }}>{t('assignment.seedsLabel')}</div>
-            <p className="text-xs text-muted-foreground leading-snug">{t('assignment.seedsIntro')}</p>
-            <div className="flex flex-wrap gap-2 content-start">
-              {seeds.map((s, i) => (
-                <div key={i} className="px-2.5 py-1.5 rounded-full border border-border bg-muted/30 flex items-center gap-1.5">
-                  <span className="text-base leading-none">{s.emoji}</span>
-                  <span className="font-semibold text-xs text-foreground leading-tight">{s.title}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="shrink-0 p-4 bg-card border-2 rounded-2xl flex flex-col gap-2.5" style={{ borderColor: STAGE1 + '80' }}>
-            <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: STAGE1 }}>{t('assignment.stage1Label')}</div>
-            {steps.map((s, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="shrink-0 w-[5.6rem] text-center px-1.5 py-1 rounded-md text-[10px] font-black font-mono whitespace-nowrap" style={{ backgroundColor: STAGE1 + '26', color: STAGE1 }}>{s.time}</div>
-                <p className="text-xs lg:text-sm text-foreground leading-snug">{s.label}</p>
-              </div>
+      <div className="relative z-10 w-full max-w-5xl p-6 lg:p-8 bg-card border-2 rounded-2xl flex flex-col gap-5" style={{ borderColor: COLOR + '50' }}>
+        {/* Header: title + meta line */}
+        <div>
+          <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('assignment.title')}</h2>
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-semibold" style={{ color: COLOR }}>
+            {meta.map((m, i) => (
+              <span key={i} className="flex items-center gap-2">
+                {i > 0 && <span className="text-muted-foreground">·</span>}
+                {m}
+              </span>
             ))}
-            <p className="text-[11px] italic text-muted-foreground leading-snug border-t border-border pt-2">🗣️ {t('assignment.stage1Note')}</p>
           </div>
         </div>
 
-        {/* Right: Stage 2 (homework) — the one-page write-up and its rules */}
-        <div className="col-span-7 p-5 bg-card border-2 rounded-2xl flex flex-col gap-3 min-h-0" style={{ borderColor: STAGE2 + '80' }}>
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="flex items-center gap-2">
-              <FileText className="size-4" style={{ color: STAGE2 }} />
-              <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: STAGE2 }}>{t('assignment.stage2Label')}</div>
-            </div>
-            <div className="px-3 py-1 rounded-full text-xs font-black border-2 text-white shadow-sm" style={{ borderColor: STAGE2, backgroundColor: STAGE2 }}>
-              {t('assignment.deliverableLimit')}
-            </div>
-          </div>
-          <div className="grid grid-cols-4 gap-2">
+        {/* Framing */}
+        <p className="text-sm lg:text-base text-foreground leading-relaxed">
+          {t('assignment.framing')} <span className="text-muted-foreground">{t('assignment.grading')}</span>
+        </p>
+
+        {/* Three parts */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {parts.map((p, i) => {
+            const Icon = partIcons[i];
+            const c = partColors[i];
+            return (
+              <div key={i} className="p-4 rounded-xl border-2 bg-muted/20 flex flex-col gap-2" style={{ borderColor: c + '50' }}>
+                <div className="flex items-center gap-2">
+                  <div className="size-7 rounded-full flex items-center justify-center text-xs font-black text-white shrink-0" style={{ backgroundColor: c }}>{i + 1}</div>
+                  <Icon className="size-4 shrink-0" style={{ color: c }} />
+                  <div className="font-bold text-base text-foreground leading-tight">{p.title}</div>
+                </div>
+                <p className="text-xs lg:text-sm text-muted-foreground leading-snug">{p.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Rules + optional problem ideas */}
+        <div className="flex flex-col gap-3 border-t border-border pt-4">
+          <div className="flex flex-wrap gap-2">
             {rules.map((r, i) => (
-              <div key={i} className="px-2.5 py-2 rounded-xl border-2 flex items-center gap-2 text-xs font-semibold text-foreground leading-tight"
-                style={{ borderColor: STAGE2 + '55', backgroundColor: STAGE2 + '10' }}>
+              <div key={i} className="px-3 py-1.5 rounded-full border-2 flex items-center gap-2 text-xs font-semibold text-foreground leading-tight"
+                style={{ borderColor: COLOR + '50', backgroundColor: COLOR + '10' }}>
                 <span className="text-base leading-none shrink-0">{r.emoji}</span>{r.text}
               </div>
             ))}
           </div>
-          <p className="text-sm text-muted-foreground leading-snug">{t('assignment.deliverableIntro')}</p>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-3">
-            {parts.map((p, i) => {
-              const Icon = partIcons[i];
-              const c = partColors[i];
-              return (
-                <div key={i} className="p-4 rounded-xl border-2 bg-muted/20 flex flex-col gap-2 min-h-0 overflow-hidden" style={{ borderColor: c + '50' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="size-7 rounded-full flex items-center justify-center text-xs font-black text-white shrink-0" style={{ backgroundColor: c }}>{i + 1}</div>
-                    <Icon className="size-4 shrink-0" style={{ color: c }} />
-                    <div className="font-bold text-base text-foreground leading-tight">{p.title}</div>
-                  </div>
-                  <p className="text-xs lg:text-sm text-muted-foreground leading-snug">{p.desc}</p>
-                  <div className="mt-auto pt-2 text-[10px] font-semibold uppercase tracking-widest truncate" style={{ color: c + 'aa' }}>{t('assignment.partHint')}</div>
-                </div>
-              );
-            })}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-muted-foreground">{t('assignment.seedsLabel')}</span>
+            {seeds.map((s, i) => (
+              <div key={i} className="px-2.5 py-1 rounded-full border border-border bg-muted/30 flex items-center gap-1.5">
+                <span className="text-sm leading-none">{s.emoji}</span>
+                <span className="text-xs text-foreground leading-tight">{s.title}</span>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
-
-      <div className="shrink-0 relative z-10 mt-4 p-3 rounded-xl border-2 text-sm" style={{ borderColor: COLOR + '40', backgroundColor: COLOR + '10' }}>
-        <strong className="text-foreground">{t('assignment.footerStrong')}</strong> <span className="text-muted-foreground">{t('assignment.footerBody')}</span>
       </div>
     </div>
   );
