@@ -937,45 +937,27 @@
     }
   },
   "assignment": {
-    "ribbon":       "Assignment #1",
-    "contextLabel": "Closing activity · individual write-up (online)",
-    "title":        "Could a blockchain fix this?",
-    "subtitle":     "Apply the course's recurring question, does this problem actually need a blockchain, to a real-world problem of your choice.",
-    "groupSize":    "On your own",
-    "duration":     "~1 page · due end of week",
-    "seedsLabel":   "Pick a real-world problem",
-    "seedsIntro":   "Any industry, any scale. Examples:",
+    "title":   "Assignment #1 — Could a blockchain fix this?",
+    "meta":    ["Individual", "1 page", "PDF on Moodle", "due Tue 17 Nov 23:59"],
+    "framing": "Pick a problem — real or invented/fictional — and argue whether a blockchain is a good way to solve it.",
+    "grading": "We grade how you reason about the problem, the solution and the technology together, not the yes/no. A well-argued \"no, a database is enough\" scores as well as a yes.",
+    "parts": [
+      { "title": "Problem statement",           "desc": "Who is affected, what goes wrong today, and why trust or coordination is at the heart of it." },
+      { "title": "Could a blockchain solve it?", "desc": "How a blockchain-based approach would work, in plain language — or why it would not. Who would run the network and who would use it?" },
+      { "title": "Pros & cons",                 "desc": "What a blockchain genuinely adds here — and what it costs. Would a spreadsheet or a trusted middleman do the job?" }
+    ],
+    "rules": [
+      { "emoji": "📄", "text": "Max 1 page" },
+      { "emoji": "✅", "text": "Bullet points are fine" },
+      { "emoji": "📤", "text": "Submit as PDF on Moodle" }
+    ],
+    "seedsLabel": "Need an idea?",
     "seeds": [
       { "emoji": "🚚", "title": "Supply-chain fraud" },
       { "emoji": "🎓", "title": "Fake diplomas" },
       { "emoji": "💸", "title": "Slow cross-border pay" },
       { "emoji": "🗳️", "title": "Contested votes" },
-      { "emoji": "🎟️", "title": "Ticket scalping" },
-      { "emoji": "🏠", "title": "Land registries" }
-    ],
-    "stage1Label": "Stage 1 · Think it through (on your own)",
-    "steps": [
-      { "time": "Step 1",       "label": "Pick one real-world problem that interests you" },
-      { "time": "Step 2",      "label": "Decide: could a blockchain genuinely help? Sketch the solution, pros and cons" },
-      { "time": "Step 3", "label": "Jot your rough take, then write it up for Stage 2" }
-    ],
-    "stage1Note": "No live group work — do this on your own. Nothing is submitted at this stage; just your own notes.",
-    "stage2Label": "Stage 2 · Write-up · one page per student",
-    "deliverableLimit": "MAX 1 PAGE",
-    "rules": [
-      { "emoji": "📄", "text": "Max one page" },
-      { "emoji": "⚠️", "text": "Penalties for anything over one page" },
-      { "emoji": "✅", "text": "Bullet points are fine" },
-      { "emoji": "📅", "text": "Due end of the week · via Moodle" }
-    ],
-    "partHint":         "≈ ⅓ page each",
-    "deliverableIntro": "Three parts, in this order. A well-argued \"no, a database is enough\" scores as well as a yes.",
-    "parts": [
-      { "title": "Problem statement",   "desc": "Who is affected, what goes wrong today, and why trust or coordination is at the heart of it." },
-      { "title": "Proposed solution",   "desc": "How a blockchain-based approach would work, in plain language. Who runs the network and who uses it?" },
-      { "title": "Pros & cons",         "desc": "What a blockchain genuinely adds here — and what it costs. Would a spreadsheet or a trusted middleman do the job?" }
-    ],
-    "footerStrong": "Summary:",
-    "footerBody":   "Your own one-page write-up on Moodle by the end of the week."
+      { "emoji": "🎟️", "title": "Ticket scalping" }
+    ]
   }
 }
