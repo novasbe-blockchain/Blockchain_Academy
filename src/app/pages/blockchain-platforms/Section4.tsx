@@ -11,7 +11,7 @@ import { QuizSlide } from '../../components/templates/QuizSlide';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { RecapHandoff } from '../../components/shared/RecapHandoff';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
-import { Network } from 'lucide-react';
+import { Network, ShieldCheck } from 'lucide-react';
 
 // Language-neutral shape — IDs + kind only. Labels resolved via t() at render time.
 const chapterShape = [
@@ -742,19 +742,19 @@ export function BP_Section4() {
                   <rect x="12" y="40" width="110" height="120" rx="10" fill="#f59e0b14" stroke="#f59e0b" strokeWidth="1.5" />
                   <text x="67" y="30" textAnchor="middle" fontSize="11" fontWeight="900" fill="#f59e0b">{t('bridges.vault.chainA')}</text>
                   <text x="67" y="78" textAnchor="middle" fontSize="26">🔒</text>
-                  <text x="67" y="112" textAnchor="middle" fontSize="15" fontWeight="900" fill="hsl(var(--foreground))">1,000 ETH</text>
-                  <text x="67" y="128" textAnchor="middle" fontSize="8.5" fill="hsl(var(--muted-foreground))">{t('bridges.vault.locked')}</text>
+                  <text x="67" y="112" textAnchor="middle" fontSize="15" fontWeight="900" fill="var(--foreground)">1,000 ETH</text>
+                  <text x="67" y="128" textAnchor="middle" fontSize="8.5" fill="var(--muted-foreground)">{t('bridges.vault.locked')}</text>
                   <text x="67" y="150" textAnchor="middle" fontSize="8.5" fill="#f59e0b">+ every new user ↑</text>
                   {/* Arrow */}
-                  <line x1="128" y1="100" x2="168" y2="100" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeDasharray="4 3" />
-                  <polygon points="168,95 178,100 168,105" fill="hsl(var(--muted-foreground))" />
-                  <text x="150" y="90" textAnchor="middle" fontSize="8" fill="hsl(var(--muted-foreground))">bridge</text>
+                  <line x1="128" y1="100" x2="168" y2="100" stroke="var(--muted-foreground)" strokeWidth="1.5" strokeDasharray="4 3" />
+                  <polygon points="168,95 178,100 168,105" fill="var(--muted-foreground)" />
+                  <text x="150" y="90" textAnchor="middle" fontSize="8" fill="var(--muted-foreground)">bridge</text>
                   {/* Chain B copies */}
                   <rect x="178" y="40" width="110" height="120" rx="10" fill="#6366f114" stroke="#6366f1" strokeWidth="1.5" />
                   <text x="233" y="30" textAnchor="middle" fontSize="11" fontWeight="900" fill="#6366f1">{t('bridges.vault.chainB')}</text>
                   <text x="233" y="78" textAnchor="middle" fontSize="26">🎟️</text>
-                  <text x="233" y="112" textAnchor="middle" fontSize="15" fontWeight="900" fill="hsl(var(--foreground))">1,000 wETH</text>
-                  <text x="233" y="128" textAnchor="middle" fontSize="8.5" fill="hsl(var(--muted-foreground))">{t('bridges.vault.minted')}</text>
+                  <text x="233" y="112" textAnchor="middle" fontSize="15" fontWeight="900" fill="var(--foreground)">1,000 wETH</text>
+                  <text x="233" y="128" textAnchor="middle" fontSize="8.5" fill="var(--muted-foreground)">{t('bridges.vault.minted')}</text>
                   <text x="150" y="190" textAnchor="middle" fontSize="9" fontWeight="700" fill="#ef4444">🍯 {bridgeDangers[0]?.title}</text>
                 </svg>
                 <p className="text-[11px] text-muted-foreground leading-snug shrink-0 mt-1">{t('bridges.vault.caption')}</p>
@@ -832,6 +832,14 @@ export function BP_Section4() {
                 </motion.div>
               );
             })}
+          </div>
+          {/* Safety takeaway — closes the wrapped → bridges → hacks arc */}
+          <div className="shrink-0 mt-3 flex items-center gap-3 pl-4 pr-14 py-3 rounded-xl border-2" style={{ borderColor: '#39B54A80', backgroundColor: '#39B54A14' }}>
+            <ShieldCheck className="w-6 h-6 shrink-0 text-[#39B54A]" aria-hidden />
+            <div className="min-w-0">
+              <p className="text-[10px] font-black uppercase tracking-widest text-[#39B54A]">{t('bridgeHacks.takeawayLabel')}</p>
+              <p className="text-base lg:text-lg font-bold text-foreground leading-snug">{t('bridgeHacks.takeaway')}</p>
+            </div>
           </div>
           {kp('s4-bridge-hacks')}
         </div>

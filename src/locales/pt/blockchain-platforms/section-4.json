@@ -250,7 +250,9 @@
   "bridgeHacks": {
     "heading": "The four largest bridge hacks",
     "subtitle": "All in 2022, all on the same design: one vault, a few keys, one checking routine.",
-    "whatWentWrong": "What went wrong"
+    "whatWentWrong": "What went wrong",
+    "takeawayLabel": "Regra de segurança",
+    "takeaway": "Prefere a bridge canónica/oficial de uma chain, move apenas o que precisas — e, para qualquer token embrulhado (wrapped), pergunta quem detém o original."
   },
   "cosmos": {
     "heading": "Cosmos: A Internet das Blockchains",
