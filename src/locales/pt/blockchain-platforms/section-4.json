@@ -1,6 +1,7 @@
 {
   "groups": {
     "g-s4-problem": "🌉 O Problema",
+    "g-s4-ways": "Três Formas de Ligar",
     "g-s4-l0": "Layer 0",
     "g-s4-bridges": "🔥 Segurança das Bridges",
     "g-s4-cosmos": "Cosmos",
@@ -9,8 +10,11 @@
   },
   "chapters": {
     "s4-usecases": "Real-World Use Cases",
-    "s4-interop": "Interoperabilidade",
-    "s4-interop-compare": "Abordagens Comparadas",
+    "s4-closed": "Sistemas Fechados",
+    "s4-interop": "Porque Têm de Falar",
+    "s4-way-bridge": "1 · Bridges",
+    "s4-way-ibc": "2 · IBC",
+    "s4-way-l0": "3 · Layer 0",
     "s4-chooser": "Which Connection?",
     "s4-layer0": "🧩 Layer 0: Conceito",
     "s4-layer0-2": "Layer 0: Plataformas",
@@ -72,39 +76,76 @@
       "l2": "— rollup numa L1 específica"
     }
   },
+  "closed": {
+    "heading": "As blockchains são sistemas fechados",
+    "subtitle": "Todas as chains correm na internet, mas nenhuma consegue ler, verificar ou pagar a outra. O isolamento faz parte do desenho.",
+    "howLabel": "Como é que uma chain se mantém fechada",
+    "cards": [
+      {
+        "emoji": "👥",
+        "title": "Os seus próprios validadores",
+        "desc": "Cada chain tem o seu próprio grupo de computadores que aprova blocos. Os mineradores da Bitcoin nunca olham para a Ethereum, e os validadores da Ethereum nunca olham para a Bitcoin."
+      },
+      {
+        "emoji": "📜",
+        "title": "As suas próprias regras",
+        "desc": "Cada chain tem as suas regras de consenso para decidir o que é válido. Um nó só aceita aquilo que essas regras lhe permitem verificar por si."
+      },
+      {
+        "emoji": "📒",
+        "title": "O seu próprio registo",
+        "desc": "Uma moeda é apenas uma entrada no registo (estado) de uma chain. Um bitcoin só existe nos registos da Bitcoin, por isso não há nada para enviar fisicamente para a Ethereum."
+      }
+    ],
+    "whyLabel": "Porque é que é construída assim",
+    "why": "Confiamos numa blockchain porque cada nó volta a verificar tudo por si. Os factos de outra chain não podem ser verificados dessa forma, por isso a chain ignora-os — o mesmo muro do problema do oráculo.",
+    "notEqual": "Estar na internet ≠ ser interoperável",
+    "notEqualSub": "Partilhar os mesmos cabos não é partilhar o mesmo registo.",
+    "svg": {
+      "internet": "A internet — todos os nós de todas as chains estão online",
+      "validators": "os seus próprios validadores"
+    }
+  },
   "interop": {
     "svg": {
-      "noLink": "no native link",
-      "caption": "Each island validates only its own ledger. A coin cannot \"swim\" across."
+      "noLink": "sem ligação nativa",
+      "caption": "Cada ilha valida apenas o seu próprio registo. Uma moeda não consegue \"nadar\" até à outra margem."
     },
-    "analogy": "Early email: a Gmail user could not write to a Hotmail user until providers agreed on a shared standard. Blockchains today are mostly still at the \"no shared standard\" stage.",
-    "analogyLabel": "Analogy",
+    "visuals": {
+      "ethApp": "App na Ethereum",
+      "lost": "~2 mil M$ roubados em 2022",
+      "chainA": "Chain A",
+      "chainB": "Chain B",
+      "sameToken": "o mesmo token, dois preços"
+    },
+    "analogy": "Imagina o Gmail sem conseguir enviar uma mensagem para o Hotmail. As primeiras redes de email funcionavam mesmo assim: cada serviço era fechado, até todos adotarem uma norma comum (SMTP). As blockchains estão, na sua maioria, ainda na fase \"sem norma comum\".",
+    "analogyLabel": "Analogia",
     "recap": "Bitcoin (Section 01) · Ethereum (Section 02) · Hyperledger Fabric (Section 03) — each one is its own island",
-    "heading": "O Problema da Interoperabilidade",
-    "subtitle": "Bitcoin, Ethereum, Solana e Hyperledger Fabric operam cada uma como redes isoladas — não conseguem comunicar nativamente entre si.",
+    "heading": "Porque é que as blockchains precisam de falar entre si?",
+    "subtitle": "Os sistemas fechados são seguros, mas as pessoas, o dinheiro e as aplicações não ficam numa só chain.",
     "islands": {
-      "title": "Ilhas Blockchain",
-      "intro": "Cada blockchain de referência — Bitcoin, Ethereum, Solana, Hyperledger Fabric — é uma rede soberana com o seu próprio consenso, tokens e estado. Não falam nativamente umas com as outras. O resultado são ecossistemas fragmentados que não conseguem colaborar sem infraestrutura externa.",
+      "title": "Três problemas que daí resultam",
+      "intro": "Surgem assim que valor ou utilizadores querem mover-se entre chains fechadas.",
       "cards": [
         {
           "emoji": "🏝️",
-          "title": "Silos de Ativos",
+          "title": "Ativos encalhados",
           "desc": "O BTC está bloqueado na rede Bitcoin. Não pode ser usado nativamente em protocolos DeFi da Ethereum — é preciso um token embrulhado (WBTC) que introduz risco de custódia."
         },
         {
           "emoji": "🌉",
-          "title": "Ataques a Bridges",
+          "title": "Bridges frágeis",
           "desc": "As bridges cross-chain são vetores de ataque de elevado valor. Mais de 2 mil M$ roubados: Ronin 625 M$, Wormhole 320 M$, Nomad 190 M$. As bridges são o elo mais fraco da interoperabilidade."
         },
         {
           "emoji": "🔄",
-          "title": "Liquidez Fragmentada",
+          "title": "Mercados divididos",
           "desc": "Cada chain tem os seus próprios DEX, pools de liquidez e mercados. O capital não pode fluir livremente — um trader na Ethereum não consegue aceder a um preço melhor na Solana sem atrito."
         }
       ]
     },
     "matters": {
-      "solutionsLabel": "Soluções Emergentes",
+      "solutionsLabel": "Três formas de ligar — comparadas a seguir",
       "solutions": [
         { "label": "Bridges", "sub": "Arriscadas mas muito usadas" },
         { "label": "Cosmos IBC", "sub": "Norma de protocolo nativa" },
@@ -113,41 +154,84 @@
     }
   },
   "interopCompare": {
-    "heading": "Abordagens de Interoperabilidade — Comparadas",
-    "subtitle": "Três respostas fundamentalmente diferentes à mesma pergunta: como é que duas blockchains trocam valor ou mensagens sem confiarem numa terceira parte?",
+    "heading": "Três formas de ligar chains",
     "rowLabels": {
-      "analogy": "Think of it as",
-      "mechanism": "Mecanismo",
-      "trust": "Modelo de confiança",
-      "risk": "Risco"
+      "analogy": "Pensa nisto como",
+      "mechanism": "Como funciona",
+      "trust": "Em quem confias",
+      "risk": "Onde pode falhar"
     },
     "examplesLabel": "Exemplos",
     "col1": {
-      "analogy": "A courier keeps your luggage and gives you a claim ticket to use in the other city.",
-      "approachLabel": "Abordagem 1",
+      "analogy": "Um estafeta fica com a tua bagagem e dá-te um talão de levantamento para usares na outra cidade.",
+      "short": "Bridges",
+      "lead": "Lock-and-mint: um operador fica no meio, guarda a tua moeda e emite uma cópia na outra chain.",
+      "caption": "A tua moeda nunca sai da chain A. Fica à espera no cofre enquanto uma cópia circula na chain B.",
+      "svg": {
+        "chainA": "Chain A",
+        "chainB": "Chain B",
+        "locked": "1 ETH",
+        "lockedNote": "a tua moeda, bloqueada",
+        "vaultNote": "um só cofre para todos",
+        "operator": "Operador da bridge",
+        "operatorNote1": "poucos signatários aprovam",
+        "operatorNote2": "cada emissão e libertação",
+        "minted": "1 wETH",
+        "mintedNote": "cópia embrulhada, emitida",
+        "ticketNote": "o teu talão",
+        "back": "Regresso: queimar a cópia → os signatários libertam o original"
+      },
       "title": "Bridges & Tokens Embrulhados",
-      "subtitle": "Lock-and-mint · baseada em smart contracts",
       "mechanism": "Bloquear o ativo nativo num smart contract na chain de origem → cunhar uma representação embrulhada na chain de destino",
       "trust": "Validadores multisig ou MPC — um conjunto de operadores off-chain tem de concordar antes de libertar os fundos",
       "risk": "Os ativos bloqueados acumulam-se num só contrato — uma bridge com 500 M$ de TVL é uma recompensa de 500 M$ por bugs",
       "examples": "WBTC · Ronin · Wormhole · Hop Protocol · LayerZero · Stargate"
     },
     "col2": {
-      "analogy": "Both airports read each other's boarding passes directly — no courier needed.",
-      "approachLabel": "Abordagem 2",
+      "analogy": "Os dois aeroportos leem diretamente os cartões de embarque um do outro — sem estafeta.",
+      "short": "IBC",
+      "lead": "Sem operador no meio: as duas chains verificam-se diretamente uma à outra.",
+      "caption": "Cada chain guarda uma pequena cópia, sempre atualizada, dos cabeçalhos de bloco da outra, para poder verificar por si qualquer mensagem que chegue.",
+      "svg": {
+        "chainA": "Chain A",
+        "chainB": "Chain B",
+        "ownValidators": "os seus validadores",
+        "copyOfB": "Cabeçalhos da Chain B",
+        "copyOfA": "Cabeçalhos da Chain A",
+        "checks1": "✓ verifica cada prova",
+        "checks2": "com eles, por si própria",
+        "packet": "mensagem + prova",
+        "relayer": "Relayer",
+        "relayerNote1": "leva a mensagem,",
+        "relayerNote2": "não a pode forjar"
+      },
       "title": "Nativa de protocolo / IBC",
-      "subtitle": "Light clients · mensagens com confiança minimizada",
       "mechanism": "Cada chain corre um light client da outra — as provas das transições de estado são verificadas on-chain, não por um operador externo",
       "trust": "Criptográfico — o consenso da chain emissora é a fonte de verdade. Não é preciso um conjunto de validadores separado",
-      "risk": "Sem contrato honeypot — circulam mensagens, não ativos bloqueados. Zero ataques via IBC até à data",
+      "risk": "Só é tão forte quanto a mais fraca das duas chains. Ambas têm de falar a mesma norma, o que hoje limita o alcance.",
       "examples": "Cosmos IBC · IBC Eureka (Ethereum) · Polkadot XCM (entre parachains)"
     },
     "col3": {
-      "analogy": "One security team guards every terminal in the airport — moving between terminals is just walking.",
-      "approachLabel": "Abordagem 3",
+      "analogy": "Uma só equipa de segurança guarda todos os terminais do aeroporto — passar de um terminal para outro é apenas andar.",
+      "short": "Layer 0",
+      "lead": "Uma equipa de segurança para muitas chains: as chains ligadas partilham validadores, por isso as mensagens já vêm incluídas.",
+      "caption": "Dentro da Layer 0, uma mensagem entre chains é verificada pelos mesmos validadores que finalizam os seus blocos.",
+      "svg": {
+        "l0Title": "Layer 0 — um conjunto de validadores partilhado",
+        "l0Note": "os mesmos validadores finalizam todas as chains ligadas",
+        "secures": "protege",
+        "chainA": "Chain A",
+        "chainB": "Chain B",
+        "chainC": "Chain C",
+        "chainNote": "lógica da sua app",
+        "native": "mensagens nativas entre membros — sem contrato de bridge",
+        "outside1": "Chain",
+        "outside2": "externa",
+        "bridgeNeeded": "precisa de bridge",
+        "example": "ex.: Polkadot — os validadores da Relay Chain protegem cada parachain; o XCM é a mensagem nativa"
+      },
       "title": "Rede Layer 0",
-      "subtitle": "Validadores partilhados · chamadas cross-chain nativas",
-      "mechanism": "Um conjunto de validadores partilhado (Relay Chain / Primary Network) protege todas as L1s ligadas — as mensagens cross-chain são uma operação nativa do protocolo, não um smart contract",
+      "mechanism": "Um conjunto de validadores partilhado protege todas as chains ligadas ao mesmo tempo, por isso enviar uma mensagem entre elas é uma operação nativa, não um contrato à parte.",
       "trust": "Os próprios validadores da L0 — o mesmo conjunto que finaliza blocos também valida as mensagens cross-chain",
       "risk": "As mensagens dentro da L0 são tão seguras quanto a própria L0. Continuam a ser precisas bridges externas para chains fora do ecossistema",
       "examples": "Polkadot (Relay Chain + XCM) · Avalanche (Primary Network + Warp) · Babylon (camada de segurança BTC)"
@@ -204,10 +288,10 @@
     "subAmount": "2,5 mil M$",
     "subB": " foram roubados de bridges só em 2022 — mais do que todos os outros ataques DeFi juntos.",
     "hacks": [
-      { "name": "Ronin Bridge", "amount": "625 M$", "year": "2022", "chain": "Axie Infinity ↔ Ethereum", "method": "O atacante comprometeu 5 de 9 chaves privadas de validadores — atingiu o limiar multisig de 5/9 e esvaziou todo o contrato de bloqueio." },
-      { "name": "Wormhole Bridge", "amount": "320 M$", "year": "2022", "chain": "Solana ↔ Ethereum", "method": "Contorno da verificação de assinaturas — o atacante forjou uma assinatura de guardian para cunhar 120 000 wETH na Solana sem bloquear ETH real." },
-      { "name": "Nomad Bridge", "amount": "190 M$", "year": "2022", "chain": "Multi-chain", "method": "Bug de inicialização — um root hash foi definido como 0x0, que é truthy na função de verificação. Qualquer pessoa podia repetir qualquer mensagem. Centenas de imitadores esvaziaram-no em simultâneo." },
-      { "name": "Harmony Horizon", "amount": "100 M$", "year": "2022", "chain": "Harmony ↔ Ethereum", "method": "Multisig 2 de 5 com apenas 4 signatários ativos — o atacante comprometeu 2 chaves, atingindo o limiar com esforço mínimo." }
+      { "name": "Ronin Bridge", "amount": "625 M$", "year": "2022", "chain": "Axie Infinity ↔ Ethereum", "method": "5 das 9 chaves de signatários foram roubadas — o suficiente para aprovar qualquer levantamento do cofre." },
+      { "name": "Wormhole Bridge", "amount": "320 M$", "year": "2022", "chain": "Solana ↔ Ethereum", "method": "Era possível saltar uma verificação de assinatura — o atacante emitiu 120 000 wETH sem qualquer garantia." },
+      { "name": "Nomad Bridge", "amount": "190 M$", "year": "2022", "chain": "Multi-chain", "method": "Um erro de configuração fez todas as mensagens parecerem válidas. Centenas de imitadores esvaziaram-na em horas." },
+      { "name": "Harmony Horizon", "amount": "100 M$", "year": "2022", "chain": "Harmony ↔ Ethereum", "method": "Bastavam 2 de 5 signatários — duas chaves roubadas foram suficientes." }
     ],
     "dangerLabel": "Porque as Bridges São Estruturalmente Perigosas",
     "dangers": [
@@ -248,9 +332,36 @@
     "note": "WETH on Ethereum itself is a plain contract: anyone swaps ETH for WETH and back 1:1 with nobody in the middle. The question to ask of any wrapped token is who holds the original."
   },
   "bridgeHacks": {
-    "heading": "The four largest bridge hacks",
-    "subtitle": "All in 2022, all on the same design: one vault, a few keys, one checking routine.",
-    "whatWentWrong": "What went wrong",
+    "heading": "Porque é que as bridges são atacadas — e os quatro maiores ataques",
+    "subtitle": "Uma bridge põe as moedas de todos num só cofre que poucas chaves abrem. Os quatro maiores roubos, todos em 2022, provam-no.",
+    "why": {
+      "label": "Porque é que as bridges são o alvo",
+      "points": [
+        {
+          "icon": "🍯",
+          "title": "Um só cofre guarda as moedas de todos",
+          "desc": "O depósito de cada utilizador vai parar ao mesmo contrato. Quanto mais pessoas usam a bridge, maior é o prémio."
+        },
+        {
+          "icon": "🔑",
+          "title": "Poucas chaves de signatários controlam-no",
+          "desc": "Basta roubar chaves suficientes, ou encontrar um bug na verificação, e o cofre inteiro abre-se de uma vez — não apenas uma conta."
+        }
+      ],
+      "svg": {
+        "users": "Milhares de pessoas",
+        "usersNote": "cada uma deposita",
+        "vault": "UM SÓ COFRE",
+        "vaultNote": "moedas de todos, 1 contrato",
+        "vaultExample": "Bridge Ronin, março de 2022",
+        "grows": "mais utilizadores → maior prémio",
+        "keys": "9 chaves de signatários",
+        "stolen": "5 roubadas",
+        "stolenNote": "5 de 9 bastam: o cofre abre-se"
+      }
+    },
+    "evidenceLabel": "A prova — os quatro maiores ataques a bridges",
+    "whatWentWrong": "O que correu mal",
     "takeawayLabel": "Regra de segurança",
     "takeaway": "Prefere a bridge canónica/oficial de uma chain, move apenas o que precisas — e, para qualquer token embrulhado (wrapped), pergunta quem detém o original."
   },
@@ -328,9 +439,12 @@
     ]
   },
   "keyPoints": {
-    "s4-interop": "Every chain is an island by design; value only moves if someone builds a route and someone is trusted to run it.",
+    "s4-closed": "Cada blockchain é um sistema fechado: só verifica o seu próprio registo. Estar na internet não torna as chains interoperáveis.",
+    "s4-interop": "As pessoas e o dinheiro não ficam numa só chain, e cada rota entre chains fechadas exige confiar em alguém ou em alguma coisa.",
     "s4-usecases": "In every real case someone holds the asset or verifies the other chain; who that is, is the design question.",
-    "s4-interop-compare": "Three routes, one question: do you trust an operator, the maths, or a shared validator set?",
+    "s4-way-bridge": "Uma bridge é um operador que guarda a tua moeda: confias nos seus signatários, e o cofre único é o ponto fraco.",
+    "s4-way-ibc": "Com o IBC, as chains verificam diretamente as provas uma da outra: confias na matemática e nas duas chains, não num intermediário.",
+    "s4-way-l0": "Uma Layer 0 põe muitas chains sob um conjunto de validadores partilhado: as mensagens são nativas, mas só dentro do clube.",
     "s4-chooser": "The safest connection is the one with the fewest people to trust.",
     "s4-bridges": "Bridges are where most of the money has been stolen; using one is a trust decision.",
     "s4-wrapped": "A wrapped token is an IOU; it is worth the original only while someone holds that coin and agrees to give it back.",

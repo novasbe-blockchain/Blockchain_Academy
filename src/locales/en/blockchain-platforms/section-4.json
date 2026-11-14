@@ -1,6 +1,7 @@
 {
   "groups": {
     "g-s4-problem": "The Problem",
+    "g-s4-ways": "Three Ways to Connect",
     "g-s4-l0": "Layer 0",
     "g-s4-bridges": "Bridge Security",
     "g-s4-cosmos": "Cosmos",
@@ -8,9 +9,12 @@
     "g-s4-wrap": "Wrap Up"
   },
   "chapters": {
+    "s4-closed": "Closed Systems",
     "s4-interop": "Why Chains Must Talk",
     "s4-usecases": "Real-World Use Cases",
-    "s4-interop-compare": "Three Ways to Connect",
+    "s4-way-bridge": "1 · Bridges",
+    "s4-way-ibc": "2 · IBC",
+    "s4-way-l0": "3 · Layer 0",
     "s4-chooser": "Which Connection?",
     "s4-layer0": "Layer 0: Concept",
     "s4-layer0-2": "Layer 0: Platforms",
@@ -59,19 +63,56 @@
       "l2": "— rollup on a specific L1"
     }
   },
+  "closed": {
+    "heading": "Blockchains are closed systems",
+    "subtitle": "Every chain runs on the internet, yet none can read, check or pay another. The isolation is built in.",
+    "howLabel": "How a chain stays closed",
+    "cards": [
+      {
+        "emoji": "👥",
+        "title": "Its own validators",
+        "desc": "Each chain has its own group of computers that approves blocks. Bitcoin's miners never look at Ethereum, and Ethereum's validators never look at Bitcoin."
+      },
+      {
+        "emoji": "📜",
+        "title": "Its own rules",
+        "desc": "Each chain has its own consensus rules for what counts as valid. A node accepts only what those rules let it check for itself."
+      },
+      {
+        "emoji": "📒",
+        "title": "Its own ledger",
+        "desc": "A coin is just an entry in one chain's ledger (its state). A bitcoin exists only in Bitcoin's records, so there is nothing to physically send to Ethereum."
+      }
+    ],
+    "whyLabel": "Why it is built this way",
+    "why": "A blockchain is trusted because every node re-checks everything itself. Facts from another chain cannot be re-checked that way, so the chain ignores them — the same wall as the oracle problem.",
+    "notEqual": "On the internet ≠ interoperable",
+    "notEqualSub": "Sharing the same cables is not sharing the same ledger.",
+    "svg": {
+      "internet": "The internet — every node of every chain is online",
+      "validators": "its own validators"
+    }
+  },
   "interop": {
     "heading": "Why do blockchains need to talk to each other?",
-    "subtitle": "Every chain you have met so far keeps its own ledger, its own money and its own rules. None of them can read the others — by design.",
+    "subtitle": "Closed systems are safe, but people, money and apps do not stay on one chain.",
     "recap": "Bitcoin (Section 01) · Ethereum (Section 02) · Hyperledger Fabric (Section 03) — each one is its own island",
     "analogyLabel": "Analogy",
-    "analogy": "Early email: a Gmail user could not write to a Hotmail user until providers agreed on a shared standard. Blockchains today are mostly still at the \"no shared standard\" stage.",
+    "analogy": "Imagine Gmail unable to send a message to Hotmail. Early email networks really worked like that: each service was closed until everyone adopted one shared standard (SMTP). Blockchains are mostly still at the \"no shared standard\" stage.",
     "svg": {
       "noLink": "no native link",
       "caption": "Each island validates only its own ledger. A coin cannot \"swim\" across."
     },
+    "visuals": {
+      "ethApp": "Ethereum app",
+      "lost": "~$2B stolen in 2022",
+      "chainA": "Chain A",
+      "chainB": "Chain B",
+      "sameToken": "same token, two prices"
+    },
     "islands": {
       "title": "Three problems that follow",
-      "intro": "They appear as soon as value or users want to move.",
+      "intro": "They appear as soon as value or users want to move between closed chains.",
       "cards": [
         {
           "emoji": "🏝️",
@@ -80,8 +121,8 @@
         },
         {
           "emoji": "🌉",
-          "title": "Fragile connections",
-          "desc": "Bridges, the connectors built so far, have lost more money than any other part of crypto."
+          "title": "Fragile bridges",
+          "desc": "Bridges are the connectors built so far. Each one keeps the coins it carries in a single place, which has made them the costliest failures in crypto: about $2B stolen in 2022 alone."
         },
         {
           "emoji": "🔄",
@@ -114,7 +155,6 @@
   },
   "interopCompare": {
     "heading": "Three ways to connect chains",
-    "subtitle": "The question is the same each time: who do you trust for the hand-over?",
     "rowLabels": {
       "analogy": "Think of it as",
       "mechanism": "How it works",
@@ -123,9 +163,24 @@
     },
     "examplesLabel": "Examples",
     "col1": {
-      "approachLabel": "Approach 1",
+      "short": "Bridges",
+      "lead": "Lock-and-mint: an operator sits in the middle, holds your coin and issues a copy on the other chain.",
+      "caption": "Your coin never leaves chain A. It waits in the vault while a copy circulates on chain B.",
+      "svg": {
+        "chainA": "Chain A",
+        "chainB": "Chain B",
+        "locked": "1 ETH",
+        "lockedNote": "your coin, locked",
+        "vaultNote": "one vault for everyone",
+        "operator": "Bridge operator",
+        "operatorNote1": "a few signers approve",
+        "operatorNote2": "every mint and release",
+        "minted": "1 wETH",
+        "mintedNote": "wrapped copy, minted",
+        "ticketNote": "your claim ticket",
+        "back": "Way back: burn the copy → signers release the original"
+      },
       "title": "Bridges & Wrapped Tokens",
-      "subtitle": "Lock-and-mint · an operator in the middle",
       "analogy": "A courier keeps your luggage and gives you a claim ticket to use in the other city.",
       "mechanism": "Your coin is locked in a vault on chain A; a copy (\"wrapped\" token) is issued on chain B. Burn the copy to get the original back.",
       "trust": "The bridge operators — usually a small group of signers who approve every release.",
@@ -133,9 +188,23 @@
       "examples": "WBTC · Ronin · Wormhole · Hop Protocol · LayerZero · Stargate"
     },
     "col2": {
-      "approachLabel": "Approach 2",
+      "short": "IBC",
+      "lead": "No operator in the middle: the two chains verify each other directly.",
+      "caption": "Each chain keeps a small, constantly updated copy of the other's block headers, so it can check any incoming message itself.",
+      "svg": {
+        "chainA": "Chain A",
+        "chainB": "Chain B",
+        "ownValidators": "its own validators",
+        "copyOfB": "Copy of Chain B's headers",
+        "copyOfA": "Copy of Chain A's headers",
+        "checks1": "✓ checks every proof",
+        "checks2": "against them, by itself",
+        "packet": "message + proof",
+        "relayer": "Relayer",
+        "relayerNote1": "carries the message,",
+        "relayerNote2": "cannot forge it"
+      },
       "title": "Protocol-native / IBC",
-      "subtitle": "Chains verify each other directly",
       "analogy": "Both airports read each other's boarding passes directly — no courier needed.",
       "mechanism": "Each chain keeps a tiny copy of the other's block headers and checks the proof itself. Messages travel; coins are escrowed per connection, not in one giant vault.",
       "trust": "The maths and the two chains' own validators — no extra company or committee.",
@@ -143,9 +212,24 @@
       "examples": "Cosmos IBC (110+ chains) · IBC Eureka (Ethereum) · Polkadot XCM (within parachains)"
     },
     "col3": {
-      "approachLabel": "Approach 3",
+      "short": "Layer 0",
+      "lead": "One security team for many chains: connected chains share validators, so messaging is built in.",
+      "caption": "Inside the Layer 0, a message between chains is checked by the same validators that finalise their blocks.",
+      "svg": {
+        "l0Title": "Layer 0 — one shared validator set",
+        "l0Note": "the same validators finalise every connected chain",
+        "secures": "secures",
+        "chainA": "Chain A",
+        "chainB": "Chain B",
+        "chainC": "Chain C",
+        "chainNote": "own app logic",
+        "native": "native messages between members — no bridge contract",
+        "outside1": "Outside",
+        "outside2": "chain",
+        "bridgeNeeded": "bridge needed",
+        "example": "e.g. Polkadot: Relay Chain validators secure every parachain; XCM is the built-in messaging"
+      },
       "title": "Layer 0 Network",
-      "subtitle": "One security team for many chains",
       "analogy": "One security team guards every terminal in the airport — moving between terminals is just walking.",
       "mechanism": "A shared validator set secures all connected chains at once, so sending a message between them is a built-in operation, not a separate contract.",
       "trust": "The Layer 0's validators — the same people who finalise blocks also carry the messages.",
@@ -248,8 +332,35 @@
     "note": "WETH on Ethereum itself is a plain contract: anyone swaps ETH for WETH and back 1:1 with nobody in the middle. The question to ask of any wrapped token is who holds the original."
   },
   "bridgeHacks": {
-    "heading": "The four largest bridge hacks",
-    "subtitle": "All in 2022, all on the same design: one vault, a few keys, one checking routine.",
+    "heading": "Why bridges get hacked — and the four largest hacks",
+    "subtitle": "A bridge puts everyone's coins in one vault and lets a few keys open it. The four largest thefts, all in 2022, are the evidence.",
+    "why": {
+      "label": "Why bridges are the target",
+      "points": [
+        {
+          "icon": "🍯",
+          "title": "One vault holds everyone's coins",
+          "desc": "Every user's deposit lands in the same contract. The more people use the bridge, the bigger the prize."
+        },
+        {
+          "icon": "🔑",
+          "title": "A few signer keys control it",
+          "desc": "Steal enough keys, or find one bug in the check, and the whole vault opens at once — not just one account."
+        }
+      ],
+      "svg": {
+        "users": "Thousands of users",
+        "usersNote": "each locks coins",
+        "vault": "ONE VAULT",
+        "vaultNote": "everyone's coins, one contract",
+        "vaultExample": "Ronin bridge, March 2022",
+        "grows": "more users → bigger prize",
+        "keys": "9 signer keys guard it",
+        "stolen": "5 stolen",
+        "stolenNote": "5 of 9 is enough: the vault opens"
+      }
+    },
+    "evidenceLabel": "The evidence — the four largest bridge hacks",
     "whatWentWrong": "What went wrong",
     "takeawayLabel": "Safety takeaway",
     "takeaway": "Prefer a chain's canonical/official bridge, move only what you need — and for any wrapped token, ask who holds the original."
@@ -328,9 +439,12 @@
     ]
   },
   "keyPoints": {
-    "s4-interop": "Every chain is an island by design; value only moves if someone builds a route and someone is trusted to run it.",
+    "s4-closed": "Every blockchain is a closed system: it checks only its own ledger. Being on the internet does not make chains interoperable.",
+    "s4-interop": "People and money do not stay on one chain, and every route between closed chains needs someone or something to trust.",
     "s4-usecases": "In every real case someone holds the asset or verifies the other chain; who that is, is the design question.",
-    "s4-interop-compare": "Three routes, one question: do you trust an operator, the maths, or a shared validator set?",
+    "s4-way-bridge": "A bridge is an operator holding your coin: you trust its signers, and the single vault is the weak point.",
+    "s4-way-ibc": "With IBC the chains check each other's proofs directly: you trust the maths and the two chains, not a middleman.",
+    "s4-way-l0": "A Layer 0 puts many chains under one shared validator set: messaging is built in, but only inside the club.",
     "s4-chooser": "The safest connection is the one with the fewest people to trust.",
     "s4-bridges": "Bridges are where most of the money has been stolen; using one is a trust decision.",
     "s4-wrapped": "A wrapped token is an IOU; it is worth the original only while someone holds that coin and agrees to give it back.",

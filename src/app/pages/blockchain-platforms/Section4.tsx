@@ -16,9 +16,14 @@ import { Network, ShieldCheck } from 'lucide-react';
 // Language-neutral shape — IDs + kind only. Labels resolved via t() at render time.
 const chapterShape = [
   { kind: 'group' as const, id: 'g-s4-problem' },
+  { id: 's4-closed' },
   { id: 's4-interop' },
   { id: 's4-usecases' },
-  { id: 's4-interop-compare' },
+
+  { kind: 'group' as const, id: 'g-s4-ways' },
+  { id: 's4-way-bridge' },
+  { id: 's4-way-ibc' },
+  { id: 's4-way-l0' },
   { id: 's4-chooser' },
 
   { kind: 'group' as const, id: 'g-s4-bridges' },
@@ -352,6 +357,236 @@ function InteropChooser() {
   );
 }
 
+/* ───────────── Shared SVG bits for the "three ways to connect" diagrams ─────────────
+   Theme tokens are plain colours (not HSL triplets), so SVG paints use var(--token). */
+const INK = 'var(--foreground)';
+const MUTED = 'var(--muted-foreground)';
+
+function StepDot({ x, y, n, color }: { x: number; y: number; n: number; color: string }) {
+  return (
+    <g>
+      <circle cx={x} cy={y} r="9" fill={color} />
+      <text x={x} y={y + 3.5} textAnchor="middle" fontSize="10" fontWeight="900" fill="#fff">{n}</text>
+    </g>
+  );
+}
+
+/** Row of small "validator" dots centred on cx. */
+function ValidatorDots({ cx, y, n, color, r = 4, gap = 13 }: { cx: number; y: number; n: number; color: string; r?: number; gap?: number }) {
+  const x0 = cx - ((n - 1) * gap) / 2;
+  return (
+    <g>
+      {Array.from({ length: n }, (_, i) => (
+        <circle key={i} cx={x0 + i * gap} cy={y} r={r} fill={color + '55'} stroke={color} strokeWidth="1" />
+      ))}
+    </g>
+  );
+}
+
+/** Mini chain of block headers (a light client's copy of the other chain). */
+function HeaderStrip({ x, y, color }: { x: number; y: number; color: string }) {
+  return (
+    <g>
+      {[0, 1, 2, 3].map((i) => (
+        <g key={i}>
+          {i > 0 && <line x1={x + i * 30 - 8} y1={y + 7} x2={x + i * 30} y2={y + 7} stroke={color} strokeWidth="1" />}
+          <rect x={x + i * 30} y={y} width="22" height="14" rx="2.5" fill={color + '30'} stroke={color} strokeWidth="1" />
+        </g>
+      ))}
+    </g>
+  );
+}
+
+/* Approach 1 — lock-and-mint bridge: vault on A, signers in the middle, claim ticket on B. */
+function BridgeWayDiagram() {
+  const { t } = useTranslation('blockchain-platforms/section-4');
+  const s = (k: string) => t(`interopCompare.col1.svg.${k}`);
+  return (
+    <svg viewBox="0 0 480 236" className="w-full flex-1 min-h-0">
+      {/* Chain A — the vault */}
+      <text x="87" y="24" textAnchor="middle" fontSize="11" fontWeight="900" fill="#f59e0b">{s('chainA')}</text>
+      <rect x="12" y="32" width="150" height="150" rx="10" fill="#f59e0b14" stroke="#f59e0b" strokeWidth="1.5" />
+      <text x="87" y="90" textAnchor="middle" fontSize="30">🔒</text>
+      <text x="87" y="122" textAnchor="middle" fontSize="16" fontWeight="900" fill={INK}>{s('locked')}</text>
+      <text x="87" y="140" textAnchor="middle" fontSize="9" fill={MUTED}>{s('lockedNote')}</text>
+      <text x="87" y="162" textAnchor="middle" fontSize="9" fontWeight="700" fill="#f59e0b">{s('vaultNote')}</text>
+      <StepDot x={30} y={50} n={1} color="#f59e0b" />
+
+      {/* Operator — the signers */}
+      <rect x="180" y="52" width="120" height="110" rx="10" fill="#ef444412" stroke="#ef4444" strokeWidth="1.5" />
+      <text x="240" y="92" textAnchor="middle" fontSize="11" fontWeight="900" fill="#ef4444">{s('operator')}</text>
+      <text x="240" y="116" textAnchor="middle" fontSize="16">🔑🔑🔑</text>
+      <text x="240" y="135" textAnchor="middle" fontSize="9" fill={MUTED}>{s('operatorNote1')}</text>
+      <text x="240" y="148" textAnchor="middle" fontSize="9" fill={MUTED}>{s('operatorNote2')}</text>
+      <StepDot x={198} y={70} n={2} color="#ef4444" />
+
+      {/* A → operator → B */}
+      <line x1="163" y1="107" x2="172" y2="107" stroke={MUTED} strokeWidth="1.5" />
+      <polygon points="172,103 179,107 172,111" fill={MUTED} />
+      <line x1="301" y1="107" x2="310" y2="107" stroke={MUTED} strokeWidth="1.5" />
+      <polygon points="310,103 317,107 310,111" fill={MUTED} />
+
+      {/* Chain B — the wrapped copy */}
+      <text x="393" y="24" textAnchor="middle" fontSize="11" fontWeight="900" fill="#6366f1">{s('chainB')}</text>
+      <rect x="318" y="32" width="150" height="150" rx="10" fill="#6366f114" stroke="#6366f1" strokeWidth="1.5" />
+      <text x="393" y="90" textAnchor="middle" fontSize="30">🎟️</text>
+      <text x="393" y="122" textAnchor="middle" fontSize="16" fontWeight="900" fill={INK}>{s('minted')}</text>
+      <text x="393" y="140" textAnchor="middle" fontSize="9" fill={MUTED}>{s('mintedNote')}</text>
+      <text x="393" y="162" textAnchor="middle" fontSize="9" fontWeight="700" fill="#6366f1">{s('ticketNote')}</text>
+      <StepDot x={336} y={50} n={3} color="#6366f1" />
+
+      {/* Way back: burn the copy → release the original */}
+      <path d="M 393 184 V 212 H 87 V 193" fill="none" stroke="#10b981" strokeWidth="1.5" strokeDasharray="4 3" />
+      <polygon points="82,193 87,184 92,193" fill="#10b981" />
+      <text x="240" y="228" textAnchor="middle" fontSize="9" fontWeight="700" fill="#10b981">{s('back')}</text>
+    </svg>
+  );
+}
+
+/* Approach 2 — IBC: each chain keeps the other's block headers and checks proofs itself. */
+function IbcWayDiagram() {
+  const { t } = useTranslation('blockchain-platforms/section-4');
+  const s = (k: string) => t(`interopCompare.col2.svg.${k}`);
+  const A = '#22d3ee', B = '#8b5cf6';
+  const side = (x: number, own: string, other: string, name: string, copyLabel: string) => (
+    <g>
+      <text x={x + 85} y="24" textAnchor="middle" fontSize="11" fontWeight="900" fill={own}>{name}</text>
+      <rect x={x} y="32" width="170" height="180" rx="10" fill={own + '12'} stroke={own} strokeWidth="1.5" />
+      <ValidatorDots cx={x + 85} y={56} n={7} color={own} />
+      <text x={x + 85} y="78" textAnchor="middle" fontSize="9" fill={MUTED}>{s('ownValidators')}</text>
+      {/* light client — the other chain's headers */}
+      <rect x={x + 14} y="96" width="142" height="100" rx="8" fill="var(--card)" stroke={other} strokeWidth="1.2" strokeDasharray="4 3" />
+      <text x={x + 85} y="116" textAnchor="middle" fontSize="9.5" fontWeight="800" fill={other}>{copyLabel}</text>
+      <HeaderStrip x={x + 29} y={128} color={other} />
+      <text x={x + 85} y="164" textAnchor="middle" fontSize="9" fontWeight="700" fill="#10b981">{s('checks1')}</text>
+      <text x={x + 85} y="178" textAnchor="middle" fontSize="9" fontWeight="700" fill="#10b981">{s('checks2')}</text>
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 480 236" className="w-full flex-1 min-h-0">
+      {side(12, A, B, s('chainA'), s('copyOfB'))}
+      {side(298, B, A, s('chainB'), s('copyOfA'))}
+
+      {/* A → B */}
+      <text x="240" y="72" textAnchor="middle" fontSize="9" fontWeight="700" fill={INK}>✉️ {s('packet')}</text>
+      <line x1="188" y1="82" x2="284" y2="82" stroke={A} strokeWidth="1.5" />
+      <polygon points="284,78 292,82 284,86" fill={A} />
+      {/* relayer */}
+      <text x="240" y="114" textAnchor="middle" fontSize="16">📮</text>
+      <text x="240" y="132" textAnchor="middle" fontSize="9" fontWeight="800" fill={MUTED}>{s('relayer')}</text>
+      <text x="240" y="145" textAnchor="middle" fontSize="8.5" fill={MUTED}>{s('relayerNote1')}</text>
+      <text x="240" y="157" textAnchor="middle" fontSize="8.5" fill={MUTED}>{s('relayerNote2')}</text>
+      {/* B → A */}
+      <line x1="292" y1="174" x2="196" y2="174" stroke={B} strokeWidth="1.5" />
+      <polygon points="196,170 188,174 196,178" fill={B} />
+      <text x="240" y="192" textAnchor="middle" fontSize="9" fontWeight="700" fill={INK}>✉️ {s('packet')}</text>
+    </svg>
+  );
+}
+
+/* Approach 3 — Layer 0: one shared validator set secures many chains; messaging is built in. */
+function Layer0WayDiagram() {
+  const { t } = useTranslation('blockchain-platforms/section-4');
+  const s = (k: string) => t(`interopCompare.col3.svg.${k}`);
+  const L0 = '#6366f1', C = '#22d3ee';
+  const chains = [
+    { x: 20, name: s('chainA') },
+    { x: 146, name: s('chainB') },
+    { x: 272, name: s('chainC') },
+  ];
+  return (
+    <svg viewBox="0 0 480 236" className="w-full flex-1 min-h-0">
+      {/* Shared validator set */}
+      <rect x="20" y="14" width="348" height="70" rx="10" fill={L0 + '14'} stroke={L0} strokeWidth="1.5" />
+      <text x="194" y="36" textAnchor="middle" fontSize="11" fontWeight="900" fill={L0}>{s('l0Title')}</text>
+      <ValidatorDots cx={194} y={54} n={15} color={L0} gap={16} />
+      <text x="194" y="75" textAnchor="middle" fontSize="9" fill={MUTED}>{s('l0Note')}</text>
+
+      {/* Member chains — each secured from above */}
+      {chains.map((c) => (
+        <g key={c.name}>
+          <line x1={c.x + 48} y1="84" x2={c.x + 48} y2="122" stroke={L0} strokeWidth="1.5" />
+          <polygon points={`${c.x + 44},122 ${c.x + 48},130 ${c.x + 52},122`} fill={L0} />
+          <rect x={c.x} y="130" width="96" height="56" rx="8" fill={C + '14'} stroke={C} strokeWidth="1.5" />
+          <text x={c.x + 48} y="154" textAnchor="middle" fontSize="11" fontWeight="900" fill={INK}>{c.name}</text>
+          <text x={c.x + 48} y="170" textAnchor="middle" fontSize="8.5" fill={MUTED}>{s('chainNote')}</text>
+        </g>
+      ))}
+      <text x="122" y="108" fontSize="8.5" fontWeight="700" fill={L0}>🛡 {s('secures')}</text>
+
+      {/* Native messages between members */}
+      {[116, 242].map((x) => (
+        <g key={x}>
+          <line x1={x + 6} y1="158" x2={x + 24} y2="158" stroke="#10b981" strokeWidth="1.5" />
+          <polygon points={`${x + 7},154 ${x + 1},158 ${x + 7},162`} fill="#10b981" />
+          <polygon points={`${x + 23},154 ${x + 29},158 ${x + 23},162`} fill="#10b981" />
+        </g>
+      ))}
+      <text x="194" y="206" textAnchor="middle" fontSize="9" fontWeight="700" fill="#10b981">⇄ {s('native')}</text>
+
+      {/* A chain outside the club still needs a bridge */}
+      <rect x="398" y="130" width="72" height="56" rx="8" fill="none" stroke={MUTED} strokeWidth="1.2" strokeDasharray="4 3" />
+      <text x="434" y="154" textAnchor="middle" fontSize="9.5" fontWeight="800" fill={MUTED}>{s('outside1')}</text>
+      <text x="434" y="168" textAnchor="middle" fontSize="9.5" fontWeight="800" fill={MUTED}>{s('outside2')}</text>
+      <line x1="369" y1="158" x2="397" y2="158" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3 3" />
+      <text x="420" y="206" textAnchor="middle" fontSize="9" fontWeight="700" fill="#ef4444">🌉 {s('bridgeNeeded')}</text>
+      <text x="240" y="228" textAnchor="middle" fontSize="8.5" fill={MUTED}>{s('example')}</text>
+    </svg>
+  );
+}
+
+/* Why bridges are hack targets — everyone's coins in one vault, a few keys open it (Ronin's numbers). */
+function HoneypotDiagram() {
+  const { t } = useTranslation('blockchain-platforms/section-4');
+  const s = (k: string) => t(`bridgeHacks.why.svg.${k}`);
+  const users = Array.from({ length: 15 }, (_, i) => ({ x: 22 + (i % 5) * 17, y: 38 + Math.floor(i / 5) * 24 }));
+  return (
+    <svg viewBox="0 0 560 150" className="w-full h-full">
+      {/* Users */}
+      {users.map((u, i) => (
+        <g key={i}>
+          <circle cx={u.x} cy={u.y - 5} r="3.5" fill={MUTED} />
+          <path d={`M ${u.x - 6} ${u.y + 8} Q ${u.x} ${u.y - 4} ${u.x + 6} ${u.y + 8} Z`} fill={MUTED} />
+        </g>
+      ))}
+      <text x="56" y="122" textAnchor="middle" fontSize="10" fontWeight="700" fill={INK}>{s('users')}</text>
+      <text x="56" y="136" textAnchor="middle" fontSize="9" fill={MUTED}>{s('usersNote')}</text>
+
+      {/* Deposits all flow into one vault */}
+      {[40, 64, 88].map((y) => (
+        <line key={y} x1="112" y1={y} x2="176" y2="66" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="4 3" />
+      ))}
+      <polygon points="175,60 186,66 175,72" fill="#f59e0b" />
+
+      {/* The vault */}
+      <rect x="188" y="12" width="150" height="108" rx="12" fill="#f59e0b1c" stroke="#f59e0b" strokeWidth="2" />
+      <text x="263" y="34" textAnchor="middle" fontSize="10" fontWeight="900" fill="#f59e0b">🍯 {s('vault')}</text>
+      <text x="263" y="76" textAnchor="middle" fontSize="30" fontWeight="900" fill={INK}>$625M</text>
+      <text x="263" y="96" textAnchor="middle" fontSize="9.5" fill={MUTED}>{s('vaultNote')}</text>
+      <text x="263" y="110" textAnchor="middle" fontSize="8.5" fill={MUTED}>{s('vaultExample')}</text>
+      <text x="263" y="136" textAnchor="middle" fontSize="9" fontWeight="700" fill="#f59e0b">{s('grows')}</text>
+
+      {/* The keys */}
+      <line x1="340" y1="66" x2="374" y2="66" stroke="#ef4444" strokeWidth="1.5" />
+      <polygon points="349,61 339,66 349,71" fill="#ef4444" />
+      <text x="464" y="28" textAnchor="middle" fontSize="10" fontWeight="900" fill={INK}>{s('keys')}</text>
+      {Array.from({ length: 9 }, (_, i) => {
+        const stolen = i < 5;
+        const x = 384 + i * 20;
+        return (
+          <g key={i}>
+            <circle cx={x} cy="66" r="8.5" fill={stolen ? '#ef4444' : 'var(--card)'} stroke={stolen ? '#ef4444' : MUTED} strokeWidth="1.2" />
+            <text x={x} y="69.5" textAnchor="middle" fontSize="9">🔑</text>
+          </g>
+        );
+      })}
+      <path d="M 376 82 V 88 H 472 V 82" fill="none" stroke="#ef4444" strokeWidth="1.2" />
+      <text x="424" y="104" textAnchor="middle" fontSize="10" fontWeight="900" fill="#ef4444">{s('stolen')}</text>
+      <text x="464" y="126" textAnchor="middle" fontSize="9.5" fill={MUTED}>{s('stolenNote')}</text>
+    </svg>
+  );
+}
+
 interface CardItem { emoji: string; title: string; desc: string; }
 interface IconCard { icon: string; title: string; desc: string; }
 interface TitledCard { title: string; desc: string; }
@@ -378,6 +613,8 @@ export function BP_Section4() {
 
   const islandCards = t('interop.islands.cards', { returnObjects: true }) as CardItem[];
   const mattersSolutions = t('interop.matters.solutions', { returnObjects: true }) as SolutionItem[];
+  const closedCards = t('closed.cards', { returnObjects: true }) as CardItem[];
+  const bridgeWhyPoints = t('bridgeHacks.why.points', { returnObjects: true }) as IconCard[];
   const useCases = t('usecases.items', { returnObjects: true }) as UseCaseItem[];
   const hoodLabel = t('ui.hood');
   const recapLabel = t('ui.recap');
@@ -430,13 +667,32 @@ export function BP_Section4() {
   ];
   // Island map for the opening slide — positions in a 480×240 viewBox.
   const islands = [
-    { name: 'Bitcoin',  x: 80,  y: 70,  color: '#f7931a' },
-    { name: 'Ethereum', x: 240, y: 55,  color: '#627EEA' },
-    { name: 'Solana',   x: 400, y: 80,  color: '#9945FF' },
-    { name: 'Fabric',   x: 160, y: 185, color: '#0EA5E9' },
-    { name: 'XRPL',     x: 330, y: 190, color: '#06b6d4' },
+    { name: 'Bitcoin',  x: 80,  y: 62,  color: '#f7931a' },
+    { name: 'Ethereum', x: 240, y: 62,  color: '#627EEA' },
+    { name: 'Solana',   x: 400, y: 62,  color: '#9945FF' },
+    { name: 'Fabric',   x: 160, y: 160, color: '#0EA5E9' },
+    { name: 'XRPL',     x: 320, y: 160, color: '#06b6d4' },
   ];
-  const islandGaps: [number, number][] = [[0, 1], [1, 2], [0, 3], [1, 4], [3, 4], [2, 4]];
+  const islandGaps: [number, number][] = [[0, 1], [1, 2], [0, 3], [1, 3], [1, 4], [2, 4], [3, 4]];
+  const problemColors = ['#f7931a', '#ef4444', '#8b5cf6'];
+  // The three ways to connect chains — one slide each, same layout, own diagram.
+  const ways = [
+    {
+      id: 's4-way-bridge', key: 'col1', accent: '#f59e0b', Diagram: BridgeWayDiagram,
+      rowColors: { mechanism: '#f59e0b', trust: '#f97316', risk: '#ef4444' },
+      terms: ['lock-and-mint', 'multisig', 'custodian', 'TVL'],
+    },
+    {
+      id: 's4-way-ibc', key: 'col2', accent: '#22d3ee', Diagram: IbcWayDiagram,
+      rowColors: { mechanism: '#22d3ee', trust: '#10b981', risk: '#f59e0b' },
+      terms: ['light client', 'block header', 'Merkle proof', 'relayer'],
+    },
+    {
+      id: 's4-way-l0', key: 'col3', accent: '#6366f1', Diagram: Layer0WayDiagram,
+      rowColors: { mechanism: '#6366f1', trust: '#10b981', risk: '#f59e0b' },
+      terms: ['shared validator set', 'relay chain', 'parachain', 'XCM'],
+    },
+  ];
 
   return (
     <div className="h-full w-full flex overflow-hidden">
@@ -455,41 +711,66 @@ export function BP_Section4() {
           />
         </div>
 
-        {/* ═══════ S4-INTEROP ═══════ */}
-        <div id="s4-interop" className="h-full flex flex-col p-6 lg:p-10">
+        {/* ═══════ S4-CLOSED — every chain is a closed system, even on the internet ═══════ */}
+        <div id="s4-closed" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
-            <h2 className="text-2xl lg:text-4xl font-bold text-foreground mb-1">{t('interop.heading')}</h2>
-            <p className="text-sm lg:text-base text-muted-foreground max-w-4xl">{t('interop.subtitle')}</p>
+            <h2 className="text-2xl lg:text-4xl font-bold text-foreground mb-1">{t('closed.heading')}</h2>
+            <p className="text-sm lg:text-base text-muted-foreground max-w-4xl">{t('closed.subtitle')}</p>
             <div className="mt-2">
               <RecapHandoff label={recapLabel} text={t('interop.recap')} color="#39B54A" />
             </div>
           </div>
 
           <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 min-h-0">
-            {/* Left — island map + analogy */}
+            {/* Left — island map (all online, none linked) + analogy */}
             <div className="flex flex-col gap-3 min-h-0">
               <div className="flex-1 min-h-[220px] rounded-xl border border-border bg-card/40 p-3 flex flex-col">
-                <svg viewBox="0 0 480 240" className="w-full flex-1">
+                <svg viewBox="0 0 480 256" className="w-full flex-1 min-h-0">
+                  {/* Every island is plugged into the same internet… */}
+                  {islands.map((isl) => (
+                    <line key={isl.name} x1={isl.x} y1={isl.y + 30} x2={isl.x} y2="222" stroke="var(--muted-foreground)" strokeWidth="1" opacity="0.45" />
+                  ))}
+                  <rect x="20" y="222" width="440" height="26" rx="6" fill="var(--muted)" stroke="var(--muted-foreground)" strokeWidth="1" strokeOpacity="0.5" />
+                  <text x="240" y="239" textAnchor="middle" fontSize="10" fontWeight="800" fill="var(--foreground)">🌐 {t('closed.svg.internet')}</text>
+
+                  {/* …but there is no link between any two of them */}
                   {islandGaps.map(([a, b], i) => {
                     const A = islands[a], B = islands[b];
                     const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
                     return (
                       <g key={i}>
-                        <line x1={A.x} y1={A.y} x2={B.x} y2={B.y} stroke="hsl(var(--muted-foreground))" strokeWidth="1" strokeDasharray="3 4" opacity="0.35" />
-                        <circle cx={mx} cy={my} r="8" fill="hsl(var(--card))" stroke="#ef4444" strokeWidth="1" />
+                        <line x1={A.x} y1={A.y} x2={B.x} y2={B.y} stroke="var(--muted-foreground)" strokeWidth="1" strokeDasharray="3 4" opacity="0.4" />
+                        <circle cx={mx} cy={my} r="8" fill="var(--card)" stroke="#ef4444" strokeWidth="1" />
                         <text x={mx} y={my + 3.5} textAnchor="middle" fontSize="9" fontWeight="900" fill="#ef4444">✕</text>
                       </g>
                     );
                   })}
                   {islands.map((isl) => (
                     <g key={isl.name}>
+                      <circle cx={isl.x} cy={isl.y} r="30" fill="var(--card)" />
                       <circle cx={isl.x} cy={isl.y} r="30" fill={isl.color + '22'} stroke={isl.color} strokeWidth="1.5" />
+                      {/* its own validators, on its own shore */}
+                      {[0, 1, 2, 3, 4, 5].map((k) => {
+                        const a = (k * 60 - 90) * (Math.PI / 180);
+                        return <circle key={k} cx={isl.x + 30 * Math.cos(a)} cy={isl.y + 30 * Math.sin(a)} r="3.2" fill={isl.color} stroke="var(--card)" strokeWidth="1" />;
+                      })}
                       <text x={isl.x} y={isl.y + 4} textAnchor="middle" fontSize="11" fontWeight="800" fill={isl.color}>{isl.name}</text>
                     </g>
                   ))}
-                  <text x="240" y="232" textAnchor="middle" fontSize="9" fill="hsl(var(--muted-foreground))">✕ = {t('interop.svg.noLink')}</text>
+                  {/* A coin trying — and failing — to swim across */}
+                  <motion.g animate={{ x: [0, 20, 0] }} transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}>
+                    <circle cx="124" cy="62" r="7.5" fill="#facc15" stroke="#a16207" strokeWidth="1.2" />
+                    <text x="124" y="65.5" textAnchor="middle" fontSize="9" fontWeight="900" fill="#7c2d12">₿</text>
+                  </motion.g>
                 </svg>
-                <p className="text-[11px] text-muted-foreground text-center shrink-0 mt-1">{t('interop.svg.caption')}</p>
+                <p className="text-[11px] text-muted-foreground text-center shrink-0 mt-1">
+                  <span className="font-bold">●</span> {t('closed.svg.validators')} · <span className="font-bold text-[#ef4444]">✕</span> {t('interop.svg.noLink')} — {t('interop.svg.caption')}
+                </p>
+              </div>
+              <div className="shrink-0 rounded-xl border-2 px-3 py-2 flex items-center gap-3" style={{ borderColor: '#f59e0b80', backgroundColor: '#f59e0b12' }}>
+                <span className="text-xl leading-none shrink-0">🌐</span>
+                <p className="text-sm lg:text-base font-black text-foreground leading-tight">{t('closed.notEqual')}</p>
+                <p className="text-xs text-muted-foreground leading-snug">{t('closed.notEqualSub')}</p>
               </div>
               <div className="shrink-0 rounded-xl border p-3" style={{ borderColor: '#22d3ee55', backgroundColor: '#22d3ee0d' }}>
                 <p className="text-[10px] font-black uppercase tracking-widest text-[#22d3ee]">{t('interop.analogyLabel')}</p>
@@ -497,21 +778,18 @@ export function BP_Section4() {
               </div>
             </div>
 
-            {/* Right — the three frictions + where we go next */}
-            <div className="flex flex-col gap-3 min-h-0">
-              <div className="shrink-0">
-                <h3 className="text-base lg:text-lg font-semibold text-foreground">{t('interop.islands.title')}</h3>
-                <p className="text-xs lg:text-sm text-muted-foreground">{t('interop.islands.intro')}</p>
-              </div>
+            {/* Right — how a chain stays closed, and why */}
+            <div className="flex flex-col gap-2.5 min-h-0">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground shrink-0">{t('closed.howLabel')}</p>
               <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
-                {islandCards.map((card) => (
+                {closedCards.map((card) => (
                   <motion.div
                     key={card.title}
                     initial={{ opacity: 0, x: 16 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.3 }}
-                    className="flex gap-3 p-3 bg-card rounded-xl border border-[#22d3ee]/20 hover:border-[#22d3ee]/60 transition-colors min-h-0 items-start"
+                    className="flex gap-3 p-3 bg-card rounded-xl border border-[#22d3ee]/20 min-h-0 items-start"
                   >
                     <span className="text-xl lg:text-2xl flex-shrink-0">{card.emoji}</span>
                     <div className="min-w-0">
@@ -521,21 +799,109 @@ export function BP_Section4() {
                   </motion.div>
                 ))}
               </div>
-              <div className="shrink-0">
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">{t('interop.matters.solutionsLabel')}</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {mattersSolutions.map((s, i) => {
-                    const color = ['#f59e0b', '#22d3ee', '#6366f1'][i];
-                    return (
-                      <div key={s.label} className="p-2 bg-card rounded-lg border text-center" style={{ borderColor: `${color}40` }}>
-                        <p className="text-xs lg:text-sm font-semibold" style={{ color }}>{s.label}</p>
-                        <p className="text-[10px] lg:text-xs text-muted-foreground mt-0.5">{s.sub}</p>
-                      </div>
-                    );
-                  })}
-                </div>
+              <div className="shrink-0 rounded-xl border p-3" style={{ borderColor: '#39B54A60', backgroundColor: '#39B54A10' }}>
+                <p className="text-[10px] font-black uppercase tracking-widest text-[#39B54A]">{t('closed.whyLabel')}</p>
+                <p className="text-sm text-foreground mt-1 leading-snug">{t('closed.why')}</p>
               </div>
-              <UnderTheHood label={hoodLabel} terms={['consensus', 'state', 'wrapped token', 'light client']} className="self-start" />
+              <UnderTheHood label={hoodLabel} terms={['validator set', 'consensus', 'state', 'finality']} className="self-start" />
+            </div>
+          </div>
+          {kp('s4-closed')}
+        </div>
+
+        {/* ═══════ S4-INTEROP — why they must talk: the three problems that follow ═══════ */}
+        <div id="s4-interop" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-4xl font-bold text-foreground mb-1">{t('interop.heading')}</h2>
+            <p className="text-sm lg:text-base text-muted-foreground max-w-4xl">{t('interop.subtitle')}</p>
+          </div>
+
+          <div className="shrink-0 mb-2">
+            <h3 className="text-base lg:text-lg font-semibold text-foreground">{t('interop.islands.title')}</h3>
+            <p className="text-xs lg:text-sm text-muted-foreground">{t('interop.islands.intro')}</p>
+          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {islandCards.map((card, i) => {
+              const color = problemColors[i];
+              return (
+                <motion.div
+                  key={card.title}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                  className="min-h-0 rounded-xl border-2 p-4 flex flex-col gap-3"
+                  style={{ borderColor: color + '55', backgroundColor: color + '08' }}
+                >
+                  <div className="flex-1 min-h-[110px] rounded-lg border border-border bg-card/60 p-2">
+                    <svg viewBox="0 0 240 120" className="w-full h-full">
+                      {i === 0 && (
+                        <>
+                          {/* a bitcoin that cannot reach an Ethereum app */}
+                          <text x="55" y="16" textAnchor="middle" fontSize="10" fontWeight="900" fill="#f7931a">Bitcoin</text>
+                          <rect x="10" y="24" width="90" height="84" rx="8" fill="#f7931a14" stroke="#f7931a" strokeWidth="1.5" />
+                          <circle cx="55" cy="66" r="16" fill="#facc15" stroke="#a16207" strokeWidth="1.5" />
+                          <text x="55" y="72" textAnchor="middle" fontSize="17" fontWeight="900" fill="#7c2d12">₿</text>
+                          <text x="185" y="16" textAnchor="middle" fontSize="10" fontWeight="900" fill="#627EEA">{t('interop.visuals.ethApp')}</text>
+                          <rect x="140" y="24" width="90" height="84" rx="8" fill="#627EEA14" stroke="#627EEA" strokeWidth="1.5" />
+                          <text x="185" y="76" textAnchor="middle" fontSize="28">🏦</text>
+                          <line x1="76" y1="66" x2="108" y2="66" stroke="var(--muted-foreground)" strokeWidth="1.5" strokeDasharray="4 3" />
+                          <circle cx="120" cy="66" r="10" fill="var(--card)" stroke="#ef4444" strokeWidth="1.5" />
+                          <text x="120" y="70" textAnchor="middle" fontSize="11" fontWeight="900" fill="#ef4444">✕</text>
+                        </>
+                      )}
+                      {i === 1 && (
+                        <>
+                          {/* a bridge with a hole in the middle */}
+                          <text x="120" y="18" textAnchor="middle" fontSize="12" fontWeight="900" fill="#ef4444">{t('interop.visuals.lost')}</text>
+                          <rect x="10" y="58" width="56" height="50" rx="6" fill="#f59e0b14" stroke="#f59e0b" strokeWidth="1.5" />
+                          <text x="38" y="87" textAnchor="middle" fontSize="10" fontWeight="900" fill="#f59e0b">{t('interop.visuals.chainA')}</text>
+                          <rect x="174" y="58" width="56" height="50" rx="6" fill="#6366f114" stroke="#6366f1" strokeWidth="1.5" />
+                          <text x="202" y="87" textAnchor="middle" fontSize="10" fontWeight="900" fill="#6366f1">{t('interop.visuals.chainB')}</text>
+                          <path d="M 66 66 H 104 l 4 6" fill="none" stroke="var(--muted-foreground)" strokeWidth="3" strokeLinecap="round" />
+                          <path d="M 174 66 H 136 l -4 6" fill="none" stroke="var(--muted-foreground)" strokeWidth="3" strokeLinecap="round" />
+                          <path d="M 66 66 Q 86 38 104 66 M 174 66 Q 154 38 136 66" fill="none" stroke="var(--muted-foreground)" strokeWidth="1" />
+                          {[[120, 74], [114, 90], [127, 102]].map(([cx, cy]) => (
+                            <circle key={cy} cx={cx} cy={cy} r="5" fill="#facc15" stroke="#a16207" strokeWidth="1" />
+                          ))}
+                        </>
+                      )}
+                      {i === 2 && (
+                        <>
+                          {/* the same token, priced differently on two chains */}
+                          <text x="58" y="16" textAnchor="middle" fontSize="10" fontWeight="900" fill="#22d3ee">{t('interop.visuals.chainA')}</text>
+                          <rect x="10" y="24" width="96" height="62" rx="8" fill="#22d3ee14" stroke="#22d3ee" strokeWidth="1.5" />
+                          <text x="58" y="63" textAnchor="middle" fontSize="20" fontWeight="900" fill="var(--foreground)">$1.00</text>
+                          <text x="182" y="16" textAnchor="middle" fontSize="10" fontWeight="900" fill="#8b5cf6">{t('interop.visuals.chainB')}</text>
+                          <rect x="134" y="24" width="96" height="62" rx="8" fill="#8b5cf614" stroke="#8b5cf6" strokeWidth="1.5" />
+                          <text x="182" y="63" textAnchor="middle" fontSize="20" fontWeight="900" fill="var(--foreground)">$1.03</text>
+                          <text x="120" y="62" textAnchor="middle" fontSize="18" fontWeight="900" fill="#ef4444">≠</text>
+                          <text x="120" y="106" textAnchor="middle" fontSize="10" fill="var(--muted-foreground)">{t('interop.visuals.sameToken')}</text>
+                        </>
+                      )}
+                    </svg>
+                  </div>
+                  <div className="shrink-0 lg:min-h-[124px]">
+                    <p className="text-lg font-bold text-foreground leading-tight"><span className="mr-2">{card.emoji}</span>{card.title}</p>
+                    <p className="text-sm text-muted-foreground mt-1 leading-snug">{card.desc}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <div className="shrink-0 mt-3">
+            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">{t('interop.matters.solutionsLabel')}</p>
+            <div className="grid grid-cols-3 gap-2">
+              {mattersSolutions.map((s, i) => {
+                const color = ['#f59e0b', '#22d3ee', '#6366f1'][i];
+                return (
+                  <div key={s.label} className="p-2 bg-card rounded-lg border text-center" style={{ borderColor: `${color}40` }}>
+                    <p className="text-xs lg:text-sm font-semibold" style={{ color }}>{s.label}</p>
+                    <p className="text-[10px] lg:text-xs text-muted-foreground mt-0.5">{s.sub}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
           {kp('s4-interop')}
@@ -578,69 +944,71 @@ export function BP_Section4() {
           {kp('s4-usecases')}
         </div>
 
-        {/* ═══════ S4-INTEROP-COMPARE ═══════ */}
-        <div id="s4-interop-compare" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-4">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('interopCompare.heading')}</h2>
-            <p className="text-sm text-muted-foreground mt-1">{t('interopCompare.subtitle')}</p>
-          </div>
-
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4">
-
-            {[
-              {
-                key: 'col1',
-                accent: '#f59e0b',
-                rowColors: { mechanism: '#f59e0b', trust: '#f97316', risk: '#ef4444', finality: '#6b7280', compatibility: '#10b981' },
-              },
-              {
-                key: 'col2',
-                accent: '#22d3ee',
-                rowColors: { mechanism: '#22d3ee', trust: '#10b981', risk: '#10b981', finality: '#22d3ee', compatibility: '#f59e0b' },
-              },
-              {
-                key: 'col3',
-                accent: '#6366f1',
-                rowColors: { mechanism: '#6366f1', trust: '#10b981', risk: '#f59e0b', finality: '#10b981', compatibility: '#ef4444' },
-              },
-            ].map((col) => {
-              // Three plain-language rows; the analogy card is the one to read first.
-              const rowKeys = ['mechanism', 'trust', 'risk'] as const;
-              return (
-                <div key={col.key} className="flex flex-col gap-2 min-h-0 rounded-xl border-2 p-4" style={{ borderColor: col.accent + '55', backgroundColor: col.accent + '05' }}>
-                  <div className="shrink-0">
-                    <div className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: col.accent }}>{t(`interopCompare.${col.key}.approachLabel`)}</div>
-                    <div className="text-lg font-black text-foreground leading-tight">{t(`interopCompare.${col.key}.title`)}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{t(`interopCompare.${col.key}.subtitle`)}</div>
-                  </div>
-
-                  <div className="shrink-0 p-3 rounded-lg border-2" style={{ borderColor: col.accent + '70', backgroundColor: col.accent + '12' }}>
-                    <div className="text-[9px] font-black uppercase tracking-wider mb-1" style={{ color: col.accent }}>{t('interopCompare.rowLabels.analogy')}</div>
-                    <div className="text-sm font-semibold text-foreground leading-snug">{t(`interopCompare.${col.key}.analogy`)}</div>
-                  </div>
-
-                  <div className="flex-1 min-h-0 flex flex-col gap-2">
-                    {rowKeys.map((rk) => (
-                      <div key={rk} className="flex flex-col gap-0.5 p-2 rounded-lg bg-card border border-border">
-                        <div className="text-[9px] font-black uppercase tracking-wider" style={{ color: col.rowColors[rk] }}>{t(`interopCompare.rowLabels.${rk}`)}</div>
-                        <div className="text-xs text-muted-foreground leading-snug">{t(`interopCompare.${col.key}.${rk}`)}</div>
-                      </div>
-                    ))}
-                    <div className="mt-auto p-2 rounded-lg border" style={{ borderColor: col.accent + '40', backgroundColor: col.accent + '08' }}>
-                      <div className="text-[9px] font-black uppercase tracking-wider mb-1" style={{ color: col.accent }}>{t('interopCompare.examplesLabel')}</div>
-                      <div className="text-[11px] text-muted-foreground">{t(`interopCompare.${col.key}.examples`)}</div>
-                    </div>
-                  </div>
+        {/* ═══════ S4-WAY-* — three ways to connect chains, one slide + one diagram each ═══════ */}
+        {ways.map((w, wi) => (
+          <div key={w.id} id={w.id} className="h-full flex flex-col p-6 lg:p-10">
+            <div className="shrink-0 mb-4">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('interopCompare.heading')}</span>
+                <div className="flex items-center gap-1.5">
+                  {ways.map((o, oi) => {
+                    const on = oi === wi;
+                    return (
+                      <span
+                        key={o.id}
+                        className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold"
+                        style={{
+                          borderColor: on ? o.accent : 'var(--border)',
+                          backgroundColor: on ? o.accent + '1f' : 'transparent',
+                          color: on ? o.accent : 'var(--muted-foreground)',
+                        }}
+                      >
+                        <span className="font-black">{oi + 1}</span>{t(`interopCompare.${o.key}.short`)}
+                      </span>
+                    );
+                  })}
                 </div>
-              );
-            })}
+              </div>
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t(`interopCompare.${w.key}.title`)}</h2>
+              <p className="text-sm text-muted-foreground mt-1 max-w-4xl">{t(`interopCompare.${w.key}.lead`)}</p>
+            </div>
 
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-4 lg:gap-6">
+              {/* Left — how it works, drawn */}
+              <div className="flex flex-col gap-3 min-h-0">
+                <div className="flex-1 min-h-[240px] rounded-xl border border-border bg-card/40 p-3 flex flex-col">
+                  <w.Diagram />
+                  <p className="text-xs text-muted-foreground leading-snug shrink-0 mt-1.5 text-center">{t(`interopCompare.${w.key}.caption`)}</p>
+                </div>
+                <div className="shrink-0 p-3 rounded-xl border-2" style={{ borderColor: w.accent + '70', backgroundColor: w.accent + '12' }}>
+                  <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: w.accent }}>{t('interopCompare.rowLabels.analogy')}</p>
+                  <p className="text-sm lg:text-base font-semibold text-foreground leading-snug mt-0.5">{t(`interopCompare.${w.key}.analogy`)}</p>
+                </div>
+              </div>
+
+              {/* Right — mechanism · trust · risk */}
+              <div className="flex flex-col gap-2.5 min-h-0">
+                <div className="flex-1 min-h-0 grid auto-rows-fr gap-2.5">
+                  {(['mechanism', 'trust', 'risk'] as const).map((rk) => (
+                    <div key={rk} className="min-h-0 flex gap-3 p-3 bg-card border rounded-xl items-start" style={{ borderColor: w.rowColors[rk] + '40' }}>
+                      <div className="w-1 self-stretch rounded-full shrink-0" style={{ backgroundColor: w.rowColors[rk] }} />
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: w.rowColors[rk] }}>{t(`interopCompare.rowLabels.${rk}`)}</p>
+                        <p className="text-sm lg:text-base text-foreground leading-snug mt-1">{t(`interopCompare.${w.key}.${rk}`)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="shrink-0 p-2.5 rounded-lg border" style={{ borderColor: w.accent + '40', backgroundColor: w.accent + '08' }}>
+                  <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: w.accent }}>{t('interopCompare.examplesLabel')}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{t(`interopCompare.${w.key}.examples`)}</p>
+                </div>
+                <UnderTheHood label={hoodLabel} terms={w.terms} className="self-start" />
+              </div>
+            </div>
+            {kp(w.id)}
           </div>
-          {kp('s4-interop-compare')}
-          <div className="shrink-0 mt-2">
-            <UnderTheHood label={hoodLabel} terms={['lock-and-mint', 'multisig', 'light client', 'relayer', 'shared validator set']} />
-          </div>
-        </div>
+        ))}
 
         {/* ═══════ S4-CHOOSER — interactive: how should these two chains talk? ═══════ */}
         <div id="s4-chooser" className="h-full flex flex-col p-6 lg:p-10">
@@ -801,13 +1169,35 @@ export function BP_Section4() {
           {kp('s4-bridges')}
         </div>
 
-        {/* ═══════ S4-BRIDGE-HACKS — the four largest, one readable card each ═══════ */}
+        {/* ═══════ S4-BRIDGE-HACKS — why bridges are targets (visual), then the four largest as evidence ═══════ */}
         <div id="s4-bridge-hacks" className="h-full flex flex-col p-5 lg:p-8">
-          <div className="shrink-0 mb-4">
+          <div className="shrink-0 mb-3">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{t('bridgeHacks.heading')}</h2>
             <p className="text-sm text-muted-foreground max-w-4xl">{t('bridgeHacks.subtitle')}</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+          {/* WHY — one vault, a few keys */}
+          <div className="shrink-0 rounded-xl border-2 p-3 grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-4 items-center" style={{ borderColor: '#f59e0b55', backgroundColor: '#f59e0b08' }}>
+            <div className="h-[215px] min-w-0">
+              <HoneypotDiagram />
+            </div>
+            <div className="flex flex-col gap-2 min-w-0">
+              <p className="text-[10px] font-black uppercase tracking-widest text-[#f59e0b]">{t('bridgeHacks.why.label')}</p>
+              {bridgeWhyPoints.map((p) => (
+                <div key={p.title} className="flex gap-2.5 items-start">
+                  <span className="text-xl leading-none shrink-0">{p.icon}</span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-foreground leading-tight">{p.title}</p>
+                    <p className="text-xs text-muted-foreground leading-snug mt-0.5">{p.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* EVIDENCE — the four largest */}
+          <p className="shrink-0 mt-3 mb-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('bridgeHacks.evidenceLabel')}</p>
+          <div className="flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {bridgeHacks.map((h, i) => {
               const color = hackColors[i];
               return (
@@ -817,28 +1207,28 @@ export function BP_Section4() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.3, delay: i * 0.05 }}
-                  className="min-h-0 rounded-xl border-2 p-4 lg:p-5 flex flex-col gap-2"
+                  className="min-h-0 rounded-xl border-2 p-3.5 flex flex-col gap-1"
                   style={{ borderColor: color + '55', backgroundColor: color + '08' }}
                 >
-                  <div className="flex items-baseline justify-between gap-3 shrink-0">
-                    <p className="text-lg lg:text-xl font-bold text-foreground leading-tight">{h.name}</p>
-                    <p className="text-2xl lg:text-3xl font-black shrink-0" style={{ color }}>{h.amount}</p>
+                  <div className="flex items-baseline justify-between gap-2 shrink-0">
+                    <p className="text-base font-bold text-foreground leading-tight">{h.name}</p>
+                    <p className="text-2xl font-black shrink-0" style={{ color }}>{h.amount}</p>
                   </div>
                   <p className="text-xs text-muted-foreground shrink-0">{h.year} · {h.chain}</p>
-                  <div className="flex-1 min-h-0 mt-2 rounded-lg border bg-card p-4 flex flex-col justify-center gap-1.5" style={{ borderColor: color + '40' }}>
+                  <div className="flex-1 min-h-0 mt-1.5 rounded-lg border bg-card p-3 flex flex-col justify-center gap-1" style={{ borderColor: color + '40' }}>
                     <p className="text-[10px] font-black uppercase tracking-widest" style={{ color }}>{t('bridgeHacks.whatWentWrong')}</p>
-                    <p className="text-base lg:text-lg text-foreground leading-snug">{h.method}</p>
+                    <p className="text-sm lg:text-base text-foreground leading-snug">{h.method}</p>
                   </div>
                 </motion.div>
               );
             })}
           </div>
           {/* Safety takeaway — closes the wrapped → bridges → hacks arc */}
-          <div className="shrink-0 mt-3 flex items-center gap-3 pl-4 pr-14 py-3 rounded-xl border-2" style={{ borderColor: '#39B54A80', backgroundColor: '#39B54A14' }}>
+          <div className="shrink-0 mt-3 flex items-center gap-3 pl-4 pr-14 py-2.5 rounded-xl border-2" style={{ borderColor: '#39B54A80', backgroundColor: '#39B54A14' }}>
             <ShieldCheck className="w-6 h-6 shrink-0 text-[#39B54A]" aria-hidden />
             <div className="min-w-0">
               <p className="text-[10px] font-black uppercase tracking-widest text-[#39B54A]">{t('bridgeHacks.takeawayLabel')}</p>
-              <p className="text-base lg:text-lg font-bold text-foreground leading-snug">{t('bridgeHacks.takeaway')}</p>
+              <p className="text-base font-bold text-foreground leading-snug">{t('bridgeHacks.takeaway')}</p>
             </div>
           </div>
           {kp('s4-bridge-hacks')}
