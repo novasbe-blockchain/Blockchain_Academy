@@ -18,6 +18,9 @@ const chapterShape = [
   { id: 's3-why' },
   { id: 's3-tradeoffs' },
   { id: 's3-usecases' },
+  { id: 's3-usecase-supply' },
+  { id: 's3-usecase-finance' },
+  { id: 's3-usecase-public' },
 
   { kind: 'group' as const, id: 'g-s3-arch' },
   { id: 's3-overview' },
@@ -37,6 +40,7 @@ const chapterShape = [
   { kind: 'group' as const, id: 'g-s3-fit' },
   { id: 's3-bestfits' },
   { id: 's3-vocab' },
+  { id: 's3-vocab-2' },
 
   { kind: 'group' as const, id: 'g-s3-wrap' },
   { id: 's3-quiz' },
@@ -203,7 +207,7 @@ function TradeoffsSlide() {
 // ─── s3-usecases ──────────────────────────────────────────────────────────────
 
 interface UseCaseExample { name: string; status: string; note: string; }
-interface UseCaseText { emoji: string; title: string; pain: string; change: string; examples: UseCaseExample[]; consortium: string; }
+interface UseCaseText { emoji: string; title: string; lead: string; pain: string; change: string; examples: UseCaseExample[]; consortium: string; keyPoint: string; }
 
 const USECASE_COLORS = ['#39B54A', '#6366f1', '#f59e0b'];
 
@@ -213,19 +217,36 @@ function statusColor(status: string) {
   return '#f59e0b';
 }
 
-function UseCasesSlide() {
+// Slide IDs for the three family slides, in the same order as `usecases.cases`.
+const USECASE_SLIDE_IDS = ['s3-usecase-supply', 's3-usecase-finance', 's3-usecase-public'] as const;
+
+function StatusPill({ status }: { status: string }) {
+  const c = statusColor(status);
+  return (
+    <span
+      className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap"
+      style={{ color: c, backgroundColor: c + '18' }}
+    >
+      {status}
+    </span>
+  );
+}
+
+/** Lead-in: names the three families and carries the section's key point. Detail lives on the family slides. */
+function UseCasesIntroSlide() {
   const { t } = useTranslation('blockchain-platforms/section-3');
   const cases = t('usecases.cases', { returnObjects: true }) as UseCaseText[];
   const hood = t('usecases.hood', { returnObjects: true }) as string[];
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
-      <div className="shrink-0 mb-4">
+      <div className="shrink-0 mb-5">
         <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('usecases.heading')}</h2>
         <p className="text-sm text-muted-foreground mt-1">{t('usecases.subtitle')}</p>
       </div>
 
-      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="flex-1 min-h-0 flex flex-col justify-center">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {cases.map((c, i) => {
           const color = USECASE_COLORS[i];
           return (
@@ -234,50 +255,191 @@ function UseCasesSlide() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1, duration: 0.3 }}
-              className="rounded-2xl border-2 p-4 flex flex-col gap-3 min-h-0"
+              className="rounded-2xl border-2 p-5 lg:p-6 flex flex-col gap-4"
               style={{ borderColor: color + '55', backgroundColor: color + '08' }}
             >
-              <div className="shrink-0 flex items-center gap-2.5">
-                <span className="text-3xl leading-none">{c.emoji}</span>
-                <div className="font-black text-base text-foreground leading-tight">{c.title}</div>
+              <div className="flex items-center gap-3">
+                <span
+                  className="size-7 rounded-full flex items-center justify-center text-white text-sm font-black shrink-0"
+                  style={{ backgroundColor: color }}
+                >
+                  {i + 1}
+                </span>
+                <span className="text-4xl leading-none">{c.emoji}</span>
               </div>
-
-              <div className="shrink-0">
-                <div className="text-[9px] font-black uppercase tracking-widest text-[#ED1C24]">{t('usecases.painLabel')}</div>
-                <p className="text-xs text-muted-foreground leading-snug mt-0.5">{c.pain}</p>
-              </div>
-
-              <div className="shrink-0">
-                <div className="text-[9px] font-black uppercase tracking-widest" style={{ color }}>{t('usecases.changeLabel')}</div>
-                <p className="text-xs text-foreground leading-snug mt-0.5">{c.change}</p>
-              </div>
-
-              <div className="flex-1 min-h-0 flex flex-col gap-1.5">
-                <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{t('usecases.examplesLabel')}</div>
+              <div className="font-black text-xl text-foreground leading-tight">{c.title}</div>
+              <p className="text-sm text-muted-foreground leading-relaxed">{c.lead}</p>
+              <div className="mt-auto flex flex-col gap-1.5 pt-3 border-t" style={{ borderColor: color + '30' }}>
+                <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('usecases.examplesLabel')}</div>
                 {c.examples.map(ex => (
-                  <div key={ex.name} className="rounded-lg border bg-card/60 px-2.5 py-1.5" style={{ borderColor: color + '30' }}>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-foreground">{ex.name}</span>
-                      <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full shrink-0" style={{ color: statusColor(ex.status), backgroundColor: statusColor(ex.status) + '18' }}>{ex.status}</span>
-                    </div>
-                    <div className="text-[11px] text-muted-foreground leading-snug mt-0.5">{ex.note}</div>
+                  <div key={ex.name} className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-foreground leading-tight">{ex.name}</span>
+                    <StatusPill status={ex.status} />
                   </div>
                 ))}
-              </div>
-
-              <div className="shrink-0 rounded-lg px-2.5 py-1.5 border-l-2" style={{ borderColor: color, backgroundColor: color + '12' }}>
-                <div className="text-[9px] font-black uppercase tracking-widest" style={{ color }}>{t('usecases.consortiumLabel')}</div>
-                <div className="text-[11px] text-muted-foreground leading-snug mt-0.5">{c.consortium}</div>
               </div>
             </motion.div>
           );
         })}
       </div>
+      </div>
 
-      <div className="shrink-0 mt-3 flex flex-col gap-2 lg:pr-20">
+      <div className="shrink-0 mt-4 flex flex-col gap-2 lg:pr-20">
         <KeyPointBar text={t('usecases.keyPoint')} />
         <UnderTheHood items={hood} />
       </div>
+    </div>
+  );
+}
+
+/** One enterprise family per slide: pain → what changes → who sits at the table, with the real networks alongside. */
+function UseCaseFamilySlide({ index }: { index: number }) {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const cases = t('usecases.cases', { returnObjects: true }) as UseCaseText[];
+  const c = cases[index];
+  const color = USECASE_COLORS[index];
+
+  return (
+    <div className="h-full flex flex-col p-6 lg:p-10">
+      <div className="shrink-0 mb-5 flex items-center gap-4">
+        <span className="text-5xl leading-none shrink-0">{c.emoji}</span>
+        <div className="min-w-0">
+          <div className="text-[11px] font-black uppercase tracking-widest" style={{ color }}>
+            {t('usecases.familyLabel', { n: index + 1, total: cases.length })}
+          </div>
+          <h2 className="text-2xl lg:text-3xl font-bold text-foreground leading-tight">{c.title}</h2>
+        </div>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-5 lg:gap-8">
+        {/* Left — the story: pain → change → consortium */}
+        <div className="flex flex-col gap-4 lg:justify-center min-h-0">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className="rounded-2xl border p-4 lg:p-5 border-[#ED1C24]/30"
+            style={{ backgroundColor: '#ED1C240a' }}
+          >
+            <div className="text-[11px] font-black uppercase tracking-widest text-[#ED1C24]">{t('usecases.painLabel')}</div>
+            <p className="text-base text-foreground leading-relaxed mt-1.5">{c.pain}</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1, duration: 0.3 }}
+            className="rounded-2xl border-2 p-4 lg:p-5"
+            style={{ borderColor: color + '55', backgroundColor: color + '0d' }}
+          >
+            <div className="text-[11px] font-black uppercase tracking-widest" style={{ color }}>{t('usecases.changeLabel')}</div>
+            <p className="text-base text-foreground leading-relaxed mt-1.5">{c.change}</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.3 }}
+            className="rounded-xl px-4 py-3 border-l-4"
+            style={{ borderColor: color, backgroundColor: color + '12' }}
+          >
+            <div className="text-[11px] font-black uppercase tracking-widest" style={{ color }}>{t('usecases.consortiumLabel')}</div>
+            <div className="text-sm text-foreground leading-relaxed mt-1">{c.consortium}</div>
+          </motion.div>
+        </div>
+
+        {/* Right — the real networks, including the closed ones */}
+        <div className="flex flex-col gap-3 lg:justify-center min-h-0">
+          <div className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">{t('usecases.examplesLabel')}</div>
+          {c.examples.map((ex, i) => (
+            <motion.div
+              key={ex.name}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 + i * 0.1, duration: 0.3 }}
+              className="rounded-2xl border bg-card p-4 lg:p-5 border-l-4"
+              style={{ borderLeftColor: statusColor(ex.status) }}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-lg font-black text-foreground leading-tight">{ex.name}</span>
+                <StatusPill status={ex.status} />
+              </div>
+              <div className="text-sm text-muted-foreground leading-relaxed mt-1.5">{ex.note}</div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <KeyPointBar text={c.keyPoint} className="shrink-0 mt-4 lg:mr-20" />
+    </div>
+  );
+}
+
+// ─── s3-vocab ─────────────────────────────────────────────────────────────────
+
+interface VocabRow { pub: string; fab: string; note: string; }
+interface VocabPart { tag: string; title: string; rows: VocabRow[]; keyPoint: string; }
+
+const VOCAB_PUB_COLOR = '#627EEA';
+const VOCAB_FAB_COLOR = '#0EA5E9';
+const VOCAB_COLS = 'grid grid-cols-2 lg:grid-cols-[minmax(0,5fr)_1.5rem_minmax(0,6fr)_minmax(0,9fr)] gap-x-4 lg:gap-x-5';
+
+/** Fabric ↔ public glossary as a scannable three-column table. Split across two slides (`part` 0 and 1). */
+function VocabSlide({ part }: { part: number }) {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const parts = t('vocab.parts', { returnObjects: true }) as VocabPart[];
+  const p = parts[part];
+
+  return (
+    <div className="h-full flex flex-col p-6 lg:p-10">
+      <div className="shrink-0 mb-4">
+        <div className="text-[11px] font-black uppercase tracking-widest" style={{ color: VOCAB_FAB_COLOR }}>
+          {p.tag} · {p.title}
+        </div>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('vocab.heading')}</h2>
+        <p className="text-sm text-muted-foreground mt-1 max-w-5xl">
+          {t('vocab.intro.a')}<strong className="text-foreground">{t('vocab.intro.strong')}</strong>{t('vocab.intro.b')}
+        </p>
+      </div>
+
+      <div className="flex-1 min-h-0 flex flex-col rounded-2xl border border-border bg-card overflow-hidden" role="table">
+        {/* Column headers */}
+        <div className={`${VOCAB_COLS} shrink-0 items-center px-4 lg:px-6 py-3 border-b border-border bg-muted/50`} role="row">
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest" style={{ color: VOCAB_PUB_COLOR }} role="columnheader">
+            <span className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: VOCAB_PUB_COLOR }} />
+            {t('vocab.pubLabel')}
+          </div>
+          <div className="hidden lg:block" aria-hidden />
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest" style={{ color: VOCAB_FAB_COLOR }} role="columnheader">
+            <span className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: VOCAB_FAB_COLOR }} />
+            {t('vocab.fabLabel')}
+          </div>
+          <div className="hidden lg:block text-xs font-black uppercase tracking-widest text-muted-foreground" role="columnheader">
+            {t('vocab.noteLabel')}
+          </div>
+        </div>
+
+        {/* Rows — equal height, so the table always fills the slide without scrolling */}
+        <div className="flex-1 min-h-0 grid auto-rows-fr divide-y divide-border" role="rowgroup">
+          {p.rows.map((row, i) => (
+            <motion.div
+              key={row.pub}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05, duration: 0.25 }}
+              className={`${VOCAB_COLS} items-center content-center gap-y-1 px-4 lg:px-6 py-2 min-h-0`}
+              role="row"
+            >
+              <div className="text-base lg:text-lg font-bold text-foreground leading-tight" role="cell">{row.pub}</div>
+              <div className="hidden lg:block text-lg font-bold text-muted-foreground/60 text-center" aria-hidden>→</div>
+              <div className="text-base lg:text-lg font-bold leading-tight" style={{ color: VOCAB_FAB_COLOR }} role="cell">{row.fab}</div>
+              <div className="col-span-2 lg:col-span-1 text-sm text-muted-foreground leading-snug" role="cell">{row.note}</div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <KeyPointBar text={p.keyPoint} className="shrink-0 mt-4 lg:mr-20" />
     </div>
   );
 }
@@ -932,7 +1094,6 @@ export function BP_Section3() {
   const productionColors = ['#39B54A', '#ED1C24', '#6366f1'];
   const productionCaseList = productionCases.map((c, i) => ({ ...c, statusColor: productionColors[i] }));
   const bestfitCases = t('bestfits.cases', { returnObjects: true }) as { emoji: string; name: string; why: string; example: string }[];
-  const vocabRows = t('vocab.rows', { returnObjects: true }) as { pub: string; fab: string; note: string }[];
   const quizOptions = t('quiz.options', { returnObjects: true }) as { text: string }[];
   const quiz2Options = t('quiz2.options', { returnObjects: true }) as { text: string }[];
   const quiz3Options = t('quiz3.options', { returnObjects: true }) as { text: string }[];
@@ -972,8 +1133,15 @@ export function BP_Section3() {
 
         {/* ═══════ ENTERPRISE USE CASES ═══════ */}
         <div id="s3-usecases" className="h-full">
-          <UseCasesSlide />
+          <UseCasesIntroSlide />
         </div>
+
+        {/* ═══════ ENTERPRISE USE CASES — one slide per family ═══════ */}
+        {USECASE_SLIDE_IDS.map((id, i) => (
+          <div key={id} id={id} className="h-full">
+            <UseCaseFamilySlide index={i} />
+          </div>
+        ))}
 
         {/* ═══════ FABRIC OVERVIEW ═══════ */}
         <div id="s3-overview" className="h-full flex flex-col">
@@ -1112,35 +1280,11 @@ export function BP_Section3() {
         </div>
 
         {/* ═══════ FABRIC ↔ PUBLIC-CHAIN GLOSSARY ═══════ */}
-        <div id="s3-vocab" className="h-full flex flex-col p-5 lg:p-8">
-          <div className="shrink-0 mb-3">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('vocab.heading')}</h2>
-            <p className="text-sm text-muted-foreground max-w-3xl">
-              {t('vocab.intro.a')}<strong className="text-foreground">{t('vocab.intro.strong')}</strong>{t('vocab.intro.b')}
-            </p>
-          </div>
-
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3 overflow-y-auto">
-            {vocabRows.map(row => (
-              <div key={row.pub} className="rounded-xl border bg-card p-3 flex flex-col gap-1.5">
-                <div className="grid grid-cols-2 gap-2 items-start">
-                  <div>
-                    <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: '#627EEA' }}>{t('vocab.pubLabel')}</div>
-                    <div className="text-sm font-bold text-foreground mt-0.5">{row.pub}</div>
-                  </div>
-                  <div>
-                    <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: '#0EA5E9' }}>{t('vocab.fabLabel')}</div>
-                    <div className="text-sm font-bold text-foreground mt-0.5">{row.fab}</div>
-                  </div>
-                </div>
-                <div className="text-[11px] text-muted-foreground leading-snug border-t border-border pt-1.5">
-                  <span className="text-[#0EA5E9] font-bold mr-1">↔</span>{row.note}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <KeyPointBar text={t('vocab.keyPoint')} className="shrink-0 mt-3 lg:mr-20" />
+        <div id="s3-vocab" className="h-full">
+          <VocabSlide part={0} />
+        </div>
+        <div id="s3-vocab-2" className="h-full">
+          <VocabSlide part={1} />
         </div>
 
         {/* ═══════ QUIZ ═══════ */}

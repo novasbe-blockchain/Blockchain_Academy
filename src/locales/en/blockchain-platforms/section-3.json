@@ -12,6 +12,9 @@
     "s3-why": "Why Permissioned?",
     "s3-tradeoffs": "Public vs Permissioned",
     "s3-usecases": "Enterprise Use Cases",
+    "s3-usecase-supply": "Supply Chain",
+    "s3-usecase-finance": "Trade Finance",
+    "s3-usecase-public": "Public Records",
     "s3-overview": "Fabric Overview",
     "s3-channels": "Channels",
     "s3-txflow": "Transaction Flow",
@@ -20,7 +23,8 @@
     "s3-production": "In Production",
     "s3-comparison": "ETH vs Fabric",
     "s3-bestfits": "🎯 Best Fits",
-    "s3-vocab": "🧩 Fabric ↔ Public-chain glossary",
+    "s3-vocab": "Glossary: identity",
+    "s3-vocab-2": "Glossary: consensus",
     "s3-quiz": "Quiz",
     "s3-takeaways": "Takeaways"
   },
@@ -74,6 +78,7 @@
   "usecases": {
     "heading": "Where permissioned chains earn their keep",
     "subtitle": "Three families of enterprise use cases, with the real networks, including the ones that closed and why.",
+    "familyLabel": "Use-case family {{n}} of {{total}}",
     "painLabel": "Pain today",
     "changeLabel": "What a shared ledger changes",
     "examplesLabel": "Real networks",
@@ -82,6 +87,7 @@
       {
         "emoji": "🚚",
         "title": "Supply chain & provenance",
+        "lead": "Many companies handle the same goods, and each keeps its own records.",
         "pain": "Every partner keeps its own records. A recall means phoning seven systems; a disputed invoice means weeks of reconciliation.",
         "change": "One timeline every partner writes to and can prove — with selective visibility so prices stay between the pairs concerned.",
         "examples": [
@@ -89,11 +95,13 @@
           { "name": "Walmart Canada DL Freight", "status": "live", "note": "Freight invoices on Fabric — disputes fell from ~70% of invoices to under 2%" },
           { "name": "Maersk TradeLens", "status": "closed 2022", "note": "Rival carriers would not feed data to a Maersk-branded network" }
         ],
-        "consortium": "Retailer or shipper as convener · suppliers · carriers · inspectors"
+        "consortium": "Retailer or shipper as convener · suppliers · carriers · inspectors",
+        "keyPoint": "A shared timeline works when a convener brings its own partners; a network branded by one competitor keeps its rivals away."
       },
       {
         "emoji": "🏦",
         "title": "Trade finance & interbank",
+        "lead": "Many banks check the same deal, each from its own copy of the paperwork.",
         "pain": "Letters of credit and invoices still travel as documents. Each bank re-checks the same deal, and fraud hides in the gaps between them.",
         "change": "Every bank sees the same state of the deal, and payment conditions execute as chaincode when the documents arrive.",
         "examples": [
@@ -101,11 +109,13 @@
           { "name": "Contour · Marco Polo", "status": "closed 2023", "note": "Corda-based rivals — the same network-effect problem" },
           { "name": "JPMorgan Kinexys (ex-Onyx)", "status": "live", "note": "Permissioned Ethereum — works because one bank owns it and its own clients use it" }
         ],
-        "consortium": "Banks · corporate buyers and sellers · insurers · logistics"
+        "consortium": "Banks · corporate buyers and sellers · insurers · logistics",
+        "keyPoint": "In trade finance the technology worked; the consortia closed when the banks stopped funding them, and the survivor has a single owner."
       },
       {
         "emoji": "🏛️",
         "title": "Health, identity & public records",
+        "lead": "Many institutions re-verify the same facts because no one trusts another's database.",
         "pain": "Institutions re-verify the same facts — a diploma, a prescription, a licence — because nobody trusts anyone else's database.",
         "change": "One verifiable record, issued once and checked anywhere, with the regulator on the channel from day one.",
         "examples": [
@@ -113,7 +123,8 @@
           { "name": "Change Healthcare", "status": "launched 2018", "note": "US claims network on Fabric — claim status shared across payers and providers" },
           { "name": "MediLedger", "status": "live", "note": "US drug serialisation (DSCSA) on a permissioned network run by pharma and wholesalers" }
         ],
-        "consortium": "Regulator or public body as convener · institutions · service providers"
+        "consortium": "Regulator or public body as convener · institutions · service providers",
+        "keyPoint": "Public records fit a permissioned ledger because a regulator or public body can convene everyone and stay on the network."
       }
     ],
     "hood": ["channels", "chaincode", "endorsement policy", "private data collections"],
@@ -324,21 +335,35 @@
     },
     "pubLabel": "Public blockchain",
     "fabLabel": "Hyperledger Fabric",
-    "rows": [
-      { "pub": "Wallet / EOA", "fab": "MSP-issued identity (X.509 cert)", "note": "Your \"account\" in Fabric is a certificate issued by the Membership Service Provider (MSP) for your org. The CA replaces the public-key infra you do yourself in a wallet." },
-      { "pub": "Public/private key pair", "fab": "X.509 cert + private key in MSP", "note": "Same crypto, different distribution. CA issues, MSP revokes. The wallet primitive moves into a controlled enterprise PKI." },
-      { "pub": "Smart contract", "fab": "Chaincode", "note": "A program that runs against the world state and emits state writes. Go / Node.js / Java instead of Solidity, but the role is identical." },
-      { "pub": "Address", "fab": "Identity hash / MSP ID + cert subject", "note": "A canonical pointer to \"who you are\" on the chain. Fabric attaches it to your org rather than to a self-sovereign key." },
-      { "pub": "Token (ERC-20 / ERC-721)", "fab": "Token chaincode (Fabric Token SDK)", "note": "No native token in Fabric. You write a chaincode that tracks balances or asset records yourself, often using the official Token SDK template." },
-      { "pub": "Gas / Tx fee", "fab": "— none (permissioned)", "note": "Fabric has no economic spam pressure — participants are vetted. Compute is paid for off-chain by the consortium that runs the network." },
-      { "pub": "Block", "fab": "Block", "note": "Same thing. The Orderer assembles transactions into blocks and broadcasts them to channel members." },
-      { "pub": "Miner / Validator", "fab": "Endorser + Orderer", "note": "Fabric splits the role: Endorsers simulate + sign tx proposals; Orderers (Raft/BFT cluster) put them in deterministic order. No PoW, no PoS." },
-      { "pub": "Consensus (PoW / PoS)", "fab": "Raft (CFT) or BFT ordering service", "note": "Crash-fault-tolerant ordering by default. BFT ordering exists for stronger trust assumptions. No PoW." },
-      { "pub": "Mempool", "fab": "Tx proposal → endorsement → orderer", "note": "Tx is first proposed to endorsers, then submitted to the orderer for sequencing. There is no global mempool — Fabric never had a fee market." },
-      { "pub": "Layer 2 / Sidechain", "fab": "Channel (private sub-ledger)", "note": "A channel is a self-contained ledger with its own members, chaincode, and history — completely invisible to non-members on the same network." },
-      { "pub": "On-chain governance / DAO", "fab": "Channel config update (consortium vote)", "note": "Members vote off-chain or via signed config transactions. Fabric never adopted on-chain token-vote governance." }
-    ],
-    "keyPoint": "Fabric reuses the mechanisms you already know under new names; relearn the vocabulary, not the cryptography."
+    "noteLabel": "What changes",
+    "parts": [
+      {
+        "tag": "Part 1 of 2",
+        "title": "Identity, accounts & assets",
+        "rows": [
+          { "pub": "Wallet / EOA", "fab": "MSP-issued identity (X.509 cert)", "note": "Your account is a certificate issued by your organisation, not a key you create yourself." },
+          { "pub": "Public/private key pair", "fab": "X.509 cert + private key in MSP", "note": "Same cryptography. A certificate authority issues the certificate and can revoke it." },
+          { "pub": "Address", "fab": "Identity hash / MSP ID + cert subject", "note": "Who you are on the ledger is tied to your organisation, not to a self-made key." },
+          { "pub": "Smart contract", "fab": "Chaincode", "note": "Same role: a program that updates the shared ledger. Written in Go, JavaScript or Java, not Solidity." },
+          { "pub": "Token (ERC-20 / ERC-721)", "fab": "Token chaincode (Fabric Token SDK)", "note": "No native token. Balances and assets are records kept by chaincode you write." },
+          { "pub": "Gas / Tx fee", "fab": "— none (permissioned)", "note": "Members are vetted, so no fee is needed to deter spam. The consortium pays for the nodes." }
+        ],
+        "keyPoint": "Fabric reuses the mechanisms you already know under new names; relearn the vocabulary, not the cryptography."
+      },
+      {
+        "tag": "Part 2 of 2",
+        "title": "Blocks, consensus & governance",
+        "rows": [
+          { "pub": "Block", "fab": "Block", "note": "Same thing. The orderer assembles transactions into blocks and sends them to channel members." },
+          { "pub": "Miner / Validator", "fab": "Endorser + Orderer", "note": "The job is split: endorsers simulate and sign, orderers put transactions in order." },
+          { "pub": "Consensus (PoW / PoS)", "fab": "Raft (CFT) or BFT ordering service", "note": "Raft survives crashed nodes; BFT also survives dishonest ones. No mining, no staking." },
+          { "pub": "Mempool", "fab": "Tx proposal → endorsement → orderer", "note": "No public waiting room and no fee market: a transaction is endorsed first, then ordered." },
+          { "pub": "Layer 2 / Sidechain", "fab": "Channel (private sub-ledger)", "note": "The closest analogy: a separate ledger with its own members, invisible to everyone else." },
+          { "pub": "On-chain governance / DAO", "fab": "Channel config update (consortium vote)", "note": "Rule changes are configuration transactions signed by member organisations, not token votes." }
+        ],
+        "keyPoint": "Fabric splits the validator's job in two: endorsers check a transaction, orderers sequence it, and the consortium sets the rules."
+      }
+    ]
   },
   "quiz": {
     "question": "In Hyperledger Fabric, three pharmaceutical companies (PharmaA, PharmaB, and a Hospital) are on the same network. PharmaA and PharmaB want to share pricing data that the Hospital must NOT see. What Fabric feature enables this?",
