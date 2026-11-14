@@ -480,6 +480,15 @@
     "subtitleB": " agrupam milhares de transações off-chain e publicam uma única atualização comprimida na L1 — herdando a sua segurança.",
     "analogyLabel": "Em linguagem simples: ",
     "analogy": "um rollup é como uma cozinha que recebe 1 000 pedidos e entrega à Ethereum um único talão-resumo. A L1 verifica o resumo, não cada pedido.",
+    "viz": {
+      "aria": "Diagrama: milhares de transações na Layer 2 são agrupadas e comprimidas numa única atualização, publicada uma só vez num único bloco da Ethereum.",
+      "l2": "L2 · milhares de transações",
+      "batch": "1 lote",
+      "batchSub": "comprimido + state root",
+      "post": "publicado uma vez",
+      "l1": "L1 · Ethereum",
+      "block": "Bloco da L1"
+    },
     "howHeading": "Como funciona um rollup",
     "steps": [
       { "label": "Os utilizadores transacionam na L2", "detail": "Envias uma transação para o rollup — mesma carteira, mesma experiência. Confirmada em ~1–2 segundos. Taxas: cêntimos." },
