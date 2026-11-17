@@ -3,7 +3,7 @@
     "g-s4-problem": "The Problem",
     "g-s4-ways": "Three Ways to Connect",
     "g-s4-l0": "Layer 0",
-    "g-s4-bridges": "Bridge Security",
+    "g-s4-bridges": "Bridges in Depth",
     "g-s4-cosmos": "Cosmos",
     "g-s4-xrp": "XRP Ledger",
     "g-s4-layers": "The Stack",
@@ -20,10 +20,12 @@
     "s4-layer0": "Layer 0: Concept",
     "s4-layer0-2": "Layer 0: Platforms",
     "s4-wrapped": "Wrapped Tokens",
-    "s4-bridges": "Bridge Security",
+    "s4-bridges": "How a Bridge Works",
+    "s4-bridge-risk": "Bridge Risk",
     "s4-bridge-hacks": "Bridge Hacks",
     "s4-cosmos": "Cosmos",
-    "s4-xrp": "XRP Ledger",
+    "s4-xrp": "XRPL: What It Is",
+    "s4-xrp-how": "XRPL: How It Works",
     "s4-layers": "L0 · L1 · L2",
     "s4-quiz": "Quiz",
     "s4-takeaways": "Takeaways"
@@ -257,44 +259,89 @@
   },
   "layer02": {
     "heading": "Layer 0: Known Platforms & Trade-offs",
-    "subtitle": "Three Layer 0 networks, and how the model compares with Cosmos's sovereign chains.",
+    "subtitle": "Four networks usually called Layer 0, and the one choice that separates them: rent security or build your own.",
     "platformsLabel": "Known Layer 0 platforms",
     "platforms": [
-      { "name": "Polkadot", "tagline": "Relay Chain + Parachains · XCM native messaging · Coretime model (2024)" },
-      { "name": "Avalanche", "tagline": "Primary Network (X/P/C-Chain) + sovereign Avalanche L1s · Warp messaging" },
-      { "name": "Babylon", "tagline": "Uses Bitcoin staking to provide shared security to any PoS chain — no new token needed" }
+      { "name": "Polkadot", "tagline": "Relay Chain validators secure every parachain; XCM is the built-in messaging." },
+      { "name": "Babylon", "tagline": "Bitcoin holders stake BTC to help secure other proof-of-stake chains — security borrowed from Bitcoin." },
+      { "name": "Avalanche", "tagline": "Primary Network plus sovereign Avalanche L1s (formerly subnets) with their own validators; Warp messaging between them." },
+      { "name": "Cosmos", "tagline": "Cosmos SDK chains (zones) with their own validators, linked by IBC; the Hub can lend security as an option." }
     ],
+    "modelTags": {
+      "shared": "Shared security",
+      "sovereign": "Sovereign"
+    },
     "tradeoffLabel": "The design trade-off",
-    "l0ModelTitle": "Layer 0 model",
-    "l0ModelBody1": "shared security on day 1",
-    "l0ModelBody2": "native cross-chain messaging",
-    "l0ModelBody3": "chains must follow L0 rules",
-    "cosmosModelTitle": "Cosmos model",
-    "cosmosModelBody1": "full sovereignty per chain",
-    "cosmosModelBody2": "any consensus, any VM, any rules",
-    "cosmosModelBody3": "each chain bootstraps own validators"
+    "models": [
+      { "title": "Rent security", "sub": "Shared-security model", "pros": ["Secure from day one", "Messaging between members is built in"], "con": "Must follow the Layer 0's rules and pay it for security", "examples": "Polkadot parachains · Babylon-secured chains" },
+      { "title": "Build your own", "sub": "Sovereign model", "pros": ["Full control: own rules, fees and upgrades", "Any design — no landlord"], "con": "Must recruit and pay its own validators", "examples": "Cosmos zones · Avalanche L1s" }
+    ],
+    "examplesLabel": "Who works this way",
+    "spectrum": {
+      "left": "More shared security",
+      "right": "More sovereignty"
+    },
+    "notL0Label": "Name trap",
+    "notL0": "LayerZero is not a Layer 0: it is a messaging protocol between existing chains, closer to a bridge."
   },
   "bridges": {
-    "heading": "Bridges — useful, and the most hacked component in crypto",
-    "subA": "Roughly ",
-    "subAmount": "$2B",
-    "subB": " was stolen from bridges in 2022 alone — about two-thirds of everything stolen in crypto that year.",
-    "vault": {
+    "heading": "What a bridge is — and how it works",
+    "subtitle": "A bridge lets value from one chain be used on another. Nothing actually crosses: the original is locked on one side and a copy is issued on the other.",
+    "definitionLabel": "Definition",
+    "definitionTerm": "Cross-chain bridge",
+    "definition": "A service that holds an asset on one chain and issues a matching \"wrapped\" copy on another, so the value can be used there.",
+    "analogyLabel": "Think of it as",
+    "analogy": "A courier puts your luggage in storage and hands you a claim ticket. You travel with the ticket; the luggage never leaves. Hand the ticket back and you get the luggage.",
+    "stepsLabel": "Lock-and-mint, step by step",
+    "steps": [
+      { "title": "Lock", "desc": "You send 1 ETH to the bridge's vault on chain A." },
+      { "title": "Approve", "desc": "The bridge's signers see the deposit and approve it." },
+      { "title": "Mint", "desc": "Chain B issues 1 wETH to you: your claim ticket." },
+      { "title": "Burn to return", "desc": "Burn the wETH on chain B and the signers release your 1 ETH." }
+    ],
+    "flow": {
       "label": "How a lock-and-mint bridge works",
       "chainA": "Chain A",
       "chainB": "Chain B",
-      "locked": "locked in one vault",
-      "minted": "copies (wrapped) issued",
-      "caption": "Every user adds to the same vault. The bigger it gets, the bigger the prize — that is the honeypot."
+      "you": "You",
+      "vault": "Bridge vault",
+      "locked": "1 ETH locked",
+      "operator": "Bridge operator",
+      "operatorNote1": "a few signers",
+      "operatorNote2": "approve each move",
+      "minted": "1 wETH",
+      "mintedNote": "wrapped copy = claim ticket",
+      "back": "Way back: burn the copy → signers release the original",
+      "stays": "the real coin never leaves chain A",
+      "play": "▶ Play",
+      "pause": "⏸ Pause"
     },
-    "honestLabel": "In practice",
-    "honest": "Using a bridge is a trust decision, not a technical detail: you are trusting whoever controls the vault. Prefer a chain's official (canonical) bridge, and move only what you need.",
     "hacks": [
       { "name": "Ronin Bridge", "amount": "$625M", "year": "2022", "chain": "Axie Infinity ↔ Ethereum", "method": "5 of the 9 signer keys were stolen — enough to approve any withdrawal from the vault." },
       { "name": "Wormhole Bridge", "amount": "$320M", "year": "2022", "chain": "Solana ↔ Ethereum", "method": "A signature check could be skipped — the attacker issued 120,000 wrapped ETH backed by nothing." },
       { "name": "Nomad Bridge", "amount": "$190M", "year": "2022", "chain": "Multi-chain", "method": "A setup mistake made every message look valid. Hundreds of copycats emptied it within hours." },
       { "name": "Harmony Horizon", "amount": "$100M", "year": "2022", "chain": "Harmony ↔ Ethereum", "method": "Only 2 of 5 signers were needed — two stolen keys were enough." }
-    ],
+    ]
+  },
+  "bridgeRisk": {
+    "heading": "Bridges — useful, and the most hacked component in crypto",
+    "subA": "Roughly ",
+    "subAmount": "$2B",
+    "subB": " was stolen from bridges in 2022 alone — about half of everything stolen in crypto that year.",
+    "vault": {
+      "label": "The honeypot: one vault backs every copy",
+      "chainA": "Chain A",
+      "chainB": "Chain B",
+      "locked": "locked in one vault",
+      "grows": "+ every new user ↑",
+      "backs": "backs",
+      "minted": "wrapped copies issued",
+      "keys": "a few keys open it",
+      "drained": "Vault drained → every copy is a ticket to nothing",
+      "caption": "Every user adds to the same vault. The bigger it gets, the bigger the prize — that is the honeypot."
+    },
+    "honestLabel": "In practice",
+    "honest": "Using a bridge is a trust decision, not a technical detail: you are trusting whoever controls the vault. Prefer a chain's official (canonical) bridge, and move only what you need.",
     "dangerLabel": "Why bridges are structurally risky",
     "dangers": [
       { "icon": "🍯", "title": "One vault, everyone's coins", "desc": "The locked assets sit in a single contract. A bridge holding $500M is a $500M prize for whoever finds a bug." },
@@ -305,7 +352,7 @@
     "safer": [
       { "title": "Chains verify each other (IBC)", "desc": "No operator, no single vault — each chain checks the other's proofs. No known loss of funds from an IBC-protocol exploit so far." },
       { "title": "Official (canonical) bridges", "desc": "Ethereum rollups' own bridges (Arbitrum, Optimism, Base) are secured by the rollup's proof system, not by a separate group of signers." },
-      { "title": "Rate limits & circuit breakers", "desc": "Cap how much can leave per hour. Nomad was drained in minutes — a limit would have saved most of it." }
+      { "title": "Rate limits & circuit breakers", "desc": "Cap how much can leave per hour. Nomad was drained within hours — a limit would have saved most of it." }
     ]
   },
   "wrapped": {
@@ -405,58 +452,124 @@
   "xrp": {
     "badgePartner": "Partner platform",
     "heading": "XRP Ledger — a purpose-built settlement rail",
-    "pillars": [
-      { "label": "Native ops", "title": "DEX & payments are first-class", "body": "An order-book DEX has been built into the protocol since 2012; a native AMM (XLS-30) followed in 2024. The rule-set is fixed." },
-      { "label": "Federated validation", "title": "UNL — operators pick validators", "body": "Anyone can use the chain, but each node trusts a Unique Node List of validators; a round closes when 80% of them agree." },
-      { "label": "Cross-chain reach", "title": "One API to 50+ chains", "body": "Axelar lets XRPL apps send a payment and a message to EVM, Cosmos and other chains in one call, without a bridge contract per pair." }
+    "subtitle": "A public blockchain launched in 2012 to do one job well: move and exchange value. It is not a general smart-contract platform.",
+    "compareLabel": "Two ways to design a chain",
+    "general": {
+      "title": "General-purpose platform",
+      "example": "Ethereum, Solana",
+      "body": "A blank computer. Every feature is a smart contract that someone wrote and deployed.",
+      "items": ["Token contract", "Exchange contract", "Lending contract", "Game contract", "…anything"],
+      "foot": "Flexible — but every contract is new code that can have bugs."
+    },
+    "rail": {
+      "title": "Purpose-built rail",
+      "example": "XRP Ledger",
+      "body": "A fixed menu. The financial features are part of the protocol itself.",
+      "items": ["Payment", "Issued token", "Exchange (DEX)", "AMM pool", "Escrow"],
+      "foot": "Limited menu — but fast, cheap and the same for everyone."
+    },
+    "analogyLabel": "Analogy",
+    "analogy": "Ethereum is a kitchen: you can cook anything, and every dish is someone's own recipe. XRPL is a vending machine: a short fixed menu, served in seconds, the same way every time.",
+    "whyLabel": "Why it is different",
+    "why": [
+      { "emoji": "🧱", "title": "Payments and trading are built in", "desc": "An order-book exchange has been part of the protocol since 2012, and a native AMM since 2024. No contract to deploy or audit." },
+      { "emoji": "⚡", "title": "Fast and cheap by design", "desc": "A payment is final in 3–5 seconds and costs a fraction of a cent. The tiny fee is destroyed, which deters spam; there is no fee auction." },
+      { "emoji": "⚖️", "title": "What you give up", "desc": "No general smart contracts on the main ledger. Richer logic runs on side networks such as the XRPL EVM sidechain (2025)." }
     ],
-    "designLabel": "How it is built",
-    "design": [
-      { "emoji": "⚡", "title": "Fast & cheap by design", "desc": "3–5 s finality and a few hundred tx/s in practice. Each transaction burns a tiny amount of XRP (~$0.0002), which deters spam; there is no fee market." },
-      { "emoji": "🔗", "title": "Trust Lines / IOUs", "desc": "Issued tokens (RLUSD, other stablecoins, tokenised assets) are balances on a Trust Line, a permission the holder grants the issuer." },
-      { "emoji": "🧩", "title": "Smart-contract logic lives off the base layer", "desc": "XRPL mainnet has no general smart contracts by design. Richer logic runs on side networks: the XRPL EVM sidechain (Solidity, 2025) and Xahau (Hooks)." },
-      { "emoji": "🏦", "title": "Institutional use", "desc": "RLUSD, an NYDFS-regulated stablecoin (Dec 2024), settles on XRPL and Ethereum. Ripple's payment network uses XRP as a bridge currency, and CBDC pilots (Bhutan, Palau, Colombia) run on XRPL technology." }
+    "stats": [
+      { "metric": "2012", "label": "live since" },
+      { "metric": "3–5 s", "label": "to final" },
+      { "metric": "< 1¢", "label": "per transaction" },
+      { "metric": "0", "label": "miners" }
+    ]
+  },
+  "xrpHow": {
+    "heading": "How XRPL works — agreement by vote, not by mining",
+    "subtitle": "No miners and no staking. A set of known validators votes on each batch of transactions, every few seconds.",
+    "consensusLabel": "One round of consensus",
+    "svg": {
+      "unl": "Trusted validators (UNL: ~35 in the default list)",
+      "agree": "agree",
+      "threshold": "80% needed",
+      "open": "Voting…",
+      "closed": "Ledger validated ✓",
+      "ledger": "Ledger",
+      "caption": "Each node listens to a list of validators it trusts. When 80% of them agree on the same set of transactions, the ledger closes — every 3–5 seconds. Below 80%, the network pauses rather than splits."
+    },
+    "steps": [
+      { "title": "Propose", "desc": "Validators share the transactions they have seen." },
+      { "title": "Vote", "desc": "They compare and vote in rounds until they converge." },
+      { "title": "Close", "desc": "At 80% agreement the ledger is final. No rewards, no mining." }
     ],
-    "honestTitle": "What you give up",
-    "honestBody": "A smaller smart-contract surface than the EVM, and federated validation: anyone can run a node, but the default validator list ships with the software. The bet is payments, tokenised assets and cross-chain settlement, not general-purpose apps."
+    "usesLabel": "What it is used for",
+    "uses": [
+      { "emoji": "🌍", "title": "Cross-border payments", "desc": "XRP acts as a bridge currency: euros → XRP → pesos in seconds, without pre-funded bank accounts abroad." },
+      { "emoji": "💵", "title": "Stablecoins and tokenised assets", "desc": "Issuers put tokens on the ledger, such as RLUSD, a New York-regulated dollar stablecoin (Dec 2024). You hold one by opening a Trust Line to its issuer." },
+      { "emoji": "🏛️", "title": "Institutional pilots", "desc": "Central-bank digital currency pilots in Bhutan, Palau and Colombia run on XRPL technology (private versions)." },
+      { "emoji": "🔗", "title": "Reaching other chains", "desc": "Through Axelar, XRPL apps send a payment and a message to 50+ chains in one call; Solidity apps run on the XRPL EVM sidechain." }
+    ],
+    "honestTitle": "The trade-off",
+    "honestBody": "Anyone can run a validator, but most nodes use the default published list. You trust that list not to collude — a different bet from proof of work or proof of stake."
   },
   "layers": {
     "heading": "The Layers: L0 · L1 · L2",
-    "subtitle": "Three layers, three jobs. Read the stack from the bottom up.",
-    "stack": [
-      { "id": "L2", "name": "Layer 2", "role": "Scale · low fees", "line": "Runs transactions off an L1, then settles the result on it.", "chains": ["Arbitrum", "Optimism", "Base", "Starknet", "zkSync"] },
-      { "id": "L1", "name": "Layer 1", "role": "Security · settlement", "line": "The base chain: its own validators, its own final record.", "chains": ["Ethereum", "Bitcoin", "Solana"] },
-      { "id": "L0", "name": "Layer 0", "role": "Shared security · interop", "line": "A foundation that many chains plug into and talk through.", "chains": ["Polkadot", "Cosmos", "Avalanche Primary Network"] }
-    ],
-    "l0Note": "Optional: Bitcoin, Ethereum and Solana run without a Layer 0.",
-    "chart": {
-      "title": "How each layer scales",
-      "aria": "Chart comparing how each layer scales: an L1 is one secure lane at roughly 15 to 30 transactions per second on Ethereum; an L2 stacks a much longer lane of thousands of transactions per second on top of it; an L0 adds lanes side by side, one per connected chain.",
-      "axis": "capacity → (not to scale)",
-      "l1": "one secure lane",
-      "l1Value": "Ethereum: ~15–30 tx/s · fees in dollars",
-      "l2": "a longer lane on top",
-      "l2Value": "rollups: thousands of tx/s · fees in cents",
-      "l0": "more lanes, side by side",
-      "l0Value": "every connected chain adds its own capacity"
+    "subtitle": "L2s stack on an L1; some L1s stand on a shared Layer 0.",
+    "recap": "Section 02 · Rollups & L2s",
+    "aria": "Diagram of the layer stack. Bitcoin and Ethereum are Layer 1 chains with no Layer 0 underneath; Lightning, Stacks and Rootstock sit on Bitcoin, and Arbitrum, Base, Optimism and zkSync sit on Ethereum, settling their results on it. Three other chains stand on a shared Layer 0 that gives them security and messaging. Moving dots show transactions: slow on the L1s, fast on the L2s.",
+    "roles": {
+      "L2": "scale",
+      "L1": "secure",
+      "L0": "connect"
     },
-    "examplesLabel": "Three chains, placed on the stack",
-    "examples": [
-      { "name": "Starknet", "layer": "L2", "line": "Starknet uses ZK for cheap verification, not secrecy." },
-      { "name": "Polkadot", "layer": "L0", "line": "Polkadot rents out security; parachains skip recruiting validators but live by the Relay Chain's rules." },
-      { "name": "Avalanche", "layer": "L0", "line": "Avalanche sells sovereign lanes with shared tooling; a custom L1 is only as secure as its own validators." }
-    ],
-    "recap": "Section 02 · Rollups & L2s"
+    "svg": {
+      "btcSub": "~7 tx/s · final in ~60 min",
+      "ethSub": "~15–30 tx/s · final in ~13 min",
+      "btcL2": [
+        { "name": "Lightning", "sub": "payments" },
+        { "name": "Stacks", "sub": "apps" },
+        { "name": "Rootstock", "sub": "sidechain" }
+      ],
+      "ethL2": [
+        { "name": "Arbitrum", "sub": "optimistic" },
+        { "name": "Base", "sub": "optimistic" },
+        { "name": "Optimism", "sub": "optimistic" },
+        { "name": "zkSync", "sub": "ZK" }
+      ],
+      "appChains": [
+        { "name": "Chain A", "sub": "DeFi" },
+        { "name": "Chain B", "sub": "games" },
+        { "name": "Chain C", "sub": "payments" }
+      ],
+      "settle": "settles ↓",
+      "secures": "secures ↑",
+      "noL0Title": "No Layer 0 underneath",
+      "noL0Sub": "Bitcoin and Ethereum secure themselves, with their own miners and validators",
+      "l0Title": "LAYER 0 — shared foundation",
+      "l0Sub": "security and messaging for every chain plugged in",
+      "l0Examples": "Polkadot · Avalanche · Cosmos",
+      "legendTx": "transactions (faster dots = more per second)",
+      "legendBatch": "result settling on the L1",
+      "legendMsg": "message crossing through Layer 0"
+    },
+    "speed": {
+      "title": "Speed at each layer (not to scale)",
+      "items": [
+        { "layer": "L1", "name": "Bitcoin", "value": "~7 tx/s", "note": "final in ~60 min" },
+        { "layer": "L1", "name": "Ethereum", "value": "~15–30 tx/s", "note": "final in ~13 min" },
+        { "layer": "L2", "name": "Rollups", "value": "100s–1,000s tx/s", "note": "fees in cents" },
+        { "layer": "L0", "name": "Layer 0", "value": "one lane per chain", "note": "capacity grows with each chain" }
+      ]
+    }
   },
   "quiz": {
-    "question": "Cross-chain bridges have been responsible for the largest hacks in crypto history — Ronin ($625M), Wormhole ($320M), Nomad ($190M). What architectural property makes bridges such high-value targets?",
+    "question": "You send 1 ETH through a lock-and-mint bridge and receive 1 wETH on another chain. A month later hackers empty the bridge's vault. What are you holding now?",
     "options": [
-      "Bridges use proof-of-authority consensus controlled by a single company, making them easy to corrupt.",
-      "Bridges require KYC verification, creating a centralized identity database attackers can exploit.",
-      "Bridges concentrate large amounts of locked assets in a single smart contract on one chain while issuing representations on another — creating a honeypot with a single point of failure.",
-      "Bridges are slower than direct transactions, giving attackers more time to execute front-running attacks during the transfer window."
+      "1 ETH — the bridge moved your coin across, so it is safe on the new chain.",
+      "1 wETH that the new chain's validators must replace, because they approved the mint.",
+      "1 wETH that is a claim on an empty vault — a ticket with nothing behind it.",
+      "Nothing at all — wrapped tokens are deleted automatically when a vault is drained."
     ],
-    "explanation": "To bridge 1 ETH to another chain, you lock the ETH in a contract on Ethereum and mint a wrapped version on the destination. Every user's locked assets pile up in that one contract, so it becomes an ever more valuable target. Ronin held $625M before attackers compromised 5 of 9 validator keys and drained it. Bridges need a trusted group (validators or a multisig) to operate, which conflicts with blockchain's trust minimisation. IBC-style protocols avoid this by having chains verify each other directly."
+    "explanation": "A bridge never moves a coin. Your 1 ETH stayed in the vault on the first chain, and the wETH was only a claim ticket on it. Once the vault is empty the ticket is still in your wallet, but nothing backs it, so its price collapses — unless someone refills the vault, as Wormhole's backer did with $320M in 2022. That is why one shared vault guarded by a few keys makes bridges the biggest target in crypto, and why IBC and Layer 0 designs try to remove the middleman."
   },
   "takeaways": {
     "title": "Section 04 — Key Takeaways",
@@ -464,8 +577,8 @@
       "Each chain is an island: Bitcoin, Ethereum, Solana and Fabric cannot read each other's ledgers — so value and messages need a route",
       "Real needs drive it: cheaper L2 lanes, Bitcoin in DeFi, stablecoins on many chains, game assets, private data with public settlement",
       "Three routes, one question — who do you trust? Bridges: an operator. IBC: the maths and both chains. Layer 0: one shared validator set",
-      "Bridges are the most hacked component in crypto (Ronin $625M, Wormhole $320M); using one is a trust decision, so prefer official bridges",
-      "XRP Ledger is a payments rail that reaches other chains through Axelar rather than a bespoke bridge per pair",
+      "A bridge never moves a coin: it locks the original and issues a claim ticket. That one shared vault made bridges the most hacked component in crypto (Ronin $625M, Wormhole $320M)",
+      "XRP Ledger is a purpose-built payments rail: validators vote instead of mining, and it reaches other chains through Axelar rather than a bridge per pair",
       "The stack in one line: L1 secures and settles, L2 adds cheap scale on top, L0 lets many chains share security and talk to each other"
     ]
   },
@@ -477,13 +590,15 @@
     "s4-way-ibc": "With IBC the chains check each other's proofs directly: you trust the maths and the two chains, not a middleman.",
     "s4-way-l0": "A Layer 0 puts many chains under one shared validator set: messaging is built in, but only inside the club.",
     "s4-chooser": "The safest connection is the one with the fewest people to trust.",
-    "s4-bridges": "Bridges are where most of the money has been stolen; using one is a trust decision.",
+    "s4-bridges": "A bridge never moves a coin: it locks the original on one chain and issues a claim ticket on the other.",
+    "s4-bridge-risk": "Bridges are where the biggest thefts have happened; using one is a trust decision.",
     "s4-wrapped": "A wrapped token is an IOU; it is worth the original only while someone holds that coin and agrees to give it back.",
     "s4-bridge-hacks": "Every big bridge hack came down to a few stolen keys or one bug in the vault's checks; one shared vault turned it into a total loss.",
     "s4-cosmos": "Cosmos trades shared security for sovereignty; IBC lets chains verify each other without a middleman.",
     "s4-layer0": "A Layer 0 is a security team for hire; new chains inherit protection on day one.",
     "s4-layer0-2": "Shared security or full sovereignty: you rent one or build the other.",
     "s4-xrp": "XRPL is a payments rail, not an app platform; it is fast and cheap because it does less.",
+    "s4-xrp-how": "XRPL agrees by a vote among known validators: final in seconds with no mining, at the price of trusting a published list.",
     "s4-layers": "Layers are a division of labour: L1 secures and settles, L2 scales on top of it, L0 lets many chains share security and talk."
   },
   "chooser": {
