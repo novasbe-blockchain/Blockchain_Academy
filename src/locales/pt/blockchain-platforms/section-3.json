@@ -11,6 +11,7 @@
   "chapters": {
     "s3-why": "Porquê Permissionada?",
     "s3-overview": "Visão Geral do Fabric",
+    "s3-network": "Quem Opera o Quê",
     "s3-channels": "Channels",
     "s3-txflow": "Fluxo de Transações",
     "s3-exercise-supply": "Exercício: Cadeia de Abastecimento",
@@ -70,6 +71,31 @@
       "Usado por IBM Food Trust, TradeLens, HSBC, Maersk, Walmart"
     ],
     "keyPoint": "Fabric is blockchain for companies: known members, private channels, no token, no mining."
+  },
+  "network": {
+    "heading": "Quem opera o quê numa rede Fabric",
+    "subtitle": "Não existe um servidor central. Cada organização opera as suas próprias máquinas; só o ordering é partilhado.",
+    "orgLabel": "Organização",
+    "orgs": ["Produtor", "Distribuidor", "Retalhista"],
+    "parts": [
+      { "emoji": "🪪", "name": "Autoridade de certificação (MSP)", "desc": "Emite os certificados que identificam as pessoas, aplicações e nós da organização." },
+      { "emoji": "💻", "name": "Aplicação cliente", "desc": "O sistema de negócio (ERP, portal) que propõe transações." },
+      { "emoji": "🗄️", "name": "Peer", "desc": "Guarda a cópia do ledger da própria organização, executa chaincode e volta a verificar cada bloco." }
+    ],
+    "sharedLabel": "Partilhado pelo consórcio",
+    "ordering": {
+      "emoji": "📮",
+      "name": "Serviço de ordering",
+      "desc": "Um pequeno cluster de nós, normalmente distribuído pelos membros, que coloca as transações numa única ordem acordada e as agrupa em blocos. Não executa chaincode nem avalia o conteúdo de negócio."
+    },
+    "ledgerLabel": "O que cada peer guarda",
+    "ledger": [
+      { "name": "Blockchain", "desc": "O histórico completo de transações, ao qual só se acrescenta." },
+      { "name": "World state", "desc": "O valor atual de cada registo, para consultas rápidas." }
+    ],
+    "dbLabel": "Porque não uma base de dados partilhada?",
+    "dbBody": "Uma base de dados tem um administrador que a pode alterar. Aqui cada organização guarda a sua própria cópia e valida cada alteração, por isso nenhum membro consegue reescrever o registo sozinho.",
+    "keyPoint": "Cada organização opera o seu próprio peer e guarda a sua própria cópia do ledger; só o ordering é partilhado, por isso nenhuma empresa é dona do registo."
   },
   "channels": {
     "heading": "Channels: Partilha Seletiva de Dados",
@@ -269,23 +295,21 @@
     "keyPoint": "Ethereum sells openness to strangers; Fabric sells privacy and control to partners — choose by who your participants are."
   },
   "bestfits": {
-    "heading": "Onde o Hyperledger Fabric Vence — Os Casos de Uso Que Realmente Domina",
+    "heading": "Onde o Fabric vence",
     "intro": {
-      "a": "As escolhas de desenho do Fabric (adesão permissionada, channels para privacidade, consenso conectável, sem token nativo) tornam-no a opção por defeito sempre que os participantes são ",
-      "strong": "organizações conhecidas que precisam de partilhar um ledger sem partilhar publicamente todos os seus dados",
+      "a": "O Fabric é a escolha por defeito quando os participantes são ",
+      "strong": "organizações conhecidas que têm de partilhar um ledger, mas não todos os seus dados",
       "b": "."
     },
     "whyLabel": "Porquê",
     "inTheWildLabel": "No mundo real",
     "cases": [
-      { "emoji": "🚚", "name": "Proveniência de cadeia de abastecimento multi-parte", "why": "Cada passo (fabricante → distribuidor → retalhista) é registado; os channels mantêm o preço comercial privado entre pares específicos.", "example": "IBM Food Trust (Walmart, Carrefour, Nestlé) · Maersk TradeLens (descontinuada mas prova do padrão) · transporte marítimo GSBN." },
-      { "emoji": "🏦", "name": "Liquidação interbancária e financiamento ao comércio", "why": "KYC por desenho, amigável para reguladores, o serviço de ordering garante finalidade sem os custos do PoW.", "example": "we.trade · Marco Polo · Santander Onyx · pilotos TIPS do Eurosistema." },
-      { "emoji": "🏥", "name": "Registos de saúde e serialização farmacêutica", "why": "Acesso permissionado + channels cumprem os requisitos de HIPAA/RGPD. Pedigree de medicamentos demonstrável sem expor dados de pacientes.", "example": "MediLedger (serialização de medicamentos nos EUA) · reclamações Change Healthcare · trocas regionais de registos de pacientes." },
-      { "emoji": "🪪", "name": "Consórcios de identidade e credenciais", "why": "Sem participantes anónimos — cada parte assina com uma credencial emitida por um MSP de confiança. Encaixa em frameworks de identidade regulados.", "example": "Credenciais verificáveis ao estilo Sovrin · portais B2B governamentais · rails interbancários de CBDC (pilotos)." }
+      { "emoji": "🚚", "name": "Proveniência na cadeia de abastecimento", "why": "Cada passagem de mão é registada uma vez; os channels mantêm os preços entre os pares envolvidos.", "example": "IBM Food Trust · transporte marítimo GSBN · TradeLens (encerrada em 2022)" },
+      { "emoji": "🏦", "name": "Liquidação interbancária e trade finance", "why": "Membros identificados e verificados (KYC) e finalidade em segundos, sem mining.", "example": "we.trade (Fabric, 2018–22) · Contour e Marco Polo (Corda, encerradas em 2023) · JPMorgan Kinexys (Ethereum permissionada, ativa)" },
+      { "emoji": "🏥", "name": "Registos de saúde e serialização farmacêutica", "why": "Os channels refletem as regras de acesso de HIPAA/RGPD; o percurso de um medicamento é demonstrável sem expor dados de pacientes.", "example": "Change Healthcare, pedidos de reembolso (Fabric) · MediLedger, serialização de medicamentos" },
+      { "emoji": "🪪", "name": "Identidade e credenciais", "why": "Sem partes anónimas: todos assinam com um certificado de um emissor de confiança.", "example": "Credenciais verificáveis · portais B2B governamentais · pilotos interbancários de CBDC" }
     ],
-    "notAFitLabel": "Não encaixa em:",
-    "notAFitBody": " open consumer apps, DeFi or NFTs (use Ethereum or another public chain), neutral store of value (use Bitcoin), and anything that must resist the consortium itself: members can vote to freeze assets or change the rules.",
-    "keyPoint": "Fabric fits when participants are known, regulated and need to share selectively: supply chains, interbank rails, health exchanges."
+    "keyPoint": "O Fabric encaixa em parceiros conhecidos e regulados que partilham de forma seletiva. Não encaixa em apps abertas ao consumidor, DeFi ou NFTs, dinheiro neutro, nem em nada que tenha de resistir ao próprio consórcio."
   },
   "vocab": {
     "heading": "Fabric ↔ Blockchain Pública — Mesmo Mecanismo, Vocabulário Diferente",
@@ -327,34 +351,34 @@
     ]
   },
   "quiz": {
-    "question": "Em Hyperledger Fabric, três empresas farmacêuticas (PharmaA, PharmaB e um Hospital) estão na mesma rede. A PharmaA e a PharmaB querem partilhar dados de preço que o Hospital NÃO pode ver. Que funcionalidade do Fabric permite isto?",
+    "question": "A PharmaA, a PharmaB e um Hospital estão na mesma rede Fabric. A PharmaA e a PharmaB querem partilhar dados de preços que o Hospital NÃO pode ver. Que funcionalidade do Fabric o torna possível?",
     "options": [
-      { "text": "Consenso conectável — a PharmaA e a PharmaB usam um serviço de ordering Raft separado que exclui o Hospital." },
-      { "text": "Um Channel privado — apenas a PharmaA e a PharmaB são membros deste channel; o Hospital não vê nenhuma das suas transações nem do estado do ledger." },
-      { "text": "Um MSP (Membership Service Provider) separado — o Hospital recebe um tipo de certificado diferente que limita o seu acesso de leitura." },
-      { "text": "Provas de conhecimento-zero — a PharmaA e a PharmaB submetem provas em vez de dados brutos, escondendo os detalhes de preço do Hospital." }
+      { "text": "Consenso conectável: as duas farmacêuticas operam um serviço de ordering Raft separado que exclui o Hospital." },
+      { "text": "Um MSP separado: o Hospital recebe um tipo de certificado diferente que limita o que pode ler." },
+      { "text": "Um channel privado: só a PharmaA e a PharmaB são membros, por isso o Hospital não vê nenhuma das transações nem dos dados." },
+      { "text": "Provas de conhecimento zero: as duas farmacêuticas submetem provas em vez de dados brutos, escondendo os preços do Hospital." }
     ],
-    "explanation": "Os Channels são o mecanismo de privacidade principal do Hyperledger Fabric. Um Channel é um sub-ledger privado com o seu próprio conjunto de organizações membro, chaincode e histórico de transações — invisível para os não-membros na mesma rede. A PharmaA e a PharmaB criam um channel onde só elas aderem; o Hospital não consegue ver as suas transações, estado, nem sequer que ele existe. Isto é fundamentalmente diferente das blockchains públicas, onde todos os dados são visíveis a todos os participantes. Os MSPs controlam a identidade e o enrolment, não a visibilidade dos dados entre membros inscritos."
+    "explanation": "Os channels são o principal mecanismo de privacidade do Fabric. Um channel é um ledger privado com os seus próprios membros, chaincode e histórico de transações; as organizações de fora não guardam nenhuma cópia e não veem nada. O MSP responde a \"quem és?\", não a \"o que podes ler?\", e o serviço de ordering apenas sequencia transações. Compara com uma chain pública, onde todos os participantes veem todas as transações."
   },
   "quiz2": {
-    "question": "Num consórcio Fabric entre o BankA e o BankB, cada peer tem de provar a sua identidade ao submeter uma proposta ou um endorsement. Que componente do Fabric emite e valida estas identidades?",
+    "question": "A maior companhia de transporte marítimo do mundo cria uma rede Fabric para seguir contentores e convida as rivais a aderir. O software funciona bem e os portos aderem, mas a rede encerra ao fim de quatro anos. Com base nos casos desta secção, qual é a razão mais provável?",
     "options": [
-      { "text": "O Serviço de Ordering — os nós Raft verificam a identidade de cada transação antes de a sequenciar num bloco." },
-      { "text": "O Membership Service Provider (MSP) — cada organização corre o seu próprio MSP suportado por uma Certificate Authority que emite certificados X.509 a peers, clientes e administradores; os peers remotos validam as assinaturas confiando no root CA do emissor." },
-      { "text": "O Bloco de Configuração do Channel — uma lista estática de chaves públicas registada na génese do channel é verificada em cada transação." },
-      { "text": "O Smart Contract (chaincode) — cada chaincode tem de incluir lógica de validação de identidade na sua função Init." }
+      { "text": "As transportadoras rivais recusaram entregar os seus dados a uma rede detida e com a marca de um concorrente, e a rede nunca atingiu massa crítica." },
+      { "text": "O Fabric não aguentou o volume: o transporte marítimo global gera mais eventos do que uma chain permissionada consegue ordenar." },
+      { "text": "Sem um token nativo não havia forma de pagar às organizações que operavam os nós." },
+      { "text": "Os channels expunham os preços de cada transportadora às outras, e os membros saíram quando o descobriram." }
     ],
-    "explanation": "O Fabric é permissionado por desenho e assenta em PKI. Cada organização corre um MSP que mapeia material criptográfico (certificados X.509 emitidos pelo seu CA) para papéis (peer / cliente / admin / orderer). Quando um peer assina uma proposta ou endorsement, os peers de outras organizações validam a assinatura contra o certificado raiz configurado do MSP do assinante — listado na configuração do channel. O serviço de ordering NÃO valida a identidade de negócio; apenas ordena transações que já foram endossadas. As identidades são configuradas por channel via a config do channel, não codificadas no chaincode, por isso adicionar uma nova organização é uma alteração de configuração, não uma reimplementação."
+    "explanation": "É a história da TradeLens (Maersk + IBM, 2018–2022). A tecnologia funcionava e processava centenas de milhões de eventos por ano; os channels mantinham os dados comerciais privados; e um consórcio paga os seus nós como qualquer TI partilhada, por isso não é preciso token. O que falhou foi a governação: os concorrentes não aderem a um ledger controlado por um rival. As redes que duram têm um promotor que todos aceitam — um comprador dominante como a Walmart, ou um regulador como a UE no caso da EBSI."
   },
   "quiz3": {
-    "question": "Um chaincode de cadeia de abastecimento está implementado num channel com três organizações (Producer, Distributor, Retailer) e uma política de endorsement de AND('Producer.peer', 'Distributor.peer'). O Retailer submete uma proposta de transação que atualiza um registo de entrega. O que é necessário para que esta transação seja confirmada no ledger?",
+    "question": "Um channel de cadeia de abastecimento tem três organizações: Produtor, Distribuidor e Retalhista. A política de endorsement para um registo de entrega é \"Produtor E Distribuidor\". O Retalhista submete uma atualização de entrega. O que tem de acontecer antes de ser confirmada no ledger?",
     "options": [
-      { "text": "Um único peer do Retailer endossa a proposta — o Retailer é o submetente, por isso o seu endorsement é suficiente." },
-      { "text": "A proposta tem de ser endossada por pelo menos um peer do Producer E pelo menos um peer do Distributor antes de chegar ao orderer; o endorsement do Retailer é irrelevante para a política." },
-      { "text": "As três organizações (Producer, Distributor, Retailer) têm de endossar — o Fabric usa por defeito endorsement unânime quando o submetente está no channel." },
-      { "text": "O orderer Raft endossa em nome de qualquer organização não especificada assim que se atinge um quórum de nós orderer." }
+      { "text": "O peer do próprio Retalhista endossa-a; a organização que submete uma transação pode sempre aprová-la." },
+      { "text": "As três organizações têm de a endossar, porque o Fabric exige unanimidade entre os membros do channel." },
+      { "text": "O serviço de ordering endossa-a em nome das outras assim que a maioria dos nós orderer concorda." },
+      { "text": "Um peer do Produtor e um peer do Distribuidor têm ambos de a assinar; a assinatura do Retalhista não conta para a política." }
     ],
-    "explanation": "A política de endorsement é aplicada independentemente do submetente. O cliente (o Retailer aqui) envia a proposta diretamente aos peers listados na política — Producer e Distributor — recolhe os seus read/write sets assinados e só então encaminha a transação endossada para o serviço de ordering. O orderer agrupa e ordena transações mas nunca endossa. Os peers que confirmam verificam, na receção, que os endorsements recolhidos satisfazem a política antes de aplicar a alteração de estado; se a política não for cumprida, a transação é marcada como inválida no bloco mas ainda assim registada (para que o trilho de auditoria capte cada tentativa). A identidade do submetente não confere qualquer poder de endorsement especial."
+    "explanation": "A política de endorsement é a regra de negócio e aplica-se independentemente de quem submete. A aplicação do Retalhista envia a proposta a peers do Produtor e do Distribuidor, recolhe os resultados assinados e só então passa a transação ao serviço de ordering. Os orderers sequenciam transações; nunca endossam. Depois, cada peer volta a verificar as assinaturas face à política antes de confirmar: uma transação que não a cumpra fica registada no bloco, mas marcada como inválida e sem efeito."
   },
   "takeaways": {
     "title": "Secção 03 — Conclusões",
