@@ -31,6 +31,10 @@
       "title": "Build & Integration",
       "description": "(Optional) Navigate ERC standards, the EIP process, frameworks, platform comparison and integration patterns — the developer-oriented material your technical teammates will own."
     },
+    "zkPrivacy": {
+      "title": "Zero-Knowledge & Privacy",
+      "description": "Explain why public chains are not private, what a zero-knowledge proof does in plain terms, and how selective disclosure enables private transactions and KYC without handing over identity."
+    },
     "design": {
       "title": "Business Judgement (in-class assignment)",
       "description": "In a small group, take a real problem through the course's critical lens and argue in one page whether it deserves a blockchain — problem, proposed solution, pros & cons."

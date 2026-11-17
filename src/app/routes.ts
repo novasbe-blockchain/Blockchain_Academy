@@ -21,7 +21,6 @@ import { BP_Section1 } from "./pages/blockchain-platforms/Section1";
 import { BP_Section2 } from "./pages/blockchain-platforms/Section2";
 import { BP_Section3 } from "./pages/blockchain-platforms/Section3";
 import { BP_Section4 } from "./pages/blockchain-platforms/Section4";
-import { BP_Section5 } from "./pages/blockchain-platforms/Section5";
 import { Conclusion } from "./pages/blockchain-platforms/Conclusion";
 import { BP_Bibliography } from "./pages/blockchain-platforms/Bibliography";
 import { SmartContractsHome } from "./pages/smart-contracts/Home";
@@ -33,6 +32,7 @@ import { SC_Section4 } from "./pages/smart-contracts/Section4";
 import { SC_Section5 } from "./pages/smart-contracts/Section5";
 import { SC_Section6 } from "./pages/smart-contracts/Section6";
 import { SC_Section7 } from "./pages/smart-contracts/Section7";
+import { SC_Section8 } from "./pages/smart-contracts/Section8";
 import { SC_Conclusion } from "./pages/smart-contracts/Conclusion";
 import { SC_Bibliography } from "./pages/smart-contracts/Bibliography";
 import { ProjectManagementRoot } from "./ProjectManagementRoot";
@@ -111,6 +111,7 @@ export const router = createHashRouter([
               { path: "section-5", Component: SC_Section5 },
               { path: "section-6", Component: SC_Section6 },
               { path: "section-7", Component: SC_Section7 },
+              { path: "section-8", Component: SC_Section8 },
               { path: "conclusion", Component: SC_Conclusion },
               { path: "bibliography", Component: SC_Bibliography },
             ],
@@ -128,7 +129,6 @@ export const router = createHashRouter([
               { path: "section-2", Component: BP_Section2 },
               { path: "section-3", Component: BP_Section3 },
               { path: "section-4", Component: BP_Section4 },
-              { path: "section-5", Component: BP_Section5 },
               { path: "conclusion", Component: Conclusion },
               { path: "bibliography", Component: BP_Bibliography },
             ],

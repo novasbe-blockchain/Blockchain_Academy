@@ -21,12 +21,15 @@
     "s2-eip1559": "🧩 EIP-1559",
     "s2-smartcontracts": "Smart Contracts",
     "s2-consensus": "PoW → PoS",
+    "s2-staking-flow": "Staking Flow",
     "s2-staking": "🧩 Staking",
     "s2-issuance": "🧩 ETH Issuance",
     "s2-evmecosystem": "EVM Everywhere",
     "s2-why-l2": "Why L2?",
     "s2-rollups": "Rollups & L2s",
     "s2-rollups-2": "Optimistic vs ZK",
+    "s2-data-where": "Where the Data Goes",
+    "s2-data": "Why Post the Data?",
     "s2-defi": "DeFi Mechanics",
     "s2-stablecoins": "Stablecoins",
     "s2-apps": "Apps Beyond DeFi (1)",
@@ -35,6 +38,8 @@
     "s2-bestfits": "🎯 Best Fits",
     "s2-worstfits": "🚫 Worst Fits",
     "s2-quiz": "Quiz",
+    "s2-quiz-2": "Quiz 2",
+    "s2-quiz-3": "Quiz 3",
     "s2-takeaways": "Takeaways"
   },
   "title": {
@@ -51,11 +56,14 @@
     "gas": "opcode gas table · gasLimit vs gasUsed · revert · block gas limit (~30M)",
     "smartContracts": "Solidity → bytecode · ABI · CREATE / CREATE2 · immutability vs proxies",
     "consensus": "RANDAO (random picker) · committees · BLS signature aggregation · slots (12 s) / epochs · Casper FFG finality",
+    "stakingFlow": "RANDAO · attestations · slashing · stETH · custody",
     "staking": "validator keys · withdrawal credentials · slashing conditions · churn limit · stETH / rETH",
     "issuance": "EIP-1559 base-fee burn · PoS issuance curve (∝ √ staked ETH) · ultrasound.money",
     "whyL2": "scalability trilemma · block gas limit",
     "rollups": "sequencer · state root · L1 bridge",
     "rollups2": "fraud proof · validity proof · blobs",
+    "dataWhere": "calldata · EIP-4844 blobs · KZG · validium · DAC",
+    "dataAvail": "data availability · fraud proof · forced exit",
     "defi": "x·y=k · collateral ratio · liquidation bots · LP tokens · composability",
     "stablecoins": "ERC-20 mint/redeem · proof of reserves · liquidation ratio · delta-neutral hedge",
     "apps": "ERC-20 · ERC-721 · ERC-1155 · tokenURI · governor contracts · ENS · SIWE"
@@ -72,12 +80,15 @@
     "eip1559": "The network sets the price and burns it; the tip is the only part you negotiate.",
     "smartContracts": "Once deployed, a contract gives the same output for the same input, and nobody can quietly edit it.",
     "consensus": "Security moved from burning electricity to risking capital.",
+    "stakingFlow": "Staking means locking ETH to help validate blocks; an ETF only follows the price from outside.",
     "staking": "The return is real, but getting in and out takes time.",
     "issuance": "Bitcoin sells scarcity by rule; Ethereum sells scarcity by usage.",
     "evmEcosystem": "The EVM is the shared standard: build once, deploy on many chains.",
     "whyL2": "Ethereum keeps L1 small and secure on purpose; Layer 2 is where the volume goes.",
     "rollups": "Rollups move execution off Ethereum while security stays on it.",
     "rollups2": "Optimistic rollups wait a week to be sure; ZK rollups prove it up front. Either way users pay cents.",
+    "dataWhere": "Blobs made it cheap to put rollup data on Ethereum; keeping it elsewhere is cheaper still, but adds someone to trust.",
+    "dataAvail": "A rollup is only as safe as its data: publishing it on Ethereum is what lets users leave without the operator.",
     "defi": "Swap, lend and earn recombine into almost every DeFi product.",
     "stablecoins": "A stablecoin is only as stable as what backs it.",
     "apps1": "Tokens prove who owns what and who gets to decide.",
@@ -334,7 +345,7 @@
       "title": "Before (Proof of Work)",
       "items": [
         { "icon": "⛏️", "label": "Participants", "value": "Miners" },
-        { "icon": "🔢", "label": "Mechanism", "value": "SHA-256 hash race" },
+        { "icon": "🔢", "label": "Mechanism", "value": "Ethash hash race" },
         { "icon": "⚡", "label": "Energy", "value": "~73 TWh / year" },
         { "icon": "🖥️", "label": "Requirement", "value": "Anyone with hardware" }
       ]
@@ -355,6 +366,98 @@
       { "label": "Attest", "detail": "The other validators check the block and vote on it.", "metric": "needs 2/3 of votes" },
       { "label": "Finalize", "detail": "After enough votes the block is final. Undoing it would mean burning a third of all staked ETH.", "metric": "final in ~13 min" }
     ]
+  },
+  "stakingFlow": {
+    "heading": "How Staking Works: the Validator Loop",
+    "subtitle": "Lock ETH, join the validators, take turns proposing and checking blocks, earn new ETH. There are two ways in, and one product that stays outside.",
+    "waysIn": "Two ways in",
+    "solo": {
+      "title": "Solo",
+      "body": "Lock 32 ETH and run your own validator."
+    },
+    "liquid": {
+      "title": "Liquid staking",
+      "pool": "pool",
+      "body": "Any amount. A protocol such as Lido pools it and runs the validators.",
+      "receipt": "comes back to you",
+      "receiptSub": "A receipt for your stake that you can still trade, lend or use as collateral."
+    },
+    "arenaLabel": "On-chain · the validators",
+    "validators": {
+      "you": "You",
+      "pool": "Pool validator",
+      "other": "Validator"
+    },
+    "legend": {
+      "you": "you (solo)",
+      "pool": "pool validators",
+      "other": "other validators"
+    },
+    "queues": {
+      "entry": "entry queue",
+      "exit": "exit queue"
+    },
+    "drawLabel": "Random draw",
+    "pow": {
+      "reminder": "In Proof-of-Work, five computers race for the next block. Here nobody races: one validator is drawn at random.",
+      "link": "Compare with Proof-of-Work mining →"
+    },
+    "block": {
+      "slot": "Slot {{n}}",
+      "every": "one slot every 12 s",
+      "votes": "votes",
+      "threshold": "⅔ needed",
+      "status": {
+        "idle": "waiting",
+        "picking": "random pick",
+        "proposing": "proposed",
+        "conflict": "2 versions!",
+        "attesting": "voting",
+        "rewarded": "accepted",
+        "slashed": "rejected"
+      }
+    },
+    "badge": {
+      "picked": "picked",
+      "proposes": "proposes block",
+      "double": "signs twice",
+      "attests": "attests",
+      "ejected": "slashed · out"
+    },
+    "status": {
+      "idle": "20 validators shown; the real network has hundreds of thousands. Press start.",
+      "paused": "Paused.",
+      "picking": "🎲 Slot {{n}}: the protocol draws one validator at random…",
+      "picked": "🎯 The draw lands on {{name}}",
+      "proposing": "📦 {{name}} proposes the next block",
+      "proposingCheat": "⚠️ {{name}} proposes two conflicting blocks",
+      "attesting": "🗳️ The others check the block and vote: {{votes}}/{{total}}",
+      "rewarded": "✅ Block accepted. Proposer and voters earn new ETH",
+      "slashed": "✂️ {{name}} is slashed: part of its stake is burned and it is ejected",
+      "churn": "🔄 Between slots: one validator leaves through the exit queue, and one from the entry queue takes its place",
+      "churnSlashed": "🚪 The slashed validator is forced out, and one from the entry queue takes its place"
+    },
+    "controls": {
+      "start": "Start staking",
+      "resume": "Resume",
+      "pause": "Pause",
+      "cheat": "What if one cheats?",
+      "cheatArmed": "Cheater is up next…",
+      "reset": "Reset"
+    },
+    "caption": "Rewards are exaggerated so you can see them.",
+    "etf": {
+      "zone": "Off-chain · outside the loop",
+      "investor": "Institution",
+      "investorSub": "pays in dollars",
+      "fund": "Spot ETH ETF",
+      "fundSub": "shares in a brokerage account",
+      "custodian": "Custodian",
+      "custodianSub": "holds the fund's ETH",
+      "gets": "Exposure to the ETH price",
+      "lacks": "No validator, no keys, nothing to use on-chain",
+      "note": "Since 2025 some funds also stake through their custodian. The shareholder still never touches the chain."
+    }
   },
   "staking": {
     "heading": "Staking — ETH's Interest Rate",
@@ -436,6 +539,13 @@
       "mergeDot": "≈120.5M",
       "dipLabel": "2024 low ≈120.1M",
       "footnote": "Stylised curve; dashed lines are projections, not forecasts. Quiet network: issuance beats burn, supply drifts up. Busy network: burn beats issuance, supply shrinks. Either way, well under 1% a year."
+    },
+    "shapes": {
+      "aria": "Bitcoin's supply flattens under a 21 million hard cap; Ethereum's supply has no cap and has been nearly flat since 2022",
+      "btcCap": "21M hard cap",
+      "btcNote": "halving every ~4 years",
+      "ethCap": "no cap",
+      "ethNote": "≈flat since 2022"
     },
     "btcLabel": "₿ Bitcoin, for contrast",
     "btcBody": "Fixed 21M · new coins halve every ~4 years (halvings) · nothing is ever burned · last coin ≈2140. Predictable by rule."
@@ -535,8 +645,81 @@
     "optimisticModel": "Trusted by default. Withdrawing to L1 waits out a ~7-day challenge window.",
     "zkMotto": "“Prove it upfront”",
     "zkModel": "A validity proof comes with every batch. Withdraw to L1 in hours.",
-    "deeperLabel": "Going deeper: ",
-    "deeper": "ZK proofs, data availability and the full trilemma return in Section 5 (New Trends)."
+    "noteLabel": "Good to know: ",
+    "note": "\"ZK\" here buys cheap checking, not secrecy. A ZK rollup is as public as Ethereum itself."
+  },
+  "dataWhere": {
+    "heading": "Where Rollup Data Goes",
+    "subtitle": "Data availability means anyone can download the transactions behind a batch. Where a rollup puts them sets the fee, and decides who you have to trust.",
+    "batch": "Rollup batch",
+    "batchSub": "thousands of compressed transactions",
+    "onL1": "On Ethereum · published to every validator",
+    "offL1": "Off Ethereum · trust required",
+    "lanes": [
+      {
+        "title": "Calldata",
+        "tag": "inside the block",
+        "points": [
+          "Stored in the block itself, forever",
+          "Competes for space with every other transaction",
+          "Expensive: the only option before 2024"
+        ]
+      },
+      {
+        "title": "Blobs",
+        "tag": "EIP-4844 · since March 2024",
+        "points": [
+          "Attached to the block, in a separate cheap lane",
+          "Deleted after ~18 days, long enough for anyone to copy or challenge",
+          "Rollup fees fell roughly 10×"
+        ]
+      },
+      {
+        "title": "Off-chain",
+        "tag": "validium · committee",
+        "points": [
+          "Kept by the operator or a small committee",
+          "Ethereum only sees a fingerprint",
+          "Cheapest, but the data can be withheld"
+        ]
+      }
+    ],
+    "serverLabel": "operator",
+    "riskLabel": "If data is withheld",
+    "risk": "Every proof can still be valid, yet nobody can work out their own balance. Funds stay frozen until the data reappears."
+  },
+  "dataAvail": {
+    "heading": "Why Rollups Post Their Data to Ethereum",
+    "subtitle": "A proof says the batch was correct. The data lets anyone check it, and lets you leave if the operator disappears.",
+    "svg": {
+      "l2Title": "Rollup (L2)",
+      "l2Sub": "operator runs thousands of transactions",
+      "proofTitle": "Proof",
+      "proofSub": "\"this batch is correct\"",
+      "dataTitle": "Data",
+      "dataSub": "a copy of every transaction",
+      "l1Title": "Ethereum (L1)",
+      "l1Sub": "stores both · anyone can read them",
+      "verifierTitle": "Anyone",
+      "verifierSub": "re-runs the batch and checks it",
+      "userTitle": "You",
+      "userSub": "rebuild your balance and withdraw",
+      "caption": "Proof without data: you know the books balance but cannot see your own line."
+    },
+    "cards": [
+      {
+        "title": "Anyone can verify",
+        "desc": "With the data public, anyone can re-run the transactions and rebuild the rollup. A fraud can only be challenged by someone who can see it."
+      },
+      {
+        "title": "Anyone can exit",
+        "desc": "If the operator goes dark or blocks you, you prove your balance from the data on Ethereum and withdraw. No permission needed."
+      },
+      {
+        "title": "Ethereum vouches for it",
+        "desc": "A block only counts if its data reached the validators. The rollup inherits that guarantee instead of asking you to trust its own servers."
+      }
+    ]
   },
   "defi": {
     "heading": "DeFi: Three Primitives",
@@ -585,6 +768,26 @@
     "subtitle": "A token that tracks 1 USD. The key question is what backs the peg. Three answers, three failure modes.",
     "mechanismLabel": "What backs it",
     "breakLabel": "Breaks when",
+    "viz": {
+      "fiat": {
+        "bank": "Bank",
+        "reserve": "$1",
+        "token": "1 token",
+        "mint": "deposit → mint",
+        "redeem": "redeem ← burn"
+      },
+      "crypto": {
+        "locked": "$150 of ETH locked",
+        "minted": "$100 minted",
+        "buffer": "$50 buffer"
+      },
+      "algo": {
+        "peg": "$1",
+        "above": "price > $1 → supply expands",
+        "below": "price < $1 → supply contracts",
+        "spiral": "Terra, 2022 → ~$0"
+      }
+    },
     "cards": [
       {
         "title": "Fiat-backed",
@@ -719,6 +922,12 @@
     "subtitleB": ".",
     "whyLabel": "Why",
     "wildLabel": "In the wild",
+    "viz": {
+      "defi": "three protocols, one transaction",
+      "nft": { "token": "token #42", "owner": "owner" },
+      "dao": { "yes": "Yes", "no": "No", "treasury": "treasury pays" },
+      "rwa": { "offChain": "off-chain asset", "onChain": "on-chain token", "bill": "T-bill" }
+    },
     "items": [
       { "name": "DeFi & on-chain finance", "why": "Protocols interoperate by default. ~$50B locked across L1 and L2.", "example": "Uniswap (DEX), Aave (lending), MakerDAO (DAI), Lido (staking), Curve (stable swaps)." },
       { "name": "NFTs & creator economy", "why": "ERC-721 / ERC-1155 are the standards; provenance is built in.", "example": "OpenSea, Blur, Sotheby's on-chain auctions · ENS domains · POAPs · proof-of-attendance." },
@@ -733,22 +942,28 @@
     "subtitle": "Jobs where open programmability is the problem, not the solution.",
     "whyNotLabel": "Why not",
     "useInsteadLabel": "Use instead",
+    "viz": {
+      "sov": { "btc": "same rule since 2009", "eth": "rules changed by upgrade" },
+      "privacy": { "doc": "supplier contract", "caption": "anyone can read it" },
+      "pay": { "tap": "card tap", "l1": "L1 finality" },
+      "game": { "game": "game · 60 updates / s", "chain": "L1 · 1 block / 12 s" }
+    },
     "items": [
       { "name": "Pure store of value / digital gold", "why": "ETH has no hard cap and its monetary policy has changed by upgrade (Merge, EIP-1559).", "alt": "Use Bitcoin for neutral, scarce, time-tested SoV." },
       { "name": "Private B2B consortia, regulated data", "why": "Mainnet is fully public: unsuitable for KYC data, supplier contracts, health records. Privacy layers add complexity and trust assumptions.", "alt": "Use Hyperledger Fabric · Quorum · R3 Corda for permissioned channels." },
-      { "name": "Consumer-grade payments on L1", "why": "L1 finalises in ~12 min and fees spike with demand. Even with L2s, withdrawals and bridges are slow for retail.", "alt": "Use Bitcoin Lightning · Solana · XRPL · Stellar for sub-second payment UX." },
+      { "name": "Consumer-grade payments on L1", "why": "L1 finalises in ~13 min and fees spike with demand. Even with L2s, withdrawals and bridges are slow for retail.", "alt": "Use Bitcoin Lightning · Solana · XRPL · Stellar for sub-second payment UX." },
       { "name": "Latency-critical games / real-time apps", "why": "~12 s blocks on L1, ~1–2 s on rollups: too slow for real-time gaming or live trading, and order-book matching is expensive in gas.", "alt": "Use Solana · Sui · Aptos · purpose-built order-book chains (dYdX v4) for latency-bound apps." }
     ]
   },
   "quiz": {
-    "question": "What is the fundamental difference between an Externally Owned Account (EOA) and a Contract Account on Ethereum?",
+    "question": "Three investors want a return on ETH. Ana locks 32 ETH on her own machine. Bruno deposits 5 ETH into Lido and receives stETH. A pension fund buys shares of a spot ETH ETF. Who is actually running a validator?",
     "options": [
-      "EOAs can store ETH; Contract Accounts can only store code and cannot hold a balance.",
-      "Contract Accounts can initiate transactions independently; EOAs can only respond when called by a contract.",
-      "EOAs are controlled by a private key and can initiate transactions; Contract Accounts are controlled by code and only execute when triggered by an EOA or another contract.",
-      "EOAs exist only on Ethereum mainnet; Contract Accounts work across all EVM-compatible chains automatically."
+      "All three. Any product that follows the ETH price counts as staking on the network.",
+      "Ana and the pension fund. Both hold more than 32 ETH of exposure, which is the threshold for validating.",
+      "Only Ana. Bruno's ETH is staked for him by the pool's validators and he keeps a tradable receipt; the fund holds off-chain shares.",
+      "Only Bruno. Liquid staking pools replaced solo validators after the Merge."
     ],
-    "explanation": "An EOA has a private key, can initiate transactions, and pays gas. A Contract Account has no key; it is code that runs only when another account calls it. A contract cannot act on its own schedule, so every transaction on Ethereum ultimately originates from an EOA."
+    "explanation": "Ana does the whole job herself: 32 ETH, a machine online, the slashing risk. Bruno is inside the loop indirectly: Lido's operators validate with the pooled ETH, and stETH is his claim on it, still usable elsewhere in DeFi. The pension fund owns shares in a brokerage account while a custodian holds the ETH. Even when a fund stakes, the shareholder has no keys, no validator and nothing to use on-chain."
   },
   "quiz2": {
     "question": "An EIP-1559 transaction sets maxFeePerGas = 30 Gwei and maxPriorityFeePerGas = 2 Gwei. The current base fee is 25 Gwei. What does the sender actually pay per gas, and where does each part go?",
@@ -760,6 +975,16 @@
     ],
     "explanation": "The base fee (25 Gwei) is burned. The tip (2 Gwei) goes to the validator. Effective price is min(maxFeePerGas, baseFee + tip) = min(30, 27) = 27 Gwei per gas; the unused 3 Gwei is never charged. maxFeePerGas is a cap, not a target."
   },
+  "quiz3": {
+    "question": "A rollup posts a valid proof for every batch to Ethereum, but keeps the transaction data on its own servers. One day the operator goes offline. What happens to users' funds?",
+    "options": [
+      "They are frozen. The proofs say the totals are right, but without the data nobody can show what their own balance is.",
+      "Nothing changes. A valid proof is all Ethereum needs to pay each user out.",
+      "Ethereum's validators rebuild the missing data from the proofs and reopen withdrawals.",
+      "The funds are burned, the same way a cheating validator is slashed."
+    ],
+    "explanation": "A proof shows the batch followed the rules; it does not contain the transactions. To leave without the operator, a user must prove their balance to the contract on Ethereum, and that takes the data. This is why rollups publish it on Ethereum (in blobs since 2024), and why chains that keep data off-chain are cheaper but add someone you have to trust."
+  },
   "takeaways": {
     "title": "Section 02 — Key Takeaways",
     "items": [
@@ -769,7 +994,7 @@
       "The Merge (2022) replaced Proof of Work with Proof of Stake, cutting energy use by 99.95% and new issuance by ~88%",
       "Staking pays ~3–4% a year (solo, liquid or via ETFs), but entry and exit go through queues",
       "ETH has no hard cap: PoS issuance minus the EIP-1559 burn keeps supply roughly flat, and busy periods make it deflationary",
-      "The EVM is an industry standard; Polygon, Arbitrum, Base and Optimism are EVM-compatible",
+      "The EVM is an industry standard; rollups run it, settle on Ethereum and publish their data there",
       "Bitcoin is digital money; Ethereum is a programmable settlement layer"
     ]
   }

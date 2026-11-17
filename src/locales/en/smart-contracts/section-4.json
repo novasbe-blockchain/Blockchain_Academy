@@ -105,7 +105,7 @@
       "Land on a verdict (smart contract, hybrid or database), then say in two sentences why a sceptical CFO should believe it.",
       "Name the single weakest point in the design: the data feed, the legal wrapper, the admin key, or the partners who have to join?"
     ],
-    "note": "This is the warm-up for the Section 7 one-page assignment, where you run the same framework on a problem of your own."
+    "note": "This is the warm-up for the Section 8 one-page assignment, where you run the same framework on a problem of your own."
   },
   "decisionYes": {
     "heading": "When smart contracts make sense",

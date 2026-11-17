@@ -31,6 +31,10 @@
       "title": "Construção e Integração",
       "description": "Navegar pelas normas ERC, o processo EIP, frameworks (Hardhat / Foundry), comparação de 17 plataformas, padrões de integração e onde se enquadram as ferramentas de IA no desenvolvimento de smart contracts."
     },
+    "zkPrivacy": {
+      "title": "Zero-Knowledge e Privacidade",
+      "description": "Explicar porque as cadeias públicas não são privadas, o que faz uma prova zero-knowledge em termos simples, e como a divulgação seletiva permite transações privadas e KYC sem entregar a identidade."
+    },
     "design": {
       "title": "Business Judgement (in-class assignment)",
       "description": "In a small group, take a real problem through the course's critical lens and argue in one page whether it deserves a blockchain — problem, proposed solution, pros & cons."

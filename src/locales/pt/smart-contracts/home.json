@@ -5,7 +5,7 @@
     "titleLine2": "de Smart Contracts",
     "tagline": "Da teoria à disrupção da indústria — compreende o que os smart contracts conseguem e não conseguem fazer pelo teu negócio.",
     "badges": {
-      "sections": "7 Secções",
+      "sections": "8 Secções",
       "slides": "90+ Slides",
       "verticals": "5 Verticais de Indústria",
       "cases": "8 Casos de Estudo",
@@ -43,6 +43,10 @@
       "description": "Normas ERC, processo EIP, frameworks (Hardhat / Foundry), comparação de 17 plataformas, padrões de integração e desenvolvimento com IA."
     },
     "section7": {
+      "title": "Zero-Knowledge e Privacidade",
+      "description": "As cadeias públicas expõem tudo. As provas zero-knowledge permitem a uma empresa provar o que importa — solvência, elegibilidade, um KYC aprovado — sem revelar mais nada. Inclui a história da Tornado Cash."
+    },
+    "section8": {
       "title": "In-class Assignment",
       "description": "In small groups: pick a real-world problem, discuss it, and submit a one-page report — problem, proposed solution, and the pros & cons of using a blockchain."
     },

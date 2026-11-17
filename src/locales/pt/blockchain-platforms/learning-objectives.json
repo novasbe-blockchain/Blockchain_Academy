@@ -24,8 +24,8 @@
       "description": "Aplicar o modelo do Trilema da Blockchain para comparar Bitcoin, Ethereum e Hyperledger — identificando quais as propriedades que cada plataforma prioriza e sacrifica."
     },
     "interoperability": {
-      "title": "Interoperabilidade e Tendências Emergentes",
-      "description": "Explorar protocolos de comunicação entre cadeias (Cosmos, IBC), arquiteturas Layer 0, plataformas de ZK-rollup como a Starknet e o futuro da interoperabilidade entre blockchains."
+      "title": "Interoperabilidade e a Pilha de Camadas",
+      "description": "Explorar como cadeias fechadas se ligam — bridges, Cosmos IBC e Layer 0 —, avaliar a confiança que cada via exige e situar qualquer cadeia na pilha L0 · L1 · L2."
     }
   }
 }

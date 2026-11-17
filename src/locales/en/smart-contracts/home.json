@@ -2,10 +2,10 @@
   "hero": {
     "courseBadge": "Course 02",
     "titleLine1": "Business Applications",
-    "titleLine2": "for Smart Contracts",
+    "titleLine2": "of Smart Contracts",
     "tagline": "From theory to industry disruption — understand what smart contracts can and cannot do for your business.",
     "badges": {
-      "sections": "7 Sections",
+      "sections": "8 Sections",
       "slides": "100+ Slides",
       "verticals": "5 Industry Verticals",
       "cases": "9 Case Studies",
@@ -43,6 +43,10 @@
       "description": "Optional, developer-oriented: ERC standards, EIP process, frameworks, platform comparison and integration patterns. Skipped in lecture."
     },
     "section7": {
+      "title": "Zero-Knowledge & Privacy",
+      "description": "Public chains expose everything. Zero-knowledge proofs let a business prove what matters — solvency, eligibility, a passed KYC check — and reveal nothing else. Includes the Tornado Cash story."
+    },
+    "section8": {
       "title": "In-class Assignment",
       "description": "In small groups: pick a real-world problem, discuss it, and submit a one-page report — problem, proposed solution, and the pros & cons of using a blockchain."
     },

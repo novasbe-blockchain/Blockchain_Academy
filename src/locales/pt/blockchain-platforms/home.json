@@ -31,8 +31,8 @@
       "description": "Porque existem blockchains empresariais, smart contracts em cadeias de abastecimento, canais e fluxo de transações."
     },
     "interoperability": {
-      "title": "Interoperabilidade e Novas Tendências",
-      "description": "Ligar blockchains — Cosmos, protocolos Layer 0 e Starknet."
+      "title": "Interoperabilidade",
+      "description": "Ligar blockchains — bridges, Cosmos IBC e Layer 0 — e como as camadas L0 · L1 · L2 se encaixam."
     },
     "conclusion": {
       "title": "Conclusão",

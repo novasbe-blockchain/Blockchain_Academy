@@ -1,235 +1,382 @@
 {
   "groups": {
-    "g-brief": "The Assignment",
-    "g-work": "Work Session",
-    "g-wrap": "Wrap"
+    "g-s7-problem": "The Problem",
+    "g-s7-idea": "The Idea",
+    "g-s7-business": "In Business",
+    "g-s7-law": "Privacy & the Law",
+    "g-s7-wrap": "Wrap Up"
   },
   "chapters": {
-    "s7-brief": "At a Glance",
-    "s7-three-parts": "The Three Parts",
-    "s7-problem-bank": "🧩 Problem Starters",
-    "s7-lens": "🧩 Blockchain Lens",
-    "s7-report": "The 1-Page Report",
-    "s7-discussion": "Class Discussion",
-    "s7-rubric": "How It's Assessed"
+    "s7-public": "Public ≠ Private",
+    "s7-zk": "ZK: The Idea",
+    "s7-waldo": "ZK: Where's Waldo?",
+    "s7-kyc": "KYC Without Identity",
+    "s7-live": "ZK in Production",
+    "s7-approaches": "Four Ways to Privacy",
+    "s7-tornado": "Tornado Cash",
+    "s7-disclosure": "Selective Disclosure",
+    "s7-quiz": "Quiz",
+    "s7-takeaways": "Takeaways"
   },
   "title": {
     "sectionNumber": "SECTION 07",
-    "title": "In-class Assignment & Discussion",
-    "subtitle": "Pick a real-world problem, debate it in a small group, and argue in one page whether it needs a blockchain."
+    "title": "Zero-Knowledge & Privacy",
+    "subtitle": "Prove what matters, reveal nothing else — what ZK and privacy unlock for business"
   },
-  "brief": {
-    "badge": "In-class assignment",
-    "heading": "The assignment at a glance",
-    "subtitle": "A consulting exercise, not a coding one: analyse a real problem and give an honest recommendation.",
-    "linkLine": "This is the second of two graded in-class assignments; the first was in Fundamentals §3.",
-    "stats": [
-      { "label": "Groups", "value": "3–4 people", "note": "form them in the room" },
-      { "label": "Time in class", "value": "~45 min", "note": "discussion + drafting" },
-      { "label": "Deliverable", "value": "1 page max", "note": "PDF · exactly three parts" },
-      { "label": "Weight", "value": "In-class", "note": "one of the course's two in-class assignments" }
-    ],
-    "flowLabel": "How the session runs",
-    "flow": [
-      { "step": "Form groups & pick a problem", "time": "10 min", "desc": "Use a starter from the next slide or bring a problem from your own work or studies." },
-      { "step": "Discuss & draft", "time": "25 min", "desc": "Work through the three parts and run the blockchain lens." },
-      { "step": "Share back", "time": "2 min / group", "desc": "One sentence per part. The class pushes back; you refine." },
-      { "step": "Submit the 1-pager", "time": "end of session", "desc": "PDF, one page, group names at the top. Your instructor confirms the exact deadline." }
-    ],
-    "mindsetLabel": "The mindset:",
-    "mindsetBody": " you are the consultant hired to say whether blockchain is worth it. \"No, and here is why\" is a good answer if it is well argued."
+  "ui": {
+    "hood": "under the hood →",
+    "recap": "Already covered",
+    "keyPoint": "Key point"
   },
-  "parts": {
-    "heading": "Three parts",
-    "subtitle": "A reader with five minutes should get the problem, the proposal, and an honest verdict. Headings in the report must match these three.",
-    "wordsLabel": "≈ {{words}} words",
-    "items": [
+  "privacy": {
+    "heading": "A public chain is not private",
+    "subtitle": "Every address, balance and transfer is visible to anyone, forever. Pseudonymous is not anonymous: one link to your name unlocks your whole history.",
+    "traceLabel": "How one link exposes everything",
+    "trace": [
       {
-        "num": "1",
-        "title": "Problem statement",
-        "words": "120",
-        "lead": "What is broken today, for whom, and why?",
-        "prompts": [
-          "Who are the actors — and which of them do the others have to trust?",
-          "Where exactly is the friction: time, cost, fraud, disputes, opacity?",
-          "How is it handled today, and what does that cost (money, days, errors)?",
-          "One concrete scenario beats three abstract ones."
-        ]
+        "who": "Exchange",
+        "note": "knows your name (KYC)"
       },
       {
-        "num": "2",
-        "title": "Proposed solution",
-        "words": "150",
-        "lead": "What would a smart-contract-based design do — in plain language?",
-        "prompts": [
-          "What triggers the contract, and what does it do when triggered?",
-          "What lives on-chain (ownership, votes, hashes) and what stays off-chain (documents, personal data)?",
-          "Who operates it: a company, a consortium, a DAO? Public or permissioned chain?",
-          "Which course examples is it closest to — and how does it differ?"
-        ]
+        "who": "Your wallet",
+        "note": "0xA1b2… — now linked to you"
       },
       {
-        "num": "3",
-        "title": "Pros & cons of using a blockchain",
-        "words": "150",
-        "lead": "Would this actually be better than a well-run database?",
-        "prompts": [
-          "At least two genuine advantages and two genuine disadvantages.",
-          "Cost, privacy, governance, legal recognition, user experience — pick the ones that bite here.",
-          "What would the non-blockchain alternative look like, and why is it worse (or better)?",
-          "End with a one-sentence verdict: smart contract, hybrid or database."
-        ]
+        "who": "Landlord",
+        "note": "rent, every month"
+      },
+      {
+        "who": "Charity",
+        "note": "a donation you'd rather keep quiet"
       }
     ],
-    "footer": "Diagrams count toward the page. No appendices."
-  },
-  "problemBank": {
-    "badge": "Problem starters",
-    "heading": "Pick a problem — or bring your own",
-    "subtitle": "Click a card to see the actors, the friction, one blockchain angle and one alternative.",
-    "selectPrompt": "Select a problem to see the starter notes",
-    "actorsLabel": "Actors",
-    "frictionLabel": "Where trust breaks today",
-    "angleLabel": "A blockchain angle",
-    "alternativeLabel": "The honest alternative",
-    "ownLabel": "Bring your own:",
-    "ownBody": " any problem where several parties exchange value or records and at least one is not fully trusted.",
-    "items": [
-      {
-        "title": "Diploma verification",
-        "sector": "Education",
-        "actors": "Universities · graduates · employers · background-check firms",
-        "friction": "Employers e-mail registrars and wait days; fake diplomas are a multi-billion-dollar market; students don't control their own record.",
-        "angle": "The university anchors a hash of each diploma on-chain; the graduate holds the credential; anyone verifies in seconds (MIT Blockcerts, Section 3).",
-        "alternative": "A national verification API run by the ministry of education — cheaper, but it makes the ministry the single point of trust and failure."
-      },
-      {
-        "title": "Concert ticket scalping",
-        "sector": "Entertainment",
-        "actors": "Artist · promoter · ticketing platform · fans · resellers",
-        "friction": "Bots buy out drops in seconds; resale prices explode; the artist earns nothing on resale; fakes are common at the door.",
-        "angle": "Tickets as NFTs with resale rules in the contract — price caps, identity-bound transfers, a cut to the artist on every resale (GET Protocol).",
-        "alternative": "A centralised platform can already cap resale prices (Ticketmaster does). The blockchain adds portability and auditability — is that worth wallets for fans?"
-      },
-      {
-        "title": "Cross-border tuition & remittances",
-        "sector": "Payments",
-        "actors": "International students or migrant workers · their families · banks on both sides · the university or landlord",
-        "friction": "3–5 days, 5–8% in fees and FX spread, no visibility on where the money is.",
-        "angle": "Stablecoins over an L2 settle in seconds for cents; the university accepts USDC or converts on arrival (Section 3 · Borderless).",
-        "alternative": "Fintech rails (Wise, SEPA Instant) already do this cheaply in many corridors — the case is strongest where banking access is poor."
-      },
-      {
-        "title": "Charity donation transparency",
-        "sector": "Non-profit",
-        "actors": "Donors · the charity · field partners · auditors · regulators",
-        "friction": "Donors can't see what happened to their money; overhead ratios are disputed; trust collapses after each scandal.",
-        "angle": "Donations and disbursements flow through a transparent treasury contract; every payment is public; milestone-based release (DAO-style, Section 3).",
-        "alternative": "Published audited accounts. Cheaper and legally recognised — but slower, less granular, and still based on trusting the auditor."
-      },
-      {
-        "title": "Carbon credit double counting",
-        "sector": "Sustainability",
-        "actors": "Project developers · registries · brokers · corporate buyers · verifiers",
-        "friction": "The same credit can be sold twice across registries; retirement is hard to prove; provenance is opaque.",
-        "angle": "Each credit is a unique token; retiring it burns it; the full chain of custody is public (tokenised credits, Section 3 · RWA).",
-        "alternative": "A single global registry with an API. The real problem is bad or fraudulent measurement at the source — which no ledger fixes."
-      },
-      {
-        "title": "Baby-formula recall",
-        "sector": "Food supply chain",
-        "actors": "Manufacturer · distributors · retailers · regulators · parents",
-        "friction": "Tracing one contaminated batch to shelves takes days; whole product lines get pulled; blame is disputed.",
-        "angle": "Every hand-off recorded on a permissioned chain; recall scope found in seconds (Walmart Food Trust, Section 3).",
-        "alternative": "A shared database run by the industry association. Works if everyone trusts the association — the question is whether they do."
-      },
-      {
-        "title": "Freelancer escrow",
-        "sector": "Gig economy",
-        "actors": "Freelancer · client · platform · dispute arbitrators",
-        "friction": "Clients ghost after delivery; freelancers deliver nothing after deposit; platforms take 10–20% and freeze funds for weeks.",
-        "angle": "Funds locked in an escrow contract; released on client approval or by a vote of arbitrators; fees fall to a few percent.",
-        "alternative": "Existing platforms are escrow already. The contract removes the platform's discretion — and its customer support. Who settles a messy dispute?"
-      },
-      {
-        "title": "Group-buying a rare asset",
-        "sector": "Collective ownership",
-        "actors": "Thousands of small contributors · an auction house · a custodian · a legal entity",
-        "friction": "Pooling money fast across strangers is hard; deciding what happens after is harder (ConstitutionDAO, Section 3).",
-        "angle": "A DAO treasury collects funds in days; token holders vote on custody, display, resale; exit rights protect minorities.",
-        "alternative": "A fund or cooperative with a lawyer. Slower, but it can actually own the asset. What happens when the DAO loses the auction?"
-      }
-    ]
-  },
-  "lens": {
-    "badge": "Critical lens",
-    "heading": "Should this problem earn a blockchain?",
-    "subtitle": "Tick what is true for your group's problem. The verdict updates live — bring it to Part 3 of your report.",
-    "checks": [
-      { "label": "Several parties are involved who do not fully trust each other", "hint": "If one party is trusted by all, a database wins." },
-      { "label": "They need one shared record that no single party controls", "hint": "Shared truth is the core thing a blockchain sells." },
-      { "label": "The rules are simple and stable enough to write as code", "hint": "If the policy changes monthly, immutability hurts." },
-      { "label": "The data can be public or hashed — no raw personal data on-chain", "hint": "GDPR and trade secrets conflict with public ledgers." },
-      { "label": "The current intermediary is expensive, slow or a real fraud risk", "hint": "Disintermediation must save something measurable." },
-      { "label": "Users can live with wallets — or you can hide them behind an app", "hint": "Wallet UX is still the number-one adoption killer." }
+    "traceCaption": "Anyone can follow the same trail, backwards and forwards, forever.",
+    "businessLabel": "Why a business cares",
+    "business": [
+      "Payroll on-chain = every salary public",
+      "Suppliers can read your volumes and margins",
+      "Competitors watch your treasury move in real time"
     ],
-    "scoreLabel": "{{count}} of {{total}} ticked",
-    "verdicts": {
-      "sc": { "title": "Strong case for a smart contract", "desc": "Multi-party, shared truth, stable rules. Your Part 3 should still name the two biggest risks — audits and governance." },
-      "hybrid": { "title": "Hybrid: justify every on-chain piece", "desc": "Some of the pattern fits. Most real deployments live here: hashes or ownership on-chain, data and discretion off-chain." },
-      "db": { "title": "Probably a database", "desc": "A well-run database with audit logs is cheaper, faster and legally clearer. Saying so, with reasons, is a strong report." }
+    "normalLabel": "A normal public transaction",
+    "normalCaption": "Anyone can read who paid whom, how much, and trace it backwards forever.",
+    "shieldedLabel": "A shielded transaction",
+    "shieldedProof": "proof ✓ valid",
+    "shieldedCaption": "Hidden — yet still provably valid.",
+    "trickA": "The trick: let validators confirm a transaction is ",
+    "trickStrong1": "valid",
+    "trickB": " without learning ",
+    "trickStrong2": "who",
+    "trickC": ", ",
+    "trickStrong3": "what",
+    "trickD": ", or ",
+    "trickStrong4": "how much",
+    "trickE": ".",
+    "trickCaption": "That trick has a name: zero-knowledge proofs. Next slide.",
+    "trickLabel": "The way out"
+  },
+  "zkp": {
+    "heading": "Zero-Knowledge Proofs — the one idea",
+    "subtitle": "One sentence and one everyday example.",
+    "oneLinerA": "Prove a statement is true — ",
+    "oneLinerB": "without revealing anything that makes it true.",
+    "exampleTitle": "Example — proving you're over 18",
+    "exampleSubtitle": "Same goal, two ways. Watch what the bouncer learns.",
+    "withoutLabel": "Without ZK — show your passport",
+    "withoutBodyA": "The bouncer now knows your ",
+    "withoutBodyStrong": "name, address, nationality and exact birth date",
+    "withoutBodyB": ".",
+    "withoutCaption": "You proved one fact and leaked five.",
+    "withLabel": "With ZK — show a proof",
+    "withBodyA": "\"I was born before ",
+    "withBodyStrong": "today − 18 years",
+    "withBodyB": ".\" The bouncer checks ✓.",
+    "withCaptionA": "Verified — and they learned ",
+    "withCaptionItalic": "nothing else about you",
+    "withCaptionB": ".",
+    "demo": {
+      "badge": "Try it",
+      "youLabel": "You, at the door",
+      "pick": "Pick how you prove you're over 18:",
+      "passportBtn": "🛂 Show my passport",
+      "proofBtn": "🔐 Show a ZK proof",
+      "bouncerLabel": "What the bouncer now knows",
+      "idle": "Choose an option on the left…",
+      "verdict": "Over 18 ✓",
+      "leaked": [
+        "Full name",
+        "Home address",
+        "Nationality",
+        "Exact birth date",
+        "Photo"
+      ],
+      "hidden": "— stays with you",
+      "leakedCountPassport": "1 fact proven · 5 facts leaked",
+      "leakedCountProof": "1 fact proven · 0 facts leaked"
     },
-    "reset": "↺ Reset",
-    "footnote": "A conversation starter, not a formula; Section 4's decision tree is the full version."
-  },
-  "report": {
-    "heading": "The 1-page report",
-    "subtitle": "A template: three headings, a verdict line, your names.",
-    "pageTitle": "Smart Contracts · In-class Assignment",
-    "pageGroup": "Group: names · date",
-    "pageProblemTitle": "1 · Problem statement",
-    "pageSolutionTitle": "2 · Proposed solution",
-    "pageProsConsTitle": "3 · Pros & cons of using a blockchain",
-    "pageProsLabel": "Pros",
-    "pageConsLabel": "Cons",
-    "pageVerdictLabel": "Verdict:",
-    "pageVerdictPlaceholder": "smart contract / hybrid / database — one sentence",
-    "submissionLabel": "Submission",
-    "submission": [
-      { "label": "Format", "value": "PDF", "note": "one page, portrait" },
-      { "label": "Length", "value": "1 page max", "note": "diagrams count; appendices don't exist" },
-      { "label": "Names", "value": "All group members", "note": "at the top of the page" },
-      { "label": "Due", "value": "End of session", "note": "unless your instructor says otherwise" }
-    ],
-    "strongLabel": "A strong report…",
-    "strong": [
-      "Names the actors and says which one is not trusted — in the first three lines.",
-      "Describes what the contract does in plain language. No code, no jargon without a gloss.",
-      "Puts data where it belongs: ownership and rules on-chain, personal data and documents off.",
-      "Gives at least two honest cons — cost, privacy, governance, user experience.",
-      "Ends with a verdict a sceptical CFO could repeat in one sentence.",
-      "Cites at least one real case from this course (success or failure) as a reference point."
+    "moreLabel": "Same trick, other doors",
+    "more": [
+      {
+        "icon": "🔑",
+        "text": "Log in by proving you know the password — without typing it anywhere."
+      },
+      {
+        "icon": "🏠",
+        "text": "Prove your salary clears a mortgage threshold — without handing over the payslip."
+      },
+      {
+        "icon": "🧑",
+        "text": "Prove you are one unique human — without saying which human."
+      }
     ]
   },
-  "discussion": {
-    "prompt": "Which of today's problems genuinely needs a blockchain — and which just needs a better database?",
-    "questions": [
-      "Where did your group disagree most: the problem, the solution, or the verdict? What evidence would settle it?",
-      "For a database verdict: what would have to change (regulation, user tools, cost) to make it a smart contract?",
-      "For a smart-contract verdict: who runs it, who pays the gas, and who is liable when it goes wrong?",
-      "Which real case from the course does your problem most resemble — Estonia, Walmart, The DAO, ASX, TradeLens, ConstitutionDAO?"
+  "zkpCave": {
+    "heading": "Where's Waldo? — the same idea, visually",
+    "subtitle": "I prove I found Waldo on a crowded page without telling you where he is.",
+    "steps": [
+      {
+        "title": "The claim",
+        "text": "I say I found Waldo on this crowded page. You don't believe me, and I refuse to point, because that gives my answer away."
+      },
+      {
+        "title": "The proof",
+        "text": "I cover the whole page with a large opaque sheet that has one tiny Waldo-sized hole, lined up exactly over him. You see Waldo through the hole."
+      },
+      {
+        "title": "You're convinced",
+        "text": "Waldo is clearly on the page. But the sheet hid the rest, so you still have no idea where on the page he is."
+      }
+    ],
+    "punchlineLabel": "The punchline — ",
+    "punchlineA": "you end fully convinced Waldo is there, yet learn ",
+    "punchlineStrong": "nothing",
+    "punchlineB": " about his location. That gap is \"zero-knowledge\".",
+    "classicLabel": "The classic version — ",
+    "classicBody": "\"the magic cave\": Alice repeatedly exits the side a verifier shouts, proving she knows the password without ever saying it. Repeat enough and luck is ruled out.",
+    "sheetLabel": "opaque sheet",
+    "pageLabel": "crowded page"
+  },
+  "zkIdentity": {
+    "heading": "KYC without handing over your identity",
+    "subtitle": "Step by step. Any ZK-capable platform can run this pattern.",
+    "actors": [
+      "Bank",
+      "Your wallet",
+      "The app"
+    ],
+    "steps": [
+      {
+        "label": "Bank issues a credential",
+        "desc": "Your bank verifies you once and signs a digital credential: name, date of birth, residency, sanctions check. It lives in your wallet — only you hold it."
+      },
+      {
+        "label": "You generate a proof",
+        "desc": "Your wallet builds a proof: \"signed by the bank · age ≥ 18 · EU resident · not sanctioned.\" The proof contains none of the raw data."
+      },
+      {
+        "label": "The app verifies",
+        "desc": "The app's smart contract checks the proof and lets you in. Your name and birth date never leave your wallet — not even the app operator can read them."
+      }
+    ],
+    "businessLabel": "Why a business cares",
+    "business": [
+      "No database of passports to leak — far less GDPR exposure",
+      "Onboarding in seconds, reusable across every service that trusts the issuer",
+      "Regulators still get what they need: proof the check was done, on demand"
+    ],
+    "footA": "Same pattern: ",
+    "footStrong": "private voting · proof of solvency · medical records · sanctions screening",
+    "footB": " — anywhere the question is \"is this true?\" without \"who are you?\"."
+  },
+  "zkApps": {
+    "heading": "ZK in production today",
+    "subtitle": "Six live products. Each one proves a business fact without opening the books.",
+    "propsLabel": "Three properties",
+    "props": [
+      {
+        "t": "True claims always pass",
+        "d": "If you really are over 18, the proof always works."
+      },
+      {
+        "t": "False claims always fail",
+        "d": "No clever trick lets a 16-year-old forge the proof."
+      },
+      {
+        "t": "Nothing else leaks",
+        "d": "The checker learns the yes/no — and nothing more."
+      }
+    ],
+    "doesLabel": "Lets you",
+    "items": [
+      {
+        "name": "Private payments",
+        "who": "Zcash shielded transactions",
+        "does": "Send money where sender, receiver and amount stay hidden, yet the network still proves the payment is valid.",
+        "since": "Payments · live since 2016"
+      },
+      {
+        "name": "Proof of reserves",
+        "who": "Binance · OKX (zk-based PoR)",
+        "does": "Let an exchange prove it holds every customer's deposit — without publishing any customer's balance.",
+        "since": "Finance · since 2023"
+      },
+      {
+        "name": "Proof of personhood",
+        "who": "World ID (Worldcoin)",
+        "does": "Prove to an app that you are a unique human — without revealing which human.",
+        "since": "Identity · live since 2023"
+      },
+      {
+        "name": "Compliance proofs",
+        "who": "Privacy Pools (Ethereum mainnet)",
+        "does": "Prove your funds do not come from a flagged source — without revealing your transaction history.",
+        "since": "Compliance · live Mar 2025"
+      },
+      {
+        "name": "Private voting",
+        "who": "MACI (Ethereum Foundation PSE) · Vocdoni",
+        "does": "Vote in an election anyone can audit, where nobody — not even the organiser — can see your ballot.",
+        "since": "Governance · in use since 2021"
+      },
+      {
+        "name": "zkTLS / web proofs",
+        "who": "Reclaim Protocol · Opacity · TLSNotary",
+        "does": "Prove a fact from any website you log into (bank balance above X, your driver rating) without sharing your password or a screenshot.",
+        "since": "Web data · 2023+"
+      }
     ]
   },
-  "rubric": {
-    "heading": "How it's assessed",
-    "subtitle": "Four equal criteria. A well-argued \"no\" scores as high as a well-argued \"yes\".",
-    "criteria": [
-      { "label": "Clarity of the problem", "weight": "25%", "desc": "Actors, friction and today's cost are concrete. A reader knows who is not trusted and why it matters." },
-      { "label": "Fit of the solution", "weight": "25%", "desc": "The contract's trigger, action and on/off-chain split are plain and plausible. It connects to a real pattern from the course." },
-      { "label": "Honesty of the pros & cons", "weight": "25%", "desc": "Real trade-offs, not a sales pitch. The non-blockchain alternative is taken seriously. The verdict follows from the analysis." },
-      { "label": "Use of course concepts", "weight": "25%", "desc": "Decision framework, oracle problem, governance, limitations and at least one real case are used correctly — not name-dropped." }
+  "privacyApproaches": {
+    "heading": "Four ways to get privacy on-chain",
+    "subtitle": "Each makes a different trade-off between strength, flexibility, and how regulators treat it.",
+    "howLabel": "How: ",
+    "tradeLabel": "Trade-off: ",
+    "items": [
+      {
+        "name": "Zcash",
+        "sub": "L1 · zk-SNARKs · 2016",
+        "mech": "Optional shielded transactions use zk-SNARKs to prove ownership and value conservation without revealing sender, recipient or amount.",
+        "trade": "Privacy is opt-in, so most volume stays transparent — weakening the anonymity set."
+      },
+      {
+        "name": "Monero",
+        "sub": "L1 · ring sigs + stealth · 2014",
+        "mech": "Mandatory privacy: ring signatures hide the sender, stealth addresses hide the recipient, RingCT hides the amount.",
+        "trade": "No transparency option — auditing is hard, so many exchanges have delisted it."
+      },
+      {
+        "name": "Aztec · Aleo",
+        "sub": "Programmable ZK privacy · 2023+",
+        "mech": "Smart contracts with private state and inputs — build any confidential dApp, not just private payments.",
+        "trade": "Far more flexible, but newer tooling (Noir, Leo) and privacy lives at the contract level."
+      },
+      {
+        "name": "Mixers",
+        "sub": "Tornado Cash · cautionary case",
+        "mech": "Pool many deposits, withdraw to fresh addresses — breaking the on-chain link between sender and receiver.",
+        "trade": "Credibly neutral and immutable — which is exactly why they became a sanctions target."
+      }
+    ]
+  },
+  "privacyRegulation": {
+    "heading": "Tornado Cash — when privacy code met the law",
+    "subtitle": "One mixer, one sanction, and years of courts deciding where a privacy tool ends and laundering infrastructure begins.",
+    "story": [
+      {
+        "yr": "2019",
+        "t": "Tornado Cash launches",
+        "d": "A non-custodial mixer on Ethereum: deposit, wait, withdraw to a fresh address. Nobody operates it — the code simply runs."
+      },
+      {
+        "yr": "Aug 2022",
+        "t": "OFAC sanctions the code",
+        "d": "The US Treasury sanctioned the smart-contract addresses themselves — a first. Its reason: ~$7B laundered, including $455M by North Korea's Lazarus Group. Ordinary users were swept in too."
+      },
+      {
+        "yr": "2024",
+        "t": "Developers on trial",
+        "d": "Alexey Pertsev convicted in the Netherlands (64 months, under appeal); Roman Storm awaiting trial in the US. Writing privacy software itself became the legal question."
+      },
+      {
+        "yr": "Nov 2024 → Mar 2025",
+        "t": "Courts push back",
+        "d": "A US appeals court ruled immutable smart contracts are not \"property\" that can be sanctioned. OFAC delisted Tornado Cash on 21 March 2025."
+      },
+      {
+        "yr": "Aug 2025 →",
+        "t": "Still unsettled",
+        "d": "Storm convicted on one count (unlicensed money transmission); the jury hung on laundering and sanctions charges. Samourai Wallet's founders received 4–5 years (Nov 2025)."
+      }
     ],
-    "noteLabel": "Reminder:",
-    "noteBody": " this is one of two in-class assignments in the course. It is graded on reasoning, not on whether the answer was \"blockchain\"."
+    "truthsLabel": "Two things are true at once",
+    "truthA": "Privacy tools really did shield a state-sponsored hacking group's loot. Regulators had a genuine problem.",
+    "truthB": "The same tools protected ordinary people from surveillance — and sanctioning code punished users who had done nothing wrong.",
+    "cypherpunkLabel": "Back to Course 01",
+    "cypherpunk": "The Cypherpunks (Course 01) said privacy is a precondition for freedom; regulators say untraceable money is a precondition for crime. Both are partly right, which is why selective disclosure (next slide) matters.",
+    "recapFreedom": "Course 01 · Prologue — the Cypherpunks: privacy as a precondition for freedom",
+    "guidanceLabel": "Design guidance — ",
+    "guidanceA": "where regulation matters, prefer ",
+    "guidanceStrong1": "selective disclosure",
+    "guidanceB": " and ",
+    "guidanceStrong2": "proof-of-compliance",
+    "guidanceC": " (e.g. prove \"not on a sanctions list\" without revealing identity) over all-or-nothing anonymity."
+  },
+  "privacyFuture": {
+    "heading": "What this unlocks for business — selective, provable disclosure",
+    "subtitleA": "ZK turns privacy from hiding things into ",
+    "subtitleStrong": "selective, provable disclosure",
+    "subtitleB": ", which is what institutions and regulators need.",
+    "items": [
+      {
+        "title": "Confidential DeFi & payments",
+        "d": "Trade without broadcasting your size, run payroll or treasury on-chain without exposing salaries. Dark-pool-style execution with public settlement."
+      },
+      {
+        "title": "Reusable private identity",
+        "d": "KYC once, then prove \"is human\", \"over 18\" or \"not sanctioned\" to any app, with no document and no database of personal data to leak."
+      },
+      {
+        "title": "Proof without exposure",
+        "d": "Exchanges prove solvency, funds prove eligibility, firms prove an audit passed — all without opening their books or counterparties."
+      },
+      {
+        "title": "Verifiable computation",
+        "d": "ZK rollups, coprocessors and verifiable AI: prove an off-chain result was computed correctly, so chains trust heavy work they never ran."
+      }
+    ],
+    "bannerA": "Privacy stops being a ",
+    "bannerStrong1": "red flag",
+    "bannerB": " and becomes ",
+    "bannerStrong2": "compliant infrastructure",
+    "bannerC": ", which is what lets regulated finance, healthcare and government use public chains."
+  },
+  "quiz": {
+    "question": "A lender must confirm that an applicant earns at least €40,000 a year before approving a loan. What does a zero-knowledge approach change?",
+    "options": [
+      "The payslip is encrypted and stored on-chain, so only the lender can open it.",
+      "The applicant sends a proof that \"income ≥ €40,000, attested by a trusted issuer\" is true. The lender verifies the proof and never sees the payslip or the exact figure.",
+      "The lender no longer needs to check anything: the blockchain guarantees the applicant is honest.",
+      "The salary is hidden from everyone, regulators included, forever."
+    ],
+    "explanation": "Zero-knowledge separates the claim from the data behind it. A trusted issuer (an employer or a bank) signs the facts once; the applicant's wallet turns them into a proof of one statement; the lender checks the proof. Nothing is stored on-chain in readable or encrypted form, a check still happens, and the applicant can produce further proofs for a regulator on demand. That is selective disclosure, not blanket secrecy."
+  },
+  "takeaways": {
+    "title": "Section 07 — Key Takeaways",
+    "items": [
+      "A public chain is transparent by default: one link between a wallet and a name exposes its whole history — a real obstacle for payroll, suppliers and treasury",
+      "Zero-knowledge in one line: prove a statement is true without revealing what makes it true",
+      "It is already in production: private payments, proof of reserves, proof of personhood, private voting and compliance proofs",
+      "KYC without surrendering identity: the issuer checks once, the customer proves only what each service needs, and there is no passport database to leak",
+      "Tornado Cash showed that all-or-nothing anonymity collides with the law; selective, provable disclosure is what lets regulated business use public chains"
+    ]
+  },
+  "keyPoints": {
+    "s7-public": "A public ledger is a permanent record; privacy has to be added on purpose.",
+    "s7-zk": "Prove it is true without showing why.",
+    "s7-waldo": "A proof convinces by making cheating impossible, not by showing the secret.",
+    "s7-kyc": "Verify the claim, not the person: the issuer vouches once and the customer reveals only what each service needs.",
+    "s7-live": "ZK is a product, not a paper: payments, solvency, identity and compliance proofs are live today.",
+    "s7-approaches": "Mixers hide everything or nothing; ZK reveals exactly what a counterparty needs.",
+    "s7-tornado": "Untraceable money shields dissidents and launderers alike; selective disclosure is the way out.",
+    "s7-disclosure": "Keep the data confidential and still prove you follow the rules."
   }
 }
