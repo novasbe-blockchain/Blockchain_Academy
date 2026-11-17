@@ -10,6 +10,7 @@ import { QuizSlide } from '../../components/templates/QuizSlide';
 import { Fuel, Hash, KeyRound, Layers, ScrollText, Wallet } from 'lucide-react';
 import { GasCalculator } from '../../components/ethereum/GasCalculator';
 import { Eip1559Demo } from '../../components/ethereum/Eip1559Demo';
+import { StakingFlow } from '../../components/ethereum/StakingFlow';
 
 // Language-neutral shape — only IDs + kind. Labels come from t() at render time.
 const chapterShape = [
@@ -30,6 +31,7 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-s2-consensus' },
   { id: 's2-consensus' },
+  { id: 's2-staking-flow' },
   { id: 's2-staking' },
   { id: 's2-issuance' },
 
@@ -38,6 +40,7 @@ const chapterShape = [
   { id: 's2-why-l2' },
   { id: 's2-rollups' },
   { id: 's2-rollups-2' },
+  { id: 's2-data-where' },
   { id: 's2-data' },
 
   { kind: 'group' as const, id: 'g-s2-apps' },
@@ -55,6 +58,8 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-s2-wrap' },
   { id: 's2-quiz' },
+  { id: 's2-quiz-2' },
+  { id: 's2-quiz-3' },
   { id: 's2-takeaways' },
 ] as const;
 
@@ -377,6 +382,94 @@ function RollupFunnel() {
   );
 }
 
+/* ── Where rollup data lives, one tiny picture per lane (no text beyond the L1 label, so it reads in any language).
+      0 calldata: the data is a row INSIDE the block · 1 blob: a sidecar ATTACHED to the block · 2 off-chain: a server APART from it. ── */
+function DataLaneGlyph({ kind, color, serverLabel }: { kind: 0 | 1 | 2; color: string; serverLabel: string }) {
+  const muted = 'var(--muted-foreground)';
+  const rows = [22, 33, 44, 55];
+  return (
+    <svg viewBox={kind === 0 ? '-50 0 220 72' : '0 0 220 72'} className="w-full flex-1 min-h-[72px] max-h-[190px]" aria-hidden="true">
+      <rect x="8" y="6" width="104" height="62" rx="7" fill="var(--card)" stroke="#627EEA" strokeWidth="1.5" />
+      <text x="16" y="17" fontSize="8" fontWeight="800" fill="#627EEA">L1</text>
+      {rows.map((y, i) => {
+        const isData = kind === 0 && (i === 1 || i === 2);
+        const isMark = kind !== 0 && i === 1;
+        return <rect key={y} x="16" y={y} width={isMark ? 22 : 88} height="7" rx="2" fill={isData || isMark ? color : muted} fillOpacity={isData || isMark ? 1 : 0.22} />;
+      })}
+      {kind !== 0 && <rect x="42" y="33" width="62" height="7" rx="2" fill={muted} fillOpacity="0.22" />}
+      {kind === 1 && (
+        <>
+          <line x1="112" y1="37" x2="128" y2="37" stroke={color} strokeWidth="2" />
+          <rect x="128" y="14" width="78" height="46" rx="7" fill={color} fillOpacity="0.16" stroke={color} strokeWidth="1.5" />
+          {[24, 34, 44].map(y => <rect key={y} x="136" y={y} width="62" height="6" rx="2" fill={color} />)}
+          <text x="200" y="11" textAnchor="end" fontSize="8.5" fontWeight="800" fill={color}>⏳ ~18d</text>
+        </>
+      )}
+      {kind === 2 && (
+        <>
+          <line x1="112" y1="37" x2="146" y2="37" stroke={color} strokeWidth="1.5" strokeDasharray="3 4" />
+          <text x="129" y="32" textAnchor="middle" fontSize="11" fontWeight="900" fill={color}>?</text>
+          <rect x="146" y="14" width="66" height="46" rx="7" fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="4 3" />
+          {[24, 34, 44].map(y => <rect key={y} x="154" y={y} width="50" height="6" rx="2" fill={color} fillOpacity="0.55" />)}
+          <text x="179" y="11" textAnchor="middle" fontSize="8" fontWeight="800" fill={color}>{serverLabel}</text>
+        </>
+      )}
+    </svg>
+  );
+}
+
+/* ── How each stablecoin type holds (or loses) its peg — one small diagram per card.
+      0 fiat: $1 in a bank ⇄ 1 token · 1 crypto: $150 locked → $100 minted · 2 algorithmic: supply chases the peg, then the Terra spiral. ── */
+function StablecoinMiniViz({ kind, color }: { kind: number; color: string }) {
+  const { t } = useTranslation('blockchain-platforms/section-2');
+  const muted = 'var(--muted-foreground)';
+  const fg = 'var(--foreground)';
+  const cls = 'w-full h-[100px] shrink-0 rounded-lg border bg-card/70';
+  const style = { borderColor: color + '30' };
+
+  if (kind === 0) {
+    return (
+      <svg viewBox="0 0 280 82" preserveAspectRatio="xMidYMid meet" className={cls} style={style} role="img" aria-label={`${t('stablecoins.viz.fiat.mint')} · ${t('stablecoins.viz.fiat.redeem')}`}>
+        <rect x="10" y="12" width="76" height="52" rx="8" fill={color} fillOpacity="0.12" stroke={color} strokeWidth="1.5" />
+        <text x="48" y="31" textAnchor="middle" fontSize="10" fontWeight="700" fill={muted}>🏦 {t('stablecoins.viz.fiat.bank')}</text>
+        <text x="48" y="53" textAnchor="middle" fontSize="18" fontWeight="900" fill={fg}>{t('stablecoins.viz.fiat.reserve')}</text>
+        <rect x="194" y="12" width="76" height="52" rx="8" fill="#10b981" fillOpacity="0.12" stroke="#10b981" strokeWidth="1.5" />
+        <text x="232" y="31" textAnchor="middle" fontSize="10" fontWeight="700" fill={muted}>on-chain</text>
+        <text x="232" y="53" textAnchor="middle" fontSize="14" fontWeight="900" fill={fg}>🪙 {t('stablecoins.viz.fiat.token')}</text>
+        <line x1="92" y1="29" x2="182" y2="29" stroke="#10b981" strokeWidth="1.5" />
+        <polygon points="181,25 188,29 181,33" fill="#10b981" />
+        <text x="140" y="23" textAnchor="middle" fontSize="9.5" fontWeight="700" fill="#10b981">{t('stablecoins.viz.fiat.mint')}</text>
+        <line x1="98" y1="49" x2="188" y2="49" stroke={color} strokeWidth="1.5" />
+        <polygon points="99,45 92,49 99,53" fill={color} />
+        <text x="140" y="62" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={color}>{t('stablecoins.viz.fiat.redeem')}</text>
+      </svg>
+    );
+  }
+  if (kind === 1) {
+    return (
+      <svg viewBox="0 0 280 82" preserveAspectRatio="xMidYMid meet" className={cls} style={style} role="img" aria-label={`${t('stablecoins.viz.crypto.locked')} → ${t('stablecoins.viz.crypto.minted')}`}>
+        <rect x="10" y="10" width="260" height="24" rx="6" fill={color} />
+        <text x="140" y="26" textAnchor="middle" fontSize="11" fontWeight="800" fill="#ffffff">🔒 {t('stablecoins.viz.crypto.locked')}</text>
+        <rect x="10" y="42" width="173" height="24" rx="6" fill="#10b981" />
+        <text x="96" y="58" textAnchor="middle" fontSize="11" fontWeight="800" fill="#ffffff">🪙 {t('stablecoins.viz.crypto.minted')}</text>
+        <rect x="187" y="42" width="83" height="24" rx="6" fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="4 3" />
+        <text x="228" y="58" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={color}>{t('stablecoins.viz.crypto.buffer')}</text>
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 280 82" preserveAspectRatio="xMidYMid meet" className={cls} style={style} role="img" aria-label={`${t('stablecoins.viz.algo.above')} · ${t('stablecoins.viz.algo.below')} · ${t('stablecoins.viz.algo.spiral')}`}>
+      <line x1="30" y1="34" x2="272" y2="34" stroke={muted} strokeOpacity="0.6" strokeDasharray="3 3" />
+      <text x="8" y="37" fontSize="9" fontWeight="800" fill={fg}>{t('stablecoins.viz.algo.peg')}</text>
+      <path d="M30,34 C40,22 52,22 62,34 S84,46 94,34 S116,22 126,34 S148,46 158,34 S176,24 186,32" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" />
+      <path d="M186,32 C200,38 208,58 226,66 S256,70 272,71" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
+      <text x="30" y="13" fontSize="9.5" fontWeight="700" fill="#10b981">{t('stablecoins.viz.algo.above')}</text>
+      <text x="30" y="62" fontSize="9.5" fontWeight="700" fill="#10b981">{t('stablecoins.viz.algo.below')}</text>
+      <text x="272" y="26" textAnchor="end" fontSize="9" fontWeight="800" fill={color}>{t('stablecoins.viz.algo.spiral')}</text>
+    </svg>
+  );
+}
+
 interface WhyItem { title: string; detail: string; }
 interface LabelDesc { label: string; desc: string; }
 interface LabelDetail { label: string; detail: string; }
@@ -500,6 +593,13 @@ export function BP_Section2() {
   const rollupZk = t('rollups.zk', { returnObjects: true }) as RollupBullet[];
   const rollupMetrics = t('rollups.metrics', { returnObjects: true }) as RollupMetric[];
   const dataAvailCards = t('dataAvail.cards', { returnObjects: true }) as { title: string; desc: string }[];
+  const dataAvailCardMeta = [
+    { icon: '🔍', color: '#6366f1' },
+    { icon: '🚪', color: '#39B54A' },
+    { icon: '🛡️', color: '#627EEA' },
+  ];
+  const dataLanes = t('dataWhere.lanes', { returnObjects: true }) as { title: string; tag: string; points: string[] }[];
+  const dataLaneColors = ['#627EEA', '#10b981', '#f59e0b'];
 
   const stablecoinCards = t('stablecoins.cards', { returnObjects: true }) as StablecoinCard[];
   const stablecoinCardMeta = [
@@ -528,6 +628,7 @@ export function BP_Section2() {
   const worstFitsEmojis = ['₿', '🏢', '🚀', '🎮'];
 
   const quizOptions = (t('quiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }));
+  const quiz3Options = (t('quiz3.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }));
   const quiz2Options = (t('quiz2.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
 
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
@@ -1451,6 +1552,16 @@ export function BP_Section2() {
           </div>
         </div>
 
+        {/* ═══════ S2-STAKING-FLOW — the validator loop, the two ways in, and the ETF outside it ═══════ */}
+        <div id="s2-staking-flow" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('stakingFlow.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t('stakingFlow.subtitle')}</p>
+          </div>
+          <StakingFlow />
+          <KeyPoint topic="stakingFlow" hood="stakingFlow" className="mt-3" />
+        </div>
+
         {/* ═══════ S2-STAKING — ETH's interest rate + the stake-and-exit simulator ═══════ */}
         <div id="s2-staking" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-3">
@@ -1810,7 +1921,69 @@ export function BP_Section2() {
           <KeyPoint topic="rollups2" hood="rollups2" className="mt-3" />
         </div>
 
-        {/* ═══════ S2-DATA — why rollups post their data to L1 ═══════ */}
+        {/* ═══════ S2-DATA-WHERE — where the data goes: calldata · blobs · off-chain ═══════ */}
+        <div id="s2-data-where" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('dataWhere.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1 max-w-4xl">{t('dataWhere.subtitle')}</p>
+          </div>
+
+          <div className="flex-1 min-h-0 flex flex-col gap-2">
+            {/* the batch that has to land somewhere */}
+            <div className="shrink-0 flex flex-col items-center">
+              <div className="rounded-xl border-2 px-5 py-1.5 text-center" style={{ borderColor: '#8b5cf6', backgroundColor: '#8b5cf614' }}>
+                <div className="text-sm font-black text-[#8b5cf6]">📦 {t('dataWhere.batch')}</div>
+                <div className="text-[11px] text-muted-foreground leading-tight">{t('dataWhere.batchSub')}</div>
+              </div>
+              <div className="text-[#8b5cf6] text-lg leading-none font-bold mt-1">↓</div>
+            </div>
+
+            {/* zone labels: two lanes on Ethereum, one off it */}
+            <div className="shrink-0 hidden lg:grid grid-cols-3 gap-4 text-[10px] font-black uppercase tracking-widest text-center">
+              <div className="col-span-2 rounded-t-lg border-x-2 border-t-2 px-2 pt-1.5 pb-1 text-[#627EEA]" style={{ borderColor: '#627EEA60' }}>{t('dataWhere.onL1')}</div>
+              <div className="rounded-t-lg border-x-2 border-t-2 border-dashed px-2 pt-1.5 pb-1 text-[#f59e0b]" style={{ borderColor: '#f59e0b80' }}>{t('dataWhere.offL1')}</div>
+            </div>
+
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {dataLanes.map((lane, i) => {
+                const color = dataLaneColors[i];
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + i * 0.1 }}
+                    className={`min-h-0 rounded-xl border-2 p-4 flex flex-col gap-2 ${i === 2 ? 'border-dashed' : ''}`}
+                    style={{ borderColor: color + '70', backgroundColor: color + '0D' }}
+                  >
+                    <div className="shrink-0 flex items-baseline justify-between gap-2">
+                      <div className="font-black text-lg leading-tight" style={{ color }}>{lane.title}</div>
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground text-right leading-tight">{lane.tag}</div>
+                    </div>
+                    <DataLaneGlyph kind={i as 0 | 1 | 2} color={color} serverLabel={t('dataWhere.serverLabel')} />
+                    <ul className="shrink-0 flex flex-col gap-1.5 text-sm text-foreground/90 leading-snug">
+                      {lane.points.map((pt, pi) => (
+                        <li key={pi} className="flex gap-2">
+                          <span className="font-black shrink-0" style={{ color }}>{i === 2 && pi === 2 ? '⚠' : '·'}</span>
+                          <span className={i === 2 && pi === 2 ? 'font-semibold text-foreground' : ''}>{pt}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* the risk in one line */}
+            <div className="shrink-0 rounded-xl border-l-4 px-4 py-2 text-sm leading-snug" style={{ borderColor: '#ED1C24', backgroundColor: '#ED1C2410' }}>
+              <span className="font-black uppercase tracking-wider text-[11px] text-[#ED1C24] mr-2">🧊 {t('dataWhere.riskLabel')}</span>
+              <span className="text-foreground/90">{t('dataWhere.risk')}</span>
+            </div>
+          </div>
+          <KeyPoint topic="dataWhere" hood="dataWhere" className="mt-3" />
+        </div>
+
+        {/* ═══════ S2-DATA — why rollups post their data to L1: verify · exit · guarantee ═══════ */}
         <div id="s2-data" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('dataAvail.heading')}</h2>
@@ -1820,7 +1993,7 @@ export function BP_Section2() {
           <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-5">
             {/* Visual — the rollup posts a proof and the data; the user can exit from the data */}
             <div className="min-h-[220px] rounded-xl border border-border bg-card/40 p-4 flex flex-col">
-              <svg viewBox="0 0 480 250" className="w-full flex-1 min-h-0" role="img" aria-label={t('dataAvail.svg.caption')}>
+              <svg viewBox="0 0 480 256" className="w-full flex-1 min-h-0" role="img" aria-label={t('dataAvail.svg.caption')}>
                 <rect x="140" y="14" width="200" height="44" rx="8" fill="#8b5cf614" stroke="#8b5cf6" strokeWidth="1.5" />
                 <text x="240" y="33" textAnchor="middle" fontSize="11" fontWeight="900" fill="#8b5cf6">{t('dataAvail.svg.l2Title')}</text>
                 <text x="240" y="48" textAnchor="middle" fontSize="8.5" fill="var(--muted-foreground)">{t('dataAvail.svg.l2Sub')}</text>
@@ -1844,24 +2017,29 @@ export function BP_Section2() {
                 <line x1="145" y1="150" x2="145" y2="166" stroke="#6366f1" strokeWidth="1.5" />
                 <line x1="335" y1="150" x2="335" y2="166" stroke="#39B54A" strokeWidth="1.5" />
 
-                <line x1="400" y1="208" x2="422" y2="222" stroke="#39B54A" strokeWidth="1.5" />
-                <polygon points="416,224 426,225 421,217" fill="#39B54A" />
-                <text x="450" y="230" textAnchor="end" fontSize="10" fontWeight="900" fill="#39B54A">🧍 {t('dataAvail.svg.userTitle')}</text>
-                <text x="450" y="245" textAnchor="end" fontSize="8" fill="var(--muted-foreground)">{t('dataAvail.svg.userSub')}</text>
+                <line x1="68" y1="208" x2="52" y2="218" stroke="#6366f1" strokeWidth="1.5" />
+                <polygon points="47,221 56.5,220.8 52.3,214" fill="#6366f1" />
+                <text x="30" y="236" fontSize="10" fontWeight="900" fill="#6366f1">🔍 {t('dataAvail.svg.verifierTitle')}</text>
+                <text x="30" y="250" fontSize="8" fill="var(--muted-foreground)">{t('dataAvail.svg.verifierSub')}</text>
+
+                <line x1="412" y1="208" x2="428" y2="218" stroke="#39B54A" strokeWidth="1.5" />
+                <polygon points="433,221 423.5,220.8 427.7,214" fill="#39B54A" />
+                <text x="450" y="236" textAnchor="end" fontSize="10" fontWeight="900" fill="#39B54A">🧍 {t('dataAvail.svg.userTitle')}</text>
+                <text x="450" y="250" textAnchor="end" fontSize="8" fill="var(--muted-foreground)">{t('dataAvail.svg.userSub')}</text>
               </svg>
               <p className="text-xs text-muted-foreground leading-snug shrink-0 mt-2">{t('dataAvail.svg.caption')}</p>
             </div>
 
-            {/* Two plain-language cards: the exit door · the cheaper shortcut */}
+            {/* Three plain-language reasons: verify · exit · Ethereum's guarantee */}
             <div className="min-h-0 grid auto-rows-fr gap-3">
               {dataAvailCards.map((c, i) => {
-                const color = ['#39B54A', '#f59e0b'][i % 2];
+                const { icon, color } = dataAvailCardMeta[i % dataAvailCardMeta.length];
                 return (
-                  <div key={c.title} className="min-h-0 flex gap-3 p-5 bg-card border-2 rounded-xl items-center" style={{ borderColor: color + '55' }}>
-                    <span className="text-4xl leading-none shrink-0">{['🚪', '✂️'][i % 2]}</span>
+                  <div key={c.title} className="min-h-0 flex gap-3 px-4 py-3 bg-card border-2 rounded-xl items-center" style={{ borderColor: color + '55' }}>
+                    <span className="text-3xl leading-none shrink-0">{icon}</span>
                     <div className="min-w-0">
-                      <div className="font-bold text-lg mb-1" style={{ color }}>{c.title}</div>
-                      <div className="text-sm lg:text-base text-muted-foreground leading-relaxed">{c.desc}</div>
+                      <div className="font-bold text-base mb-0.5" style={{ color }}>{c.title}</div>
+                      <div className="text-sm text-muted-foreground leading-snug">{c.desc}</div>
                     </div>
                   </div>
                 );
@@ -2034,7 +2212,8 @@ export function BP_Section2() {
                     <div className="text-[11px] text-muted-foreground leading-tight">{s.sub}</div>
                   </div>
                 </div>
-                {/* Logo strip — the visual: who's in this category */}
+                <StablecoinMiniViz kind={ci} color={meta.color} />
+                {/* Logo strip — who's in this category */}
                 <div className="flex flex-wrap gap-2 shrink-0">
                   {s.logos.map((l, li) => {
                     const logoColor = meta.logoColors[li];
@@ -2212,12 +2391,13 @@ export function BP_Section2() {
           <KeyPoint topic="worstFits" className="mt-3" />
         </div>
 
-        {/* ═══════ QUIZ ═══════ */}
+        {/* ═══════ QUIZ 1 — who is actually staking: solo, liquid, ETF ═══════ */}
         <div id="s2-quiz" className="h-full">
           <QuizSlide
             question={t('quiz.question')}
             options={quizOptions}
             explanation={t('quiz.explanation')}
+            compact
           />
         </div>
 
@@ -2227,6 +2407,17 @@ export function BP_Section2() {
             question={t('quiz2.question')}
             options={quiz2Options}
             explanation={t('quiz2.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 3 — data availability: valid proofs, withheld data ═══════ */}
+        <div id="s2-quiz-3" className="h-full">
+          <QuizSlide
+            question={t('quiz3.question')}
+            options={quiz3Options}
+            explanation={t('quiz3.explanation')}
+            compact
           />
         </div>
 
