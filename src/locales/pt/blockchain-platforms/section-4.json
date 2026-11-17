@@ -20,7 +20,7 @@
     "s4-layer0": "🧩 Layer 0: Conceito",
     "s4-layer0-2": "Layer 0: Plataformas",
     "s4-wrapped": "Wrapped Tokens",
-    "s4-bridges": "Como Funciona uma Bridge",
+    "s4-bridges": "O Que É uma Bridge",
     "s4-bridge-risk": "Risco das Bridges",
     "s4-bridge-hacks": "Bridge Hacks",
     "s4-cosmos": "Cosmos",
@@ -120,13 +120,15 @@
       "lost": "~2 mil M$ roubados em 2022",
       "chainA": "Chain A",
       "chainB": "Chain B",
+      "marketA": "Ethereum",
+      "marketB": "Arbitrum",
       "sameToken": "o mesmo token, dois preços"
     },
     "analogy": "Imagina o Gmail sem conseguir enviar uma mensagem para o Hotmail. As primeiras redes de email funcionavam mesmo assim: cada serviço era fechado, até todos adotarem uma norma comum (SMTP). As blockchains estão, na sua maioria, ainda na fase \"sem norma comum\".",
     "analogyLabel": "Analogia",
     "recap": "Bitcoin (Section 01) · Ethereum (Section 02) · Hyperledger Fabric (Section 03) — each one is its own island",
     "heading": "Porque é que as blockchains precisam de falar entre si?",
-    "subtitle": "Os sistemas fechados são seguros, mas as pessoas, o dinheiro e as aplicações não ficam numa só chain.",
+    "subtitle": "Os sistemas fechados são seguros, mas as pessoas, o dinheiro e as aplicações não ficam numa só chain — por isso as chains precisam de uma forma de se ligar.",
     "islands": {
       "title": "Três problemas que daí resultam",
       "intro": "Surgem assim que valor ou utilizadores querem mover-se entre chains fechadas.",
@@ -134,26 +136,26 @@
         {
           "emoji": "🏝️",
           "title": "Ativos encalhados",
-          "desc": "O BTC está bloqueado na rede Bitcoin. Não pode ser usado nativamente em protocolos DeFi da Ethereum — é preciso um token embrulhado (WBTC) que introduz risco de custódia."
+          "desc": "Um bitcoin só existe no registo da Bitcoin, por isso não pode ser usado numa app da Ethereum. Para levar o seu valor até lá, alguém tem de guardar a moeda real e emitir um substituto na outra chain — e passas a confiar nesse alguém."
         },
         {
-          "emoji": "🌉",
-          "title": "Bridges frágeis",
-          "desc": "As bridges cross-chain são vetores de ataque de elevado valor. Mais de 2 mil M$ roubados: Ronin 625 M$, Wormhole 320 M$, Nomad 190 M$. As bridges são o elo mais fraco da interoperabilidade."
+          "emoji": "🔗",
+          "title": "Conectores caros",
+          "desc": "Tudo o que liga duas chains tem de guardar, ou garantir, o valor em trânsito. Os conectores criados para mover valor entre chains foram as falhas mais caras da cripto: cerca de 2 mil M$ roubados só em 2022."
         },
         {
           "emoji": "🔄",
           "title": "Mercados divididos",
-          "desc": "Cada chain tem os seus próprios DEX, pools de liquidez e mercados. O capital não pode fluir livremente — um trader na Ethereum não consegue aceder a um preço melhor na Solana sem atrito."
+          "desc": "Cada chain tem as suas próprias exchanges e pools. O mesmo token pode ter um preço na Ethereum e outro na Arbitrum, e passar de uma para a outra custa tempo e taxas."
         }
       ]
     },
     "matters": {
       "solutionsLabel": "Três formas de ligar — comparadas a seguir",
       "solutions": [
-        { "label": "Bridges", "sub": "Arriscadas mas muito usadas" },
-        { "label": "Cosmos IBC", "sub": "Norma de protocolo nativa" },
-        { "label": "Layer 0", "sub": "Polkadot · Avalanche" }
+        { "label": "Bridges", "sub": "Confiar num operador" },
+        { "label": "Cosmos IBC", "sub": "As chains verificam-se uma à outra" },
+        { "label": "Layer 0", "sub": "Uma equipa de segurança para muitas chains" }
       ]
     }
   },
@@ -170,10 +172,10 @@
       "analogy": "Um estafeta fica com a tua bagagem e dá-te um talão de levantamento para usares na outra cidade.",
       "short": "Bridges",
       "lead": "Lock-and-mint: um operador fica no meio, guarda a tua moeda e emite uma cópia na outra chain.",
-      "caption": "A tua moeda nunca sai da chain A. Fica à espera no cofre enquanto uma cópia circula na chain B.",
+      "caption": "A tua moeda nunca sai da Ethereum. Fica à espera no cofre enquanto uma cópia circula na Solana.",
       "svg": {
-        "chainA": "Chain A",
-        "chainB": "Chain B",
+        "chainA": "Ethereum",
+        "chainB": "Solana",
         "locked": "1 ETH",
         "lockedNote": "a tua moeda, bloqueada",
         "vaultNote": "um só cofre para todos",
@@ -197,11 +199,11 @@
       "lead": "Sem operador no meio: as duas chains verificam-se diretamente uma à outra.",
       "caption": "Cada chain guarda uma pequena cópia, sempre atualizada, dos cabeçalhos de bloco da outra, para poder verificar por si qualquer mensagem que chegue.",
       "svg": {
-        "chainA": "Chain A",
-        "chainB": "Chain B",
+        "chainA": "Cosmos Hub",
+        "chainB": "Osmosis",
         "ownValidators": "os seus validadores",
-        "copyOfB": "Cabeçalhos da Chain B",
-        "copyOfA": "Cabeçalhos da Chain A",
+        "copyOfB": "Cabeçalhos da Osmosis",
+        "copyOfA": "Cabeçalhos do Cosmos Hub",
         "checks1": "✓ verifica cada prova",
         "checks2": "com eles, por si própria",
         "packet": "mensagem + prova",
@@ -224,15 +226,15 @@
         "l0Title": "Layer 0 — um conjunto de validadores partilhado",
         "l0Note": "os mesmos validadores finalizam todas as chains ligadas",
         "secures": "protege",
-        "chainA": "Chain A",
-        "chainB": "Chain B",
-        "chainC": "Chain C",
+        "chainA": "Moonbeam",
+        "chainB": "Hydration",
+        "chainC": "Bifrost",
         "chainNote": "lógica da sua app",
         "native": "mensagens nativas entre membros — sem contrato de bridge",
         "outside1": "Chain",
         "outside2": "externa",
         "bridgeNeeded": "precisa de bridge",
-        "example": "ex.: Polkadot — os validadores da Relay Chain protegem cada parachain; o XCM é a mensagem nativa"
+        "example": "aqui: Polkadot — os validadores da Relay Chain protegem cada parachain; o XCM é a mensagem nativa"
       },
       "title": "Rede Layer 0",
       "mechanism": "Um conjunto de validadores partilhado protege todas as chains ligadas ao mesmo tempo, por isso enviar uma mensagem entre elas é uma operação nativa, não um contrato à parte.",
@@ -294,25 +296,27 @@
     "analogy": "Um estafeta guarda a tua bagagem num depósito e dá-te um talão. Viajas com o talão; a bagagem nunca sai do sítio. Devolves o talão e recebes a bagagem.",
     "stepsLabel": "Lock-and-mint, passo a passo",
     "steps": [
-      { "title": "Bloquear", "desc": "Envias 1 ETH para o cofre da bridge na chain A." },
-      { "title": "Aprovar", "desc": "Os signatários da bridge veem o depósito e aprovam-no." },
-      { "title": "Emitir", "desc": "A chain B emite 1 wETH para ti: o teu talão." },
-      { "title": "Queimar para voltar", "desc": "Queimas o wETH na chain B e os signatários libertam o teu 1 ETH." }
+      { "title": "Bloquear", "desc": "Envias 1 ETH para o cofre da bridge na Ethereum." },
+      { "title": "Aprovar", "desc": "O operador da bridge vê o depósito e aprova-o." },
+      { "title": "Emitir", "desc": "A bridge emite 1 wETH para ti na Solana: o teu talão." },
+      { "title": "Queimar para voltar", "desc": "Queimas o wETH na Solana e o operador liberta o teu 1 ETH." }
     ],
+    "operatorLabel": "Quem é o operador?",
+    "operatorBody": "Alguém em quem tens de confiar: uma empresa (um custodiante) ou um multisig — um grupo de detentores de chaves em que, por exemplo, 5 de 9 têm de assinar. A bridge é tão segura quanto eles.",
     "flow": {
       "label": "Como funciona uma bridge lock-and-mint",
-      "chainA": "Chain A",
-      "chainB": "Chain B",
+      "chainA": "Ethereum",
+      "chainB": "Solana",
       "you": "Tu",
       "vault": "Cofre da bridge",
       "locked": "1 ETH bloqueado",
       "operator": "Operador da bridge",
-      "operatorNote1": "poucos signatários",
-      "operatorNote2": "aprovam cada passo",
+      "operatorNote1": "uma empresa, ou um",
+      "operatorNote2": "multisig (ex.: 5 de 9 chaves)",
       "minted": "1 wETH",
       "mintedNote": "cópia wrapped = o teu talão",
-      "back": "Regresso: queimar a cópia → os signatários libertam o original",
-      "stays": "a moeda real nunca sai da chain A",
+      "back": "Regresso: queimar a cópia → o operador liberta o original",
+      "stays": "a moeda real nunca sai da Ethereum",
       "play": "▶ Reproduzir",
       "pause": "⏸ Pausar"
     },
@@ -330,8 +334,8 @@
     "subB": " foram roubados de bridges só em 2022 — cerca de metade de tudo o que foi roubado em cripto nesse ano.",
     "vault": {
       "label": "O honeypot: um só cofre garante todas as cópias",
-      "chainA": "Chain A",
-      "chainB": "Chain B",
+      "chainA": "Ethereum",
+      "chainB": "Solana",
       "locked": "bloqueados num só cofre",
       "grows": "+ cada novo utilizador ↑",
       "backs": "garante",
@@ -357,7 +361,7 @@
   },
   "wrapped": {
     "heading": "What a wrapped token is",
-    "subtitle": "WBTC, wETH and friends are not the coin itself. They are a claim on a coin that someone else is holding.",
+    "subtitle": "The copy a bridge issues is a wrapped token. WBTC, wETH and friends are not the coin itself: they are a claim on a coin that someone else is holding.",
     "svg": {
       "sourceChain": "Bitcoin",
       "sourceAsset": "1 BTC",
@@ -521,7 +525,7 @@
     "heading": "As Camadas: L0 · L1 · L2",
     "subtitle": "As L2 assentam numa L1; algumas L1 assentam numa Layer 0 partilhada.",
     "recap": "Secção 02 · Rollups e L2s",
-    "aria": "Diagrama da pilha de camadas. A Bitcoin e a Ethereum são chains Layer 1 sem Layer 0 por baixo; Lightning, Stacks e Rootstock assentam na Bitcoin, e Arbitrum, Base, Optimism e zkSync assentam na Ethereum, onde liquidam os seus resultados. Três outras chains assentam numa Layer 0 partilhada que lhes dá segurança e mensagens. Os pontos em movimento são transações: lentas nas L1, rápidas nas L2.",
+    "aria": "Diagrama da pilha de camadas. A Bitcoin, a Ethereum e a Solana são chains Layer 1 sem Layer 0 por baixo; Lightning, Stacks e Rootstock assentam na Bitcoin, e Arbitrum, Base e Optimism assentam na Ethereum, onde liquidam os seus resultados; a Solana não tem L2 por cima. Uma faixa tracejada indica que a Bitcoin (através da Babylon) e a Ethereum (através do restaking da EigenLayer) também dão segurança partilhada a outras chains. Moonbeam, Hydration e Bifrost assentam na Polkadot, uma Layer 0 partilhada que lhes dá segurança e mensagens. Os pontos em movimento são transações: lentas na Bitcoin e na Ethereum, rápidas nas L2 e na Solana.",
     "roles": {
       "L2": "escalar",
       "L1": "proteger",
@@ -538,21 +542,24 @@
       "ethL2": [
         { "name": "Arbitrum", "sub": "otimista" },
         { "name": "Base", "sub": "otimista" },
-        { "name": "Optimism", "sub": "otimista" },
-        { "name": "zkSync", "sub": "ZK" }
+        { "name": "Optimism", "sub": "otimista" }
       ],
+      "solSub": "1000+ tx/s",
+      "solNoL2": "sem L2 por cima",
       "appChains": [
-        { "name": "Chain A", "sub": "DeFi" },
-        { "name": "Chain B", "sub": "jogos" },
-        { "name": "Chain C", "sub": "pagamentos" }
+        { "name": "Moonbeam", "sub": "apps" },
+        { "name": "Hydration", "sub": "exchange" },
+        { "name": "Bifrost", "sub": "staking" }
       ],
+      "restakers": "₿ Babylon: BTC em staking  ·  Ξ EigenLayer: ETH em restaking",
+      "alsoShared": "também dão segurança partilhada →",
       "settle": "liquida ↓",
       "secures": "protege ↑",
       "noL0Title": "Sem Layer 0 por baixo",
-      "noL0Sub": "A Bitcoin e a Ethereum protegem-se a si próprias, com os seus mineradores e validadores",
+      "noL0Sub": "A Bitcoin, a Ethereum e a Solana protegem-se a si próprias, com os seus mineradores e validadores",
       "l0Title": "LAYER 0 — base partilhada",
       "l0Sub": "segurança e mensagens para cada chain ligada",
-      "l0Examples": "Polkadot · Avalanche · Cosmos",
+      "l0Examples": "aqui: Polkadot · também Cosmos · Avalanche",
       "legendTx": "transações (pontos mais rápidos = mais por segundo)",
       "legendBatch": "resultado a ser liquidado na L1",
       "legendMsg": "mensagem a atravessar a Layer 0"
@@ -590,13 +597,13 @@
   },
   "keyPoints": {
     "s4-closed": "Cada blockchain é um sistema fechado: só verifica o seu próprio registo. Estar na internet não torna as chains interoperáveis.",
-    "s4-interop": "As pessoas e o dinheiro não ficam numa só chain, e cada rota entre chains fechadas exige confiar em alguém ou em alguma coisa.",
+    "s4-interop": "As pessoas, o dinheiro e as apps não ficam numa só chain, por isso as chains fechadas precisam de ser ligadas — e cada ligação exige confiar em alguém ou em alguma coisa.",
     "s4-usecases": "In every real case someone holds the asset or verifies the other chain; who that is, is the design question.",
     "s4-way-bridge": "Uma bridge é um operador que guarda a tua moeda: confias nos seus signatários, e o cofre único é o ponto fraco.",
     "s4-way-ibc": "Com o IBC, as chains verificam diretamente as provas uma da outra: confias na matemática e nas duas chains, não num intermediário.",
     "s4-way-l0": "Uma Layer 0 põe muitas chains sob um conjunto de validadores partilhado: as mensagens são nativas, mas só dentro do clube.",
     "s4-chooser": "The safest connection is the one with the fewest people to trust.",
-    "s4-bridges": "Uma bridge nunca move uma moeda: bloqueia o original numa chain e emite um talão na outra.",
+    "s4-bridges": "Uma bridge nunca move uma moeda: um operador de confiança bloqueia o original numa chain e emite um talão na outra.",
     "s4-bridge-risk": "É nas bridges que aconteceram os maiores roubos; usar uma é uma decisão de confiança.",
     "s4-wrapped": "A wrapped token is an IOU; it is worth the original only while someone holds that coin and agrees to give it back.",
     "s4-bridge-hacks": "Every big bridge hack came down to a few stolen keys or one bug in the vault's checks; one shared vault turned it into a total loss.",
