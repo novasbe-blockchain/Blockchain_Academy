@@ -24,6 +24,7 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-s3-arch' },
   { id: 's3-overview' },
+  { id: 's3-network' },
 
   { kind: 'group' as const, id: 'g-s3-privacy' },
   { id: 's3-channels' },
@@ -462,6 +463,123 @@ function FabricOverviewVisual() {
           <div className="text-xs text-muted-foreground">{card.desc}</div>
         </div>
       ))}
+    </div>
+  );
+}
+
+// ─── s3-network ──────────────────────────────────────────────────────────────
+
+interface NetworkPart { emoji: string; name: string; desc: string; }
+
+const NETWORK_ORG_COLORS = ['#6366f1', '#39B54A', '#22d3ee'];
+const NETWORK_ORDER_COLOR = '#f59e0b';
+
+/** Network anatomy: what each organisation runs itself (CA, app, peer) versus the one shared piece (ordering). */
+function NetworkSlide() {
+  const { t } = useTranslation('blockchain-platforms/section-3');
+  const orgs = t('network.orgs', { returnObjects: true }) as string[];
+  const parts = t('network.parts', { returnObjects: true }) as NetworkPart[];
+  const ordering = t('network.ordering', { returnObjects: true }) as NetworkPart;
+  const ledger = t('network.ledger', { returnObjects: true }) as { name: string; desc: string }[];
+
+  return (
+    <div className="h-full flex flex-col p-6 lg:p-10">
+      <div className="shrink-0 mb-4">
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('network.heading')}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{t('network.subtitle')}</p>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-5 lg:gap-6">
+        {/* Diagram — three organisations over one shared ordering service */}
+        <div className="flex flex-col min-h-0">
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-3">
+            {orgs.map((org, i) => {
+              const color = NETWORK_ORG_COLORS[i];
+              return (
+                <motion.div
+                  key={org}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1, duration: 0.3 }}
+                  className="rounded-2xl border-2 p-3 lg:p-4 flex flex-col gap-2 min-h-0"
+                  style={{ borderColor: color + '55', backgroundColor: color + '08' }}
+                >
+                  <div className="shrink-0">
+                    <div className="text-[10px] font-black uppercase tracking-widest" style={{ color }}>{t('network.orgLabel')}</div>
+                    <div className="font-black text-lg text-foreground leading-tight">{org}</div>
+                  </div>
+                  {parts.map((p, j) => {
+                    const isPeer = j === parts.length - 1;
+                    return (
+                      <div
+                        key={p.name}
+                        className="flex-1 min-h-0 rounded-xl border bg-card px-3 flex items-center gap-2"
+                        style={{ borderColor: isPeer ? color : 'var(--border)', borderWidth: isPeer ? 2 : 1 }}
+                      >
+                        <span className="text-xl shrink-0 leading-none">{p.emoji}</span>
+                        <span className="text-sm font-semibold text-foreground leading-tight">{p.name}</span>
+                      </div>
+                    );
+                  })}
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <div className="shrink-0 grid grid-cols-3 gap-3 text-center text-lg leading-none py-1 text-muted-foreground" aria-hidden>
+            {orgs.map(org => <span key={org}>↕</span>)}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.3 }}
+            className="shrink-0 rounded-2xl border-2 p-3 lg:p-4 flex items-center gap-4"
+            style={{ borderColor: NETWORK_ORDER_COLOR + '70', backgroundColor: NETWORK_ORDER_COLOR + '0d' }}
+          >
+            <span className="text-4xl shrink-0 leading-none">{ordering.emoji}</span>
+            <div className="min-w-0">
+              <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: NETWORK_ORDER_COLOR }}>{t('network.sharedLabel')}</div>
+              <div className="font-black text-lg text-foreground leading-tight">{ordering.name}</div>
+              <div className="text-sm text-muted-foreground leading-snug mt-1">{ordering.desc}</div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Legend — what each piece does, what a peer stores, and why this is not a database */}
+        <div className="flex flex-col gap-3 min-h-0">
+          <div className="rounded-2xl border border-border bg-card p-4 flex flex-col gap-3">
+            {parts.map(p => (
+              <div key={p.name} className="flex items-start gap-3">
+                <span className="text-xl shrink-0 leading-none mt-0.5">{p.emoji}</span>
+                <div className="min-w-0">
+                  <div className="font-bold text-sm text-foreground leading-tight">{p.name}</div>
+                  <div className="text-xs text-muted-foreground leading-snug mt-0.5">{p.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('network.ledgerLabel')}</div>
+            <div className="grid grid-cols-2 gap-3 mt-2">
+              {ledger.map(l => (
+                <div key={l.name}>
+                  <div className="font-bold text-sm text-foreground leading-tight">{l.name}</div>
+                  <div className="text-xs text-muted-foreground leading-snug mt-0.5">{l.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-auto rounded-2xl border border-[#39B54A]/40 p-4" style={{ backgroundColor: '#39B54A0d' }}>
+            <div className="font-bold text-sm text-foreground">{t('network.dbLabel')}</div>
+            <div className="text-xs text-muted-foreground leading-relaxed mt-1">{t('network.dbBody')}</div>
+          </div>
+        </div>
+      </div>
+
+      <KeyPointBar text={t('network.keyPoint')} className="shrink-0 mt-3 lg:mr-20" />
     </div>
   );
 }
@@ -1100,9 +1218,9 @@ export function BP_Section3() {
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
   // Correct-answer flags stay in code (language-neutral); text comes from t().
-  const quizCorrect = [false, true, false, false];
-  const quiz2Correct = [false, true, false, false];
-  const quiz3Correct = [false, true, false, false];
+  const quizCorrect = [false, false, true, false];
+  const quiz2Correct = [true, false, false, false];
+  const quiz3Correct = [false, false, false, true];
 
   return (
     <div className="h-full w-full flex overflow-hidden">
@@ -1154,6 +1272,11 @@ export function BP_Section3() {
             />
           </div>
           <KeyPointBar text={t('overview.keyPoint')} className="shrink-0 mx-5 mb-5 lg:ml-10 lg:mr-30 lg:mb-8" />
+        </div>
+
+        {/* ═══════ NETWORK ANATOMY — who runs what ═══════ */}
+        <div id="s3-network" className="h-full">
+          <NetworkSlide />
         </div>
 
         {/* ═══════ CHANNELS ═══════ */}
@@ -1248,35 +1371,35 @@ export function BP_Section3() {
         </div>
 
         {/* ═══════ BEST FITS — WHERE FABRIC WINS ═══════ */}
-        <div id="s3-bestfits" className="h-full flex flex-col p-5 lg:p-8">
-          <div className="shrink-0 mb-3">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('bestfits.heading')}</h2>
-            <p className="text-sm text-muted-foreground max-w-3xl">
-              {t('bestfits.intro.a')}<strong className="text-foreground">{t('bestfits.intro.strong')}</strong>{t('bestfits.intro.b')}
-            </p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3">
-            {bestfitCases.map(uc => (
-              <div key={uc.name} className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#0EA5E955', backgroundColor: '#0EA5E908' }}>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl shrink-0">{uc.emoji}</span>
-                  <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
+        {/* Inner wrapper so the key-point bar keeps its right margin clear of the slide arrows */}
+        <div id="s3-bestfits" className="h-full">
+          <div className="h-full flex flex-col p-6 lg:p-10">
+            <div className="shrink-0 mb-4">
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('bestfits.heading')}</h2>
+              <p className="text-base text-muted-foreground mt-1">
+                {t('bestfits.intro.a')}<strong className="text-foreground">{t('bestfits.intro.strong')}</strong>{t('bestfits.intro.b')}
+              </p>
+            </div>
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {bestfitCases.map(uc => (
+                <div key={uc.name} className="rounded-2xl border-2 p-4 lg:p-5 flex flex-col gap-3" style={{ borderColor: '#0EA5E955', backgroundColor: '#0EA5E908' }}>
+                  <div className="flex items-center gap-3">
+                    <span className="text-4xl shrink-0 leading-none">{uc.emoji}</span>
+                    <div className="font-black text-foreground text-xl leading-tight">{uc.name}</div>
+                  </div>
+                  <div>
+                    <div className="font-black text-[#0EA5E9] uppercase tracking-widest text-[10px]">{t('bestfits.whyLabel')}</div>
+                    <p className="text-base text-foreground leading-snug mt-0.5">{uc.why}</p>
+                  </div>
+                  <div className="mt-auto bg-card border border-border rounded-lg px-3 py-2">
+                    <div className="font-black text-[#0EA5E9] uppercase tracking-widest text-[10px]">{t('bestfits.inTheWildLabel')}</div>
+                    <p className="text-sm text-muted-foreground leading-snug mt-0.5">{uc.example}</p>
+                  </div>
                 </div>
-                <div className="text-xs text-muted-foreground leading-snug">
-                  <span className="font-bold text-[#0EA5E9] uppercase tracking-widest text-[9px] mr-1">{t('bestfits.whyLabel')}</span>
-                  {uc.why}
-                </div>
-                <div className="mt-auto text-[11px] text-foreground bg-card border border-border rounded-md px-2 py-1.5 leading-snug">
-                  <span className="font-bold text-[#0EA5E9] uppercase tracking-widest text-[9px] mr-1">{t('bestfits.inTheWildLabel')}</span>
-                  {uc.example}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <KeyPointBar text={t('bestfits.keyPoint')} className="shrink-0 mt-4 lg:mr-20" />
           </div>
-          <div className="shrink-0 mt-3 p-2.5 bg-[#ef4444]/08 border border-[#ef4444]/30 rounded-lg text-[11px] text-muted-foreground">
-            <strong className="text-[#ef4444]">{t('bestfits.notAFitLabel')}</strong>{t('bestfits.notAFitBody')}
-          </div>
-          <KeyPointBar text={t('bestfits.keyPoint')} className="shrink-0 mt-2 lg:mr-20" />
         </div>
 
         {/* ═══════ FABRIC ↔ PUBLIC-CHAIN GLOSSARY ═══════ */}
@@ -1297,7 +1420,7 @@ export function BP_Section3() {
           />
         </div>
 
-        {/* ═══════ QUIZ 2 — MSP / identity ═══════ */}
+        {/* ═══════ QUIZ 2 — governance (why networks close) ═══════ */}
         <div id="s3-quiz-2" className="h-full">
           <QuizSlide
             question={t('quiz2.question')}
