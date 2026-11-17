@@ -20,7 +20,7 @@
     "s4-layer0": "Layer 0: Concept",
     "s4-layer0-2": "Layer 0: Platforms",
     "s4-wrapped": "Wrapped Tokens",
-    "s4-bridges": "How a Bridge Works",
+    "s4-bridges": "What a Bridge Is",
     "s4-bridge-risk": "Bridge Risk",
     "s4-bridge-hacks": "Bridge Hacks",
     "s4-cosmos": "Cosmos",
@@ -99,7 +99,7 @@
   },
   "interop": {
     "heading": "Why do blockchains need to talk to each other?",
-    "subtitle": "Closed systems are safe, but people, money and apps do not stay on one chain.",
+    "subtitle": "Closed systems are safe, but people, money and apps do not stay on one chain — so chains need a way to connect.",
     "recap": "Bitcoin (Section 01) · Ethereum (Section 02) · Hyperledger Fabric (Section 03) — each one is its own island",
     "analogyLabel": "Analogy",
     "analogy": "Imagine Gmail unable to send a message to Hotmail. Early email networks really worked like that: each service was closed until everyone adopted one shared standard (SMTP). Blockchains are mostly still at the \"no shared standard\" stage.",
@@ -112,6 +112,8 @@
       "lost": "~$2B stolen in 2022",
       "chainA": "Chain A",
       "chainB": "Chain B",
+      "marketA": "Ethereum",
+      "marketB": "Arbitrum",
       "sameToken": "same token, two prices"
     },
     "islands": {
@@ -121,17 +123,17 @@
         {
           "emoji": "🏝️",
           "title": "Stranded assets",
-          "desc": "Bitcoin cannot be used inside an Ethereum app. To get it there, someone has to hold the real BTC and issue an IOU (WBTC) — so you now trust that someone."
+          "desc": "A bitcoin exists only on Bitcoin's ledger, so it cannot be used inside an Ethereum app. To get its value there, someone must hold the real coin and issue a stand-in on the other chain — and you now trust that someone."
         },
         {
-          "emoji": "🌉",
-          "title": "Fragile bridges",
-          "desc": "Bridges are the connectors built so far. Each one keeps the coins it carries in a single place, which has made them the costliest failures in crypto: about $2B stolen in 2022 alone."
+          "emoji": "🔗",
+          "title": "Costly connectors",
+          "desc": "Anything that links two chains has to hold, or vouch for, the value in transit. The connectors built to move value between chains have been crypto's costliest failures: about $2B stolen in 2022 alone."
         },
         {
           "emoji": "🔄",
           "title": "Split-up markets",
-          "desc": "Every chain has its own exchanges and pools. The same token can trade at different prices on different chains, and moving between them costs time and fees."
+          "desc": "Every chain has its own exchanges and pools. The same token can trade at one price on Ethereum and another on Arbitrum, and moving between them costs time and fees."
         }
       ]
     },
@@ -169,10 +171,10 @@
     "col1": {
       "short": "Bridges",
       "lead": "Lock-and-mint: an operator sits in the middle, holds your coin and issues a copy on the other chain.",
-      "caption": "Your coin never leaves chain A. It waits in the vault while a copy circulates on chain B.",
+      "caption": "Your coin never leaves Ethereum. It waits in the vault while a copy circulates on Solana.",
       "svg": {
-        "chainA": "Chain A",
-        "chainB": "Chain B",
+        "chainA": "Ethereum",
+        "chainB": "Solana",
         "locked": "1 ETH",
         "lockedNote": "your coin, locked",
         "vaultNote": "one vault for everyone",
@@ -186,7 +188,7 @@
       },
       "title": "Bridges & Wrapped Tokens",
       "analogy": "A courier keeps your luggage and gives you a claim ticket to use in the other city.",
-      "mechanism": "Your coin is locked in a vault on chain A; a copy (\"wrapped\" token) is issued on chain B. Burn the copy to get the original back.",
+      "mechanism": "Your coin is locked in a vault on one chain; a copy (\"wrapped\" token) is issued on the other. Burn the copy to get the original back.",
       "trust": "The bridge operators — usually a small group of signers who approve every release.",
       "risk": "The vault holds everyone's coins in one place. If the signers' keys leak or the code has a bug, the whole vault goes.",
       "examples": "WBTC · Ronin · Wormhole · Hop Protocol · LayerZero · Stargate"
@@ -196,11 +198,11 @@
       "lead": "No operator in the middle: the two chains verify each other directly.",
       "caption": "Each chain keeps a small, constantly updated copy of the other's block headers, so it can check any incoming message itself.",
       "svg": {
-        "chainA": "Chain A",
-        "chainB": "Chain B",
+        "chainA": "Cosmos Hub",
+        "chainB": "Osmosis",
         "ownValidators": "its own validators",
-        "copyOfB": "Copy of Chain B's headers",
-        "copyOfA": "Copy of Chain A's headers",
+        "copyOfB": "Osmosis block headers",
+        "copyOfA": "Cosmos Hub block headers",
         "checks1": "✓ checks every proof",
         "checks2": "against them, by itself",
         "packet": "message + proof",
@@ -223,15 +225,15 @@
         "l0Title": "Layer 0 — one shared validator set",
         "l0Note": "the same validators finalise every connected chain",
         "secures": "secures",
-        "chainA": "Chain A",
-        "chainB": "Chain B",
-        "chainC": "Chain C",
+        "chainA": "Moonbeam",
+        "chainB": "Hydration",
+        "chainC": "Bifrost",
         "chainNote": "own app logic",
         "native": "native messages between members — no bridge contract",
         "outside1": "Outside",
         "outside2": "chain",
         "bridgeNeeded": "bridge needed",
-        "example": "e.g. Polkadot: Relay Chain validators secure every parachain; XCM is the built-in messaging"
+        "example": "shown: Polkadot — Relay Chain validators secure every parachain; XCM is the built-in messaging"
       },
       "title": "Layer 0 Network",
       "analogy": "One security team guards every terminal in the airport — moving between terminals is just walking.",
@@ -294,25 +296,27 @@
     "analogy": "A courier puts your luggage in storage and hands you a claim ticket. You travel with the ticket; the luggage never leaves. Hand the ticket back and you get the luggage.",
     "stepsLabel": "Lock-and-mint, step by step",
     "steps": [
-      { "title": "Lock", "desc": "You send 1 ETH to the bridge's vault on chain A." },
-      { "title": "Approve", "desc": "The bridge's signers see the deposit and approve it." },
-      { "title": "Mint", "desc": "Chain B issues 1 wETH to you: your claim ticket." },
-      { "title": "Burn to return", "desc": "Burn the wETH on chain B and the signers release your 1 ETH." }
+      { "title": "Lock", "desc": "You send 1 ETH to the bridge's vault on Ethereum." },
+      { "title": "Approve", "desc": "The bridge operator sees the deposit and signs off on it." },
+      { "title": "Mint", "desc": "The bridge mints 1 wETH for you on Solana: your claim ticket." },
+      { "title": "Burn to return", "desc": "Burn the wETH on Solana and the operator releases your 1 ETH." }
     ],
+    "operatorLabel": "Who is the operator?",
+    "operatorBody": "Someone you have to trust: one company (a custodian), or a multisig — a group of key-holders where, say, 5 of 9 must sign. The bridge is only as safe as they are.",
     "flow": {
       "label": "How a lock-and-mint bridge works",
-      "chainA": "Chain A",
-      "chainB": "Chain B",
+      "chainA": "Ethereum",
+      "chainB": "Solana",
       "you": "You",
       "vault": "Bridge vault",
       "locked": "1 ETH locked",
       "operator": "Bridge operator",
-      "operatorNote1": "a few signers",
-      "operatorNote2": "approve each move",
+      "operatorNote1": "one company, or a",
+      "operatorNote2": "multisig (e.g. 5 of 9 keys)",
       "minted": "1 wETH",
       "mintedNote": "wrapped copy = claim ticket",
-      "back": "Way back: burn the copy → signers release the original",
-      "stays": "the real coin never leaves chain A",
+      "back": "Way back: burn the copy → the operator releases the original",
+      "stays": "the real coin never leaves Ethereum",
       "play": "▶ Play",
       "pause": "⏸ Pause"
     },
@@ -330,8 +334,8 @@
     "subB": " was stolen from bridges in 2022 alone — about half of everything stolen in crypto that year.",
     "vault": {
       "label": "The honeypot: one vault backs every copy",
-      "chainA": "Chain A",
-      "chainB": "Chain B",
+      "chainA": "Ethereum",
+      "chainB": "Solana",
       "locked": "locked in one vault",
       "grows": "+ every new user ↑",
       "backs": "backs",
@@ -357,7 +361,7 @@
   },
   "wrapped": {
     "heading": "What a wrapped token is",
-    "subtitle": "WBTC, wETH and friends are not the coin itself. They are a claim on a coin that someone else is holding.",
+    "subtitle": "The copy a bridge issues is a wrapped token. WBTC, wETH and friends are not the coin itself: they are a claim on a coin that someone else is holding.",
     "svg": {
       "sourceChain": "Bitcoin",
       "sourceAsset": "1 BTC",
@@ -515,7 +519,7 @@
     "heading": "The Layers: L0 · L1 · L2",
     "subtitle": "L2s stack on an L1; some L1s stand on a shared Layer 0.",
     "recap": "Section 02 · Rollups & L2s",
-    "aria": "Diagram of the layer stack. Bitcoin and Ethereum are Layer 1 chains with no Layer 0 underneath; Lightning, Stacks and Rootstock sit on Bitcoin, and Arbitrum, Base, Optimism and zkSync sit on Ethereum, settling their results on it. Three other chains stand on a shared Layer 0 that gives them security and messaging. Moving dots show transactions: slow on the L1s, fast on the L2s.",
+    "aria": "Diagram of the layer stack. Bitcoin, Ethereum and Solana are Layer 1 chains with no Layer 0 underneath; Lightning, Stacks and Rootstock sit on Bitcoin, and Arbitrum, Base and Optimism sit on Ethereum, settling their results on it; Solana has no L2 on top. A dashed strip notes that Bitcoin (through Babylon) and Ethereum (through EigenLayer restaking) also provide shared security to other chains. Moonbeam, Hydration and Bifrost stand on Polkadot, a shared Layer 0 that gives them security and messaging. Moving dots show transactions: slow on Bitcoin and Ethereum, fast on the L2s and Solana.",
     "roles": {
       "L2": "scale",
       "L1": "secure",
@@ -532,21 +536,24 @@
       "ethL2": [
         { "name": "Arbitrum", "sub": "optimistic" },
         { "name": "Base", "sub": "optimistic" },
-        { "name": "Optimism", "sub": "optimistic" },
-        { "name": "zkSync", "sub": "ZK" }
+        { "name": "Optimism", "sub": "optimistic" }
       ],
+      "solSub": "1,000+ tx/s",
+      "solNoL2": "no L2 on top",
       "appChains": [
-        { "name": "Chain A", "sub": "DeFi" },
-        { "name": "Chain B", "sub": "games" },
-        { "name": "Chain C", "sub": "payments" }
+        { "name": "Moonbeam", "sub": "apps" },
+        { "name": "Hydration", "sub": "exchange" },
+        { "name": "Bifrost", "sub": "staking" }
       ],
+      "restakers": "₿ Babylon: staked BTC  ·  Ξ EigenLayer: restaked ETH",
+      "alsoShared": "also provide shared security →",
       "settle": "settles ↓",
       "secures": "secures ↑",
       "noL0Title": "No Layer 0 underneath",
-      "noL0Sub": "Bitcoin and Ethereum secure themselves, with their own miners and validators",
+      "noL0Sub": "Bitcoin, Ethereum and Solana secure themselves, with their own miners and validators",
       "l0Title": "LAYER 0 — shared foundation",
       "l0Sub": "security and messaging for every chain plugged in",
-      "l0Examples": "Polkadot · Avalanche · Cosmos",
+      "l0Examples": "shown: Polkadot · also Cosmos · Avalanche",
       "legendTx": "transactions (faster dots = more per second)",
       "legendBatch": "result settling on the L1",
       "legendMsg": "message crossing through Layer 0"
@@ -584,13 +591,13 @@
   },
   "keyPoints": {
     "s4-closed": "Every blockchain is a closed system: it checks only its own ledger. Being on the internet does not make chains interoperable.",
-    "s4-interop": "People and money do not stay on one chain, and every route between closed chains needs someone or something to trust.",
+    "s4-interop": "People, money and apps do not stay on one chain, so closed chains need connecting — and every connection needs someone or something to trust.",
     "s4-usecases": "In every real case someone holds the asset or verifies the other chain; who that is, is the design question.",
     "s4-way-bridge": "A bridge is an operator holding your coin: you trust its signers, and the single vault is the weak point.",
     "s4-way-ibc": "With IBC the chains check each other's proofs directly: you trust the maths and the two chains, not a middleman.",
     "s4-way-l0": "A Layer 0 puts many chains under one shared validator set: messaging is built in, but only inside the club.",
     "s4-chooser": "The safest connection is the one with the fewest people to trust.",
-    "s4-bridges": "A bridge never moves a coin: it locks the original on one chain and issues a claim ticket on the other.",
+    "s4-bridges": "A bridge never moves a coin: a trusted operator locks the original on one chain and issues a claim ticket on the other.",
     "s4-bridge-risk": "Bridges are where the biggest thefts have happened; using one is a trust decision.",
     "s4-wrapped": "A wrapped token is an IOU; it is worth the original only while someone holds that coin and agrees to give it back.",
     "s4-bridge-hacks": "Every big bridge hack came down to a few stolen keys or one bug in the vault's checks; one shared vault turned it into a total loss.",

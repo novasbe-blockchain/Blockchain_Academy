@@ -27,17 +27,17 @@ const chapterShape = [
   { id: 's4-chooser' },
 
   { kind: 'group' as const, id: 'g-s4-bridges' },
-  { id: 's4-wrapped' },
   { id: 's4-bridges' },
+  { id: 's4-wrapped' },
   { id: 's4-bridge-risk' },
   { id: 's4-bridge-hacks' },
-
-  { kind: 'group' as const, id: 'g-s4-cosmos' },
-  { id: 's4-cosmos' },
 
   { kind: 'group' as const, id: 'g-s4-l0' },
   { id: 's4-layer0' },
   { id: 's4-layer0-2' },
+
+  { kind: 'group' as const, id: 'g-s4-cosmos' },
+  { id: 's4-cosmos' },
 
   { kind: 'group' as const, id: 'g-s4-xrp' },
   { id: 's4-xrp' },
@@ -776,7 +776,11 @@ function BridgeHowSlide({ hoodLabel, keyPoint }: { hoodLabel: string; keyPoint: 
               );
             })}
           </div>
-          <UnderTheHood label={hoodLabel} terms={['lock-and-mint', 'wrapped token', 'multisig', 'burn']} className="self-start" />
+          <div className="shrink-0 rounded-xl border px-3 py-2" style={{ borderColor: '#ef444455', backgroundColor: '#ef44440d' }}>
+            <p className="text-[10px] font-black uppercase tracking-widest text-[#ef4444]">{t('bridges.operatorLabel')}</p>
+            <p className="text-xs lg:text-sm text-foreground leading-snug mt-0.5">{t('bridges.operatorBody')}</p>
+          </div>
+          <UnderTheHood label={hoodLabel} terms={['lock-and-mint', 'wrapped token', 'multisig', 'custodian', 'burn']} className="self-start" />
         </div>
       </div>
       {keyPoint}
@@ -965,12 +969,15 @@ function XrplHowSlide({ hoodLabel, keyPoint }: { hoodLabel: string; keyPoint: Re
 }
 
 /* ──────────────────── The Layers: L0 · L1 · L2 overview ────────────────────
-   One structural picture: L2s standing on Bitcoin and Ethereum (which have no
-   Layer 0 beneath them), and three chains standing on a shared Layer 0.
+   One structural picture: L2s standing on Bitcoin and Ethereum, Solana scaling
+   on its own (none of the three has a Layer 0 beneath it), and three Polkadot
+   parachains standing on a shared Layer 0. A light dashed strip shows that
+   Bitcoin (Babylon) and Ethereum (EigenLayer) now also lend their security out.
    Moving dots are transactions — the busier the lane, the faster the layer.
    Animation is SVG-native (SMIL), so React does no per-frame work. */
 const LAYER_COLORS: Record<string, string> = { L2: '#39B54A', L1: '#627EEA', L0: '#0891b2' };
 const BTC_ORANGE = '#f7931a';
+const SOL_PURPLE = '#9945FF';
 
 interface NamedSub { name: string; sub: string }
 interface SpeedItem { layer: string; name: string; value: string; note: string }
@@ -1001,12 +1008,17 @@ function LayerStackDiagram({ still }: { still: boolean }) {
   const Y2 = 14, Y1 = 156, Y0 = 273, H = 92; // row tops + box height
   const GAP = 12;
   const towers = [
-    { x: 72, w: 250, items: list('btcL2') },
-    { x: 340, w: 320, items: list('ethL2') },
+    { x: 72, w: 240, items: list('btcL2') },
+    { x: 326, w: 240, items: list('ethL2') },
   ];
-  const appChains = list('appChains').map((c, i) => ({ ...c, x: 690 + i * 105, w: 92 }));
+  const SOL_X = 580, SOL_W = 100; // an L1 with no L2s on top
+  const SOLO_END = SOL_X + SOL_W; // right edge of the self-securing L1s
+  const L0_X = 700, L0_W = 292;
+  const appChains = list('appChains').map((c, i) => ({ ...c, x: L0_X + i * 102, w: 88 }));
+  const firstCx = appChains[0].x + 44, lastCx = appChains[appChains.length - 1].x + 44;
+  const l0Cx = L0_X + L0_W / 2;
   const rows: [string, number][] = [['L2', Y2], ['L1', Y1], ['L0', Y0]];
-  const msgPath = `M 736 ${Y1 + H - 6} V ${Y0 + 14} H 946 V ${Y1 + H - 6}`;
+  const msgPath = `M ${firstCx} ${Y1 + H - 6} V ${Y0 + 14} H ${lastCx} V ${Y1 + H - 6}`;
 
   return (
     <svg viewBox="0 0 1000 402" className="w-full h-full" role="img" aria-label={t('layers.aria')}>
@@ -1030,7 +1042,7 @@ function LayerStackDiagram({ still }: { still: boolean }) {
           return (
             <g key={it.name}>
               <rect x={x} y={Y2} width={w} height={H} rx="8" fill={L2 + '1c'} stroke={L2} strokeWidth="1.5" />
-              <text x={cx} y={Y2 + 30} textAnchor="middle" fontSize="13.5" fontWeight="800" fill={INK}>{it.name}</text>
+              <text x={cx} y={Y2 + 30} textAnchor="middle" fontSize="12.5" fontWeight="800" fill={INK}>{it.name}</text>
               <text x={cx} y={Y2 + 48} textAnchor="middle" fontSize="10.5" fill={MUTED}>{it.sub}</text>
               <TxLane x1={x + 10} x2={x + w - 10} y={Y2 + 71} dur={1.3} n={4} color={L2} r={2.6} still={still} />
               <line x1={cx} y1={Y2 + H} x2={cx} y2={Y1} stroke={L2} strokeWidth="1.2" strokeDasharray="3 3" strokeOpacity="0.6" />
@@ -1048,19 +1060,32 @@ function LayerStackDiagram({ still }: { still: boolean }) {
       })}
 
       {/* L1s that stand alone */}
-      <rect x="72" y={Y1} width="250" height={H} rx="10" fill={L1 + '1c'} stroke={L1} strokeWidth="1.8" />
+      <rect x="72" y={Y1} width="240" height={H} rx="10" fill={L1 + '1c'} stroke={L1} strokeWidth="1.8" />
       <text x="88" y={Y1 + 33} fontSize="19" fontWeight="900" fill={BTC_ORANGE}>₿ Bitcoin</text>
       <text x="88" y={Y1 + 53} fontSize="11.5" fill={MUTED}>{s('btcSub')}</text>
-      <TxLane x1={88} x2={306} y={Y1 + 74} dur={9} n={2} color={BTC_ORANGE} r={3.2} still={still} />
+      <TxLane x1={88} x2={296} y={Y1 + 74} dur={9} n={2} color={BTC_ORANGE} r={3.2} still={still} />
 
-      <rect x="340" y={Y1} width="320" height={H} rx="10" fill={L1 + '1c'} stroke={L1} strokeWidth="1.8" />
-      <text x="356" y={Y1 + 33} fontSize="19" fontWeight="900" fill={L1}>Ξ Ethereum</text>
-      <text x="356" y={Y1 + 53} fontSize="11.5" fill={MUTED}>{s('ethSub')}</text>
-      <TxLane x1={356} x2={644} y={Y1 + 74} dur={6} n={3} color={L1} r={3.2} still={still} />
+      <rect x="326" y={Y1} width="240" height={H} rx="10" fill={L1 + '1c'} stroke={L1} strokeWidth="1.8" />
+      <text x="342" y={Y1 + 33} fontSize="19" fontWeight="900" fill={L1}>Ξ Ethereum</text>
+      <text x="342" y={Y1 + 53} fontSize="11.5" fill={MUTED}>{s('ethSub')}</text>
+      <TxLane x1={342} x2={550} y={Y1 + 74} dur={6} n={3} color={L1} r={3.2} still={still} />
 
-      <rect x="72" y={Y0} width="588" height={H} rx="10" fill="none" stroke={MUTED} strokeWidth="1.3" strokeDasharray="6 5" strokeOpacity="0.7" />
-      <text x="366" y={Y0 + 42} textAnchor="middle" fontSize="15" fontWeight="800" fill={MUTED}>{s('noL0Title')}</text>
-      <text x="366" y={Y0 + 63} textAnchor="middle" fontSize="11.5" fill={MUTED}>{s('noL0Sub')}</text>
+      {/* An L1 that scales on its own — nothing stacked on top */}
+      <rect x={SOL_X} y={Y1} width={SOL_W} height={H} rx="10" fill={L1 + '1c'} stroke={L1} strokeWidth="1.8" />
+      <text x={SOL_X + SOL_W / 2} y={Y1 + 33} textAnchor="middle" fontSize="17" fontWeight="900" fill={SOL_PURPLE}>Solana</text>
+      <text x={SOL_X + SOL_W / 2} y={Y1 + 53} textAnchor="middle" fontSize="11" fill={MUTED}>{s('solSub')}</text>
+      <TxLane x1={SOL_X + 12} x2={SOL_X + SOL_W - 12} y={Y1 + 74} dur={1.6} n={4} color={SOL_PURPLE} r={2.8} still={still} />
+      <text x={SOL_X + SOL_W / 2} y={Y2 + H / 2 + 4} textAnchor="middle" fontSize="10.5" fill={MUTED} opacity="0.8">{s('solNoL2')}</text>
+
+      {/* No Layer 0 under these three… */}
+      <rect x="72" y={Y0} width={SOLO_END - 72} height={H} rx="10" fill="none" stroke={MUTED} strokeWidth="1.3" strokeDasharray="6 5" strokeOpacity="0.7" />
+      <text x={(72 + SOLO_END) / 2} y={Y0 + 25} textAnchor="middle" fontSize="15" fontWeight="800" fill={MUTED}>{s('noL0Title')}</text>
+      <text x={(72 + SOLO_END) / 2} y={Y0 + 44} textAnchor="middle" fontSize="11.5" fill={MUTED}>{s('noL0Sub')}</text>
+      {/* …yet Bitcoin and Ethereum are starting to lend their security out: a soft overlap into Layer 0, not a wall */}
+      <rect x="84" y={Y0 + 56} width={L0_X - 84 - 8} height="26" rx="13" fill={L0 + '10'} stroke={L0} strokeWidth="1" strokeDasharray="4 4" strokeOpacity="0.75" />
+      <text x="98" y={Y0 + 73} fontSize="11" fill={INK}>{s('restakers')}</text>
+      <text x={L0_X - 22} y={Y0 + 73} textAnchor="end" fontSize="11" fontWeight="800" fill={L0}>{s('alsoShared')}</text>
+      <line x1={L0_X - 8} y1={Y0 + 69} x2={L0_X - 2} y2={Y0 + 69} stroke={L0} strokeWidth="1" strokeDasharray="2 2" />
 
       {/* L1s that stand on a shared Layer 0 */}
       {appChains.map((c) => {
@@ -1076,16 +1101,16 @@ function LayerStackDiagram({ still }: { still: boolean }) {
           </g>
         );
       })}
-      <text x="788.5" y={Y1 + H + 17} textAnchor="middle" fontSize="10.5" fontWeight="700" fill={L0}>{s('secures')}</text>
+      <text x={(firstCx + l0Cx) / 2} y={Y1 + H + 17} textAnchor="middle" fontSize="10.5" fontWeight="700" fill={L0}>{s('secures')}</text>
 
-      <rect x="690" y={Y0} width="302" height={H} rx="10" fill={L0 + '22'} stroke={L0} strokeWidth="2" />
-      <line x1="736" y1={Y0 + 14} x2="946" y2={Y0 + 14} stroke={L0} strokeWidth="1" strokeOpacity="0.35" />
-      <text x="841" y={Y0 + 43} textAnchor="middle" fontSize="13.5" fontWeight="900" fill={L0}>{s('l0Title')}</text>
-      <text x="841" y={Y0 + 61} textAnchor="middle" fontSize="10.5" fill={MUTED}>{s('l0Sub')}</text>
-      <text x="841" y={Y0 + 79} textAnchor="middle" fontSize="11" fontWeight="700" fill={INK}>{s('l0Examples')}</text>
+      <rect x={L0_X} y={Y0} width={L0_W} height={H} rx="10" fill={L0 + '22'} stroke={L0} strokeWidth="2" />
+      <line x1={firstCx} y1={Y0 + 14} x2={lastCx} y2={Y0 + 14} stroke={L0} strokeWidth="1" strokeOpacity="0.35" />
+      <text x={l0Cx} y={Y0 + 43} textAnchor="middle" fontSize="13.5" fontWeight="900" fill={L0}>{s('l0Title')}</text>
+      <text x={l0Cx} y={Y0 + 61} textAnchor="middle" fontSize="10.5" fill={MUTED}>{s('l0Sub')}</text>
+      <text x={l0Cx} y={Y0 + 79} textAnchor="middle" fontSize="11" fontWeight="700" fill={INK}>{s('l0Examples')}</text>
 
       {/* A message hopping chain → Layer 0 → chain */}
-      <g transform={still ? `translate(841 ${Y0 + 14})` : undefined} opacity={still ? 1 : 0}>
+      <g transform={still ? `translate(${l0Cx} ${Y0 + 14})` : undefined} opacity={still ? 1 : 0}>
         <rect x="-5" y="-5" width="10" height="10" rx="2" transform="rotate(45)" fill="#f59e0b" stroke="#a16207" strokeWidth="1" />
         {!still && (
           <>
@@ -1420,7 +1445,7 @@ export function BP_Section4() {
                       )}
                       {i === 1 && (
                         <>
-                          {/* a bridge with a hole in the middle */}
+                          {/* a connector between two chains, with a hole in the middle */}
                           <text x="120" y="18" textAnchor="middle" fontSize="12" fontWeight="900" fill="#ef4444">{t('interop.visuals.lost')}</text>
                           <rect x="10" y="58" width="56" height="50" rx="6" fill="#f59e0b14" stroke="#f59e0b" strokeWidth="1.5" />
                           <text x="38" y="87" textAnchor="middle" fontSize="10" fontWeight="900" fill="#f59e0b">{t('interop.visuals.chainA')}</text>
@@ -1437,10 +1462,10 @@ export function BP_Section4() {
                       {i === 2 && (
                         <>
                           {/* the same token, priced differently on two chains */}
-                          <text x="58" y="16" textAnchor="middle" fontSize="10" fontWeight="900" fill="#22d3ee">{t('interop.visuals.chainA')}</text>
+                          <text x="58" y="16" textAnchor="middle" fontSize="10" fontWeight="900" fill="#22d3ee">{t('interop.visuals.marketA')}</text>
                           <rect x="10" y="24" width="96" height="62" rx="8" fill="#22d3ee14" stroke="#22d3ee" strokeWidth="1.5" />
                           <text x="58" y="63" textAnchor="middle" fontSize="20" fontWeight="900" fill="var(--foreground)">$1.00</text>
-                          <text x="182" y="16" textAnchor="middle" fontSize="10" fontWeight="900" fill="#8b5cf6">{t('interop.visuals.chainB')}</text>
+                          <text x="182" y="16" textAnchor="middle" fontSize="10" fontWeight="900" fill="#8b5cf6">{t('interop.visuals.marketB')}</text>
                           <rect x="134" y="24" width="96" height="62" rx="8" fill="#8b5cf614" stroke="#8b5cf6" strokeWidth="1.5" />
                           <text x="182" y="63" textAnchor="middle" fontSize="20" fontWeight="900" fill="var(--foreground)">$1.03</text>
                           <text x="120" y="62" textAnchor="middle" fontSize="18" fontWeight="900" fill="#ef4444">≠</text>
@@ -1449,7 +1474,7 @@ export function BP_Section4() {
                       )}
                     </svg>
                   </div>
-                  <div className="shrink-0 lg:min-h-[124px]">
+                  <div className="shrink-0 lg:min-h-[156px]">
                     <p className="text-lg font-bold text-foreground leading-tight"><span className="mr-2">{card.emoji}</span>{card.title}</p>
                     <p className="text-sm text-muted-foreground mt-1 leading-snug">{card.desc}</p>
                   </div>
@@ -1589,6 +1614,9 @@ export function BP_Section4() {
           {kp('s4-chooser')}
         </div>
 
+        {/* ═══════ S4-BRIDGES — what a bridge is & how it works (concept + animated mechanism) ═══════ */}
+        <BridgeHowSlide hoodLabel={hoodLabel} keyPoint={kp('s4-bridges')} />
+
         {/* ═══════ S4-WRAPPED — what a wrapped token is ═══════ */}
         <div id="s4-wrapped" className="h-full flex flex-col p-5 lg:p-8">
           <div className="shrink-0 mb-4">
@@ -1660,9 +1688,6 @@ export function BP_Section4() {
           </div>
           {kp('s4-wrapped')}
         </div>
-
-        {/* ═══════ S4-BRIDGES — what a bridge is & how it works (concept + animated mechanism) ═══════ */}
-        <BridgeHowSlide hoodLabel={hoodLabel} keyPoint={kp('s4-bridges')} />
 
         {/* ═══════ S4-BRIDGE-RISK — why the design is risky, and what safer looks like ═══════ */}
         <div id="s4-bridge-risk" className="h-full flex flex-col p-5 lg:p-8">
@@ -1775,7 +1800,7 @@ export function BP_Section4() {
               );
             })}
           </div>
-          {/* Safety takeaway — closes the wrapped → bridges → hacks arc */}
+          {/* Safety takeaway — closes the bridge → wrapped token → risk → hacks arc */}
           <div className="shrink-0 mt-3 flex items-center gap-3 pl-4 pr-14 py-2.5 rounded-xl border-2" style={{ borderColor: '#39B54A80', backgroundColor: '#39B54A14' }}>
             <ShieldCheck className="w-6 h-6 shrink-0 text-[#39B54A]" aria-hidden />
             <div className="min-w-0">
@@ -1784,6 +1809,130 @@ export function BP_Section4() {
             </div>
           </div>
           {kp('s4-bridge-hacks')}
+        </div>
+
+        {/* ═══════ S4-LAYER0 (1/2) — Animated Concept ═══════ */}
+        <div id="s4-layer0" className="h-full flex flex-col p-5 lg:p-8">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('layer0.heading')}</h2>
+            <p className="text-sm text-muted-foreground max-w-3xl">
+              {t('layer0.leadA')}<strong className="text-foreground">{t('layer0.leadStrong')}</strong>{t('layer0.leadB')}<em>{t('layer0.leadEm')}</em>{t('layer0.leadC')}
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <RecapHandoff label={recapLabel} text="Section 02 · Rollups & L2s" to="/blockchain-platforms/section-2" color="#39B54A" />
+              <UnderTheHood label={hoodLabel} terms={['relay chain', 'parachain', 'XCM', 'Warp', 'restaking']} />
+            </div>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-5">
+            {/* Left: animated stack */}
+            <Layer0AnimatedStack />
+
+            {/* Right: what L0 provides */}
+            <div className="flex flex-col gap-3 min-h-0">
+              <div className="rounded-xl border p-3" style={{ borderColor: '#22d3ee55', backgroundColor: '#22d3ee0d' }}>
+                <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#22d3ee' }}>{t('layer0.inOneLineLabel')}</p>
+                <p className="text-sm text-foreground mt-1 leading-snug">
+                  {t('layer0.inOneLine')}
+                </p>
+              </div>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('layer0.providesLabel')}</p>
+              <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
+                {layer0Provides.map(c => (
+                  <div key={c.title} className="rounded-lg border border-[#22d3ee]/30 bg-card p-2.5 flex items-start gap-2.5 min-h-0">
+                    <span className="text-lg shrink-0 leading-none mt-0.5">{c.icon}</span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-foreground">{c.title}</p>
+                      <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{c.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          {kp('s4-layer0')}
+        </div>
+
+        {/* ═══════ S4-LAYER0 (2/2) — Platforms & the shared-vs-sovereign trade-off ═══════ */}
+        <div id="s4-layer0-2" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('layer02.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t('layer02.subtitle')}</p>
+          </div>
+
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-5 min-h-0">
+
+            {/* Left — the platforms, each tagged with its model */}
+            <div className="flex flex-col gap-2.5 min-h-0">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground shrink-0">{t('layer02.platformsLabel')}</p>
+              <div className="flex-1 min-h-0 grid auto-rows-fr gap-2.5">
+                {layer0Platforms.map((p, i) => {
+                  const meta = platformMeta[i];
+                  const mc = modelColors[meta.model];
+                  return (
+                    <div key={p.name} className="rounded-xl px-4 py-3 min-h-0 flex flex-col justify-center gap-1.5 border" style={{ borderColor: meta.color + '55', backgroundColor: meta.color + '08' }}>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-base">{meta.emoji}</span>
+                        <p className="text-base font-bold text-foreground">{p.name}</p>
+                        <span className="text-xs px-1.5 py-0.5 rounded font-mono" style={{ backgroundColor: meta.color + '18', color: meta.color, border: `1px solid ${meta.color}35` }}>{meta.token}</span>
+                        <span className="ml-auto text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border whitespace-nowrap" style={{ color: mc, borderColor: mc + '66', backgroundColor: mc + '14' }}>{t(`layer02.modelTags.${meta.model}`)}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-snug">{p.tagline}</p>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="shrink-0 rounded-lg border border-border bg-muted/30 px-3 py-2">
+                <p className="text-xs text-muted-foreground leading-snug"><span className="font-black uppercase tracking-wider text-[10px] text-foreground mr-1.5">⚠️ {t('layer02.notL0Label')}</span>{t('layer02.notL0')}</p>
+              </div>
+            </div>
+
+            {/* Right — the trade-off: two models side by side, then where each platform sits */}
+            <div className="flex flex-col gap-2.5 min-h-0">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground shrink-0">{t('layer02.tradeoffLabel')}</p>
+              <div className="flex-1 min-h-0 grid grid-cols-2 gap-3">
+                {layer0Models.map((m, i) => {
+                  const c = i === 0 ? modelColors.shared : modelColors.sovereign;
+                  return (
+                    <div key={m.title} className="min-h-0 rounded-xl border-2 p-4 flex flex-col gap-3" style={{ borderColor: c + '80', backgroundColor: c + '0d' }}>
+                      <div className="shrink-0">
+                        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: c }}>{m.sub}</p>
+                        <p className="text-xl font-black text-foreground leading-tight mt-0.5"><span className="mr-1.5">{i === 0 ? '🏢' : '🏗️'}</span>{m.title}</p>
+                      </div>
+                      <ModelPictogram kind={i === 0 ? 'shared' : 'sovereign'} color={c} />
+                      <ul className="flex-1 min-h-0 flex flex-col justify-center gap-2.5">
+                        {m.pros.map((pro) => (
+                          <li key={pro} className="flex gap-2 text-sm text-foreground leading-snug"><span className="font-black text-[#10b981] shrink-0">✓</span>{pro}</li>
+                        ))}
+                        <li className="flex gap-2 text-sm text-foreground leading-snug"><span className="font-black text-[#ef4444] shrink-0">✕</span>{m.con}</li>
+                      </ul>
+                      <div className="shrink-0 rounded-lg border bg-card px-2.5 py-2" style={{ borderColor: c + '40' }}>
+                        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: c }}>{t('layer02.examplesLabel')}</p>
+                        <p className="text-sm font-semibold text-foreground leading-snug mt-0.5">{m.examples}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="shrink-0 rounded-xl border border-border bg-card px-5 pt-4 pb-2.5">
+                <div className="relative h-2 rounded-full" style={{ background: `linear-gradient(90deg, ${modelColors.shared}, ${modelColors.sovereign})` }}>
+                  {layer0Platforms.map((p, i) => (
+                    <span key={p.name} className="absolute top-1/2 size-3.5 rounded-full border-2 border-card -translate-x-1/2 -translate-y-1/2" style={{ left: `${spectrumPos[i]}%`, backgroundColor: platformMeta[i].color }} />
+                  ))}
+                </div>
+                <div className="relative h-5 mt-2">
+                  {layer0Platforms.map((p, i) => (
+                    <span key={p.name} className="absolute -translate-x-1/2 text-xs font-bold text-foreground whitespace-nowrap" style={{ left: `${spectrumPos[i]}%` }}>{p.name}</span>
+                  ))}
+                </div>
+                <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mt-1 lg:pr-12">
+                  <span style={{ color: modelColors.shared }}>← {t('layer02.spectrum.left')}</span>
+                  <span style={{ color: modelColors.sovereign }}>{t('layer02.spectrum.right')} →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          {kp('s4-layer0-2')}
         </div>
 
         {/* ═══════ S4-COSMOS ═══════ */}
@@ -1944,130 +2093,6 @@ export function BP_Section4() {
             </div>
           </div>
           {kp('s4-cosmos')}
-        </div>
-
-        {/* ═══════ S4-LAYER0 (1/2) — Animated Concept ═══════ */}
-        <div id="s4-layer0" className="h-full flex flex-col p-5 lg:p-8">
-          <div className="shrink-0 mb-3">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('layer0.heading')}</h2>
-            <p className="text-sm text-muted-foreground max-w-3xl">
-              {t('layer0.leadA')}<strong className="text-foreground">{t('layer0.leadStrong')}</strong>{t('layer0.leadB')}<em>{t('layer0.leadEm')}</em>{t('layer0.leadC')}
-            </p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <RecapHandoff label={recapLabel} text="Section 02 · Rollups & L2s" to="/blockchain-platforms/section-2" color="#39B54A" />
-              <UnderTheHood label={hoodLabel} terms={['relay chain', 'parachain', 'XCM', 'Warp', 'restaking']} />
-            </div>
-          </div>
-
-          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-5">
-            {/* Left: animated stack */}
-            <Layer0AnimatedStack />
-
-            {/* Right: what L0 provides */}
-            <div className="flex flex-col gap-3 min-h-0">
-              <div className="rounded-xl border p-3" style={{ borderColor: '#22d3ee55', backgroundColor: '#22d3ee0d' }}>
-                <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#22d3ee' }}>{t('layer0.inOneLineLabel')}</p>
-                <p className="text-sm text-foreground mt-1 leading-snug">
-                  {t('layer0.inOneLine')}
-                </p>
-              </div>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('layer0.providesLabel')}</p>
-              <div className="flex-1 min-h-0 grid auto-rows-fr gap-2">
-                {layer0Provides.map(c => (
-                  <div key={c.title} className="rounded-lg border border-[#22d3ee]/30 bg-card p-2.5 flex items-start gap-2.5 min-h-0">
-                    <span className="text-lg shrink-0 leading-none mt-0.5">{c.icon}</span>
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-foreground">{c.title}</p>
-                      <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{c.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          {kp('s4-layer0')}
-        </div>
-
-        {/* ═══════ S4-LAYER0 (2/2) — Platforms & the shared-vs-sovereign trade-off ═══════ */}
-        <div id="s4-layer0-2" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-4">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('layer02.heading')}</h2>
-            <p className="text-sm text-muted-foreground mt-1">{t('layer02.subtitle')}</p>
-          </div>
-
-          <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-5 min-h-0">
-
-            {/* Left — the platforms, each tagged with its model */}
-            <div className="flex flex-col gap-2.5 min-h-0">
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground shrink-0">{t('layer02.platformsLabel')}</p>
-              <div className="flex-1 min-h-0 grid auto-rows-fr gap-2.5">
-                {layer0Platforms.map((p, i) => {
-                  const meta = platformMeta[i];
-                  const mc = modelColors[meta.model];
-                  return (
-                    <div key={p.name} className="rounded-xl px-4 py-3 min-h-0 flex flex-col justify-center gap-1.5 border" style={{ borderColor: meta.color + '55', backgroundColor: meta.color + '08' }}>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-base">{meta.emoji}</span>
-                        <p className="text-base font-bold text-foreground">{p.name}</p>
-                        <span className="text-xs px-1.5 py-0.5 rounded font-mono" style={{ backgroundColor: meta.color + '18', color: meta.color, border: `1px solid ${meta.color}35` }}>{meta.token}</span>
-                        <span className="ml-auto text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border whitespace-nowrap" style={{ color: mc, borderColor: mc + '66', backgroundColor: mc + '14' }}>{t(`layer02.modelTags.${meta.model}`)}</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-snug">{p.tagline}</p>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="shrink-0 rounded-lg border border-border bg-muted/30 px-3 py-2">
-                <p className="text-xs text-muted-foreground leading-snug"><span className="font-black uppercase tracking-wider text-[10px] text-foreground mr-1.5">⚠️ {t('layer02.notL0Label')}</span>{t('layer02.notL0')}</p>
-              </div>
-            </div>
-
-            {/* Right — the trade-off: two models side by side, then where each platform sits */}
-            <div className="flex flex-col gap-2.5 min-h-0">
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground shrink-0">{t('layer02.tradeoffLabel')}</p>
-              <div className="flex-1 min-h-0 grid grid-cols-2 gap-3">
-                {layer0Models.map((m, i) => {
-                  const c = i === 0 ? modelColors.shared : modelColors.sovereign;
-                  return (
-                    <div key={m.title} className="min-h-0 rounded-xl border-2 p-4 flex flex-col gap-3" style={{ borderColor: c + '80', backgroundColor: c + '0d' }}>
-                      <div className="shrink-0">
-                        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: c }}>{m.sub}</p>
-                        <p className="text-xl font-black text-foreground leading-tight mt-0.5"><span className="mr-1.5">{i === 0 ? '🏢' : '🏗️'}</span>{m.title}</p>
-                      </div>
-                      <ModelPictogram kind={i === 0 ? 'shared' : 'sovereign'} color={c} />
-                      <ul className="flex-1 min-h-0 flex flex-col justify-center gap-2.5">
-                        {m.pros.map((pro) => (
-                          <li key={pro} className="flex gap-2 text-sm text-foreground leading-snug"><span className="font-black text-[#10b981] shrink-0">✓</span>{pro}</li>
-                        ))}
-                        <li className="flex gap-2 text-sm text-foreground leading-snug"><span className="font-black text-[#ef4444] shrink-0">✕</span>{m.con}</li>
-                      </ul>
-                      <div className="shrink-0 rounded-lg border bg-card px-2.5 py-2" style={{ borderColor: c + '40' }}>
-                        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: c }}>{t('layer02.examplesLabel')}</p>
-                        <p className="text-sm font-semibold text-foreground leading-snug mt-0.5">{m.examples}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="shrink-0 rounded-xl border border-border bg-card px-5 pt-4 pb-2.5">
-                <div className="relative h-2 rounded-full" style={{ background: `linear-gradient(90deg, ${modelColors.shared}, ${modelColors.sovereign})` }}>
-                  {layer0Platforms.map((p, i) => (
-                    <span key={p.name} className="absolute top-1/2 size-3.5 rounded-full border-2 border-card -translate-x-1/2 -translate-y-1/2" style={{ left: `${spectrumPos[i]}%`, backgroundColor: platformMeta[i].color }} />
-                  ))}
-                </div>
-                <div className="relative h-5 mt-2">
-                  {layer0Platforms.map((p, i) => (
-                    <span key={p.name} className="absolute -translate-x-1/2 text-xs font-bold text-foreground whitespace-nowrap" style={{ left: `${spectrumPos[i]}%` }}>{p.name}</span>
-                  ))}
-                </div>
-                <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mt-1 lg:pr-12">
-                  <span style={{ color: modelColors.shared }}>← {t('layer02.spectrum.left')}</span>
-                  <span style={{ color: modelColors.sovereign }}>{t('layer02.spectrum.right')} →</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          {kp('s4-layer0-2')}
         </div>
 
         {/* ═══════ S4-XRP (1/2) — what XRPL is & why it is different ═══════ */}
