@@ -50,7 +50,7 @@
       ]
     },
     "smartContracts": {
-      "title": "Business Applications for Smart Contracts",
+      "title": "Business Applications of Smart Contracts",
       "description": "From theory to industry disruption — understand what smart contracts can and cannot do for your business, with real case studies, DAO & NFT applications, and an in-class assignment.",
       "topics": [
         "Smart Contract Fundamentals",
@@ -92,7 +92,7 @@
     "ethereum": "Ethereum",
     "hyperledger": "Hyperledger",
     "interoperability": "Interoperability",
-    "newTrends": "New Trends",
+    "zkPrivacy": "ZK & Privacy",
     "inClassAssignment": "In-class Assignment"
   },
   "instructors": {

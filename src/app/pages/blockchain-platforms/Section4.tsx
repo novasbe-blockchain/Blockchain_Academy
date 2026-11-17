@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import anime from 'animejs';
 import { motion } from 'motion/react';
@@ -40,6 +40,9 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-s4-xrp' },
   { id: 's4-xrp' },
+
+  { kind: 'group' as const, id: 'g-s4-layers' },
+  { id: 's4-layers' },
 
   { kind: 'group' as const, id: 'g-s4-wrap' },
   { id: 's4-quiz' },
@@ -597,6 +600,141 @@ interface ZoneItem { label: string; purpose: string; }
 interface MetricItem { metric: string; label: string; }
 interface HackItem { name: string; amount: string; year: string; chain: string; method: string; }
 interface UseCaseItem { title: string; scenario: string; how: string; }
+
+/* ──────────────────── The Layers: L0 · L1 · L2 overview ────────────────────
+   Left: the stack (L2 on L1 on an optional L0) with chain names per layer.
+   Right: how each layer scales (one lane · a longer lane on top · more lanes
+   side by side) and three chains placed on the stack. Text from t(). */
+const LAYER_COLORS: Record<string, string> = { L2: '#39B54A', L1: '#627EEA', L0: '#0891b2' };
+const LAYER_EXAMPLE_META = [
+  { emoji: '⭑', color: '#EC796B' },
+  { emoji: '🔴', color: '#e6007a' },
+  { emoji: '🔺', color: '#e84142' },
+];
+
+interface LayerRow { id: string; name: string; role: string; line: string; chains: string[] }
+interface LayerExample { name: string; layer: string; line: string }
+
+function LayerScalingChart() {
+  const { t } = useTranslation('blockchain-platforms/section-4');
+  const muted = 'var(--muted-foreground)';
+  const fg = 'var(--foreground)';
+  const X0 = 58;
+  const tile = (y: number, id: string) => (
+    <g>
+      <rect x="8" y={y} width="38" height="30" rx="7" fill={LAYER_COLORS[id]} />
+      <text x="27" y={y + 20} textAnchor="middle" fontSize="13" fontWeight="900" fill="#fff">{id}</text>
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 440 214" className="w-full h-auto" role="img" aria-label={t('layers.chart.aria')}>
+      {/* L2 — a much longer lane, sitting on L1 */}
+      {tile(10, 'L2')}
+      <rect x={X0} y="14" width="366" height="22" rx="6" fill={LAYER_COLORS.L2} fillOpacity="0.85" />
+      <text x={X0 + 10} y="29.5" fontSize="11.5" fontWeight="800" fill="#fff">{t('layers.chart.l2')}</text>
+      <text x={X0} y="52" fontSize="10.5" fill={muted}>{t('layers.chart.l2Value')}</text>
+
+      {/* L1 — one short, secure lane */}
+      {tile(72, 'L1')}
+      <rect x={X0} y="76" width="36" height="22" rx="6" fill={LAYER_COLORS.L1} />
+      <text x={X0 + 46} y="91.5" fontSize="11.5" fontWeight="800" fill={fg}>{t('layers.chart.l1')}</text>
+      <text x={X0} y="114" fontSize="10.5" fill={muted}>{t('layers.chart.l1Value')}</text>
+
+      {/* L0 — more lanes side by side, one per connected chain */}
+      {tile(134, 'L0')}
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={i} x={X0 + i * 42} y="138" width="36" height="22" rx="6" fill={LAYER_COLORS.L0} fillOpacity={1 - i * 0.2} />
+      ))}
+      <text x={X0 + 4 * 42 + 2} y="153.5" fontSize="13" fontWeight="900" fill={LAYER_COLORS.L0}>+ …</text>
+      <text x={X0 + 4 * 42 + 32} y="153.5" fontSize="11.5" fontWeight="800" fill={fg}>{t('layers.chart.l0')}</text>
+      <text x={X0} y="176" fontSize="10.5" fill={muted}>{t('layers.chart.l0Value')}</text>
+
+      {/* Axis */}
+      <line x1={X0} y1="196" x2="424" y2="196" stroke={muted} strokeWidth="1" strokeOpacity="0.6" />
+      <polygon points="424,196 416,192 416,200" fill={muted} fillOpacity="0.8" />
+      <text x={X0} y="209" fontSize="9.5" fontWeight="700" letterSpacing="0.6" fill={muted}>{t('layers.chart.axis')}</text>
+    </svg>
+  );
+}
+
+function LayersOverview({ recapLabel, keyPoint }: { recapLabel: string; keyPoint: ReactNode }) {
+  const { t } = useTranslation('blockchain-platforms/section-4');
+  const stack = t('layers.stack', { returnObjects: true }) as LayerRow[];
+  const examples = t('layers.examples', { returnObjects: true }) as LayerExample[];
+  const inset = ['lg:mx-12', 'lg:mx-6', ''];
+  return (
+    <div id="s4-layers" className="h-full flex flex-col p-6 lg:p-10">
+      <div className="shrink-0 mb-4">
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('layers.heading')}</h2>
+        <p className="text-sm text-muted-foreground mt-1">{t('layers.subtitle')}</p>
+        <div className="mt-2">
+          <RecapHandoff label={recapLabel} text={t('layers.recap')} to="/blockchain-platforms/section-2" color="#39B54A" />
+        </div>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-5">
+        {/* Left — the stack, top (L2) to bottom (L0) */}
+        <div className="flex flex-col gap-2 min-h-0">
+          {stack.map((row, i) => {
+            const color = LAYER_COLORS[row.id] ?? '#6366f1';
+            return (
+              <motion.div
+                key={row.id}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: (stack.length - 1 - i) * 0.08 }}
+                className={`flex-1 min-h-0 rounded-xl border-2 bg-card flex items-center gap-4 px-4 py-3 ${inset[i] ?? ''}`}
+                style={{ borderColor: color + '80' }}
+              >
+                <div className="size-14 rounded-xl flex items-center justify-center text-xl font-black text-white shrink-0" style={{ backgroundColor: color }}>{row.id}</div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                    <p className="text-lg font-black text-foreground leading-tight">{row.name}</p>
+                    <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border" style={{ color, borderColor: color + '66', backgroundColor: color + '12' }}>{row.role}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-snug mt-1">{row.line}</p>
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {row.chains.map((c) => (
+                      <span key={c} className="text-xs font-semibold text-foreground px-2 py-0.5 rounded-md border border-border bg-muted/40">{c}</span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+          <p className="shrink-0 text-xs text-muted-foreground text-center">{t('layers.l0Note')}</p>
+        </div>
+
+        {/* Right — how each layer scales + three chains placed on the stack */}
+        <div className="flex flex-col gap-3 min-h-0">
+          <div className="shrink-0 rounded-xl border border-border bg-card p-4">
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">{t('layers.chart.title')}</p>
+            <LayerScalingChart />
+          </div>
+          <div className="flex-1 min-h-0 rounded-xl border border-border bg-card p-4 flex flex-col">
+            <p className="shrink-0 text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">{t('layers.examplesLabel')}</p>
+            <div className="flex-1 min-h-0 flex flex-col justify-around gap-2">
+              {examples.map((ex, i) => {
+                const meta = LAYER_EXAMPLE_META[i % LAYER_EXAMPLE_META.length];
+                const color = LAYER_COLORS[ex.layer] ?? '#6366f1';
+                return (
+                  <div key={ex.name} className="flex items-start gap-2.5">
+                    <span className="shrink-0 mt-0.5 text-[10px] font-black text-white rounded-md px-1.5 py-0.5" style={{ backgroundColor: color }}>{ex.layer}</span>
+                    <p className="text-sm text-muted-foreground leading-snug">
+                      <span className="mr-1" style={{ color: meta.color }}>{meta.emoji}</span>{ex.line}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+      {keyPoint}
+    </div>
+  );
+}
 
 export function BP_Section4() {
   const { t } = useTranslation('blockchain-platforms/section-4');
@@ -1541,6 +1679,9 @@ export function BP_Section4() {
           </div>
           {kp('s4-xrp')}
         </div>
+
+        {/* ═══════ S4-LAYERS — the L0 · L1 · L2 stack at a glance ═══════ */}
+        <LayersOverview recapLabel={recapLabel} keyPoint={kp('s4-layers')} />
 
         {/* ═══════ QUIZ ═══════ */}
         <div id="s4-quiz" className="h-full">

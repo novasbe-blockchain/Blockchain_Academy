@@ -101,7 +101,7 @@ const resources: Resource[] = [
   {
     title: "Ethereum Layer 2 — Rollup Fundamentals",
     url: "https://ethereum.org/en/layer-2/",
-    description: "Ethereum Foundation's clear explainer of optimistic vs. ZK rollups, sequencers, data availability layers, and withdrawal mechanics. The conceptual base for Section 05.",
+    description: "Ethereum Foundation's clear explainer of optimistic vs. ZK rollups, sequencers, data availability layers, and withdrawal mechanics. The conceptual base for the rollup slides in Section 02.",
     tag: "Deep Dive",
     tagColor: "#f59e0b",
   },
@@ -116,14 +116,14 @@ const resources: Resource[] = [
   {
     title: "L2Beat — Layer 2 Risk & Analytics",
     url: "https://l2beat.com/",
-    description: "Comprehensive tracking of every Ethereum Layer 2 — TVL, security stage ratings, withdrawal mechanisms, and technical maturity. Essential for evaluating the L2 landscape in Section 05.",
+    description: "Comprehensive tracking of every Ethereum Layer 2 — TVL, security stage ratings, withdrawal mechanisms, and technical maturity. Essential for evaluating the L2 landscape from Section 02.",
     tag: "Tool",
     tagColor: "#22d3ee",
   },
   {
     title: "DeFi Llama — Cross-chain Analytics",
     url: "https://defillama.com/",
-    description: "The most comprehensive DeFi analytics platform. Compare TVL, stablecoin supply, and protocol revenue across 200+ blockchains — great for the decision framework in Section 05.",
+    description: "The most comprehensive DeFi analytics platform. Compare TVL, stablecoin supply, and protocol revenue across 200+ blockchains — great for comparing the platforms in this course.",
     tag: "Tool",
     tagColor: "#22d3ee",
   },
@@ -166,7 +166,7 @@ const resources: Resource[] = [
   {
     title: "Finematics — Layer 2 Explained",
     url: "https://www.youtube.com/watch?v=7pWxCklcNsU",
-    description: "Clear animated explanation of optimistic rollups, ZK rollups, data availability, and their trade-offs. The best visual companion to the Layer 2 and Starknet content in Section 05.",
+    description: "Clear animated explanation of optimistic rollups, ZK rollups, data availability, and their trade-offs. The best visual companion to the Layer 2 content in Section 02.",
     tag: "Video",
     tagColor: "#6366f1",
   },

@@ -27,6 +27,7 @@
     "s2-why-l2": "Why L2?",
     "s2-rollups": "Rollups & L2s",
     "s2-rollups-2": "Optimistic vs ZK",
+    "s2-data": "Why Post the Data?",
     "s2-defi": "DeFi Mechanics",
     "s2-stablecoins": "Stablecoins",
     "s2-apps": "Apps Beyond DeFi (1)",
@@ -56,6 +57,7 @@
     "whyL2": "scalability trilemma · block gas limit",
     "rollups": "sequencer · state root · L1 bridge",
     "rollups2": "fraud proof · validity proof · blobs",
+    "dataAvail": "data availability · blobs · forced exit · validium",
     "defi": "x·y=k · collateral ratio · liquidation bots · LP tokens · composability",
     "stablecoins": "ERC-20 mint/redeem · proof of reserves · liquidation ratio · delta-neutral hedge",
     "apps": "ERC-20 · ERC-721 · ERC-1155 · tokenURI · governor contracts · ENS · SIWE"
@@ -78,6 +80,7 @@
     "whyL2": "Ethereum keeps L1 small and secure on purpose; Layer 2 is where the volume goes.",
     "rollups": "Rollups move execution off Ethereum while security stays on it.",
     "rollups2": "Optimistic rollups wait a week to be sure; ZK rollups prove it up front. Either way users pay cents.",
+    "dataAvail": "A rollup is only as safe as its data: publishing it on Ethereum is what lets users leave without the operator.",
     "defi": "Swap, lend and earn recombine into almost every DeFi product.",
     "stablecoins": "A stablecoin is only as stable as what backs it.",
     "apps1": "Tokens prove who owns what and who gets to decide.",
@@ -535,8 +538,29 @@
     "optimisticModel": "Trusted by default. Withdrawing to L1 waits out a ~7-day challenge window.",
     "zkMotto": "“Prove it upfront”",
     "zkModel": "A validity proof comes with every batch. Withdraw to L1 in hours.",
-    "deeperLabel": "Going deeper: ",
-    "deeper": "ZK proofs, data availability and the full trilemma return in Section 5 (New Trends)."
+    "noteLabel": "Good to know: ",
+    "note": "\"ZK\" here buys cheap checking, not secrecy. A ZK rollup is as public as Ethereum itself."
+  },
+  "dataAvail": {
+    "heading": "Why rollups post their data to Ethereum",
+    "subtitle": "A proof shows the batch was correct. The data is what lets you leave if the rollup's operator disappears.",
+    "svg": {
+      "l2Title": "Rollup (L2)",
+      "l2Sub": "operator runs thousands of transactions",
+      "proofTitle": "Proof",
+      "proofSub": "\"this batch is correct\"",
+      "dataTitle": "Data",
+      "dataSub": "a copy of every transaction",
+      "l1Title": "Ethereum (L1)",
+      "l1Sub": "stores both · anyone can read them",
+      "userTitle": "You",
+      "userSub": "rebuild your balance from L1 data and withdraw, operator or not",
+      "caption": "Proof without data: you know the books balance but cannot see your own line. The data is what makes the exit possible."
+    },
+    "cards": [
+      { "title": "Your exit door", "desc": "If the operator goes dark, anyone can read the data on Ethereum, rebuild the balances and withdraw. Without the data, coins are stuck even though every proof was valid." },
+      { "title": "The cheaper shortcut", "desc": "Some chains keep the data somewhere else to cut fees. It is cheaper, but you now also trust whoever holds it." }
+    ]
   },
   "defi": {
     "heading": "DeFi: Three Primitives",
@@ -769,7 +793,7 @@
       "The Merge (2022) replaced Proof of Work with Proof of Stake, cutting energy use by 99.95% and new issuance by ~88%",
       "Staking pays ~3–4% a year (solo, liquid or via ETFs), but entry and exit go through queues",
       "ETH has no hard cap: PoS issuance minus the EIP-1559 burn keeps supply roughly flat, and busy periods make it deflationary",
-      "The EVM is an industry standard; Polygon, Arbitrum, Base and Optimism are EVM-compatible",
+      "The EVM is an industry standard; rollups like Arbitrum, Base and Optimism run it and settle on Ethereum",
       "Bitcoin is digital money; Ethereum is a programmable settlement layer"
     ]
   }

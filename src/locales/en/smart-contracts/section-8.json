@@ -1,0 +1,235 @@
+{
+  "groups": {
+    "g-brief": "The Assignment",
+    "g-work": "Work Session",
+    "g-wrap": "Wrap"
+  },
+  "chapters": {
+    "s8-brief": "At a Glance",
+    "s8-three-parts": "The Three Parts",
+    "s8-problem-bank": "🧩 Problem Starters",
+    "s8-lens": "🧩 Blockchain Lens",
+    "s8-report": "The 1-Page Report",
+    "s8-discussion": "Class Discussion",
+    "s8-rubric": "How It's Assessed"
+  },
+  "title": {
+    "sectionNumber": "SECTION 08",
+    "title": "In-class Assignment & Discussion",
+    "subtitle": "Pick a real-world problem, debate it in a small group, and argue in one page whether it needs a blockchain."
+  },
+  "brief": {
+    "badge": "In-class assignment",
+    "heading": "The assignment at a glance",
+    "subtitle": "A consulting exercise, not a coding one: analyse a real problem and give an honest recommendation.",
+    "linkLine": "This is the second of two graded in-class assignments; the first was in Fundamentals §3.",
+    "stats": [
+      { "label": "Groups", "value": "3–4 people", "note": "form them in the room" },
+      { "label": "Time in class", "value": "~45 min", "note": "discussion + drafting" },
+      { "label": "Deliverable", "value": "1 page max", "note": "PDF · exactly three parts" },
+      { "label": "Weight", "value": "In-class", "note": "one of the course's two in-class assignments" }
+    ],
+    "flowLabel": "How the session runs",
+    "flow": [
+      { "step": "Form groups & pick a problem", "time": "10 min", "desc": "Use a starter from the next slide or bring a problem from your own work or studies." },
+      { "step": "Discuss & draft", "time": "25 min", "desc": "Work through the three parts and run the blockchain lens." },
+      { "step": "Share back", "time": "2 min / group", "desc": "One sentence per part. The class pushes back; you refine." },
+      { "step": "Submit the 1-pager", "time": "end of session", "desc": "PDF, one page, group names at the top. Your instructor confirms the exact deadline." }
+    ],
+    "mindsetLabel": "The mindset:",
+    "mindsetBody": " you are the consultant hired to say whether blockchain is worth it. \"No, and here is why\" is a good answer if it is well argued."
+  },
+  "parts": {
+    "heading": "Three parts",
+    "subtitle": "A reader with five minutes should get the problem, the proposal, and an honest verdict. Headings in the report must match these three.",
+    "wordsLabel": "≈ {{words}} words",
+    "items": [
+      {
+        "num": "1",
+        "title": "Problem statement",
+        "words": "120",
+        "lead": "What is broken today, for whom, and why?",
+        "prompts": [
+          "Who are the actors — and which of them do the others have to trust?",
+          "Where exactly is the friction: time, cost, fraud, disputes, opacity?",
+          "How is it handled today, and what does that cost (money, days, errors)?",
+          "One concrete scenario beats three abstract ones."
+        ]
+      },
+      {
+        "num": "2",
+        "title": "Proposed solution",
+        "words": "150",
+        "lead": "What would a smart-contract-based design do — in plain language?",
+        "prompts": [
+          "What triggers the contract, and what does it do when triggered?",
+          "What lives on-chain (ownership, votes, hashes) and what stays off-chain (documents, personal data)?",
+          "Who operates it: a company, a consortium, a DAO? Public or permissioned chain?",
+          "Which course examples is it closest to — and how does it differ?"
+        ]
+      },
+      {
+        "num": "3",
+        "title": "Pros & cons of using a blockchain",
+        "words": "150",
+        "lead": "Would this actually be better than a well-run database?",
+        "prompts": [
+          "At least two genuine advantages and two genuine disadvantages.",
+          "Cost, privacy, governance, legal recognition, user experience — pick the ones that bite here.",
+          "What would the non-blockchain alternative look like, and why is it worse (or better)?",
+          "End with a one-sentence verdict: smart contract, hybrid or database."
+        ]
+      }
+    ],
+    "footer": "Diagrams count toward the page. No appendices."
+  },
+  "problemBank": {
+    "badge": "Problem starters",
+    "heading": "Pick a problem — or bring your own",
+    "subtitle": "Click a card to see the actors, the friction, one blockchain angle and one alternative.",
+    "selectPrompt": "Select a problem to see the starter notes",
+    "actorsLabel": "Actors",
+    "frictionLabel": "Where trust breaks today",
+    "angleLabel": "A blockchain angle",
+    "alternativeLabel": "The honest alternative",
+    "ownLabel": "Bring your own:",
+    "ownBody": " any problem where several parties exchange value or records and at least one is not fully trusted.",
+    "items": [
+      {
+        "title": "Diploma verification",
+        "sector": "Education",
+        "actors": "Universities · graduates · employers · background-check firms",
+        "friction": "Employers e-mail registrars and wait days; fake diplomas are a multi-billion-dollar market; students don't control their own record.",
+        "angle": "The university anchors a hash of each diploma on-chain; the graduate holds the credential; anyone verifies in seconds (MIT Blockcerts, Section 3).",
+        "alternative": "A national verification API run by the ministry of education — cheaper, but it makes the ministry the single point of trust and failure."
+      },
+      {
+        "title": "Concert ticket scalping",
+        "sector": "Entertainment",
+        "actors": "Artist · promoter · ticketing platform · fans · resellers",
+        "friction": "Bots buy out drops in seconds; resale prices explode; the artist earns nothing on resale; fakes are common at the door.",
+        "angle": "Tickets as NFTs with resale rules in the contract — price caps, identity-bound transfers, a cut to the artist on every resale (GET Protocol).",
+        "alternative": "A centralised platform can already cap resale prices (Ticketmaster does). The blockchain adds portability and auditability — is that worth wallets for fans?"
+      },
+      {
+        "title": "Cross-border tuition & remittances",
+        "sector": "Payments",
+        "actors": "International students or migrant workers · their families · banks on both sides · the university or landlord",
+        "friction": "3–5 days, 5–8% in fees and FX spread, no visibility on where the money is.",
+        "angle": "Stablecoins over an L2 settle in seconds for cents; the university accepts USDC or converts on arrival (Section 3 · Borderless).",
+        "alternative": "Fintech rails (Wise, SEPA Instant) already do this cheaply in many corridors — the case is strongest where banking access is poor."
+      },
+      {
+        "title": "Charity donation transparency",
+        "sector": "Non-profit",
+        "actors": "Donors · the charity · field partners · auditors · regulators",
+        "friction": "Donors can't see what happened to their money; overhead ratios are disputed; trust collapses after each scandal.",
+        "angle": "Donations and disbursements flow through a transparent treasury contract; every payment is public; milestone-based release (DAO-style, Section 3).",
+        "alternative": "Published audited accounts. Cheaper and legally recognised — but slower, less granular, and still based on trusting the auditor."
+      },
+      {
+        "title": "Carbon credit double counting",
+        "sector": "Sustainability",
+        "actors": "Project developers · registries · brokers · corporate buyers · verifiers",
+        "friction": "The same credit can be sold twice across registries; retirement is hard to prove; provenance is opaque.",
+        "angle": "Each credit is a unique token; retiring it burns it; the full chain of custody is public (tokenised credits, Section 3 · RWA).",
+        "alternative": "A single global registry with an API. The real problem is bad or fraudulent measurement at the source — which no ledger fixes."
+      },
+      {
+        "title": "Baby-formula recall",
+        "sector": "Food supply chain",
+        "actors": "Manufacturer · distributors · retailers · regulators · parents",
+        "friction": "Tracing one contaminated batch to shelves takes days; whole product lines get pulled; blame is disputed.",
+        "angle": "Every hand-off recorded on a permissioned chain; recall scope found in seconds (Walmart Food Trust, Section 3).",
+        "alternative": "A shared database run by the industry association. Works if everyone trusts the association — the question is whether they do."
+      },
+      {
+        "title": "Freelancer escrow",
+        "sector": "Gig economy",
+        "actors": "Freelancer · client · platform · dispute arbitrators",
+        "friction": "Clients ghost after delivery; freelancers deliver nothing after deposit; platforms take 10–20% and freeze funds for weeks.",
+        "angle": "Funds locked in an escrow contract; released on client approval or by a vote of arbitrators; fees fall to a few percent.",
+        "alternative": "Existing platforms are escrow already. The contract removes the platform's discretion — and its customer support. Who settles a messy dispute?"
+      },
+      {
+        "title": "Group-buying a rare asset",
+        "sector": "Collective ownership",
+        "actors": "Thousands of small contributors · an auction house · a custodian · a legal entity",
+        "friction": "Pooling money fast across strangers is hard; deciding what happens after is harder (ConstitutionDAO, Section 3).",
+        "angle": "A DAO treasury collects funds in days; token holders vote on custody, display, resale; exit rights protect minorities.",
+        "alternative": "A fund or cooperative with a lawyer. Slower, but it can actually own the asset. What happens when the DAO loses the auction?"
+      }
+    ]
+  },
+  "lens": {
+    "badge": "Critical lens",
+    "heading": "Should this problem earn a blockchain?",
+    "subtitle": "Tick what is true for your group's problem. The verdict updates live — bring it to Part 3 of your report.",
+    "checks": [
+      { "label": "Several parties are involved who do not fully trust each other", "hint": "If one party is trusted by all, a database wins." },
+      { "label": "They need one shared record that no single party controls", "hint": "Shared truth is the core thing a blockchain sells." },
+      { "label": "The rules are simple and stable enough to write as code", "hint": "If the policy changes monthly, immutability hurts." },
+      { "label": "The data can be public or hashed — no raw personal data on-chain", "hint": "GDPR and trade secrets conflict with public ledgers." },
+      { "label": "The current intermediary is expensive, slow or a real fraud risk", "hint": "Disintermediation must save something measurable." },
+      { "label": "Users can live with wallets — or you can hide them behind an app", "hint": "Wallet UX is still the number-one adoption killer." }
+    ],
+    "scoreLabel": "{{count}} of {{total}} ticked",
+    "verdicts": {
+      "sc": { "title": "Strong case for a smart contract", "desc": "Multi-party, shared truth, stable rules. Your Part 3 should still name the two biggest risks — audits and governance." },
+      "hybrid": { "title": "Hybrid: justify every on-chain piece", "desc": "Some of the pattern fits. Most real deployments live here: hashes or ownership on-chain, data and discretion off-chain." },
+      "db": { "title": "Probably a database", "desc": "A well-run database with audit logs is cheaper, faster and legally clearer. Saying so, with reasons, is a strong report." }
+    },
+    "reset": "↺ Reset",
+    "footnote": "A conversation starter, not a formula; Section 4's decision tree is the full version."
+  },
+  "report": {
+    "heading": "The 1-page report",
+    "subtitle": "A template: three headings, a verdict line, your names.",
+    "pageTitle": "Smart Contracts · In-class Assignment",
+    "pageGroup": "Group: names · date",
+    "pageProblemTitle": "1 · Problem statement",
+    "pageSolutionTitle": "2 · Proposed solution",
+    "pageProsConsTitle": "3 · Pros & cons of using a blockchain",
+    "pageProsLabel": "Pros",
+    "pageConsLabel": "Cons",
+    "pageVerdictLabel": "Verdict:",
+    "pageVerdictPlaceholder": "smart contract / hybrid / database — one sentence",
+    "submissionLabel": "Submission",
+    "submission": [
+      { "label": "Format", "value": "PDF", "note": "one page, portrait" },
+      { "label": "Length", "value": "1 page max", "note": "diagrams count; appendices don't exist" },
+      { "label": "Names", "value": "All group members", "note": "at the top of the page" },
+      { "label": "Due", "value": "End of session", "note": "unless your instructor says otherwise" }
+    ],
+    "strongLabel": "A strong report…",
+    "strong": [
+      "Names the actors and says which one is not trusted — in the first three lines.",
+      "Describes what the contract does in plain language. No code, no jargon without a gloss.",
+      "Puts data where it belongs: ownership and rules on-chain, personal data and documents off.",
+      "Gives at least two honest cons — cost, privacy, governance, user experience.",
+      "Ends with a verdict a sceptical CFO could repeat in one sentence.",
+      "Cites at least one real case from this course (success or failure) as a reference point."
+    ]
+  },
+  "discussion": {
+    "prompt": "Which of today's problems genuinely needs a blockchain — and which just needs a better database?",
+    "questions": [
+      "Where did your group disagree most: the problem, the solution, or the verdict? What evidence would settle it?",
+      "For a database verdict: what would have to change (regulation, user tools, cost) to make it a smart contract?",
+      "For a smart-contract verdict: who runs it, who pays the gas, and who is liable when it goes wrong?",
+      "Which real case from the course does your problem most resemble — Estonia, Walmart, The DAO, ASX, TradeLens, ConstitutionDAO?"
+    ]
+  },
+  "rubric": {
+    "heading": "How it's assessed",
+    "subtitle": "Four equal criteria. A well-argued \"no\" scores as high as a well-argued \"yes\".",
+    "criteria": [
+      { "label": "Clarity of the problem", "weight": "25%", "desc": "Actors, friction and today's cost are concrete. A reader knows who is not trusted and why it matters." },
+      { "label": "Fit of the solution", "weight": "25%", "desc": "The contract's trigger, action and on/off-chain split are plain and plausible. It connects to a real pattern from the course." },
+      { "label": "Honesty of the pros & cons", "weight": "25%", "desc": "Real trade-offs, not a sales pitch. The non-blockchain alternative is taken seriously. The verdict follows from the analysis." },
+      { "label": "Use of course concepts", "weight": "25%", "desc": "Decision framework, oracle problem, governance, limitations and at least one real case are used correctly — not name-dropped." }
+    ],
+    "noteLabel": "Reminder:",
+    "noteBody": " this is one of two in-class assignments in the course. It is graded on reasoning, not on whether the answer was \"blockchain\"."
+  }
+}

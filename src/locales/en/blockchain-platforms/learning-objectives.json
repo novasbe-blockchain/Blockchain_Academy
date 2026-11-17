@@ -24,8 +24,8 @@
       "description": "Apply the Blockchain Trilemma framework to compare Bitcoin, Ethereum, and Hyperledger — identifying which properties each platform prioritizes and sacrifices."
     },
     "interoperability": {
-      "title": "Interoperability & Emerging Trends",
-      "description": "Explore cross-chain communication protocols (Cosmos, IBC), Layer 0 architectures, ZK-rollup platforms like Starknet, and the future of blockchain interoperability."
+      "title": "Interoperability & the Layer Stack",
+      "description": "Explore how closed chains connect — bridges, Cosmos IBC and Layer 0 — weigh the trust each route requires, and place any chain in the L0 · L1 · L2 stack."
     }
   }
 }

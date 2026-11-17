@@ -27,6 +27,7 @@
     "s2-why-l2": "Porquê L2?",
     "s2-rollups": "Rollups e L2s",
     "s2-rollups-2": "Optimistic vs ZK",
+    "s2-data": "Why Post the Data?",
     "s2-defi": "Mecânica do DeFi",
     "s2-stablecoins": "Stablecoins",
     "s2-apps": "Apps Além do DeFi (1)",
@@ -56,6 +57,7 @@
     "whyL2": "scalability trilemma · block gas limit",
     "rollups": "sequencer · state root · L1 bridge",
     "rollups2": "fraud proof · validity proof · blobs",
+    "dataAvail": "data availability · blobs · forced exit · validium",
     "defi": "x·y=k · collateral ratio · liquidation bots · LP tokens · composability",
     "stablecoins": "ERC-20 mint/redeem · proof of reserves · liquidation ratio · delta-neutral hedge",
     "apps": "ERC-20 · ERC-721 · ERC-1155 · tokenURI · governor contracts · ENS · SIWE"
@@ -78,6 +80,7 @@
     "whyL2": "Ethereum keeps L1 small and secure on purpose; Layer 2 is where the volume goes.",
     "rollups": "Rollups make Ethereum cheap without making it less secure: execution moves out, security stays.",
     "rollups2": "Optimistic rollups wait a week to be sure; ZK rollups prove it up front. Either way users pay cents.",
+    "dataAvail": "A rollup is only as safe as its data: publishing it on Ethereum is what lets users leave without the operator.",
     "defi": "Three building blocks — swap, lend, earn — recombine into almost every DeFi product.",
     "stablecoins": "A stablecoin is only as stable as whatever backs it — always ask what sits behind the peg.",
     "apps1": "Tokens prove who owns what and who gets to decide — the business is in the proof, not the picture.",
@@ -535,8 +538,29 @@
     "optimisticModel": "Trusted by default. Withdrawing to L1 waits out a ~7-day challenge window.",
     "zkMotto": "“Prove it upfront”",
     "zkModel": "A validity proof comes with every batch. Withdraw to L1 in hours.",
-    "deeperLabel": "Going deeper: ",
-    "deeper": "ZK proofs, data availability and the full trilemma return in Section 5 (New Trends)."
+    "noteLabel": "Good to know: ",
+    "note": "\"ZK\" here buys cheap checking, not secrecy. A ZK rollup is as public as Ethereum itself."
+  },
+  "dataAvail": {
+    "heading": "Why rollups post their data to Ethereum",
+    "subtitle": "A proof shows the batch was correct. The data is what lets you leave if the rollup's operator disappears.",
+    "svg": {
+      "l2Title": "Rollup (L2)",
+      "l2Sub": "operator runs thousands of transactions",
+      "proofTitle": "Proof",
+      "proofSub": "\"this batch is correct\"",
+      "dataTitle": "Data",
+      "dataSub": "a copy of every transaction",
+      "l1Title": "Ethereum (L1)",
+      "l1Sub": "stores both · anyone can read them",
+      "userTitle": "You",
+      "userSub": "rebuild your balance from L1 data and withdraw, operator or not",
+      "caption": "Proof without data: you know the books balance but cannot see your own line. The data is what makes the exit possible."
+    },
+    "cards": [
+      { "title": "Your exit door", "desc": "If the operator goes dark, anyone can read the data on Ethereum, rebuild the balances and withdraw. Without the data, coins are stuck even though every proof was valid." },
+      { "title": "The cheaper shortcut", "desc": "Some chains keep the data somewhere else to cut fees. It is cheaper, but you now also trust whoever holds it." }
+    ]
   },
   "defi": {
     "heading": "DeFi — Três Primitivas, Uma Ideia",
@@ -583,19 +607,13 @@
   "stablecoins": {
     "heading": "Stablecoins — a categoria de app mais usada",
     "subtitle": "Tokens concebidos para acompanhar uma referência estável (quase sempre 1 USD). Discretamente a maior categoria de dApp por volume — e a ponte entre as finanças tradicionais e a cripto.",
-    "whatLabel": "O que é uma stablecoin?",
-    "whatBodyA": "Um token on-chain cujo valor acompanha uma referência externa — quase sempre o dólar norte-americano. A questão interessante é ",
-    "whatBodyStrong": "o que sustenta o peg",
-    "whatBodyB": ": dólares reais num banco, colateral cripto on-chain, ou puro algoritmo. Cada modelo falha de forma diferente.",
     "mechanismLabel": "Como funciona o peg",
-    "examplesLabel": "Exemplos reais",
     "breakLabel": "Como pode quebrar",
     "cards": [
       {
         "title": "Garantida por fiat",
         "sub": "Custodial · reserva 1:1",
         "mechanism": "Um emissor regulado detém USD (ou títulos do tesouro de curto prazo) 1:1 numa conta bancária. Os utilizadores cunham tokens depositando fiat; resgatam queimando tokens. Mantém o peg porque o emissor garante o resgate.",
-        "examples": "USDT (Tether) · ~140 mil M$ — a maior, atestações opacas · USDC (Circle) · ~60 mil M$ — atestações mensais das Big Four · PYUSD (PayPal) · ~1 mil M$ — mais recente, regulada.",
         "logos": [
           { "sym": "USDT", "tag": "~140 mil M$" },
           { "sym": "USDC", "tag": "~60 mil M$" },
@@ -608,7 +626,6 @@
         "title": "Garantida por cripto",
         "sub": "Descentralizada · sobre-colateralizada",
         "mechanism": "Os utilizadores bloqueiam cripto (ETH, wBTC) num smart contract com um rácio de colateral de 150-200% e cunham stablecoins. Se o valor do colateral cair, o contrato liquida posições automaticamente. Sem emissor humano.",
-        "examples": "DAI (MakerDAO/Sky) · ~5 mil M$ — a original, desde 2017 · GHO (Aave) · LUSD (Liquity) · crvUSD (Curve) — cada uma com mecânicas de liquidação ligeiramente diferentes.",
         "logos": [
           { "sym": "DAI", "tag": "MakerDAO" },
           { "sym": "GHO", "tag": "Aave" },
@@ -621,7 +638,6 @@
         "title": "Algorítmica e híbrida",
         "sub": "Sem colateral (ou parcial)",
         "mechanism": "Mantêm o peg através de algoritmos de cunhagem/queima de oferta ou de posições de derivados delta-neutras. As versões puramente algorítmicas têm um modo de falha documentado; as híbridas (Frax, Ethena) combinam colateral com estratégias sintéticas.",
-        "examples": "TerraUSD (UST) · colapsou em maio de 2022, eliminou ~60 mil M$ — caso de estudo de espiral de morte · Frax · ~650 M$, híbrida parcialmente colateralizada · Ethena USDe · delta-neutra sintética, ~5 mil M$+ em 2024.",
         "logos": [
           { "sym": "UST", "tag": "colapsou" },
           { "sym": "FRAX", "tag": "híbrida" },
@@ -630,12 +646,6 @@
         "risk": "Puramente algorítmica: todas as tentativas anteriores falharam. Híbrida: a Ethena depende de as taxas de financiamento dos perps de ETH se manterem positivas — funciona em mercados em alta, por testar ao longo de um ciclo de baixa prolongado. Trata com cuidado redobrado."
       }
     ],
-    "scaleLabel": "Escala",
-    "scaleBodyA": "Oferta total de stablecoins: ",
-    "scaleBodyStrong": "~200 mil M$",
-    "scaleBodyB": " · o volume diário de liquidação rivaliza com a Visa · só o USDT liquida, em alguns dias, mais volume on-chain do que o Bitcoin. As stablecoins são a dApp mais usada por número de transações.",
-    "regLabel": "Regulação a apertar",
-    "regBody": "A MiCA da UE (em vigor desde 2024) restringe stablecoins algorítmicas não denominadas em euros · enquadramentos dos EUA em debate no Congresso · sandbox de Hong Kong ativa. Transparência do emissor, auditorias de reservas e licenciamento são a nova base.",
     "stats": [
       { "value": "~$300B", "label": "total stablecoin supply" },
       { "value": "Visa-scale", "label": "annual on-chain settlement" },
@@ -645,22 +655,12 @@
   "apps1": {
     "heading": "Além do DeFi — o que mais corre na Ethereum",
     "subtitle": "O DeFi é a categoria de app mais discutida — mas não a única. A mesma EVM aloja propriedade, governação, identidade e jogos a uma escala relevante.",
-    "standardsLabel": "Os padrões de token por baixo de tudo",
-    "standardsA": "A maioria das apps fora do DeFi resume-se a três padrões de token: ",
-    "standardsErc20": "ERC-20",
-    "standardsB": " (fungível — moedas, ações, governação), ",
-    "standardsErc721": "ERC-721",
-    "standardsC": " (único — NFTs, identidade, escrituras), ",
-    "standardsErc1155": "ERC-1155",
-    "standardsD": " (misto — itens de jogo). A \"app\" é, na verdade, um smart contract que cunha, transfere ou consulta estes tokens.",
-    "moreExamplesLabel": "Mais exemplos: ",
     "limitLabel": "Limite honesto: ",
     "cards": [
       {
         "title": "NFTs e propriedade digital",
         "sub": "ERC-721 / ERC-1155",
         "what": "Um token único on-chain cujo tokenURI aponta para metadados off-chain (imagem, JSON). O token prova a proveniência; os bytes vivem tipicamente no IPFS ou num servidor centralizado.",
-        "examples": "CryptoPunks (2017) · Bored Ape (2021) · Bilhetes: Liverpool FC, Coachella · Música: Sound.xyz · IP de marca: Nike RTFKT, pilotos da Disney.",
         "projects": [
           { "sym": "OpenSea", "tag": "maior marketplace" },
           { "sym": "BAYC", "tag": "PFPs · cultura" },
@@ -674,7 +674,6 @@
         "title": "DAOs e governação on-chain",
         "sub": "Votação ERC-20 · tesouraria controlada por contrato",
         "what": "Uma Decentralized Autonomous Organization é um smart contract que controla uma tesouraria e executa propostas aprovadas por votos dos detentores de tokens. O contrato — e não um CEO — move os fundos.",
-        "examples": "MakerDAO (emissão de DAI) · Uniswap DAO (controla mais de 7 mil M$ em UNI) · ENS DAO (registo .eth) · Optimism Citizen House · subsídios da Gitcoin.",
         "projects": [
           { "sym": "Uniswap DAO", "tag": "tesouraria de 7 mil M$" },
           { "sym": "MakerDAO", "tag": "emissão de DAI" },
@@ -689,14 +688,12 @@
   "apps2": {
     "heading": "Além do DeFi — Identidade e Jogos",
     "subtitle": "Mais dois verticais onde a programabilidade da Ethereum abre possibilidades que os sistemas centralizados ainda não conseguem replicar.",
-    "moreExamplesLabel": "Mais exemplos: ",
     "limitLabel": "Limite honesto: ",
     "cards": [
       {
         "title": "Identidade e social descentralizado",
         "sub": "ENS · SIWE · Lens · Farcaster",
         "what": "Substituir os logins por email por identidade baseada na carteira. O ENS dá-te um nome humano (alice.eth) para o teu endereço. O Sign-In With Ethereum (SIWE) autentica sem palavras-passe. A Lens e o Farcaster constroem grafos sociais on-chain.",
-        "examples": "ENS: mais de 3M de nomes registados · SIWE: mais de 200 apps integradas · Farcaster: ~300 mil DAU (2024) · Worldcoin: mais de 7M de humanos verificados · Lens: construída em torno de grafos de feed componíveis.",
         "projects": [
           { "sym": "ENS", "tag": "3M+ nomes .eth" },
           { "sym": "SIWE", "tag": "login por carteira" },
@@ -710,7 +707,6 @@
         "title": "Jogos on-chain e metaverso",
         "sub": "A maioria dos ativos vive agora em L2s",
         "what": "Ativos de jogo (skins, personagens, itens) como tokens que os jogadores possuem de facto e podem negociar. Vai desde \"jogo off-chain com cosméticos NFT\" até \"jogos totalmente on-chain\" onde todo o estado do jogo vive em contratos (motor Dojo).",
-        "examples": "Immutable (zkEVM para jogos) · Ronin (o Axie Infinity atingiu 3 mil M$ de GMV em 2021) · Decentraland · Realms / Loot Survivor na Starknet · DFK Chain (L1 da Avalanche).",
         "projects": [
           { "sym": "Immutable", "tag": "zkEVM para jogos" },
           { "sym": "Axie · Ronin", "tag": "pico de 3 mil M$ GMV" },
@@ -720,9 +716,7 @@
         ],
         "limit": "A maioria dos \"jogos Web3\" falhou (jogabilidade fraca, tokenomics predatória, incentivos em forma de Ponzi). A UX da carteira continua a bloquear o gaming mainstream. Os estúdios sérios assentam cada vez mais em \"jogo primeiro, blockchain opcional\"."
       }
-    ],
-    "uriLabel": "A armadilha do URI — ",
-    "uriBody": "Os NFTs ERC-721 guardam tipicamente apenas um URL que aponta para metadados off-chain. O token on-chain prova que possuis um apontador; a imagem/ativo em si vive no IPFS, no Arweave, ou — demasiadas vezes — num único servidor web. Se o anfitrião desaparecer, o teu NFT fica em branco. Verifica sempre onde estão fixados os metadados antes de comprar."
+    ]
   },
   "comparison": {
     "title": "Bitcoin vs Ethereum",
@@ -799,7 +793,7 @@
       "The Merge (2022) substituiu o Proof of Work por Proof of Stake — reduzindo o consumo de energia em 99,95%",
       "Staking is ETH's interest rate (~3–4%) — solo, liquid (stETH/rETH) or via ETFs — but entry and exit go through rate-limited queues",
       "ETH has no hard cap: PoS issuance minus the EIP-1559 burn keeps supply roughly flat, and busy periods make it deflationary",
-      "A EVM tornou-se um padrão da indústria — Polygon, Arbitrum, Base, Optimism e outras são compatíveis com EVM",
+      "A EVM é um padrão da indústria; rollups como Arbitrum, Base e Optimism executam-na e liquidam na Ethereum",
       "O Bitcoin é dinheiro digital; a Ethereum é uma camada de liquidação programável"
     ]
   }

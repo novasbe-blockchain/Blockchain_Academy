@@ -31,8 +31,8 @@
       "description": "Why enterprise blockchains exist, smart contracts in supply chains, channels, and transaction flow."
     },
     "interoperability": {
-      "title": "Interoperability & New Trends",
-      "description": "Connecting blockchains — Cosmos, Layer 0 protocols, and Starknet."
+      "title": "Interoperability",
+      "description": "Connecting blockchains — bridges, Cosmos IBC and Layer 0 — and how the L0 · L1 · L2 layers fit together."
     },
     "conclusion": {
       "title": "Conclusion",

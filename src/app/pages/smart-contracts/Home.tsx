@@ -14,7 +14,8 @@ const sectionMeta = [
   { key: 'section4',   number: '04', pathSuffix: '/section-4',   gradient: 'from-[#6366f1] to-[#8b5cf6]' },
   { key: 'section5',   number: '05', pathSuffix: '/section-5',   gradient: 'from-[#ED1C24] to-[#6366f1]' },
   { key: 'section6',   number: '06', pathSuffix: '/section-6',   gradient: 'from-[#6366f1] to-[#22d3ee]' },
-  { key: 'section7',   number: '07', pathSuffix: '/section-7',   gradient: 'from-[#39B54A] to-[#6366f1]' },
+  { key: 'section7',   number: '07', pathSuffix: '/section-7',   gradient: 'from-[#8b5cf6] to-[#22d3ee]' },
+  { key: 'section8',   number: '08', pathSuffix: '/section-8',   gradient: 'from-[#39B54A] to-[#6366f1]' },
   { key: 'conclusion', number: '🏁', pathSuffix: '/conclusion',  gradient: 'from-[#6366f1] to-[#ED1C24]' },
 ];
 

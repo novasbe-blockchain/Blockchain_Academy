@@ -19,7 +19,6 @@ export function BlockchainPlatformsRoot() {
     { id: '2',    number: '02', label: t('sections.ethereum'),         path: `${BASE}/section-2` },
     { id: '3',    number: '03', label: t('sections.hyperledger'),      path: `${BASE}/section-3` },
     { id: '4',    number: '04', label: t('sections.interoperability'), path: `${BASE}/section-4` },
-    { id: '5',    number: '05', label: t('sections.newTrends'),        path: `${BASE}/section-5` },
     { id: 'end',  number: '🏁', label: t('sections.conclusion'),       path: `${BASE}/conclusion` },
     { id: 'bib',  number: '📖', label: t('sections.bibliography'),     path: `${BASE}/bibliography` },
   ];

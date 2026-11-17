@@ -6,6 +6,7 @@
     "g-s4-bridges": "🔥 Segurança das Bridges",
     "g-s4-cosmos": "Cosmos",
     "g-s4-xrp": "XRP Ledger",
+    "g-s4-layers": "The Stack",
     "g-s4-wrap": "✅ Resumo"
   },
   "chapters": {
@@ -23,6 +24,7 @@
     "s4-bridge-hacks": "Bridge Hacks",
     "s4-cosmos": "Cosmos",
     "s4-xrp": "XRP Ledger",
+    "s4-layers": "L0 · L1 · L2",
     "s4-quiz": "Quiz",
     "s4-takeaways": "Conclusões"
   },
@@ -418,6 +420,34 @@
     "honestTitle": "Contexto honesto — o que abdicas",
     "honestBody": "Uma superfície de smart contracts menor que a EVM, e validação que é federada: qualquer pessoa pode correr um nó, mas o conjunto de validadores por omissão vem com o software. A aposta é em pagamentos, RWA e liquidação cross-chain — não em dApps de uso geral."
   },
+  "layers": {
+    "heading": "The Layers: L0 · L1 · L2",
+    "subtitle": "Three layers, three jobs. Read the stack from the bottom up.",
+    "stack": [
+      { "id": "L2", "name": "Layer 2", "role": "Scale · low fees", "line": "Runs transactions off an L1, then settles the result on it.", "chains": ["Arbitrum", "Optimism", "Base", "Starknet", "zkSync"] },
+      { "id": "L1", "name": "Layer 1", "role": "Security · settlement", "line": "The base chain: its own validators, its own final record.", "chains": ["Ethereum", "Bitcoin", "Solana"] },
+      { "id": "L0", "name": "Layer 0", "role": "Shared security · interop", "line": "A foundation that many chains plug into and talk through.", "chains": ["Polkadot", "Cosmos", "Avalanche Primary Network"] }
+    ],
+    "l0Note": "Optional: Bitcoin, Ethereum and Solana run without a Layer 0.",
+    "chart": {
+      "title": "How each layer scales",
+      "aria": "Chart comparing how each layer scales: an L1 is one secure lane at roughly 15 to 30 transactions per second on Ethereum; an L2 stacks a much longer lane of thousands of transactions per second on top of it; an L0 adds lanes side by side, one per connected chain.",
+      "axis": "capacity → (not to scale)",
+      "l1": "one secure lane",
+      "l1Value": "Ethereum: ~15–30 tx/s · fees in dollars",
+      "l2": "a longer lane on top",
+      "l2Value": "rollups: thousands of tx/s · fees in cents",
+      "l0": "more lanes, side by side",
+      "l0Value": "every connected chain adds its own capacity"
+    },
+    "examplesLabel": "Three chains, placed on the stack",
+    "examples": [
+      { "name": "Starknet", "layer": "L2", "line": "Starknet uses ZK for cheap verification, not secrecy." },
+      { "name": "Polkadot", "layer": "L0", "line": "Polkadot rents out security; parachains skip recruiting validators but live by the Relay Chain's rules." },
+      { "name": "Avalanche", "layer": "L0", "line": "Avalanche sells sovereign lanes with shared tooling; a custom L1 is only as secure as its own validators." }
+    ],
+    "recap": "Section 02 · Rollups & L2s"
+  },
   "quiz": {
     "question": "As bridges cross-chain têm sido responsáveis pelos maiores ataques da história da cripto — Ronin (625 M$), Wormhole (320 M$), Nomad (190 M$). Que propriedade arquitetural torna as bridges alvos de tão elevado valor?",
     "options": [
@@ -435,7 +465,8 @@
       "As bridges concentram ativos bloqueados num único contrato, tornando-as alvos de ataque de elevado valor (Ronin 625 M$, Wormhole 320 M$)",
       "O Cosmos IBC consegue comunicação cross-chain com confiança minimizada sem um contrato de bridge centralizado",
       "A XRP Ledger é otimizada para pagamentos, com um DEX nativo, Trust Lines e suporte de sidechain federada",
-      "XRP Ledger is a payments rail that reaches other chains through Axelar rather than a bespoke bridge per pair"
+      "XRP Ledger is a payments rail that reaches other chains through Axelar rather than a bespoke bridge per pair",
+      "The stack in one line: L1 secures and settles, L2 adds cheap scale on top, L0 lets many chains share security and talk to each other"
     ]
   },
   "keyPoints": {
@@ -452,7 +483,8 @@
     "s4-cosmos": "Cosmos trades shared security for sovereignty; IBC lets chains verify each other without a middleman.",
     "s4-layer0": "A Layer 0 is a security team for hire; new chains inherit protection on day one.",
     "s4-layer0-2": "Shared security or full sovereignty: you rent one or build the other.",
-    "s4-xrp": "XRPL is a payments rail, not an app platform; it is fast and cheap because it does less."
+    "s4-xrp": "XRPL is a payments rail, not an app platform; it is fast and cheap because it does less.",
+    "s4-layers": "Layers are a division of labour: L1 secures and settles, L2 scales on top of it, L0 lets many chains share security and talk."
   },
   "chooser": {
     "badge": "Try it",

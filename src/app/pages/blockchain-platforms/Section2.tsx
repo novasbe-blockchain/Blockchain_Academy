@@ -38,6 +38,7 @@ const chapterShape = [
   { id: 's2-why-l2' },
   { id: 's2-rollups' },
   { id: 's2-rollups-2' },
+  { id: 's2-data' },
 
   { kind: 'group' as const, id: 'g-s2-apps' },
   { id: 's2-defi' },
@@ -498,6 +499,7 @@ export function BP_Section2() {
   const rollupOptimistic = t('rollups.optimistic', { returnObjects: true }) as RollupBullet[];
   const rollupZk = t('rollups.zk', { returnObjects: true }) as RollupBullet[];
   const rollupMetrics = t('rollups.metrics', { returnObjects: true }) as RollupMetric[];
+  const dataAvailCards = t('dataAvail.cards', { returnObjects: true }) as { title: string; desc: string }[];
 
   const stablecoinCards = t('stablecoins.cards', { returnObjects: true }) as StablecoinCard[];
   const stablecoinCardMeta = [
@@ -1802,10 +1804,71 @@ export function BP_Section2() {
             </motion.div>
 
             <p className="shrink-0 text-xs text-muted-foreground text-center">
-              <span className="font-bold text-foreground">{t('rollups2.deeperLabel')}</span>{t('rollups2.deeper')}
+              <span className="font-bold text-foreground">{t('rollups2.noteLabel')}</span>{t('rollups2.note')}
             </p>
           </div>
           <KeyPoint topic="rollups2" hood="rollups2" className="mt-3" />
+        </div>
+
+        {/* ═══════ S2-DATA — why rollups post their data to L1 ═══════ */}
+        <div id="s2-data" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('dataAvail.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1 max-w-4xl">{t('dataAvail.subtitle')}</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-5">
+            {/* Visual — the rollup posts a proof and the data; the user can exit from the data */}
+            <div className="min-h-[220px] rounded-xl border border-border bg-card/40 p-4 flex flex-col">
+              <svg viewBox="0 0 480 250" className="w-full flex-1 min-h-0" role="img" aria-label={t('dataAvail.svg.caption')}>
+                <rect x="140" y="14" width="200" height="44" rx="8" fill="#8b5cf614" stroke="#8b5cf6" strokeWidth="1.5" />
+                <text x="240" y="33" textAnchor="middle" fontSize="11" fontWeight="900" fill="#8b5cf6">{t('dataAvail.svg.l2Title')}</text>
+                <text x="240" y="48" textAnchor="middle" fontSize="8.5" fill="var(--muted-foreground)">{t('dataAvail.svg.l2Sub')}</text>
+
+                <line x1="200" y1="58" x2="150" y2="96" stroke="#6366f1" strokeWidth="1.5" strokeDasharray="4 3" />
+                <polygon points="153,90 148,98 158,97" fill="#6366f1" />
+                <line x1="280" y1="58" x2="330" y2="96" stroke="#39B54A" strokeWidth="1.5" strokeDasharray="4 3" />
+                <polygon points="322,97 332,98 327,90" fill="#39B54A" />
+
+                <rect x="60" y="98" width="170" height="52" rx="8" fill="#6366f112" stroke="#6366f1" strokeWidth="1.5" />
+                <text x="145" y="118" textAnchor="middle" fontSize="11" fontWeight="900" fill="#6366f1">{t('dataAvail.svg.proofTitle')}</text>
+                <text x="145" y="136" textAnchor="middle" fontSize="8.5" fill="var(--muted-foreground)">{t('dataAvail.svg.proofSub')}</text>
+
+                <rect x="250" y="98" width="170" height="52" rx="8" fill="#39B54A12" stroke="#39B54A" strokeWidth="1.5" />
+                <text x="335" y="118" textAnchor="middle" fontSize="11" fontWeight="900" fill="#39B54A">{t('dataAvail.svg.dataTitle')}</text>
+                <text x="335" y="136" textAnchor="middle" fontSize="8.5" fill="var(--muted-foreground)">{t('dataAvail.svg.dataSub')}</text>
+
+                <rect x="30" y="168" width="420" height="40" rx="8" fill="#627EEA14" stroke="#627EEA" strokeWidth="1.5" />
+                <text x="240" y="185" textAnchor="middle" fontSize="11" fontWeight="900" fill="#627EEA">{t('dataAvail.svg.l1Title')}</text>
+                <text x="240" y="199" textAnchor="middle" fontSize="8.5" fill="var(--muted-foreground)">{t('dataAvail.svg.l1Sub')}</text>
+                <line x1="145" y1="150" x2="145" y2="166" stroke="#6366f1" strokeWidth="1.5" />
+                <line x1="335" y1="150" x2="335" y2="166" stroke="#39B54A" strokeWidth="1.5" />
+
+                <line x1="400" y1="208" x2="422" y2="222" stroke="#39B54A" strokeWidth="1.5" />
+                <polygon points="416,224 426,225 421,217" fill="#39B54A" />
+                <text x="450" y="230" textAnchor="end" fontSize="10" fontWeight="900" fill="#39B54A">🧍 {t('dataAvail.svg.userTitle')}</text>
+                <text x="450" y="245" textAnchor="end" fontSize="8" fill="var(--muted-foreground)">{t('dataAvail.svg.userSub')}</text>
+              </svg>
+              <p className="text-xs text-muted-foreground leading-snug shrink-0 mt-2">{t('dataAvail.svg.caption')}</p>
+            </div>
+
+            {/* Two plain-language cards: the exit door · the cheaper shortcut */}
+            <div className="min-h-0 grid auto-rows-fr gap-3">
+              {dataAvailCards.map((c, i) => {
+                const color = ['#39B54A', '#f59e0b'][i % 2];
+                return (
+                  <div key={c.title} className="min-h-0 flex gap-3 p-5 bg-card border-2 rounded-xl items-center" style={{ borderColor: color + '55' }}>
+                    <span className="text-4xl leading-none shrink-0">{['🚪', '✂️'][i % 2]}</span>
+                    <div className="min-w-0">
+                      <div className="font-bold text-lg mb-1" style={{ color }}>{c.title}</div>
+                      <div className="text-sm lg:text-base text-muted-foreground leading-relaxed">{c.desc}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <KeyPoint topic="dataAvail" hood="dataAvail" className="mt-3" />
         </div>
 
         {/* ═══════ DEFI MECHANICS ═══════ */}
