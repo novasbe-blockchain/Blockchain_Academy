@@ -384,26 +384,23 @@
     },
     "arenaLabel": "On-chain · the validators",
     "validators": {
-      "you": {
-        "name": "You",
-        "tag": "solo"
-      },
-      "b": {
-        "name": "Validator B",
-        "tag": "staked"
-      },
-      "c": {
-        "name": "Validator C",
-        "tag": "staked"
-      },
-      "d": {
-        "name": "Validator D",
-        "tag": "staked"
-      },
-      "pool": {
-        "name": "Pool",
-        "tag": "pooled ETH"
-      }
+      "you": "You",
+      "pool": "Pool validator",
+      "other": "Validator"
+    },
+    "legend": {
+      "you": "you (solo)",
+      "pool": "pool validators",
+      "other": "other validators"
+    },
+    "queues": {
+      "entry": "entry queue",
+      "exit": "exit queue"
+    },
+    "drawLabel": "Random draw",
+    "pow": {
+      "reminder": "In Proof-of-Work, five computers race for the next block. Here nobody races: one validator is drawn at random.",
+      "link": "Compare with Proof-of-Work mining →"
     },
     "block": {
       "slot": "Slot {{n}}",
@@ -421,20 +418,24 @@
       }
     },
     "badge": {
+      "picked": "picked",
       "proposes": "proposes block",
       "double": "signs twice",
       "attests": "attests",
       "ejected": "slashed · out"
     },
     "status": {
-      "idle": "Five validators, 32 ETH each. Press start.",
+      "idle": "20 validators shown; the real network has hundreds of thousands. Press start.",
       "paused": "Paused.",
-      "picking": "🎲 Slot {{n}}: one validator is picked at random",
+      "picking": "🎲 Slot {{n}}: the protocol draws one validator at random…",
+      "picked": "🎯 The draw lands on {{name}}",
       "proposing": "📦 {{name}} proposes the next block",
       "proposingCheat": "⚠️ {{name}} proposes two conflicting blocks",
       "attesting": "🗳️ The others check the block and vote: {{votes}}/{{total}}",
       "rewarded": "✅ Block accepted. Proposer and voters earn new ETH",
-      "slashed": "✂️ {{name}} is slashed: part of its stake is burned and it is ejected"
+      "slashed": "✂️ {{name}} is slashed: part of its stake is burned and it is ejected",
+      "churn": "🔄 Between slots: one validator leaves through the exit queue, and one from the entry queue takes its place",
+      "churnSlashed": "🚪 The slashed validator is forced out, and one from the entry queue takes its place"
     },
     "controls": {
       "start": "Start staking",
@@ -538,6 +539,13 @@
       "mergeDot": "≈120.5M",
       "dipLabel": "2024 low ≈120.1M",
       "footnote": "Stylised curve; dashed lines are projections, not forecasts. Quiet network: issuance beats burn, supply drifts up. Busy network: burn beats issuance, supply shrinks. Either way, well under 1% a year."
+    },
+    "shapes": {
+      "aria": "Bitcoin's supply flattens under a 21 million hard cap; Ethereum's supply has no cap and has been nearly flat since 2022",
+      "btcCap": "21M hard cap",
+      "btcNote": "halving every ~4 years",
+      "ethCap": "no cap",
+      "ethNote": "≈flat since 2022"
     },
     "btcLabel": "₿ Bitcoin, for contrast",
     "btcBody": "Fixed 21M · new coins halve every ~4 years (halvings) · nothing is ever burned · last coin ≈2140. Predictable by rule."
@@ -914,6 +922,12 @@
     "subtitleB": ".",
     "whyLabel": "Why",
     "wildLabel": "In the wild",
+    "viz": {
+      "defi": "three protocols, one transaction",
+      "nft": { "token": "token #42", "owner": "owner" },
+      "dao": { "yes": "Yes", "no": "No", "treasury": "treasury pays" },
+      "rwa": { "offChain": "off-chain asset", "onChain": "on-chain token", "bill": "T-bill" }
+    },
     "items": [
       { "name": "DeFi & on-chain finance", "why": "Protocols interoperate by default. ~$50B locked across L1 and L2.", "example": "Uniswap (DEX), Aave (lending), MakerDAO (DAI), Lido (staking), Curve (stable swaps)." },
       { "name": "NFTs & creator economy", "why": "ERC-721 / ERC-1155 are the standards; provenance is built in.", "example": "OpenSea, Blur, Sotheby's on-chain auctions · ENS domains · POAPs · proof-of-attendance." },
@@ -928,10 +942,16 @@
     "subtitle": "Jobs where open programmability is the problem, not the solution.",
     "whyNotLabel": "Why not",
     "useInsteadLabel": "Use instead",
+    "viz": {
+      "sov": { "btc": "same rule since 2009", "eth": "rules changed by upgrade" },
+      "privacy": { "doc": "supplier contract", "caption": "anyone can read it" },
+      "pay": { "tap": "card tap", "l1": "L1 finality" },
+      "game": { "game": "game · 60 updates / s", "chain": "L1 · 1 block / 12 s" }
+    },
     "items": [
       { "name": "Pure store of value / digital gold", "why": "ETH has no hard cap and its monetary policy has changed by upgrade (Merge, EIP-1559).", "alt": "Use Bitcoin for neutral, scarce, time-tested SoV." },
       { "name": "Private B2B consortia, regulated data", "why": "Mainnet is fully public: unsuitable for KYC data, supplier contracts, health records. Privacy layers add complexity and trust assumptions.", "alt": "Use Hyperledger Fabric · Quorum · R3 Corda for permissioned channels." },
-      { "name": "Consumer-grade payments on L1", "why": "L1 finalises in ~12 min and fees spike with demand. Even with L2s, withdrawals and bridges are slow for retail.", "alt": "Use Bitcoin Lightning · Solana · XRPL · Stellar for sub-second payment UX." },
+      { "name": "Consumer-grade payments on L1", "why": "L1 finalises in ~13 min and fees spike with demand. Even with L2s, withdrawals and bridges are slow for retail.", "alt": "Use Bitcoin Lightning · Solana · XRPL · Stellar for sub-second payment UX." },
       { "name": "Latency-critical games / real-time apps", "why": "~12 s blocks on L1, ~1–2 s on rollups: too slow for real-time gaming or live trading, and order-book matching is expensive in gas.", "alt": "Use Solana · Sui · Aptos · purpose-built order-book chains (dYdX v4) for latency-bound apps." }
     ]
   },

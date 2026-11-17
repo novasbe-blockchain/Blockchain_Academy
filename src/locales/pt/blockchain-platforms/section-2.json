@@ -384,26 +384,23 @@
     },
     "arenaLabel": "On-chain · os validadores",
     "validators": {
-      "you": {
-        "name": "Tu",
-        "tag": "solo"
-      },
-      "b": {
-        "name": "Validador B",
-        "tag": "em stake"
-      },
-      "c": {
-        "name": "Validador C",
-        "tag": "em stake"
-      },
-      "d": {
-        "name": "Validador D",
-        "tag": "em stake"
-      },
-      "pool": {
-        "name": "Pool",
-        "tag": "ETH agregado"
-      }
+      "you": "Tu",
+      "pool": "Validador da pool",
+      "other": "Validador"
+    },
+    "legend": {
+      "you": "tu (solo)",
+      "pool": "validadores da pool",
+      "other": "outros validadores"
+    },
+    "queues": {
+      "entry": "fila de entrada",
+      "exit": "fila de saída"
+    },
+    "drawLabel": "Sorteio aleatório",
+    "pow": {
+      "reminder": "No Proof-of-Work, cinco computadores competem pelo próximo bloco. Aqui ninguém compete: um validador é sorteado.",
+      "link": "Comparar com a mineração Proof-of-Work →"
     },
     "block": {
       "slot": "Slot {{n}}",
@@ -421,20 +418,24 @@
       }
     },
     "badge": {
+      "picked": "sorteado",
       "proposes": "propõe bloco",
       "double": "assina 2 vezes",
       "attests": "atesta",
       "ejected": "slashed · fora"
     },
     "status": {
-      "idle": "Cinco validadores, 32 ETH cada. Carrega em iniciar.",
+      "idle": "20 validadores visíveis; a rede real tem centenas de milhares. Carrega em iniciar.",
       "paused": "Em pausa.",
-      "picking": "🎲 Slot {{n}}: um validador é sorteado",
+      "picking": "🎲 Slot {{n}}: o protocolo sorteia um validador…",
+      "picked": "🎯 O sorteio calha a {{name}}",
       "proposing": "📦 {{name}} propõe o próximo bloco",
       "proposingCheat": "⚠️ {{name}} propõe dois blocos contraditórios",
       "attesting": "🗳️ Os outros verificam o bloco e votam: {{votes}}/{{total}}",
       "rewarded": "✅ Bloco aceite. Proponente e votantes ganham novo ETH",
-      "slashed": "✂️ {{name}} sofre slashing: parte do stake é queimada e é expulso"
+      "slashed": "✂️ {{name}} sofre slashing: parte do stake é queimada e é expulso",
+      "churn": "🔄 Entre slots: um validador sai pela fila de saída e um da fila de entrada ocupa o seu lugar",
+      "churnSlashed": "🚪 O validador punido é forçado a sair e um da fila de entrada ocupa o seu lugar"
     },
     "controls": {
       "start": "Iniciar staking",
@@ -538,6 +539,13 @@
       "mergeDot": "≈120.5M",
       "dipLabel": "2024 low ≈120.1M",
       "footnote": "Stylised curve; dashed lines are projections, not forecasts. Quiet network → issuance beats burn → supply drifts up; busy network → burn beats issuance → supply shrinks. Either way, well under 1% a year."
+    },
+    "shapes": {
+      "aria": "A oferta de Bitcoin estabiliza abaixo de um limite rígido de 21 milhões; a oferta de ETH não tem limite e está quase estável desde 2022",
+      "btcCap": "limite rígido de 21M",
+      "btcNote": "halving a cada ~4 anos",
+      "ethCap": "sem limite",
+      "ethNote": "≈estável desde 2022"
     },
     "btcLabel": "₿ Bitcoin, for contrast",
     "btcBody": "Fixed 21M · new coins halve every ~4 years (halvings) · nothing is ever burned · last coin ≈2140. Predictable by rule."
@@ -956,6 +964,12 @@
     "subtitleB": ".",
     "whyLabel": "Porquê",
     "wildLabel": "Na prática",
+    "viz": {
+      "defi": "três protocolos, uma transação",
+      "nft": { "token": "token #42", "owner": "dono" },
+      "dao": { "yes": "Sim", "no": "Não", "treasury": "tesouraria paga" },
+      "rwa": { "offChain": "ativo off-chain", "onChain": "token on-chain", "bill": "T-bill" }
+    },
     "items": [
       { "name": "DeFi e finanças on-chain", "why": "Peças de dinheiro componíveis — Uniswap, Aave e Compound interoperam por defeito. ~50 mil M$ de TVL em L1 + L2.", "example": "Uniswap (DEX), Aave (lending), MakerDAO (DAI), Lido (staking), Curve (trocas de stables)." },
       { "name": "NFTs e economia de criadores", "why": "ERC-721 / ERC-1155 são os padrões de facto. Aplicação de royalties + proveniência comprovável incluídas.", "example": "OpenSea, Blur, leilões on-chain da Sotheby's · domínios ENS · POAPs · provas de presença." },
@@ -970,10 +984,16 @@
     "subtitle": "A Ethereum é a opção por defeito para tudo o que seja programável — mas as opções por defeito não são gratuitas. Há tarefas em que a sua programabilidade aberta é o problema, não a solução.",
     "whyNotLabel": "Porque não",
     "useInsteadLabel": "Usa antes",
+    "viz": {
+      "sov": { "btc": "a mesma regra desde 2009", "eth": "regras alteradas por upgrade" },
+      "privacy": { "doc": "contrato de fornecedor", "caption": "qualquer pessoa o pode ler" },
+      "pay": { "tap": "cartão", "l1": "finalidade na L1" },
+      "game": { "game": "jogo · 60 atualizações / s", "chain": "L1 · 1 bloco / 12 s" }
+    },
     "items": [
       { "name": "Reserva de valor pura / ouro digital", "why": "O ETH não tem limite rígido, a política monetária muda (Merge, EIP-1559), e tem um orçamento de credibilidade de \"sound money\" muito menor face ao Bitcoin.", "alt": "Usa Bitcoin para uma RdV neutra, escassa e testada pelo tempo." },
       { "name": "Consórcios B2B privados, dados regulados", "why": "A mainnet da Ethereum é totalmente pública — má para dados de KYC, contratos com fornecedores, registos de saúde. As camadas de privacidade (Aztec) ajudam mas acrescentam complexidade e pressupostos de confiança.", "alt": "Usa Hyperledger Fabric · Quorum · R3 Corda para canais com permissão." },
-      { "name": "Pagamentos de consumo na L1", "why": "A L1 finaliza em ~12 min e as taxas disparam com a procura. Mesmo com L2s, a latência de levantamento e a UX das pontes ainda incomodam no retalho.", "alt": "Usa Bitcoin Lightning · Solana · XRPL · Stellar para uma UX de pagamento abaixo do segundo." },
+      { "name": "Pagamentos de consumo na L1", "why": "A L1 finaliza em ~13 min e as taxas disparam com a procura. Mesmo com L2s, a latência de levantamento e a UX das pontes ainda incomodam no retalho.", "alt": "Usa Bitcoin Lightning · Solana · XRPL · Stellar para uma UX de pagamento abaixo do segundo." },
       { "name": "Jogos sensíveis à latência / apps em tempo real", "why": "Blocos de ~12 segundos na L1, ~1-2 s na maioria dos rollups — ainda demasiado lento para jogos por ticks ou negociação ao vivo. Emparelhar order books ao custo de gas é brutal.", "alt": "Usa Solana · Sui · Aptos · cadeias de order book dedicadas (dYdX v4) para apps limitadas pela latência." }
     ]
   },
