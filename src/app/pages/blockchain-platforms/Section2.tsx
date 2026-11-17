@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
@@ -7,10 +8,11 @@ import { ComparisonSlide } from '../../components/templates/ComparisonSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { QuizSlide } from '../../components/templates/QuizSlide';
-import { Fuel, Hash, KeyRound, Layers, ScrollText, Wallet } from 'lucide-react';
+import { Fuel, Hash, KeyRound, Layers, Pickaxe, ScrollText, Wallet } from 'lucide-react';
 import { GasCalculator } from '../../components/ethereum/GasCalculator';
 import { Eip1559Demo } from '../../components/ethereum/Eip1559Demo';
 import { StakingFlow } from '../../components/ethereum/StakingFlow';
+import { useLocalizedPath } from '../../../i18n/useLang';
 
 // Language-neutral shape — only IDs + kind. Labels come from t() at render time.
 const chapterShape = [
@@ -418,6 +420,202 @@ function DataLaneGlyph({ kind, color, serverLabel }: { kind: 0 | 1 | 2; color: s
   );
 }
 
+/* ── Bitcoin vs Ethereum supply, shape only: two mini panels, each on its own scale.
+      Left: Bitcoin's halving curve flattening under the 21M cap. Right: ETH's curve, flat since the Merge, with no ceiling. ── */
+const BTC_SUPPLY: [number, number][] = [
+  [2009, 0], [2012.9, 10.5], [2016.5, 15.75], [2020.4, 18.375], [2024.3, 19.6875], [2028.3, 20.34], [2032.3, 20.67], [2036.3, 20.84], [2040, 20.91],
+];
+function SupplyShapes() {
+  const { t } = useTranslation('blockchain-platforms/section-2');
+  const muted = 'var(--muted-foreground)';
+  const BTC = '#f7931a';
+  const ETH = '#627EEA';
+  const bx = (yr: number) => 8 + ((yr - 2009) / 31) * 130;
+  const by = (m: number) => 70 - (m / 21) * 42;
+  const ex = (yr: number) => 162 + ((yr - 2015) / 15) * 130;
+  const ey = (m: number) => 70 - ((m - 60) / 70) * 42;
+  const path = (pts: [number, number][], fx: (v: number) => number, fy: (v: number) => number) =>
+    pts.map(([yr, m], i) => `${i === 0 ? 'M' : 'L'}${fx(yr).toFixed(1)},${fy(m).toFixed(1)}`).join(' ');
+  return (
+    <svg viewBox="0 0 300 84" className="w-full h-[124px] shrink-0 my-1" role="img" aria-label={t('issuance.shapes.aria')}>
+      {/* Bitcoin */}
+      <text x="8" y="10" fontSize="9.5" fontWeight="800" fill={BTC}>₿ Bitcoin</text>
+      <line x1="8" y1={by(21)} x2="138" y2={by(21)} stroke={BTC} strokeWidth="1.2" strokeDasharray="4 3" />
+      <text x="138" y={by(21) - 4} textAnchor="end" fontSize="8.5" fontWeight="700" fill={BTC}>{t('issuance.shapes.btcCap')}</text>
+      <path d={path(BTC_SUPPLY, bx, by)} fill="none" stroke={BTC} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+      {BTC_SUPPLY.slice(1, 6).map(([yr, m]) => <circle key={yr} cx={bx(yr)} cy={by(m)} r="1.8" fill={BTC} />)}
+      <text x={bx(2018)} y={by(8)} fontSize="8" fill={muted}>{t('issuance.shapes.btcNote')}</text>
+      <line x1="8" y1="70" x2="138" y2="70" stroke={muted} strokeOpacity="0.5" />
+      <text x="8" y="80" fontSize="7.5" fill={muted}>2009</text>
+      <text x="138" y="80" textAnchor="end" fontSize="7.5" fill={muted}>2040</text>
+      {/* Ethereum */}
+      <text x="162" y="10" fontSize="9.5" fontWeight="800" fill={ETH}>Ξ Ethereum</text>
+      <text x="292" y={by(21) - 4} textAnchor="end" fontSize="8.5" fontWeight="700" fill={ETH}>{t('issuance.shapes.ethCap')}</text>
+      <path d={path(SUPPLY_HISTORY, ex, ey)} fill="none" stroke={ETH} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+      <path d={path(SUPPLY_QUIET, ex, ey)} fill="none" stroke={ETH} strokeWidth="1.5" strokeDasharray="3 3" />
+      <path d={path(SUPPLY_BUSY, ex, ey)} fill="none" stroke={ETH} strokeWidth="1.5" strokeDasharray="3 3" />
+      <circle cx={ex(MERGE_YEAR)} cy={ey(120.5)} r="2.2" fill={ETH} />
+      <text x={ex(2021.2)} y={by(8)} fontSize="8" fill={muted}>{t('issuance.shapes.ethNote')}</text>
+      <line x1="162" y1="70" x2="292" y2="70" stroke={muted} strokeOpacity="0.5" />
+      <text x="162" y="80" fontSize="7.5" fill={muted}>2015</text>
+      <text x="292" y="80" textAnchor="end" fontSize="7.5" fill={muted}>2030</text>
+    </svg>
+  );
+}
+
+/* ── One small diagram per fit / anti-fit card (same idea as the stablecoin cards).
+      fit:  0 DeFi legos · 1 NFT → owner · 2 DAO vote → treasury · 3 real-world asset → token
+      anti: 0 fixed rule vs upgrades · 1 everyone can read it · 2 tap vs finality · 3 game ticks vs blocks ── */
+function FitMiniViz({ set, kind, color }: { set: 'bestFits' | 'worstFits'; kind: number; color: string }) {
+  const { t } = useTranslation('blockchain-platforms/section-2');
+  const v = (k: string) => t(`${set}.viz.${k}`);
+  const muted = 'var(--muted-foreground)';
+  const fg = 'var(--foreground)';
+  const OK = '#10b981';
+  const BAD = '#ef4444';
+  const frame = (label: string, body: ReactNode) => (
+    <svg viewBox="0 0 400 82" preserveAspectRatio="xMidYMid meet" className="w-full flex-1 min-h-[84px] rounded-lg border bg-card/70 py-1" style={{ borderColor: color + '30' }} role="img" aria-label={label}>
+      {body}
+    </svg>
+  );
+  const arrow = (x1: number, x2: number, y: number, c: string) => (
+    <>
+      <line x1={x1} y1={y} x2={x2 - 6} y2={y} stroke={c} strokeWidth="1.5" />
+      <polygon points={`${x2 - 7},${y - 4} ${x2},${y} ${x2 - 7},${y + 4}`} fill={c} />
+    </>
+  );
+
+  if (set === 'bestFits') {
+    if (kind === 0) {
+      const legos = [{ n: 'Uniswap', c: '#FF007A' }, { n: 'Aave', c: '#B6509E' }, { n: 'Lido', c: '#00A3FF' }];
+      return frame(v('defi'), (
+        <>
+          {legos.map((l, i) => (
+            <g key={l.n}>
+              <rect x={56 + i * 100} y="6" width="14" height="6" rx="2" fill={l.c} />
+              <rect x={90 + i * 100} y="6" width="14" height="6" rx="2" fill={l.c} />
+              <rect x={42 + i * 100} y="11" width="96" height="30" rx="5" fill={l.c} fillOpacity="0.16" stroke={l.c} strokeWidth="1.5" />
+              <text x={90 + i * 100} y="30" textAnchor="middle" fontSize="11" fontWeight="800" fill={fg}>{l.n}</text>
+              {i > 0 && <text x={40 + i * 100} y="30" textAnchor="middle" fontSize="12" fontWeight="900" fill={muted}>+</text>}
+            </g>
+          ))}
+          <path d="M42,50 v6 h296 v-6" fill="none" stroke={color} strokeWidth="1.5" />
+          <text x="190" y="73" textAnchor="middle" fontSize="10" fontWeight="700" fill={color}>{v('defi')}</text>
+        </>
+      ));
+    }
+    if (kind === 1) {
+      return frame(`${v('nft.token')} → ${v('nft.owner')}`, (
+        <>
+          <rect x="62" y="10" width="68" height="60" rx="4" fill={color} fillOpacity="0.12" stroke={color} strokeWidth="2" />
+          <circle cx="112" cy="26" r="6" fill="#f59e0b" />
+          <path d="M66,66 L86,38 L100,54 L110,44 L126,66 Z" fill={color} fillOpacity="0.55" />
+          <text x="150" y="28" fontSize="11" fontWeight="800" fill={fg}>{v('nft.token')}</text>
+          <text x="150" y="62" fontSize="9" fontWeight="600" fill={muted}>ERC-721</text>
+          {arrow(150, 236, 42, color)}
+          <rect x="240" y="28" width="104" height="28" rx="14" fill={OK} fillOpacity="0.12" stroke={OK} strokeWidth="1.5" />
+          <text x="292" y="46" textAnchor="middle" fontSize="10.5" fontWeight="800" fontFamily="monospace" fill={fg}>0x7a3…e9</text>
+          <text x="292" y="21" textAnchor="middle" fontSize="9" fontWeight="700" fill={OK}>{v('nft.owner')}</text>
+        </>
+      ));
+    }
+    if (kind === 2) {
+      return frame(`${v('dao.yes')} / ${v('dao.no')} → ${v('dao.treasury')}`, (
+        <>
+          {[0, 1, 2, 3, 4, 5].map(i => (
+            <circle key={i} cx={38 + (i % 3) * 18} cy={30 + Math.floor(i / 3) * 20} r="6.5" fill={color} fillOpacity={i === 4 ? 0.25 : 0.8} />
+          ))}
+          {arrow(96, 122, 40, muted)}
+          <rect x="128" y="18" width="120" height="16" rx="4" fill={muted} fillOpacity="0.15" />
+          <rect x="128" y="18" width="82" height="16" rx="4" fill={OK} />
+          <text x="134" y="30" fontSize="10" fontWeight="800" fill="#ffffff">{v('dao.yes')} 68%</text>
+          <rect x="128" y="44" width="120" height="16" rx="4" fill={muted} fillOpacity="0.15" />
+          <rect x="128" y="44" width="38" height="16" rx="4" fill={BAD} fillOpacity="0.75" />
+          <text x="172" y="56" fontSize="10" fontWeight="700" fill={muted}>{v('dao.no')} 32%</text>
+          {arrow(256, 284, 40, OK)}
+          <rect x="288" y="20" width="92" height="40" rx="8" fill={color} fillOpacity="0.12" stroke={color} strokeWidth="1.5" />
+          <text x="334" y="37" textAnchor="middle" fontSize="13">🏛️</text>
+          <text x="334" y="53" textAnchor="middle" fontSize="9.5" fontWeight="800" fill={fg}>{v('dao.treasury')}</text>
+        </>
+      ));
+    }
+    return frame(`${v('rwa.offChain')} → ${v('rwa.onChain')}`, (
+      <>
+        <text x="96" y="12" textAnchor="middle" fontSize="9" fontWeight="700" fill={muted}>{v('rwa.offChain')}</text>
+        <text x="304" y="12" textAnchor="middle" fontSize="9" fontWeight="700" fill={OK}>{v('rwa.onChain')}</text>
+        {[{ y: 18, a: '🏦 $1', b: '🪙 USDC' }, { y: 50, a: `📄 ${v('rwa.bill')}`, b: '🪙 BUIDL' }].map(r => (
+          <g key={r.y}>
+            <rect x="40" y={r.y} width="112" height="26" rx="6" fill={muted} fillOpacity="0.1" stroke={muted} strokeOpacity="0.6" strokeWidth="1.2" strokeDasharray="4 3" />
+            <text x="96" y={r.y + 17} textAnchor="middle" fontSize="11" fontWeight="800" fill={fg}>{r.a}</text>
+            {arrow(160, 240, r.y + 13, color)}
+            <rect x="248" y={r.y} width="112" height="26" rx="13" fill={OK} fillOpacity="0.12" stroke={OK} strokeWidth="1.5" />
+            <text x="304" y={r.y + 17} textAnchor="middle" fontSize="11" fontWeight="800" fill={fg}>{r.b}</text>
+          </g>
+        ))}
+      </>
+    ));
+  }
+
+  if (kind === 0) {
+    return frame(`${v('sov.btc')} · ${v('sov.eth')}`, (
+      <>
+        <text x="16" y="26" fontSize="11" fontWeight="800" fill="#f7931a">₿ Bitcoin</text>
+        <line x1="104" y1="22" x2="384" y2="22" stroke="#f7931a" strokeWidth="2.5" strokeLinecap="round" />
+        <text x="384" y="13" textAnchor="end" fontSize="9.5" fontWeight="700" fill="#f7931a">{v('sov.btc')}</text>
+        <text x="16" y="58" fontSize="11" fontWeight="800" fill="#627EEA">Ξ Ethereum</text>
+        <path d="M104,54 H236 L244,60 H296 L304,50 H384" fill="none" stroke="#627EEA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        {[{ x: 240, l: 'EIP-1559 · 2021' }, { x: 300, l: 'Merge · 2022' }].map((m, i) => (
+          <g key={m.l}>
+            <circle cx={m.x} cy={i === 0 ? 57 : 55} r="4.5" fill={color} stroke="var(--card)" strokeWidth="1.5" />
+            <text x={m.x + (i === 0 ? -6 : 6)} y="75" textAnchor={i === 0 ? 'end' : 'start'} fontSize="9" fontWeight="700" fill={color}>{m.l}</text>
+          </g>
+        ))}
+        <text x="384" y="42" textAnchor="end" fontSize="9.5" fontWeight="700" fill="#627EEA">{v('sov.eth')}</text>
+      </>
+    ));
+  }
+  if (kind === 1) {
+    const eyes = [[70, 18], [44, 41], [70, 64], [330, 18], [356, 41], [330, 64]];
+    return frame(v('privacy.caption'), (
+      <>
+        {eyes.map(([x, y]) => (
+          <g key={`${x}-${y}`}>
+            <line x1={x < 200 ? x + 12 : x - 12} y1={y - 3} x2={x < 200 ? 128 : 272} y2="34" stroke={color} strokeOpacity="0.55" strokeWidth="1.2" strokeDasharray="3 3" />
+            <text x={x} y={y + 2} textAnchor="middle" fontSize="15">👁️</text>
+          </g>
+        ))}
+        <rect x="128" y="12" width="144" height="44" rx="6" fill={color} fillOpacity="0.1" stroke={color} strokeWidth="1.5" />
+        <text x="200" y="31" textAnchor="middle" fontSize="13">📄</text>
+        <text x="200" y="48" textAnchor="middle" fontSize="10" fontWeight="800" fill={fg}>{v('privacy.doc')}</text>
+        <text x="200" y="74" textAnchor="middle" fontSize="10" fontWeight="700" fill={color}>{v('privacy.caption')}</text>
+      </>
+    ));
+  }
+  if (kind === 2) {
+    return frame(`${v('pay.tap')} ~1 s · ${v('pay.l1')} ~13 min`, (
+      <>
+        <text x="16" y="28" fontSize="10.5" fontWeight="800" fill={fg}>💳 {v('pay.tap')}</text>
+        <rect x="150" y="17" width="8" height="16" rx="3" fill={OK} />
+        <text x="166" y="29" fontSize="10.5" fontWeight="800" fill={OK}>~1 s</text>
+        <text x="16" y="60" fontSize="10.5" fontWeight="800" fill={fg}>⛓️ {v('pay.l1')}</text>
+        <rect x="150" y="49" width="176" height="16" rx="4" fill={color} fillOpacity="0.8" />
+        {[1, 2, 3, 4, 5, 6, 7].map(i => <line key={i} x1={150 + i * 22} y1="49" x2={150 + i * 22} y2="65" stroke="var(--card)" strokeOpacity="0.7" />)}
+        <text x="334" y="61" fontSize="10.5" fontWeight="800" fill={color}>~13 min</text>
+      </>
+    ));
+  }
+  return frame(`${v('game.game')} · ${v('game.chain')}`, (
+    <>
+      <text x="16" y="28" fontSize="10.5" fontWeight="800" fill={fg}>🎮 {v('game.game')}</text>
+      {Array.from({ length: 61 }).map((_, i) => <line key={i} x1={170 + i * 3.5} y1="16" x2={170 + i * 3.5} y2="34" stroke={OK} strokeWidth="1.4" />)}
+      <text x="16" y="62" fontSize="10.5" fontWeight="800" fill={fg}>⛓️ {v('game.chain')}</text>
+      <line x1="170" y1="58" x2="380" y2="58" stroke={muted} strokeOpacity="0.5" strokeDasharray="3 3" />
+      {[170, 372].map(x => <rect key={x} x={x} y="50" width="10" height="16" rx="2" fill={color} />)}
+      <text x="276" y="54" textAnchor="middle" fontSize="9" fontWeight="700" fill={color}>12 s</text>
+    </>
+  ));
+}
+
 /* ── How each stablecoin type holds (or loses) its peg — one small diagram per card.
       0 fiat: $1 in a bank ⇄ 1 token · 1 crypto: $150 locked → $100 minted · 2 algorithmic: supply chases the peg, then the Terra spiral. ── */
 function StablecoinMiniViz({ kind, color }: { kind: number; color: string }) {
@@ -496,6 +694,7 @@ interface IssuanceFact { title: string; detail: string; }
 
 export function BP_Section2() {
   const { t } = useTranslation('blockchain-platforms/section-2');
+  const localized = useLocalizedPath();
 
   const chapters = useMemo(
     () =>
@@ -1554,9 +1753,23 @@ export function BP_Section2() {
 
         {/* ═══════ S2-STAKING-FLOW — the validator loop, the two ways in, and the ETF outside it ═══════ */}
         <div id="s2-staking-flow" className="h-full flex flex-col p-5 lg:p-8">
-          <div className="shrink-0 mb-3">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('stakingFlow.heading')}</h2>
-            <p className="text-sm text-muted-foreground mt-1">{t('stakingFlow.subtitle')}</p>
+          <div className="shrink-0 mb-3 flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-6">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('stakingFlow.heading')}</h2>
+              <p className="text-sm text-muted-foreground mt-1">{t('stakingFlow.subtitle')}</p>
+            </div>
+            {/* Reminder of the Proof-of-Work mining race in Blockchain Fundamentals §1 */}
+            <Link
+              to={localized('/blockchain-fundamentals/section-1')}
+              className="group shrink-0 lg:w-[400px] rounded-xl border px-3 py-2 flex items-center gap-2.5 transition-colors hover:bg-[#f59e0b]/10"
+              style={{ borderColor: '#f59e0b70', backgroundColor: '#f59e0b0D' }}
+            >
+              <Pickaxe className="size-5 shrink-0 text-[#f59e0b]" />
+              <span className="min-w-0">
+                <span className="block text-[11px] text-muted-foreground leading-snug">{t('stakingFlow.pow.reminder')}</span>
+                <span className="block text-xs font-bold text-[#f59e0b] leading-snug mt-0.5 group-hover:underline">{t('stakingFlow.pow.link')}</span>
+              </span>
+            </Link>
           </div>
           <StakingFlow />
           <KeyPoint topic="stakingFlow" hood="stakingFlow" className="mt-3" />
@@ -1598,6 +1811,7 @@ export function BP_Section2() {
               })}
               <div className="shrink-0 rounded-xl border-2 px-3 py-2.5" style={{ borderColor: '#f7931a60', backgroundColor: '#f7931a10' }}>
                 <div className="text-[10px] font-black uppercase tracking-widest text-[#f7931a]">{t('issuance.btcLabel')}</div>
+                <SupplyShapes />
                 <div className="text-xs text-foreground leading-snug mt-0.5">{t('issuance.btcBody')}</div>
               </div>
             </div>
@@ -2348,6 +2562,7 @@ export function BP_Section2() {
                   <span className="text-2xl shrink-0">{bestFitsEmojis[i]}</span>
                   <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
                 </div>
+                <FitMiniViz set="bestFits" kind={i} color="#627EEA" />
                 <div className="text-xs text-muted-foreground leading-snug">
                   <span className="font-bold text-[#627EEA] uppercase tracking-widest text-[9px] mr-1">{t('bestFits.whyLabel')}</span>
                   {uc.why}
@@ -2377,6 +2592,7 @@ export function BP_Section2() {
                   <span className="text-2xl shrink-0">{worstFitsEmojis[i]}</span>
                   <div className="font-black text-foreground text-base leading-tight">{uc.name}</div>
                 </div>
+                <FitMiniViz set="worstFits" kind={i} color="#ef4444" />
                 <div className="text-xs text-muted-foreground leading-snug">
                   <span className="font-bold text-[#ef4444] uppercase tracking-widest text-[9px] mr-1">{t('worstFits.whyNotLabel')}</span>
                   {uc.why}

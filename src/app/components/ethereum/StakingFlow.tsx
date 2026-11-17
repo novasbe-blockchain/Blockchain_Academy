@@ -1,59 +1,98 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { Pause, Play, RotateCcw, ShieldAlert } from 'lucide-react';
 
 /* ──────────────────── Staking flow — the validator loop ────────────────────
    Proof-of-Stake counterpart of the Proof-of-Work "mining race":
-     1. picking    — the protocol picks one validator at random
+     1. picking    — a random-draw beam spins round the validator set and lands on one
      2. proposing  — that validator proposes the next block
-     3. attesting  — the others check it and vote
+     3. attesting  — the others check it and vote, one after another
      4. rewarded   — proposer and voters earn new ETH
      (slashed)     — a validator that signs two conflicting blocks loses stake and is ejected
+     (churn)       — between slots: one validator leaves through the exit queue,
+                     the head of the entry queue is activated in its place
    Left of the loop: the two ways IN (solo, liquid staking).
    Right of the loop: the spot ETF, which stays OUTSIDE (off-chain, custodial price exposure).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const VALIDATORS = [
-  { key: 'you', color: '#627EEA', angle: 288, icon: '🧑' },
-  { key: 'b', color: '#8b5cf6', angle: 0, icon: '🖥️' },
-  { key: 'c', color: '#f59e0b', angle: 72, icon: '🖥️' },
-  { key: 'd', color: '#ec4899', angle: 144, icon: '🖥️' },
-  { key: 'pool', color: '#06b6d4', angle: 216, icon: '👥' },
-] as const;
-const CHEATER = 3;
-const RING_RADIUS = 39; // % of the square arena
+type Kind = 'you' | 'pool' | 'other';
+interface Validator { id: number; kind: Kind; }
+interface World { ring: Validator[]; entry: Validator[]; exit: Validator[]; }
+interface Pos { left: number; top: number; }
+
+const RING_SIZE = 20;
+const RING_RADIUS = 40; // % of the square arena
+const YOU_SLOT = 17;
+const POOL_SLOTS = [2, 5, 9, 12, 15];
 const STAKE = 32;
-// Exaggerated so the balances visibly move; the caption says so.
+// Exaggerated so the balance visibly moves; the caption says so.
 const PROPOSER_REWARD = 0.04;
 const ATTESTER_REWARD = 0.004;
 const TX_SLOTS = 6;
+
+// Pacing (ms) — slow enough to follow every step; one full round ≈ one real 12 s slot.
+const SPIN_MS = 3000;
+const LAND_HOLD = 1100;
+const PROPOSE_HOLD = 2400;
+const VOTE_STEP = 140;
+const VOTE_HOLD = 900;
+const REWARD_HOLD = 3200;
+const SLASH_HOLD = 4500;
+const CHURN_MS = 3000;
+const CHURN_EVERY = 2; // slots
+
+const KIND_COLOR: Record<Kind, string> = { you: '#627EEA', pool: '#06b6d4', other: '#94a3b8' };
 const SOLO_COLOR = '#627EEA';
 const POOL_COLOR = '#06b6d4';
 const ETF_COLOR = '#8b5cf6';
+const PICK = '#f59e0b';
 const OK = '#10b981';
 const BAD = '#ef4444';
 
-type Phase = 'idle' | 'picking' | 'proposing' | 'attesting' | 'rewarded' | 'slashed';
+const polar = (deg: number, radius: number): Pos => {
+  const rad = (deg * Math.PI) / 180;
+  return { left: 50 + radius * Math.sin(rad), top: 50 - radius * Math.cos(rad) };
+};
+const slotAngle = (k: number) => (k * 360) / RING_SIZE;
+// Queues sit in the two bottom corners of the arena, head nearest the ring.
+const ENTRY_POS: Pos[] = [{ left: 6, top: 77 }, { left: 6, top: 83 }, { left: 6, top: 89 }];
+const EXIT_POS: Pos[] = [{ left: 94, top: 77 }, { left: 94, top: 83 }];
+
+const initialWorld = (): World => ({
+  ring: Array.from({ length: RING_SIZE }, (_, k) => ({
+    id: 1203 + k * 317,
+    kind: k === YOU_SLOT ? 'you' : POOL_SLOTS.includes(k) ? 'pool' : 'other',
+  })),
+  entry: [{ id: 8104, kind: 'other' }, { id: 8105, kind: 'pool' }, { id: 8106, kind: 'other' }],
+  exit: [{ id: 411, kind: 'other' }],
+});
+
+type Phase = 'idle' | 'picking' | 'proposing' | 'attesting' | 'rewarded' | 'slashed' | 'churn';
 
 export function StakingFlow() {
   const { t } = useTranslation('blockchain-platforms/section-2');
   const [phase, setPhase] = useState<Phase>('idle');
   const [running, setRunning] = useState(false);
   const [slot, setSlot] = useState(1);
-  const [cursor, setCursor] = useState<number | null>(null);
-  const [proposer, setProposer] = useState<number | null>(null);
-  const [votes, setVotes] = useState<number[]>([]);
-  const [balances, setBalances] = useState<number[]>(() => VALIDATORS.map(() => STAKE));
-  const [ejected, setEjected] = useState(false);
+  const [world, setWorld] = useState<World>(initialWorld);
+  const [beam, setBeam] = useState(-90); // degrees; -90 points at ring slot 0 (top)
+  const [proposer, setProposer] = useState<number | null>(null); // ring slot
+  const [votes, setVotes] = useState<number[]>([]); // ring slots
+  const [youBalance, setYouBalance] = useState(STAKE);
+  const [slashedId, setSlashedId] = useState<number | null>(null);
   const [cheatArmed, setCheatArmed] = useState(false);
   const [cheating, setCheating] = useState(false);
 
-  // Refs mirror the flags the timer chain reads, so a round never sees stale state.
+  // Refs mirror what the timer chain reads, so a round never sees stale state.
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const runningRef = useRef(false);
-  const ejectedRef = useRef(false);
   const cheatRef = useRef(false);
+  const worldRef = useRef(world);
+  const slotRef = useRef(1);
+  const beamRef = useRef(-90);
+  const slashedRef = useRef<number | null>(null);
+  const nextId = useRef(8107);
 
   const clearTimers = () => {
     timers.current.forEach(clearTimeout);
@@ -64,61 +103,98 @@ export function StakingFlow() {
   const later = (ms: number, fn: () => void) => {
     timers.current.push(setTimeout(fn, ms));
   };
+  const commitWorld = (w: World) => {
+    worldRef.current = w;
+    setWorld(w);
+  };
 
   function runRound() {
     timers.current = [];
-    const active = VALIDATORS.map((_, i) => i).filter(i => !(ejectedRef.current && i === CHEATER));
-    const cheat = cheatRef.current && !ejectedRef.current;
-    const chosen = cheat ? CHEATER : active[Math.floor(Math.random() * active.length)];
-    const others = active.filter(i => i !== chosen);
+    const ring = worldRef.current.ring;
+    const cheat = cheatRef.current;
+    const pool = ring.map((_, k) => k).filter(k => !cheat || ring[k].kind === 'other');
+    const chosen = pool[Math.floor(Math.random() * pool.length)];
+    const others = Array.from({ length: RING_SIZE - 1 }, (_, n) => (chosen + 1 + n) % RING_SIZE);
 
     setPhase('picking');
     setProposer(null);
     setVotes([]);
     setCheating(cheat);
 
-    // 1 · the random pick: a highlight hops around the ring, then lands
-    const hops = 8;
-    for (let k = 0; k < hops; k++) later(k * 140, () => setCursor(active[k % active.length]));
-    const tPropose = hops * 140;
-    later(tPropose, () => {
-      setCursor(null);
-      setProposer(chosen);
-      setPhase('proposing');
-    });
+    // 1 · the random draw: the beam makes two full turns, slows down and lands on one validator
+    const target = slotAngle(chosen) - 90;
+    const ahead = (((target - beamRef.current) % 360) + 360) % 360;
+    beamRef.current += 720 + ahead;
+    setBeam(beamRef.current);
+    later(SPIN_MS, () => setProposer(chosen));
+
+    // 2 · it proposes the next block
+    const tPropose = SPIN_MS + LAND_HOLD;
+    later(tPropose, () => setPhase('proposing'));
 
     if (cheat) {
-      // the cheater signs two conflicting blocks → slashed and ejected
-      later(tPropose + 1300, () => {
+      // the cheater signs two conflicting blocks → slashed, then pushed out through the exit queue
+      later(tPropose + PROPOSE_HOLD, () => {
         cheatRef.current = false;
-        ejectedRef.current = true;
+        slashedRef.current = ring[chosen].id;
         setCheatArmed(false);
-        setEjected(true);
+        setSlashedId(ring[chosen].id);
         setPhase('slashed');
       });
-      later(tPropose + 1300 + 3200, nextSlot);
+      later(tPropose + PROPOSE_HOLD + SLASH_HOLD, endSlot);
       return;
     }
 
-    // 3 · the others attest one by one
-    const tAttest = tPropose + 1100;
+    // 3 · the others attest, sweeping round the ring from the proposer
+    const tAttest = tPropose + PROPOSE_HOLD;
     later(tAttest, () => setPhase('attesting'));
-    others.forEach((v, order) => later(tAttest + (order + 1) * 300, () => setVotes(prev => [...prev, v])));
+    others.forEach((k, order) => later(tAttest + (order + 1) * VOTE_STEP, () => setVotes(prev => [...prev, k])));
 
     // 4 · rewards
-    const tReward = tAttest + others.length * 300 + 500;
+    const tReward = tAttest + others.length * VOTE_STEP + VOTE_HOLD;
     later(tReward, () => {
       setPhase('rewarded');
-      setBalances(prev => prev.map((b, i) => (i === chosen ? b + PROPOSER_REWARD : others.includes(i) ? b + ATTESTER_REWARD : b)));
+      setYouBalance(b => b + (chosen === YOU_SLOT ? PROPOSER_REWARD : ATTESTER_REWARD));
     });
-    later(tReward + 1900, nextSlot);
+    later(tReward + REWARD_HOLD, endSlot);
   }
 
-  function nextSlot() {
-    setSlot(s => s + 1);
+  function endSlot() {
+    timers.current = [];
     setProposer(null);
     setVotes([]);
     setCheating(false);
+
+    // Between slots the set changes a little: a slashed validator is forced out at once,
+    // otherwise one validator leaves voluntarily every couple of slots.
+    const w = worldRef.current;
+    const slashedSlot = w.ring.findIndex(v => v.id === slashedRef.current);
+    if (slashedSlot < 0 && slotRef.current % CHURN_EVERY !== 0) {
+      nextSlot();
+      return;
+    }
+    const leavers = w.ring.map((_, k) => k).filter(k => k !== YOU_SLOT);
+    const leaverSlot = slashedSlot >= 0 ? slashedSlot : leavers[Math.floor(Math.random() * leavers.length)];
+    const [joiner, ...waiting] = w.entry;
+    const id = nextId.current++;
+    const ring = w.ring.slice();
+    ring[leaverSlot] = joiner;
+    setPhase('churn');
+    commitWorld({
+      ring,
+      entry: [...waiting, { id, kind: id % 3 === 0 ? 'pool' : 'other' }],
+      exit: [w.ring[leaverSlot], ...w.exit].slice(0, EXIT_POS.length),
+    });
+    later(CHURN_MS, () => {
+      slashedRef.current = null;
+      setSlashedId(null);
+      nextSlot();
+    });
+  }
+
+  function nextSlot() {
+    slotRef.current += 1;
+    setSlot(slotRef.current);
     if (runningRef.current) runRound();
     else setPhase('idle');
   }
@@ -144,38 +220,57 @@ export function StakingFlow() {
   function reset() {
     clearTimers();
     runningRef.current = false;
-    ejectedRef.current = false;
     cheatRef.current = false;
+    slashedRef.current = null;
+    slotRef.current = 1;
     setRunning(false);
-    setEjected(false);
+    setSlashedId(null);
     setCheatArmed(false);
     setCheating(false);
     setPhase('idle');
     setSlot(1);
-    setCursor(null);
     setProposer(null);
     setVotes([]);
-    setBalances(VALIDATORS.map(() => STAKE));
+    setYouBalance(STAKE);
+    commitWorld(initialWorld());
   }
 
-  const name = (i: number) => t(`stakingFlow.validators.${VALIDATORS[i].key}.name`);
-  const activeCount = VALIDATORS.length - (ejected ? 1 : 0);
-  const voteCount = proposer === null || phase === 'picking' || phase === 'slashed' ? 0 : votes.length + 1; // the proposer backs its own block
-  const votePct = (voteCount / activeCount) * 100;
-  const blockColor = phase === 'slashed' || (cheating && phase === 'proposing') ? BAD : phase === 'rewarded' ? OK : phase === 'idle' ? 'var(--border)' : '#f59e0b';
+  const name = (v: Validator) => (v.kind === 'you' ? t('stakingFlow.validators.you') : `${t(`stakingFlow.validators.${v.kind}`)} #${v.id}`);
+  const proposerV = proposer === null ? null : world.ring[proposer];
+  const slashedV = world.ring.find(v => v.id === slashedId) ?? world.exit.find(v => v.id === slashedId) ?? null;
+  const landed = phase === 'picking' && proposer !== null;
+  const voting = phase === 'proposing' || phase === 'attesting' || phase === 'rewarded';
+  const voteCount = voting && proposer !== null ? votes.length + 1 : 0; // the proposer backs its own block
+  const votePct = (voteCount / RING_SIZE) * 100;
+  const conflict = cheating && phase === 'proposing';
+  const quiet = phase === 'idle' || phase === 'churn';
+  const blockColor = phase === 'slashed' || conflict ? BAD : phase === 'rewarded' ? OK : quiet ? 'var(--border)' : PICK;
   const blockFilled = phase === 'proposing' || phase === 'attesting' || phase === 'rewarded' || phase === 'slashed';
   const pristine = phase === 'idle' && slot === 1 && !running;
 
   const statusText =
-    phase === 'picking' ? t('stakingFlow.status.picking', { n: slot })
-      : phase === 'proposing' && proposer !== null ? t(cheating ? 'stakingFlow.status.proposingCheat' : 'stakingFlow.status.proposing', { name: name(proposer) })
-        : phase === 'attesting' ? t('stakingFlow.status.attesting', { votes: voteCount, total: activeCount })
+    phase === 'picking' ? (landed && proposerV ? t('stakingFlow.status.picked', { name: name(proposerV) }) : t('stakingFlow.status.picking', { n: slot }))
+      : phase === 'proposing' && proposerV ? t(cheating ? 'stakingFlow.status.proposingCheat' : 'stakingFlow.status.proposing', { name: name(proposerV) })
+        : phase === 'attesting' ? t('stakingFlow.status.attesting', { votes: voteCount, total: RING_SIZE })
           : phase === 'rewarded' ? t('stakingFlow.status.rewarded')
-            : phase === 'slashed' ? t('stakingFlow.status.slashed', { name: name(CHEATER) })
-              : pristine ? t('stakingFlow.status.idle') : t('stakingFlow.status.paused');
-  const statusColor = phase === 'slashed' || (cheating && phase === 'proposing') ? BAD : phase === 'rewarded' ? OK : phase === 'idle' ? 'var(--muted-foreground)' : '#f59e0b';
+            : phase === 'slashed' && slashedV ? t('stakingFlow.status.slashed', { name: name(slashedV) })
+              : phase === 'churn' ? t(slashedId !== null ? 'stakingFlow.status.churnSlashed' : 'stakingFlow.status.churn')
+                : pristine ? t('stakingFlow.status.idle') : t('stakingFlow.status.paused');
+  const statusColor = phase === 'slashed' || conflict ? BAD : phase === 'rewarded' ? OK : phase === 'idle' ? 'var(--muted-foreground)' : phase === 'churn' ? '#627EEA' : PICK;
+
+  const beamColor = cheating && phase !== 'picking' ? BAD : PICK;
+  const beamOpacity = phase === 'picking' || phase === 'proposing' ? 1 : phase === 'attesting' || phase === 'rewarded' || phase === 'slashed' ? 0.3 : 0;
+
+  // Every validator on screen, keyed by id, so one that changes place glides there.
+  const placed: { v: Validator; pos: Pos; where: 'ring' | 'entry' | 'exit'; k: number }[] = [
+    ...world.ring.map((v, k) => ({ v, pos: polar(slotAngle(k), RING_RADIUS), where: 'ring' as const, k })),
+    ...world.entry.map((v, k) => ({ v, pos: ENTRY_POS[k], where: 'entry' as const, k })),
+    ...world.exit.map((v, k) => ({ v, pos: EXIT_POS[k], where: 'exit' as const, k })),
+  ];
 
   const zoneLabel = 'text-[10px] font-black uppercase tracking-wider whitespace-nowrap';
+  const queueLabel = 'absolute -translate-x-1/2 -translate-y-1/2 text-[9px] font-bold uppercase tracking-wider whitespace-nowrap text-muted-foreground';
+  const chip = 'absolute -translate-x-1/2 -translate-y-1/2 z-[6] py-0.5 rounded-full text-white font-mono font-bold shadow-md whitespace-nowrap pointer-events-none';
   const btn = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border text-xs lg:text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed';
 
   return (
@@ -225,17 +320,44 @@ export function StakingFlow() {
           </div>
         </div>
 
-        {/* ── The loop: validators around the next block ── */}
+        {/* ── The loop: the validator set around the next block ── */}
         <div className="relative min-h-[380px] lg:min-h-0 rounded-2xl border-2 border-dashed border-border/70 bg-muted/20 overflow-hidden">
-          <div className={`${zoneLabel} absolute top-2 left-3 text-[#627EEA]`}>{t('stakingFlow.arenaLabel')}</div>
-          <div className="absolute top-2 right-3 text-[10px] font-mono text-muted-foreground">{t('stakingFlow.block.every')}</div>
-          <div className="absolute bottom-2 inset-x-3 text-center text-[10px] text-muted-foreground italic">{t('stakingFlow.caption')}</div>
+          <div className="absolute top-2 left-3 z-[7]">
+            <div className={`${zoneLabel} text-[#627EEA]`}>{t('stakingFlow.arenaLabel')}</div>
+            <div className="mt-1 flex flex-col gap-0.5 text-[9px] font-semibold text-muted-foreground leading-tight">
+              {(['you', 'pool', 'other'] as const).map(kind => (
+                <span key={kind} className="flex items-center gap-1">
+                  <span className="size-2 rounded-full border" style={{ borderColor: KIND_COLOR[kind], backgroundColor: KIND_COLOR[kind] + (kind === 'you' ? '' : '40') }} />
+                  {t(`stakingFlow.legend.${kind}`)}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="absolute top-2 right-3 z-[7] text-right">
+            <div className="text-[10px] font-mono text-muted-foreground">{t('stakingFlow.block.every')}</div>
+            <div className="text-[9px] text-muted-foreground italic leading-tight mt-0.5 max-w-[150px] ml-auto">{t('stakingFlow.caption')}</div>
+          </div>
 
           <div className="relative h-full aspect-square max-w-full mx-auto">
             {/* the loop itself */}
             <div
               className="absolute rounded-full border-2 border-dashed transition-colors duration-500"
-              style={{ inset: `${50 - RING_RADIUS}%`, borderColor: (phase === 'idle' ? '#627EEA' : statusColor) + (phase === 'idle' ? '55' : '90') }}
+              style={{ inset: `${50 - RING_RADIUS}%`, borderColor: (quiet ? '#627EEA' : statusColor) + (quiet ? '45' : '70') }}
+            />
+
+            {/* the random draw: a beam from the centre that spins, slows and lands on one validator */}
+            <div
+              className="absolute left-1/2 top-1/2 h-[3px] -mt-[1.5px] rounded-full pointer-events-none"
+              style={{
+                width: `${RING_RADIUS}%`,
+                transformOrigin: '0 50%',
+                transform: `rotate(${beam}deg)`,
+                opacity: beamOpacity,
+                background: `linear-gradient(90deg, transparent 18%, ${beamColor})`,
+                boxShadow: beamOpacity === 1 ? `0 0 10px ${beamColor}90` : 'none',
+                transition: `transform ${SPIN_MS}ms cubic-bezier(0.16, 0.6, 0.12, 1), opacity 500ms ease`,
+                willChange: 'transform',
+              }}
             />
 
             {/* centre: the block being decided */}
@@ -243,10 +365,21 @@ export function StakingFlow() {
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-[172px] rounded-xl border-2 bg-card shadow-lg transition-colors duration-300"
               style={{ borderColor: blockColor, borderStyle: phase === 'rewarded' ? 'solid' : 'dashed' }}
             >
-              <div className="px-2.5 py-1.5 border-b border-border/70 flex items-center justify-between gap-2">
+              <div
+                className="absolute -top-4 left-1/2 -translate-x-1/2 size-8 rounded-full border-2 bg-card flex items-center justify-center text-base leading-none shadow-md transition-colors duration-300"
+                style={{ borderColor: phase === 'picking' ? PICK : 'var(--border)' }}
+                title={t('stakingFlow.drawLabel')}
+              >
+                <motion.span
+                  animate={phase === 'picking' && !landed ? { rotate: [0, 360] } : { rotate: 0 }}
+                  transition={phase === 'picking' && !landed ? { duration: 0.9, repeat: Infinity, ease: 'linear' } : { duration: 0.3 }}
+                  className="inline-block"
+                >🎲</motion.span>
+              </div>
+              <div className="px-2.5 pt-4 pb-1.5 border-b border-border/70 flex items-center justify-between gap-2">
                 <span className="font-mono text-[10px] font-bold text-muted-foreground">{t('stakingFlow.block.slot', { n: slot })}</span>
                 <span className="text-[9px] uppercase tracking-widest font-bold text-right leading-tight" style={{ color: statusColor }}>
-                  {t(`stakingFlow.block.status.${cheating && phase === 'proposing' ? 'conflict' : phase}`)}
+                  {t(`stakingFlow.block.status.${conflict ? 'conflict' : phase === 'churn' ? 'idle' : phase}`)}
                 </span>
               </div>
               <div className="p-2 grid grid-cols-6 gap-1">
@@ -264,70 +397,116 @@ export function StakingFlow() {
               </div>
               <div className="px-2.5 pb-2">
                 <div className="flex items-center justify-between text-[9px] font-mono text-muted-foreground mb-1">
-                  <span>{t('stakingFlow.block.votes')} {voteCount}/{activeCount}</span>
+                  <span>{t('stakingFlow.block.votes')} {voteCount}/{RING_SIZE}</span>
                   <span>{t('stakingFlow.block.threshold')}</span>
                 </div>
                 <div className="relative h-1.5 rounded-full bg-muted/60">
-                  <div className="h-full rounded-full transition-all duration-300" style={{ width: `${votePct}%`, backgroundColor: votePct >= 66.6 ? OK : '#f59e0b' }} />
+                  <div className="h-full rounded-full transition-all duration-300" style={{ width: `${votePct}%`, backgroundColor: votePct >= 66.6 ? OK : PICK }} />
                   <div className="absolute -top-0.5 -bottom-0.5 w-0.5 bg-foreground/70" style={{ left: '66.6%' }} />
                 </div>
               </div>
             </div>
 
-            {/* validators on the ring */}
-            {VALIDATORS.map((v, i) => {
-              const rad = (v.angle * Math.PI) / 180;
-              const left = 50 + RING_RADIUS * Math.sin(rad);
-              const top = 50 - RING_RADIUS * Math.cos(rad);
-              const out = ejected && i === CHEATER;
-              const isCursor = cursor === i;
-              const isProposer = proposer === i && phase !== 'idle';
-              const hasVoted = votes.includes(i);
-              const paid = phase === 'rewarded' && !out;
-              const border = out || (isProposer && cheating) ? BAD : hasVoted || (isProposer && phase === 'rewarded') ? OK : v.color + (isCursor || isProposer ? 'FF' : '80');
-              const line = out ? t('stakingFlow.badge.ejected')
-                : isProposer ? t(cheating ? 'stakingFlow.badge.double' : 'stakingFlow.badge.proposes')
-                  : hasVoted ? t('stakingFlow.badge.attests')
-                    : t(`stakingFlow.validators.${v.key}.tag`);
-              return (
-                <div
-                  key={v.key}
-                  className={`absolute w-[140px] -translate-x-1/2 -translate-y-1/2 rounded-xl border-2 bg-card px-2.5 py-1.5 transition-all duration-300 ${out ? 'opacity-60' : ''}`}
-                  style={{
-                    left: `${left}%`,
-                    top: `${top}%`,
-                    borderColor: border,
-                    boxShadow: isCursor || isProposer ? `0 0 0 4px ${(isProposer && cheating ? BAD : v.color)}35` : undefined,
-                    scale: isCursor || isProposer ? '1.06' : '1',
-                  }}
-                >
-                  {hasVoted && !out && (
-                    <div className="absolute -top-2 -right-2 size-5 rounded-full text-white text-[11px] flex items-center justify-center font-bold shadow-md" style={{ backgroundColor: OK }}>✓</div>
-                  )}
-                  {isCursor && <div className="absolute -top-2.5 -right-2.5 text-lg leading-none">🎲</div>}
-                  {paid && (
-                    <motion.div
-                      key={slot}
-                      initial={{ opacity: 0, y: 0, scale: 0.6 }}
-                      animate={{ opacity: 1, y: -6, scale: 1 }}
-                      transition={{ duration: 0.5 }}
-                      className="absolute -top-5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-white text-[10px] font-mono font-bold shadow-md whitespace-nowrap pointer-events-none"
-                      style={{ backgroundColor: OK }}
+            {/* entry + exit queues (the validators in them are drawn below, with the rest of the set) */}
+            <div className={queueLabel} style={{ left: '8%', top: '94.5%' }}>↑ {t('stakingFlow.queues.entry')}</div>
+            <div className={queueLabel} style={{ left: '92%', top: '94.5%' }}>{t('stakingFlow.queues.exit')} ↓</div>
+
+            {/* the validator set: 20 on the ring, a few waiting to join, a few on their way out */}
+            <AnimatePresence>
+              {placed.map(({ v, pos, where, k }) => {
+                const onRing = where === 'ring';
+                const out = v.id === slashedId;
+                const isProposer = onRing && proposer === k;
+                const hasVoted = onRing && votes.includes(k);
+                const color = KIND_COLOR[v.kind];
+                const border = out || (isProposer && cheating) ? BAD : isProposer ? (phase === 'rewarded' ? OK : PICK) : hasVoted ? OK : color;
+                const fill = out ? BAD + '30' : hasVoted || (isProposer && phase === 'rewarded') ? OK + '35' : v.kind === 'you' ? color : color + '40';
+                return (
+                  <motion.div
+                    key={v.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: onRing ? 1 : where === 'entry' ? 0.6 : 0.45 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.8 }}
+                    className="absolute -translate-x-1/2 -translate-y-1/2"
+                    style={{
+                      left: `${pos.left}%`,
+                      top: `${pos.top}%`,
+                      zIndex: isProposer ? 6 : 5,
+                      transition: 'left 1400ms cubic-bezier(0.4, 0, 0.2, 1), top 1400ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    }}
+                    title={name(v)}
+                  >
+                    {isProposer && (
+                      <motion.span
+                        className="absolute inset-0 rounded-full"
+                        style={{ border: `2px solid ${cheating ? BAD : PICK}` }}
+                        animate={{ scale: [1, 2.2], opacity: [0.7, 0] }}
+                        transition={{ duration: 1.3, repeat: Infinity, ease: 'easeOut' }}
+                      />
+                    )}
+                    <div
+                      className="relative size-[30px] rounded-full border-2 bg-card flex items-center justify-center text-[13px] leading-none font-black"
+                      style={{
+                        borderColor: border,
+                        boxShadow: isProposer ? `0 0 0 4px ${(cheating ? BAD : PICK)}40` : undefined,
+                        transform: `scale(${isProposer ? 1.3 : onRing ? 1 : 0.62})`,
+                        transition: 'transform 500ms ease, border-color 300ms ease, box-shadow 300ms ease',
+                      }}
                     >
-                      +{(isProposer ? PROPOSER_REWARD : ATTESTER_REWARD).toFixed(3)} ETH
-                    </motion.div>
-                  )}
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-sm leading-none">{out ? '⛔' : v.icon}</span>
-                    <span className="text-[10px] font-bold truncate" style={{ color: out ? BAD : v.color }}>{name(i)}</span>
-                  </div>
-                  <div className={`font-mono text-xs font-bold tabular-nums mt-0.5 ${out ? 'text-[#ef4444]' : 'text-foreground'}`}>
-                    {out ? `🔥 < ${STAKE} ETH` : `${balances[i].toFixed(3)} ETH`}
-                  </div>
-                  <div className="text-[9px] uppercase tracking-wider font-bold truncate" style={{ color: out || (isProposer && cheating) ? BAD : isProposer ? '#f59e0b' : hasVoted ? OK : 'var(--muted-foreground)' }}>
-                    {line}
-                  </div>
+                      <span className="absolute inset-0 rounded-full transition-colors duration-300" style={{ backgroundColor: fill }} />
+                      <span className="relative" style={{ color: OK }}>
+                        {out ? '⛔' : v.kind === 'you' ? '🧑' : hasVoted ? '✓' : ''}
+                      </span>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+
+            {/* your validator: always labelled, with its balance */}
+            {(() => {
+              const p = polar(slotAngle(YOU_SLOT), RING_RADIUS - 9.5);
+              return (
+                <div className="absolute -translate-x-1/2 -translate-y-1/2 z-[6] rounded-md border bg-card px-1.5 py-0.5 text-center leading-tight pointer-events-none" style={{ left: `${p.left}%`, top: `${p.top}%`, borderColor: SOLO_COLOR + '70' }}>
+                  <div className="text-[9px] font-black" style={{ color: SOLO_COLOR }}>{t('stakingFlow.validators.you')}</div>
+                  <div className="font-mono text-[10px] font-bold tabular-nums text-foreground">{youBalance.toFixed(3)} ETH</div>
                 </div>
+              );
+            })()}
+
+            {/* who was drawn / who was slashed */}
+            {proposer !== null && phase !== 'rewarded' && (() => {
+              const p = polar(slotAngle(proposer), RING_RADIUS + 7);
+              const bad = cheating && phase !== 'picking';
+              return (
+                <motion.div
+                  key={`tag-${slot}`}
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.35 }}
+                  className={`${chip} px-1.5 text-[9px] uppercase tracking-wider`}
+                  style={{ left: `${p.left}%`, top: `${p.top}%`, backgroundColor: bad ? BAD : PICK }}
+                >
+                  {phase === 'slashed' ? t('stakingFlow.badge.ejected') : bad ? t('stakingFlow.badge.double') : landed ? `🎲 ${t('stakingFlow.badge.picked')}` : t('stakingFlow.badge.proposes')}
+                </motion.div>
+              );
+            })()}
+
+            {/* rewards: a big one for the proposer, a small one for every voter */}
+            {phase === 'rewarded' && proposer !== null && world.ring.map((v, k) => {
+              const p = polar(slotAngle(k), RING_RADIUS + (k === proposer ? 7 : 6));
+              return (
+                <motion.div
+                  key={`reward-${slot}-${v.id}`}
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.45, delay: k === proposer ? 0 : 0.25 }}
+                  className={`${chip} ${k === proposer ? 'px-1.5 text-[10px]' : 'px-1 text-[8px]'}`}
+                  style={{ left: `${p.left}%`, top: `${p.top}%`, backgroundColor: OK }}
+                >
+                  +{(k === proposer ? PROPOSER_REWARD : ATTESTER_REWARD).toFixed(3)}{k === proposer ? ' ETH' : ''}
+                </motion.div>
               );
             })}
           </div>
@@ -370,7 +549,7 @@ export function StakingFlow() {
 
       {/* ── Status + controls ── */}
       <div className="shrink-0 flex items-center justify-center gap-2.5 flex-wrap min-h-[38px]">
-        <div className="px-4 py-1.5 rounded-xl border text-xs lg:text-sm font-bold text-center" style={{ color: statusColor, borderColor: phase === 'idle' ? 'var(--border)' : statusColor + '60', backgroundColor: phase === 'idle' ? 'transparent' : statusColor + '14' }}>
+        <div className="px-4 py-1.5 rounded-xl border text-xs lg:text-sm font-bold text-center transition-colors duration-300" style={{ color: statusColor, borderColor: phase === 'idle' ? 'var(--border)' : statusColor + '60', backgroundColor: phase === 'idle' ? 'transparent' : statusColor + '14' }}>
           {statusText}
         </div>
         {running ? (
@@ -382,7 +561,7 @@ export function StakingFlow() {
             <Play className="size-3.5" />{pristine ? t('stakingFlow.controls.start') : t('stakingFlow.controls.resume')}
           </button>
         )}
-        <button onClick={armCheat} disabled={ejected || cheatArmed} className={`${btn} border-[#ef4444]/50 bg-[#ef4444]/10 text-[#ef4444] hover:bg-[#ef4444]/15`}>
+        <button onClick={armCheat} disabled={cheatArmed || slashedId !== null} className={`${btn} border-[#ef4444]/50 bg-[#ef4444]/10 text-[#ef4444] hover:bg-[#ef4444]/15`}>
           <ShieldAlert className="size-3.5" />{cheatArmed ? t('stakingFlow.controls.cheatArmed') : t('stakingFlow.controls.cheat')}
         </button>
         {!pristine && (
