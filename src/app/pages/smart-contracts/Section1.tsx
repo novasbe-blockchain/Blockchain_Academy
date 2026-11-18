@@ -8,18 +8,16 @@ import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
-import { FileCode2, Check, X } from 'lucide-react';
+import { FileCode2, Check, X, Scale, Handshake, Database } from 'lucide-react';
 
 import imgSzaboVending from '../../../assets/sc/szabo-vending-machine.png';
 
 // Language-neutral shape — only IDs. Labels come from t() at render time.
 const chapterIds = [
-  's1-warmup',
+  's1-why',
   's1-recap',
-  's1-what',
-  's1-exercise',
   's1-hype',
-  's1-szabo',
+  's1-exercise',
   's1-history',
   's1-quiz',
   's1-takeaways',
@@ -134,130 +132,18 @@ function ContractOrNotExercise() {
   );
 }
 
-// ─── Warm-up: Bitcoin or Ethereum? (recap from Course 02) ───────────────────
-
-type Chain = 'btc' | 'eth' | 'both';
-
-// Language-neutral: only the correct chain per statement is fixed.
-const BTC_ETH_ANSWERS: Chain[] = ['btc', 'eth', 'btc', 'eth', 'btc', 'eth', 'eth', 'both'];
-
-const CHAIN_COLORS: Record<Chain, { color: string; glyph: string }> = {
-  btc:  { color: '#f59e0b', glyph: '₿' },
-  eth:  { color: '#6366f1', glyph: 'Ξ' },
-  both: { color: '#8b5cf6', glyph: '⇋' },
-};
-
-interface BtcEthItem { stmt: string; why: string; }
-
-function BitcoinEthereumWarmup() {
-  const { t } = useTranslation('smart-contracts/section-1');
-  const itemsText = t('warmup.items', { returnObjects: true }) as BtcEthItem[];
-  const BTC_ETH = itemsText.map((q, i) => ({ ...q, answer: BTC_ETH_ANSWERS[i] }));
-  const chainLabel = (c: Chain) => t(`warmup.chainMeta.${c}`);
-
-  const [picks, setPicks] = useState<Record<number, Chain>>({});
-  const total = BTC_ETH.length;
-  const done = Object.keys(picks).length;
-  const correct = Object.entries(picks).filter(([i, p]) => p === BTC_ETH[+i].answer).length;
-
-  const pick = (i: number, c: Chain) => {
-    if (picks[i]) return;
-    setPicks(prev => ({ ...prev, [i]: c }));
-  };
-  const reset = () => setPicks({});
-
-  return (
-    <div className="h-full flex flex-col p-6 lg:p-8">
-      <div className="shrink-0 flex items-center justify-between mb-4">
-        <div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">{t('warmup.badge')}</span>
-          <h2 className="text-2xl font-bold text-foreground mt-1">{t('warmup.heading')}</h2>
-          <p className="text-muted-foreground text-sm mt-0.5">{t('warmup.subtitle')}</p>
-        </div>
-        <div className="flex items-center gap-4">
-          {done > 0 && (
-            <div className="text-right">
-              <div className="text-2xl font-black" style={{ color: correct === done ? '#39B54A' : '#f59e0b' }}>{correct}/{done}</div>
-              <div className="text-xs text-muted-foreground">{t('warmup.scoreLabel')}</div>
-            </div>
-          )}
-          {done === total && (
-            <button onClick={reset} className="px-3 py-1.5 rounded-lg bg-muted hover:bg-muted/80 text-xs font-semibold text-muted-foreground transition-colors">{t('warmup.reset')}</button>
-          )}
-        </div>
-      </div>
-
-      <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-3 content-center auto-rows-min">
-        {BTC_ETH.map((q, i) => {
-          const picked = picks[i];
-          const open = !!picked;
-          const right = picked === q.answer;
-          const ans = CHAIN_COLORS[q.answer];
-          return (
-            <motion.div
-              key={i}
-              layout
-              className="relative rounded-xl border-2 overflow-hidden flex flex-col min-h-[9.5rem] lg:min-h-[11rem]"
-              style={{
-                borderColor: !open ? 'var(--border)' : right ? '#39B54A' : '#ED1C24',
-                backgroundColor: !open ? 'var(--card)' : right ? '#39B54A10' : '#ED1C2410',
-              }}
-            >
-              <div className="flex-1 p-3 flex flex-col gap-2">
-                <div className="text-sm font-semibold text-foreground leading-snug flex-1">{q.stmt}</div>
-                <AnimatePresence>
-                  {open && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-                      className="text-[11px] leading-snug"
-                    >
-                      <span className="font-black" style={{ color: ans.color }}>{ans.glyph} {chainLabel(q.answer)}</span>
-                      <span className="text-muted-foreground"> — {q.why}</span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-              {!open ? (
-                <div className="flex border-t border-border shrink-0">
-                  {(['btc','eth','both'] as Chain[]).map((c, ci) => {
-                    const m = CHAIN_COLORS[c];
-                    return (
-                      <button
-                        key={c}
-                        onClick={() => pick(i, c)}
-                        className={`flex-1 py-2 text-xs font-black transition-colors ${ci < 2 ? 'border-r border-border' : ''}`}
-                        style={{ color: m.color }}
-                      >
-                        {m.glyph} {chainLabel(c)}
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="shrink-0 flex items-center justify-center py-2 gap-1.5 border-t" style={{ borderColor: right ? '#39B54A40' : '#ED1C2440' }}>
-                  {right
-                    ? <Check className="size-4 text-[#39B54A]" strokeWidth={3} />
-                    : <X className="size-4 text-[#ED1C24]" strokeWidth={3} />}
-                  <span className="text-xs font-bold" style={{ color: right ? '#39B54A' : '#ED1C24' }}>
-                    {right ? t('warmup.correctBadge') : t('warmup.youSaid', { label: chainLabel(picked) })}
-                  </span>
-                </div>
-              )}
-            </motion.div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-interface RecapCard { title: string; desc: string; tag: string; }
-interface WhatProp { title: string; desc: string; }
-interface CompareRow { trad: string; smart: string; }
-interface WhyPoint { a: string; strong: string; b: string; }
-interface SzaboStep { label: string; detail: string; }
+interface WhyOption { tag: string; title: string; role: string; trust: string; cost: string; weak: string; }
+interface RecapCard { title: string; desc: string; }
 interface HistoryEvent { year: string; tag: string; title: string; desc: string; }
 interface HypeCard { title: string; body: string; }
+
+// The three incumbents a smart contract competes with, then the challenger itself.
+const WHY_META = [
+  { Icon: Scale,     color: '#ED1C24' },
+  { Icon: Handshake, color: '#f59e0b' },
+  { Icon: Database,  color: '#8b5cf6' },
+  { Icon: FileCode2, color: '#6366f1' },
+];
 
 const HYPE_META = [
   { emoji: '⚖️', color: '#ED1C24' },
@@ -276,24 +162,14 @@ export function SC_Section1() {
 
   // Language-neutral presentation data merged with translated text.
   const recapColors = ['#6366f1', '#8b5cf6', '#f59e0b', '#39B54A'];
-  const recapEmojis = ['👤', '🖥️', '⛽', '✍️'];
+  const recapEmojis = ['🖥️', '🔒', '⛽', '✍️'];
   const recapText = t('recap.cards', { returnObjects: true }) as RecapCard[];
   const recapCards = recapText.map((c, i) => ({ ...c, color: recapColors[i], emoji: recapEmojis[i] }));
 
-  const compareRows = t('what.compareRows', { returnObjects: true }) as CompareRow[];
+  const whyText = t('why.options', { returnObjects: true }) as WhyOption[];
+  const whyOptions = whyText.map((o, i) => ({ ...o, ...WHY_META[i] }));
 
-  const propColors = ['#6366f1', '#8b5cf6', '#39B54A', '#f59e0b', '#ED1C24'];
-  const propEmojis = ['⚙️', '🔒', '🌐', '📐', '🛡️'];
-  const propText = t('what.props', { returnObjects: true }) as WhatProp[];
-  const props = propText.map((p, i) => ({ ...p, color: propColors[i], emoji: propEmojis[i] }));
-
-  const whyPoints = t('szabo.whyPoints', { returnObjects: true }) as WhyPoint[];
-
-  const stepColors = ['#6366f1', '#8b5cf6', '#39B54A', '#ED1C24'];
-  const stepText = t('szabo.steps', { returnObjects: true }) as SzaboStep[];
-  const szaboSteps = stepText.map((s, i) => ({ ...s, color: stepColors[i] }));
-
-  const eventColors = ['#8b5cf6', '#f59e0b', '#6366f1', '#ED1C24', '#6366f1', '#f97316', '#39B54A', '#22d3ee'];
+  const eventColors = ['#8b5cf6', '#6366f1', '#ED1C24', '#f59e0b', '#39B54A', '#22d3ee'];
   const eventText = t('history.events', { returnObjects: true }) as HistoryEvent[];
   const historyEvents = eventText.map((e, i) => ({ ...e, color: eventColors[i] }));
 
@@ -322,17 +198,54 @@ export function SC_Section1() {
           />
         </div>
 
-        {/* ═══════ 0a. WARM-UP: BITCOIN vs ETHEREUM ═══════ */}
-        <div id="s1-warmup" className="h-full flex flex-col">
-          <div className="flex-1 min-h-0">
-            <BitcoinEthereumWarmup />
+        {/* ═══════ 1. OPENER: WHY A SMART CONTRACT AT ALL? ═══════ */}
+        <div id="s1-why" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-5">
+            <span className="text-xs font-black uppercase tracking-widest text-[#6366f1]">{t('why.badge')}</span>
+            <h2 className="text-3xl lg:text-4xl font-black text-foreground mt-1">{t('why.heading')}</h2>
+            <p className="text-muted-foreground text-base mt-1.5">{t('why.subtitle')}</p>
           </div>
-          <KeyPointBar text={t('keyPoints.s1-warmup')} className="mx-6 lg:mx-8 mb-6 -mt-3" />
+
+          <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-4 content-center">
+            {whyOptions.map((o, i) => {
+              const challenger = i === whyOptions.length - 1;
+              return (
+                <motion.div
+                  key={o.title}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.08, duration: 0.3 }}
+                  className={`flex flex-col gap-3 p-4 rounded-2xl border-2 ${challenger ? 'bg-gradient-to-br from-[#6366f1]/15 to-transparent' : 'bg-card'}`}
+                  style={{ borderColor: o.color + (challenger ? '' : '40') }}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="size-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: o.color + '18' }}>
+                      <o.Icon className="size-6" style={{ color: o.color }} />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest rounded-md px-2 py-1" style={{ backgroundColor: o.color + '15', color: o.color }}>{o.tag}</span>
+                  </div>
+                  <div>
+                    <div className="font-black text-lg text-foreground leading-tight">{o.title}</div>
+                    <div className="text-xs text-muted-foreground leading-snug mt-0.5">{o.role}</div>
+                  </div>
+                  <div className="flex flex-col gap-2.5 border-t pt-3" style={{ borderColor: o.color + '30' }}>
+                    {(['trust', 'cost', 'weak'] as const).map(row => (
+                      <div key={row}>
+                        <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: o.color }}>{t(`why.rowLabels.${row}`)}</div>
+                        <div className="text-sm text-foreground/90 leading-snug">{o[row]}</div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+          <KeyPointBar text={t('keyPoints.s1-why')} className="mt-4" />
         </div>
 
-        {/* ═══════ 0b. ETHEREUM RECAP (warm-up) ═══════ */}
+        {/* ═══════ 2. THE 20-SECOND RECAP (replaces BTC vs ETH, Ethereum recap, definition, Szabo) ═══════ */}
         <div id="s1-recap" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-4">
+          <div className="shrink-0 mb-5">
             <span className="text-xs font-black uppercase tracking-widest text-[#6366f1]">{t('recap.badge')}</span>
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('recap.heading')}</h2>
             <p className="text-sm text-muted-foreground mt-1">
@@ -340,94 +253,57 @@ export function SC_Section1() {
             </p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-4 content-center">
-            {recapCards.map((c, i) => (
-              <motion.div
-                key={c.title}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08, duration: 0.3 }}
-                className="flex flex-col gap-2 p-4 rounded-2xl border bg-card"
-                style={{ borderColor: c.color + '40' }}
-              >
-                <div className="text-3xl">{c.emoji}</div>
-                <div className="font-black text-base" style={{ color: c.color }}>{c.title}</div>
-                <div className="text-xs text-muted-foreground leading-relaxed flex-1">{c.desc}</div>
-                <div className="text-[10px] font-bold uppercase tracking-widest rounded-md px-2 py-1 self-start" style={{ backgroundColor: c.color + '15', color: c.color }}>{c.tag}</div>
-              </motion.div>
-            ))}
+          <div className="flex-1 min-h-0 grid grid-cols-2 gap-6 content-center">
+            {/* Left: one-sentence definition + one-line vending-machine analogy */}
+            <div className="flex flex-col gap-4">
+              <div className="p-6 bg-gradient-to-br from-[#6366f1]/15 to-transparent border border-[#6366f1]/40 rounded-2xl">
+                <div className="text-xs font-semibold text-[#6366f1] uppercase tracking-widest mb-2">{t('recap.definitionLabel')}</div>
+                <p className="text-2xl text-foreground font-bold leading-snug">
+                  {t('recap.defLeadA')}<span className="font-black text-[#6366f1]">{t('recap.defTerm')}</span>{t('recap.defLeadB')}
+                </p>
+              </div>
+              <div className="p-4 bg-card border border-border rounded-2xl flex items-center gap-4">
+                <div className="shrink-0 bg-white rounded-xl border border-border p-1.5">
+                  <img src={imgSzaboVending} alt={t('recap.imgAlt')} className="h-24 w-auto object-contain" />
+                </div>
+                <div>
+                  <div className="font-black text-base text-foreground">{t('recap.vendingLabel')}</div>
+                  <p className="text-sm text-muted-foreground leading-snug mt-1">{t('recap.vendingBody')}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: four one-liners students already know */}
+            <div className="flex flex-col gap-3">
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('recap.knowLabel')}</div>
+              {recapCards.map((c, i) => (
+                <motion.div
+                  key={c.title}
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.07, duration: 0.3 }}
+                  className="flex items-center gap-3 p-3 bg-card border rounded-xl"
+                  style={{ borderColor: c.color + '40' }}
+                >
+                  <div className="text-2xl shrink-0">{c.emoji}</div>
+                  <div>
+                    <div className="font-bold text-sm" style={{ color: c.color }}>{c.title}</div>
+                    <div className="text-xs text-muted-foreground leading-snug">{c.desc}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
 
-          <div className="shrink-0 mt-4 p-3 rounded-xl border border-[#6366f1]/30 bg-[#6366f1]/08 text-center text-sm" style={{ backgroundColor: '#6366f10f' }}>
+          <div className="shrink-0 mt-4 p-3 rounded-xl border border-[#6366f1]/30 text-center text-sm" style={{ backgroundColor: '#6366f10f' }}>
             <span className="font-bold text-[#6366f1]">{t('recap.footerLabel')}</span>
-            <span className="text-muted-foreground">{t('recap.footerA')}<em>{t('recap.footerEm')}</em>{t('recap.footerB')}</span>
+            <span className="text-muted-foreground">{t('recap.footerText')}</span>
           </div>
-          <UnderTheHood terms={['EOA vs contract account', 'EVM', 'gas · gwei', 'nonce', 'state']} className="shrink-0 mt-2 justify-center" />
+          <UnderTheHood terms={['contract account', 'EVM', 'gas', 'Solidity', 'deterministic']} className="shrink-0 mt-2 justify-center" />
           <KeyPointBar text={t('keyPoints.s1-recap')} className="mt-3" />
         </div>
 
-        {/* ═══════ 1. WHAT IS A SMART CONTRACT ═══════ */}
-        <div id="s1-what" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-6">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('what.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('what.subtitle')}</p>
-          </div>
-
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-
-            {/* Left: definition + analogy */}
-            <div className="flex flex-col gap-4">
-              <div className="p-5 bg-gradient-to-br from-[#6366f1]/15 to-transparent border border-[#6366f1]/40 rounded-xl">
-                <div className="text-xs font-semibold text-[#6366f1] uppercase tracking-widest mb-2">{t('what.definitionLabel')}</div>
-                <p className="text-base text-foreground font-medium leading-relaxed">
-                  {t('what.defLeadA')}<span className="font-black text-[#6366f1]">{t('what.defTerm')}</span>{t('what.defLeadB')}
-                </p>
-                <p className="text-sm text-muted-foreground mt-3">
-                  {t('what.defBody')}
-                </p>
-              </div>
-
-              <div className="p-4 bg-card border border-border rounded-xl">
-                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">{t('what.compareLabel')}</div>
-                <div className="space-y-2">
-                  {compareRows.map((row, i) => (
-                    <div key={i} className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="px-2 py-1.5 rounded bg-[#ED1C24]/10 text-muted-foreground border border-[#ED1C24]/20">❌ {row.trad}</div>
-                      <div className="px-2 py-1.5 rounded bg-[#39B54A]/10 text-muted-foreground border border-[#39B54A]/20">✅ {row.smart}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <UnderTheHood terms={['Solidity', 'bytecode', 'deterministic', 'immutable address']} />
-            </div>
-
-            {/* Right: key properties */}
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('what.propsLabel')}</div>
-              {props.map(p => (
-                <div key={p.title} className="flex items-start gap-3 p-3 bg-card border border-border rounded-xl flex-1" style={{ borderColor: p.color + '30' }}>
-                  <div className="text-xl shrink-0">{p.emoji}</div>
-                  <div>
-                    <div className="font-bold text-sm mb-0.5" style={{ color: p.color }}>{p.title}</div>
-                    <div className="text-xs text-muted-foreground">{p.desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-          </div>
-          <KeyPointBar text={t('keyPoints.s1-what')} className="mt-3" />
-        </div>
-
-        {/* ═══════ INTERACTIVE: CONTRACT OR NOT? ═══════ */}
-        <div id="s1-exercise" className="h-full flex flex-col">
-          <div className="flex-1 min-h-0">
-            <ContractOrNotExercise />
-          </div>
-          <KeyPointBar text={t('keyPoints.s1-exercise')} className="mx-6 lg:mx-8 mb-6 -mt-3" />
-        </div>
-
-        {/* ═══════ 1b. HYPE vs VALUE ═══════ */}
+        {/* ═══════ 3. HYPE vs VALUE ═══════ */}
         <div id="s1-hype" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('hype.heading')}</h2>
@@ -451,21 +327,21 @@ export function SC_Section1() {
                       <span className="text-2xl">{m.emoji}</span>
                       <div className="font-black text-base text-foreground">{c.title}</div>
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{c.body}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{c.body}</p>
                   </motion.div>
                 );
               })}
             </div>
 
             <div className="flex flex-col gap-3 justify-center">
-              <div className="flex-1 p-5 rounded-2xl border-2 border-[#39B54A]/50 bg-gradient-to-br from-[#39B54A]/12 to-transparent flex flex-col gap-3">
-                <div className="font-black text-base text-[#39B54A]">{t('hype.valueLabel')}</div>
-                <ul className="space-y-2.5 text-sm text-foreground/90 flex-1">
+              <div className="p-5 rounded-2xl border-2 border-[#39B54A]/50 bg-gradient-to-br from-[#39B54A]/12 to-transparent flex flex-col gap-4">
+                <div className="font-black text-xl text-[#39B54A]">{t('hype.valueLabel')}</div>
+                <ul className="space-y-3.5 text-base text-foreground/90">
                   {hypeValue.map((v, i) => (
-                    <li key={i} className="flex gap-2 leading-snug"><span className="text-[#39B54A] shrink-0 font-black">{i + 1}</span><span>{v}</span></li>
+                    <li key={i} className="flex gap-3 leading-snug"><span className="text-[#39B54A] shrink-0 font-black text-lg leading-snug">{i + 1}</span><span>{v}</span></li>
                   ))}
                 </ul>
-                <div className="text-xs text-muted-foreground italic border-t border-[#39B54A]/30 pt-2">{t('hype.footer')}</div>
+                <div className="text-sm text-muted-foreground italic border-t border-[#39B54A]/30 pt-3">{t('hype.footer')}</div>
               </div>
               <UnderTheHood terms={['legal wrapper', 'oracle', 'admin key', 'front-end vs contract']} />
             </div>
@@ -473,68 +349,18 @@ export function SC_Section1() {
           <KeyPointBar text={t('keyPoints.s1-hype')} className="mt-3" />
         </div>
 
-        {/* ═══════ 2. NICK SZABO'S VENDING MACHINE ═══════ */}
-        <div id="s1-szabo" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('szabo.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('szabo.subtitle')}</p>
+        {/* ═══════ 4. INTERACTIVE: CONTRACT OR NOT? ═══════ */}
+        <div id="s1-exercise" className="h-full flex flex-col">
+          <div className="flex-1 min-h-0">
+            <ContractOrNotExercise />
           </div>
-
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-6 content-center">
-
-            {/* Left: Szabo bio + quote */}
-            <div className="flex flex-col gap-4">
-              <div className="p-5 bg-gradient-to-br from-[#6366f1]/15 to-transparent border border-[#6366f1]/40 rounded-xl">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="size-12 rounded-full bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] flex items-center justify-center text-white font-black shrink-0">NS</div>
-                  <div>
-                    <div className="font-black text-foreground">Nick Szabo</div>
-                    <div className="text-xs text-muted-foreground">{t('szabo.role')}</div>
-                  </div>
-                </div>
-                <blockquote className="border-l-2 border-[#6366f1] pl-4 italic text-sm text-muted-foreground">
-                  {t('szabo.quote')}
-                </blockquote>
-                <div className="mt-2 text-right text-xs text-muted-foreground">{t('szabo.quoteAttribution')}</div>
-              </div>
-
-              <div className="p-4 bg-card border border-border rounded-xl flex-1">
-                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">{t('szabo.whyLabel')}</div>
-                <ul className="space-y-2.5 text-sm text-muted-foreground">
-                  {whyPoints.map((p, i) => (
-                    <li key={i} className="flex gap-2"><span className="text-[#6366f1] shrink-0">•</span>{p.a}<span className="text-foreground font-semibold">{p.strong}</span>{p.b}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Right: Vending machine diagram */}
-            <div className="flex flex-col gap-3 min-h-0">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest shrink-0">{t('szabo.modelLabel')}</div>
-
-              <div className="shrink-0 flex items-center justify-center bg-white rounded-xl border border-border p-3">
-                <img src={imgSzaboVending} alt={t('szabo.imgAlt')} className="max-h-64 w-auto object-contain" />
-              </div>
-
-              <div className="shrink-0 flex flex-wrap gap-2">
-                {szaboSteps.map(s => (
-                  <div key={s.label} className="flex-1 min-w-[140px] px-2 py-1.5 rounded-lg border text-xs" style={{ borderColor: s.color + '40', backgroundColor: s.color + '0c' }}>
-                    <span className="font-bold" style={{ color: s.color }}>{s.label}: </span>
-                    <span className="text-muted-foreground">{s.detail}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="shrink-0 p-2.5 bg-[#6366f1]/10 border border-[#6366f1]/30 rounded-lg text-xs text-muted-foreground text-center">
-                <span className="font-semibold text-foreground">{t('szabo.insightLabel')}</span>{t('szabo.insightA')}<em>{t('szabo.insightEm')}</em>{t('szabo.insightB')}
-              </div>
-            </div>
-
+          {/* Padding wrapper (not margins on the bar): the bar is full-width, so margins pushed it past the slide edge. */}
+          <div className="shrink-0 px-6 lg:px-8 pb-6 -mt-3">
+            <KeyPointBar text={t('keyPoints.s1-exercise')} />
           </div>
-          <KeyPointBar text={t('keyPoints.s1-szabo')} className="mt-3" />
         </div>
 
-        {/* ═══════ 3. HISTORICAL EVOLUTION ═══════ */}
+        {/* ═══════ 5. HISTORICAL EVOLUTION (brief) ═══════ */}
         <div id="s1-history" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
             <span className="text-xs font-black uppercase tracking-widest text-[#6366f1]">{t('history.badge')}</span>
@@ -542,7 +368,7 @@ export function SC_Section1() {
             <p className="text-sm text-muted-foreground mt-1">{t('history.subtitle')}</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-4 gap-3 content-center">
+          <div className="flex-1 min-h-0 grid grid-cols-2 lg:grid-cols-3 gap-4 content-center">
             {historyEvents.map((e, i) => (
               <motion.div
                 key={e.year}
@@ -564,7 +390,7 @@ export function SC_Section1() {
               </motion.div>
             ))}
           </div>
-          <UnderTheHood terms={['Bitcoin Script', 'EVM', 'ERC-20', 'ERC-721', 'reentrancy']} className="shrink-0 mt-3" />
+          <UnderTheHood terms={['EVM', 'reentrancy', 'ERC-20', 'ERC-721', 'audit']} className="shrink-0 mt-3" />
           <KeyPointBar text={t('keyPoints.s1-history')} className="mt-3" />
         </div>
 

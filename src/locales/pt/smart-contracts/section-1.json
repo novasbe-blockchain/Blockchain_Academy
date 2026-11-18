@@ -1,141 +1,108 @@
 {
   "chapters": {
-    "s1-warmup": "🧩 BTC vs ETH",
-    "s1-recap": "Revisão de Ethereum",
-    "s1-what": "O que é um Smart Contract?",
-    "s1-szabo": "A Máquina de Vending de Nick Szabo",
-    "s1-history": "Evolução Histórica",
+    "s1-why": "Porquê um smart contract?",
+    "s1-recap": "Revisão em 20 segundos",
+    "s1-hype": "Hype vs Value",
     "s1-exercise": "🧩 Contract or not?",
+    "s1-history": "30 anos de lições",
     "s1-quiz": "Quiz",
-    "s1-takeaways": "Conclusões",
-    "s1-hype": "Hype vs Value"
+    "s1-takeaways": "Conclusões"
   },
   "title": {
     "sectionNumber": "SECÇÃO 01",
     "title": "Introdução aos Smart Contracts",
-    "subtitle": "Fundamentos, história e o conhecimento essencial de blockchain de que precisas"
+    "subtitle": "Porque é que uma empresa usaria um, o que muda de facto e o que não consegue fazer"
   },
-  "warmup": {
-    "badge": "🧩 Aquecimento · do Curso 02",
-    "heading": "Bitcoin ou Ethereum?",
-    "subtitle": "Recorda antes de construirmos. Classifica cada afirmação e depois vê a resposta.",
-    "scoreLabel": "corretas",
-    "reset": "↺ Reiniciar",
-    "chainMeta": {
-      "btc": "Bitcoin",
-      "eth": "Ethereum",
-      "both": "Ambos"
+  "why": {
+    "badge": "A pergunta de negócio",
+    "heading": "Porquê um smart contract?",
+    "subtitle": "As empresas já têm três formas de garantir que um acordo se cumpre. O que faria melhor um código numa chain partilhada?",
+    "rowLabels": {
+      "trust": "Confias em",
+      "cost": "Custa",
+      "weak": "Ponto fraco"
     },
-    "correctBadge": "Correto",
-    "youSaid": "Disseste {{label}}",
-    "items": [
-      { "stmt": "Lançada em 2009 por Satoshi Nakamoto", "why": "A Bitcoin foi a primeira blockchain. A Ethereum surgiu em 2015." },
-      { "stmt": "Lançada em 2015 por Vitalik Buterin e companhia", "why": "A mainnet da Ethereum entrou em funcionamento em julho de 2015 com a linguagem Solidity." },
-      { "stmt": "Limite máximo fixo de 21 milhões de moedas", "why": "A Bitcoin tem um fornecimento fixo de 21M. A ETH não tem limite máximo (~120M em circulação)." },
-      { "stmt": "Smart contracts Turing-completos (a EVM)", "why": "A Ethereum corre lógica arbitrária na EVM. O Script da Bitcoin é intencionalmente limitado." },
-      { "stmt": "Regista fundos com o modelo UTXO", "why": "A Bitcoin gasta saídas não gastas discretas. A Ethereum usa saldos de conta." },
-      { "stmt": "Regista fundos com saldos de conta", "why": "A Ethereum altera um saldo por conta. A Bitcoin usa UTXOs." },
-      { "stmt": "Mudou para Proof of Stake em 2022", "why": "A Merge passou a Ethereum para PoS. A Bitcoin continua a usar Proof of Work." },
-      { "stmt": "Um registo público e descentralizado em que a moeda nativa paga as taxas", "why": "Verdade para ambos — a BTC paga as taxas da Bitcoin, a ETH paga o gas da Ethereum." }
+    "options": [
+      {
+        "tag": "Opção de hoje",
+        "title": "Um advogado",
+        "role": "Redige o acordo; os tribunais fazem-no cumprir",
+        "trust": "No sistema judicial para corrigir as coisas depois",
+        "cost": "Honorários à partida; meses ou anos se correr mal",
+        "weak": "Lento, caro e pára na fronteira"
+      },
+      {
+        "tag": "Opção de hoje",
+        "title": "Um agente de escrow",
+        "role": "Guarda o dinheiro até ambas as partes cumprirem",
+        "trust": "Num único intermediário com o dinheiro de todos",
+        "cost": "Uma comissão por negócio e dias de espera",
+        "weak": "O agente pode errar, atrasar ou falir"
+      },
+      {
+        "tag": "Opção de hoje",
+        "title": "A base de dados de uma empresa",
+        "role": "Uma empresa guarda o registo e aplica as regras",
+        "trust": "Em quem é dono da base de dados",
+        "cost": "Muito pouco: é rápida e barata",
+        "weak": "O dono pode alterar o registo; os outros têm de acreditar na sua palavra"
+      },
+      {
+        "tag": "O desafiante",
+        "title": "Um smart contract",
+        "role": "Uma regra partilhada que se executa sozinha",
+        "trust": "Em código que todos podem ler, executado por uma rede que nenhuma parte controla",
+        "cost": "Uma taxa de rede por ação; liquida em segundos ou minutos",
+        "weak": "Faz exatamente o que está escrito, bugs incluídos, sem juiz a quem recorrer"
+      }
     ]
   },
   "recap": {
-    "badge": "Aquecimento · do Curso 02",
-    "heading": "Revisão Rápida — Ethereum, o Computador Mundial",
-    "leadA": "Já viste tudo isto no ",
-    "leadStrong": "Curso 02 → Ethereum",
-    "leadB": ". Uma revisão de 60 segundos antes de aprofundarmos os próprios contratos.",
+    "badge": "Revisão · já viste isto",
+    "heading": "A versão de 20 segundos",
+    "leadA": "Viste isto em ",
+    "leadStrong": "Fundamentals §3 e Platforms §2",
+    "leadB": ". Uma linha para cada ideia e seguimos para o negócio.",
+    "definitionLabel": "Numa frase",
+    "defLeadA": "Um ",
+    "defTerm": "smart contract",
+    "defLeadB": " é código que se executa sozinho numa chain partilhada.",
+    "vendingLabel": "Lógica de máquina de vending, sem funcionário",
+    "vendingBody": "Moedas certas, sai o snack; moedas erradas, o dinheiro volta. Ninguém aprova e ninguém a convence do contrário. É a analogia de Nick Szabo, de 1994.",
+    "imgAlt": "Uma máquina de vending como metáfora de smart contract: entram condições, sai um resultado automático, sem intermediário.",
+    "knowLabel": "O que já sabes",
     "cards": [
       {
-        "title": "Contas",
-        "desc": "Dois tipos: EOAs controladas por uma chave privada (pessoas) e contas de contrato controladas pelo seu código.",
-        "tag": "EOA vs Contrato"
+        "title": "Um computador partilhado",
+        "desc": "Milhares de máquinas independentes correm o mesmo código e têm de concordar com o resultado."
       },
       {
-        "title": "A EVM",
-        "desc": "Cada nó corre a mesma Ethereum Virtual Machine, pelo que um programa produz o mesmo resultado em todo o lado.",
-        "tag": "Determinista"
+        "title": "Regras fixas e públicas",
+        "desc": "Depois de implementado, qualquer pessoa pode ler o código e nenhuma parte o pode alterar às escondidas."
       },
       {
-        "title": "Gas",
-        "desc": "Pagas pela computação. O gas atribui preço a cada passo e garante que os programas param sempre — sem ciclos infinitos.",
-        "tag": "Pagas por passo"
+        "title": "Cada ação tem uma taxa",
+        "desc": "Pagas à rede por cada passo, por isso nada on-chain é gratuito."
       },
       {
-        "title": "Transações",
-        "desc": "Mensagens assinadas que alteram o estado global. Só uma EOA pode iniciar uma; esta pode chamar um contrato.",
-        "tag": "Mudança de estado"
+        "title": "Uma pessoa dá o primeiro passo",
+        "desc": "Um contrato só age quando alguém lhe envia uma instrução assinada."
       }
     ],
     "footerLabel": "Onde este curso continua: ",
-    "footerA": "uma conta de contrato ",
-    "footerEm": "é",
-    "footerB": " um smart contract. As próximas secções tratam de tudo o que esse código pode fazer, como o ler e quando é a ferramenta certa."
-  },
-  "what": {
-    "heading": "O que é um Smart Contract?",
-    "subtitle": "Um programa que vive numa blockchain — e corre exatamente como foi escrito, sempre.",
-    "definitionLabel": "Definição",
-    "defLeadA": "Um ",
-    "defTerm": "smart contract",
-    "defLeadB": " é um programa auto-executável armazenado numa blockchain cujos termos são escritos diretamente em código — não em linguagem natural.",
-    "defBody": "Quando as condições predefinidas são cumpridas, o contrato executa automaticamente. Sem intermediário. Sem acionamento manual. Sem possibilidade de censura ou adulteração.",
-    "compareLabel": "Contrato tradicional vs Smart contract",
-    "compareRows": [
-      { "trad": "Escrito em linguagem jurídica", "smart": "Escrito em código (Solidity, Rust…)" },
-      { "trad": "Imposto por tribunais e advogados", "smart": "Imposto pelo protocolo da blockchain" },
-      { "trad": "Exige confiança entre as partes", "smart": "Sem necessidade de confiança — a matemática impõe os termos" },
-      { "trad": "Pode ser mal interpretado", "smart": "Determinista — um único caminho de execução" },
-      { "trad": "Trilho em papel, disputas lentas", "smart": "On-chain, instantâneo, irreversível" }
-    ],
-    "propsLabel": "Propriedades-chave",
-    "props": [
-      { "title": "Autónomo", "desc": "Executa automaticamente quando as condições são satisfeitas. Nenhum humano precisa de acionar ou aprovar o que quer que seja após a implementação." },
-      { "title": "Imutável", "desc": "Uma vez implementado na blockchain, o código não pode ser alterado. O que implementas é o que corre — para sempre." },
-      { "title": "Transparente", "desc": "Qualquer pessoa pode ler o código do contrato on-chain. Não há cláusulas escondidas — a lógica é totalmente pública e auditável." },
-      { "title": "Determinista", "desc": "Dados os mesmos inputs, um smart contract produz sempre o mesmo output. Cada nó da rede concorda com o resultado." },
-      { "title": "Sem necessidade de confiança", "desc": "As partes não precisam de confiar umas nas outras — só precisam de confiar no código. O protocolo impõe cada termo." }
-    ]
-  },
-  "szabo": {
-    "heading": "A Máquina de Vending de Nick Szabo",
-    "subtitle": "A analogia original — e a mente por trás do conceito, 30 anos antes da DeFi.",
-    "role": "Cientista da Computação · Académico de Direito · Criptógrafo",
-    "quote": "\"Um smart contract é um conjunto de promessas, especificadas em formato digital, incluindo os protocolos dentro dos quais as partes cumprem essas promessas.\"",
-    "quoteAttribution": "— Nick Szabo, 1994",
-    "whyLabel": "Porque importa",
-    "whyPoints": [
-      { "a": "Szabo cunhou o termo \"smart contract\" em ", "strong": "1994", "b": " — 15 anos antes da Bitcoin" },
-      { "a": "Compreendeu que os contratos são, no fundo, ", "strong": "algoritmos", "b": "" },
-      { "a": "A peça em falta era um ", "strong": "ambiente de execução de confiança", "b": " — que a blockchain finalmente fornece" },
-      { "a": "Szabo também criou o ", "strong": "Bit Gold", "b": " (1998) — um precursor direto do desenho da Bitcoin" }
-    ],
-    "modelLabel": "O modelo da máquina de vending",
-    "imgAlt": "Metáfora do smart contract: uma máquina de vending. Inserir condições → resultado automatizado. Sem intermediário.",
-    "steps": [
-      { "label": "O cliente insere", "detail": "Moedas + seleção" },
-      { "label": "O contrato verifica", "detail": "Moedas suficientes? Item em stock?" },
-      { "label": "Condição cumprida", "detail": "Dispensa o item · devolve o troco" },
-      { "label": "Condição não cumprida", "detail": "Devolve as moedas · sem item" }
-    ],
-    "insightLabel": "Ideia-chave:",
-    "insightA": " a máquina não se importa com quem és. Sem confiança, sem negociação, sem intermediário. O código ",
-    "insightEm": "é",
-    "insightB": " o contrato."
+    "footerText": "não em como o código funciona, mas em quando vale a pena usá-lo num negócio."
   },
   "history": {
     "badge": "Secção 01",
-    "heading": "Evolução Histórica dos Smart Contracts",
-    "subtitle": "De uma ideia sem computador para a correr, a mais de 100 mil milhões de dólares em contratos ativos.",
+    "heading": "Trinta anos em seis momentos",
+    "subtitle": "De uma ideia sem nada onde correr a mais de 100 mil milhões de dólares em contratos ativos, e o que cada passo ensinou às empresas.",
     "events": [
-      { "year": "1994", "tag": "A ideia", "title": "Szabo cunha \"smart contract\"", "desc": "Promessas impostas por código — a analogia da máquina de vending, 15 anos antes de qualquer chain a conseguir correr." },
-      { "year": "2009", "tag": "Primeira chain", "title": "Bitcoin — primeiros contratos on-chain", "desc": "O Script faz gastos condicionais (multisig, timelocks) — deliberadamente não Turing-completo." },
-      { "year": "2015", "tag": "Avanço", "title": "Ethereum + Solidity", "desc": "Chega a EVM Turing-completa: implementa lógica de contrato arbitrária num computador partilhado e sem necessidade de confiança." },
-      { "year": "2016", "tag": "Crise", "title": "A DAO — primeira crise de contrato", "desc": "Um bug de reentrância drena 60M de dólares; a Ethereum bifurca (ETH/ETC). A segurança torna-se uma disciplina." },
-      { "year": "2017", "tag": "Standards", "title": "ERC-20 — contratos de token", "desc": "Uma interface de token partilhada que todas as carteiras e exchanges entendem. Segue-se o boom das ICO." },
-      { "year": "2018", "tag": "Standards", "title": "ERC-721 — contratos de NFT", "desc": "Um standard para tokens únicos e detidos — ativos mais royalties automáticos na transferência." },
-      { "year": "2020", "tag": "Composibilidade", "title": "DeFi Summer", "desc": "Contratos a chamar contratos — \"legos de dinheiro\". Empréstimos, negociação e yield, sem intermediário." },
-      { "year": "Hoje", "tag": "Maturidade", "title": "Auditados, multi-chain, de alto risco", "desc": "Mais de 100 mil milhões de dólares em contratos em várias chains; auditorias obrigatórias — mais de 6 mil milhões de dólares perdidos em exploits desde 2016." }
+      { "year": "1994", "tag": "A ideia", "title": "Szabo cunha \"smart contract\"", "desc": "Promessas impostas por um mecanismo em vez de uma pessoa. Ainda não existe nada capaz de correr um." },
+      { "year": "2015", "tag": "Avanço", "title": "A Ethereum entra em funcionamento", "desc": "A primeira chain feita para correr qualquer acordo como código. A ideia tem finalmente um computador." },
+      { "year": "2016", "tag": "Crise", "title": "A DAO perde 60M de dólares", "desc": "Um bug permite a um atacante esvaziar um fundo sem gestor que o trave. O código também impõe os erros." },
+      { "year": "2017–18", "tag": "Standards", "title": "Os tokens ganham um formato comum", "desc": "Standards partilhados para tokens semelhantes a dinheiro e para tokens únicos permitem a qualquer carteira ou mercado lidar com qualquer ativo." },
+      { "year": "2020", "tag": "Composibilidade", "title": "DeFi Summer", "desc": "Contratos começam a chamar outros contratos: empréstimos e negociação sem banco nem corretor no meio." },
+      { "year": "Hoje", "tag": "Maturidade", "title": "Alto risco, auditados", "desc": "Mais de 100 mil milhões de dólares em contratos em várias chains; mais de 6 mil milhões perdidos em exploits desde 2016 tornaram as auditorias a norma." }
     ]
   },
   "exercise": {
@@ -182,24 +149,24 @@
     ]
   },
   "quiz": {
-    "question": "Nick Szabo introduziu o conceito de smart contracts em 1994. Que objeto do mundo real usou ele como analogia fundadora para explicar como funcionam?",
+    "question": "Três transportadoras concorrentes e a sua seguradora querem uma regra partilhada: pagar a compensação automaticamente quando uma remessa chega atrasada. Qual é a razão mais forte para usar um smart contract em vez da base de dados de uma das empresas?",
     "options": [
-      "Um cartório notarial — um terceiro de confiança que valida e regista acordos entre as partes.",
-      "Uma máquina de vending — um mecanismo que impõe autonomamente os termos de uma transação sem intermediário humano.",
-      "Um tribunal — uma autoridade que resolve disputas e impõe obrigações contratuais a posteriori.",
-      "O cofre de um banco — um sistema seguro que retém ativos até serem cumpridas as condições acordadas por ambas as partes."
+      "É mais barato e mais rápido de operar do que uma base de dados.",
+      "Nenhuma das partes tem de ser a entidade de confiança que aplica a regra, e nenhuma a pode alterar depois.",
+      "O código passa automaticamente a ser um contrato juridicamente vinculativo entre elas.",
+      "É suficientemente inteligente para tratar casos invulgares de forma justa."
     ],
-    "explanation": "Szabo usou a máquina de vending como a sua analogia canónica: inseres dinheiro, selecionas um item e a máquina verifica automaticamente o pagamento e entrega o produto — sem caixa, sem confiança, sem disputa. A lógica da máquina é o contrato. A perceção de Szabo foi que este mesmo princípio — lógica condicional imposta por um mecanismo em vez de uma pessoa — podia ser incorporado em protocolos digitais. Isto tornou-se a base intelectual do modelo de smart contracts da Ethereum duas décadas depois."
+    "explanation": "Concorrentes não aceitam uma regra guardada na base de dados de um rival, porque o dono a pode alterar. Um smart contract dá-lhes uma regra que ninguém controla. As outras respostas são o hype: uma base de dados é mais barata e mais rápida, o código não é por si só um contrato legal, e não tem discernimento, por isso executa exatamente o que foi escrito."
   },
   "takeaways": {
     "title": "Secção 01 — Conclusões",
     "items": [
-      "Um smart contract é código auto-executável numa blockchain — nenhum intermediário o pode travar ou alterar",
-      "Nick Szabo descreveu o conceito em 1994; a Bitcoin (2009) e a Ethereum (2015) tornaram-no real",
-      "Propriedades-chave: autónomo, imutável, transparente, determinista, sem necessidade de confiança",
-      "O modelo da máquina de vending: condições → execução automática, sem necessidade de julgamento humano",
-      "DeFi, NFTs e DAOs são todos smart contracts a escalas diferentes",
-      "Mais de 6 mil milhões de dólares perdidos em exploits — o poder dos smart contracts traz uma séria responsabilidade de segurança"
+      "Um smart contract é código que se executa sozinho numa chain partilhada: lógica de máquina de vending, sem funcionário",
+      "Os seus verdadeiros concorrentes são um advogado, um agente de escrow e a base de dados de uma empresa",
+      "Não é um contrato legal, não é inteligente, não é gratuito, não é imparável",
+      "O valor: eliminar um intermediário, fixar uma regra para todos, liquidar depressa além-fronteiras",
+      "Se uma instituição de confiança já gere bem o processo, uma base de dados costuma ganhar",
+      "Trinta anos de lições, desde a DAO: o código impõe os bugs com a mesma fidelidade que as funcionalidades"
     ]
   },
   "hype": {
@@ -232,12 +199,10 @@
     "footer": "Keep this lens for the rest of the course: does this use case need one of these three things? If not, a database will usually win."
   },
   "keyPoints": {
-    "s1-warmup": "Bitcoin is a ledger for one asset; Ethereum is a shared computer — smart contracts only make sense on the second.",
-    "s1-recap": "A smart contract is just an account controlled by code instead of a person — everything else follows from that.",
-    "s1-what": "A smart contract turns an agreement into a rule that runs itself — no one has to be trusted to honour it.",
+    "s1-why": "Um smart contract só merece o lugar quando uma regra partilhada e inalterável vale mais do que confiar num advogado, num agente ou no dono de uma base de dados.",
+    "s1-recap": "Um smart contract é código que se executa sozinho numa chain partilhada: lógica de máquina de vending, sem funcionário.",
     "s1-hype": "Not legal, not smart, not free, not unstoppable — the value is removing a middleman, locking a rule and settling fast.",
-    "s1-szabo": "The vending machine is the whole idea: fixed rules, instant verification, no negotiation — and no one to appeal to.",
-    "s1-history": "Thirty years from idea to $100B in live contracts — and every expensive lesson came from code doing exactly what it was told.",
-    "s1-exercise": "If one trusted institution already runs the process well, a smart contract adds cost, not trust."
+    "s1-exercise": "If one trusted institution already runs the process well, a smart contract adds cost, not trust.",
+    "s1-history": "Em trinta anos, todas as lições caras vieram de código a fazer exatamente o que lhe mandaram."
   }
 }
