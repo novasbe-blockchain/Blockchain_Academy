@@ -1,50 +1,34 @@
 {
+  "groups": {
+    "g-s2-stack":    "🧱 The Web3 Stack",
+    "g-s2-inside":   "🔍 Inside a Contract",
+    "g-s2-engine":   "⚙️ The Engine",
+    "g-s2-business": "💼 Business Impact",
+    "g-s2-wrap":     "✅ Wrap Up"
+  },
   "chapters": {
     "s2-web3":         "The Web3 Landscape",
     "s2-dapp":         "dApp & Smart Contracts",
     "s2-ex-stack":     "🧩 Exercise: Stack",
     "s2-vs":           "Web2 vs Web3 Apps",
-    "s2-standards":    "Token Standards",
     "s2-components":   "Core Components",
     "s2-workflow":     "Workflow",
+    "s2-run":          "▶ Watch It Execute",
     "s2-solidity":     "Reading Solidity · optional",
     "s2-execution":    "Execution Environment",
+    "s2-gas":          "Gas · 10-sec recap",
+    "s2-standards":    "Tokens · 10-sec recap",
     "s2-capabilities": "New Capabilities",
-    "s2-gas":          "Gas & Tx Economics",
-    "s2-ex-gas":       "🧩 Exercise: Gas",
     "s2-reshape":      "Reshape Business",
-    "s2-quiz":         "Quizzes",
+    "s2-quiz":         "Quiz",
+    "s2-quiz-2":       "Quiz 2",
     "s2-takeaways":    "Takeaways"
   },
+  "recapLabel": "Already covered",
   "title": {
     "sectionNumber": "SECTION 02",
     "title": "How Smart Contracts Work",
-    "subtitle": "What happens when a smart contract runs: the Web3 stack, gas and token standards, with the code kept optional"
-  },
-  "gasExercise": {
-    "badge": "Exercise",
-    "heading": "Gas Estimation Challenge",
-    "instructionA": "Click the 5 operations in order from ",
-    "cheapest": "cheapest",
-    "instructionB": " to ",
-    "expensive": "most expensive",
-    "instructionC": ".",
-    "tryAgain": "↺ Try again",
-    "operationsLabel": "Operations — click to rank",
-    "correctRanking": "Correct ranking",
-    "placed": "{{count}} / {{total}} placed",
-    "hideHint": "Hide hint",
-    "hint": "Hint",
-    "perfect": "Correct order",
-    "reviewOrder": "Review the order above",
-    "explanation": "Storage writes are expensive because they modify global state on every full node permanently.",
-    "ops": [
-      { "label": "Read a public variable",      "detail": "View call — never hits the chain",            "gasLabel": "FREE" },
-      { "label": "Emit an event",                "detail": "Logged on-chain but not in state",            "gasLabel": "~375 gas" },
-      { "label": "Transfer ETH (simple send)",   "detail": "Base cost for moving ETH between accounts",   "gasLabel": "~21,000 gas" },
-      { "label": "Write to a new storage slot",  "detail": "Most expensive regular operation on the EVM", "gasLabel": "~22,100 gas" },
-      { "label": "Deploy a new contract",        "detail": "Pays for every byte of bytecode stored",      "gasLabel": "500k+ gas" }
-    ]
+    "subtitle": "What happens when a smart contract runs: the Web3 stack, one escrow deal stepped through live, and quick gas and token recaps. Code stays optional."
   },
   "stackExercise": {
     "badge": "Exercise",
@@ -83,6 +67,7 @@
     "before": {
       "tag": "BEFORE — Web2",
       "title": "Trust intermediaries",
+      "centre": "Middleman",
       "points": [
         "Banks hold your money",
         "Institutions hold your data",
@@ -93,6 +78,7 @@
     "after": {
       "tag": "AFTER — Web3",
       "title": "Trust mathematics and transparent code",
+      "centre": "Shared code",
       "points": [
         "Cryptographic proofs verify claims",
         "Open-source, auditable code",
@@ -148,13 +134,28 @@
         ]
       }
     ],
+    "pickHint": "Click a part to light up its layers",
     "stackLabel": "Full dApp stack",
-    "stackAlt": "dApp stack: User → Browser → Web Server (Front-end) → Smart Contracts → Ethereum Virtual Machine → Ethereum Blockchain",
+    "layers": {
+      "user":        "User",
+      "wallet":      "Browser + wallet",
+      "frontend":    "Front-end (web server)",
+      "contracts":   "Smart contracts",
+      "evm":         "Ethereum Virtual Machine",
+      "chain":       "Ethereum blockchain",
+      "offchain":    "Off-chain services",
+      "offchainSub": "storage · indexers · oracles"
+    },
+    "badges": {
+      "device": "your device",
+      "server": "someone's server",
+      "chain":  "decentralised"
+    },
     "insightLabel": "Key insight:",
     "insightBody": " only the blockchain layer is decentralised. Most dApps host their frontend on ordinary servers (Vercel, AWS)."
   },
   "vsApp": {
-    "kicker": "Web3 vs Traditional · 1 of 2",
+    "kicker": "Web3 vs Traditional",
     "heading": "The App: Web2 vs Web3",
     "subtitle": "The same product, built on two very different foundations.",
     "propertyLabel": "Property",
@@ -172,33 +173,25 @@
     "takeaway": "a dApp trades a company you must trust for a protocol anyone can verify — at the cost of paying gas per action."
   },
   "standards": {
-    "kicker": "Section 02",
-    "heading": "Token Standards",
-    "subtitleA": "A standard is just a ",
-    "subtitleStrong": "shared interface",
-    "subtitleB": ": an agreed set of functions every token of that type exposes, so any wallet, exchange or app can handle it without custom work.",
+    "kicker": "10-second recap",
+    "recapWhere": "Fundamentals §3 · Tokens & NFTs",
+    "heading": "Tokens: the 10-second version",
+    "lead": "You met tokens in Fundamentals §3 and saw them at work in Platforms §2. One picture each is all this section needs.",
     "erc20": {
-      "title": "Fungible — every unit identical",
-      "desc": "Money-like tokens. 1 unit = 1 unit — always interchangeable."
+      "title": "Fungible — every unit identical"
     },
     "erc721": {
       "title": "Non-fungible — each one unique",
-      "desc": "One-of-a-kind tokens. Each has a unique ID and owner — not interchangeable.",
       "tagTitleDeeds": "Title deeds"
     },
     "erc1155": {
       "title": "Multi-token — both, one contract",
-      "descA": "One contract holds many token types — fungible ",
-      "descEm": "and",
-      "descB": " unique — with cheap batch transfers.",
       "tagGameItems": "Game items",
       "tagTickets": "Tickets",
       "tagEditions": "Editions"
     },
-    "footerLabel": "Why standards matter: ",
-    "footerA": "Any wallet can show any ERC-20 balance and OpenSea any ERC-721 — without knowing the project — because they all expose the ",
-    "footerEm": "same functions",
-    "footerB": "."
+    "bridgeLabel": "Why it matters here: ",
+    "bridge": "a token is simply a smart contract that follows a shared template, so every wallet, exchange and app can plug into it with no custom work."
   },
   "components": {
     "heading": "Anatomy of a Smart Contract",
@@ -210,12 +203,8 @@
       { "title": "Events",              "desc": "Logs that record important contract activities. Emitted when key actions occur — cheaply stored and readable by off-chain systems." },
       { "title": "Blockchain Platform", "desc": "The execution environment. Ethereum, Polygon, Solana, BNB Chain… Each has different performance, cost, and tooling trade-offs." }
     ],
+    "pickHint": "Click a building block to find it in the code",
     "annotatedLabel": "Annotated contract",
-    "codeComments": {
-      "state": "// ─── State ───────────────────────",
-      "event": "// ─── Event ───────────────────────",
-      "function": "// ─── Function ────────────────────"
-    },
     "tags": {
       "state": "State",
       "event": "Event",
@@ -226,22 +215,116 @@
   },
   "workflow": {
     "heading": "How Smart Contracts Work",
-    "subtitle": "Five steps from deployment to notification.",
+    "subtitle": "Every run follows the same five steps, from deployment to notification.",
     "steps": [
-      { "label": "Deploy",  "desc": "Contract code is compiled and uploaded to the blockchain. It gets a permanent address — immutable from this point on." },
-      { "label": "Trigger", "desc": "A user or system sends a transaction to the contract address, calling a function with the required inputs." },
-      { "label": "Execute", "desc": "The EVM (or equivalent VM) runs the contract code on every node in the network simultaneously." },
-      { "label": "Update",  "desc": "State changes are recorded on the blockchain — permanent, transparent, and agreed upon by consensus." },
-      { "label": "Emit",    "desc": "Events are emitted and logged on-chain, notifying off-chain systems (front-ends, indexers, oracles)." }
+      { "label": "Deploy", "who": "Developer", "desc": "Contract code is compiled and uploaded to the blockchain. It gets a permanent address — immutable from this point on." },
+      { "label": "Trigger", "who": "User or system", "desc": "A user or system sends a transaction to the contract address, calling a function with the required inputs." },
+      { "label": "Execute", "who": "Every node", "desc": "The EVM (or equivalent VM) runs the contract code on every node in the network simultaneously." },
+      { "label": "Update", "who": "The shared ledger", "desc": "State changes are recorded on the blockchain — permanent, transparent, and agreed upon by consensus." },
+      { "label": "Emit", "who": "Apps listening", "desc": "Events are emitted and logged on-chain, notifying off-chain systems (front-ends, indexers, oracles)." }
     ],
-    "code": {
-      "cState": "// ← State variables",
-      "cEmit": "// ← Emit",
-      "cExecute": "// ← Execute: only buyer can release",
-      "cUpdate": "// ← Update state"
-    }
+    "bridge": "Five boxes are abstract. Next, follow one real deal, an escrow payment, through every step.",
+    "bridgeCta": "Watch it run ↓"
+  },
+  "run": {
+    "kicker": "Applied walkthrough · click through it",
+    "heading": "What actually happens when a smart contract runs?",
+    "subtitle": "Follow one escrow deal: Ana buys equipment from Rui for 2 ETH, and the money is released only on delivery.",
+    "actors": {
+      "buyer": "Ana · buyer",
+      "seller": "Rui · seller",
+      "wallet": "wallet",
+      "contract": "Escrow contract",
+      "held": "Held in escrow"
+    },
+    "status": {
+      "awaiting": "Unpaid",
+      "funded": "Funded",
+      "complete": "Complete",
+      "reverted": "Reverted"
+    },
+    "newBadge": "New",
+    "stages": [
+      {
+        "label": "Deploy",
+        "who": "Rui publishes the escrow contract, once.",
+        "what": "The code goes on-chain and gets a permanent address. It names the buyer, the seller and the 2 ETH price. From here on nobody can edit the rules, Rui included.",
+        "biz": "Like signing the agreement and handing it to a neutral escrow agent, except the agent is code that cannot be persuaded."
+      },
+      {
+        "label": "Call",
+        "who": "Ana signs a transaction calling deposit() with 2 ETH.",
+        "what": "A contract never acts on its own. It sits idle until a signed transaction arrives at its address and names a function to run.",
+        "biz": "Ana pays into escrow straight from her own wallet. No bank form, no opening hours."
+      },
+      {
+        "label": "Run",
+        "who": "Every node runs the same code.",
+        "what": "Before anything moves, the contract checks its rules: is the caller the buyer, and is the amount the agreed price? One failed check cancels the whole transaction.",
+        "biz": "The compliance check is automatic and identical on thousands of machines."
+      },
+      {
+        "label": "State changes",
+        "who": "The network records the new state.",
+        "what": "2 ETH leaves Ana's wallet and is locked in the contract. The status flips to Funded. This is now the single shared record of the deal.",
+        "biz": "The money is provably set aside. Neither Ana nor Rui can pull it back alone."
+      },
+      {
+        "label": "Event fires",
+        "who": "The contract announces what happened.",
+        "what": "It emits a Deposited event, a public receipt that apps can listen for. Rui's order system sees it and ships the goods.",
+        "biz": "The notification triggers the next business step, with no phone call and no reconciliation."
+      },
+      {
+        "label": "Done",
+        "who": "Ana confirms delivery, and the same loop runs again.",
+        "what": "Her confirmDelivery() call is checked, the 2 ETH moves to Rui, the status becomes Complete and a Released event fires. The deal is settled.",
+        "biz": "Payment on delivery, settled in minutes, with no escrow agent to pay or to trust."
+      }
+    ],
+    "packets": {
+      "code": "contract code",
+      "deposit": "deposit() + 2 ETH",
+      "deposited": "Deposited",
+      "confirm": "confirmDelivery()",
+      "payout": "2 ETH"
+    },
+    "checks": {
+      "caller": "caller == buyer",
+      "amount": "amount == 2 ETH",
+      "nodes": "same result on every node",
+      "pass": "Both checks pass, so the run continues.",
+      "revert": "Reverted: nothing changes, and the caller still pays the gas."
+    },
+    "tryLabel": "Try it: who is calling?",
+    "callerBuyer": "Ana",
+    "callerStranger": "A stranger",
+    "whoLabel": "Who acts",
+    "whatLabel": "What happens",
+    "bizLabel": "In business terms",
+    "back": "← Back",
+    "next": "Next step →",
+    "restart": "↺ Run it again",
+    "play": "▶ Auto-play",
+    "pause": "❚❚ Pause",
+    "footnote": "Balances leave out gas fees to keep the numbers clean.",
+    "logLabel": "Event log",
+    "logEmpty": "No events yet. Events are the contract's public receipts.",
+    "events": {
+      "deposited": "Deposited(Ana, 2 ETH)",
+      "released": "Released(Rui, 2 ETH)"
+    },
+    "gasLabel": "Who paid gas",
+    "gasRows": [
+      "Deploy → Rui",
+      "deposit() → Ana",
+      "confirmDelivery() → Ana"
+    ],
+    "gasNote": "Whoever sends the transaction pays for the run.",
+    "hood": ["payable", "require()", "msg.sender", "revert", "emit", "event log"]
   },
   "solidity": {
+    "pickHint": "Hover or click a letter to find it in the code",
     "kicker": "Section 02",
     "heading": "Reading a Smart Contract",
     "subtitle": "Optional. You will not write Solidity in this course; one annotated contract shows that it is readable code, not a black box.",
@@ -350,38 +433,55 @@
     ]
   },
   "gas": {
-    "heading": "Gas & Transaction Economics",
-    "subtitle": "Every computation costs gas.",
-    "fundamentalsLabel": "Gas system fundamentals",
-    "fundamentals": [
-      { "term": "Gas",       "def": "Unit measuring the computational work required for an operation. Every EVM opcode has a fixed gas cost — storing data costs more than reading it." },
-      { "term": "Gas Price", "def": "Market-determined cost per gas unit (denominated in Gwei — 1 ETH = 1,000,000,000 Gwei). Set by the user; higher price = faster inclusion." },
-      { "term": "Gas Limit", "def": "Maximum gas the user is willing to spend on this transaction. Acts as a safety cap — prevents runaway loops from draining your wallet." },
-      { "term": "Tx Fee",    "def": "Gas Used × Gas Price = Total Cost in ETH. Unused gas (up to the limit) is refunded. You pay for what the EVM actually executes." }
+    "kicker": "10-second recap",
+    "recapWhere": "Platforms §2 · Gas & EIP-1559",
+    "heading": "Gas: the 10-second version",
+    "lead": "You saw gas and EIP-1559 in Platforms §2. Here is all you need for this course: every step of the run you just watched had a price.",
+    "formula": {
+      "work": "Work done",
+      "workSub": "gas units: more computation and storage, more gas",
+      "price": "Price per unit",
+      "priceSub": "set by demand: it rises when the network is busy",
+      "fee": "Fee",
+      "feeSub": "paid in ETH by whoever sends the transaction"
+    },
+    "formulaExample": "e.g. 21,000 gas × 15 gwei = 0.000315 ETH",
+    "levers": [
+      { "label": "Busy network", "desc": "Fees can jump 10–100× in a rush, so a business must budget for peaks." },
+      { "label": "Layer 2",      "desc": "Rollups such as Arbitrum or Base run the same contract for a fraction of the fee." }
     ],
-    "formulaLabel": "Transaction fee formula",
-    "formulaGasUsed": "Gas Used",
-    "formulaGasPrice": "Gas Price (Gwei)",
-    "formulaFee": "Fee (ETH)",
-    "formulaExample": "e.g. 21,000 gas × 15 Gwei = 0.000315 ETH (~$0.80)",
-    "incentivesLabel": "Why gas? — economic incentives",
-    "incentives": [
-      { "who": "Users",      "why": "Pay for the computation and storage they use, which prevents spam." },
-      { "who": "Validators", "why": "Receive fees for processing transactions — economic incentive to keep the network running." },
-      { "who": "Network",    "why": "Higher fees during congestion create natural throttling — the market self-regulates throughput." },
-      { "who": "EIP-1559",   "why": "Base fee is burned, not paid to validators. Deflationary pressure on ETH supply during high usage." }
-    ],
-    "impactLabel": "Real-world impact",
-    "impact": [
-      { "label": "Congestion spikes", "desc": "Network congestion can increase costs 10–100×. During the 2021 NFT boom, simple transfers cost $50–200." },
-      { "label": "Speed vs. cost",    "desc": "Users set gas price: higher = faster inclusion, lower = wait. Wallets show estimated confirmation times." },
-      { "label": "Layer 2 savings",   "desc": "Arbitrum, Optimism, Base reduce costs by 10–1000×. The same transaction that costs $5 on L1 costs $0.01 on L2." }
+    "ladderLabel": "Quick check",
+    "ladderPrompt": "Which operation costs the most? Tap your guess.",
+    "ladderRevealed": "Cheapest to most expensive",
+    "tryAgain": "↺ Try again",
+    "guessRight": "Correct. ",
+    "guessWrong": "Not quite. ",
+    "ladderExplain": "Deploying stores every byte of code on every node forever, and writing data is the next most expensive thing a contract does. Reading is free.",
+    "ladderNote": "Bars are illustrative, not to scale.",
+    "ops": [
+      { "label": "Read a public value",          "gasLabel": "free" },
+      { "label": "Emit an event",                "gasLabel": "from 375 gas" },
+      { "label": "Send ETH (simple transfer)",   "gasLabel": "21,000 gas" },
+      { "label": "Write a new storage slot",     "gasLabel": "~22,100 gas" },
+      { "label": "Deploy a new contract",        "gasLabel": "500k+ gas" }
     ]
   },
   "reshape": {
     "heading": "How Smart Contracts Reshape Traditional Business",
     "subtitle": "Five structural shifts.",
     "imgAlt": "Two people exchanging documents directly — disintermediation",
+    "viz": {
+      "label": "One deal, two routes — flip the switch",
+      "trad": "Traditional",
+      "sc": "Smart contract",
+      "buyer": "Buyer",
+      "seller": "Seller",
+      "middlemen": ["Bank", "Broker", "Escrow agent", "Notary"],
+      "contract": "Escrow contract",
+      "statsTrad": ["4 intermediaries", "A fee at every hop", "Clears in days"],
+      "statsSc": ["1 public contract", "One network fee", "Clears in minutes"],
+      "note": "Illustrative"
+    },
     "cards": [
       { "title": "Disintermediation",       "desc": "Peer-to-peer execution. No banks, brokers, or escrow services needed for the agreement to clear." },
       { "title": "Process Automation",      "desc": "Autonomous \"if X, then Y\" rules execute the moment conditions are met — no manual approval step." },
@@ -402,14 +502,25 @@
     ],
     "explanation": "Smart contracts are passive — they sit on the blockchain and do nothing until triggered. A transaction sent to the contract address kicks off execution on the EVM. The contract then runs, updates state, and emits events — all within that single transaction."
   },
+  "quiz2": {
+    "question": "In the escrow walkthrough, a stranger (not the buyer) calls the contract's deposit() function. What happens?",
+    "options": [
+      "The contract accepts the money and makes the stranger the new buyer",
+      "The transaction waits in a queue until the seller approves it manually",
+      "The check fails, the transaction reverts and nothing changes — but the caller still pays gas",
+      "The contract is frozen until its developer redeploys it"
+    ],
+    "explanation": "The contract checks its rules before anything moves. A failed check reverts the whole transaction: balances, status and events stay exactly as they were. The nodes still did the work of running it, so the caller still pays the gas."
+  },
   "takeaways": {
     "title": "Section 02 — Key Takeaways",
     "items": [
-      "Smart contracts run inside a deterministic virtual machine (EVM) — every node gets the same result",
-      "Core components: code, state, functions, events and the platform it runs on",
-      "Web3 dApps combine a front-end with a wallet and on-chain smart contract logic",
-      "Gas is the cost of computation — every operation has a price in ETH",
-      "Smart contracts enable programmable money, automated settlement, and trustless governance"
+      "A dApp is a full stack: only the contract layer is decentralised, the rest are ordinary servers",
+      "Five words describe any contract: code, state, functions, events and the platform it runs on",
+      "Every run is the same loop: a transaction calls a function, the code checks its rules, state changes, an event fires",
+      "A failed check reverts everything — nothing half-happens",
+      "Every node computes the same result, and that work is paid for in gas by whoever sends the transaction",
+      "The business effect: programmable money and automated settlement with no middleman to pay or trust"
     ]
   },
   "keyPoints": {
@@ -417,14 +528,14 @@
     "s2-dapp": "The blockchain is one layer of a dApp; the website, data feeds and storage are ordinary servers that someone controls.",
     "s2-ex-stack": "Only the contract is decentralised by default; every other box is a vendor you depend on.",
     "s2-vs": "Web2 apps can change the rules overnight; Web3 apps make the rules public and hard to change.",
-    "s2-standards": "Standards are why one wallet works with thousands of tokens.",
     "s2-components": "Code, state, functions, events, platform: five words that let you follow any contract summary.",
     "s2-workflow": "A transaction, not a person, triggers the contract, and the result is final on every node.",
+    "s2-run": "A contract does nothing until someone calls it; then it checks, updates and announces, the same way for everyone.",
     "s2-solidity": "A contract is readable code, not a black box; you can ask a vendor to show it.",
     "s2-execution": "Thousands of machines compute the same result, which makes it trustworthy, slow, expensive and public.",
     "s2-capabilities": "The new capability is automation that no single party, including the operator, can override.",
-    "s2-gas": "Every step costs real money, so good design keeps computation and data off-chain and puts only the proof on-chain.",
-    "s2-ex-gas": "Writing data costs far more than reading it or sending value.",
+    "s2-gas": "Every step costs real money, so good design keeps heavy data off-chain and puts only the proof on-chain.",
+    "s2-standards": "Standards are why one wallet works with thousands of tokens.",
     "s2-reshape": "Smart-contract businesses stop earning as the trusted middleman; the revenue model moves."
   }
 }
