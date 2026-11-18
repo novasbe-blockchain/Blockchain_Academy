@@ -725,6 +725,11 @@
     "heading": "DeFi: Three Primitives",
     "subtitleA": "DeFi replaces financial intermediaries with smart contracts. Three primitives cover most of it. ",
     "subtitleHighlight": "Details in the Smart Contracts course.",
+    "viz": {
+      "amm": { "tokenX": "ETH", "tokenY": "USDC", "pool": "pool" },
+      "lending": { "locked": "$150 collateral locked", "borrowed": "$100 borrowed", "liquidation": "liquidation" },
+      "yield": { "position": "LP position", "deposit": "your deposit", "share": "share of fees", "fees": "+ fees", "il": "− impermanent loss" }
+    },
     "amm": {
       "title": "AMM",
       "subtitle": "Automated Market Maker",
@@ -929,10 +934,10 @@
       "rwa": { "offChain": "off-chain asset", "onChain": "on-chain token", "bill": "T-bill" }
     },
     "items": [
-      { "name": "DeFi & on-chain finance", "why": "Protocols interoperate by default. ~$50B locked across L1 and L2.", "example": "Uniswap (DEX), Aave (lending), MakerDAO (DAI), Lido (staking), Curve (stable swaps)." },
-      { "name": "NFTs & creator economy", "why": "ERC-721 / ERC-1155 are the standards; provenance is built in.", "example": "OpenSea, Blur, Sotheby's on-chain auctions · ENS domains · POAPs · proof-of-attendance." },
-      { "name": "DAOs & on-chain governance", "why": "Token-weighted voting, programmable treasuries, transparent proposals.", "example": "Uniswap DAO ($6B treasury), MakerDAO, Arbitrum DAO, Optimism, Gitcoin grants." },
-      { "name": "Stablecoins & tokenised RWAs", "why": "Deepest liquidity for USD-backed tokens; institutional RWA issuance (BlackRock, Franklin Templeton).", "example": "USDC, USDT, DAI, RLUSD, PYUSD on Ethereum · BlackRock BUIDL ($2B+ AUM) · Ondo Finance." }
+      { "name": "DeFi & on-chain finance", "why": "Composability: protocols snap together like \"money legos\". Permissionless, with 24/7 settlement.", "example": "Uniswap (DEX), Aave (lending), MakerDAO (DAI), Lido (staking), Curve (stable swaps)." },
+      { "name": "NFTs & creator economy", "why": "Provenance and verifiable ownership, on-chain. Royalty info is built into the standards (ERC-721 / ERC-1155, ERC-2981).", "example": "OpenSea, Blur, Sotheby's on-chain auctions · ENS domains · POAPs · proof-of-attendance." },
+      { "name": "DAOs & on-chain governance", "why": "Transparency and accountability: every vote and payment leaves an on-chain audit trail. Verifiable token-weighted voting, programmable treasuries.", "example": "Uniswap DAO ($6B treasury), MakerDAO, Arbitrum DAO, Optimism, Gitcoin grants." },
+      { "name": "Stablecoins & tokenised RWAs", "why": "Settlement finality and deep 24/7 liquidity; tokenisation of real-world assets (BlackRock, Franklin Templeton).", "example": "USDC, USDT, DAI, RLUSD, PYUSD on Ethereum · BlackRock BUIDL ($2B+ AUM) · Ondo Finance." }
     ]
   },
   "worstFits": {
