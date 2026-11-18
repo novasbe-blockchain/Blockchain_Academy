@@ -21,9 +21,7 @@ const chapterShape = [
   { id: 's4-usecases' },
 
   { kind: 'group' as const, id: 'g-s4-ways' },
-  { id: 's4-way-bridge' },
-  { id: 's4-way-ibc' },
-  { id: 's4-way-l0' },
+  { id: 's4-ways' },
   { id: 's4-chooser' },
 
   { kind: 'group' as const, id: 'g-s4-bridges' },
@@ -362,7 +360,7 @@ function InteropChooser() {
   );
 }
 
-/* ───────────── Shared SVG bits for the "three ways to connect" diagrams ─────────────
+/* ───────────── Shared SVG bits ─────────────
    Theme tokens are plain colours (not HSL triplets), so SVG paints use var(--token). */
 const INK = 'var(--foreground)';
 const MUTED = 'var(--muted-foreground)';
@@ -388,155 +386,88 @@ function ValidatorDots({ cx, y, n, color, r = 4, gap = 13 }: { cx: number; y: nu
   );
 }
 
-/** Mini chain of block headers (a light client's copy of the other chain). */
-function HeaderStrip({ x, y, color }: { x: number; y: number; color: string }) {
+/* "Three ways to connect" overview — one wordless glyph per route.
+   At-a-glance only: the mechanism is drawn in each route's own deep-dive slide. */
+type WayKind = 'bridge' | 'ibc' | 'l0';
+
+function WayGlyph({ kind, color }: { kind: WayKind; color: string }) {
+  const OK = '#10b981';
+  const chain = (x: number) => <rect x={x} y="20" width="68" height="56" rx="9" fill={color + '14'} stroke={color} strokeWidth="1.5" />;
+  const arrow = (x1: number, x2: number, y: number, c: string) => {
+    const d = x2 > x1 ? 1 : -1;
+    return (
+      <g>
+        <line x1={x1} y1={y} x2={x2 - d * 6} y2={y} stroke={c} strokeWidth="1.5" />
+        <polygon points={`${x2 - d * 7},${y - 4} ${x2},${y} ${x2 - d * 7},${y + 4}`} fill={c} />
+      </g>
+    );
+  };
   return (
-    <g>
-      {[0, 1, 2, 3].map((i) => (
-        <g key={i}>
-          {i > 0 && <line x1={x + i * 30 - 8} y1={y + 7} x2={x + i * 30} y2={y + 7} stroke={color} strokeWidth="1" />}
-          <rect x={x + i * 30} y={y} width="22" height="14" rx="2.5" fill={color + '30'} stroke={color} strokeWidth="1" />
+    <svg viewBox="0 0 240 96" className="w-full h-full max-h-[150px]" aria-hidden="true">
+      {kind === 'bridge' && (
+        <g>
+          {/* coin locked on A → operator with the keys → claim ticket on B */}
+          {chain(6)}
+          <text x="40" y="57" textAnchor="middle" fontSize="24">🔒</text>
+          {arrow(78, 98, 48, MUTED)}
+          <circle cx="120" cy="48" r="20" fill="#ef444414" stroke="#ef4444" strokeWidth="1.5" />
+          <text x="120" y="55" textAnchor="middle" fontSize="18">🔑</text>
+          {arrow(142, 162, 48, MUTED)}
+          {chain(166)}
+          <text x="200" y="57" textAnchor="middle" fontSize="24">🎟️</text>
         </g>
-      ))}
-    </g>
-  );
-}
-
-/* Approach 1 — lock-and-mint bridge: vault on A, signers in the middle, claim ticket on B. */
-function BridgeWayDiagram() {
-  const { t } = useTranslation('blockchain-platforms/section-4');
-  const s = (k: string) => t(`interopCompare.col1.svg.${k}`);
-  return (
-    <svg viewBox="0 0 480 236" className="w-full flex-1 min-h-0">
-      {/* Chain A — the vault */}
-      <text x="87" y="24" textAnchor="middle" fontSize="11" fontWeight="900" fill="#f59e0b">{s('chainA')}</text>
-      <rect x="12" y="32" width="150" height="150" rx="10" fill="#f59e0b14" stroke="#f59e0b" strokeWidth="1.5" />
-      <text x="87" y="90" textAnchor="middle" fontSize="30">🔒</text>
-      <text x="87" y="122" textAnchor="middle" fontSize="16" fontWeight="900" fill={INK}>{s('locked')}</text>
-      <text x="87" y="140" textAnchor="middle" fontSize="9" fill={MUTED}>{s('lockedNote')}</text>
-      <text x="87" y="162" textAnchor="middle" fontSize="9" fontWeight="700" fill="#f59e0b">{s('vaultNote')}</text>
-      <StepDot x={30} y={50} n={1} color="#f59e0b" />
-
-      {/* Operator — the signers */}
-      <rect x="180" y="52" width="120" height="110" rx="10" fill="#ef444412" stroke="#ef4444" strokeWidth="1.5" />
-      <text x="240" y="92" textAnchor="middle" fontSize="11" fontWeight="900" fill="#ef4444">{s('operator')}</text>
-      <text x="240" y="116" textAnchor="middle" fontSize="16">🔑🔑🔑</text>
-      <text x="240" y="135" textAnchor="middle" fontSize="9" fill={MUTED}>{s('operatorNote1')}</text>
-      <text x="240" y="148" textAnchor="middle" fontSize="9" fill={MUTED}>{s('operatorNote2')}</text>
-      <StepDot x={198} y={70} n={2} color="#ef4444" />
-
-      {/* A → operator → B */}
-      <line x1="163" y1="107" x2="172" y2="107" stroke={MUTED} strokeWidth="1.5" />
-      <polygon points="172,103 179,107 172,111" fill={MUTED} />
-      <line x1="301" y1="107" x2="310" y2="107" stroke={MUTED} strokeWidth="1.5" />
-      <polygon points="310,103 317,107 310,111" fill={MUTED} />
-
-      {/* Chain B — the wrapped copy */}
-      <text x="393" y="24" textAnchor="middle" fontSize="11" fontWeight="900" fill="#6366f1">{s('chainB')}</text>
-      <rect x="318" y="32" width="150" height="150" rx="10" fill="#6366f114" stroke="#6366f1" strokeWidth="1.5" />
-      <text x="393" y="90" textAnchor="middle" fontSize="30">🎟️</text>
-      <text x="393" y="122" textAnchor="middle" fontSize="16" fontWeight="900" fill={INK}>{s('minted')}</text>
-      <text x="393" y="140" textAnchor="middle" fontSize="9" fill={MUTED}>{s('mintedNote')}</text>
-      <text x="393" y="162" textAnchor="middle" fontSize="9" fontWeight="700" fill="#6366f1">{s('ticketNote')}</text>
-      <StepDot x={336} y={50} n={3} color="#6366f1" />
-
-      {/* Way back: burn the copy → release the original */}
-      <path d="M 393 184 V 212 H 87 V 193" fill="none" stroke="#10b981" strokeWidth="1.5" strokeDasharray="4 3" />
-      <polygon points="82,193 87,184 92,193" fill="#10b981" />
-      <text x="240" y="228" textAnchor="middle" fontSize="9" fontWeight="700" fill="#10b981">{s('back')}</text>
+      )}
+      {kind === 'ibc' && (
+        <g>
+          {/* nobody in the middle: each chain holds the other's block headers and checks for itself */}
+          {[6, 166].map((x) => (
+            <g key={x}>
+              {chain(x)}
+              {[0, 1, 2].map((i) => (
+                <rect key={i} x={x + 9 + i * 18} y="32" width="14" height="10" rx="2" fill="var(--card)" stroke={color} strokeWidth="1" strokeDasharray="3 2" />
+              ))}
+              <text x={x + 34} y="66" textAnchor="middle" fontSize="15" fontWeight="900" fill={OK}>✓</text>
+            </g>
+          ))}
+          {arrow(80, 160, 40, color)}
+          {arrow(160, 80, 58, color)}
+        </g>
+      )}
+      {kind === 'l0' && (
+        <g>
+          {/* one shared validator set on top, member chains underneath */}
+          <rect x="6" y="8" width="228" height="30" rx="9" fill={color + '14'} stroke={color} strokeWidth="1.5" />
+          <ValidatorDots cx={120} y={23} n={11} color={color} gap={18} />
+          {[6, 88, 170].map((x) => (
+            <g key={x}>
+              <line x1={x + 32} y1="38" x2={x + 32} y2="56" stroke={color} strokeWidth="1.5" />
+              <rect x={x} y="56" width="64" height="32" rx="8" fill="#22d3ee14" stroke="#22d3ee" strokeWidth="1.5" />
+            </g>
+          ))}
+          {arrow(72, 86, 72, OK)}
+          {arrow(168, 154, 72, OK)}
+        </g>
+      )}
     </svg>
   );
 }
 
-/* Approach 2 — IBC: each chain keeps the other's block headers and checks proofs itself. */
-function IbcWayDiagram() {
+/** Compact "who you trust / where it breaks" pair shown on a route's deep-dive slide. */
+function TrustRisk({ trust, risk }: { trust: string; risk: string }) {
   const { t } = useTranslation('blockchain-platforms/section-4');
-  const s = (k: string) => t(`interopCompare.col2.svg.${k}`);
-  const A = '#22d3ee', B = '#8b5cf6';
-  const side = (x: number, own: string, other: string, name: string, copyLabel: string) => (
-    <g>
-      <text x={x + 85} y="24" textAnchor="middle" fontSize="11" fontWeight="900" fill={own}>{name}</text>
-      <rect x={x} y="32" width="170" height="180" rx="10" fill={own + '12'} stroke={own} strokeWidth="1.5" />
-      <ValidatorDots cx={x + 85} y={56} n={7} color={own} />
-      <text x={x + 85} y="78" textAnchor="middle" fontSize="9" fill={MUTED}>{s('ownValidators')}</text>
-      {/* light client — the other chain's headers */}
-      <rect x={x + 14} y="96" width="142" height="100" rx="8" fill="var(--card)" stroke={other} strokeWidth="1.2" strokeDasharray="4 3" />
-      <text x={x + 85} y="116" textAnchor="middle" fontSize="9.5" fontWeight="800" fill={other}>{copyLabel}</text>
-      <HeaderStrip x={x + 29} y={128} color={other} />
-      <text x={x + 85} y="164" textAnchor="middle" fontSize="9" fontWeight="700" fill="#10b981">{s('checks1')}</text>
-      <text x={x + 85} y="178" textAnchor="middle" fontSize="9" fontWeight="700" fill="#10b981">{s('checks2')}</text>
-    </g>
-  );
-  return (
-    <svg viewBox="0 0 480 236" className="w-full flex-1 min-h-0">
-      {side(12, A, B, s('chainA'), s('copyOfB'))}
-      {side(298, B, A, s('chainB'), s('copyOfA'))}
-
-      {/* A → B */}
-      <text x="240" y="72" textAnchor="middle" fontSize="9" fontWeight="700" fill={INK}>✉️ {s('packet')}</text>
-      <line x1="188" y1="82" x2="284" y2="82" stroke={A} strokeWidth="1.5" />
-      <polygon points="284,78 292,82 284,86" fill={A} />
-      {/* relayer */}
-      <text x="240" y="114" textAnchor="middle" fontSize="16">📮</text>
-      <text x="240" y="132" textAnchor="middle" fontSize="9" fontWeight="800" fill={MUTED}>{s('relayer')}</text>
-      <text x="240" y="145" textAnchor="middle" fontSize="8.5" fill={MUTED}>{s('relayerNote1')}</text>
-      <text x="240" y="157" textAnchor="middle" fontSize="8.5" fill={MUTED}>{s('relayerNote2')}</text>
-      {/* B → A */}
-      <line x1="292" y1="174" x2="196" y2="174" stroke={B} strokeWidth="1.5" />
-      <polygon points="196,170 188,174 196,178" fill={B} />
-      <text x="240" y="192" textAnchor="middle" fontSize="9" fontWeight="700" fill={INK}>✉️ {s('packet')}</text>
-    </svg>
-  );
-}
-
-/* Approach 3 — Layer 0: one shared validator set secures many chains; messaging is built in. */
-function Layer0WayDiagram() {
-  const { t } = useTranslation('blockchain-platforms/section-4');
-  const s = (k: string) => t(`interopCompare.col3.svg.${k}`);
-  const L0 = '#6366f1', C = '#22d3ee';
-  const chains = [
-    { x: 20, name: s('chainA') },
-    { x: 146, name: s('chainB') },
-    { x: 272, name: s('chainC') },
+  const cells = [
+    { label: t('ui.trustLabel'), text: trust, color: '#10b981' },
+    { label: t('ui.riskLabel'), text: risk, color: '#f59e0b' },
   ];
   return (
-    <svg viewBox="0 0 480 236" className="w-full flex-1 min-h-0">
-      {/* Shared validator set */}
-      <rect x="20" y="14" width="348" height="70" rx="10" fill={L0 + '14'} stroke={L0} strokeWidth="1.5" />
-      <text x="194" y="36" textAnchor="middle" fontSize="11" fontWeight="900" fill={L0}>{s('l0Title')}</text>
-      <ValidatorDots cx={194} y={54} n={15} color={L0} gap={16} />
-      <text x="194" y="75" textAnchor="middle" fontSize="9" fill={MUTED}>{s('l0Note')}</text>
-
-      {/* Member chains — each secured from above */}
-      {chains.map((c) => (
-        <g key={c.name}>
-          <line x1={c.x + 48} y1="84" x2={c.x + 48} y2="122" stroke={L0} strokeWidth="1.5" />
-          <polygon points={`${c.x + 44},122 ${c.x + 48},130 ${c.x + 52},122`} fill={L0} />
-          <rect x={c.x} y="130" width="96" height="56" rx="8" fill={C + '14'} stroke={C} strokeWidth="1.5" />
-          <text x={c.x + 48} y="154" textAnchor="middle" fontSize="11" fontWeight="900" fill={INK}>{c.name}</text>
-          <text x={c.x + 48} y="170" textAnchor="middle" fontSize="8.5" fill={MUTED}>{s('chainNote')}</text>
-        </g>
+    <div className="shrink-0 grid grid-cols-2 gap-2">
+      {cells.map((c) => (
+        <div key={c.label} className="rounded-lg border bg-card px-2.5 py-2" style={{ borderColor: c.color + '55' }}>
+          <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: c.color }}>{c.label}</p>
+          <p className="text-xs text-foreground leading-snug mt-0.5">{c.text}</p>
+        </div>
       ))}
-      <text x="122" y="108" fontSize="8.5" fontWeight="700" fill={L0}>🛡 {s('secures')}</text>
-
-      {/* Native messages between members */}
-      {[116, 242].map((x) => (
-        <g key={x}>
-          <line x1={x + 6} y1="158" x2={x + 24} y2="158" stroke="#10b981" strokeWidth="1.5" />
-          <polygon points={`${x + 7},154 ${x + 1},158 ${x + 7},162`} fill="#10b981" />
-          <polygon points={`${x + 23},154 ${x + 29},158 ${x + 23},162`} fill="#10b981" />
-        </g>
-      ))}
-      <text x="194" y="206" textAnchor="middle" fontSize="9" fontWeight="700" fill="#10b981">⇄ {s('native')}</text>
-
-      {/* A chain outside the club still needs a bridge */}
-      <rect x="398" y="130" width="72" height="56" rx="8" fill="none" stroke={MUTED} strokeWidth="1.2" strokeDasharray="4 3" />
-      <text x="434" y="154" textAnchor="middle" fontSize="9.5" fontWeight="800" fill={MUTED}>{s('outside1')}</text>
-      <text x="434" y="168" textAnchor="middle" fontSize="9.5" fontWeight="800" fill={MUTED}>{s('outside2')}</text>
-      <line x1="369" y1="158" x2="397" y2="158" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3 3" />
-      <text x="420" y="206" textAnchor="middle" fontSize="9" fontWeight="700" fill="#ef4444">🌉 {s('bridgeNeeded')}</text>
-      <text x="240" y="228" textAnchor="middle" fontSize="8.5" fill={MUTED}>{s('example')}</text>
-    </svg>
+    </div>
   );
 }
 
@@ -601,6 +532,7 @@ interface PlatformItem { name: string; tagline: string; }
 interface ZoneItem { label: string; purpose: string; }
 interface MetricItem { metric: string; label: string; }
 interface HackItem { name: string; amount: string; year: string; chain: string; method: string; }
+interface WayItem { name: string; how: string; trust: string; analogy: string; }
 interface UseCaseItem { title: string; scenario: string; how: string; }
 
 const NS = 'blockchain-platforms/section-4';
@@ -1268,24 +1200,13 @@ export function BP_Section4() {
   ];
   const islandGaps: [number, number][] = [[0, 1], [1, 2], [0, 3], [1, 3], [1, 4], [2, 4], [3, 4]];
   const problemColors = ['#f7931a', '#ef4444', '#8b5cf6'];
-  // The three ways to connect chains — one slide each, same layout, own diagram.
-  const ways = [
-    {
-      id: 's4-way-bridge', key: 'col1', accent: '#f59e0b', Diagram: BridgeWayDiagram,
-      rowColors: { mechanism: '#f59e0b', trust: '#f97316', risk: '#ef4444' },
-      terms: ['lock-and-mint', 'multisig', 'custodian', 'TVL'],
-    },
-    {
-      id: 's4-way-ibc', key: 'col2', accent: '#22d3ee', Diagram: IbcWayDiagram,
-      rowColors: { mechanism: '#22d3ee', trust: '#10b981', risk: '#f59e0b' },
-      terms: ['light client', 'block header', 'Merkle proof', 'relayer'],
-    },
-    {
-      id: 's4-way-l0', key: 'col3', accent: '#6366f1', Diagram: Layer0WayDiagram,
-      rowColors: { mechanism: '#6366f1', trust: '#10b981', risk: '#f59e0b' },
-      terms: ['shared validator set', 'relay chain', 'parachain', 'XCM'],
-    },
+  // The three ways to connect chains — one at-a-glance card each; `to` is the slide where the detail lives.
+  const ways: { kind: WayKind; accent: string; to: string; group: string }[] = [
+    { kind: 'bridge', accent: '#f59e0b', to: 's4-bridges', group: 'g-s4-bridges' },
+    { kind: 'ibc', accent: '#22d3ee', to: 's4-cosmos', group: 'g-s4-cosmos' },
+    { kind: 'l0', accent: '#6366f1', to: 's4-layer0', group: 'g-s4-l0' },
   ];
+  const wayCards = t('interopCompare.ways', { returnObjects: true }) as WayItem[];
 
   return (
     <div className="h-full w-full flex overflow-hidden">
@@ -1537,71 +1458,55 @@ export function BP_Section4() {
           {kp('s4-usecases')}
         </div>
 
-        {/* ═══════ S4-WAY-* — three ways to connect chains, one slide + one diagram each ═══════ */}
-        {ways.map((w, wi) => (
-          <div key={w.id} id={w.id} className="h-full flex flex-col p-6 lg:p-10">
-            <div className="shrink-0 mb-4">
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('interopCompare.heading')}</span>
-                <div className="flex items-center gap-1.5">
-                  {ways.map((o, oi) => {
-                    const on = oi === wi;
-                    return (
-                      <span
-                        key={o.id}
-                        className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold"
-                        style={{
-                          borderColor: on ? o.accent : 'var(--border)',
-                          backgroundColor: on ? o.accent + '1f' : 'transparent',
-                          color: on ? o.accent : 'var(--muted-foreground)',
-                        }}
-                      >
-                        <span className="font-black">{oi + 1}</span>{t(`interopCompare.${o.key}.short`)}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t(`interopCompare.${w.key}.title`)}</h2>
-              <p className="text-sm text-muted-foreground mt-1 max-w-4xl">{t(`interopCompare.${w.key}.lead`)}</p>
-            </div>
-
-            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-4 lg:gap-6">
-              {/* Left — how it works, drawn */}
-              <div className="flex flex-col gap-3 min-h-0">
-                <div className="flex-1 min-h-[240px] rounded-xl border border-border bg-card/40 p-3 flex flex-col">
-                  <w.Diagram />
-                  <p className="text-xs text-muted-foreground leading-snug shrink-0 mt-1.5 text-center">{t(`interopCompare.${w.key}.caption`)}</p>
-                </div>
-                <div className="shrink-0 p-3 rounded-xl border-2" style={{ borderColor: w.accent + '70', backgroundColor: w.accent + '12' }}>
-                  <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: w.accent }}>{t('interopCompare.rowLabels.analogy')}</p>
-                  <p className="text-sm lg:text-base font-semibold text-foreground leading-snug mt-0.5">{t(`interopCompare.${w.key}.analogy`)}</p>
-                </div>
-              </div>
-
-              {/* Right — mechanism · trust · risk */}
-              <div className="flex flex-col gap-2.5 min-h-0">
-                <div className="flex-1 min-h-0 grid auto-rows-fr gap-2.5">
-                  {(['mechanism', 'trust', 'risk'] as const).map((rk) => (
-                    <div key={rk} className="min-h-0 flex gap-3 p-3 bg-card border rounded-xl items-start" style={{ borderColor: w.rowColors[rk] + '40' }}>
-                      <div className="w-1 self-stretch rounded-full shrink-0" style={{ backgroundColor: w.rowColors[rk] }} />
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: w.rowColors[rk] }}>{t(`interopCompare.rowLabels.${rk}`)}</p>
-                        <p className="text-sm lg:text-base text-foreground leading-snug mt-1">{t(`interopCompare.${w.key}.${rk}`)}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="shrink-0 p-2.5 rounded-lg border" style={{ borderColor: w.accent + '40', backgroundColor: w.accent + '08' }}>
-                  <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: w.accent }}>{t('interopCompare.examplesLabel')}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{t(`interopCompare.${w.key}.examples`)}</p>
-                </div>
-                <UnderTheHood label={hoodLabel} terms={w.terms} className="self-start" />
-              </div>
-            </div>
-            {kp(w.id)}
+        {/* ═══════ S4-WAYS — three ways to connect, at a glance (the detail lives in each deep dive) ═══════ */}
+        <div id="s4-ways" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('interopCompare.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1 max-w-4xl">{t('interopCompare.subtitle')}</p>
           </div>
-        ))}
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5">
+            {ways.map((w, i) => {
+              const c = wayCards[i];
+              return (
+                <motion.div
+                  key={w.kind}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: i * 0.06 }}
+                  className="min-h-0 rounded-xl border-2 p-5 flex flex-col gap-4"
+                  style={{ borderColor: w.accent + '60', backgroundColor: w.accent + '0a' }}
+                >
+                  <div className="shrink-0 flex items-center gap-2.5">
+                    <span className="size-7 shrink-0 rounded-full border flex items-center justify-center text-sm font-black" style={{ color: w.accent, borderColor: w.accent, backgroundColor: w.accent + '1f' }}>{i + 1}</span>
+                    <p className="text-xl lg:text-2xl font-black text-foreground leading-tight">{c.name}</p>
+                  </div>
+                  <div className="flex-1 min-h-[80px] rounded-lg border border-border bg-card/60 p-3 flex items-center justify-center">
+                    <WayGlyph kind={w.kind} color={w.accent} />
+                  </div>
+                  <div className="shrink-0">
+                    <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: w.accent }}>{t('interopCompare.howLabel')}</p>
+                    <p className="text-base lg:text-lg text-foreground leading-snug mt-0.5">{c.how}</p>
+                  </div>
+                  <div className="shrink-0 rounded-lg border px-3 py-2.5" style={{ borderColor: w.accent + '55', backgroundColor: w.accent + '14' }}>
+                    <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: w.accent }}>{t('interopCompare.trustLabel')}</p>
+                    <p className="text-base font-semibold text-foreground leading-snug mt-0.5">{c.trust}</p>
+                  </div>
+                  <p className="shrink-0 text-sm italic text-muted-foreground leading-snug">{c.analogy}</p>
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById(w.to)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                    className="shrink-0 self-start text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  >
+                    {t('interopCompare.moreLabel')} · <span className="font-bold text-foreground">{t(`groups.${w.group}`)}</span> →
+                  </button>
+                </motion.div>
+              );
+            })}
+          </div>
+          {kp('s4-ways')}
+        </div>
 
         {/* ═══════ S4-CHOOSER — interactive: how should these two chains talk? ═══════ */}
         <div id="s4-chooser" className="h-full flex flex-col p-6 lg:p-10">
@@ -1848,6 +1753,7 @@ export function BP_Section4() {
                   </div>
                 ))}
               </div>
+              <TrustRisk trust={t('layer0.trust')} risk={t('layer0.risk')} />
             </div>
           </div>
           {kp('s4-layer0')}
@@ -1944,6 +1850,7 @@ export function BP_Section4() {
             <p className="text-sm text-muted-foreground mt-1">
               {t('cosmos.subtitle')}
             </p>
+            <UnderTheHood label={hoodLabel} terms={['light client', 'block header', 'Merkle proof', 'relayer']} className="mt-2" />
           </div>
 
           <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-5 min-h-0">
@@ -2047,6 +1954,9 @@ export function BP_Section4() {
                   </div>
                 ))}
               </div>
+
+              {/* IBC: who you trust, and where it breaks */}
+              <TrustRisk trust={t('cosmos.trust')} risk={t('cosmos.risk')} />
             </div>
 
             {/* Right — Properties + token role + IBC reach */}

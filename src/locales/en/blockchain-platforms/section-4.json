@@ -13,9 +13,7 @@
     "s4-closed": "Closed Systems",
     "s4-interop": "Why Chains Must Talk",
     "s4-usecases": "Real-World Use Cases",
-    "s4-way-bridge": "1 · Bridges",
-    "s4-way-ibc": "2 · IBC",
-    "s4-way-l0": "3 · Layer 0",
+    "s4-ways": "The Three Ways",
     "s4-chooser": "Which Connection?",
     "s4-layer0": "Layer 0: Concept",
     "s4-layer0-2": "Layer 0: Platforms",
@@ -38,7 +36,9 @@
   "ui": {
     "hood": "under the hood →",
     "recap": "Already covered",
-    "keyPoint": "Key point"
+    "keyPoint": "Key point",
+    "trustLabel": "Who you trust",
+    "riskLabel": "Where it breaks"
   },
   "layer0Anim": {
     "headline": "A tx travelling L2 → L1 → L0 → L1 → L2",
@@ -161,87 +161,15 @@
   },
   "interopCompare": {
     "heading": "Three ways to connect chains",
-    "rowLabels": {
-      "analogy": "Think of it as",
-      "mechanism": "How it works",
-      "trust": "Who you trust",
-      "risk": "Where it breaks"
-    },
-    "examplesLabel": "Examples",
-    "col1": {
-      "short": "Bridges",
-      "lead": "Lock-and-mint: an operator sits in the middle, holds your coin and issues a copy on the other chain.",
-      "caption": "Your coin never leaves Ethereum. It waits in the vault while a copy circulates on Solana.",
-      "svg": {
-        "chainA": "Ethereum",
-        "chainB": "Solana",
-        "locked": "1 ETH",
-        "lockedNote": "your coin, locked",
-        "vaultNote": "one vault for everyone",
-        "operator": "Bridge operator",
-        "operatorNote1": "a few signers approve",
-        "operatorNote2": "every mint and release",
-        "minted": "1 wETH",
-        "mintedNote": "wrapped copy, minted",
-        "ticketNote": "your claim ticket",
-        "back": "Way back: burn the copy → signers release the original"
-      },
-      "title": "Bridges & Wrapped Tokens",
-      "analogy": "A courier keeps your luggage and gives you a claim ticket to use in the other city.",
-      "mechanism": "Your coin is locked in a vault on one chain; a copy (\"wrapped\" token) is issued on the other. Burn the copy to get the original back.",
-      "trust": "The bridge operators — usually a small group of signers who approve every release.",
-      "risk": "The vault holds everyone's coins in one place. If the signers' keys leak or the code has a bug, the whole vault goes.",
-      "examples": "WBTC · Ronin · Wormhole · Hop Protocol · LayerZero · Stargate"
-    },
-    "col2": {
-      "short": "IBC",
-      "lead": "No operator in the middle: the two chains verify each other directly.",
-      "caption": "Each chain keeps a small, constantly updated copy of the other's block headers, so it can check any incoming message itself.",
-      "svg": {
-        "chainA": "Cosmos Hub",
-        "chainB": "Osmosis",
-        "ownValidators": "its own validators",
-        "copyOfB": "Osmosis block headers",
-        "copyOfA": "Cosmos Hub block headers",
-        "checks1": "✓ checks every proof",
-        "checks2": "against them, by itself",
-        "packet": "message + proof",
-        "relayer": "Relayer",
-        "relayerNote1": "carries the message,",
-        "relayerNote2": "cannot forge it"
-      },
-      "title": "Protocol-native / IBC",
-      "analogy": "Both airports read each other's boarding passes directly — no courier needed.",
-      "mechanism": "Each chain keeps a tiny copy of the other's block headers and checks the proof itself. Messages travel; coins are escrowed per connection, not in one giant vault.",
-      "trust": "The maths and the two chains' own validators — no extra company or committee.",
-      "risk": "Only as strong as the weaker of the two chains. Both must speak the same standard, which limits reach today.",
-      "examples": "Cosmos IBC (110+ chains) · IBC Eureka (Ethereum) · Polkadot XCM (within parachains)"
-    },
-    "col3": {
-      "short": "Layer 0",
-      "lead": "One security team for many chains: connected chains share validators, so messaging is built in.",
-      "caption": "Inside the Layer 0, a message between chains is checked by the same validators that finalise their blocks.",
-      "svg": {
-        "l0Title": "Layer 0 — one shared validator set",
-        "l0Note": "the same validators finalise every connected chain",
-        "secures": "secures",
-        "chainA": "Moonbeam",
-        "chainB": "Hydration",
-        "chainC": "Bifrost",
-        "chainNote": "own app logic",
-        "native": "native messages between members — no bridge contract",
-        "outside1": "Outside",
-        "outside2": "chain",
-        "bridgeNeeded": "bridge needed",
-        "example": "shown: Polkadot — Relay Chain validators secure every parachain; XCM is the built-in messaging"
-      },
-      "title": "Layer 0 Network",
-      "analogy": "One security team guards every terminal in the airport — moving between terminals is just walking.",
-      "mechanism": "A shared validator set secures all connected chains at once, so sending a message between them is a built-in operation, not a separate contract.",
-      "trust": "The Layer 0's validators — the same people who finalise blocks also carry the messages.",
-      "risk": "Everything inside is as safe as the Layer 0 itself. To reach chains outside the club you still need a bridge.",
-      "examples": "Polkadot (Relay Chain + XCM) · Avalanche (Primary Network + Warp) · Babylon (BTC security layer)"
-    }
+    "subtitle": "Each one moves value or messages across chains; what changes is who you trust. Each gets its own section next.",
+    "howLabel": "How",
+    "trustLabel": "Who you trust",
+    "moreLabel": "In depth",
+    "ways": [
+      { "name": "Bridges", "how": "Lock the coin on one chain, issue a copy on the other.", "trust": "An operator: a company or a few signers who hold the vault.", "analogy": "A courier stores your luggage and hands you a claim ticket." },
+      { "name": "IBC · protocol-native", "how": "The two chains check each other's proofs directly.", "trust": "The maths and the two chains themselves. No middleman.", "analogy": "Two airports read each other's boarding passes." },
+      { "name": "Layer 0", "how": "Many chains sit under one shared validator set; messaging is built in.", "trust": "The Layer 0's validators: one security team for every chain.", "analogy": "One security team guards every terminal in the airport." }
+    ]
   },
   "layer0": {
     "heading": "Layer 0 — shared security beneath the L1s",
@@ -257,7 +185,9 @@
       { "icon": "🔐", "title": "Shared security", "desc": "A pooled validator set secures every L1 connected to it. New chains inherit security on day 1." },
       { "icon": "📨", "title": "Native cross-chain messaging", "desc": "L0 defines the message format and trust model (XCM, Warp) — no third-party bridge needed." },
       { "icon": "⚙️", "title": "Shared infrastructure", "desc": "Block production, finality, governance and upgrades live at L0. L1s focus on application logic." }
-    ]
+    ],
+    "trust": "The Layer 0's validators: the same set that finalises blocks also carries the messages.",
+    "risk": "Everything inside is only as safe as the Layer 0 itself, and reaching a chain outside the club still needs a bridge."
   },
   "layer02": {
     "heading": "Layer 0: Known Platforms & Trade-offs",
@@ -441,7 +371,7 @@
     ],
     "propertiesTitle": "Core Properties",
     "properties": [
-      { "emoji": "🌐", "title": "IBC Protocol", "desc": "Inter-Blockchain Communication: each chain verifies the other's block headers itself, so messages and assets move without a middleman." },
+      { "emoji": "🌐", "title": "IBC Protocol", "desc": "Inter-Blockchain Communication: each chain keeps a small copy of the other's block headers (a light client) and checks every proof itself, so messages and assets move without a middleman." },
       { "emoji": "🔧", "title": "Cosmos SDK", "desc": "Go framework with ready-made modules (staking, governance, IBC) for building an app-specific chain. Used by Osmosis, dYdX v4, Celestia and 100+ chains." },
       { "emoji": "⚛️", "title": "CometBFT (ex-Tendermint)", "desc": "The consensus engine, formerly Tendermint: ~1-second blocks, instant finality, no forks. Each zone has a known validator set and stays secure while fewer than one-third are dishonest." },
       { "emoji": "⚡", "title": "App-Specific Sovereignty", "desc": "Each chain sets its own fees, governance and upgrades, and does not compete for block space with other apps." }
@@ -450,6 +380,8 @@
     "beyondBodyA": "IBC ",
     "beyondBodyStrong": "Eureka",
     "beyondBodyB": " (live 2025) extends IBC to Ethereum and other non-Cosmos chains without a centralised bridge.",
+    "trust": "The maths and the two chains' own validators, with no extra company or committee. A relayer only carries the message; it cannot forge it.",
+    "risk": "Only as strong as the weaker of the two chains, and both must speak IBC, which limits reach today.",
     "dydxLabel": "Example",
     "dydx": "dYdX, a derivatives exchange, left its Ethereum rollup in 2023 for its own Cosmos chain: an app gets its own chain once it is big enough to justify one."
   },
@@ -593,9 +525,7 @@
     "s4-closed": "Every blockchain is a closed system: it checks only its own ledger. Being on the internet does not make chains interoperable.",
     "s4-interop": "People, money and apps do not stay on one chain, so closed chains need connecting — and every connection needs someone or something to trust.",
     "s4-usecases": "In every real case someone holds the asset or verifies the other chain; who that is, is the design question.",
-    "s4-way-bridge": "A bridge is an operator holding your coin: you trust its signers, and the single vault is the weak point.",
-    "s4-way-ibc": "With IBC the chains check each other's proofs directly: you trust the maths and the two chains, not a middleman.",
-    "s4-way-l0": "A Layer 0 puts many chains under one shared validator set: messaging is built in, but only inside the club.",
+    "s4-ways": "Three routes, one question: who do you trust — an operator, the two chains themselves, or one shared validator set?",
     "s4-chooser": "The safest connection is the one with the fewest people to trust.",
     "s4-bridges": "A bridge never moves a coin: a trusted operator locks the original on one chain and issues a claim ticket on the other.",
     "s4-bridge-risk": "Bridges are where the biggest thefts have happened; using one is a trust decision.",
