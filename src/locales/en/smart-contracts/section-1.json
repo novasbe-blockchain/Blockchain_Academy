@@ -16,93 +16,170 @@
   "why": {
     "badge": "The business question",
     "heading": "Why a smart contract at all?",
-    "subtitle": "Business already has three ways to make a deal stick. What could code on a shared chain do better?",
+    "subtitle": "Business already has three ways to make a deal stick. Run one deal through each, then through code on a shared chain.",
+    "hint": "Click each option to run the same deal through it",
+    "deal": {
+      "label": "One deal",
+      "text": "A Lisbon importer pays a Shenzhen supplier €50,000 once the goods arrive.",
+      "buyer": "Buyer",
+      "buyerSub": "Lisbon",
+      "seller": "Supplier",
+      "sellerSub": "Shenzhen"
+    },
     "rowLabels": {
       "trust": "You trust",
-      "cost": "It costs",
+      "time": "Time to settle",
+      "cheat": "Who could cheat?",
       "weak": "Weak spot"
+    },
+    "timeScale": {
+      "fast": "Instant",
+      "slow": "Years"
     },
     "options": [
       {
         "tag": "Today's option",
         "title": "A lawyer",
-        "role": "Writes the deal; courts enforce it",
+        "middle": "Lawyer",
+        "role": "Writes the deal on paper; courts enforce it afterwards",
         "trust": "The legal system to put things right afterwards",
-        "cost": "Fees up front; months or years if it goes wrong",
-        "weak": "Slow, expensive, and it stops at the border"
+        "time": "Months or years if it ends up in court",
+        "cheat": "Either side can break the deal first; you sue later.",
+        "weak": "Slow, expensive, and enforcement stops at the border."
       },
       {
         "tag": "Today's option",
         "title": "An escrow agent",
-        "role": "Holds the money until both sides deliver",
-        "trust": "One middleman with everyone's money",
-        "cost": "A fee on every deal, plus days of waiting",
-        "weak": "The agent can make mistakes, stall or go bust"
+        "middle": "Agent",
+        "role": "Holds the €50,000 until both sides deliver",
+        "trust": "One middleman holding everyone's money",
+        "time": "Days of waiting, plus a fee on every deal",
+        "cheat": "Buyer and supplier are held to it, but the agent has the money.",
+        "weak": "The agent can make mistakes, stall or go bust."
       },
       {
         "tag": "Today's option",
         "title": "A company database",
+        "middle": "Database owner",
         "role": "One firm keeps the record and runs the rules",
         "trust": "Whoever owns the database",
-        "cost": "Very little: fast and cheap",
-        "weak": "The owner can change the record; everyone else takes their word"
+        "time": "Instant, and nearly free",
+        "cheat": "The owner can edit the record; everyone else takes their word.",
+        "weak": "Fine inside one firm. Rivals will not accept a record that one of them controls."
       },
       {
         "tag": "The challenger",
         "title": "A smart contract",
-        "role": "A shared rule that runs itself",
+        "middle": "Network",
+        "role": "Code holds the €50,000 and releases it when delivery is confirmed",
         "trust": "Code everyone can read, run by a network no one party controls",
-        "cost": "A network fee per action; settles in seconds to minutes",
-        "weak": "It does exactly what is written, bugs included, with no judge to appeal to"
+        "time": "Seconds to minutes, for a network fee",
+        "cheat": "No one can bend the rule once it is live.",
+        "weak": "It does exactly what is written, bugs included, and it needs a reliable data feed to know the goods arrived."
       }
     ]
   },
   "recap": {
     "badge": "Recap · you have met this",
     "heading": "The 20-second version",
-    "leadA": "You covered this in ",
+    "leadA": "You met smart contracts in ",
     "leadStrong": "Fundamentals §3 and Platforms §2",
-    "leadB": ". One line each, then on to the business.",
-    "definitionLabel": "In one sentence",
-    "defLeadA": "A ",
-    "defTerm": "smart contract",
-    "defLeadB": " is self-running code on a shared chain.",
-    "vendingLabel": "Vending-machine logic, no clerk",
-    "vendingBody": "Right coins in, snack out; wrong coins, money back. Nobody approves it and nobody can talk it round. That is Nick Szabo's 1994 analogy.",
-    "imgAlt": "A vending machine as a smart contract metaphor: conditions in, automatic result out, no middleman.",
+    "leadB": ". Here is the same idea in one picture, then the bridge into the business of it.",
+    "definitionLabel": "A smart contract in three pieces",
+    "parts": [
+      "Self-running code",
+      "On a shared chain",
+      "No clerk in the middle"
+    ],
+    "vendingLabel": "Vending-machine logic",
+    "vendingBody": "Nobody approves it and nobody can talk it round. That is Nick Szabo's 1994 picture of a smart contract.",
+    "imgAlt": "A vending machine as a smart contract metaphor: right coins in, snack out; wrong coins, money back; no clerk.",
+    "vending": {
+      "tryLabel": "Try it",
+      "price": "PRICE",
+      "payRight": "Insert €2",
+      "payWrong": "Insert €1",
+      "if": "IF",
+      "ifBody": "€2 in → snack out",
+      "else": "ELSE",
+      "elseBody": "→ coins back"
+    },
     "knowLabel": "What you already know",
     "cards": [
       {
         "title": "One shared computer",
-        "desc": "Thousands of independent machines run the same code and must agree on the result."
+        "desc": "Thousands of machines run the same code and must agree."
       },
       {
         "title": "Fixed, public rules",
-        "desc": "Once deployed, anyone can read the code and no single party can quietly change it."
+        "desc": "Anyone can read the code; no one can quietly change it."
       },
       {
         "title": "Every action has a fee",
-        "desc": "You pay the network for each step, so nothing on-chain is free."
+        "desc": "You pay the network for each step."
       },
       {
         "title": "A person moves first",
-        "desc": "A contract only acts when someone sends it a signed instruction."
+        "desc": "It only acts when someone sends a signed instruction."
       }
     ],
-    "footerLabel": "Where this course picks up: ",
-    "footerText": "not how the code works, but when it is worth using in a business."
+    "sawLabel": "You saw this in",
+    "sawFundamentals": "Fundamentals §3",
+    "sawPlatforms": "Platforms §2",
+    "footerLabel": "This course: ",
+    "footerText": "the business of it. Not how the code works, but when it is worth using."
   },
   "history": {
     "badge": "Section 01",
     "heading": "Thirty years in six moments",
-    "subtitle": "From an idea with nothing to run it on to $100B+ in live contracts, and what each step taught business.",
+    "subtitle": "Click along the line: from an idea with nothing to run it on to $100B+ in live contracts.",
+    "gap": "21-year wait",
+    "lessonLabel": "Lesson for business",
+    "prev": "Previous moment",
+    "next": "Next moment",
     "events": [
-      { "year": "1994", "tag": "The idea", "title": "Szabo coins \"smart contract\"", "desc": "Promises enforced by a mechanism instead of a person. Nothing yet exists that can run one." },
-      { "year": "2015", "tag": "Breakthrough", "title": "Ethereum goes live", "desc": "The first chain built to run any agreement as code. The idea finally has a computer." },
-      { "year": "2016", "tag": "Crisis", "title": "The DAO loses $60M", "desc": "A bug lets an attacker drain a fund with no manager to stop it. Code enforces mistakes too." },
-      { "year": "2017–18", "tag": "Standards", "title": "Tokens get a common format", "desc": "Shared standards for money-like and one-of-a-kind tokens let any wallet or marketplace handle any asset." },
-      { "year": "2020", "tag": "Composability", "title": "DeFi Summer", "desc": "Contracts start calling other contracts: lending and trading with no bank or broker in the middle." },
-      { "year": "Today", "tag": "Maturity", "title": "High stakes, audited", "desc": "$100B+ sits in contracts across many chains; $6B+ lost to exploits since 2016 has made audits standard." }
+      {
+        "year": "1994",
+        "tag": "The idea",
+        "title": "Szabo coins \"smart contract\"",
+        "desc": "Nick Szabo describes promises enforced by a mechanism instead of a person. Nothing yet exists that can run one.",
+        "lesson": "A good idea is not a business until the infrastructure exists."
+      },
+      {
+        "year": "2015",
+        "tag": "Breakthrough",
+        "title": "Ethereum goes live",
+        "desc": "The first chain built to run any agreement as code. The idea finally has a computer.",
+        "lesson": "Once anyone can deploy a rule, experiments multiply fast."
+      },
+      {
+        "year": "2016",
+        "tag": "Crisis",
+        "title": "The DAO loses $60M",
+        "desc": "A bug lets an attacker drain a fund that has no manager to stop it.",
+        "lesson": "Code enforces mistakes as faithfully as intentions."
+      },
+      {
+        "year": "2017–18",
+        "tag": "Standards",
+        "title": "Tokens get a common format",
+        "desc": "Shared standards for money-like and one-of-a-kind tokens let any wallet or marketplace handle any asset.",
+        "lesson": "Common standards, not clever code, are what create a market."
+      },
+      {
+        "year": "2020",
+        "tag": "Composability",
+        "title": "DeFi Summer",
+        "desc": "Contracts start calling other contracts: lending and trading with no bank or broker in the middle.",
+        "lesson": "Contracts become building blocks, and so do their risks."
+      },
+      {
+        "year": "Today",
+        "tag": "Maturity",
+        "title": "High stakes, audited",
+        "desc": "$100B+ sits in contracts across many chains; $6B+ has been lost to exploits since 2016.",
+        "lesson": "Treat a contract as financial infrastructure: audit it before money goes in."
+      }
     ]
   },
   "exercise": {
@@ -170,33 +247,58 @@
     ]
   },
   "hype": {
-    "heading": "Hype vs value: four things a smart contract is not",
-    "subtitle": "The name oversells it. These four limits matter for every case study later.",
-    "cards": [
+    "badge": "Interactive",
+    "heading": "Hype or genuine value?",
+    "subtitle": "Seven things people say about smart contracts. Send each one to the side where it belongs.",
+    "claimLabel": "Claim",
+    "btnHype": "Hype",
+    "btnValue": "Genuine value",
+    "binHype": "Hype",
+    "binValue": "Genuine value",
+    "binHypeEmpty": "Oversold claims land here, with what is actually true.",
+    "binValueEmpty": "Claims that hold up land here, with the reason.",
+    "guessRight": "You called it",
+    "guessWrong": "You put this on the other side",
+    "scoreLabel": "sorted correctly",
+    "reset": "↺ Sort again",
+    "claims": [
       {
-        "title": "Not a legal contract",
-        "body": "It is code that moves assets when conditions are met. Whether a court recognises it is a separate question — most real deployments pair the code with a normal legal agreement."
+        "claim": "The code is the contract. No lawyers needed.",
+        "verdict": "Not a legal contract",
+        "why": "Code moves assets; whether a court recognises it is a separate question. Real deployments pair it with a normal legal agreement."
       },
       {
-        "title": "Not smart",
-        "body": "It does exactly what is written, with no judgement and no exceptions. A bug executes as faithfully as a feature."
+        "claim": "Rivals can share one rule without trusting each other, or a middleman.",
+        "verdict": "Removes a middleman",
+        "why": "No party has to be the trusted one in the middle, or be paid for it."
       },
       {
-        "title": "Not free",
-        "body": "Every step costs a network fee, and on-chain storage is very expensive: one megabyte on Ethereum costs more than a laptop."
+        "claim": "It is smart: it copes with whatever comes up.",
+        "verdict": "Not smart",
+        "why": "It does exactly what is written, with no judgement. A bug runs as faithfully as a feature."
       },
       {
-        "title": "Not unstoppable",
-        "body": "The contract may be, but its website, data feeds and admin keys are ordinary points of control. Tornado Cash's front-end went dark in 2022 while the contract kept running."
+        "claim": "No middleman, so it is basically free.",
+        "verdict": "Not free",
+        "why": "Every step costs a network fee, and storing data on-chain is very expensive."
+      },
+      {
+        "claim": "Once it is live, nobody can quietly bend the rule.",
+        "verdict": "Locks the rule",
+        "why": "True for everyone, operator included, as long as no admin key was left in."
+      },
+      {
+        "claim": "Nobody can ever switch it off.",
+        "verdict": "Not unstoppable",
+        "why": "Its website, data feeds and admin keys are ordinary points of control. Tornado Cash's website went dark in 2022 while the contract kept running."
+      },
+      {
+        "claim": "It settles across borders in minutes, around the clock.",
+        "verdict": "Settles fast, in public",
+        "why": "No banking hours and no correspondent banks, and it leaves a public audit trail."
       }
     ],
-    "valueLabel": "So where is the value?",
-    "value": [
-      "Removing a middleman that many parties would otherwise have to trust — and pay",
-      "Making a rule impossible to bend after the fact — for everyone, including the operator",
-      "Settling across borders in seconds, around the clock, with a public audit trail"
-    ],
-    "footer": "Ask of every use case: does it need one of these three things? If not, a database will usually win."
+    "footer": "Ask of every use case: does it need one of the three on the right? If not, a database will usually win."
   },
   "keyPoints": {
     "s1-why": "A smart contract earns its place only when one shared, un-bendable rule beats trusting a lawyer, an agent or a database owner.",

@@ -16,93 +16,170 @@
   "why": {
     "badge": "A pergunta de negócio",
     "heading": "Porquê um smart contract?",
-    "subtitle": "As empresas já têm três formas de garantir que um acordo se cumpre. O que faria melhor um código numa chain partilhada?",
+    "subtitle": "As empresas já têm três formas de garantir que um acordo se cumpre. Passa o mesmo negócio por cada uma e depois por código numa chain partilhada.",
+    "hint": "Clica em cada opção para passar o mesmo negócio por ela",
+    "deal": {
+      "label": "Um negócio",
+      "text": "Um importador de Lisboa paga 50 000 € a um fornecedor de Shenzhen quando a mercadoria chegar.",
+      "buyer": "Comprador",
+      "buyerSub": "Lisboa",
+      "seller": "Fornecedor",
+      "sellerSub": "Shenzhen"
+    },
     "rowLabels": {
       "trust": "Confias em",
-      "cost": "Custa",
+      "time": "Tempo até liquidar",
+      "cheat": "Quem pode fazer batota?",
       "weak": "Ponto fraco"
+    },
+    "timeScale": {
+      "fast": "Imediato",
+      "slow": "Anos"
     },
     "options": [
       {
         "tag": "Opção de hoje",
         "title": "Um advogado",
-        "role": "Redige o acordo; os tribunais fazem-no cumprir",
+        "middle": "Advogado",
+        "role": "Redige o acordo em papel; os tribunais fazem-no cumprir depois",
         "trust": "No sistema judicial para corrigir as coisas depois",
-        "cost": "Honorários à partida; meses ou anos se correr mal",
-        "weak": "Lento, caro e pára na fronteira"
+        "time": "Meses ou anos se acabar em tribunal",
+        "cheat": "Qualquer das partes pode falhar primeiro; processas depois.",
+        "weak": "Lento, caro e a execução pára na fronteira."
       },
       {
         "tag": "Opção de hoje",
         "title": "Um agente de escrow",
-        "role": "Guarda o dinheiro até ambas as partes cumprirem",
+        "middle": "Agente",
+        "role": "Guarda os 50 000 € até ambas as partes cumprirem",
         "trust": "Num único intermediário com o dinheiro de todos",
-        "cost": "Uma comissão por negócio e dias de espera",
-        "weak": "O agente pode errar, atrasar ou falir"
+        "time": "Dias de espera e uma comissão por negócio",
+        "cheat": "Comprador e fornecedor ficam obrigados, mas o agente tem o dinheiro.",
+        "weak": "O agente pode errar, atrasar ou falir."
       },
       {
         "tag": "Opção de hoje",
         "title": "A base de dados de uma empresa",
+        "middle": "Dono da base de dados",
         "role": "Uma empresa guarda o registo e aplica as regras",
         "trust": "Em quem é dono da base de dados",
-        "cost": "Muito pouco: é rápida e barata",
-        "weak": "O dono pode alterar o registo; os outros têm de acreditar na sua palavra"
+        "time": "Imediato e quase gratuito",
+        "cheat": "O dono pode alterar o registo; os outros têm de acreditar na sua palavra.",
+        "weak": "Funciona dentro de uma empresa. Concorrentes não aceitam um registo controlado por um deles."
       },
       {
         "tag": "O desafiante",
         "title": "Um smart contract",
-        "role": "Uma regra partilhada que se executa sozinha",
+        "middle": "Rede",
+        "role": "O código guarda os 50 000 € e liberta-os quando a entrega é confirmada",
         "trust": "Em código que todos podem ler, executado por uma rede que nenhuma parte controla",
-        "cost": "Uma taxa de rede por ação; liquida em segundos ou minutos",
-        "weak": "Faz exatamente o que está escrito, bugs incluídos, sem juiz a quem recorrer"
+        "time": "Segundos ou minutos, por uma taxa de rede",
+        "cheat": "Ninguém consegue contornar a regra depois de ativa.",
+        "weak": "Faz exatamente o que está escrito, bugs incluídos, e precisa de uma fonte de dados fiável para saber que a mercadoria chegou."
       }
     ]
   },
   "recap": {
     "badge": "Revisão · já viste isto",
     "heading": "A versão de 20 segundos",
-    "leadA": "Viste isto em ",
+    "leadA": "Conheceste os smart contracts em ",
     "leadStrong": "Fundamentals §3 e Platforms §2",
-    "leadB": ". Uma linha para cada ideia e seguimos para o negócio.",
-    "definitionLabel": "Numa frase",
-    "defLeadA": "Um ",
-    "defTerm": "smart contract",
-    "defLeadB": " é código que se executa sozinho numa chain partilhada.",
-    "vendingLabel": "Lógica de máquina de vending, sem funcionário",
-    "vendingBody": "Moedas certas, sai o snack; moedas erradas, o dinheiro volta. Ninguém aprova e ninguém a convence do contrário. É a analogia de Nick Szabo, de 1994.",
-    "imgAlt": "Uma máquina de vending como metáfora de smart contract: entram condições, sai um resultado automático, sem intermediário.",
+    "leadB": ". Aqui está a mesma ideia numa imagem e, a seguir, a ponte para o lado de negócio.",
+    "definitionLabel": "Um smart contract em três peças",
+    "parts": [
+      "Código que se executa sozinho",
+      "Numa chain partilhada",
+      "Sem funcionário no meio"
+    ],
+    "vendingLabel": "Lógica de máquina de vending",
+    "vendingBody": "Ninguém aprova e ninguém a convence do contrário. É a imagem de smart contract de Nick Szabo, de 1994.",
+    "imgAlt": "Uma máquina de vending como metáfora de smart contract: moedas certas, sai o snack; moedas erradas, o dinheiro volta; sem funcionário.",
+    "vending": {
+      "tryLabel": "Experimenta",
+      "price": "PREÇO",
+      "payRight": "Inserir 2 €",
+      "payWrong": "Inserir 1 €",
+      "if": "SE",
+      "ifBody": "2 € → sai o snack",
+      "else": "SENÃO",
+      "elseBody": "→ moedas de volta"
+    },
     "knowLabel": "O que já sabes",
     "cards": [
       {
         "title": "Um computador partilhado",
-        "desc": "Milhares de máquinas independentes correm o mesmo código e têm de concordar com o resultado."
+        "desc": "Milhares de máquinas correm o mesmo código e têm de concordar."
       },
       {
         "title": "Regras fixas e públicas",
-        "desc": "Depois de implementado, qualquer pessoa pode ler o código e nenhuma parte o pode alterar às escondidas."
+        "desc": "Todos podem ler o código; ninguém o altera às escondidas."
       },
       {
         "title": "Cada ação tem uma taxa",
-        "desc": "Pagas à rede por cada passo, por isso nada on-chain é gratuito."
+        "desc": "Pagas à rede por cada passo."
       },
       {
         "title": "Uma pessoa dá o primeiro passo",
-        "desc": "Um contrato só age quando alguém lhe envia uma instrução assinada."
+        "desc": "Só age quando alguém envia uma instrução assinada."
       }
     ],
-    "footerLabel": "Onde este curso continua: ",
-    "footerText": "não em como o código funciona, mas em quando vale a pena usá-lo num negócio."
+    "sawLabel": "Viste isto em",
+    "sawFundamentals": "Fundamentals §3",
+    "sawPlatforms": "Platforms §2",
+    "footerLabel": "Este curso: ",
+    "footerText": "o lado de negócio. Não como o código funciona, mas quando vale a pena usá-lo."
   },
   "history": {
     "badge": "Secção 01",
     "heading": "Trinta anos em seis momentos",
-    "subtitle": "De uma ideia sem nada onde correr a mais de 100 mil milhões de dólares em contratos ativos, e o que cada passo ensinou às empresas.",
+    "subtitle": "Clica ao longo da linha: de uma ideia sem nada onde correr a mais de 100 mil milhões de dólares em contratos ativos.",
+    "gap": "21 anos à espera",
+    "lessonLabel": "Lição para o negócio",
+    "prev": "Momento anterior",
+    "next": "Momento seguinte",
     "events": [
-      { "year": "1994", "tag": "A ideia", "title": "Szabo cunha \"smart contract\"", "desc": "Promessas impostas por um mecanismo em vez de uma pessoa. Ainda não existe nada capaz de correr um." },
-      { "year": "2015", "tag": "Avanço", "title": "A Ethereum entra em funcionamento", "desc": "A primeira chain feita para correr qualquer acordo como código. A ideia tem finalmente um computador." },
-      { "year": "2016", "tag": "Crise", "title": "A DAO perde 60M de dólares", "desc": "Um bug permite a um atacante esvaziar um fundo sem gestor que o trave. O código também impõe os erros." },
-      { "year": "2017–18", "tag": "Standards", "title": "Os tokens ganham um formato comum", "desc": "Standards partilhados para tokens semelhantes a dinheiro e para tokens únicos permitem a qualquer carteira ou mercado lidar com qualquer ativo." },
-      { "year": "2020", "tag": "Composibilidade", "title": "DeFi Summer", "desc": "Contratos começam a chamar outros contratos: empréstimos e negociação sem banco nem corretor no meio." },
-      { "year": "Hoje", "tag": "Maturidade", "title": "Alto risco, auditados", "desc": "Mais de 100 mil milhões de dólares em contratos em várias chains; mais de 6 mil milhões perdidos em exploits desde 2016 tornaram as auditorias a norma." }
+      {
+        "year": "1994",
+        "tag": "A ideia",
+        "title": "Szabo cunha \"smart contract\"",
+        "desc": "Nick Szabo descreve promessas impostas por um mecanismo em vez de uma pessoa. Ainda não existe nada capaz de correr um.",
+        "lesson": "Uma boa ideia só é um negócio quando a infraestrutura existe."
+      },
+      {
+        "year": "2015",
+        "tag": "Avanço",
+        "title": "A Ethereum entra em funcionamento",
+        "desc": "A primeira chain feita para correr qualquer acordo como código. A ideia tem finalmente um computador.",
+        "lesson": "Quando qualquer pessoa pode publicar uma regra, as experiências multiplicam-se depressa."
+      },
+      {
+        "year": "2016",
+        "tag": "Crise",
+        "title": "A DAO perde 60M de dólares",
+        "desc": "Um bug permite a um atacante esvaziar um fundo que não tem gestor que o trave.",
+        "lesson": "O código impõe os erros com a mesma fidelidade que as intenções."
+      },
+      {
+        "year": "2017–18",
+        "tag": "Standards",
+        "title": "Os tokens ganham um formato comum",
+        "desc": "Standards partilhados para tokens semelhantes a dinheiro e para tokens únicos permitem a qualquer carteira ou mercado lidar com qualquer ativo.",
+        "lesson": "São os standards comuns, e não o código engenhoso, que criam um mercado."
+      },
+      {
+        "year": "2020",
+        "tag": "Composibilidade",
+        "title": "DeFi Summer",
+        "desc": "Contratos começam a chamar outros contratos: empréstimos e negociação sem banco nem corretor no meio.",
+        "lesson": "Os contratos tornam-se blocos de construção, e os seus riscos também."
+      },
+      {
+        "year": "Hoje",
+        "tag": "Maturidade",
+        "title": "Alto risco, auditados",
+        "desc": "Mais de 100 mil milhões de dólares em contratos em várias chains; mais de 6 mil milhões perdidos em exploits desde 2016.",
+        "lesson": "Trata um contrato como infraestrutura financeira: audita-o antes de lá pôr dinheiro."
+      }
     ]
   },
   "exercise": {
@@ -170,38 +247,63 @@
     ]
   },
   "hype": {
-    "heading": "Hype vs value: four things a smart contract is not",
-    "subtitle": "The name oversells it. Clearing these up now makes every case study later easier to judge.",
-    "cards": [
+    "badge": "Interativo",
+    "heading": "Hype ou valor real?",
+    "subtitle": "Sete coisas que se dizem sobre smart contracts. Envia cada uma para o lado certo.",
+    "claimLabel": "Afirmação",
+    "btnHype": "Hype",
+    "btnValue": "Valor real",
+    "binHype": "Hype",
+    "binValue": "Valor real",
+    "binHypeEmpty": "As promessas exageradas caem aqui, com o que é mesmo verdade.",
+    "binValueEmpty": "As afirmações que se aguentam caem aqui, com a razão.",
+    "guessRight": "Acertaste",
+    "guessWrong": "Puseste isto no outro lado",
+    "scoreLabel": "bem classificadas",
+    "reset": "↺ Classificar de novo",
+    "claims": [
       {
-        "title": "Not a legal contract",
-        "body": "It is code that moves assets when conditions are met. Whether a court recognises it is a separate question — most real deployments pair the code with a normal legal agreement."
+        "claim": "O código é o contrato. Não são precisos advogados.",
+        "verdict": "Não é um contrato legal",
+        "why": "O código move ativos; se um tribunal o reconhece é outra questão. Na prática, vem acompanhado de um acordo legal normal."
       },
       {
-        "title": "Not smart",
-        "body": "It does exactly what is written — no judgement, no exceptions, no \"obviously that's not what we meant\". A bug executes as faithfully as a feature."
+        "claim": "Concorrentes podem partilhar uma regra sem confiar uns nos outros, nem num intermediário.",
+        "verdict": "Elimina um intermediário",
+        "why": "Nenhuma parte tem de ser a entidade de confiança no meio, nem ser paga por isso."
       },
       {
-        "title": "Not free",
-        "body": "Every step costs a network fee and on-chain storage is extraordinarily expensive. Storing one megabyte on Ethereum costs more than a laptop."
+        "claim": "É inteligente: lida com o que aparecer.",
+        "verdict": "Não é inteligente",
+        "why": "Faz exatamente o que está escrito, sem discernimento. Um bug corre com a mesma fidelidade que uma funcionalidade."
       },
       {
-        "title": "Not unstoppable",
-        "body": "The contract may be, but its website, data feeds and admin keys are ordinary points of control. Tornado Cash's front-end went dark in 2022 while the contract kept running."
+        "claim": "Sem intermediário, é praticamente gratuito.",
+        "verdict": "Não é gratuito",
+        "why": "Cada passo custa uma taxa de rede, e guardar dados on-chain é muito caro."
+      },
+      {
+        "claim": "Depois de ativo, ninguém consegue contornar a regra às escondidas.",
+        "verdict": "Fixa a regra",
+        "why": "Vale para todos, incluindo o operador, desde que não tenha ficado nenhuma chave de administrador."
+      },
+      {
+        "claim": "Ninguém o consegue desligar, nunca.",
+        "verdict": "Não é imparável",
+        "why": "O site, as fontes de dados e as chaves de administrador são pontos de controlo normais. O site do Tornado Cash foi abaixo em 2022 e o contrato continuou a correr."
+      },
+      {
+        "claim": "Liquida além-fronteiras em minutos, a qualquer hora.",
+        "verdict": "Liquida depressa, em público",
+        "why": "Sem horário bancário nem bancos correspondentes, e deixa um registo público auditável."
       }
     ],
-    "valueLabel": "So where is the value?",
-    "value": [
-      "Removing a middleman that many parties would otherwise have to trust — and pay",
-      "Making a rule impossible to bend after the fact — for everyone, including the operator",
-      "Settling across borders in seconds, around the clock, with a public audit trail"
-    ],
-    "footer": "Keep this lens for the rest of the course: does this use case need one of these three things? If not, a database will usually win."
+    "footer": "Pergunta em cada caso de uso: precisa de uma das três da direita? Se não, uma base de dados costuma ganhar."
   },
   "keyPoints": {
     "s1-why": "Um smart contract só merece o lugar quando uma regra partilhada e inalterável vale mais do que confiar num advogado, num agente ou no dono de uma base de dados.",
     "s1-recap": "Um smart contract é código que se executa sozinho numa chain partilhada: lógica de máquina de vending, sem funcionário.",
-    "s1-hype": "Not legal, not smart, not free, not unstoppable — the value is removing a middleman, locking a rule and settling fast.",
+    "s1-hype": "Não é legal, nem inteligente, nem gratuito, nem imparável; o valor está em eliminar um intermediário, fixar uma regra e liquidar depressa.",
     "s1-exercise": "If one trusted institution already runs the process well, a smart contract adds cost, not trust.",
     "s1-history": "Em trinta anos, todas as lições caras vieram de código a fazer exatamente o que lhe mandaram."
   }
