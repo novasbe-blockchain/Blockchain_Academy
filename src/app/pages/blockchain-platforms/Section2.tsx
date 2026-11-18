@@ -668,6 +668,64 @@ function StablecoinMiniViz({ kind, color }: { kind: number; color: string }) {
   );
 }
 
+/* ── The three DeFi primitives, one small diagram per card (same frame as StablecoinMiniViz).
+      0 AMM: two token pools + the x·y=k curve · 1 lending: $150 locked → $100 borrowed, liquidation line · 2 yield: LP position → share of fees, minus impermanent loss. ── */
+function DefiMiniViz({ kind, color }: { kind: number; color: string }) {
+  const { t } = useTranslation('blockchain-platforms/section-2');
+  const muted = 'var(--muted-foreground)';
+  const fg = 'var(--foreground)';
+  const cls = 'w-full h-[100px] shrink-0 rounded-lg border bg-card/70';
+  const style = { borderColor: color + '30' };
+
+  if (kind === 0) {
+    return (
+      <svg viewBox="0 0 280 82" preserveAspectRatio="xMidYMid meet" className={cls} style={style} role="img" aria-label={`${t('defi.viz.amm.tokenX')} ⇄ ${t('defi.viz.amm.tokenY')} · ${t('defi.amm.formula')} · ${t('defi.amm.formulaSub')}`}>
+        <rect x="10" y="8" width="62" height="46" rx="8" fill={color} fillOpacity="0.12" stroke={color} strokeWidth="1.5" />
+        <text x="41" y="25" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={muted}>{t('defi.viz.amm.pool')} x</text>
+        <text x="41" y="45" textAnchor="middle" fontSize="14" fontWeight="900" fill={fg}>{t('defi.viz.amm.tokenX')}</text>
+        <text x="86" y="37" textAnchor="middle" fontSize="16" fontWeight="900" fill={color}>⇄</text>
+        <rect x="100" y="8" width="62" height="46" rx="8" fill={color} fillOpacity="0.12" stroke={color} strokeWidth="1.5" />
+        <text x="131" y="25" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={muted}>{t('defi.viz.amm.pool')} y</text>
+        <text x="131" y="45" textAnchor="middle" fontSize="14" fontWeight="900" fill={fg}>{t('defi.viz.amm.tokenY')}</text>
+        <text x="86" y="71" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={color}>{t('defi.amm.formulaSub')}</text>
+        {/* x·y=k curve */}
+        <polyline points="184,8 184,68 272,68" fill="none" stroke={muted} strokeOpacity="0.6" strokeWidth="1" />
+        <text x="178" y="14" textAnchor="middle" fontSize="9" fontWeight="700" fill={muted}>y</text>
+        <text x="270" y="78" textAnchor="middle" fontSize="9" fontWeight="700" fill={muted}>x</text>
+        <path d="M192,12 C196,42 214,58 268,62" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="207" cy="44" r="3.5" fill={color} />
+        <text x="240" y="30" textAnchor="middle" fontSize="12" fontWeight="900" className="font-mono" fill={fg}>{t('defi.amm.formula')}</text>
+      </svg>
+    );
+  }
+  if (kind === 1) {
+    return (
+      <svg viewBox="0 0 280 82" preserveAspectRatio="xMidYMid meet" className={cls} style={style} role="img" aria-label={`${t('defi.viz.lending.locked')} → ${t('defi.viz.lending.borrowed')} · ${t('defi.viz.lending.liquidation')}`}>
+        <rect x="10" y="10" width="260" height="24" rx="6" fill={color} />
+        <text x="118" y="26" textAnchor="middle" fontSize="11" fontWeight="800" fill="#ffffff">🔒 {t('defi.viz.lending.locked')}</text>
+        <rect x="10" y="42" width="173" height="24" rx="6" fill="#10b981" />
+        <text x="96" y="58" textAnchor="middle" fontSize="11" fontWeight="800" fill="#ffffff">{t('defi.viz.lending.borrowed')}</text>
+        {/* liquidation threshold: if the collateral bar shrinks back to this line, the position is liquidated */}
+        <line x1="227" y1="5" x2="227" y2="48" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="4 3" />
+        <text x="227" y="60" textAnchor="middle" fontSize="9.5" fontWeight="700" fill="#ef4444">⚠ {t('defi.viz.lending.liquidation')}</text>
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 280 82" preserveAspectRatio="xMidYMid meet" className={cls} style={style} role="img" aria-label={`${t('defi.viz.yield.position')} → ${t('defi.viz.yield.share')} · ${t('defi.viz.yield.il')}`}>
+      <rect x="10" y="8" width="88" height="46" rx="8" fill={color} fillOpacity="0.12" stroke={color} strokeWidth="1.5" />
+      <text x="54" y="26" textAnchor="middle" fontSize="11" fontWeight="900" fill={fg}>💧 {t('defi.viz.yield.position')}</text>
+      <text x="54" y="43" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={muted}>{t('defi.viz.yield.deposit')}</text>
+      <line x1="104" y1="34" x2="176" y2="34" stroke="#10b981" strokeWidth="1.5" />
+      <polygon points="175,30 182,34 175,38" fill="#10b981" />
+      <text x="142" y="27" textAnchor="middle" fontSize="9.5" fontWeight="700" fill="#10b981">{t('defi.viz.yield.share')}</text>
+      <rect x="188" y="8" width="82" height="46" rx="8" fill="#10b981" fillOpacity="0.12" stroke="#10b981" strokeWidth="1.5" />
+      <text x="229" y="37" textAnchor="middle" fontSize="14" fontWeight="900" fill={fg}>💰 {t('defi.viz.yield.fees')}</text>
+      <text x="270" y="71" textAnchor="end" fontSize="9.5" fontWeight="700" fill="#ef4444" fillOpacity="0.85">{t('defi.viz.yield.il')}</text>
+    </svg>
+  );
+}
+
 interface WhyItem { title: string; detail: string; }
 interface LabelDesc { label: string; desc: string; }
 interface LabelDetail { label: string; detail: string; }
@@ -2292,6 +2350,8 @@ export function BP_Section2() {
                   </div>
                 </div>
 
+                <DefiMiniViz kind={0} color="#39B54A" />
+
                 <div className="rounded-lg bg-muted/40 border border-border px-2.5 py-1.5 text-[11px]">
                   <span className="text-muted-foreground">{t('defi.amm.replacesPre')}</span>
                   <span className="font-semibold text-foreground">{t('defi.amm.replaces')}</span>
@@ -2300,11 +2360,6 @@ export function BP_Section2() {
                 <p className="text-sm text-muted-foreground flex-1">
                   {t('defi.amm.body')}
                 </p>
-
-                <div className="p-3 bg-[#39B54A]/10 border border-[#39B54A]/30 rounded-xl text-center">
-                  <div className="font-mono text-xl font-black text-foreground">{t('defi.amm.formula')}</div>
-                  <div className="text-[10px] text-muted-foreground mt-1">{t('defi.amm.formulaSub')}</div>
-                </div>
 
                 <div className="text-[11px] text-muted-foreground pt-2 border-t border-border">
                   <span className="font-semibold text-foreground">{t('defi.amm.liveLabel')}</span>{t('defi.amm.live')}
@@ -2328,6 +2383,8 @@ export function BP_Section2() {
                     <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">{t('defi.lending.subtitle')}</div>
                   </div>
                 </div>
+
+                <DefiMiniViz kind={1} color="#f97316" />
 
                 <div className="rounded-lg bg-muted/40 border border-border px-2.5 py-1.5 text-[11px]">
                   <span className="text-muted-foreground">{t('defi.lending.replacesPre')}</span>
@@ -2371,6 +2428,8 @@ export function BP_Section2() {
                     <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">{t('defi.yield.subtitle')}</div>
                   </div>
                 </div>
+
+                <DefiMiniViz kind={2} color="#6366f1" />
 
                 <div className="rounded-lg bg-muted/40 border border-border px-2.5 py-1.5 text-[11px]">
                   <span className="text-muted-foreground">{t('defi.yield.replacesPre')}</span>

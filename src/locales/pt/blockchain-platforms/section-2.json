@@ -725,6 +725,11 @@
     "heading": "DeFi — Três Primitivas, Uma Ideia",
     "subtitleA": "O DeFi substitui os intermediários financeiros por smart contracts. Três primitivas explicam ~90% do que existe por aí. ",
     "subtitleHighlight": "Vamos aprofundar no Curso 03 (Smart Contracts) — isto é a vista geral do terreno.",
+    "viz": {
+      "amm": { "tokenX": "ETH", "tokenY": "USDC", "pool": "pool" },
+      "lending": { "locked": "150 $ de colateral bloqueado", "borrowed": "100 $ emprestados", "liquidation": "liquidação" },
+      "yield": { "position": "Posição LP", "deposit": "o teu depósito", "share": "parte das taxas", "fees": "+ taxas", "il": "− perda impermanente" }
+    },
     "amm": {
       "title": "AMM",
       "subtitle": "Automated Market Maker",
@@ -971,10 +976,10 @@
       "rwa": { "offChain": "ativo off-chain", "onChain": "token on-chain", "bill": "T-bill" }
     },
     "items": [
-      { "name": "DeFi e finanças on-chain", "why": "Peças de dinheiro componíveis — Uniswap, Aave e Compound interoperam por defeito. ~50 mil M$ de TVL em L1 + L2.", "example": "Uniswap (DEX), Aave (lending), MakerDAO (DAI), Lido (staking), Curve (trocas de stables)." },
-      { "name": "NFTs e economia de criadores", "why": "ERC-721 / ERC-1155 são os padrões de facto. Aplicação de royalties + proveniência comprovável incluídas.", "example": "OpenSea, Blur, leilões on-chain da Sotheby's · domínios ENS · POAPs · provas de presença." },
-      { "name": "DAOs e governação on-chain", "why": "Votação ponderada por tokens, tesourarias programáveis, propostas transparentes — kits de governação testados em batalha.", "example": "Uniswap DAO (tesouraria de 6 mil M$), MakerDAO, Arbitrum DAO, Optimism, subsídios da Gitcoin." },
-      { "name": "Stablecoins e RWAs tokenizados", "why": "Liquidez mais profunda para tokens garantidos por USD; emissão de RWA via canais institucionais (BlackRock BUIDL, Franklin Templeton).", "example": "USDC, USDT, DAI, RLUSD, PYUSD na Ethereum · BlackRock BUIDL (mais de 2 mil M$ de AUM) · Ondo Finance." }
+      { "name": "DeFi e finanças on-chain", "why": "Composabilidade: os protocolos encaixam como \"money legos\". Sem permissões, com liquidação 24/7.", "example": "Uniswap (DEX), Aave (lending), MakerDAO (DAI), Lido (staking), Curve (trocas de stables)." },
+      { "name": "NFTs e economia de criadores", "why": "Proveniência e propriedade verificável, on-chain. Informação de royalties incluída nos padrões (ERC-721 / ERC-1155, ERC-2981).", "example": "OpenSea, Blur, leilões on-chain da Sotheby's · domínios ENS · POAPs · provas de presença." },
+      { "name": "DAOs e governação on-chain", "why": "Transparência e responsabilização: cada voto e pagamento deixa um registo de auditoria on-chain. Votação ponderada por tokens verificável, tesourarias programáveis.", "example": "Uniswap DAO (tesouraria de 6 mil M$), MakerDAO, Arbitrum DAO, Optimism, subsídios da Gitcoin." },
+      { "name": "Stablecoins e RWAs tokenizados", "why": "Finalidade de liquidação e liquidez profunda 24/7; tokenização de ativos do mundo real (BlackRock, Franklin Templeton).", "example": "USDC, USDT, DAI, RLUSD, PYUSD na Ethereum · BlackRock BUIDL (mais de 2 mil M$ de AUM) · Ondo Finance." }
     ]
   },
   "worstFits": {
