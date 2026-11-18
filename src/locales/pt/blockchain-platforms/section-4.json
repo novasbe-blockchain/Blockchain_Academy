@@ -13,9 +13,7 @@
     "s4-usecases": "Real-World Use Cases",
     "s4-closed": "Sistemas Fechados",
     "s4-interop": "Porque Têm de Falar",
-    "s4-way-bridge": "1 · Bridges",
-    "s4-way-ibc": "2 · IBC",
-    "s4-way-l0": "3 · Layer 0",
+    "s4-ways": "As Três Formas",
     "s4-chooser": "Which Connection?",
     "s4-layer0": "🧩 Layer 0: Conceito",
     "s4-layer0-2": "Layer 0: Plataformas",
@@ -46,7 +44,9 @@
   "ui": {
     "hood": "under the hood →",
     "recap": "Already covered",
-    "keyPoint": "Key point"
+    "keyPoint": "Key point",
+    "trustLabel": "Em quem confias",
+    "riskLabel": "Onde pode falhar"
   },
   "title": {
     "sectionNumber": "SECÇÃO 04",
@@ -161,87 +161,15 @@
   },
   "interopCompare": {
     "heading": "Três formas de ligar chains",
-    "rowLabels": {
-      "analogy": "Pensa nisto como",
-      "mechanism": "Como funciona",
-      "trust": "Em quem confias",
-      "risk": "Onde pode falhar"
-    },
-    "examplesLabel": "Exemplos",
-    "col1": {
-      "analogy": "Um estafeta fica com a tua bagagem e dá-te um talão de levantamento para usares na outra cidade.",
-      "short": "Bridges",
-      "lead": "Lock-and-mint: um operador fica no meio, guarda a tua moeda e emite uma cópia na outra chain.",
-      "caption": "A tua moeda nunca sai da Ethereum. Fica à espera no cofre enquanto uma cópia circula na Solana.",
-      "svg": {
-        "chainA": "Ethereum",
-        "chainB": "Solana",
-        "locked": "1 ETH",
-        "lockedNote": "a tua moeda, bloqueada",
-        "vaultNote": "um só cofre para todos",
-        "operator": "Operador da bridge",
-        "operatorNote1": "poucos signatários aprovam",
-        "operatorNote2": "cada emissão e libertação",
-        "minted": "1 wETH",
-        "mintedNote": "cópia embrulhada, emitida",
-        "ticketNote": "o teu talão",
-        "back": "Regresso: queimar a cópia → os signatários libertam o original"
-      },
-      "title": "Bridges & Tokens Embrulhados",
-      "mechanism": "Bloquear o ativo nativo num smart contract na chain de origem → cunhar uma representação embrulhada na chain de destino",
-      "trust": "Validadores multisig ou MPC — um conjunto de operadores off-chain tem de concordar antes de libertar os fundos",
-      "risk": "Os ativos bloqueados acumulam-se num só contrato — uma bridge com 500 M$ de TVL é uma recompensa de 500 M$ por bugs",
-      "examples": "WBTC · Ronin · Wormhole · Hop Protocol · LayerZero · Stargate"
-    },
-    "col2": {
-      "analogy": "Os dois aeroportos leem diretamente os cartões de embarque um do outro — sem estafeta.",
-      "short": "IBC",
-      "lead": "Sem operador no meio: as duas chains verificam-se diretamente uma à outra.",
-      "caption": "Cada chain guarda uma pequena cópia, sempre atualizada, dos cabeçalhos de bloco da outra, para poder verificar por si qualquer mensagem que chegue.",
-      "svg": {
-        "chainA": "Cosmos Hub",
-        "chainB": "Osmosis",
-        "ownValidators": "os seus validadores",
-        "copyOfB": "Cabeçalhos da Osmosis",
-        "copyOfA": "Cabeçalhos do Cosmos Hub",
-        "checks1": "✓ verifica cada prova",
-        "checks2": "com eles, por si própria",
-        "packet": "mensagem + prova",
-        "relayer": "Relayer",
-        "relayerNote1": "leva a mensagem,",
-        "relayerNote2": "não a pode forjar"
-      },
-      "title": "Nativa de protocolo / IBC",
-      "mechanism": "Cada chain corre um light client da outra — as provas das transições de estado são verificadas on-chain, não por um operador externo",
-      "trust": "Criptográfico — o consenso da chain emissora é a fonte de verdade. Não é preciso um conjunto de validadores separado",
-      "risk": "Só é tão forte quanto a mais fraca das duas chains. Ambas têm de falar a mesma norma, o que hoje limita o alcance.",
-      "examples": "Cosmos IBC · IBC Eureka (Ethereum) · Polkadot XCM (entre parachains)"
-    },
-    "col3": {
-      "analogy": "Uma só equipa de segurança guarda todos os terminais do aeroporto — passar de um terminal para outro é apenas andar.",
-      "short": "Layer 0",
-      "lead": "Uma equipa de segurança para muitas chains: as chains ligadas partilham validadores, por isso as mensagens já vêm incluídas.",
-      "caption": "Dentro da Layer 0, uma mensagem entre chains é verificada pelos mesmos validadores que finalizam os seus blocos.",
-      "svg": {
-        "l0Title": "Layer 0 — um conjunto de validadores partilhado",
-        "l0Note": "os mesmos validadores finalizam todas as chains ligadas",
-        "secures": "protege",
-        "chainA": "Moonbeam",
-        "chainB": "Hydration",
-        "chainC": "Bifrost",
-        "chainNote": "lógica da sua app",
-        "native": "mensagens nativas entre membros — sem contrato de bridge",
-        "outside1": "Chain",
-        "outside2": "externa",
-        "bridgeNeeded": "precisa de bridge",
-        "example": "aqui: Polkadot — os validadores da Relay Chain protegem cada parachain; o XCM é a mensagem nativa"
-      },
-      "title": "Rede Layer 0",
-      "mechanism": "Um conjunto de validadores partilhado protege todas as chains ligadas ao mesmo tempo, por isso enviar uma mensagem entre elas é uma operação nativa, não um contrato à parte.",
-      "trust": "Os próprios validadores da L0 — o mesmo conjunto que finaliza blocos também valida as mensagens cross-chain",
-      "risk": "As mensagens dentro da L0 são tão seguras quanto a própria L0. Continuam a ser precisas bridges externas para chains fora do ecossistema",
-      "examples": "Polkadot (Relay Chain + XCM) · Avalanche (Primary Network + Warp) · Babylon (camada de segurança BTC)"
-    }
+    "subtitle": "Todas movem valor ou mensagens entre chains; o que muda é em quem confias. Cada uma tem a sua secção a seguir.",
+    "howLabel": "Como",
+    "trustLabel": "Em quem confias",
+    "moreLabel": "Em detalhe",
+    "ways": [
+      { "name": "Bridges", "how": "Bloqueia a moeda numa chain e emite uma cópia na outra.", "trust": "Num operador: uma empresa ou alguns signatários que guardam o cofre.", "analogy": "Um estafeta guarda a tua bagagem e dá-te um talão de levantamento." },
+      { "name": "IBC · protocolo nativo", "how": "As duas chains verificam diretamente as provas uma da outra.", "trust": "Na matemática e nas próprias chains. Sem intermediário.", "analogy": "Dois aeroportos leem os cartões de embarque um do outro." },
+      { "name": "Layer 0", "how": "Muitas chains sob um conjunto de validadores partilhado; as mensagens são nativas.", "trust": "Nos validadores da Layer 0: uma equipa de segurança para todas as chains.", "analogy": "Uma só equipa de segurança guarda todos os terminais do aeroporto." }
+    ]
   },
   "layer0": {
     "heading": "Layer 0 — O Substrato por Baixo das L1s",
@@ -257,7 +185,9 @@
       { "icon": "🔐", "title": "Segurança partilhada", "desc": "Um conjunto de validadores agregado protege cada L1 a ele ligada. As novas chains herdam segurança no dia 1." },
       { "icon": "📨", "title": "Mensagens cross-chain nativas", "desc": "A L0 define o formato da mensagem e o modelo de confiança (XCM, Warp) — sem necessidade de bridge de terceiros." },
       { "icon": "⚙️", "title": "Infraestrutura partilhada", "desc": "A produção de blocos, a finalidade, a governação e as atualizações residem na L0. As L1s focam-se na lógica de aplicação." }
-    ]
+    ],
+    "trust": "Nos validadores da Layer 0: o mesmo conjunto que finaliza os blocos também transporta as mensagens.",
+    "risk": "Tudo o que está lá dentro só é tão seguro quanto a própria Layer 0, e chegar a uma chain fora do clube continua a exigir uma bridge."
   },
   "layer02": {
     "heading": "Layer 0: Plataformas Conhecidas & Compromissos",
@@ -441,7 +371,7 @@
     ],
     "propertiesTitle": "Propriedades Fundamentais",
     "properties": [
-      { "emoji": "🌐", "title": "Protocolo IBC", "desc": "Inter-Blockchain Communication: cada chain verifica por si os cabeçalhos de bloco da outra, por isso mensagens e ativos circulam sem intermediário." },
+      { "emoji": "🌐", "title": "Protocolo IBC", "desc": "Inter-Blockchain Communication: cada chain guarda uma pequena cópia dos cabeçalhos de bloco da outra (um light client) e verifica cada prova por si, por isso mensagens e ativos circulam sem intermediário." },
       { "emoji": "🔧", "title": "Cosmos SDK", "desc": "Framework em Go com módulos prontos (staking, governação, IBC) para construir uma chain específica de aplicação. Usado pela Osmosis, dYdX v4, Celestia e mais de 100 chains." },
       { "emoji": "⚛️", "title": "CometBFT (ex-Tendermint)", "desc": "O motor de consenso (ex-Tendermint): blocos de ~1 segundo, finalidade instantânea, sem forks. Cada zona fica segura enquanto menos de um terço dos validadores for desonesto." },
       { "emoji": "⚡", "title": "Soberania Específica de Aplicação", "desc": "Cada chain define as suas taxas, governação e atualizações, e não disputa espaço de bloco com outras apps." }
@@ -450,6 +380,8 @@
     "beyondBodyA": "O IBC ",
     "beyondBodyStrong": "Eureka",
     "beyondBodyB": " (ativo desde 2025) estende o IBC à Ethereum e a outras chains fora da Cosmos, sem bridge centralizada.",
+    "trust": "Na matemática e nos validadores das duas chains, sem empresa nem comité adicional. Um relayer só transporta a mensagem; não a pode forjar.",
+    "risk": "Só é tão forte quanto a mais fraca das duas chains, e ambas têm de falar IBC, o que hoje limita o alcance.",
     "dydxLabel": "Exemplo",
     "dydx": "A dYdX, uma exchange de derivados, deixou o seu rollup na Ethereum em 2023 para ter a sua própria chain Cosmos: uma app ganha chain própria quando é suficientemente grande para o justificar."
   },
@@ -599,9 +531,7 @@
     "s4-closed": "Cada blockchain é um sistema fechado: só verifica o seu próprio registo. Estar na internet não torna as chains interoperáveis.",
     "s4-interop": "As pessoas, o dinheiro e as apps não ficam numa só chain, por isso as chains fechadas precisam de ser ligadas — e cada ligação exige confiar em alguém ou em alguma coisa.",
     "s4-usecases": "In every real case someone holds the asset or verifies the other chain; who that is, is the design question.",
-    "s4-way-bridge": "Uma bridge é um operador que guarda a tua moeda: confias nos seus signatários, e o cofre único é o ponto fraco.",
-    "s4-way-ibc": "Com o IBC, as chains verificam diretamente as provas uma da outra: confias na matemática e nas duas chains, não num intermediário.",
-    "s4-way-l0": "Uma Layer 0 põe muitas chains sob um conjunto de validadores partilhado: as mensagens são nativas, mas só dentro do clube.",
+    "s4-ways": "Três caminhos, uma pergunta: em quem confias — num operador, nas próprias chains ou num conjunto de validadores partilhado?",
     "s4-chooser": "The safest connection is the one with the fewest people to trust.",
     "s4-bridges": "Uma bridge nunca move uma moeda: um operador de confiança bloqueia o original numa chain e emite um talão na outra.",
     "s4-bridge-risk": "É nas bridges que aconteceram os maiores roubos; usar uma é uma decisão de confiança.",
