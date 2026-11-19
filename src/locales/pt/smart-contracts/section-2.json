@@ -3,6 +3,7 @@
     "g-s2-stack":    "🧱 A Stack Web3",
     "g-s2-inside":   "🔍 Dentro de um Contrato",
     "g-s2-engine":   "⚙️ O Motor",
+    "g-s2-oracles":  "🔮 Oracles",
     "g-s2-business": "💼 Impacto no Negócio",
     "g-s2-wrap":     "✅ Fecho"
   },
@@ -18,17 +19,25 @@
     "s2-execution":    "Ambiente de Execução",
     "s2-gas":          "Gas · resumo de 10 s",
     "s2-standards":    "Tokens · resumo de 10 s",
+    "s2-oracle-why":   "Porquê Oracles?",
+    "s2-oracle-what":  "O Que É um Oracle?",
+    "s2-oracle-how":   "Como Funcionam",
+    "s2-oracle-risks": "O Problema do Oracle",
+    "s2-oracle-paris": "Caso: Sensor de Paris",
+    "s2-oracle-attack":"▶ Caso: Preço Falso",
     "s2-capabilities": "Novas Capacidades",
     "s2-reshape":      "Transformar o Negócio",
     "s2-quiz":         "Questionário",
     "s2-quiz-2":       "Questionário 2",
+    "s2-quiz-3":       "Questionário 3",
+    "s2-quiz-4":       "Questionário 4",
     "s2-takeaways":    "Conclusões"
   },
   "recapLabel": "Já abordado",
   "title": {
     "sectionNumber": "SECÇÃO 02",
     "title": "Como Funcionam os Smart Contracts",
-    "subtitle": "O que acontece quando um smart contract corre: a stack Web3, um negócio de escrow seguido passo a passo e resumos rápidos de gas e tokens. O código é opcional."
+    "subtitle": "O que acontece quando um smart contract corre: a stack Web3, um negócio de escrow seguido passo a passo, resumos rápidos de gas e tokens, e os oracles, a única janela de um contrato para o mundo real. O código é opcional."
   },
   "stackExercise": {
     "badge": "🧩 Exercício",
@@ -38,7 +47,7 @@
     "checkAnswers": "Verificar respostas",
     "tryAgain": "↺ Tentar de novo",
     "infoHovered": "Passa o rato sobre qualquer componente colocado para ver o que é.",
-    "infoIdle": "Clica (ou passa o rato) num componente para ler o que faz e depois clica numa camada para o colocar.",
+    "infoIdle": "Cada componente traz uma definição de uma linha. Clica num para ver mais detalhe e depois clica numa camada para o colocar.",
     "componentsLabel": "Componentes",
     "allPlaced": "Tudo colocado!",
     "clickHereToPlace": "← Clica aqui para colocar",
@@ -50,15 +59,15 @@
       "offchain":   { "label": "Camada Off-Chain",   "desc": "Dados externos, armazenamento e indexação" }
     },
     "items": {
-      "metamask":  { "label": "MetaMask",          "info": "Uma carteira em extensão de browser que guarda as tuas chaves e assina transações pelo utilizador. Corre inteiramente no frontend e nunca custodia fundos num servidor." },
-      "react":     { "label": "React / Next.js",   "info": "A framework de UI que renderiza a interface da dApp no browser. Não contém lógica on-chain — apenas chama os contratos através de uma carteira ou RPC." },
-      "infura":    { "label": "Infura RPC",        "info": "Um gateway RPC alojado que permite às apps ler o estado e difundir transações sem correr o seu próprio node. Expõe a blockchain através de um endpoint HTTPS normal." },
-      "solidity":  { "label": "Solidity Contract", "info": "O código-fonte do smart contract que define as regras e o estado on-chain da dApp. Depois de compilado e implementado, vive on-chain e corre em cada node." },
-      "evm":       { "label": "EVM",               "info": "A Ethereum Virtual Machine executa o bytecode do contrato de forma determinística. É o runtime integrado em cada node, por isso todos chegam ao mesmo resultado." },
-      "pos":       { "label": "PoS Validators",    "info": "Os validators fazem stake de ETH para propor e atestar blocos sob Proof of Stake. São a camada de consenso on-chain que ordena e finaliza as transações." },
-      "ipfs":      { "label": "IPFS",              "info": "Uma rede peer-to-peer para armazenar ficheiros grandes, como imagens e metadados, off-chain. Os contratos guardam apenas um hash de conteúdo, mantendo o armazenamento on-chain barato." },
-      "thegraph":  { "label": "The Graph",         "info": "Um protocolo de indexação que transforma eventos on-chain em APIs rápidas e consultáveis. Corre off-chain para que os frontends leiam dados sem percorrer toda a chain." },
-      "chainlink": { "label": "Chainlink Oracle",  "info": "Uma rede oracle que entrega dados externos, como preços e aleatoriedade, na chain. Liga informação off-chain a contratos que de outra forma não lhe conseguiriam aceder." }
+      "metamask":  { "label": "MetaMask",          "gloss": "Guarda as tuas chaves e assina transações.", "info": "Uma carteira em extensão de browser que guarda as tuas chaves e assina transações pelo utilizador. Corre inteiramente no frontend e nunca custodia fundos num servidor." },
+      "react":     { "label": "React / Next.js",   "gloss": "A interface web que o utilizador vê e usa.", "info": "A framework de UI que renderiza a interface da dApp no browser. Não contém lógica on-chain — apenas chama os contratos através de uma carteira ou RPC." },
+      "infura":    { "label": "Infura RPC",        "gloss": "Um gateway alojado entre as apps e os nós da blockchain.", "info": "Um gateway RPC alojado que permite às apps ler o estado e difundir transações sem correr o seu próprio node. Expõe a blockchain através de um endpoint HTTPS normal." },
+      "solidity":  { "label": "Solidity Contract", "gloss": "O código-fonte do contrato: as regras da dApp.", "info": "O código-fonte do smart contract que define as regras e o estado on-chain da dApp. Depois de compilado e implementado, vive on-chain e corre em cada node." },
+      "evm":       { "label": "EVM",               "gloss": "Corre o código dos contratos de forma igual em cada nó.", "info": "A Ethereum Virtual Machine executa o bytecode do contrato de forma determinística. É o runtime integrado em cada node, por isso todos chegam ao mesmo resultado." },
+      "pos":       { "label": "PoS Validators",    "gloss": "Fazem stake para ordenar transações e confirmar blocos.", "info": "Os validators fazem stake de ETH para propor e atestar blocos sob Proof of Stake. São a camada de consenso on-chain que ordena e finaliza as transações." },
+      "ipfs":      { "label": "IPFS",              "gloss": "Armazenamento descentralizado de ficheiros grandes ou caros demais para guardar on-chain.", "info": "O IPFS (InterPlanetary File System) é uma rede peer-to-peer para guardar ficheiros como imagens e documentos. Guardá-los on-chain custaria uma fortuna, por isso o contrato guarda apenas a impressão digital do ficheiro (o seu hash) e o ficheiro em si vive no IPFS." },
+      "thegraph":  { "label": "The Graph",         "gloss": "Indexa os dados da blockchain para as apps os consultarem depressa.", "info": "O The Graph é um serviço de indexação. Uma blockchain é lenta de pesquisar, por isso o The Graph lê os eventos dos contratos à medida que acontecem e organiza-os numa API ao estilo de uma base de dados, que uma app consulta em milissegundos." },
+      "chainlink": { "label": "Chainlink Oracle",  "gloss": "Uma rede de oracles: traz dados do mundo real para on-chain.", "info": "A Chainlink é uma rede de oracles: computadores independentes que vão buscar dados do mundo real, como preços, e os escrevem on-chain. Um contrato não consegue ir buscar esses dados sozinho. Porquê, e o que pode correr mal, é o capítulo 🔮 Oracles mais à frente nesta secção." }
     }
   },
   "web3": {
@@ -130,7 +139,7 @@
           "Armazenamento: IPFS, Arweave (ficheiros grandes, metadados de NFT)",
           "Indexadores: The Graph — consultam dados da blockchain como uma BD",
           "Bases de dados: preferências do utilizador, analítica, cache",
-          "APIs: oracles, meios de pagamento, serviços de notificação"
+          "Oracles: Chainlink — trazem dados do mundo real para os contratos"
         ]
       }
     ],
@@ -466,6 +475,305 @@
       { "label": "Fazer deploy de um novo contrato",    "gasLabel": "500k+ gas" }
     ]
   },
+  "oracle": {
+    "kicker": "Novo conceito · Oracles",
+    "onChain": "On-chain",
+    "offChain": "Mundo real · off-chain",
+    "realWorld": "Mundo real",
+    "why": {
+      "heading": "Porque é que um smart contract não pode simplesmente ver o tempo que faz?",
+      "subtitle": "Consegue guardar um milhão de dólares e pagar em segundos, mas não consegue consultar um único facto fora da sua própria chain.",
+      "pickHint": "Toca em algo que o contrato precise de saber",
+      "contract": "Contrato de seguro agrícola",
+      "rule": "se chuva < 10 mm → pagar aos agricultores",
+      "waiting": "À espera de dados…",
+      "noAnswer": "Sem resposta. Não consegue decidir.",
+      "wall": "SANDBOX",
+      "items": [
+        "Chuva de hoje",
+        "Preço do ETH",
+        "Resultado do jogo",
+        "Atraso do voo",
+        "Qualquer API web"
+      ],
+      "idle": "Vá, experimenta: manda o contrato ir buscar alguma coisa.",
+      "blocked": "bloqueado. O código de um contrato corre dentro de uma máquina virtual selada, sem internet, sem sistema de ficheiros e sem chamadas a APIs. Só consegue ler o que já está na sua própria chain.",
+      "thoughtLabel": "Experiência mental",
+      "thoughtTitle": "E se cada nó chamasse ele próprio a API?",
+      "node": "Nó",
+      "nodes": [
+        "ETH = 3.012 $",
+        "ETH = 3.015 $",
+        "timeout"
+      ],
+      "noConsensus": "Três nós, três respostas: sem consenso, sem bloco.",
+      "thoughtBody": "Milhares de nós voltam a correr cada contrato e têm de chegar ao mesmo resultado. Uma API em tempo real responde a cada um de forma ligeiramente diferente. O muro é deliberado: é o que mantém todos os nós de acordo.",
+      "bridge": "Então como é que um contrato de seguro chega a saber que não choveu?",
+      "bridgeCta": "Precisa de um oracle ↓"
+    },
+    "what": {
+      "heading": "O que é um oracle?",
+      "subtitle": "A ponte entre um smart contract e o mundo real. Já colocaste um no exercício da stack: a Chainlink.",
+      "toggleLabel": "O mesmo contrato, a mesma seca — muda o interruptor",
+      "without": "Sem oracle",
+      "with": "Com oracle",
+      "station": "Estação meteorológica",
+      "stationValue": "4 mm",
+      "stationSub": "de chuva este mês",
+      "gap": "Sem passagem",
+      "oracle": "Oracle",
+      "packet": "chuva = 4 mm",
+      "contract": "Contrato de seguro agrícola",
+      "slotLabel": "chuva registada",
+      "slotEmpty": "?",
+      "slotFilled": "4 mm",
+      "stuck": "Não consegue decidir. Os agricultores esperam.",
+      "acts": "4 mm < 10 mm → os agricultores são pagos",
+      "defTerm": "Oracle",
+      "def": "Um serviço que vai buscar dados fora da blockchain e os escreve on-chain, para que os smart contracts os possam ler e agir com base neles.",
+      "nuanceLabel": "A parte subtil",
+      "nuance": "O contrato continua a nunca sair para o exterior. É o oracle que empurra os dados para dentro, numa transação normal, e a partir daí todos os nós leem o mesmo valor guardado. A sandbox mantém-se intacta.",
+      "deliversLabel": "O que os oracles entregam",
+      "delivers": [
+        "Preços de ativos",
+        "Meteorologia",
+        "Resultados desportivos e eleitorais",
+        "Atrasos de voos",
+        "Aleatoriedade",
+        "Prova de reservas"
+      ]
+    },
+    "how": {
+      "heading": "Como é que os dados chegam on-chain?",
+      "subtitle": "Quatro passos e uma regra de desenho: nunca depender de um único informador.",
+      "steps": [
+        {
+          "label": "Recolher",
+          "desc": "Os nós do oracle, computadores fora da chain, vão buscar o valor a várias fontes: exchanges, serviços meteorológicos, APIs."
+        },
+        {
+          "label": "Reportar",
+          "desc": "Cada nó assina a sua resposta e reporta-a."
+        },
+        {
+          "label": "Agregar",
+          "desc": "As respostas são combinadas num só valor, normalmente a mediana, para que alguns valores extremos não o consigam mover."
+        },
+        {
+          "label": "Ler",
+          "desc": "O valor fica guardado num contrato de feed on-chain. O teu contrato lê-o como qualquer outro dado on-chain."
+        }
+      ],
+      "labLabel": "Experimenta",
+      "labPrompt": "Toca num nó para o pôr a mentir. Quantos mentirosos são precisos para enganar o contrato?",
+      "modeSingle": "Um oracle",
+      "modeNetwork": "Rede de oracles",
+      "node": "Nó",
+      "reports": [
+        "3.001 $",
+        "2.999 $",
+        "3.000 $",
+        "3.002 $",
+        "2.998 $"
+      ],
+      "lie": "9.999 $",
+      "median": "mediana",
+      "onlyReport": "único reporte",
+      "feedLabel": "Feed on-chain · ETH / USD",
+      "contractReads": "o que o teu contrato lê",
+      "status": {
+        "honest": "Todos os reportes são honestos. O feed está certo.",
+        "tolerated": "{{n}} de 5 nós a mentir. A mediana ignora os valores extremos, por isso o feed continua certo.",
+        "captured": "A maioria está a mentir, por isso a própria mediana é uma mentira. O contrato vai agir com base em 9.999 $.",
+        "singleOk": "Funciona, enquanto esta única máquina se mantiver honesta, online e sem ser atacada.",
+        "singleBad": "Um oracle, uma mentira. O feed está errado e nada on-chain consegue dar por isso."
+      },
+      "note": "os seus price feeds funcionam assim. Muitos operadores de nós independentes e muitas fontes de dados produzem um único valor agregado on-chain, atualizado quando o preço se move o suficiente ou quando um temporizador expira.",
+      "hood": [
+        "Chainlink Data Feeds",
+        "decentralised oracle network",
+        "median",
+        "deviation threshold",
+        "heartbeat"
+      ]
+    },
+    "risks": {
+      "heading": "O problema do oracle",
+      "subtitle": "Uma blockchain consegue verificar assinaturas e aritmética. Não consegue verificar se um número é verdadeiro.",
+      "pickHint": "Escolhe uma falha para ver que elo se parte",
+      "links": {
+        "source": {
+          "label": "Fonte de dados",
+          "guard": "Quem a controla?"
+        },
+        "oracle": {
+          "label": "Oracle",
+          "guard": "Quem o opera?"
+        },
+        "contract": {
+          "label": "Smart contract",
+          "guard": "Milhares de validators"
+        }
+      },
+      "items": [
+        {
+          "title": "Ponto único de falha",
+          "tagline": "Um informador, um interruptor.",
+          "tag": "offline",
+          "desc": "Um único nó ou uma única empresa fornece os dados. Se ficar offline, for atacado ou subornado, todos os contratos que dependem dele falham com ele.",
+          "effect": "Não chegam dados. O contrato fica bloqueado, e o dinheiro lá dentro também.",
+          "defense": "Muitos nós independentes e muitas fontes."
+        },
+        {
+          "title": "Dados desatualizados ou errados",
+          "tagline": "Um número verdadeiro, seis horas atrasado.",
+          "tag": "há 6 h",
+          "desc": "O feed deixa de atualizar durante uma falha ou um congestionamento da rede, ou uma fonte publica um erro. O contrato continua a agir com base num número que já não é verdadeiro.",
+          "effect": "Empresta e liquida a um preço que o mercado já deixou para trás.",
+          "defense": "Verificar a data dos dados e parar quando são demasiado antigos."
+        },
+        {
+          "title": "Manipulação",
+          "tagline": "Um mensageiro honesto a transportar uma mentira.",
+          "tag": "adulterada",
+          "desc": "O oracle reporta fielmente, mas alguém adulterou a própria fonte: um mercado com pouca liquidez, um único sensor. O número falso chega on-chain devidamente assinado.",
+          "effect": "Paga com base num número que alguém fabricou.",
+          "defense": "Combinar mercados profundos, fazer a média ao longo do tempo, rejeitar valores extremos."
+        }
+      ],
+      "effectLabel": "O que o contrato faz",
+      "defenseLabel": "Defesa",
+      "paradoxLabel": "A ironia",
+      "paradox": "Os smart contracts tiram o intermediário de confiança do negócio e depois deixam entrar outro pelo feed de dados. Um contrato só é tão fiável quanto a sua fonte de dados.",
+      "next": "A seguir: dois casos reais, um termómetro em Paris e uma etiqueta de preço que valeu milhões."
+    },
+    "paris": {
+      "kicker": "Caso real 1 · Paris, abril de 2026",
+      "heading": "Que temperatura fez em Paris? Depende do termómetro a que perguntas.",
+      "subtitle": "Um mercado de previsões pagou com base num único sensor de aeroporto. Depois, esse sensor mostrou um pico que mais ninguém viu.",
+      "chartLabel": "Que fonte decide o mercado?",
+      "sourceSensor": "O sensor indicado",
+      "sourceNearby": "Estações vizinhas",
+      "chart": {
+        "afternoon": "tarde",
+        "evening": "noite",
+        "sensorLine": "sensor de Charles de Gaulle",
+        "nearbyLine": "estações vizinhas",
+        "high": "máxima do dia"
+      },
+      "outcomeSensor": "Máxima do dia: 22°C. Ganha a aposta improvável.",
+      "outcomeNearby": "Máxima do dia: cerca de 18°C. Ganha o favorito.",
+      "chartNote": "6 de abril de 2026, níveis de temperatura conforme noticiado; a forma da curva é ilustrativa.",
+      "facts": [
+        {
+          "label": "A regra",
+          "text": "A Polymarket tinha um mercado diário sobre a temperatura máxima em Paris. As regras resolviam-no com um único sensor da Météo-France no aeroporto Charles de Gaulle. Esse sensor era o oracle."
+        },
+        {
+          "label": "O pico",
+          "text": "A 6 e a 15 de abril, a leitura saltou mais de 3°C durante alguns minutos e depois voltou a descer. As estações vizinhas não mostraram nenhum pico assim."
+        },
+        {
+          "label": "O pagamento",
+          "text": "Apostas improváveis exatamente nessas leituras renderam mais de 35.000 dólares."
+        },
+        {
+          "label": "O desfecho",
+          "text": "A Météo-France apresentou queixa na polícia por interferência no seu equipamento. A Polymarket passou o mercado de Paris para um sensor no aeroporto de Le Bourget."
+        }
+      ],
+      "status": "A adulteração é uma suspeita, não um facto provado: a investigação ainda estava em curso quando o caso foi noticiado.",
+      "lessonLabel": "A lição",
+      "lesson": "O mercado pagou exatamente como estava escrito: o que aquele único sensor dissesse. \"A temperatura em Paris\" teve de ser definida como um único aparelho, e quem consegue tocar no aparelho consegue mover o pagamento. Um oracle é um problema de confiança e de definição, não apenas um problema técnico.",
+      "sources": "Noticiado pela NPR, CNN, Euronews e Decrypt, abril de 2026.",
+      "hood": [
+        "resolution source",
+        "prediction market",
+        "optimistic oracle (UMA)",
+        "dispute window"
+      ]
+    },
+    "attack": {
+      "kicker": "Caso real 2 · segue passo a passo",
+      "heading": "Como se assalta um credor mudando uma etiqueta de preço?",
+      "subtitle": "O ataque clássico a oracles em DeFi: distorcer o preço num mercado pequeno e depois cobrar num mercado maior que confia nele.",
+      "decimal": ",",
+      "usd": "{{v}} $",
+      "usdM": "{{v}} M$",
+      "tokM": "{{v}}M TOKEN",
+      "marketA": "Mercado A · pool de negociação pequena",
+      "marketASub": "TOKEN / USDC · apenas 4 M$ lá dentro",
+      "spot": "Preço do TOKEN aqui",
+      "thin": "Pool pequena: barata de mover",
+      "feed": "feed de preço",
+      "feedSpot": "lê o preço em tempo real do Mercado A",
+      "feedSafe": "muitos mercados, média ao longo do tempo",
+      "marketB": "Mercado B · protocolo de empréstimos",
+      "marketBSub": "empresta dólares contra colateral em TOKEN",
+      "vault": "No cofre",
+      "collateral": "Colateral",
+      "loan": "Emprestado",
+      "paper": "⚠ 4 M$ no papel, cerca de 1 M$ na realidade",
+      "hole": "✕ 3 M$ emprestados contra colateral que vale cerca de 1 M$",
+      "fair": "✓ Avaliado ao preço real",
+      "attacker": "Atacante",
+      "cash": "Dinheiro",
+      "owes": "Flash loan em dívida",
+      "steps": [
+        {
+          "label": "Cenário",
+          "what": "O Mercado B empresta dólares a quem depositar TOKEN como colateral. Para saber quanto vale o TOKEN, o seu contrato lê o preço em tempo real do Mercado A, uma pool de negociação pequena."
+        },
+        {
+          "label": "Flash loan",
+          "what": "O atacante pede 2 M$ emprestados sem qualquer colateral. A condição: um flash loan tem de ser devolvido dentro da mesma transação, ou a transação inteira é cancelada."
+        },
+        {
+          "label": "Inflacionar",
+          "what": "O atacante despeja os 2 M$ no Mercado A, a comprar TOKEN. Tanta compra numa pool tão pequena leva o preço de 1 $ para 4 $. O atacante tem agora 1M de TOKEN."
+        },
+        {
+          "label": "Confiar",
+          "what": "O atacante deposita 1M de TOKEN no Mercado B como colateral. O contrato pergunta o preço ao seu oracle, ouve 4 $ e regista o colateral como valendo 4 M$. Não tem forma de saber que o preço é falso."
+        },
+        {
+          "label": "Esvaziar",
+          "what": "Contra 4 M$ de colateral no papel, o Mercado B empresta 3 M$ em dólares reais, os seus 75% habituais."
+        },
+        {
+          "label": "Sair",
+          "what": "O atacante devolve o flash loan de 2 M$ e sai com 1 M$. O preço na pool volta a cair para cerca de 1 $, por isso o Mercado B fica com colateral que vale cerca de 1 M$ contra um empréstimo de 3 M$. Uma transação, alguns segundos."
+        }
+      ],
+      "safeSteps": [
+        "O atacante deposita 1M de TOKEN no Mercado B. Este oracle faz a média de muitos mercados ao longo do tempo, por isso uma pool pequena quase não o move: continua a dizer cerca de 1 $. O colateral é registado como valendo cerca de 1 M$.",
+        "Contra 1 M$ de colateral, o Mercado B empresta no máximo 0,75 M$.",
+        "O atacante deve 2 M$ e tem 0,75 M$. O flash loan não pode ser devolvido, por isso a transação inteira é cancelada: sem empréstimo, sem compra, nada aconteceu. A tentativa custa apenas o gas."
+      ],
+      "toggleLabel": "Experimenta: em que preço confia o Mercado B?",
+      "toggleSpot": "Preço em tempo real do Mercado A",
+      "toggleSafe": "Um feed agregado",
+      "result": {
+        "profit": "O atacante fica com 1 M$",
+        "badDebt": "Buraco de 2 M$",
+        "reverted": "Revertido: nada aconteceu",
+        "safe": "Intacto"
+      },
+      "back": "← Voltar",
+      "next": "Passo seguinte →",
+      "restart": "↺ Correr outra vez",
+      "realLabel": "O mesmo padrão, dinheiro real:",
+      "real": "bZx (2020), Harvest Finance (2020), Mango Markets (2022, cerca de 110 M$).",
+      "footnote": "Os números aqui são ilustrativos; comissões ignoradas.",
+      "hood": [
+        "flash loan",
+        "spot price",
+        "TWAP",
+        "slippage",
+        "bad debt"
+      ]
+    }
+  },
   "reshape": {
     "heading": "Como os Smart Contracts Transformam o Negócio Tradicional",
     "subtitle": "Cinco mudanças estruturais que distinguem os negócios nativos de smart contracts dos tradicionais.",
@@ -493,24 +801,44 @@
     "patternBody": " os negócios tradicionais centralizam a confiança num intermediário. Os negócios nativos de smart contracts distribuem essa confiança em código + consenso e depois constroem novas primitivas económicas por cima — composability, atomicidade e alcance global. Build one when many parties must share one record without a referee; otherwise a database is cheaper. A próxima secção explora onde isto funciona na prática."
   },
   "quiz": {
-    "question": "No fluxo de execução de um smart contract, o que aciona a execução de um contrato?",
+    "question": "As condições escritas num smart contract já implementado cumprem-se finalmente. O que é que faz, de facto, o código correr?",
     "options": [
-      "Uma tarefa cron agendada nos servidores da blockchain",
-      "Uma transação enviada para o endereço do contrato na blockchain",
-      "O programador a chamar manualmente o contrato a partir da sua máquina",
-      "A Ethereum Foundation a aprovar o pedido de execução"
+      "Um temporizador dentro do contrato que verifica as condições a intervalos regulares",
+      "Uma transação que alguém envia, chamando uma das suas funções",
+      "O próprio contrato: executa-se automaticamente no momento em que as condições se cumprem",
+      "Um validator que repara que as condições se cumpriram e o aciona"
     ],
-    "explanation": "Os smart contracts são passivos — ficam na blockchain e não fazem nada até serem acionados. Uma transação enviada para o endereço do contrato dá início à execução na EVM. O contrato corre, atualiza o estado e emite eventos — tudo dentro dessa única transação."
+    "explanation": "Um contrato nunca age sozinho: não tem temporizador e não consegue observar o mundo. Fica parado até que uma transação assinada chame uma das suas funções, diretamente ou através de outro contrato. Só então corre as verificações, atualiza o estado e emite eventos, tudo dentro dessa única transação."
   },
   "quiz2": {
-    "question": "Na demonstração do escrow, um estranho (que não é a compradora) chama a função deposit() do contrato. O que acontece?",
+    "question": "Na demonstração do escrow, um estranho (que não é a compradora) chama deposit() com 2 ETH. O que acontece?",
     "options": [
-      "O contrato aceita o dinheiro e o estranho passa a ser o novo comprador",
-      "A transação fica em fila de espera até o vendedor a aprovar manualmente",
-      "A verificação falha, a transação reverte e nada muda — mas quem chamou paga o gas na mesma",
-      "O contrato fica congelado até o programador o voltar a implementar"
+      "O contrato fica com os 2 ETH mas deixa o negócio marcado como Por pagar",
+      "A transação reverte, nada muda, e o gas é devolvido ao estranho",
+      "A transação reverte, nada muda, e o estranho paga o gas na mesma",
+      "A transação fica pendente até a verdadeira compradora a aprovar"
     ],
-    "explanation": "O contrato verifica as regras antes de qualquer movimento. Uma verificação falhada reverte a transação inteira: saldos, estado e eventos ficam exatamente como estavam. Os nós tiveram na mesma o trabalho de a correr, por isso quem chamou paga o gas."
+    "explanation": "O contrato verifica as regras antes de qualquer movimento. Uma verificação falhada reverte a transação inteira: saldos, estado e eventos ficam exatamente como estavam, por isso nada fica a meio. Os nós tiveram na mesma o trabalho de a correr, por isso o gas já gasto não é devolvido."
+  },
+  "quiz3": {
+    "question": "Um contrato de seguro agrícola tem de pagar quando a chuva fica abaixo de 10 mm. Porque é que o contrato não pode simplesmente chamar ele próprio uma API de meteorologia?",
+    "options": [
+      "Todos os nós voltam a correr o contrato e têm de obter o mesmo resultado; uma API em tempo real podia responder de forma diferente a cada nó",
+      "Chamar uma API custaria mais gas do que a maioria dos contratos consegue pagar",
+      "Os dados meteorológicos são demasiado grandes para caber num bloco",
+      "Pode, mas apenas através de APIs que os validators tenham aprovado previamente"
+    ],
+    "explanation": "O código de um contrato corre numa máquina virtual selada em milhares de nós, e todos têm de chegar ao mesmo resultado. Uma API em tempo real podia responder de forma diferente a cada nó, por isso as chamadas ao exterior simplesmente não existem. Um oracle resolve isto escrevendo os dados on-chain numa transação; a partir daí, todos os nós leem o mesmo valor guardado."
+  },
+  "quiz4": {
+    "question": "Um protocolo de empréstimos avalia o colateral com o preço em tempo real de uma única pool de negociação pequena. Um atacante faz esse preço subir 4× durante alguns segundos e pede emprestado contra o colateral inflacionado. Qual era a fraqueza de fundo?",
+    "options": [
+      "Um bug no código do contrato de empréstimos calculou mal o empréstimo",
+      "Os flash loans permitem pedir emprestado sem colateral",
+      "Os validators não detetaram nem rejeitaram o preço falso",
+      "O contrato confiou numa única fonte de preço que era barata de manipular"
+    ],
+    "explanation": "O contrato de empréstimos correu exatamente como estava escrito, e os validators só verificam se as regras foram cumpridas, não se um preço é justo. A fraqueza estava no desenho do oracle: uma pool pequena é barata de mover, nem que seja por alguns segundos. Os flash loans apenas tornam o ataque mais barato de financiar. Os feeds mais seguros combinam muitos mercados e fazem a média ao longo do tempo."
   },
   "takeaways": {
     "title": "Secção 02 — Conclusões Chave",
@@ -520,7 +848,8 @@
       "Cada execução é o mesmo ciclo: uma transação chama uma função, o código verifica as regras, o estado muda, um evento é emitido",
       "Uma verificação falhada reverte tudo — nada fica a meio",
       "Todos os nós calculam o mesmo resultado, e esse trabalho é pago em gas por quem envia a transação",
-      "O efeito no negócio: dinheiro programável e liquidação automática sem intermediário a quem pagar ou em quem confiar"
+      "O efeito no negócio: dinheiro programável e liquidação automática sem intermediário a quem pagar ou em quem confiar",
+      "Um contrato não consegue ver o mundo exterior: os oracles escrevem dados do mundo real on-chain, e o contrato só é tão seguro quanto esses dados"
     ]
   },
   "keyPoints": {
@@ -536,6 +865,12 @@
     "s2-capabilities": "The new capability is not automation — it is automation that no single party, including the operator, can override.",
     "s2-gas": "Every step costs real money, so good design keeps heavy data off-chain and puts only the proof on-chain.",
     "s2-standards": "Standards are why one wallet works with thousands of tokens.",
+    "s2-oracle-why": "A smart contract is blind by design: it sees only what is already on its own chain.",
+    "s2-oracle-what": "An oracle does not make a contract smarter; it puts outside facts on-chain where the contract can read them.",
+    "s2-oracle-how": "Many reporters and a median replace \"trust this one company\" with \"trust that most of them are honest\".",
+    "s2-oracle-risks": "The chain executes faithfully on whatever the oracle says: wrong data in, wrong payout out.",
+    "s2-oracle-paris": "Before trusting an automated payout, ask which exact source decides, and who can touch it.",
+    "s2-oracle-attack": "A smart contract is only as safe as the oracle feeding it.",
     "s2-reshape": "Smart-contract businesses earn from protocols and tokens, not from being the trusted middleman — the revenue model moves."
   }
 }
