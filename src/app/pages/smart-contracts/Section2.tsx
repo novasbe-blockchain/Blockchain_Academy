@@ -14,6 +14,7 @@ import { Cog, Check, X, Server, ShieldCheck, Activity, Database, Coins, Ban } fr
 import {
   OracleWhySlide, OracleWhatSlide, OracleHowSlide, OracleRisksSlide, OracleParisSlide, OracleAttackSlide,
 } from './Section2Oracles';
+import { LiquidityPoolSlide, FlashLoanSlide } from './Section2Capabilities';
 
 import imgDisintermediation from '../../../assets/sc/disintermediation.png';
 
@@ -36,6 +37,14 @@ const chapterShape = [
   { id: 's2-gas' },
   { id: 's2-standards' },
 
+  { kind: 'group' as const, id: 'g-s2-business' },
+  { id: 's2-reshape' },
+
+  { kind: 'group' as const, id: 'g-s2-capabilities' },
+  { id: 's2-capabilities' },
+  { id: 's2-liquidity' },
+  { id: 's2-flash' },
+
   { kind: 'group' as const, id: 'g-s2-oracles' },
   { id: 's2-oracle-why' },
   { id: 's2-oracle-what' },
@@ -43,10 +52,6 @@ const chapterShape = [
   { id: 's2-oracle-risks' },
   { id: 's2-oracle-paris' },
   { id: 's2-oracle-attack' },
-
-  { kind: 'group' as const, id: 'g-s2-business' },
-  { id: 's2-capabilities' },
-  { id: 's2-reshape' },
 
   { kind: 'group' as const, id: 'g-s2-wrap' },
   { id: 's2-quiz' },
@@ -1770,53 +1775,6 @@ export function SC_Section2() {
           <KeyPointBar text={t('keyPoints.s2-standards')} className="mt-3" />
         </div>
 
-        {/* ═══════ ORACLES — why · what · how · risks · two real cases ═══════ */}
-        <div id="s2-oracle-why" className="h-full"><OracleWhySlide /></div>
-        <div id="s2-oracle-what" className="h-full"><OracleWhatSlide /></div>
-        <div id="s2-oracle-how" className="h-full"><OracleHowSlide /></div>
-        <div id="s2-oracle-risks" className="h-full"><OracleRisksSlide /></div>
-        <div id="s2-oracle-paris" className="h-full"><OracleParisSlide /></div>
-        <div id="s2-oracle-attack" className="h-full"><OracleAttackSlide /></div>
-
-        {/* ═══════ NEW CAPABILITIES ═══════ */}
-        <div id="s2-capabilities" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('capabilities.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('capabilities.subtitle')}</p>
-          </div>
-
-          <div className="flex-1 min-h-0 flex flex-col gap-2">
-            {capabilityItems.map((c, i) => (
-              <motion.div
-                key={c.title}
-                initial={{ opacity: 0, x: -12 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.25 }}
-                className="flex-1 flex items-center gap-4 p-3 rounded-xl border-2 bg-card"
-                style={{ borderColor: capabilityMeta[i].color + '40' }}
-              >
-                <div className="size-12 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: capabilityMeta[i].color + '18' }}>{capabilityMeta[i].emoji}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-black text-base text-foreground">{c.title}</div>
-                  <div className="text-sm font-semibold mt-0.5" style={{ color: capabilityMeta[i].color }}>{c.tagline}</div>
-                </div>
-                <div className="hidden lg:flex w-32 shrink-0 items-center justify-center">
-                  <CapMiniViz kind={i} color={capabilityMeta[i].color} />
-                </div>
-                <div className="hidden lg:block w-[30%] shrink-0">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">{t('capabilities.realExample')}</div>
-                  <div className="text-sm text-muted-foreground italic leading-snug p-2 rounded-lg" style={{ backgroundColor: capabilityMeta[i].color + '0d' }}>{c.example}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-          <div className="shrink-0 mt-3 p-2.5 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">{t('capabilities.whyLabel')}</span>{t('capabilities.whyBody')}
-          </div>
-          <KeyPointBar text={t('keyPoints.s2-capabilities')} className="mt-3" />
-        </div>
-
         {/* ═══════ RESHAPE BUSINESS ═══════ */}
         <div id="s2-reshape" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4 flex items-start gap-4">
@@ -1930,6 +1888,57 @@ export function SC_Section2() {
           </div>
           <KeyPointBar text={t('keyPoints.s2-reshape')} className="mt-3" />
         </div>
+
+        {/* ═══════ NEW CAPABILITIES ═══════ */}
+        <div id="s2-capabilities" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-5">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('capabilities.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('capabilities.subtitle')}</p>
+          </div>
+
+          <div className="flex-1 min-h-0 flex flex-col gap-2">
+            {capabilityItems.map((c, i) => (
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, x: -12 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.25 }}
+                className="flex-1 flex items-center gap-4 p-3 rounded-xl border-2 bg-card"
+                style={{ borderColor: capabilityMeta[i].color + '40' }}
+              >
+                <div className="size-12 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: capabilityMeta[i].color + '18' }}>{capabilityMeta[i].emoji}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-black text-base text-foreground">{c.title}</div>
+                  <div className="text-sm font-semibold mt-0.5" style={{ color: capabilityMeta[i].color }}>{c.tagline}</div>
+                </div>
+                <div className="hidden lg:flex w-32 shrink-0 items-center justify-center">
+                  <CapMiniViz kind={i} color={capabilityMeta[i].color} />
+                </div>
+                <div className="hidden lg:block w-[30%] shrink-0">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">{t('capabilities.realExample')}</div>
+                  <div className="text-sm text-muted-foreground italic leading-snug p-2 rounded-lg" style={{ backgroundColor: capabilityMeta[i].color + '0d' }}>{c.example}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          <div className="shrink-0 mt-3 p-2.5 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground">
+            <span className="font-semibold text-foreground">{t('capabilities.whyLabel')}</span>{t('capabilities.whyBody')}
+          </div>
+          <KeyPointBar text={t('keyPoints.s2-capabilities')} className="mt-3" />
+        </div>
+
+        {/* ═══════ NEW CAPABILITIES IN ACTION — a lending pool, then the flash loan that borrows from it ═══════ */}
+        <div id="s2-liquidity" className="h-full"><LiquidityPoolSlide /></div>
+        <div id="s2-flash" className="h-full"><FlashLoanSlide /></div>
+
+        {/* ═══════ ORACLES — why · what · how · risks · two real cases ═══════ */}
+        <div id="s2-oracle-why" className="h-full"><OracleWhySlide /></div>
+        <div id="s2-oracle-what" className="h-full"><OracleWhatSlide /></div>
+        <div id="s2-oracle-how" className="h-full"><OracleHowSlide /></div>
+        <div id="s2-oracle-risks" className="h-full"><OracleRisksSlide /></div>
+        <div id="s2-oracle-paris" className="h-full"><OracleParisSlide /></div>
+        <div id="s2-oracle-attack" className="h-full"><OracleAttackSlide /></div>
 
         {/* Quiz 1: what triggers a contract */}
         <div id="s2-quiz" className="h-full">

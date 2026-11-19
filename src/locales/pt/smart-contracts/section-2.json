@@ -3,8 +3,9 @@
     "g-s2-stack":    "🧱 A Stack Web3",
     "g-s2-inside":   "🔍 Dentro de um Contrato",
     "g-s2-engine":   "⚙️ O Motor",
-    "g-s2-oracles":  "🔮 Oracles",
     "g-s2-business": "💼 Impacto no Negócio",
+    "g-s2-capabilities": "✨ Novas Capacidades",
+    "g-s2-oracles":  "🔮 Oracles",
     "g-s2-wrap":     "✅ Fecho"
   },
   "chapters": {
@@ -19,14 +20,16 @@
     "s2-execution":    "Ambiente de Execução",
     "s2-gas":          "Gas · resumo de 10 s",
     "s2-standards":    "Tokens · resumo de 10 s",
+    "s2-reshape":      "Transformar o Negócio",
+    "s2-capabilities": "As Cinco Capacidades",
+    "s2-liquidity":    "▶ Depositar e Render",
+    "s2-flash":        "▶ Flash Loans",
     "s2-oracle-why":   "Porquê Oracles?",
     "s2-oracle-what":  "O Que É um Oracle?",
     "s2-oracle-how":   "Como Funcionam",
     "s2-oracle-risks": "O Problema do Oracle",
     "s2-oracle-paris": "Caso: Sensor de Paris",
     "s2-oracle-attack":"▶ Caso: Preço Falso",
-    "s2-capabilities": "Novas Capacidades",
-    "s2-reshape":      "Transformar o Negócio",
     "s2-quiz":         "Questionário",
     "s2-quiz-2":       "Questionário 2",
     "s2-quiz-3":       "Questionário 3",
@@ -440,6 +443,207 @@
         "example": "O OFAC colocou o Tornado Cash na lista negra — o front-end morreu, o contrato continuou a correr."
       }
     ]
+  },
+  "money": {
+    "decimal": ",",
+    "thousands": ".",
+    "usd": "{{v}} $",
+    "usdM": "{{v}} M$"
+  },
+  "liquidity": {
+    "kicker": "Capacidade em ação · clica para avançar",
+    "heading": "Porquê deixar cripto parada quando podia render juros?",
+    "subtitle": "Uma pool de empréstimos: os detentores depositam, quem pede emprestado vai buscar à mesma pool, e os juros voltam para os detentores. Sem banco no meio.",
+    "holder": "Detentora",
+    "holderSub": "tem USDC sem fazer nada",
+    "wallet": "Carteira",
+    "share": "10% da pool",
+    "pool": "Pool de empréstimos",
+    "poolSub": "um smart contract · valores em USDC",
+    "available": "Disponível",
+    "lent": "Emprestado",
+    "borrower": "Mutuário",
+    "borrowerSub": "qualquer carteira com colateral",
+    "locked": "Colateral",
+    "owes": "Deve",
+    "lane": {
+      "collateral": "colateral em ETH"
+    },
+    "holderStatus": [
+      "💤 Não rende nada",
+      "✓ Na pool, pronto a ser emprestado",
+      "📈 A render juros",
+      "📈 A quota cresceu 200",
+      "✓ +200 USDC de rendimento (2%)"
+    ],
+    "poolStatus": [
+      "👥 90.000 de outros depositantes",
+      "👥 Agora 100.000 de todos os depositantes",
+      "40% emprestado, garantido por ETH bloqueado",
+      "+2.000 de juros: a pool cresceu",
+      "Aberta ao próximo depositante ou mutuário"
+    ],
+    "borrowerStatus": [
+      "Tem ETH, precisa de USDC",
+      "Tem ETH, precisa de USDC",
+      "🔒 Sem análise de crédito: colateral",
+      "🔓 Devolvido com 5% de juros",
+      "Colateral devolvido, empréstimo fechado"
+    ],
+    "steps": [
+      {
+        "label": "Parado",
+        "what": "Uma detentora tem 10.000 USDC parados numa carteira. Como dinheiro debaixo do colchão, não rendem nada. Um banco podia emprestá-los, mas é o banco que decide quem se qualifica, e fica com a sua parte."
+      },
+      {
+        "label": "Depositar",
+        "what": "A detentora envia os 10.000 USDC para o smart contract da pool. Sem formulários, sem horário de expediente. Juntam-se a 90.000 USDC de outros depositantes, e o contrato regista uma quota de 10% da pool."
+      },
+      {
+        "label": "Emprestar",
+        "what": "Um mutuário quer 40.000 USDC. Não há análise de crédito; em vez disso, o mutuário bloqueia ETH no valor de 60.000 $ como colateral, mais do que o empréstimo. O contrato liberta os USDC de imediato. Se o valor do colateral cair demasiado, o contrato permite que seja vendido para reembolsar a pool."
+      },
+      {
+        "label": "Reembolsar",
+        "what": "Mais tarde, o mutuário devolve os 40.000 mais 2.000 de juros (5%), e o contrato liberta o colateral. Os juros ficam na pool: 100.000 passaram a 102.000."
+      },
+      {
+        "label": "Rendimento",
+        "what": "A detentora levanta a sua quota de 10% de uma pool agora maior: 10.200 USDC. Os 200 a mais são o rendimento, pago inteiramente pelo mutuário. Os mutuários pagaram 5% e os depositantes ganharam 2%, porque só 40% da pool esteve emprestada. Ninguém aprovou nem processou nada: foi o contrato."
+      }
+    ],
+    "whyLabel": "Porque importa",
+    "why": [
+      {
+        "title": "Ativos parados rendem.",
+        "desc": "O rendimento são os juros dos mutuários, repartidos por todos na pool."
+      },
+      {
+        "title": "Sem porteiro.",
+        "desc": "Qualquer pessoa com uma carteira pode depositar ou pedir emprestado. Sem banco, sem candidatura."
+      },
+      {
+        "title": "O colateral substitui a confiança.",
+        "desc": "O contrato nunca pergunta quem és; só verifica o que bloqueaste."
+      }
+    ],
+    "riskLabel": "Não é isento de risco:",
+    "risk": "um bug no contrato, ou um preço errado para o colateral, pode custar dinheiro aos depositantes.",
+    "footnote": "Números ilustrativos. As pools reais (Aave, Compound) definem a taxa por fórmula: quanto mais da pool estiver emprestado, mais ela sobe, e o protocolo fica com uma pequena parte.",
+    "bridgeLabel": "A seguir:",
+    "bridge": "o único empréstimo de uma pool como esta que não exige qualquer colateral.",
+    "hood": [
+      "Aave",
+      "Compound",
+      "over-collateralised",
+      "utilisation rate",
+      "liquidation"
+    ],
+    "back": "← Voltar",
+    "next": "Passo seguinte →",
+    "restart": "↺ Correr outra vez"
+  },
+  "flash": {
+    "kicker": "Composability + atomicidade · segue passo a passo",
+    "heading": "Como se pedem 10 milhões de dólares emprestados sem qualquer colateral?",
+    "subtitle": "Um flash loan: pedido, usado em três protocolos e devolvido dentro de uma única transação. Se a devolução falhar, nada disto chegou a acontecer.",
+    "txLabel": "Uma transação",
+    "txSub": "assinada uma vez · mostrada em câmara lenta · on-chain cabe tudo num único bloco",
+    "status": {
+      "idle": "⏳ Ainda não enviada",
+      "running": "⚙️ A executar · chamada {{n}} de {{total}}",
+      "confirmed": "✓ Confirmada · as 4 chamadas mantêm-se",
+      "reverted": "✕ Revertida · as 4 chamadas desfeitas"
+    },
+    "protocols": [
+      "Pool de empréstimos",
+      "DEX A",
+      "DEX B"
+    ],
+    "calls": [
+      {
+        "label": "Pedir",
+        "effect": "+10 M$ · zero colateral"
+      },
+      {
+        "label": "Comprar barato",
+        "effect": "10 M$ → 5.000 ETH"
+      },
+      {
+        "label": "Vender caro",
+        "effect": "5.000 ETH → 10,05 M$",
+        "effectFail": "5.000 ETH → 9,98 M$"
+      },
+      {
+        "label": "Devolver",
+        "effect": "−10 M$ − 5.000 $ de comissão",
+        "effectFail": "faltam 25.000 $"
+      }
+    ],
+    "badge": {
+      "failed": "falhou",
+      "undone": "desfeita"
+    },
+    "vault": "Cofre da pool",
+    "holds": "O trader tem",
+    "owes": "Deve à pool",
+    "owesValue": "10 M$ + 5.000 $",
+    "result": {
+      "profit": "O trader fica com 45.000 $",
+      "reverted": "Nada aconteceu · pool intacta"
+    },
+    "steps": [
+      {
+        "label": "Antes da transação",
+        "what": "Um trader repara no mesmo ativo a dois preços: o ETH custa 2.000 $ na DEX A e 2.010 $ na DEX B. Comprar barato e vender caro compensava, mas são precisos milhões para valer a pena, e o trader não tem nada. Tudo o que se segue é uma única transação, mostrada em câmara lenta."
+      },
+      {
+        "label": "Pedir",
+        "what": "A chamada 1 vai a uma pool de empréstimos como a do slide anterior, só que muito maior, e levanta 10 M$. Sem colateral, sem análise de crédito, sem perguntas. O código da pool permite-o com uma condição: o dinheiro, mais uma comissão de 5.000 $, tem de estar de volta antes de esta transação terminar."
+      },
+      {
+        "label": "Comprar barato",
+        "what": "A chamada 2 vai a um segundo protocolo, a DEX A, e troca os 10 M$ por 5.000 ETH a 2.000 $. A DEX A nunca combinou trabalhar com a pool de empréstimos; ninguém lhe pediu autorização. Isto é composability sem permissão."
+      },
+      {
+        "label": "Vender caro",
+        "what": "A chamada 3 vai a um terceiro protocolo, a DEX B, e vende os 5.000 ETH a 2.010 $, por 10,05 M$. Três protocolos independentes, encadeados por quem chama, numa única transação.",
+        "whatFail": "A chamada 3 vai à DEX B, mas outro trader chegou primeiro e a diferença de preço fechou-se: os 5.000 ETH rendem apenas 9,98 M$. A transação ficou a descoberto."
+      },
+      {
+        "label": "Devolver",
+        "what": "A chamada 4 envia 10.005.000 $ de volta para a pool. A pool verifica o seu saldo: está lá tudo, mais a comissão. Todas as chamadas se cumpriram, por isso a transação é confirmada e o trader fica com 45.000 $, sem ter posto capital próprio além do gas.",
+        "whatFail": "A chamada 4 precisa de 10.005.000 $, mas só há 9,98 M$. A verificação da pool falha e, como uma transação é atómica, todas as chamadas anteriores são desfeitas: sem venda, sem compra, sem empréstimo. A pool nunca perdeu um cêntimo; o trader perde apenas o gas."
+      }
+    ],
+    "toggleLabel": "Experimenta: a devolução chega?",
+    "toggleOk": "Devolvido na totalidade",
+    "toggleFail": "A devolução falha",
+    "composability": {
+      "title": "Composability Sem Permissão",
+      "desc": "Os protocolos encaixam uns nos outros como legos de dinheiro: um contrato chama outro, que chama outro, e não é preciso pedir autorização a ninguém."
+    },
+    "atomicity": {
+      "title": "Transações Atómicas",
+      "desc": "Tudo ou nada: ou todos os passos têm sucesso, ou a transação inteira reverte como se nunca tivesse acontecido.",
+      "pending": "tudo ou nada",
+      "all": "tudo mantido",
+      "none": "tudo desfeito"
+    },
+    "bridgeLabel": "O reverso da medalha:",
+    "bridge": "qualquer pessoa pode comandar milhões durante uma transação, atacantes incluídos. É assim que se financiam os ataques a oracles de preços, como mostra a seguir o capítulo dos Oracles.",
+    "footnote": "Números ilustrativos; impacto no preço e gas ignorados. A comissão de 0,05% é a predefinição da Aave V3.",
+    "hood": [
+      "flash loan",
+      "arbitrage",
+      "revert",
+      "callback",
+      "MEV"
+    ],
+    "start": "▶ Enviar a transação",
+    "back": "← Voltar",
+    "next": "Chamada seguinte →",
+    "restart": "↺ Correr outra vez"
   },
   "gas": {
     "kicker": "Resumo de 10 segundos",
@@ -863,6 +1067,8 @@
     "s2-solidity": "You will never write this — but knowing a contract is readable code, not a black box, changes how you question a vendor.",
     "s2-execution": "Thousands of machines compute the same result, so the result is trustworthy — and slow, expensive and public.",
     "s2-capabilities": "The new capability is not automation — it is automation that no single party, including the operator, can override.",
+    "s2-liquidity": "A lending pool turns idle crypto into yield: borrowers pay the interest, and code, not a bank, sits in the middle.",
+    "s2-flash": "A flash loan is safe for the lender for one reason: the transaction repays it in full, or it never happened.",
     "s2-gas": "Every step costs real money, so good design keeps heavy data off-chain and puts only the proof on-chain.",
     "s2-standards": "Standards are why one wallet works with thousands of tokens.",
     "s2-oracle-why": "A smart contract is blind by design: it sees only what is already on its own chain.",

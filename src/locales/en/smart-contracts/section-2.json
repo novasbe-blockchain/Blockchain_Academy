@@ -3,8 +3,9 @@
     "g-s2-stack":    "🧱 The Web3 Stack",
     "g-s2-inside":   "🔍 Inside a Contract",
     "g-s2-engine":   "⚙️ The Engine",
-    "g-s2-oracles":  "🔮 Oracles",
     "g-s2-business": "💼 Business Impact",
+    "g-s2-capabilities": "✨ New Capabilities",
+    "g-s2-oracles":  "🔮 Oracles",
     "g-s2-wrap":     "✅ Wrap Up"
   },
   "chapters": {
@@ -19,14 +20,16 @@
     "s2-execution":    "Execution Environment",
     "s2-gas":          "Gas · 10-sec recap",
     "s2-standards":    "Tokens · 10-sec recap",
+    "s2-reshape":      "Reshape Business",
+    "s2-capabilities": "The Five Capabilities",
+    "s2-liquidity":    "▶ Lend & Earn Yield",
+    "s2-flash":        "▶ Flash Loans",
     "s2-oracle-why":   "Why Oracles?",
     "s2-oracle-what":  "What Is an Oracle?",
     "s2-oracle-how":   "How Oracles Work",
     "s2-oracle-risks": "The Oracle Problem",
     "s2-oracle-paris": "Case: Paris Sensor",
     "s2-oracle-attack":"▶ Case: Price Attack",
-    "s2-capabilities": "New Capabilities",
-    "s2-reshape":      "Reshape Business",
     "s2-quiz":         "Quiz",
     "s2-quiz-2":       "Quiz 2",
     "s2-quiz-3":       "Quiz 3",
@@ -440,6 +443,207 @@
         "example": "OFAC blacklisted Tornado Cash — the front-end died, the contract ran on."
       }
     ]
+  },
+  "money": {
+    "decimal": ".",
+    "thousands": ",",
+    "usd": "${{v}}",
+    "usdM": "${{v}}M"
+  },
+  "liquidity": {
+    "kicker": "Capability in action · click through",
+    "heading": "Why let crypto sit idle when it could earn interest?",
+    "subtitle": "A lending pool: holders deposit, borrowers draw from the same pot, and the interest flows back to the holders. No bank in the middle.",
+    "holder": "Holder",
+    "holderSub": "has USDC doing nothing",
+    "wallet": "Wallet",
+    "share": "10% of pool",
+    "pool": "Lending pool",
+    "poolSub": "a smart contract · amounts in USDC",
+    "available": "Available",
+    "lent": "Lent out",
+    "borrower": "Borrower",
+    "borrowerSub": "any wallet with collateral",
+    "locked": "ETH locked",
+    "owes": "Owes",
+    "lane": {
+      "collateral": "ETH collateral"
+    },
+    "holderStatus": [
+      "💤 Earning nothing",
+      "✓ In the pool, ready to be lent",
+      "📈 Earning interest",
+      "📈 Share grew by 200",
+      "✓ +200 USDC yield (2%)"
+    ],
+    "poolStatus": [
+      "👥 90,000 from other depositors",
+      "👥 Now 100,000 from all depositors",
+      "40% lent out, backed by locked ETH",
+      "+2,000 interest: the pool grew",
+      "Open to the next depositor or borrower"
+    ],
+    "borrowerStatus": [
+      "Has ETH, needs USDC",
+      "Has ETH, needs USDC",
+      "🔒 No credit check: collateral instead",
+      "🔓 Repaid with 5% interest",
+      "Collateral back, loan closed"
+    ],
+    "steps": [
+      {
+        "label": "Idle",
+        "what": "A holder has 10,000 USDC sitting in a wallet. Like cash under a mattress, it earns nothing. A bank could lend it out, but the bank decides who qualifies, and takes its cut."
+      },
+      {
+        "label": "Deposit",
+        "what": "The holder sends the 10,000 USDC to the pool's smart contract. No application, no opening hours. It joins 90,000 USDC from other depositors, and the contract records a 10% share of the pool."
+      },
+      {
+        "label": "Borrow",
+        "what": "A borrower wants 40,000 USDC. There is no credit check; instead the borrower locks ETH worth $60,000 as collateral, more than the loan. The contract releases the USDC at once. If the collateral's value falls too far, the contract allows it to be sold to repay the pool."
+      },
+      {
+        "label": "Repay",
+        "what": "Later the borrower repays the 40,000 plus 2,000 in interest (5%), and the contract releases the collateral. The interest stays in the pool: 100,000 has become 102,000."
+      },
+      {
+        "label": "Yield",
+        "what": "The holder withdraws a 10% share of the now bigger pool: 10,200 USDC. The extra 200 is the yield, paid entirely by the borrower. Borrowers paid 5% and depositors earned 2%, because only 40% of the pool was out on loan. Nobody approved or processed anything: the contract did."
+      }
+    ],
+    "whyLabel": "Why it matters",
+    "why": [
+      {
+        "title": "Idle assets earn.",
+        "desc": "The yield is the borrowers' interest, shared by everyone in the pool."
+      },
+      {
+        "title": "No gatekeeper.",
+        "desc": "Anyone with a wallet can deposit or borrow. No bank, no application."
+      },
+      {
+        "title": "Collateral replaces trust.",
+        "desc": "The contract never asks who you are; it only checks what you locked."
+      }
+    ],
+    "riskLabel": "Not risk-free:",
+    "risk": "a bug in the contract, or a wrong price for the collateral, can cost depositors money.",
+    "footnote": "Illustrative numbers. Real pools (Aave, Compound) set the rate by formula: the more of the pool is borrowed, the higher it climbs, and the protocol keeps a small cut.",
+    "bridgeLabel": "Next:",
+    "bridge": "the one loan from a pool like this that needs no collateral at all.",
+    "hood": [
+      "Aave",
+      "Compound",
+      "over-collateralised",
+      "utilisation rate",
+      "liquidation"
+    ],
+    "back": "← Back",
+    "next": "Next step →",
+    "restart": "↺ Run it again"
+  },
+  "flash": {
+    "kicker": "Composability + atomicity · step through it",
+    "heading": "How do you borrow $10 million with no collateral at all?",
+    "subtitle": "A flash loan: borrowed, used across three protocols and repaid inside one single transaction. If the repayment fails, none of it ever happened.",
+    "txLabel": "One transaction",
+    "txSub": "signed once · shown in slow motion · on-chain it all lands in a single block",
+    "status": {
+      "idle": "⏳ Not sent yet",
+      "running": "⚙️ Executing · call {{n}} of {{total}}",
+      "confirmed": "✓ Confirmed · all 4 calls kept",
+      "reverted": "✕ Reverted · all 4 calls undone"
+    },
+    "protocols": [
+      "Lending pool",
+      "DEX A",
+      "DEX B"
+    ],
+    "calls": [
+      {
+        "label": "Borrow",
+        "effect": "+$10M · zero collateral"
+      },
+      {
+        "label": "Buy low",
+        "effect": "$10M → 5,000 ETH"
+      },
+      {
+        "label": "Sell high",
+        "effect": "5,000 ETH → $10.05M",
+        "effectFail": "5,000 ETH → $9.98M"
+      },
+      {
+        "label": "Repay",
+        "effect": "−$10M − $5,000 fee",
+        "effectFail": "$25,000 short"
+      }
+    ],
+    "badge": {
+      "failed": "failed",
+      "undone": "undone"
+    },
+    "vault": "Pool vault",
+    "holds": "Trader holds",
+    "owes": "Owes the pool",
+    "owesValue": "$10M + $5,000",
+    "result": {
+      "profit": "Trader keeps $45,000",
+      "reverted": "Nothing happened · pool untouched"
+    },
+    "steps": [
+      {
+        "label": "Before the transaction",
+        "what": "A trader spots the same asset at two prices: ETH costs $2,000 on DEX A and $2,010 on DEX B. Buying low and selling high would pay, but it takes millions to matter, and the trader has nothing. Everything that follows is one transaction, shown in slow motion."
+      },
+      {
+        "label": "Borrow",
+        "what": "Call 1 goes to a lending pool like the one on the previous slide, only far bigger, and takes out $10M. No collateral, no credit check, no questions. The pool's code allows it on one condition: the money, plus a $5,000 fee, must be back before this transaction ends."
+      },
+      {
+        "label": "Buy low",
+        "what": "Call 2 goes to a second protocol, DEX A, and swaps the $10M for 5,000 ETH at $2,000. DEX A never agreed to work with the lending pool; nobody asked its permission. That is permissionless composability."
+      },
+      {
+        "label": "Sell high",
+        "what": "Call 3 goes to a third protocol, DEX B, and sells the 5,000 ETH at $2,010 for $10.05M. Three independent protocols, chained by one caller, in one transaction.",
+        "whatFail": "Call 3 goes to DEX B, but another trader got there first and the price gap has closed: the 5,000 ETH fetch only $9.98M. The transaction is now short."
+      },
+      {
+        "label": "Repay",
+        "what": "Call 4 sends $10,005,000 back to the pool. The pool checks its balance: all there, plus the fee. Every call held, so the transaction is confirmed and the trader keeps $45,000, having put in no capital beyond the gas fee.",
+        "whatFail": "Call 4 needs $10,005,000, but only $9.98M is there. The pool's check fails and, because a transaction is atomic, every earlier call is undone: no sale, no purchase, no loan. The pool never lost a cent; the trader loses only the gas fee."
+      }
+    ],
+    "toggleLabel": "Try it: does the repayment arrive?",
+    "toggleOk": "Repaid in full",
+    "toggleFail": "Repayment fails",
+    "composability": {
+      "title": "Permissionless Composability",
+      "desc": "Protocols snap together like money legos: one contract calls another, which calls another, and nobody's permission is needed."
+    },
+    "atomicity": {
+      "title": "Atomic Transactions",
+      "desc": "All or nothing: either every step succeeds, or the entire transaction reverts as if it never happened.",
+      "pending": "all or nothing",
+      "all": "all kept",
+      "none": "all undone"
+    },
+    "bridgeLabel": "The flip side:",
+    "bridge": "anyone can command millions for one transaction, attackers included. This is how price-feed oracle attacks are funded, as the Oracles chapter shows next.",
+    "footnote": "Illustrative numbers; price impact and gas ignored. The 0.05% fee is Aave V3's default.",
+    "hood": [
+      "flash loan",
+      "arbitrage",
+      "revert",
+      "callback",
+      "MEV"
+    ],
+    "start": "▶ Send the transaction",
+    "back": "← Back",
+    "next": "Next call →",
+    "restart": "↺ Run it again"
   },
   "gas": {
     "kicker": "10-second recap",
@@ -863,6 +1067,8 @@
     "s2-solidity": "A contract is readable code, not a black box; you can ask a vendor to show it.",
     "s2-execution": "Thousands of machines compute the same result, which makes it trustworthy, slow, expensive and public.",
     "s2-capabilities": "The new capability is automation that no single party, including the operator, can override.",
+    "s2-liquidity": "A lending pool turns idle crypto into yield: borrowers pay the interest, and code, not a bank, sits in the middle.",
+    "s2-flash": "A flash loan is safe for the lender for one reason: the transaction repays it in full, or it never happened.",
     "s2-gas": "Every step costs real money, so good design keeps heavy data off-chain and puts only the proof on-chain.",
     "s2-standards": "Standards are why one wallet works with thousands of tokens.",
     "s2-oracle-why": "A smart contract is blind by design: it sees only what is already on its own chain.",
