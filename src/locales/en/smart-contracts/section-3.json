@@ -2,28 +2,34 @@
   "chapters": {
     "s3-discussion": "💬 Discussion",
     "s3-industries-intro": "Industries Overview",
+    "s3-defi-title": "1 · DeFi",
     "s3-defi-intro": "Why DeFi?",
     "s3-defi-amm": "🧩 AMM Curve",
     "s3-defi-stablecoins": "🧩 Peg Simulator",
     "s3-defi-prosCons": "Wins / Breaks",
+    "s3-nft-title": "2 · NFTs",
     "s3-nft-intro": "Why NFTs?",
     "s3-nft-real": "In Production",
     "s3-nft-utility": "NFTs Beyond Art",
     "s3-nft-gate": "🧩 Token Gate",
     "s3-nft-honest": "The Honest NFT Story",
     "s3-nft-prosCons": "Wins / Breaks",
+    "s3-dao-title": "3 · DAOs",
     "s3-dao-intro": "Why DAOs?",
     "s3-dao-structures": "🧩 Governance Blocks",
     "s3-dao-vote": "🧩 Who Holds Power?",
     "s3-dao-examples": "Real DAOs: What Works",
     "s3-dao-broke": "Real DAOs: What Broke",
     "s3-dao-prosCons": "Wins / Breaks",
+    "s3-rwa-title": "4 · Real-World Assets",
     "s3-rwa-spectrum": "🧩 Spectrum",
     "s3-rwa-real": "In Production",
     "s3-rwa-prosCons": "Wins / Breaks",
+    "s3-sc-title": "5 · Supply Chain",
     "s3-sc-provenance": "🧩 Provenance",
     "s3-sc-real": "In Production",
     "s3-sc-prosCons": "Wins / Breaks",
+    "s3-cert-title": "6 · Certificates",
     "s3-cert-howitworks": "🧩 Proof of Exist",
     "s3-cert-real": "In Production",
     "s3-cert-prosCons": "Wins / Breaks",
@@ -901,15 +907,103 @@
     "theResults": "The Results",
     "whatHappened": "What Happened"
   },
+  "dividers": {
+    "kicker": "Part {{n}} of {{total}}",
+    "defi": {
+      "name": "DeFi",
+      "tag": "Decentralized Finance",
+      "line": "Trading, lending and dollars run by smart contracts instead of banks, open around the clock."
+    },
+    "nft": {
+      "name": "NFTs",
+      "tag": "Digital Ownership",
+      "line": "Unique tokens that put the game item, ticket or membership in your wallet, not in a company's database."
+    },
+    "dao": {
+      "name": "DAOs",
+      "tag": "Shared Governance",
+      "line": "Organisations whose rulebook is code: members propose and vote, and the treasury follows the result."
+    },
+    "rwa": {
+      "name": "Real-World Assets",
+      "tag": "RWA Tokenization",
+      "line": "Funds, bonds and buildings represented as tokens that settle in minutes, tied to the asset by a legal wrapper."
+    },
+    "sc": {
+      "name": "Supply Chain",
+      "tag": "Provenance & Logistics",
+      "line": "One shared, tamper-evident record of every hand-off, from the farm or factory to the shelf."
+    },
+    "cert": {
+      "name": "Certificates",
+      "tag": "Trusted Records",
+      "line": "Diplomas, registries and authenticity records that anyone can verify without calling the issuer."
+    }
+  },
   "quiz": {
-    "question": "The California DMV put 42 million vehicle titles on a permissioned blockchain. What does the chain actually add over paper titles?",
-    "options": [
-      "Lower storage costs: keeping records on a blockchain is cheaper than paper files or a database.",
-      "A tamper-evident digital title that can be checked and transferred in minutes instead of days or weeks of paperwork, with the DMV still the issuer.",
-      "Full public transparency: anyone can now look up who owns any car, with no identity checks.",
-      "An end to car theft and title fraud, because nothing recorded on-chain can ever be wrong or forged."
-    ],
-    "explanation": "The gain is a shared, tamper-evident record: a paper title can be lost or forged and takes days or weeks of paperwork to transfer, while a digital title can be checked and moved in minutes. The DMV still issues every title and runs the permissioned network, so you are still trusting the DMV, not removing it. On-chain storage costs more than a database, the records are not open to the public, and the chain cannot stop a car being stolen or correct a false entry made at the source."
+    "label": "Quiz · {{n}} / {{total}}",
+    "items": [
+      {
+        "question": "TerraUSD (UST) collapsed in May 2022, wiping out about $40B. What was the root cause?",
+        "options": [
+          "The bank holding its dollar reserves failed, so the tokens could no longer be redeemed for $1.",
+          "Its peg rested on a volatile sister token (LUNA), not on redeemable reserves, so lost confidence fed a death spiral.",
+          "A bug in its smart contract let an attacker mint unlimited tokens and sell them on the open market, crashing the price.",
+          "Regulators froze the issuer's accounts, which stopped all trading and broke the peg overnight."
+        ],
+        "explanation": "UST was an algorithmic stablecoin: the peg was held by swapping UST for LUNA, a volatile token from the same project, rather than by dollars or surplus collateral that holders could redeem. When confidence dropped, holders sold UST, LUNA was minted and dumped, its price collapsed and the cushion vanished. No bank failed and no contract was hacked: the design itself was reflexive. A bank failure is the fiat-backed risk (USDC wobbled in March 2023 when SVB held $3.3B of its reserves)."
+      },
+      {
+        "question": "An artist sets a 5% resale royalty on an NFT collection using the ERC-2981 standard. What ensures the artist is actually paid on each resale?",
+        "options": [
+          "The blockchain: validators reject any NFT transfer that does not include the royalty payment.",
+          "The token contract: every ERC-721 transfer automatically deducts the royalty from the sale price and forwards it to the artist.",
+          "Nothing in the standard: ERC-2981 only declares the royalty, and each marketplace decides whether to pay it.",
+          "The buyer's wallet: it adds the royalty to the price before it signs the purchase transaction."
+        ],
+        "explanation": "ERC-2981 is a signal, not a rule. It lets a contract tell marketplaces how much royalty is expected and who should receive it, but a transfer goes through with or without that payment. An ERC-721 transfer does not even know the sale price. Blur launched with optional royalties in 2022 and OpenSea stopped enforcing them in 2023; as trading volume and the rate actually paid both fell, creator royalty income ended more than 90% below its early-2022 peak. A revenue model that depends on marketplaces volunteering to pay is not enforced by code."
+      },
+      {
+        "question": "In April 2022 an attacker drained about $182M from the Beanstalk protocol in a single transaction. How?",
+        "options": [
+          "They stole the private keys of the multisig wallet that held the protocol's funds.",
+          "They exploited a reentrancy bug to withdraw the same deposit over and over.",
+          "They split their tokens across thousands of wallets to defeat a one-person-one-vote rule.",
+          "They flash-loaned a supermajority of the voting power and pushed through their own proposal."
+        ],
+        "explanation": "Beanstalk counted voting power at the moment of the vote, so it could be borrowed. With a flash loan (borrowed and repaid inside one transaction) the attacker held more than the two-thirds supermajority required, executed a proposal they had submitted a day earlier, which sent the protocol's funds to their own wallet, and repaid the loan. No key was stolen and the code did what governance told it to. The defences are structural: measure voting power from an earlier snapshot, and put a timelock between a vote and its execution. The reentrancy bug belongs to The DAO (2016)."
+      },
+      {
+        "question": "In a property tokenisation like Propy's NFT home sale, what does the token holder actually own?",
+        "options": [
+          "Ownership of a company (an LLC) that holds the deed, not the property itself.",
+          "Legal title to the property itself, recorded on the blockchain instead of in the land registry.",
+          "A right to occupy part of the property, which the smart contract enforces automatically.",
+          "A token whose price the contract keeps pegged to the property's latest appraised value."
+        ],
+        "explanation": "The contract moves the token in seconds, but the property's legal title still sits in a land registry and changes hands off-chain. So the property is placed in a company and the token represents ownership of that company. That legal wrapper is where the risk sits: if the entity, the custodian or the law fails to honour the link, the token cannot enforce itself. Tokenising does not create buyers either: the secondary market can stay thin and the price can drift from the asset's value."
+      },
+      {
+        "question": "TradeLens (Maersk and IBM) shut down in 2023, while GSBN, a similar shipping platform, is still running. What best explains the difference?",
+        "options": [
+          "Technology: the permissioned ledger behind TradeLens could not cope with the volume of shipping documents sent to it.",
+          "Regulation: customs authorities in key ports refused to accept electronic bills of lading issued through TradeLens.",
+          "Ownership: TradeLens belonged to Maersk and IBM, so rival carriers were wary; GSBN is co-owned by carriers and port operators.",
+          "Funding: Maersk and IBM ran out of budget before the platform could go into production with paying customers."
+        ],
+        "explanation": "TradeLens ran in production from 2018 to early 2023, well funded and technically sound, with 100+ organisations on board. What it never achieved was the full industry-wide collaboration that makes a shared record valuable: rivals were wary of a platform controlled by Maersk, and even after several large carriers signed up, the official reason for closing was that it \"did not reach the level of commercial viability necessary\". GSBN tackles the same problem as a consortium co-owned by carriers and port operators. Who owns the platform decides who joins it."
+      },
+      {
+        "question": "The California DMV put 42 million vehicle titles on a permissioned blockchain. What does the chain actually add over paper titles?",
+        "options": [
+          "Lower storage costs: keeping records on a blockchain is cheaper than paper files or a database.",
+          "A tamper-evident digital title that transfers in minutes rather than weeks, still issued by the DMV.",
+          "Full public transparency: anyone can now look up who owns any car, with no identity checks.",
+          "An end to car theft and title fraud, because nothing recorded on-chain can ever be wrong or forged."
+        ],
+        "explanation": "The gain is a shared, tamper-evident record: a paper title can be lost or forged and takes days or weeks of paperwork to transfer, while a digital title can be checked and moved in minutes. The DMV still issues every title and runs the permissioned network, so you are still trusting the DMV, not removing it. On-chain storage costs more than a database, the records are not open to the public, and the chain cannot stop a car being stolen or correct a false entry made at the source."
+      }
+    ]
   },
   "takeaways": {
     "title": "Section 03 — Key Takeaways",

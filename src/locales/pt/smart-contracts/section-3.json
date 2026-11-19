@@ -2,28 +2,34 @@
   "chapters": {
     "s3-discussion": "💬 Discussion",
     "s3-industries-intro": "Visão das Indústrias",
+    "s3-defi-title": "1 · DeFi",
     "s3-defi-intro": "Porquê DeFi?",
     "s3-defi-amm": "🧩 Curva AMM",
     "s3-defi-stablecoins": "🧩 Simulador de Peg",
     "s3-defi-prosCons": "Ganha / Falha",
+    "s3-nft-title": "2 · NFTs",
     "s3-nft-intro": "Porquê NFTs?",
     "s3-nft-real": "In Production",
     "s3-nft-utility": "NFTs Beyond Art",
     "s3-nft-gate": "🧩 Token Gate",
     "s3-nft-honest": "The Honest NFT Story",
     "s3-nft-prosCons": "Ganha / Falha",
+    "s3-dao-title": "3 · DAOs",
     "s3-dao-intro": "Porquê DAOs?",
     "s3-dao-structures": "🧩 Governance Blocks",
     "s3-dao-vote": "🧩 Who Holds Power?",
     "s3-dao-examples": "Real DAOs: What Works",
     "s3-dao-broke": "Real DAOs: What Broke",
     "s3-dao-prosCons": "Ganha / Falha",
+    "s3-rwa-title": "4 · Ativos do Mundo Real",
     "s3-rwa-spectrum": "🧩 Espetro",
     "s3-rwa-real": "In Production",
     "s3-rwa-prosCons": "Ganha / Falha",
+    "s3-sc-title": "5 · Cadeia de Abastecimento",
     "s3-sc-provenance": "🧩 Proveniência",
     "s3-sc-real": "In Production",
     "s3-sc-prosCons": "Ganha / Falha",
+    "s3-cert-title": "6 · Certificados",
     "s3-cert-howitworks": "🧩 Prova de Existência",
     "s3-cert-real": "In Production",
     "s3-cert-prosCons": "Ganha / Falha",
@@ -925,15 +931,103 @@
     "theResults": "Os Resultados",
     "whatHappened": "What Happened"
   },
+  "dividers": {
+    "kicker": "Parte {{n}} de {{total}}",
+    "defi": {
+      "name": "DeFi",
+      "tag": "Finança Descentralizada",
+      "line": "Negociação, empréstimos e dólares geridos por smart contracts em vez de bancos, abertos a qualquer hora."
+    },
+    "nft": {
+      "name": "NFTs",
+      "tag": "Posse Digital",
+      "line": "Tokens únicos que põem o item de jogo, o bilhete ou a adesão na tua wallet, e não na base de dados de uma empresa."
+    },
+    "dao": {
+      "name": "DAOs",
+      "tag": "Governação Partilhada",
+      "line": "Organizações cujo regulamento é código: os membros propõem e votam, e a tesouraria executa o resultado."
+    },
+    "rwa": {
+      "name": "Ativos do Mundo Real",
+      "tag": "Tokenização de RWA",
+      "line": "Fundos, obrigações e edifícios representados por tokens que liquidam em minutos, ligados ao ativo por um invólucro legal."
+    },
+    "sc": {
+      "name": "Cadeia de Abastecimento",
+      "tag": "Proveniência e Logística",
+      "line": "Um registo partilhado de cada passagem, da quinta ou da fábrica até à prateleira, onde qualquer adulteração se nota."
+    },
+    "cert": {
+      "name": "Certificados",
+      "tag": "Registos de Confiança",
+      "line": "Diplomas, registos oficiais e certificados de autenticidade que qualquer pessoa pode verificar sem contactar o emissor."
+    }
+  },
   "quiz": {
-    "question": "O DMV da Califórnia pôs 42 milhões de títulos de veículos numa blockchain permissionada. O que é que a chain acrescenta, de facto, face aos títulos em papel?",
-    "options": [
-      "Custos de armazenamento mais baixos: guardar registos numa blockchain é mais barato do que em papel ou numa base de dados.",
-      "Um título digital em que qualquer adulteração se nota, que pode ser verificado e transferido em minutos em vez de dias ou semanas de papelada, com o DMV a continuar a ser o emissor.",
-      "Transparência pública total: qualquer pessoa pode agora consultar quem é dono de qualquer carro, sem verificação de identidade.",
-      "O fim do furto de carros e da fraude com títulos, porque nada do que fica registado on-chain pode estar errado ou ser falsificado."
-    ],
-    "explanation": "O ganho é um registo partilhado em que qualquer adulteração se nota: um título em papel pode perder-se ou ser falsificado e demora dias ou semanas de papelada a transferir, enquanto um título digital pode ser verificado e transferido em minutos. O DMV continua a emitir todos os títulos e a gerir a rede permissionada, por isso continuas a confiar no DMV, não o eliminas. O armazenamento on-chain custa mais do que uma base de dados, os registos não estão abertos ao público, e a chain não impede que um carro seja roubado nem corrige um dado falso introduzido na origem."
+    "label": "Quiz · {{n}} / {{total}}",
+    "items": [
+      {
+        "question": "A TerraUSD (UST) colapsou em maio de 2022 e aniquilou cerca de $40 mil milhões. Qual foi a causa de fundo?",
+        "options": [
+          "O banco que guardava as suas reservas em dólares faliu, por isso os tokens deixaram de poder ser resgatados por $1.",
+          "O peg assentava num token-irmão volátil (LUNA), e não em reservas resgatáveis, e a perda de confiança gerou uma espiral da morte.",
+          "Um bug no smart contract deixou um atacante cunhar tokens sem limite e vendê-los no mercado aberto, fazendo cair o preço.",
+          "Os reguladores congelaram as contas do emissor, o que suspendeu toda a negociação e quebrou o peg de um dia para o outro."
+        ],
+        "explanation": "A UST era uma stablecoin algorítmica: o peg era mantido trocando UST por LUNA, um token volátil do mesmo projeto, e não por dólares ou garantia excedentária que os detentores pudessem resgatar. Quando a confiança caiu, os detentores venderam UST, foi cunhada e despejada LUNA, o preço desta colapsou e a almofada desapareceu. Nenhum banco faliu e nenhum contrato foi atacado: o próprio design era reflexivo. A falência de um banco é o risco das stablecoins garantidas por fiat (a USDC vacilou em março de 2023, quando o SVB detinha $3,3 mil milhões das suas reservas)."
+      },
+      {
+        "question": "Um artista define um royalty de revenda de 5% numa coleção de NFTs com o standard ERC-2981. O que garante que o artista é de facto pago em cada revenda?",
+        "options": [
+          "A blockchain: os validadores rejeitam qualquer transferência de NFT que não inclua o pagamento do royalty.",
+          "O contrato do token: cada transferência ERC-721 desconta automaticamente o royalty do preço de venda e envia-o ao artista.",
+          "Nada no standard: o ERC-2981 apenas declara o royalty, e cada marketplace decide se o paga.",
+          "A wallet do comprador: acrescenta o royalty ao preço antes de assinar a transação de compra."
+        ],
+        "explanation": "O ERC-2981 é um sinal, não uma regra. Permite que um contrato diga aos marketplaces qual é o royalty esperado e quem o deve receber, mas a transferência acontece com ou sem esse pagamento. Uma transferência ERC-721 nem sequer conhece o preço de venda. A Blur foi lançada com royalties opcionais em 2022 e a OpenSea deixou de os impor em 2023; com a queda do volume de transações e da taxa efetivamente paga, o rendimento dos criadores com royalties ficou mais de 90% abaixo do pico do início de 2022. Um modelo de receita que depende de os marketplaces pagarem voluntariamente não é imposto pelo código."
+      },
+      {
+        "question": "Em abril de 2022, um atacante drenou cerca de $182M do protocolo Beanstalk numa única transação. Como?",
+        "options": [
+          "Roubou as chaves privadas da wallet multisig que guardava os fundos do protocolo.",
+          "Explorou um bug de reentrância para levantar o mesmo depósito vezes sem conta.",
+          "Dividiu os seus tokens por milhares de wallets para contornar uma regra de uma pessoa, um voto.",
+          "Obteve uma supermaioria do poder de voto com um flash loan e fez aprovar a sua própria proposta."
+        ],
+        "explanation": "O Beanstalk contava o poder de voto no momento da votação, por isso este podia ser pedido emprestado. Com um flash loan (pedido e reembolsado dentro de uma só transação), o atacante deteve mais do que a supermaioria de dois terços exigida, executou uma proposta submetida um dia antes, que enviava os fundos do protocolo para a sua wallet, e reembolsou o empréstimo. Nenhuma chave foi roubada e o código fez o que a governação mandou. As defesas são estruturais: medir o poder de voto a partir de um snapshot anterior e pôr um timelock entre a votação e a sua execução. O bug de reentrância pertence à The DAO (2016)."
+      },
+      {
+        "question": "Numa tokenização de imobiliário como a venda de uma casa como NFT pela Propy, o que é que o detentor do token possui de facto?",
+        "options": [
+          "A propriedade de uma empresa (uma LLC) que detém a escritura, e não o imóvel em si.",
+          "O título legal do próprio imóvel, registado na blockchain e não no registo predial.",
+          "O direito de ocupar parte do imóvel, que o smart contract faz cumprir automaticamente.",
+          "Um token cujo preço o contrato mantém indexado ao último valor de avaliação do imóvel."
+        ],
+        "explanation": "O contrato move o token em segundos, mas o título legal do imóvel continua num registo predial e muda de mãos fora da chain. Por isso o imóvel é colocado numa empresa e o token representa a propriedade dessa empresa. É nesse invólucro legal que está o risco: se a entidade, o custodiante ou a lei não honrarem a ligação, o token não se faz cumprir sozinho. Tokenizar também não cria compradores: o mercado secundário pode continuar pouco líquido e o preço pode afastar-se do valor do ativo."
+      },
+      {
+        "question": "A TradeLens (Maersk e IBM) foi encerrada em 2023, enquanto a GSBN, uma plataforma de transporte marítimo semelhante, continua a funcionar. O que explica melhor a diferença?",
+        "options": [
+          "Tecnologia: o registo permissionado por trás da TradeLens não aguentava o volume de documentos de transporte que recebia.",
+          "Regulação: as alfândegas de portos importantes recusaram-se a aceitar conhecimentos de embarque eletrónicos emitidos pela TradeLens.",
+          "Propriedade: a TradeLens era da Maersk e da IBM, o que afastava os concorrentes; a GSBN é detida por armadores e operadores portuários.",
+          "Financiamento: a Maersk e a IBM ficaram sem orçamento antes de a plataforma entrar em produção com clientes pagantes."
+        ],
+        "explanation": "A TradeLens esteve em produção de 2018 até ao início de 2023, bem financiada e tecnicamente sólida, com mais de 100 organizações a bordo. O que nunca alcançou foi a colaboração de toda a indústria que dá valor a um registo partilhado: os concorrentes desconfiavam de uma plataforma controlada pela Maersk e, mesmo depois de vários grandes armadores terem aderido, a razão oficial do encerramento foi não ter atingido «o nível de viabilidade comercial necessário». A GSBN ataca o mesmo problema como um consórcio detido em conjunto por armadores e operadores portuários. Quem é dono da plataforma decide quem adere."
+      },
+      {
+        "question": "O DMV da Califórnia pôs 42 milhões de títulos de veículos numa blockchain permissionada. O que é que a chain acrescenta, de facto, face aos títulos em papel?",
+        "options": [
+          "Custos de armazenamento mais baixos: guardar registos numa blockchain é mais barato do que em papel ou numa base de dados.",
+          "Um título digital em que qualquer adulteração se nota, transferível em minutos em vez de semanas e ainda emitido pelo DMV.",
+          "Transparência pública total: qualquer pessoa pode agora consultar quem é dono de qualquer carro, sem verificação de identidade.",
+          "O fim do furto de carros e da fraude com títulos, porque nada do que fica registado on-chain pode estar errado ou ser falsificado."
+        ],
+        "explanation": "O ganho é um registo partilhado em que qualquer adulteração se nota: um título em papel pode perder-se ou ser falsificado e demora dias ou semanas de papelada a transferir, enquanto um título digital pode ser verificado e transferido em minutos. O DMV continua a emitir todos os títulos e a gerir a rede permissionada, por isso continuas a confiar no DMV, não o eliminas. O armazenamento on-chain custa mais do que uma base de dados, os registos não estão abertos ao público, e a chain não impede que um carro seja roubado nem corrige um dado falso introduzido na origem."
+      }
+    ]
   },
   "takeaways": {
     "title": "Secção 03 — Conclusões-Chave",

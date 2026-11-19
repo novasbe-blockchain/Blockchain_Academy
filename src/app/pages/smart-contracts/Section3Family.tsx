@@ -2,11 +2,11 @@ import { Fragment, useEffect, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  ArrowLeftRight, ArrowRight, BadgeCheck, Ban, Banknote, Blocks, Bug, Cable, CandlestickChart, Check,
+  ArrowLeftRight, ArrowRight, BadgeCheck, Ban, Banknote, Blocks, Bug, Building2, Cable, CandlestickChart, Check,
   CircleHelp, Clock, Coins, Crown, Database, DoorOpen, Droplets, Eraser, Eye, FileCheck, FileWarning,
-  Fingerprint, Gavel, HandCoins, Handshake, KeyRound, Landmark, Network, Package, PieChart, Play, Puzzle,
-  Repeat, RotateCcw, Scale, ScanSearch, SearchCheck, ServerOff, ShieldAlert, Stamp, Store, ThumbsUp,
-  Trash2, TrendingDown, TrendingUp, TriangleAlert, Unlink, UserCheck, Users, Wallet, X, Zap,
+  Fingerprint, Gavel, Gem, GraduationCap, HandCoins, Handshake, KeyRound, Landmark, Network, Package, PieChart,
+  Play, Puzzle, Repeat, RotateCcw, Scale, ScanSearch, SearchCheck, ServerOff, ShieldAlert, Stamp, Store, ThumbsUp,
+  Trash2, TrendingDown, TrendingUp, TriangleAlert, Truck, Unlink, UserCheck, Users, Vote, Wallet, X, Zap,
   type LucideIcon,
 } from 'lucide-react';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
@@ -163,6 +163,78 @@ export function WinsBreaksSlide({ family, keyPoint }: { family: Family; keyPoint
         <WBPanel color={BREAK} Icon={TriangleAlert} label={t('winsBreaks.breaksLabel')} points={breaks} icons={m.breaks} from={12} />
       </div>
       <KeyPointBar text={keyPoint} className="mt-4" />
+    </div>
+  );
+}
+
+// ─── Family divider: a title card marking the gear change into a new industry ─
+// Deliberately not a content slide: the name, one framing line, and where we are in the six.
+
+const FAMILY_ORDER: Family[] = ['defi', 'nft', 'dao', 'rwa', 'sc', 'cert'];
+
+const DIVIDER_ICON: Record<Family, LucideIcon> = {
+  defi: Landmark, nft: Gem, dao: Vote, rwa: Building2, sc: Truck, cert: GraduationCap,
+};
+
+export function FamilyDivider({ family }: { family: Family }) {
+  const { t } = useTranslation(NS);
+  const idx = FAMILY_ORDER.indexOf(family);
+  const { accent } = WB_META[family];
+  const Icon = DIVIDER_ICON[family];
+  const grid = `linear-gradient(${accent}1a 1px, transparent 1px), linear-gradient(90deg, ${accent}1a 1px, transparent 1px)`;
+  const fade = 'radial-gradient(ellipse 70% 80% at 78% 45%, black, transparent 72%)';
+  const rise = (delay: number) => ({
+    initial: { opacity: 0, y: 14 }, whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.4 }, transition: { duration: 0.45, delay },
+  });
+  return (
+    <div className="h-full min-h-[24rem] relative overflow-hidden flex flex-col p-6 lg:p-10">
+      {/* Backdrop: accent grid fading out from the right, a soft glow, and the family number as a ghost */}
+      <div aria-hidden className="absolute inset-0 pointer-events-none"
+        style={{ backgroundImage: grid, backgroundSize: '48px 48px', maskImage: fade, WebkitMaskImage: fade }} />
+      <div aria-hidden className="absolute right-[10%] top-[14%] size-72 lg:size-96 rounded-full blur-3xl pointer-events-none"
+        style={{ backgroundColor: accent, opacity: 0.16 }} />
+      <div aria-hidden className="absolute right-6 lg:right-10 bottom-20 font-black leading-none tabular-nums select-none pointer-events-none text-[9rem] lg:text-[22rem]"
+        style={{ color: accent, opacity: 0.09 }}>{String(idx + 1).padStart(2, '0')}</div>
+
+      <div className="relative flex-1 min-h-0 flex flex-col justify-center">
+        <motion.div {...rise(0)} className="flex items-center gap-4">
+          <div className="size-16 lg:size-20 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg" style={{ backgroundColor: accent }}>
+            <Icon className="size-8 lg:size-10" strokeWidth={2} />
+          </div>
+          <div className="min-w-0">
+            <div className="text-sm font-black uppercase tracking-widest" style={{ color: accent }}>
+              {t('dividers.kicker', { n: idx + 1, total: FAMILY_ORDER.length })}
+            </div>
+            <div className="text-base lg:text-lg font-semibold text-muted-foreground leading-tight">{t(`dividers.${family}.tag`)}</div>
+          </div>
+        </motion.div>
+        <motion.h2 {...rise(0.08)} className="mt-6 lg:mt-8 text-5xl lg:text-7xl xl:text-8xl font-black tracking-tight leading-[0.95] text-foreground text-balance">
+          {t(`dividers.${family}.name`)}
+        </motion.h2>
+        <motion.div {...rise(0.16)} aria-hidden className="mt-6 h-1.5 w-28 rounded-full" style={{ backgroundColor: accent }} />
+        <motion.p {...rise(0.22)} className="mt-6 max-w-3xl text-xl lg:text-2xl text-muted-foreground leading-snug text-balance">
+          {t(`dividers.${family}.line`)}
+        </motion.p>
+      </div>
+
+      {/* Where we are in the six; lg:pr-16 keeps the last segment clear of the floating slide-nav buttons */}
+      <div className="relative shrink-0 grid grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-3 lg:pr-16">
+        {FAMILY_ORDER.map((f, i) => {
+          const on = i === idx;
+          return (
+            <div key={f} className="min-w-0" aria-current={on ? 'step' : undefined}>
+              <div className={`h-1.5 rounded-full ${i > idx ? 'bg-foreground/10' : ''}`}
+                style={i > idx ? undefined : { backgroundColor: on ? accent : accent + '59' }} />
+              <div className={`mt-2 flex items-baseline gap-1.5 text-xs font-bold uppercase tracking-wider leading-tight ${on ? '' : 'text-muted-foreground'}`}
+                style={on ? { color: accent } : undefined}>
+                <span className="font-mono opacity-70 shrink-0">{i + 1}</span>
+                <span className="min-w-0">{t(`dividers.${f}.name`)}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

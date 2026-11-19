@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
@@ -10,13 +10,14 @@ import { Building2 } from 'lucide-react';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { ClassDiscussion } from '../../components/shared/ClassDiscussion';
+import { sha256Hex } from '../../utils/sha256';
 import {
   NftUtilitySlide, TokenGateDemo, NftHonestSlide,
   GovernanceBlocksExplorer, VotingPowerSim, DaoExamplesSlide,
   TradeLensCase,
 } from './Section3Extras';
 import {
-  HookHeader, WinsBreaksSlide, DefiWhySlide, NftWhySlide, DaoWhySlide,
+  HookHeader, WinsBreaksSlide, FamilyDivider, DefiWhySlide, NftWhySlide, DaoWhySlide,
   type RecapBridge,
 } from './Section3Family';
 
@@ -30,12 +31,14 @@ const chapterShape = [
   { id: 's3-industries-intro' },
 
   { kind: 'group' as const, id: 'g-defi' },
+  { id: 's3-defi-title' },
   { id: 's3-defi-intro' },
   { id: 's3-defi-amm' },
   { id: 's3-defi-stablecoins' },
   { id: 's3-defi-prosCons' },
 
   { kind: 'group' as const, id: 'g-nft' },
+  { id: 's3-nft-title' },
   { id: 's3-nft-intro' },
   { id: 's3-nft-real' },
   { id: 's3-nft-utility' },
@@ -44,6 +47,7 @@ const chapterShape = [
   { id: 's3-nft-prosCons' },
 
   { kind: 'group' as const, id: 'g-dao' },
+  { id: 's3-dao-title' },
   { id: 's3-dao-intro' },
   { id: 's3-dao-structures' },
   { id: 's3-dao-vote' },
@@ -52,16 +56,19 @@ const chapterShape = [
   { id: 's3-dao-prosCons' },
 
   { kind: 'group' as const, id: 'g-rwa' },
+  { id: 's3-rwa-title' },
   { id: 's3-rwa-spectrum' },
   { id: 's3-rwa-real' },
   { id: 's3-rwa-prosCons' },
 
   { kind: 'group' as const, id: 'g-sc' },
+  { id: 's3-sc-title' },
   { id: 's3-sc-provenance' },
   { id: 's3-sc-real' },
   { id: 's3-sc-prosCons' },
 
   { kind: 'group' as const, id: 'g-cert' },
+  { id: 's3-cert-title' },
   { id: 's3-cert-howitworks' },
   { id: 's3-cert-real' },
   { id: 's3-cert-prosCons' },
@@ -76,8 +83,12 @@ const chapterShape = [
   { id: 's3-takeaways' },
 ];
 
-// Every family follows the same frame: a one-line recap bridge and a "why do we even need
-// this?" hook (HookHeader), then the interactive / real cases, then one WinsBreaksSlide.
+// Every family follows the same frame: a title divider (FamilyDivider), a one-line recap bridge
+// and a "why do we even need this?" hook (HookHeader), then the interactive / real cases, then
+// one WinsBreaksSlide.
+
+// Index of the correct option for each quiz.items[] entry, in the same order as the locale files.
+const QUIZ_ANSWERS = [1, 2, 3, 0, 2, 1];
 
 // ─── Interactive AMM Bonding Curve ───────────────────────────────────────────
 
@@ -348,32 +359,29 @@ function RWASpectrum({ recap }: { recap: RecapBridge }) {
 
 // ─── Interactive Proof-of-Existence (SHA-256) ────────────────────────────────
 
-async function sha256Hex(input: string): Promise<string> {
-  if (typeof crypto === 'undefined' || !crypto.subtle) return '0000…unavailable';
-  const buf  = new TextEncoder().encode(input);
-  const hash = await crypto.subtle.digest('SHA-256', buf);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
+// Hashing is done by a synchronous pure-JS SHA-256 (utils/sha256) rather than crypto.subtle:
+// Web Crypto only exists in secure contexts, so over plain HTTP on a LAN address the demo used
+// to show a placeholder for every input — and a tampered document would have "matched".
 
 function ProofOfExistenceDemo({ recap }: { recap: RecapBridge }) {
   const { t } = useTranslation('smart-contracts/section-3');
   const [doc, setDoc]   = useState(t('poe.defaultDoc'));
-  const [hash, setHash] = useState<string>('');
   const [anchored, setAnchored] = useState<{ hash: string; ts: number } | null>(null);
   const [verifyDoc, setVerifyDoc] = useState('');
   const [verifyHash, setVerifyHash] = useState('');
 
-  useEffect(() => { sha256Hex(doc).then(setHash); }, [doc]);
+  // Live fingerprint of whatever is in the credential box.
+  const hash = useMemo(() => sha256Hex(doc), [doc]);
 
   const onDocChange = (v: string) => setDoc(v);
 
-  const anchor = () => setAnchored({ hash, ts: Date.now() });
+  // A verdict belongs to one (document, anchor) pair: drop it when either side changes.
+  const anchor = () => { setAnchored({ hash, ts: Date.now() }); setVerifyHash(''); };
+  const onVerifyDocChange = (v: string) => { setVerifyDoc(v); setVerifyHash(''); };
 
-  const verify = async () => {
-    setVerifyHash(await sha256Hex(verifyDoc));
-  };
+  const verify = () => setVerifyHash(sha256Hex(verifyDoc));
 
-  const verifyMatches = anchored && verifyHash && verifyHash === anchored.hash;
+  const verifyMatches = !!anchored && verifyHash !== '' && verifyHash === anchored.hash;
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
@@ -396,11 +404,10 @@ function ProofOfExistenceDemo({ recap }: { recap: RecapBridge }) {
           </div>
           <div className="p-3 bg-card border border-border rounded-xl">
             <div className="text-[10px] font-semibold text-muted-foreground mb-1">{t('poe.hashLabel')}</div>
-            <div className="font-mono text-[10px] text-[#6366f1] break-all leading-relaxed">{hash || '…'}</div>
+            <div className="font-mono text-[10px] text-[#6366f1] break-all leading-relaxed" data-testid="poe-hash">{hash}</div>
           </div>
           <button
             onClick={anchor}
-            disabled={!hash}
             className="px-4 py-2.5 rounded-xl bg-[#22d3ee] text-white text-xs font-black hover:bg-[#22d3ee]/90 disabled:opacity-40 transition-colors"
           >
             {t('poe.anchorButton')}
@@ -427,7 +434,7 @@ function ProofOfExistenceDemo({ recap }: { recap: RecapBridge }) {
                 <div className="text-[10px] font-semibold text-muted-foreground">{t('poe.reenterCredential')}</div>
                 <textarea
                   value={verifyDoc}
-                  onChange={e => setVerifyDoc(e.target.value)}
+                  onChange={e => onVerifyDocChange(e.target.value)}
                   placeholder={t('poe.verifyTextareaPlaceholder')}
                   rows={3}
                   className="w-full p-2 bg-muted rounded-lg text-xs font-mono text-foreground resize-none border border-border focus:outline-none focus:ring-1 focus:ring-[#39B54A]"
@@ -890,6 +897,7 @@ function DesignYourOwnExercise() {
 }
 
 interface RealColumn { kicker: string; title: string; tag: string; points: string[]; footnote: string }
+interface QuizItem { question: string; options: string[]; explanation: string }
 interface CaseCard { industry: string; name: string; problem: string; solution: string; metric: string; metricLabel: string; platform: string }
 
 const CASE_META = [
@@ -981,7 +989,7 @@ export function SC_Section3() {
   const cases    = t('caseGallery.items', { returnObjects: true }) as CaseCard[];
 
   // Closing
-  const quizOptionTexts = t('quiz.options', { returnObjects: true }) as string[];
+  const quizItems = t('quiz.items', { returnObjects: true }) as QuizItem[];
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
   return (
@@ -1039,6 +1047,8 @@ export function SC_Section3() {
         {/* DeFi                                                        */}
         {/* ═══════════════════════════════════════════════════════════ */}
 
+        <div id="s3-defi-title" className="h-full"><FamilyDivider family="defi" /></div>
+
         {/* DeFi: recap → why → two rails + the bank unbundled + what runs today */}
         <div id="s3-defi-intro" className="h-full">
           <DefiWhySlide recap={bridge('defi', '/blockchain-platforms/section-2', '#39B54A')} />
@@ -1050,6 +1060,8 @@ export function SC_Section3() {
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* Gaming & NFTs                                               */}
         {/* ═══════════════════════════════════════════════════════════ */}
+
+        <div id="s3-nft-title" className="h-full"><FamilyDivider family="nft" /></div>
 
         {/* NFTs: recap → why → database row vs token in your wallet */}
         <div id="s3-nft-intro" className="h-full">
@@ -1072,6 +1084,8 @@ export function SC_Section3() {
         {/* DAOs                                                        */}
         {/* ═══════════════════════════════════════════════════════════ */}
 
+        <div id="s3-dao-title" className="h-full"><FamilyDivider family="dao" /></div>
+
         {/* DAOs: recap → why → one payment through a company and through a DAO */}
         <div id="s3-dao-intro" className="h-full">
           <DaoWhySlide recap={bridge('dao', F3, '#ED1C24')} />
@@ -1085,6 +1099,8 @@ export function SC_Section3() {
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* Real-World Assets                                           */}
         {/* ═══════════════════════════════════════════════════════════ */}
+
+        <div id="s3-rwa-title" className="h-full"><FamilyDivider family="rwa" /></div>
 
         <div id="s3-rwa-spectrum" className="h-full">
           <RWASpectrum recap={bridge('rwa', '/smart-contracts/section-2', '#6366f1')} />
@@ -1103,6 +1119,8 @@ export function SC_Section3() {
         {/* Supply Chain                                                */}
         {/* ═══════════════════════════════════════════════════════════ */}
 
+        <div id="s3-sc-title" className="h-full"><FamilyDivider family="sc" /></div>
+
         <div id="s3-sc-provenance" className="h-full">
           <ProvenanceQR recap={bridge('sc', F3, '#ED1C24')} />
         </div>
@@ -1119,6 +1137,8 @@ export function SC_Section3() {
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* Digital Certification                                       */}
         {/* ═══════════════════════════════════════════════════════════ */}
+
+        <div id="s3-cert-title" className="h-full"><FamilyDivider family="cert" /></div>
 
         <div id="s3-cert-howitworks" className="h-full">
           <ProofOfExistenceDemo recap={bridge('cert', '/blockchain-fundamentals/section-1', '#ED1C24')} />
@@ -1182,14 +1202,18 @@ export function SC_Section3() {
         {/* ═══════ WRAP UP ═══════ */}
         <div id="s3-exercise" className="h-full"><DesignYourOwnExercise /></div>
 
-        <div id="s3-quiz" className="h-full">
-          <QuizSlide
-            question={t('quiz.question')}
-            options={quizOptionTexts.map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quiz.explanation')}
-            compact
-          />
-        </div>
+        {/* One question per slide; the first carries the chapter id for the sidebar. */}
+        {quizItems.map((q, qi) => (
+          <div key={qi} id={qi === 0 ? 's3-quiz' : undefined} className="h-full">
+            <QuizSlide
+              label={t('quiz.label', { n: qi + 1, total: quizItems.length })}
+              question={q.question}
+              options={q.options.map((text, i) => ({ text, correct: i === QUIZ_ANSWERS[qi] }))}
+              explanation={q.explanation}
+              compact
+            />
+          </div>
+        ))}
 
         <div id="s3-takeaways" className="h-full">
           <TakeawaySlide title={t('takeaways.title')} takeaways={takeawayItems} />
