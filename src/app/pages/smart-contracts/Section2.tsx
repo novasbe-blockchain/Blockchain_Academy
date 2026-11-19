@@ -11,6 +11,9 @@ import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { DeepDiveBadge } from '../../components/shared/DeepDiveBadge';
 import { RecapHandoff } from '../../components/shared/RecapHandoff';
 import { Cog, Check, X, Server, ShieldCheck, Activity, Database, Coins, Ban } from 'lucide-react';
+import {
+  OracleWhySlide, OracleWhatSlide, OracleHowSlide, OracleRisksSlide, OracleParisSlide, OracleAttackSlide,
+} from './Section2Oracles';
 
 import imgDisintermediation from '../../../assets/sc/disintermediation.png';
 
@@ -33,6 +36,14 @@ const chapterShape = [
   { id: 's2-gas' },
   { id: 's2-standards' },
 
+  { kind: 'group' as const, id: 'g-s2-oracles' },
+  { id: 's2-oracle-why' },
+  { id: 's2-oracle-what' },
+  { id: 's2-oracle-how' },
+  { id: 's2-oracle-risks' },
+  { id: 's2-oracle-paris' },
+  { id: 's2-oracle-attack' },
+
   { kind: 'group' as const, id: 'g-s2-business' },
   { id: 's2-capabilities' },
   { id: 's2-reshape' },
@@ -40,6 +51,8 @@ const chapterShape = [
   { kind: 'group' as const, id: 'g-s2-wrap' },
   { id: 's2-quiz' },
   { id: 's2-quiz-2' },
+  { id: 's2-quiz-3' },
+  { id: 's2-quiz-4' },
   { id: 's2-takeaways' },
 ] as const;
 
@@ -744,6 +757,8 @@ function DAppStackExercise() {
   const { t } = useTranslation('smart-contracts/section-2');
   const itemLabel = (id: string) => t(`stackExercise.items.${id}.label`);
   const itemInfo  = (id: string) => t(`stackExercise.items.${id}.info`);
+  // One-line definition shown on the chip itself, so no component is met cold.
+  const itemGloss = (id: string) => t(`stackExercise.items.${id}.gloss`);
   const [placements, setPlacements] = useState<Record<string, string>>({});
   const [revealed,   setRevealed]   = useState(false);
   const [selected,   setSelected]   = useState<string | null>(null);
@@ -815,9 +830,9 @@ function DAppStackExercise() {
       <div className="flex-1 min-h-0 flex gap-4">
 
         {/* Unplaced items */}
-        <div className="w-44 shrink-0 flex flex-col gap-2">
+        <div className="w-96 shrink-0 flex flex-col gap-2">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest shrink-0">{t('stackExercise.componentsLabel')}</p>
-          <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-1.5">
+          <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-1">
             {unplaced.map(item => (
               <motion.button
                 key={item.id}
@@ -827,14 +842,17 @@ function DAppStackExercise() {
                 title={itemInfo(item.id)}
                 whileHover={{ x: 3 }}
                 whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2 px-2.5 py-2 rounded-lg border-2 text-left transition-colors"
+                className="shrink-0 flex items-center gap-2.5 px-2.5 py-1 rounded-lg border-2 text-left transition-colors"
                 style={{
                   borderColor: selected === item.id ? '#6366f1' : 'var(--border)',
                   backgroundColor: selected === item.id ? '#6366f115' : 'var(--card)',
                 }}
               >
                 <span className="text-base shrink-0">{item.emoji}</span>
-                <span className="text-xs font-semibold text-foreground truncate">{itemLabel(item.id)}</span>
+                <span className="min-w-0">
+                  <span className="block text-xs font-bold text-foreground truncate">{itemLabel(item.id)}</span>
+                  <span className="block text-[10px] text-muted-foreground leading-tight">{itemGloss(item.id)}</span>
+                </span>
               </motion.button>
             ))}
             {unplaced.length === 0 && <div className="text-xs text-muted-foreground italic text-center mt-4">{t('stackExercise.allPlaced')}</div>}
@@ -1016,6 +1034,10 @@ export function SC_Section2() {
   const quizOptions = quizOptionsText.map((text, i) => ({ text, correct: i === 1 }));
   const quiz2OptionsText = t('quiz2.options', { returnObjects: true }) as string[];
   const quiz2Options = quiz2OptionsText.map((text, i) => ({ text, correct: i === 2 }));
+  const quiz3OptionsText = t('quiz3.options', { returnObjects: true }) as string[];
+  const quiz3Options = quiz3OptionsText.map((text, i) => ({ text, correct: i === 0 }));
+  const quiz4OptionsText = t('quiz4.options', { returnObjects: true }) as string[];
+  const quiz4Options = quiz4OptionsText.map((text, i) => ({ text, correct: i === 3 }));
 
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
@@ -1201,7 +1223,7 @@ export function SC_Section2() {
               <div className="shrink-0 p-2.5 bg-[#6366f1]/10 border border-[#6366f1]/25 rounded-lg text-xs text-muted-foreground">
                 <span className="font-semibold text-foreground">{t('dapp.insightLabel')}</span>{t('dapp.insightBody')}
               </div>
-              <UnderTheHood terms={['RPC (Infura / Alchemy)', 'IPFS', 'indexer (The Graph)']} className="shrink-0" />
+              <UnderTheHood terms={['RPC (Infura / Alchemy)', 'IPFS', 'indexer (The Graph)', 'oracle (Chainlink)']} className="shrink-0" />
             </div>
 
           </div>
@@ -1748,6 +1770,14 @@ export function SC_Section2() {
           <KeyPointBar text={t('keyPoints.s2-standards')} className="mt-3" />
         </div>
 
+        {/* ═══════ ORACLES — why · what · how · risks · two real cases ═══════ */}
+        <div id="s2-oracle-why" className="h-full"><OracleWhySlide /></div>
+        <div id="s2-oracle-what" className="h-full"><OracleWhatSlide /></div>
+        <div id="s2-oracle-how" className="h-full"><OracleHowSlide /></div>
+        <div id="s2-oracle-risks" className="h-full"><OracleRisksSlide /></div>
+        <div id="s2-oracle-paris" className="h-full"><OracleParisSlide /></div>
+        <div id="s2-oracle-attack" className="h-full"><OracleAttackSlide /></div>
+
         {/* ═══════ NEW CAPABILITIES ═══════ */}
         <div id="s2-capabilities" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
@@ -1904,6 +1934,7 @@ export function SC_Section2() {
         {/* Quiz 1: what triggers a contract */}
         <div id="s2-quiz" className="h-full">
           <QuizSlide
+            compact
             question={t('quiz.question')}
             options={quizOptions}
             explanation={t('quiz.explanation')}
@@ -1913,9 +1944,30 @@ export function SC_Section2() {
         {/* Quiz 2: a failed check in the escrow run */}
         <div id="s2-quiz-2" className="h-full">
           <QuizSlide
+            compact
             question={t('quiz2.question')}
             options={quiz2Options}
             explanation={t('quiz2.explanation')}
+          />
+        </div>
+
+        {/* Quiz 3: why a contract needs an oracle */}
+        <div id="s2-quiz-3" className="h-full">
+          <QuizSlide
+            compact
+            question={t('quiz3.question')}
+            options={quiz3Options}
+            explanation={t('quiz3.explanation')}
+          />
+        </div>
+
+        {/* Quiz 4: the root weakness in a price-feed attack */}
+        <div id="s2-quiz-4" className="h-full">
+          <QuizSlide
+            compact
+            question={t('quiz4.question')}
+            options={quiz4Options}
+            explanation={t('quiz4.explanation')}
           />
         </div>
 
