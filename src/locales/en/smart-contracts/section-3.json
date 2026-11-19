@@ -2,31 +2,31 @@
   "chapters": {
     "s3-discussion": "💬 Discussion",
     "s3-industries-intro": "Industries Overview",
-    "s3-defi-intro": "What is DeFi?",
+    "s3-defi-intro": "Why DeFi?",
     "s3-defi-amm": "🧩 AMM Curve",
     "s3-defi-stablecoins": "🧩 Peg Simulator",
-    "s3-defi-prosCons": "Pros & Cons",
-    "s3-nft-intro": "What is an NFT?",
+    "s3-defi-prosCons": "Wins / Breaks",
+    "s3-nft-intro": "Why NFTs?",
     "s3-nft-real": "In Production",
-    "s3-nft-prosCons": "Pros & Cons",
     "s3-nft-utility": "NFTs Beyond Art",
     "s3-nft-gate": "🧩 Token Gate",
     "s3-nft-honest": "The Honest NFT Story",
-    "s3-dao-intro": "What is a DAO?",
+    "s3-nft-prosCons": "Wins / Breaks",
+    "s3-dao-intro": "Why DAOs?",
     "s3-dao-structures": "🧩 Governance Blocks",
     "s3-dao-vote": "🧩 Who Holds Power?",
     "s3-dao-examples": "Real DAOs: What Works",
     "s3-dao-broke": "Real DAOs: What Broke",
-    "s3-dao-prosCons": "DAO Pros & Cons",
+    "s3-dao-prosCons": "Wins / Breaks",
     "s3-rwa-spectrum": "🧩 Spectrum",
     "s3-rwa-real": "In Production",
-    "s3-rwa-prosCons": "Pros & Cons",
+    "s3-rwa-prosCons": "Wins / Breaks",
     "s3-sc-provenance": "🧩 Provenance",
     "s3-sc-real": "In Production",
-    "s3-sc-prosCons": "Pros & Cons",
+    "s3-sc-prosCons": "Wins / Breaks",
     "s3-cert-howitworks": "🧩 Proof of Exist",
     "s3-cert-real": "In Production",
-    "s3-cert-prosCons": "Pros & Cons",
+    "s3-cert-prosCons": "Wins / Breaks",
     "s3-case-gallery": "Case Gallery",
     "s3-tradelens": "TradeLens",
     "s3-exercise": "🧩 Design Your Own",
@@ -36,23 +36,60 @@
   "groups": {
     "g-defi": "DeFi",
     "g-nft": "Gaming & NFTs",
+    "g-dao": "DAOs",
     "g-rwa": "RWA",
     "g-sc": "Supply Chain",
     "g-cert": "Certification",
     "g-cases": "Case Studies",
-    "g-close": "Wrap Up",
-    "g-apps": "NFT Utility & DAOs"
+    "g-close": "Wrap Up"
   },
   "title": {
     "sectionNumber": "SECTION 03",
     "title": "Industries & Case Studies",
     "subtitle": "Where smart contracts run in real industries, including the cases that failed"
   },
-  "prosCons": {
-    "prosLabel": "Pros",
-    "consLabel": "Cons"
-  },
   "interactiveBadge": "Interactive",
+  "whyLabel": "Why do we even need this?",
+  "recapLabel": "Already covered",
+  "family": {
+    "defi": {
+      "where": "Platforms §2 · DeFi Mechanics",
+      "recap": "DeFi is financial services run by smart contracts instead of institutions. You met AMMs, lending and stablecoins there; here you run them.",
+      "hook": "Why does sending your own money abroad still take days, cost up to $50 and stop for the weekend?"
+    },
+    "nft": {
+      "where": "Fundamentals §3 · NFTs",
+      "recap": "An NFT is a unique token whose owner is recorded on-chain, so ownership can be proved and transferred without asking the issuer.",
+      "hook": "You paid for that skin, ticket or song. So why can the platform take it back?"
+    },
+    "dao": {
+      "where": "Fundamentals §3 · DAOs",
+      "recap": "A DAO is an organisation whose rulebook is a smart contract: members propose and vote, and the treasury acts on the result.",
+      "hook": "17,000 strangers pooled $47M in a week. Who gets to sign the cheque?"
+    },
+    "rwa": {
+      "where": "Section 2 · Tokens recap",
+      "recap": "A token can stand for something that lives off-chain: a fund share, a bond, a building. The contract moves the token; a legal wrapper ties it to the asset.",
+      "hook": "You can buy $10 of bitcoin on a Sunday night. Why not $10 of a Treasury bill, or of a building?"
+    },
+    "sc": {
+      "where": "Fundamentals §3 · Provenance",
+      "recap": "A shared ledger gives every partner the same tamper-evident record, and each hand-off is signed by whoever made it.",
+      "hook": "The label says “organic, free-range”. How would you ever check?"
+    },
+    "cert": {
+      "where": "Fundamentals §1 · Hashing",
+      "recap": "A hash is a document's fingerprint: change one character and the fingerprint changes completely.",
+      "hook": "Anyone can print a diploma. How does an employer know yours is real without phoning the university?"
+    }
+  },
+  "hooks": {
+    "amm": "It's 3 a.m. and nobody wants the other side of your trade. Who sells you the ETH?",
+    "peg": "ETH can move 10% in a day. Would you price a loan, or take your salary, in it?",
+    "gate": "Every club, shop and event keeps its own member list. What if the door just checked your wallet?",
+    "blocks": "There is no CEO. So how does a decision actually get made, and enforced?",
+    "vote": "They call it decentralised, yet one wallet holds 62% of the tokens. Who decides?"
+  },
   "discussion": {
     "badge": "Class discussion",
     "duration": "5 min",
@@ -84,7 +121,7 @@
         "name": "USDC on an L2",
         "tag": "Borderless transfer",
         "stat": "seconds · cent fees",
-        "desc": "A SWIFT wire takes 3–5 days and $25–50 plus FX spread; a stablecoin on Base or Arbitrum settles wallet-to-wallet in seconds — irreversibly, and the on/off-ramp still needs a bank."
+        "desc": "Dollars move wallet-to-wallet on Base or Arbitrum for cents, with no cut-off time. Final means final: there is no chargeback."
       }
     ]
   },
@@ -142,7 +179,7 @@
           "Brickblock (Frankfurt) issued property tokens on Ethereum under BaFin supervision",
           "A Zurich Bahnhofstrasse building was tokenised through a Swiss GmbH — investors receive rent and trade shares under FINMA guidelines"
         ],
-        "footnote": "EU MiCA (2024) gives crypto-assets one legal framework across 27 states — the clarity these pilots were waiting for."
+        "footnote": "EU MiCA (2024) gives crypto-assets one rulebook across 27 states; tokenised securities stay under MiFID II and the EU's DLT Pilot Regime."
       },
       {
         "kicker": "Lending",
@@ -272,7 +309,7 @@
       {
         "industry": "Food supply",
         "name": "Walmart",
-        "problem": "Tracing contaminated lettuce to its farm took 7 days; whole categories were pulled from shelves.",
+        "problem": "Tracing a pack of sliced mangoes to its farm took almost 7 days; in an outbreak, whole categories are pulled from shelves.",
         "solution": "Farmers, packers, distributors and stores record each hand-off on IBM Food Trust; QR codes link the product to its provenance.",
         "metric": "7 days → 2.2 s",
         "metricLabel": "trace-back time",
@@ -292,7 +329,7 @@
   "exerciseBadge": "Exercise",
   "amm": {
     "title": "AMM Bonding Curve · ",
-    "subtitle": "Drag the slider to trade against a Uniswap-style pool and watch price and slippage move.",
+    "subtitle": "A pool does: it always quotes a price. Drag the slider to trade against it and watch price and slippage move.",
     "curveTitle": "Constant-product curve",
     "axisX": "x = ETH reserve",
     "axisY": "y = USDC",
@@ -369,7 +406,7 @@
   },
   "pegSim": {
     "title": "Stablecoin Peg Simulator",
-    "subtitle": "Pick a stablecoin design and apply market stress.",
+    "subtitle": "So DeFi runs on tokens pegged to $1. Pick a design, apply market stress and see what actually holds the peg.",
     "design": "Stablecoin design",
     "shockLabel": "Market shock — % of supply sold off",
     "shockDesc": "Sudden sell pressure (a \"bank run\" event). 100% = entire supply hits the bid simultaneously.",
@@ -525,23 +562,74 @@
       "cert": { "name": "Digital Certification", "tag": "Trusted Records", "desc": "Diplomas, government records, luxury authentication" }
     },
     "commonThreadLabel": "Common thread:",
-    "commonThreadBody": " in each vertical a smart contract replaces a slow, intermediary-dependent process with code-enforced execution. We cover each, then NFT utility and DAOs, then six case studies, including one that was shut down."
+    "commonThreadBody": " in each vertical a smart contract replaces a slow, intermediary-dependent process with code-enforced execution. Each one opens with the problem it solves and closes with where it wins and where it breaks. DAOs get the same treatment, then six case studies, including one that was shut down."
   },
-  "defiWhat": {
-    "heading": "What is DeFi?",
-    "subtitle": "Financial services run by smart contracts instead of institutions.",
-    "coreIdeaTitle": "The Core Idea",
-    "coreIdeaBody": "Instead of a bank enforcing a loan or a clearinghouse settling a trade, a smart contract does it when conditions are met. This cuts fees and settlement time, and users keep custody of their assets.",
-    "valueCodeTitle": "\"Value and Code at the same level\"",
-    "valueCodeBody": "In traditional finance, the rules of trade live in legal documents and back-office systems separate from the money itself. In DeFi, value (ETH, USDC, NFTs) and the rules that govern it (the contract code) sit on the same blockchain — composable, atomic, transparent.",
-    "primitivesLabel": "DeFi primitives",
-    "primitives": {
-      "dex": { "name": "DEXs / AMMs", "desc": "Decentralized exchanges using liquidity pools (Uniswap, CoW Swap, Curve)" },
-      "lending": { "name": "Lending", "desc": "Over-collateralized loans without credit checks (Aave, Compound)" },
-      "stablecoins": { "name": "Stablecoins", "desc": "Tokens pegged to USD/EUR (USDC, DAI, USDT) — global, programmable money" },
-      "yield": { "name": "Yield", "desc": "Automated strategies that route deposits to highest-return pools (Yearn)" },
-      "derivatives": { "name": "Derivatives", "desc": "Perpetuals, options, synthetics — trading without intermediaries (dYdX, GMX)" }
-    }
+  "defiWhy": {
+    "railsLabel": "One payment abroad, two rails",
+    "wire": {
+      "name": "International bank wire",
+      "hops": [
+        "You",
+        "Your bank",
+        "Correspondent bank",
+        "Their bank",
+        "Recipient"
+      ],
+      "stats": [
+        "1–5 business days",
+        "$25–50 + FX spread",
+        "Bank hours"
+      ]
+    },
+    "chain": {
+      "name": "Stablecoin on a Layer 2",
+      "hops": [
+        "You",
+        "Token contract",
+        "Recipient"
+      ],
+      "stats": [
+        "Seconds",
+        "Cents",
+        "24/7"
+      ]
+    },
+    "catchLabel": "The catch:",
+    "catchBody": " an on-chain transfer cannot be reversed, and moving money in and out of the chain still needs a bank.",
+    "desksLabel": "A bank, unbundled into contracts · click a desk",
+    "desks": {
+      "dex": {
+        "bank": "Trading desk",
+        "name": "DEX / AMM",
+        "desc": "A pool of two tokens and a formula quote the price. No order book, no broker.",
+        "live": "Uniswap · Curve · CoW Swap"
+      },
+      "lending": {
+        "bank": "Loans desk",
+        "name": "Lending pool",
+        "desc": "Borrow against collateral worth more than the loan. No credit check; fall below the threshold and you are liquidated.",
+        "live": "Aave · Compound"
+      },
+      "stablecoins": {
+        "bank": "Dollar account",
+        "name": "Stablecoin",
+        "desc": "A token pegged to $1 that moves like any other token: global, programmable cash.",
+        "live": "USDC · DAI · USDT"
+      },
+      "yield": {
+        "bank": "Asset management",
+        "name": "Yield vault",
+        "desc": "Code routes deposits to wherever the return is highest and shares out the fees.",
+        "live": "Yearn"
+      },
+      "derivatives": {
+        "bank": "Derivatives desk",
+        "name": "Perps & options",
+        "desc": "Leverage and hedging settled by a contract instead of a broker and a clearing house.",
+        "live": "dYdX · GMX"
+      }
+    },
+    "nextTag": "next"
   },
   "stablecoinsIntro": {
     "heading": "Stablecoins",
@@ -567,158 +655,244 @@
     "nextLabel": "Next: ",
     "nextBody": "stress-test a peg yourself on the next slide."
   },
-  "defiProsCons": {
-    "title": "DeFi · Pros & Cons",
-    "pros": [
-      { "label": "24/7 Global Access", "desc": "Markets, payments, and dollar-pegged balances stay open all day — no cut-off windows or borders." },
-      { "label": "Instant Settlement", "desc": "Trades and transfers clear in a single block (seconds), eliminating clearing delays." },
-      { "label": "Reduced Costs", "desc": "Smart contracts replace banks, card networks and brokers; fees on swaps and cross-border payments fall." },
-      { "label": "Self-Custody", "desc": "Users keep their own keys. Value moves peer-to-peer without frozen accounts or withdrawal limits." },
-      { "label": "Predictable Value", "desc": "Stablecoins let users hold and spend a token that maintains a fiat parity (mostly USD)." },
-      { "label": "Programmable Cash Flows", "desc": "Code automates swaps, payouts, and recurring transfers once preset conditions are met." },
-      { "label": "Permissionless Markets", "desc": "Anyone can list and launch a new token pair or liquidity pool. No gatekeepers." }
-    ],
-    "cons": [
-      { "label": "Regulatory Uncertainty", "desc": "Rules on KYC, securities status, and stablecoin backing differ by jurisdiction and keep evolving." },
-      { "label": "Smart Contract Bugs", "desc": "Technical vulnerabilities or exploits can drain pools, freeze funds, or break a stablecoin peg." },
-      { "label": "Liquidity Fragmentation", "desc": "Assets spread across many chains and pools. Big trades face slippage or thin depth." },
-      { "label": "Peg Instability", "desc": "Even \"stable\" coins can de-peg if reserves, collateral ratios, or algorithms fail." },
-      { "label": "UX Complexity", "desc": "Setting up wallets, safeguarding seed phrases, paying gas — all deter mainstream adoption." },
-      { "label": "On/Off-Ramp Friction", "desc": "Moving funds between banks and blockchain wallets still depends on centralized exchanges and KYC." }
-    ]
-  },
-  "nftIntro": {
-    "heading": "What is an NFT?",
-    "subtitle": "A unique digital asset recorded on-chain that certifies ownership and authenticity.",
-    "unlikeTitle": "Unlike fungible tokens…",
-    "unlikeBodyA": "Cryptocurrencies (ETH, USDC) are ",
-    "unlikeBodyStrong": "interchangeable",
-    "unlikeBodyB": " — your 1 ETH equals my 1 ETH. NFTs are not. Each NFT has its own ID and metadata, recorded on the ERC-721 (or ERC-1155) standard. Owning the token means owning that specific asset.",
-    "standardLabel": "Standard",
-    "multiTokenLabel": "Multi-token",
-    "gamingTitle": "In gaming…",
-    "gamingBody": "NFTs can represent swords, skins, characters or virtual land. Because the NFT sits in the player's wallet, not on the publisher's server, it can be listed, traded or rented peer-to-peer.",
-    "gamingPoints": [
-      "Items survive server shutdowns",
-      "Tradeable on third-party marketplaces",
-      "Cross-game interoperability potential",
-      "Royalty terms can be attached to the token"
-    ]
-  },
-  "nftEconomies": {
-    "heading": "Ownership and virtual economies",
-    "subtitle": "Smart contracts turn server-side database rows into player-owned, transferable, programmable assets.",
-    "cards": {
-      "before": {
-        "title": "Before Web3",
-        "points": [
-          "Digital assets lived on centralized servers, owned by publishers",
-          "Account banned = items gone, no recourse",
-          "No cross-game portability",
-          "Creators received zero royalties on resales"
-        ]
-      },
-      "withNft": {
-        "title": "With NFTs",
-        "points": [
-          "Asset ownership lives in the user's wallet on-chain",
-          "Royalty terms travel with the token — paid when the marketplace honours them",
-          "Items tradeable, lendable, stakeable, fractionalizable",
-          "Asset metadata transparent and verifiable"
-        ]
-      },
-      "parallels": {
-        "title": "Real-world parallels",
-        "points": [
-          "Sell items for real-world value (just like physical goods)",
-          "Lend NFTs out for yield (like real-estate rental)",
-          "Use NFTs as collateral for loans (mortgaging digital art)",
-          "Sell fractional shares (REITs for digital assets)"
-        ]
-      }
+  "winsBreaks": {
+    "kicker": "The verdict",
+    "headWins": "where it wins",
+    "headBreaks": "where it breaks",
+    "winsLabel": "Where it wins",
+    "breaksLabel": "Where it breaks",
+    "defi": {
+      "title": "DeFi",
+      "wins": [
+        {
+          "label": "Always open, settles in seconds",
+          "desc": "No cut-off times and no clearing delay: a swap or transfer confirms in seconds.",
+          "proof": "24/7"
+        },
+        {
+          "label": "No gatekeeper",
+          "desc": "Anyone with a wallet can trade, lend or launch a market, and keeps their own keys.",
+          "proof": "self-custody"
+        },
+        {
+          "label": "Money you can program",
+          "desc": "Swaps, payouts and collateral rules are code, and one contract can plug into another.",
+          "proof": "composable"
+        }
+      ],
+      "breaks": [
+        {
+          "label": "Code is the counterparty",
+          "desc": "A bug or exploit can drain a pool. There is no help desk and no reversal.",
+          "proof": "The DAO · $60M"
+        },
+        {
+          "label": "Pegs and liquidity can snap",
+          "desc": "Thin pools mean slippage, and a “stable” coin de-pegs when its backing fails.",
+          "proof": "UST · ~$40B"
+        },
+        {
+          "label": "The edges are still banks",
+          "desc": "On/off-ramps, KYC and regulation sit off-chain and differ by country.",
+          "proof": "on/off-ramp"
+        }
+      ]
+    },
+    "nft": {
+      "title": "Gaming & NFTs",
+      "wins": [
+        {
+          "label": "Ownership you can prove",
+          "desc": "The item sits in your wallet, not in a publisher's database, and you can resell it.",
+          "proof": "ERC-721"
+        },
+        {
+          "label": "The token as a key",
+          "desc": "Tickets, memberships and credentials that any partner can check without a shared database.",
+          "proof": "POAP · GET Protocol"
+        },
+        {
+          "label": "Assets that plug in",
+          "desc": "Lend it, rent it or borrow against it without a new deal with the issuer.",
+          "proof": "Zharta · NFTfi"
+        }
+      ],
+      "breaks": [
+        {
+          "label": "Royalties are not enforced",
+          "desc": "The standard only declares a royalty. The marketplace decides whether to pay it.",
+          "proof": "payouts −90%"
+        },
+        {
+          "label": "Most of the asset is off-chain",
+          "desc": "Servers, artwork and gameplay stay with a company. The token may only point at a URL.",
+          "proof": "tokenURI → server"
+        },
+        {
+          "label": "Demand is not guaranteed",
+          "desc": "Value depends on an active community. When the hype or the game fades, so does the price.",
+          "proof": "2021 → 2023 slump"
+        }
+      ]
+    },
+    "dao": {
+      "title": "DAOs",
+      "wins": [
+        { "label": "Transparent by default", "desc": "Every vote, payment and rule change is public and permanent.", "proof": "no backdated minutes" },
+        {
+          "label": "The vote moves the money",
+          "desc": "Budgets, spending limits and signatures are enforced by code, not by whoever holds the chequebook.",
+          "proof": "MakerDAO · since 2017"
+        },
+        {
+          "label": "Capital from strangers, fast",
+          "desc": "Anyone with a wallet can join and fund, and exit rights protect those who disagree.",
+          "proof": "$47M in a week"
+        }
+      ],
+      "breaks": [
+        { "label": "Whales and apathy", "desc": "Token-weighted means money-weighted, and most tokens never vote.", "proof": "turnout < 10%" },
+        {
+          "label": "Governance can be attacked",
+          "desc": "Beanstalk: an attacker flash-loaned 67% of the votes and drained $182M in one transaction.",
+          "proof": "Beanstalk · $182M"
+        },
+        {
+          "label": "Legally exposed, slow in a crisis",
+          "desc": "Voters in an unincorporated DAO can be personally liable, and timelocks tie everyone's hands.",
+          "proof": "Ooki DAO"
+        }
+      ]
+    },
+    "rwa": {
+      "title": "RWA tokenization",
+      "wins": [
+        {
+          "label": "Settles the same day, any day",
+          "desc": "The token moves in minutes instead of T+2 through a chain of intermediaries.",
+          "proof": "T+2 → same day"
+        },
+        { "label": "Smaller slices", "desc": "Funds and buildings split into units that more investors can hold and trade.", "proof": "fractional" },
+        { "label": "Cash flows on autopilot", "desc": "Coupons, rent and compliance checks run inside the contract.", "proof": "on-chain KYC" }
+      ],
+      "breaks": [
+        {
+          "label": "The wrapper is the risk",
+          "desc": "The token is only a claim. A company, custodian or registrar still holds the real asset.",
+          "proof": "SPV · custodian"
+        },
+        {
+          "label": "Law moves slower than tokens",
+          "desc": "Title and securities rules differ by country and still run off-chain.",
+          "proof": "title transfer"
+        },
+        {
+          "label": "A token does not create buyers",
+          "desc": "Secondary markets stay thin, and the price can drift from what the asset is worth.",
+          "proof": "thin liquidity"
+        }
+      ]
+    },
+    "sc": {
+      "title": "Supply chain",
+      "wins": [
+        {
+          "label": "One record for every partner",
+          "desc": "Rivals, customs and regulators read the same tamper-evident trail.",
+          "proof": "GSBN · since 2021"
+        },
+        {
+          "label": "Trace in seconds, not days",
+          "desc": "Find the source of a bad batch before the whole category is pulled from shelves.",
+          "proof": "Walmart · 7 days → 2.2 s"
+        },
+        {
+          "label": "Paperwork that triggers itself",
+          "desc": "A matched delivery releases the payment and flags the dispute automatically.",
+          "proof": "Home Depot · IBM"
+        }
+      ],
+      "breaks": [
+        {
+          "label": "Garbage in, garbage forever",
+          "desc": "The chain proves who entered what and when, not that the chicken was organic.",
+          "proof": "oracle problem"
+        },
+        {
+          "label": "Rivals have to join",
+          "desc": "The value needs near-universal participation, and who owns the platform decides who joins.",
+          "proof": "TradeLens · closed 2023"
+        },
+        {
+          "label": "Expensive to plug in",
+          "desc": "Sensors, legacy ERPs and competing consortium standards make integration slow and costly.",
+          "proof": "ERP · IoT"
+        }
+      ]
+    },
+    "cert": {
+      "title": "Digital certification",
+      "wins": [
+        {
+          "label": "Verify without the issuer",
+          "desc": "Anyone checks a record against the chain in seconds. No email to the registrar.",
+          "proof": "MIT Blockcerts"
+        },
+        { "label": "Tamper-evident for good", "desc": "Change one character and the hash no longer matches.", "proof": "Estonia KSI · since 2012" },
+        { "label": "The holder keeps it", "desc": "You share your own credential, and only its fingerprint is ever on-chain.", "proof": "hash only" }
+      ],
+      "breaks": [
+        {
+          "label": "A true record of a false claim",
+          "desc": "The chain cannot tell whether the issuer lied or erred when creating it.",
+          "proof": "issuer honesty"
+        },
+        {
+          "label": "Hard to revoke or correct",
+          "desc": "What is written stays written. Revoking needs extra contract logic.",
+          "proof": "revocation registry"
+        },
+        {
+          "label": "Not always legal proof",
+          "desc": "Many jurisdictions do not yet accept an on-chain record as official, and standards compete.",
+          "proof": "legal recognition"
+        }
+      ]
     }
   },
-  "nftProsCons": {
-    "title": "Gaming & NFTs · Pros & Cons",
-    "pros": [
-      { "label": "True Digital Ownership", "desc": "Items live in the player's wallet, can't be revoked, and survive server shutdowns." },
-      { "label": "Player-Driven Economies", "desc": "Open on-chain markets set prices; supply & demand determine value, not publishers." },
-      { "label": "Programmable Cash Flows", "desc": "Smart contracts automate rentals, revenue-sharing, staking, and collateralized lending." },
-      {
-        "label": "Creator Royalties (declared)",
-        "desc": "Royalty info travels with the token — but payment depends on marketplace policy. See \"The Honest NFT Story\"."
-      },
-      { "label": "Transparent Scarcity", "desc": "Mint caps and supply are public on-chain — preventing hidden inflation of rare items." },
-      { "label": "Global 24/7 Markets", "desc": "Anyone with a wallet can buy, sell, or earn rewards instantly across borders." },
-      { "label": "Composability", "desc": "NFTs plug into DeFi or social dApps, unlocking governance, yield, or utility bonuses." }
-    ],
-    "cons": [
-      { "label": "Price Volatility", "desc": "Item and token values can spike or crash — disrupting game balance and player trust." },
-      { "label": "Regulatory Gray Zones", "desc": "Loot-box-style drops and token rewards may face gambling or securities scrutiny." },
-      { "label": "UX Friction", "desc": "Wallet setup, key management, and gas fees are barriers for mainstream gamers." },
-      { "label": "Scams & Counterfeits", "desc": "Phishing sites and fake collections trick players into signing malicious transactions." },
-      { "label": "Game-Health Dependency", "desc": "Asset value hinges on an active player base. If the game fades, prices collapse." },
-      { "label": "Market Saturation", "desc": "A flood of low-quality drops dilutes attention and depresses resale demand." }
-    ]
-  },
-  "rwaProsCons": {
-    "title": "RWA Tokenization · Pros & Cons",
-    "pros": [
-      { "label": "Fractional Ownership", "desc": "Small investors gain access to high-value real estate, art, or institutional funds with low capital." },
-      { "label": "Increased Liquidity", "desc": "Tokenized assets can trade on secondary markets — improving exit options for historically illiquid holdings." },
-      { "label": "24/7 Global Access", "desc": "Investors participate from anywhere, any time — no broker hours, no geographic gating." },
-      { "label": "Reduced Costs", "desc": "Smart contracts automate compliance, transfer, and payout workflows — slashing administrative overhead." },
-      { "label": "Transparent Records", "desc": "Blockchain ensures tamper-proof title, transaction history, and audit trails." },
-      { "label": "Programmable Cash Flows", "desc": "Rental income, dividends, coupons distribute automatically via smart contracts." },
-      { "label": "Faster Settlement", "desc": "Property transfers and securities settlement compress from weeks to minutes/days." }
-    ],
-    "cons": [
-      { "label": "Regulatory Uncertainty", "desc": "Rules vary by country and evolve quickly — compliance can become a moving target." },
-      { "label": "Low Market Maturity", "desc": "Few active platforms; secondary market volume remains thin compared to traditional venues." },
-      { "label": "Technical Complexity", "desc": "Investors need to understand wallets, smart contracts, custody — UX is not consumer-grade yet." },
-      { "label": "Cybersecurity Risk", "desc": "Vulnerabilities in smart contracts or platforms can expose investors to total loss." },
-      { "label": "Lingering Illiquidity", "desc": "Despite tokenization, some real-estate assets simply lack buyers — wrappers don't create demand." },
-      { "label": "Custodial Wrappers Required", "desc": "Real-world assets still need legal entities (SPVs, trustees) to hold underlying property." },
-      { "label": "Valuation Drift", "desc": "On-chain token prices may diverge from underlying asset NAV — pricing reliability is an open problem." }
-    ]
-  },
-  "scProsCons": {
-    "title": "Supply Chain · Pros & Cons",
-    "pros": [
-      { "label": "Transparency", "desc": "All partners see the same tamper-proof ledger — eliminating information asymmetry." },
-      { "label": "Real-Time Traceability", "desc": "A product's full journey can be located within seconds — not days." },
-      { "label": "Process Automation", "desc": "Smart contracts trigger payments, releases, and alerts without manual checks." },
-      { "label": "Faster Dispute Resolution", "desc": "Shared data removes he-said-she-said — investigations and chargebacks shorten dramatically." },
-      { "label": "Cost Reduction", "desc": "Less paperwork, fewer courier fees, streamlined audits — overall overhead drops." },
-      { "label": "Regulatory Compliance", "desc": "Immutable logs provide instant evidence for food, pharma, and customs inspections." },
-      { "label": "Consumer Trust", "desc": "Shoppers scan a code to verify origin, quality, and handling conditions." }
-    ],
-    "cons": [
-      { "label": "Data-Input Integrity", "desc": "\"Garbage in, garbage forever\" — bad sensor data still writes immutably to the chain." },
-      { "label": "Integration Complexity", "desc": "Legacy ERPs, IoT devices, and port systems require costly and complicated connections." },
-      { "label": "Standard Fragmentation", "desc": "Competing consortia hinder network effects and global interoperability." },
-      { "label": "Implementation Cost", "desc": "Sensors, middleware, and change management demand significant upfront investment." },
-      { "label": "Scalability", "desc": "Public chains may struggle with container-level transaction volumes." },
-      { "label": "Stakeholder Coordination", "desc": "Rival companies must cooperate. Adoption stalls if key partners refuse to participate." }
-    ]
-  },
-  "certProsCons": {
-    "title": "Digital Certification · Pros & Cons",
-    "pros": [
-      { "label": "Tamper-Proof & Verifiable", "desc": "Certificates are hashed and stored on-chain — making them immutable." },
-      { "label": "Eliminates Forgery", "desc": "Even single-character alterations are detectable. Reduces fake diplomas, licenses, and credentials to ~zero." },
-      { "label": "No Intermediaries", "desc": "Removes the need for notaries, registry offices, or institutional verification emails." },
-      { "label": "Instant & Global", "desc": "Recipients share credentials digitally; employers verify them in seconds, anywhere." },
-      { "label": "Cost & Time Efficiency", "desc": "No more printing, postage, manual checks. Issuance and verification accelerate dramatically." },
-      { "label": "Self-Sovereignty", "desc": "Users hold their own credentials — reducing institutional gatekeeping." }
-    ],
-    "cons": [
-      { "label": "Legal Recognition", "desc": "In many countries, blockchain-based records aren't legally recognized as official proof." },
-      { "label": "User Literacy", "desc": "Users need basic knowledge of blockchain, wallets, or verification tools to participate." },
-      { "label": "Implementation Cost", "desc": "Setting up a robust certification system requires technical expertise and initial investment." },
-      { "label": "Privacy Concerns", "desc": "Even hashed metadata may leak personal information if not carefully designed." },
-      { "label": "Revocation Complexity", "desc": "Once written to a blockchain, it's permanent. Revoking or updating requires extra contract logic." },
-      { "label": "Vendor Lock-in", "desc": "Different consortia use different chains — interoperability still emerging." }
+  "nftWhy": {
+    "scenarioLabel": "What happens when…",
+    "scenarios": { "ban": "your account is banned", "shutdown": "the game shuts down", "resell": "you want to resell" },
+    "cols": { "item": "item", "owner": "owner", "control": "who controls it" },
+    "item": "Dragon skin",
+    "db": {
+      "tag": "Today",
+      "title": "A row in the platform's database",
+      "owner": "you (says the platform)",
+      "control": "the platform",
+      "outcomes": {
+        "ban": "Gone with the account. No recourse.",
+        "shutdown": "Everything you bought disappears with the servers.",
+        "resell": "Only inside the platform's own store, on its terms, if at all."
+      }
+    },
+    "token": {
+      "tag": "With an NFT",
+      "title": "A token in your wallet",
+      "owner": "0xA1…f3 (your wallet)",
+      "control": "only your key",
+      "outcomes": {
+        "ban": "Still in your wallet. Sell it or move it somewhere else.",
+        "shutdown": "You still hold the token, but with no game to use it in it may be worth nothing.",
+        "resell": "List it on any marketplace. Royalty terms travel with the token, paid only if the marketplace honours them."
+      }
+    },
+    "unlocksLabel": "What provable ownership unlocks",
+    "unlocks": [
+      { "label": "Sell it", "like": "like a physical good" },
+      { "label": "Rent it out", "like": "like a flat" },
+      { "label": "Borrow against it", "like": "like a mortgage" },
+      { "label": "Split it into shares", "like": "like a REIT" }
     ]
   },
   "common": {
@@ -728,27 +902,24 @@
     "whatHappened": "What Happened"
   },
   "quiz": {
-    "question": "The California DMV digitized 42 million vehicle titles on blockchain. What is the primary advantage of blockchain over the traditional paper title system?",
+    "question": "The California DMV put 42 million vehicle titles on a permissioned blockchain. What does the chain actually add over paper titles?",
     "options": [
-      "Blockchain storage is cheaper than paper filing, reducing the DMV operating budget significantly.",
-      "Title transfers and ownership verification can occur in minutes without contacting the DMV — eliminating fraud via immutable provenance records.",
-      "Vehicle titles are now publicly visible to anyone without identity verification, increasing transparency.",
-      "Vehicle theft becomes impossible because titles are stored on-chain and cannot be cloned."
+      "Lower storage costs: keeping records on a blockchain is cheaper than paper files or a database.",
+      "A tamper-evident digital title that can be checked and transferred in minutes instead of days or weeks of paperwork, with the DMV still the issuer.",
+      "Full public transparency: anyone can now look up who owns any car, with no identity checks.",
+      "An end to car theft and title fraud, because nothing recorded on-chain can ever be wrong or forged."
     ],
-    "explanation": "The core blockchain advantage here is trustless verification of ownership history. Traditional paper titles require physical transfer, manual verification, and weeks of processing. With blockchain, a buyer can instantly verify the full ownership chain, detect odometer fraud, and confirm the seller has clear title — all without trusting the DMV database or the seller's word. The immutability makes forgery structurally impossible rather than merely difficult. Blockchain storage is actually more expensive than paper — the value is in verification speed and fraud elimination, not cost."
+    "explanation": "The gain is a shared, tamper-evident record: a paper title can be lost or forged and takes days or weeks of paperwork to transfer, while a digital title can be checked and moved in minutes. The DMV still issues every title and runs the permissioned network, so you are still trusting the DMV, not removing it. On-chain storage costs more than a database, the records are not open to the public, and the chain cannot stop a car being stolen or correct a false entry made at the source."
   },
   "takeaways": {
     "title": "Section 03 — Key Takeaways",
     "items": [
-      "Five industry verticals — DeFi, Gaming/NFTs, RWA, Supply Chain, Digital Cert — all show smart contracts in production today",
-      "DeFi: AMMs, stablecoins and borderless transfers reshape financial rails — and each stablecoin design has its own failure mode",
+      "DeFi unbundles the bank into contracts that never close; the risk moves into code, pegs and admin keys, and every stablecoin design fails differently",
       "NFTs work best as keys, not pictures: tickets, memberships, credentials, provenance twins. Royalties were never enforced by the chain",
-      "DAOs can mimic a company transparently or build structures no charter allows — token votes, nested multisigs, quadratic funding, timelocks, rage-quit",
-      "DAO reality check: low turnout, whale power, legal exposure, governance attacks (Beanstalk) — and ConstitutionDAO's $47M lesson in planning for failure",
-      "RWA tokenization spans the spectrum from sovereign debt (BlackRock BUIDL) to real estate (Sweden, Brickblock, Zurich)",
-      "Supply chain wins when rivals agree to share truth — Walmart and GSBN run; Maersk's TradeLens shut down because competitors would not join",
-      "The common thread for success: many parties, no trusted authority, value from automation and shared truth — and an owner everyone can accept",
-      "Section 4 adds three lessons from the field: Estonia, The DAO and ASX"
+      "DAOs let a public vote move the money. The price: low turnout, whale power, legal exposure and governance attacks; ConstitutionDAO raised $47M with no plan for losing",
+      "Tokenised assets settle in minutes, from Treasury funds (BlackRock BUIDL) to real estate, but the legal wrapper behind the token is where the risk sits",
+      "Shared records win when rivals agree to join (Walmart, GSBN, Estonia) and fail when they will not (TradeLens); the chain cannot fix a false entry",
+      "The pattern in all six: it works with many parties, no trusted authority and an owner everyone accepts, and it breaks in a predictable place. Section 4 adds three lessons: Estonia, The DAO and ASX"
     ]
   },
   "nftUtility": {
@@ -860,8 +1031,6 @@
     ]
   },
   "daoIntro": {
-    "heading": "What is a DAO?",
-    "subtitle": "An organisation whose rulebook is a smart contract: members propose and vote, and the treasury acts on the result — no CEO signs off.",
     "tradLabel": "Traditional company",
     "tradChain": [
       { "label": "Shareholders", "sub": "own, vote once a year" },
@@ -878,13 +1047,15 @@
       { "label": "Treasury contract", "sub": "pays automatically" }
     ],
     "daoEnforced": "Enforced by code — every vote, payment and rule change is public forever.",
+    "run": "Follow one payment through both",
+    "runAgain": "Run it again",
     "twoLabel": "Two things a DAO can do",
-    "mimicTitle": "Mimic a real organisation — transparently",
-    "mimicBody": "Shareholder votes, committees, spending limits, dual signatures: the familiar structures, with no backdated minutes, no quiet transfers, and an audit trail nobody can edit.",
+    "mimicTitle": "Mimic a real organisation, transparently",
+    "mimicBody": "Votes, committees, spending limits and dual signatures, with no backdated minutes and an audit trail nobody can edit.",
     "newTitle": "Build structures no charter allows",
-    "newBody": "Votes that cost more the more you cast, committees that are themselves contracts, mandatory delays that let members exit before a rule bites, instant withdrawal of your share. New organisational designs — with new failure modes.",
-    "defLabel": "DAO = Decentralised Autonomous Organisation.",
-    "defBody": " \"Autonomous\" is generous: people still write proposals, debate on forums and vote. What is automatic is the execution — the money moves because the vote passed, not because someone approved it."
+    "newBody": "Votes that cost more the more you cast, committees that are contracts, the right to exit with your share. New designs, new failure modes.",
+    "noteLabel": "“Autonomous” is generous:",
+    "noteBody": " people still write proposals, argue on forums and vote. What is automatic is the execution."
   },
   "daoStructures": {
     "title": "Governance building blocks · Explore",
@@ -948,7 +1119,7 @@
     }
   },
   "daoVote": {
-    "title": "Who really holds the power?",
+    "title": "Voting power simulator",
     "subtitle": "Five members vote on the same proposal. Change the counting rule — and watch who wins.",
     "proposal": "Proposal: spend 10% of the treasury on a marketing campaign",
     "modeLabel": "Counting rule",
@@ -1030,25 +1201,6 @@
     ],
     "legalLabel": "Legal status is unsettled:",
     "legalBody": " Wyoming recognises DAO LLCs (2021), but a US court treated Ooki DAO's token voters as members of an unincorporated association — personally exposed to its liabilities (2022–23). Most serious DAOs now pair the contracts with a legal wrapper."
-  },
-  "daoProsCons": {
-    "title": "DAOs · Pros & Cons",
-    "pros": [
-      { "label": "Transparency by default", "desc": "Every vote, payment and rule change is public and permanent — no backdated minutes." },
-      { "label": "Global membership", "desc": "Anyone with a wallet can join, contribute and vote — no incorporation, no bank account." },
-      { "label": "Programmable treasury", "desc": "Budgets, vesting and payouts execute from the vote — no finance department in the loop." },
-      { "label": "Hard to cheat", "desc": "Spending limits and signature rules are enforced by code, not by whoever holds the chequebook." },
-      { "label": "Minority protection", "desc": "Timelocks and rage-quit let dissenters exit before a decision bites — rare in company law." },
-      { "label": "New coordination tools", "desc": "Quadratic funding, nested sub-DAOs, instant pooled capital — structures a charter cannot express." }
-    ],
-    "cons": [
-      { "label": "Voter apathy", "desc": "Turnout is often under 10% of tokens; a few dozen delegates decide most votes." },
-      { "label": "Plutocracy", "desc": "Token-weighted means money-weighted. Whales and VCs can carry any vote they care about." },
-      { "label": "Legal exposure", "desc": "Unincorporated DAOs may leave members personally liable (Ooki DAO). Wrappers add back lawyers and jurisdictions." },
-      { "label": "Slow in a crisis", "desc": "Timelocks protect members but tie hands. The DAO had 27 days' warning and still could not act." },
-      { "label": "Governance attacks", "desc": "Beanstalk (2022): an attacker flash-loaned 67% of the votes, passed a proposal and drained $182M in one transaction." },
-      { "label": "Off-chain reality", "desc": "Forums, Discord, lawyers and core teams do the real work. The chain records the decision; people make it." }
-    ]
   },
   "tradelens": {
     "kicker": "Case Study 06 — Shipping · Shut down",
