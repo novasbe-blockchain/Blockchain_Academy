@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   ArrowLeftRight, ArrowRight, BadgeCheck, Ban, Banknote, Blocks, Bug, Building2, Cable, CandlestickChart, Check,
   CircleHelp, Clock, Coins, Crown, Database, DoorOpen, Droplets, Eraser, Eye, FileCheck, FileWarning,
-  Fingerprint, Gavel, Gem, GraduationCap, HandCoins, Handshake, KeyRound, Landmark, Network, Package, PieChart,
+  Fingerprint, Gavel, Gem, GraduationCap, HandCoins, Handshake, Info, KeyRound, Landmark, Network, Package, PieChart,
   Play, Puzzle, Repeat, RotateCcw, Scale, ScanSearch, SearchCheck, ServerOff, ShieldAlert, Stamp, Store, ThumbsUp,
   Trash2, TrendingDown, TrendingUp, TriangleAlert, Truck, Unlink, UserCheck, Users, Vote, Wallet, X, Zap,
   type LucideIcon,
@@ -289,15 +289,11 @@ const DESKS: { key: DeskId; color: string; Icon: LucideIcon; next: boolean }[] =
   { key: 'yield',       color: '#f59e0b', Icon: TrendingUp,       next: false },
   { key: 'derivatives', color: '#22d3ee', Icon: CandlestickChart, next: false },
 ];
-const DEFI_EXAMPLE_COLORS = ['#6366f1', '#8b5cf6', '#39B54A'];
-
-interface ExampleChip { name: string; tag: string; stat: string; desc: string }
 
 export function DefiWhySlide({ recap }: { recap: RecapBridge }) {
   const { t } = useTranslation(NS);
   const [sel, setSel] = useState<DeskId>('dex');
   const desk = DESKS.find(d => d.key === sel)!;
-  const examples = t('defiIntro.examples', { returnObjects: true }) as ExampleChip[];
   const wireHops = t('defiWhy.wire.hops', { returnObjects: true }) as string[];
   const wireStats = t('defiWhy.wire.stats', { returnObjects: true }) as string[];
   const chainHops = t('defiWhy.chain.hops', { returnObjects: true }) as string[];
@@ -349,23 +345,88 @@ export function DefiWhySlide({ recap }: { recap: RecapBridge }) {
         </div>
       </div>
 
-      {/* pr-14 keeps the last card clear of the floating slide-nav buttons */}
-      <div className="shrink-0 mt-3 pr-14">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">{t('defiIntro.examplesLabel')}</div>
-        <div className="grid grid-cols-3 gap-3">
-          {examples.map((e, i) => (
-            <div key={e.name} className="p-2.5 rounded-xl border bg-card flex flex-col gap-0.5" style={{ borderColor: DEFI_EXAMPLE_COLORS[i] + '40' }}>
-              <div className="flex items-baseline justify-between gap-2">
-                <div className="font-black text-sm text-foreground">{e.name}</div>
-                <div className="font-mono text-[11px] font-bold shrink-0" style={{ color: DEFI_EXAMPLE_COLORS[i] }}>{e.stat}</div>
-              </div>
-              <div className="text-[10px] font-semibold" style={{ color: DEFI_EXAMPLE_COLORS[i] }}>{e.tag}</div>
-              <div className="text-[11px] text-muted-foreground leading-snug">{e.desc}</div>
-            </div>
-          ))}
-        </div>
-      </div>
       <KeyPointBar text={t('keyPoints.s3-defi-intro')} className="mt-3" />
+    </div>
+  );
+}
+
+// ─── DeFi in production: one live protocol per job (swap / lend / pay) ───────
+// Deliberately light: a name, one line, a three-node flow and two headline numbers per card.
+
+interface ProdStat { value: string; label: string }
+interface ProdCard { job: string; name: string; tag: string; line: string; flow: string[]; stats: ProdStat[] }
+
+const DEFI_PROD_META: { color: string; Icon: LucideIcon }[] = [
+  { color: '#6366f1', Icon: ArrowLeftRight },
+  { color: '#8b5cf6', Icon: HandCoins },
+  { color: '#39B54A', Icon: Banknote },
+];
+
+export function DefiProductionSlide() {
+  const { t } = useTranslation(NS);
+  const cards = t('defiReal.cards', { returnObjects: true }) as ProdCard[];
+
+  return (
+    <div className="h-full flex flex-col p-6 lg:p-10">
+      <div className="shrink-0 mb-4">
+        <div className="text-[10px] font-black uppercase tracking-widest text-[#6366f1]">{t('defiReal.kicker')}</div>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground leading-tight">{t('defiReal.heading')}</h2>
+        <p className="text-muted-foreground text-sm mt-1">{t('defiReal.subtitle')}</p>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 max-h-[24rem] my-auto">
+        {cards.map((c, i) => {
+          const { color, Icon } = DEFI_PROD_META[i];
+          return (
+            <motion.div key={c.name}
+              initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }} transition={{ delay: 0.08 + i * 0.1 }}
+              className="flex flex-col rounded-2xl border-2 bg-card overflow-hidden min-h-0" style={{ borderColor: color + '55' }}>
+              <div className="h-1.5 shrink-0" style={{ backgroundColor: color }} />
+              <div className="flex-1 min-h-0 flex flex-col gap-3 p-4">
+                <div className="flex items-center gap-3">
+                  <div className="size-11 rounded-xl flex items-center justify-center text-white shrink-0" style={{ backgroundColor: color }}>
+                    <Icon className="size-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[10px] font-black uppercase tracking-widest" style={{ color }}>{c.job}</div>
+                    <div className="font-black text-xl text-foreground leading-tight">{c.name}</div>
+                  </div>
+                </div>
+                <div className="text-xs font-semibold text-muted-foreground leading-tight">{c.tag}</div>
+                <p className="text-sm text-foreground/90 leading-snug">{c.line}</p>
+
+                {/* The mechanism in three nodes; the middle one is the contract */}
+                <div className="my-auto grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-1.5">
+                  {c.flow.map((f, j) => (
+                    <Fragment key={j}>
+                      {j > 0 && <ArrowRight className="size-3.5 text-muted-foreground" aria-hidden />}
+                      <div className={`px-1.5 py-1.5 rounded-lg border text-center text-[11px] font-semibold leading-tight ${j === 1 ? 'text-white' : 'text-foreground bg-muted border-border'}`}
+                        style={j === 1 ? { backgroundColor: color, borderColor: color } : undefined}>{f}</div>
+                    </Fragment>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  {c.stats.map(s => (
+                    <div key={s.label} className="p-2.5 rounded-xl" style={{ backgroundColor: color + '12' }}>
+                      <div className="font-mono font-black text-lg leading-tight" style={{ color }}>{s.value}</div>
+                      <div className="text-[11px] text-muted-foreground leading-snug mt-0.5">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* lg:pr-16 keeps the note clear of the floating slide-nav buttons */}
+      <div className="shrink-0 mt-3 lg:pr-16 flex items-start gap-1.5 text-[11px] text-muted-foreground leading-snug">
+        <Info className="size-3.5 shrink-0 mt-px" aria-hidden />
+        <span><span className="font-semibold text-foreground">{t('defiReal.noteLabel')}</span>{t('defiReal.noteBody')}</span>
+      </div>
+      <KeyPointBar text={t('keyPoints.s3-defi-real')} className="mt-3" />
     </div>
   );
 }

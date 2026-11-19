@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
@@ -6,7 +6,9 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
-import { Building2 } from 'lucide-react';
+import {
+  Building2, Check, GraduationCap, Minus, ShieldAlert, ShieldCheck, UserX, X, type LucideIcon,
+} from 'lucide-react';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { ClassDiscussion } from '../../components/shared/ClassDiscussion';
@@ -17,7 +19,7 @@ import {
   TradeLensCase,
 } from './Section3Extras';
 import {
-  HookHeader, WinsBreaksSlide, FamilyDivider, DefiWhySlide, NftWhySlide, DaoWhySlide,
+  HookHeader, WinsBreaksSlide, FamilyDivider, DefiWhySlide, DefiProductionSlide, NftWhySlide, DaoWhySlide,
   type RecapBridge,
 } from './Section3Family';
 
@@ -33,6 +35,7 @@ const chapterShape = [
   { kind: 'group' as const, id: 'g-defi' },
   { id: 's3-defi-title' },
   { id: 's3-defi-intro' },
+  { id: 's3-defi-real' },
   { id: 's3-defi-amm' },
   { id: 's3-defi-stablecoins' },
   { id: 's3-defi-prosCons' },
@@ -363,10 +366,53 @@ function RWASpectrum({ recap }: { recap: RecapBridge }) {
 // Web Crypto only exists in secure contexts, so over plain HTTP on a LAN address the demo used
 // to show a placeholder for every input — and a tampered document would have "matched".
 
+// A matching hash only proves the document is unchanged. Anyone can write a hash on-chain, so the
+// verifier also checks WHO wrote the record: the university's known issuer contract, or someone else.
+
+type IssuerId = 'uni' | 'rogue';
+type CheckState = 'pass' | 'fail' | 'skip';
+
+// Language-neutral: illustrative addresses + colour + icon. Names come from t().
+const ISSUERS: Record<IssuerId, { address: string; color: string; Icon: LucideIcon }> = {
+  uni:   { address: '0x71C7…E3a9', color: '#39B54A', Icon: GraduationCap },
+  rogue: { address: '0xBAD0…51f0', color: '#ED1C24', Icon: UserX },
+};
+
+const CHECK_STYLE: Record<CheckState, { color: string; Icon: LucideIcon }> = {
+  pass: { color: '#39B54A', Icon: Check },
+  fail: { color: '#ED1C24', Icon: X },
+  skip: { color: '#9ca3af', Icon: Minus },
+};
+
+function VerifyCheck({ n, state, title, delay, testId, children }: {
+  n: number; state: CheckState; title: string; delay: number; testId: string; children: ReactNode;
+}) {
+  const s = CHECK_STYLE[state];
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay }}
+      data-testid={testId} data-state={state}
+      className="flex items-start gap-2.5 p-2.5 rounded-xl border-2 bg-card"
+      style={{ borderColor: s.color + '70' }}
+    >
+      <div className="size-7 rounded-full flex items-center justify-center text-white shrink-0" style={{ backgroundColor: s.color }}>
+        <s.Icon className="size-4" strokeWidth={3} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="text-xs font-bold text-foreground leading-tight">
+          <span className="font-mono mr-1.5" style={{ color: s.color }}>{n}</span>{title}
+        </div>
+        <div className="font-mono text-[10px] text-muted-foreground break-all leading-relaxed mt-0.5">{children}</div>
+      </div>
+    </motion.div>
+  );
+}
+
 function ProofOfExistenceDemo({ recap }: { recap: RecapBridge }) {
   const { t } = useTranslation('smart-contracts/section-3');
   const [doc, setDoc]   = useState(t('poe.defaultDoc'));
-  const [anchored, setAnchored] = useState<{ hash: string; ts: number } | null>(null);
+  const [issuer, setIssuer] = useState<IssuerId>('uni');
+  const [anchored, setAnchored] = useState<{ hash: string; ts: number; issuer: IssuerId } | null>(null);
   const [verifyDoc, setVerifyDoc] = useState('');
   const [verifyHash, setVerifyHash] = useState('');
 
@@ -376,12 +422,20 @@ function ProofOfExistenceDemo({ recap }: { recap: RecapBridge }) {
   const onDocChange = (v: string) => setDoc(v);
 
   // A verdict belongs to one (document, anchor) pair: drop it when either side changes.
-  const anchor = () => { setAnchored({ hash, ts: Date.now() }); setVerifyHash(''); };
+  const anchor = () => { setAnchored({ hash, ts: Date.now(), issuer }); setVerifyHash(''); };
   const onVerifyDocChange = (v: string) => { setVerifyDoc(v); setVerifyHash(''); };
 
   const verify = () => setVerifyHash(sha256Hex(verifyDoc));
 
-  const verifyMatches = !!anchored && verifyHash !== '' && verifyHash === anchored.hash;
+  // Check 1: the document's hash equals the on-chain record.
+  const hashOk = !!anchored && verifyHash !== '' && verifyHash === anchored.hash;
+  // Check 2: that record was written by the university's issuer contract. With no matching record
+  // there is no writer to look at, so the check is skipped rather than failed.
+  const issuerOk = hashOk && anchored?.issuer === 'uni';
+  const issuerState: CheckState = !hashOk ? 'skip' : issuerOk ? 'pass' : 'fail';
+  const verdict = !hashOk ? 'altered' : issuerOk ? 'authentic' : 'forged';
+  const verdictColor = verdict === 'authentic' ? '#39B54A' : '#ED1C24';
+  const VerdictIcon = verdict === 'authentic' ? ShieldCheck : ShieldAlert;
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
@@ -391,14 +445,14 @@ function ProofOfExistenceDemo({ recap }: { recap: RecapBridge }) {
       <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
 
         {/* Issue */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5">
           <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest">{t('poe.issueStep')}</div>
           <div className="p-3 bg-card border border-border rounded-xl flex flex-col gap-2">
             <div className="text-[10px] font-semibold text-muted-foreground">{t('poe.credentialText')}</div>
             <textarea
               value={doc}
               onChange={e => onDocChange(e.target.value)}
-              rows={3}
+              rows={2}
               className="w-full p-2 bg-muted rounded-lg text-xs font-mono text-foreground resize-none border border-border focus:outline-none focus:ring-1 focus:ring-[#22d3ee]"
             />
           </div>
@@ -406,24 +460,63 @@ function ProofOfExistenceDemo({ recap }: { recap: RecapBridge }) {
             <div className="text-[10px] font-semibold text-muted-foreground mb-1">{t('poe.hashLabel')}</div>
             <div className="font-mono text-[10px] text-[#6366f1] break-all leading-relaxed" data-testid="poe-hash">{hash}</div>
           </div>
+
+          {/* Who writes the record: the chain accepts either, which is the point of check 2 */}
+          <div>
+            <div className="text-[10px] font-semibold text-muted-foreground mb-1">{t('poe.writerLabel')}</div>
+            <div className="grid grid-cols-2 gap-2">
+              {(Object.keys(ISSUERS) as IssuerId[]).map(id => {
+                const m = ISSUERS[id];
+                const active = id === issuer;
+                return (
+                  <button key={id} onClick={() => setIssuer(id)} aria-pressed={active} data-testid={`poe-issuer-${id}`}
+                    className="flex items-center gap-2 p-2 rounded-xl border-2 text-left transition-colors"
+                    style={{ borderColor: active ? m.color : 'var(--border)', backgroundColor: active ? m.color + '12' : 'var(--card)' }}>
+                    <m.Icon className="size-4 shrink-0" style={{ color: m.color }} />
+                    <span className="min-w-0 leading-tight">
+                      <span className="block text-[11px] font-bold text-foreground">{t(`poe.writers.${id}.name`)}</span>
+                      <span className="block font-mono text-[10px] text-muted-foreground">{m.address}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <button
             onClick={anchor}
+            data-testid="poe-anchor"
             className="px-4 py-2.5 rounded-xl bg-[#22d3ee] text-white text-xs font-black hover:bg-[#22d3ee]/90 disabled:opacity-40 transition-colors"
           >
             {t('poe.anchorButton')}
           </button>
           {anchored && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-3 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-xl">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} data-testid="poe-record"
+              className="p-3 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-xl">
               <div className="font-bold text-xs text-[#22d3ee] mb-1">{t('poe.anchored')}</div>
               <div className="text-[10px] text-muted-foreground">{t('poe.blockTimestamp', { ts: new Date(anchored.ts).toISOString() })}</div>
               <div className="text-[10px] text-muted-foreground">{t('poe.anchoredHash')}<span className="font-mono">{anchored.hash.slice(0, 24)}…</span></div>
+              <div className="text-[10px] text-muted-foreground">
+                {t('poe.writtenByLabel')}
+                <span className="font-mono font-bold" style={{ color: ISSUERS[anchored.issuer].color }}>{ISSUERS[anchored.issuer].address}</span>
+                {' · '}{t(`poe.writers.${anchored.issuer}.name`)}
+              </div>
+              {anchored.issuer === 'rogue' && (
+                <div className="text-[10px] font-semibold text-[#ED1C24] mt-0.5">{t('poe.chainAccepts')}</div>
+              )}
             </motion.div>
           )}
         </div>
 
         {/* Verify */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5">
           <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('poe.verifyStep')}</div>
+          {/* The verifier's reference point: the issuer address the university publishes */}
+          <div className="flex items-center gap-2 flex-wrap px-2.5 py-1.5 rounded-lg border border-[#39B54A]/40 bg-[#39B54A]/10 text-[11px]">
+            <GraduationCap className="size-4 shrink-0 text-[#39B54A]" />
+            <span className="text-muted-foreground">{t('poe.knownIssuerLabel')}</span>
+            <span className="font-mono font-bold text-foreground">{ISSUERS.uni.address}</span>
+          </div>
           {!anchored ? (
             <div className="p-4 rounded-xl border border-dashed border-border flex-1 flex items-center justify-center text-center">
               <p className="text-xs text-muted-foreground italic">{t('poe.verifyPlaceholderPrompt')}</p>
@@ -436,33 +529,57 @@ function ProofOfExistenceDemo({ recap }: { recap: RecapBridge }) {
                   value={verifyDoc}
                   onChange={e => onVerifyDocChange(e.target.value)}
                   placeholder={t('poe.verifyTextareaPlaceholder')}
-                  rows={3}
+                  rows={2}
+                  data-testid="poe-verify-input"
                   className="w-full p-2 bg-muted rounded-lg text-xs font-mono text-foreground resize-none border border-border focus:outline-none focus:ring-1 focus:ring-[#39B54A]"
                 />
-                <button
-                  onClick={verify}
-                  disabled={!verifyDoc}
-                  className="self-start px-3 py-1.5 rounded-lg bg-[#39B54A] text-white text-xs font-bold hover:bg-[#39B54A]/90 disabled:opacity-40 transition-colors"
-                >
-                  {t('poe.computeHash')}
-                </button>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <button
+                    onClick={verify}
+                    disabled={!verifyDoc}
+                    data-testid="poe-verify"
+                    className="px-3 py-1.5 rounded-lg bg-[#39B54A] text-white text-xs font-bold hover:bg-[#39B54A]/90 disabled:opacity-40 transition-colors"
+                  >
+                    {t('poe.computeHash')}
+                  </button>
+                  <button
+                    onClick={() => onVerifyDocChange(doc)}
+                    data-testid="poe-paste"
+                    className="text-[11px] font-semibold text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+                  >
+                    {t('poe.pasteIssued')}
+                  </button>
+                </div>
               </div>
 
+              {/* Two checks, in order: is the document unchanged, and did the right contract write the record? */}
               {verifyHash && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="p-3 rounded-xl border-2"
-                  style={{ borderColor: verifyMatches ? '#39B54A' : '#ED1C24', backgroundColor: (verifyMatches ? '#39B54A' : '#ED1C24') + '12' }}
-                >
-                  <div className="font-black mb-1" style={{ color: verifyMatches ? '#39B54A' : '#ED1C24' }}>
-                    {verifyMatches ? t('poe.verifiedMatch') : t('poe.verifiedMismatch')}
-                  </div>
-                  <div className="font-mono text-[10px] text-muted-foreground break-all leading-relaxed">
-                    {t('poe.computedLabel')}{verifyHash.slice(0, 32)}…<br/>
-                    {t('poe.anchoredLabelShort')}{anchored.hash.slice(0, 32)}…
-                  </div>
-                </motion.div>
+                <div key={`${verifyHash}-${anchored.ts}`} className="flex flex-col gap-2" data-testid="poe-result" data-verdict={verdict}>
+                  <VerifyCheck n={1} state={hashOk ? 'pass' : 'fail'} title={t('poe.checkHash')} delay={0} testId="poe-check-hash">
+                    {t('poe.computedLabel')}{verifyHash.slice(0, 24)}…<br />
+                    {hashOk ? '= ' : '≠ '}{t('poe.anchoredLabelShort')}{anchored.hash.slice(0, 24)}…
+                  </VerifyCheck>
+                  <VerifyCheck n={2} state={issuerState} title={t('poe.checkIssuer')} delay={0.3} testId="poe-check-issuer">
+                    {issuerState === 'skip' ? t('poe.issuerSkipped') : (
+                      <>
+                        {t('poe.writtenByLabel')}
+                        <span className="font-bold" style={{ color: ISSUERS[anchored.issuer].color }}>{ISSUERS[anchored.issuer].address}</span><br />
+                        {issuerOk ? '= ' : '≠ '}{t('poe.knownIssuerLabel')} {ISSUERS.uni.address}
+                      </>
+                    )}
+                  </VerifyCheck>
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+                    data-testid="poe-verdict"
+                    className="p-2.5 rounded-xl border-2"
+                    style={{ borderColor: verdictColor, backgroundColor: verdictColor + '12' }}
+                  >
+                    <div className="flex items-center gap-2 font-black text-sm leading-tight" style={{ color: verdictColor }}>
+                      <VerdictIcon className="size-4 shrink-0" />{t(`poe.verdict.${verdict}.title`)}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground leading-snug mt-0.5">{t(`poe.verdict.${verdict}.body`)}</div>
+                  </motion.div>
+                </div>
               )}
             </>
           )}
@@ -470,7 +587,8 @@ function ProofOfExistenceDemo({ recap }: { recap: RecapBridge }) {
 
       </div>
 
-      <div className="shrink-0 mt-3 p-2 bg-muted/50 rounded-lg text-[11px] text-muted-foreground">
+      {/* lg:pr-16 keeps the note clear of the floating slide-nav buttons */}
+      <div className="shrink-0 mt-3 p-2 lg:pr-16 bg-muted/50 rounded-lg text-[11px] text-muted-foreground">
         <span className="font-semibold text-foreground">{t('poe.whyWorksLabel')}</span>{t('poe.whyWorksBody')}
       </div>
       <KeyPointBar text={t('keyPoints.s3-cert-howitworks')} className="mt-3" />
@@ -1049,10 +1167,11 @@ export function SC_Section3() {
 
         <div id="s3-defi-title" className="h-full"><FamilyDivider family="defi" /></div>
 
-        {/* DeFi: recap → why → two rails + the bank unbundled + what runs today */}
+        {/* DeFi: recap → why → two rails + the bank unbundled; then what runs today, on its own slide */}
         <div id="s3-defi-intro" className="h-full">
           <DefiWhySlide recap={bridge('defi', '/blockchain-platforms/section-2', '#39B54A')} />
         </div>
+        <div id="s3-defi-real" className="h-full"><DefiProductionSlide /></div>
         <div id="s3-defi-amm" className="h-full"><InteractiveAMM /></div>
         <div id="s3-defi-stablecoins" className="h-full"><PegSimulator /></div>
         <div id="s3-defi-prosCons" className="h-full"><WinsBreaksSlide family="defi" keyPoint={kp('s3-defi-prosCons')} /></div>

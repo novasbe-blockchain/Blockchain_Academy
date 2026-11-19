@@ -4,6 +4,7 @@
     "s3-industries-intro": "Visão das Indústrias",
     "s3-defi-title": "1 · DeFi",
     "s3-defi-intro": "Porquê DeFi?",
+    "s3-defi-real": "Em Produção",
     "s3-defi-amm": "🧩 Curva AMM",
     "s3-defi-stablecoins": "🧩 Simulador de Peg",
     "s3-defi-prosCons": "Ganha / Falha",
@@ -108,26 +109,45 @@
     ],
     "note": "Keep your answer in mind — the Section 4 framework and the Section 8 one-pager both start from exactly this question."
   },
-  "defiIntro": {
-    "examplesLabel": "Em produção hoje",
-    "examples": [
+  "defiReal": {
+    "kicker": "DeFi · protocolos reais",
+    "heading": "Em produção hoje",
+    "subtitle": "Três exemplos em funcionamento, um para cada função do slide anterior: trocar, emprestar, pagar.",
+    "noteLabel": "Sobre os números:",
+    "noteBody": " são valores arredondados e ilustrativos, de cerca de novembro de 2026 (valor bloqueado na Aave segundo a DefiLlama). Mudam todos os dias, por isso confirma num painel em tempo real antes de os citar.",
+    "cards": [
       {
+        "job": "Trocar",
         "name": "Uniswap",
-        "tag": "DEX · token swaps",
-        "stat": "~$1.5B / day",
-        "desc": "Qualquer wallet troca milhares de tokens numa única chamada on-chain; o contrato dá o preço e nunca fica com a custódia dos fundos."
+        "tag": "DEX com AMM · trocas de tokens on-chain",
+        "line": "Troca um token por outro contra uma pool. Uma fórmula define o preço e a troca liquida numa só transação, diretamente da tua wallet.",
+        "flow": ["Token A", "Pool de liquidez", "Token B"],
+        "stats": [
+          { "value": "~$1,5 mil M", "label": "trocados por dia (aprox.)" },
+          { "value": "2018", "label": "ativo na Ethereum desde" }
+        ]
       },
       {
-        "name": "CoW Swap",
-        "tag": "DEX · intent-based",
-        "stat": "no front-running",
-        "desc": "Os utilizadores assinam uma intenção; os solvers agrupam e casam ordens off-chain e liquidam-nas numa só transação, com proteção contra MEV incluída."
+        "job": "Emprestar",
+        "name": "Aave",
+        "tag": "Protocolo de empréstimos · crédito com garantia",
+        "line": "Deposita cripto para receber juros, ou bloqueia-a como garantia e pede emprestado. Sem verificação de crédito; se a garantia cair demasiado, o empréstimo é liquidado.",
+        "flow": ["Depositantes", "Pool de empréstimos", "Mutuários"],
+        "stats": [
+          { "value": "~$16 mil M", "label": "valor bloqueado (aprox., nov. 2026)" },
+          { "value": "10+", "label": "redes blockchain (aprox.)" }
+        ]
       },
       {
-        "name": "USDC on an L2",
-        "tag": "Borderless transfer",
-        "stat": "seconds · cent fees",
-        "desc": "Os dólares passam de wallet para wallet na Base ou na Arbitrum por cêntimos, sem hora de fecho. Final é final: não há chargeback."
+        "job": "Pagar",
+        "name": "Stablecoins",
+        "tag": "Transferências internacionais · USDC, USDT",
+        "line": "Envia dólares de wallet para wallet entre países, em qualquer dia da semana. Final é final: não há chargeback.",
+        "flow": ["Remetente", "Contrato do token", "Destinatário"],
+        "stats": [
+          { "value": "Segundos", "label": "para liquidar numa Layer 2" },
+          { "value": "Cêntimos", "label": "taxa de rede por transferência" }
+        ]
       }
     ]
   },
@@ -235,7 +255,7 @@
           "Each eBL is cryptographically signed, shared in seconds and tamper-evident; contracts notify customs on loading and release goods on ownership transfer",
           "Live since 2021: 2M+ containers processed, document turnaround cut from days to hours"
         ],
-        "footnote": "Same industry as TradeLens — this one works because the carriers own it together."
+        "footnote": "Same industry as TradeLens — this one works because carriers and port operators own it together."
       }
     ]
   },
@@ -306,7 +326,7 @@
       {
         "industry": "Government",
         "name": "California DMV",
-        "problem": "42M paper vehicle titles — easy to lose or forge, and a 2–3 hour DMV visit to transfer one.",
+        "problem": "42M paper vehicle titles — easy to lose or forge, and about two weeks to transfer one through the traditional process.",
         "solution": "Each title becomes an NFT on a permissioned Avalanche subnet; transfers and lien releases are blockchain transactions.",
         "metric": "42 million",
         "metricLabel": "titles digitised (2024)",
@@ -389,26 +409,50 @@
   },
   "poe": {
     "title": "Prova de Existência · Experimenta tu mesmo",
-    "subtitle": "Faz o hash de uma credencial, ancora-a on-chain e depois verifica-a. A blockchain nunca vê o documento — apenas o hash.",
+    "subtitle": "Ancora o hash e verifica duas coisas: o hash coincide, e foi o contrato da universidade que o registou.",
     "defaultDoc": "Licenciatura em Ciências — Alice Smith — 2024-06-15",
     "issueStep": "① Emitir e ancorar",
     "credentialText": "Texto da credencial",
     "hashLabel": "Hash SHA-256 (impressão digital)",
+    "writerLabel": "Quem escreve o registo on-chain?",
+    "writers": {
+      "uni": { "name": "Contrato emissor da universidade" },
+      "rogue": { "name": "Contrato de outra pessoa" }
+    },
     "anchorButton": "⛓ Ancorar hash na blockchain",
     "anchored": "✓ Ancorado",
     "blockTimestamp": "Carimbo temporal do bloco: {{ts}}",
     "anchoredHash": "Hash ancorado: ",
+    "writtenByLabel": "Escrito por: ",
+    "chainAccepts": "A chain aceitou-o. Qualquer pessoa pode escrever um hash.",
     "verifyStep": "② Verificar (qualquer pessoa, a qualquer momento)",
-    "verifyPlaceholderPrompt": "Ancora primeiro um hash e depois volta aqui para verificar uma credencial (possivelmente adulterada).",
+    "knownIssuerLabel": "Contrato emissor publicado pela universidade:",
+    "verifyPlaceholderPrompt": "Ancora primeiro um hash e depois volta aqui para verificar uma credencial (possivelmente adulterada ou forjada).",
     "reenterCredential": "Reintroduz o texto da credencial",
     "verifyTextareaPlaceholder": "Cola o documento que queres verificar…",
-    "computeHash": "Calcular hash",
-    "verifiedMatch": "✓ Verificado — os hashes coincidem",
-    "verifiedMismatch": "✗ Não coincide — o documento foi alterado",
+    "computeHash": "Verificar",
+    "pasteIssued": "Usar o texto emitido",
+    "checkHash": "O hash coincide com o registo on-chain",
+    "checkIssuer": "O registo foi escrito pelo contrato emissor da universidade",
+    "issuerSkipped": "Nenhum registo on-chain corresponde a este documento, por isso não há emissor para verificar.",
     "computedLabel": "Calculado: ",
     "anchoredLabelShort": "Ancorado: ",
+    "verdict": {
+      "authentic": {
+        "title": "Autêntico: as duas verificações passam",
+        "body": "O documento não foi alterado e foi o contrato da própria universidade que o registou."
+      },
+      "forged": {
+        "title": "Forjado: hash certo, emissor errado",
+        "body": "O hash está on-chain, mas foi um contrato desconhecido que o lá pôs. Um hash que coincide não prova, por si só, quem emitiu o diploma."
+      },
+      "altered": {
+        "title": "Não coincide: alterado ou nunca emitido",
+        "body": "Muda um carácter e o hash fica completamente diferente, por isso não se encontra nenhum registo."
+      }
+    },
     "whyWorksLabel": "Porque é que isto funciona:",
-    "whyWorksBody": " O SHA-256 é determinístico e resistente a colisões. Mesma entrada → mesmo hash. Qualquer alteração à entrada — mesmo um único caráter — produz um hash completamente diferente. Ancorar o hash on-chain prova que o documento existia naquele momento, sem revelar o seu conteúdo."
+    "whyWorksBody": " O SHA-256 dá o mesmo hash para a mesma entrada e um hash totalmente diferente após qualquer alteração, e o documento nunca vai para a chain. Mas qualquer pessoa pode ancorar um hash, por isso quem verifica também confirma que foi o contrato conhecido da universidade a escrever o registo."
   },
   "pegSim": {
     "title": "Simulador de Peg de Stablecoin",
@@ -768,7 +812,7 @@
         },
         {
           "label": "A governação pode ser atacada",
-          "desc": "Beanstalk: um atacante obteve 67% dos votos com um flash loan e drenou $182M numa só transação.",
+          "desc": "Beanstalk: com um flash loan, um atacante obteve bem mais do que o limiar de 67% dos votos (cerca de 70% ou mais) e drenou $182M numa só transação.",
           "proof": "Beanstalk · $182M"
         },
         {
@@ -1352,11 +1396,12 @@
       "Value required near-universal participation — a network-effect and ownership problem, not a technology problem"
     ],
     "lessonLabel": "The lesson:",
-    "lessonBody": " a consortium chain is only as useful as the rivals willing to join it. Who owns the platform decides who adopts it — compare GSBN, owned jointly by several carriers, which is still running."
+    "lessonBody": " a consortium chain is only as useful as the rivals willing to join it. Who owns the platform decides who adopts it — compare GSBN, owned jointly by carriers and port operators, which is still running."
   },
   "keyPoints": {
     "s3-industries-intro": "Every winning use case here replaces a slow, paid-for middleman with a shared rule — look for that pattern first.",
     "s3-defi-intro": "DeFi replaces the bank or clearinghouse with a contract that settles when its conditions are met.",
+    "s3-defi-real": "Swap, lend, pay: each job a bank does already runs as a contract anyone can call.",
     "s3-defi-amm": "Price comes from a formula, not a market maker — big trades move it, so liquidity depth is the product.",
     "s3-defi-stablecoins": "The most-used thing on Ethereum is a dollar — and every stablecoin design is a bet on what backs it.",
     "s3-defi-prosCons": "DeFi removes the bank but not the risk — it moves risk into code, collateral and the people holding the admin keys.",
@@ -1378,7 +1423,7 @@
     "s3-sc-provenance": "The chain proves who recorded what and when — it cannot prove the goods are what the record says.",
     "s3-sc-real": "LVMH, Carrefour and GSBN work because rivals agreed to share one record — the hard part was the consortium, not the code.",
     "s3-sc-prosCons": "Traceability pays when recalls, counterfeits or paperwork are expensive — and only if every partner actually uploads.",
-    "s3-cert-howitworks": "Store the fingerprint, not the document — a hash proves a record existed unchanged without revealing it.",
+    "s3-cert-howitworks": "Store the fingerprint, not the document: the hash proves the record is unchanged, and the contract that wrote it proves who issued it.",
     "s3-cert-real": "Estonia, MIT and the luxury brands use the chain for one thing: letting anyone verify a record without calling the issuer.",
     "s3-cert-prosCons": "Verification becomes instant and free; the issuer's honesty when creating the record is still the weak point.",
     "s3-case-gallery": "Five production deployments share one pattern: many parties, one shared record, and a measurable cost that disappeared.",
