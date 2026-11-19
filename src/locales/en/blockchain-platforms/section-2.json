@@ -40,6 +40,11 @@
     "s2-quiz": "Quiz",
     "s2-quiz-2": "Quiz 2",
     "s2-quiz-3": "Quiz 3",
+    "s2-quiz-4": "Quiz 4",
+    "s2-quiz-5": "Quiz 5",
+    "s2-quiz-6": "Quiz 6",
+    "s2-quiz-7": "Quiz 7",
+    "s2-quiz-8": "Quiz 8",
     "s2-takeaways": "Takeaways"
   },
   "title": {
@@ -989,6 +994,56 @@
       "The funds are burned, the same way a cheating validator is slashed."
     ],
     "explanation": "A proof shows the batch followed the rules; it does not contain the transactions. To leave without the operator, a user must prove their balance to the contract on Ethereum, and that takes the data. This is why rollups publish it on Ethereum (in blobs since 2024), and why chains that keep data off-chain are cheaper but add someone you have to trust."
+  },
+  "quiz4": {
+    "question": "A lending contract on Ethereum holds millions of dollars in ETH. Can the contract decide, by itself, to send a payment at midnight?",
+    "options": [
+      "Yes — a contract has its own private key and signs its own transactions.",
+      "No — a contract only reacts. A wallet (EOA) has to sign and send a transaction that triggers it, and that wallet pays the gas.",
+      "Yes, provided it holds enough ETH to pay its own gas.",
+      "No — contracts cannot hold a balance, so there would be nothing to send."
+    ],
+    "explanation": "Only externally owned accounts — wallets controlled by a private key — can start a transaction. A contract account has code, storage and an ETH balance but no key: it runs only when it is called, and the wallet that triggered the call pays the gas. Every change on Ethereum starts as a signed message from a wallet."
+  },
+  "quiz5": {
+    "question": "You call a smart contract, but the gas you allowed runs out halfway through the execution. What happens?",
+    "options": [
+      "The half that was executed stays in place, and you are refunded for the rest.",
+      "The validator finishes the job at its own expense so that the block stays valid.",
+      "The transaction is cancelled and the whole fee is returned, as if nothing had happened.",
+      "The transaction reverts — its changes are undone — but you still pay for the gas already used."
+    ],
+    "explanation": "Gas prices every step of computation and guarantees that every program stops. When it runs out mid-execution the transaction reverts, yet you still pay for the gas already used. That is the price of letting a Turing-complete machine run on thousands of computers without ever getting stuck in an endless loop."
+  },
+  "quiz6": {
+    "question": "Withdrawing from an optimistic rollup back to Ethereum takes about 7 days; from a ZK rollup it takes hours. Why the difference?",
+    "options": [
+      "An optimistic rollup assumes each batch is valid and leaves a ~7-day window for anyone to submit a fraud proof; a ZK rollup sends a validity proof with every batch.",
+      "Optimistic rollups post their data to Ethereum only once a week; ZK rollups post every few hours.",
+      "ZK rollups keep transactions secret, so Ethereum has nothing to check and releases funds sooner.",
+      "Optimistic rollups run on Proof of Work and need more confirmations; ZK rollups run on Proof of Stake."
+    ],
+    "explanation": "Both batch transactions off-chain and settle on Ethereum; they differ in how L1 checks the batch. Optimistic is \"innocent until proven guilty\": trusted by default, so withdrawals wait out the challenge window. ZK is \"prove it up front\": Ethereum verifies the maths and no challenge is needed. And \"ZK\" here buys cheap checking, not secrecy — a ZK rollup is as public as Ethereum itself."
+  },
+  "quiz7": {
+    "question": "TerraUSD (UST) lost its dollar peg in May 2022 and erased about $60 billion. Which kind of stablecoin was it, and what went wrong?",
+    "options": [
+      "Fiat-backed: the bank holding its dollar reserves failed.",
+      "Crypto-backed: the ETH locked as collateral fell faster than positions could be liquidated.",
+      "Algorithmic: the peg relied on mint-and-burn incentives rather than full reserves, and once confidence broke it spiralled.",
+      "Crypto-backed: a bug in its contract let attackers mint tokens for free."
+    ],
+    "explanation": "A stablecoin is only as stable as what backs it. Fiat-backed coins hold dollars and T-bills 1:1 and break when the issuer's bank fails (USDC hit $0.87 in March 2023). Crypto-backed coins lock more collateral than they mint and break when a crash outruns the liquidators. Algorithmic coins hold little or no collateral, so when confidence breaks the peg spirals — no pure algorithmic design has survived."
+  },
+  "quiz8": {
+    "question": "ETH has no hard cap, yet when the network is busy its total supply actually shrinks. What makes that happen?",
+    "options": [
+      "A halving cuts the validators' reward every four years, as on Bitcoin.",
+      "Every transaction's base fee is burned (EIP-1559); when the network is busy, more ETH is burned than is issued to validators.",
+      "Validators are slashed more often when the network is busy, and their stakes are destroyed.",
+      "The protocol stops issuing new ETH whenever supply rises above 120 million."
+    ],
+    "explanation": "Ethereum's supply is what the protocol issues to validators minus what it burns. The Merge cut issuance by about 88%, and EIP-1559 destroys the base fee of every transaction. Quiet network: issuance beats the burn and supply drifts up. Busy network: the burn beats issuance and supply shrinks. Bitcoin sells scarcity by rule (21M cap, halvings); Ethereum sells scarcity by usage."
   },
   "takeaways": {
     "title": "Section 02 — Key Takeaways",

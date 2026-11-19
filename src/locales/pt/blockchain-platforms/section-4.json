@@ -26,6 +26,12 @@
     "s4-xrp-how": "XRPL: Como Funciona",
     "s4-layers": "L0 · L1 · L2",
     "s4-quiz": "Quiz",
+    "s4-quiz-2": "Quiz 2",
+    "s4-quiz-3": "Quiz 3",
+    "s4-quiz-4": "Quiz 4",
+    "s4-quiz-5": "Quiz 5",
+    "s4-quiz-6": "Quiz 6",
+    "s4-quiz-7": "Quiz 7",
     "s4-takeaways": "Conclusões"
   },
   "usecases": {
@@ -515,6 +521,66 @@
       "Nada — os tokens wrapped são apagados automaticamente quando um cofre é esvaziado."
     ],
     "explanation": "Uma bridge nunca move uma moeda. O teu 1 ETH ficou no cofre da primeira chain, e o wETH era apenas um talão sobre ele. Com o cofre vazio, o talão continua na tua carteira mas nada o garante, e o preço cai a pique — a menos que alguém reponha o cofre, como fez o financiador da Wormhole com 320 M$ em 2022. É por isso que um cofre partilhado, guardado por poucas chaves, faz das bridges o maior alvo da cripto, e que o IBC e as Layer 0 tentam eliminar o intermediário."
+  },
+  "quiz2": {
+    "question": "Todos os nós da Bitcoin e todos os nós da Ethereum estão ligados à mesma internet. Porque é que, mesmo assim, uma app na Ethereum não pode simplesmente usar um bitcoin?",
+    "options": [
+      "Os nós de cada chain só aceitam aquilo que conseguem verificar pelas suas próprias regras, e um bitcoin só existe como uma entrada no registo da Bitcoin.",
+      "A Bitcoin encripta o seu registo, por isso ninguém de fora da rede o consegue ler.",
+      "Os reguladores exigem que cada blockchain se mantenha legalmente separada das outras.",
+      "Podia, mas os validadores da Ethereum cobram uma taxa que o torna inviável."
+    ],
+    "explanation": "Estar na internet não é ser interoperável. Cada chain tem os seus próprios validadores, as suas próprias regras e o seu próprio registo, e confiamos numa blockchain porque cada nó volta a verificar tudo por si. Os factos de outra chain não podem ser verificados dessa forma, por isso a chain ignora-os — o mesmo muro do problema do oráculo. Para usar o valor de um bitcoin noutro lado, alguém tem de guardar a moeda verdadeira e emitir um substituto."
+  },
+  "quiz3": {
+    "question": "Duas chains Cosmos trocam tokens por IBC. Em quem estás a confiar?",
+    "options": [
+      "Numa empresa que guarda os tokens num cofre enquanto estão em trânsito.",
+      "Num comité de signatários — por exemplo, 5 de 9 — que aprova cada transferência.",
+      "Na matemática e nos validadores das duas chains: cada chain verifica por si as provas da outra, e um relayer só transporta a mensagem.",
+      "Num único conjunto de validadores partilhado que protege as duas chains ao mesmo tempo."
+    ],
+    "explanation": "Três vias, uma pergunta: em quem confias? Numa bridge: num operador, uma empresa ou alguns signatários. Numa Layer 0: num conjunto de validadores partilhado. No IBC: sem intermediário — cada chain mantém um light client da outra e verifica por si todas as provas. Os limites: só é tão forte quanto a mais fraca das duas chains, e ambas têm de falar IBC."
+  },
+  "quiz4": {
+    "question": "A bridge Ronin era guardada por 9 chaves de signatários. Em 2022, os atacantes roubaram 5 e levaram 625 milhões de dólares. Porque é que 5 chaves bastaram para levar tudo?",
+    "options": [
+      "Cada chave abria a conta de um utilizador, e essas cinco contas tinham a maior parte do dinheiro.",
+      "Com 5 chaves os atacantes conseguiam reescrever o histórico de transações da Ethereum.",
+      "As chaves permitiam-lhes criar ETH novo na Ethereum a partir do nada.",
+      "A bridge libertava fundos sempre que 5 dos 9 signatários aprovavam, e as moedas de todos os utilizadores estavam no mesmo cofre."
+    ],
+    "explanation": "Uma bridge põe as moedas de todos num só cofre e deixa que poucas chaves o abram. Cinco de nove assinaturas bastavam para aprovar qualquer levantamento, por isso o cofre inteiro abriu-se de uma vez — não apenas uma conta. É por isso que as bridges são estruturalmente arriscadas, e que o conselho é preferir a bridge oficial (canónica) de uma chain e mover apenas o que precisas."
+  },
+  "quiz5": {
+    "question": "Uma equipa vai lançar uma nova chain. Quer que seja segura desde o primeiro dia, sem ter de recrutar os seus próprios validadores. Que opção encaixa, e de que abdica?",
+    "options": [
+      "Lançá-la como chain totalmente soberana: as chains soberanas recebem a segurança de graça.",
+      "Alugar segurança a uma Layer 0 (por exemplo, como parachain da Polkadot): segura desde o início, mas tem de seguir as regras da Layer 0 e pagar por essa segurança.",
+      "Ligar-se através da LayerZero, a Layer 0 que empresta os seus validadores a novas chains.",
+      "Abrir uma bridge lock-and-mint para a Ethereum: uma bridge transmite a segurança da Ethereum à nova chain."
+    ],
+    "explanation": "Segurança partilhada ou soberania total: aluga-se uma ou constrói-se a outra. Alugar a uma Layer 0 significa herdar os seus validadores no primeiro dia, com mensagens já incluídas, em troca de seguir as suas regras e de lhe pagar. Uma chain soberana mantém o controlo total, mas tem de recrutar e pagar os seus próprios validadores. E, apesar do nome, a LayerZero não é uma Layer 0: é um protocolo de mensagens, mais próximo de uma bridge."
+  },
+  "quiz6": {
+    "question": "Como é que o XRP Ledger chega a acordo sobre que transações são finais?",
+    "options": [
+      "Validadores conhecidos votam: quando 80% dos validadores em que um nó confia concordam, o ledger fecha — a cada 3–5 segundos, sem mineração e sem staking.",
+      "Os mineradores competem para resolver um enigma, como na Bitcoin, só que com blocos muito mais pequenos.",
+      "Os validadores bloqueiam XRP como stake e são sorteados para propor blocos, como na Ethereum.",
+      "Um único servidor de uma empresa aprova cada pagamento e publica o resultado."
+    ],
+    "explanation": "O XRPL chega a acordo por votação entre validadores conhecidos: propõem, votam em rondas e, com 80% de acordo, o ledger é final — sem recompensas, sem mineração. Abaixo de 80%, a rede pára em vez de se dividir. O compromisso: a maioria dos nós usa a lista de validadores publicada por omissão, por isso confias que essa lista não entra em conluio — uma aposta diferente do proof of work ou do proof of stake."
+  },
+  "quiz7": {
+    "question": "Que frase descreve corretamente a divisão de trabalho entre as camadas?",
+    "options": [
+      "A L0 acrescenta escala barata, a L1 liga as chains entre si, a L2 protege e liquida.",
+      "A L2 protege e liquida, a L1 acrescenta escala barata por cima dela, a L0 guarda os dados.",
+      "A L1 protege e liquida, a L2 acrescenta escala barata por cima dela, a L0 permite que muitas chains partilhem segurança e falem entre si.",
+      "A L1 protege e liquida, a L0 acrescenta escala barata por cima dela, a L2 permite que muitas chains partilhem segurança."
+    ],
+    "explanation": "As camadas são uma divisão de trabalho. Uma L1 como a Bitcoin ou a Ethereum protege e liquida. As L2 — Lightning, rollups — assentam numa L1 para ganhar velocidade e taxas baixas, e liquidam nela os seus resultados. Uma Layer 0 como a Polkadot fica por baixo e dá às chains que nela se ligam segurança partilhada e mensagens. A Bitcoin, a Ethereum e a Solana não têm Layer 0 por baixo: protegem-se a si próprias."
   },
   "takeaways": {
     "title": "Secção 04 — Conclusões",
