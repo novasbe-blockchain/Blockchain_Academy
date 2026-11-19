@@ -3,6 +3,7 @@
     "g-s2-stack":    "🧱 The Web3 Stack",
     "g-s2-inside":   "🔍 Inside a Contract",
     "g-s2-engine":   "⚙️ The Engine",
+    "g-s2-oracles":  "🔮 Oracles",
     "g-s2-business": "💼 Business Impact",
     "g-s2-wrap":     "✅ Wrap Up"
   },
@@ -18,17 +19,25 @@
     "s2-execution":    "Execution Environment",
     "s2-gas":          "Gas · 10-sec recap",
     "s2-standards":    "Tokens · 10-sec recap",
+    "s2-oracle-why":   "Why Oracles?",
+    "s2-oracle-what":  "What Is an Oracle?",
+    "s2-oracle-how":   "How Oracles Work",
+    "s2-oracle-risks": "The Oracle Problem",
+    "s2-oracle-paris": "Case: Paris Sensor",
+    "s2-oracle-attack":"▶ Case: Price Attack",
     "s2-capabilities": "New Capabilities",
     "s2-reshape":      "Reshape Business",
     "s2-quiz":         "Quiz",
     "s2-quiz-2":       "Quiz 2",
+    "s2-quiz-3":       "Quiz 3",
+    "s2-quiz-4":       "Quiz 4",
     "s2-takeaways":    "Takeaways"
   },
   "recapLabel": "Already covered",
   "title": {
     "sectionNumber": "SECTION 02",
     "title": "How Smart Contracts Work",
-    "subtitle": "What happens when a smart contract runs: the Web3 stack, one escrow deal stepped through live, and quick gas and token recaps. Code stays optional."
+    "subtitle": "What happens when a smart contract runs: the Web3 stack, one escrow deal stepped through live, quick gas and token recaps, and oracles, a contract's only window on the real world. Code stays optional."
   },
   "stackExercise": {
     "badge": "Exercise",
@@ -38,7 +47,7 @@
     "checkAnswers": "Check answers",
     "tryAgain": "↺ Try again",
     "infoHovered": "Hover any placed component to see what it is.",
-    "infoIdle": "Click (or hover) a component to read what it does, then click a layer to place it.",
+    "infoIdle": "Every component carries a one-line definition. Click one for more detail, then click a layer to place it.",
     "componentsLabel": "Components",
     "allPlaced": "All placed",
     "clickHereToPlace": "← Click here to place",
@@ -50,15 +59,15 @@
       "offchain":   { "label": "Off-Chain Layer",   "desc": "External data, storage, and indexing" }
     },
     "items": {
-      "metamask":  { "label": "Wallet",            "info": "A wallet (Rabby, Zerion, MetaMask, …) that stores your keys and signs transactions in the frontend. It never custodies funds on a server." },
-      "react":     { "label": "React / Next.js",   "info": "The UI framework that renders the dApp interface in the browser. It holds no on-chain logic — it just calls contracts through a wallet or RPC." },
-      "infura":    { "label": "Infura RPC",        "info": "A hosted RPC gateway that lets apps read state and broadcast transactions without running their own node. It exposes the blockchain over a normal HTTPS endpoint." },
-      "solidity":  { "label": "Solidity Contract", "info": "The smart-contract source code that defines the dApp's on-chain rules and state. Once compiled and deployed, it lives on-chain and runs on every node." },
-      "evm":       { "label": "EVM",               "info": "The Ethereum Virtual Machine executes contract bytecode deterministically. It is the runtime baked into every node, so all of them reach the same result." },
-      "pos":       { "label": "PoS Validators",    "info": "Validators stake ETH to propose and attest blocks under Proof of Stake. They are the on-chain consensus layer that orders and finalises transactions." },
-      "ipfs":      { "label": "IPFS",              "info": "A peer-to-peer network for storing large files like images and metadata off-chain. Contracts keep only a content hash, so on-chain storage stays cheap." },
-      "thegraph":  { "label": "The Graph",         "info": "An indexing protocol that turns raw on-chain events into fast, queryable APIs. It runs off-chain so frontends read data without scanning the whole chain." },
-      "chainlink": { "label": "Chainlink Oracle",  "info": "An oracle network that delivers external data such as prices and randomness onto the chain. It bridges off-chain information into contracts that otherwise can't reach it." }
+      "metamask":  { "label": "Wallet",            "gloss": "Holds your keys and signs transactions.", "info": "A wallet (Rabby, Zerion, MetaMask, …) that stores your keys and signs transactions in the frontend. It never custodies funds on a server." },
+      "react":     { "label": "React / Next.js",   "gloss": "The web interface the user sees and clicks.", "info": "The UI framework that renders the dApp interface in the browser. It holds no on-chain logic — it just calls contracts through a wallet or RPC." },
+      "infura":    { "label": "Infura RPC",        "gloss": "A hosted gateway between apps and blockchain nodes.", "info": "A hosted RPC gateway that lets apps read state and broadcast transactions without running their own node. It exposes the blockchain over a normal HTTPS endpoint." },
+      "solidity":  { "label": "Solidity Contract", "gloss": "The contract's code: the dApp's rules.", "info": "The smart-contract source code that defines the dApp's on-chain rules and state. Once compiled and deployed, it lives on-chain and runs on every node." },
+      "evm":       { "label": "EVM",               "gloss": "Runs contract code identically on every node.", "info": "The Ethereum Virtual Machine executes contract bytecode deterministically. It is the runtime baked into every node, so all of them reach the same result." },
+      "pos":       { "label": "PoS Validators",    "gloss": "Stakers who order transactions and confirm blocks.", "info": "Validators stake ETH to propose and attest blocks under Proof of Stake. They are the on-chain consensus layer that orders and finalises transactions." },
+      "ipfs":      { "label": "IPFS",              "gloss": "Decentralised file storage for data too big or costly to keep on-chain.", "info": "IPFS (InterPlanetary File System) is a peer-to-peer network for storing files such as images and documents. Storing them on-chain would cost a fortune, so the contract keeps only the file's fingerprint (its hash) and the file itself lives on IPFS." },
+      "thegraph":  { "label": "The Graph",         "gloss": "Indexes blockchain data so apps can query it quickly.", "info": "The Graph is an indexing service. A blockchain is slow to search, so The Graph reads contract events as they happen and organises them into a database-style API that an app can query in milliseconds." },
+      "chainlink": { "label": "Chainlink Oracle",  "gloss": "An oracle network: brings real-world data on-chain.", "info": "Chainlink is an oracle network: independent computers that fetch real-world data, such as prices, and write it on-chain. A contract cannot fetch that data itself. Why not, and what can go wrong, is the 🔮 Oracles chapter later in this section." }
     }
   },
   "web3": {
@@ -130,7 +139,7 @@
           "Storage: IPFS, Arweave (large files, NFT metadata)",
           "Indexers: The Graph — query blockchain data like a DB",
           "Databases: user preferences, analytics, caching",
-          "APIs: oracles, payment rails, notification services"
+          "Oracles: Chainlink — bring real-world data to contracts"
         ]
       }
     ],
@@ -466,6 +475,305 @@
       { "label": "Deploy a new contract",        "gasLabel": "500k+ gas" }
     ]
   },
+  "oracle": {
+    "kicker": "New concept · Oracles",
+    "onChain": "On-chain",
+    "offChain": "Real world · off-chain",
+    "realWorld": "Real world",
+    "why": {
+      "heading": "Why can't a smart contract just check the weather?",
+      "subtitle": "It can hold a million dollars and pay out in seconds, yet it cannot look up a single fact outside its own chain.",
+      "pickHint": "Tap anything the contract needs to know",
+      "contract": "Crop insurance contract",
+      "rule": "if rain < 10 mm → pay farmers",
+      "waiting": "Waiting for data…",
+      "noAnswer": "No answer. Cannot decide.",
+      "wall": "SANDBOX",
+      "items": [
+        "Rainfall today",
+        "ETH price",
+        "Match result",
+        "Flight delay",
+        "Any web API"
+      ],
+      "idle": "Go on, try it: send the contract out to fetch something.",
+      "blocked": "blocked. Contract code runs inside a sealed virtual machine with no internet, no file system and no API calls. It can read only what is already on its own chain.",
+      "thoughtLabel": "Thought experiment",
+      "thoughtTitle": "What if every node called the API itself?",
+      "node": "Node",
+      "nodes": [
+        "ETH = $3,012",
+        "ETH = $3,015",
+        "timeout"
+      ],
+      "noConsensus": "Three nodes, three answers: no consensus, no block.",
+      "thoughtBody": "Thousands of nodes re-run every contract and must reach the identical result. A live API answers each of them a little differently. The wall is deliberate: it is what keeps every node in agreement.",
+      "bridge": "So how does an insurance contract ever learn that it did not rain?",
+      "bridgeCta": "It needs an oracle ↓"
+    },
+    "what": {
+      "heading": "What is an oracle?",
+      "subtitle": "The bridge between a smart contract and the real world. You placed one in the stack exercise: Chainlink.",
+      "toggleLabel": "Same contract, same drought — flip the switch",
+      "without": "Without an oracle",
+      "with": "With an oracle",
+      "station": "Weather station",
+      "stationValue": "4 mm",
+      "stationSub": "of rain this month",
+      "gap": "No way across",
+      "oracle": "Oracle",
+      "packet": "rain = 4 mm",
+      "contract": "Crop insurance contract",
+      "slotLabel": "rainfall on record",
+      "slotEmpty": "?",
+      "slotFilled": "4 mm",
+      "stuck": "Cannot decide. The farmers wait.",
+      "acts": "4 mm < 10 mm → farmers are paid",
+      "defTerm": "Oracle",
+      "def": "A service that fetches data from outside the blockchain and writes it on-chain, so that smart contracts can read it and act on it.",
+      "nuanceLabel": "The subtle part",
+      "nuance": "The contract still never reaches out. The oracle pushes the data in as an ordinary transaction, and from then on every node reads the same stored value. The sandbox stays intact.",
+      "deliversLabel": "What oracles deliver",
+      "delivers": [
+        "Asset prices",
+        "Weather",
+        "Sports and election results",
+        "Flight delays",
+        "Randomness",
+        "Proof of reserves"
+      ]
+    },
+    "how": {
+      "heading": "How does the data get on-chain?",
+      "subtitle": "Four steps, and one design rule: never rely on a single reporter.",
+      "steps": [
+        {
+          "label": "Fetch",
+          "desc": "Oracle nodes, computers outside the chain, pull the value from several sources: exchanges, weather services, APIs."
+        },
+        {
+          "label": "Report",
+          "desc": "Each node signs its answer and reports it."
+        },
+        {
+          "label": "Aggregate",
+          "desc": "The answers are combined into one value, usually the median, so a few outliers cannot move it."
+        },
+        {
+          "label": "Read",
+          "desc": "The value is stored in an on-chain feed contract. Your contract reads it like any other on-chain data."
+        }
+      ],
+      "labLabel": "Try it",
+      "labPrompt": "Tap a node to make it lie. How many liars does it take to fool the contract?",
+      "modeSingle": "One oracle",
+      "modeNetwork": "Oracle network",
+      "node": "Node",
+      "reports": [
+        "$3,001",
+        "$2,999",
+        "$3,000",
+        "$3,002",
+        "$2,998"
+      ],
+      "lie": "$9,999",
+      "median": "median",
+      "onlyReport": "only report",
+      "feedLabel": "On-chain feed · ETH / USD",
+      "contractReads": "what your contract reads",
+      "status": {
+        "honest": "Every report is honest. The feed is right.",
+        "tolerated": "{{n}} of 5 nodes lying. The median ignores the outliers, so the feed is still right.",
+        "captured": "A majority is lying, so the median itself is a lie. The contract will act on $9,999.",
+        "singleOk": "It works, for as long as this one machine stays honest, online and unhacked.",
+        "singleBad": "One oracle, one lie. The feed is wrong and nothing on-chain can tell."
+      },
+      "note": "its price feeds work this way. Many independent node operators and many data sources produce one aggregated value on-chain, refreshed when the price moves enough or a timer runs out.",
+      "hood": [
+        "Chainlink Data Feeds",
+        "decentralised oracle network",
+        "median",
+        "deviation threshold",
+        "heartbeat"
+      ]
+    },
+    "risks": {
+      "heading": "The oracle problem",
+      "subtitle": "A blockchain can verify signatures and arithmetic. It cannot verify whether a number is true.",
+      "pickHint": "Pick a failure to see which link breaks",
+      "links": {
+        "source": {
+          "label": "Data source",
+          "guard": "Who controls it?"
+        },
+        "oracle": {
+          "label": "Oracle",
+          "guard": "Who runs it?"
+        },
+        "contract": {
+          "label": "Smart contract",
+          "guard": "Thousands of validators"
+        }
+      },
+      "items": [
+        {
+          "title": "Single point of failure",
+          "tagline": "One reporter, one off switch.",
+          "tag": "offline",
+          "desc": "One node or one company supplies the data. If it goes offline, gets hacked or is bribed, every contract that depends on it fails with it.",
+          "effect": "No data arrives. The contract is stuck, and so is the money inside it.",
+          "defense": "Many independent nodes and many sources."
+        },
+        {
+          "title": "Stale or wrong data",
+          "tagline": "A true number, six hours too late.",
+          "tag": "6 h old",
+          "desc": "The feed stops updating during an outage or network congestion, or a source publishes a mistake. The contract keeps acting on a number that is no longer true.",
+          "effect": "It lends and liquidates at a price the market left behind.",
+          "defense": "Check the data's timestamp and pause when it is too old."
+        },
+        {
+          "title": "Manipulation",
+          "tagline": "An honest messenger carrying a lie.",
+          "tag": "tampered",
+          "desc": "The oracle reports faithfully, but someone has bent the source itself: a thinly traded market, a single sensor. The false number arrives on-chain properly signed.",
+          "effect": "It pays out on a number that someone engineered.",
+          "defense": "Combine deep markets, average over time, reject outliers."
+        }
+      ],
+      "effectLabel": "What the contract does",
+      "defenseLabel": "Defence",
+      "paradoxLabel": "The irony",
+      "paradox": "Smart contracts remove the trusted middleman from the deal, then let one back in through the data feed. A contract is only as trustworthy as its data source.",
+      "next": "Next: two real cases, a thermometer in Paris and a price tag worth millions."
+    },
+    "paris": {
+      "kicker": "Real case 1 · Paris, April 2026",
+      "heading": "How hot was it in Paris? That depends on which thermometer you ask.",
+      "subtitle": "A prediction market paid out on one airport sensor. Then that sensor showed a spike nobody else saw.",
+      "chartLabel": "Which source settles the market?",
+      "sourceSensor": "The named sensor",
+      "sourceNearby": "Nearby stations",
+      "chart": {
+        "afternoon": "afternoon",
+        "evening": "evening",
+        "sensorLine": "Charles de Gaulle sensor",
+        "nearbyLine": "nearby stations",
+        "high": "daily high"
+      },
+      "outcomeSensor": "Daily high: 22°C. The long-shot bet wins.",
+      "outcomeNearby": "Daily high: about 18°C. The favourite wins.",
+      "chartNote": "6 April 2026, temperature levels as reported; the shape of the curve is illustrative.",
+      "facts": [
+        {
+          "label": "The rule",
+          "text": "Polymarket ran a daily market on the highest temperature in Paris. Its rules settled it on one Météo-France sensor at Charles de Gaulle airport. That sensor was the oracle."
+        },
+        {
+          "label": "The spike",
+          "text": "On 6 and 15 April its reading jumped by more than 3°C for a few minutes, then fell back. Nearby stations showed no such spike."
+        },
+        {
+          "label": "The payout",
+          "text": "Long-shot bets on exactly those readings collected more than $35,000."
+        },
+        {
+          "label": "The aftermath",
+          "text": "Météo-France filed a police complaint for interference with its equipment. Polymarket moved the Paris market to a sensor at Le Bourget airport."
+        }
+      ],
+      "status": "Tampering is suspected, not proven: the investigation was still open when this was reported.",
+      "lessonLabel": "The lesson",
+      "lesson": "The market paid exactly as written: whatever that one sensor said. \"The temperature in Paris\" had to be defined as one device, and whoever can touch the device can move the payout. An oracle is a trust and definition problem, not only a technical one.",
+      "sources": "Reported by NPR, CNN, Euronews and Decrypt, April 2026.",
+      "hood": [
+        "resolution source",
+        "prediction market",
+        "optimistic oracle (UMA)",
+        "dispute window"
+      ]
+    },
+    "attack": {
+      "kicker": "Real case 2 · step through it",
+      "heading": "How do you rob a lender by changing a price tag?",
+      "subtitle": "The classic DeFi oracle attack: bend the price in a small market, then cash in at a bigger one that trusts it.",
+      "decimal": ".",
+      "usd": "${{v}}",
+      "usdM": "${{v}}M",
+      "tokM": "{{v}}M TOKEN",
+      "marketA": "Market A · small trading pool",
+      "marketASub": "TOKEN / USDC · only $4M inside",
+      "spot": "TOKEN price here",
+      "thin": "Small pool: cheap to move",
+      "feed": "price feed",
+      "feedSpot": "reads Market A's live price",
+      "feedSafe": "many markets, averaged over time",
+      "marketB": "Market B · lending protocol",
+      "marketBSub": "lends dollars against TOKEN collateral",
+      "vault": "In the vault",
+      "collateral": "Collateral",
+      "loan": "Lent out",
+      "paper": "⚠ $4M on paper, about $1M in reality",
+      "hole": "✕ $3M lent against collateral worth about $1M",
+      "fair": "✓ Valued at the real price",
+      "attacker": "Attacker",
+      "cash": "Cash",
+      "owes": "Flash loan owed",
+      "steps": [
+        {
+          "label": "Setup",
+          "what": "Market B lends dollars to anyone who posts TOKEN as collateral. To know what TOKEN is worth, its contract reads the live price from Market A, a small trading pool."
+        },
+        {
+          "label": "Flash loan",
+          "what": "The attacker borrows $2M with no collateral at all. The catch: a flash loan must be repaid inside the same transaction, or the whole transaction is cancelled."
+        },
+        {
+          "label": "Pump",
+          "what": "The attacker pours the $2M into Market A, buying TOKEN. That much buying in so small a pool drives the price from $1 to $4. The attacker now holds 1M TOKEN."
+        },
+        {
+          "label": "Trust",
+          "what": "The attacker posts the 1M TOKEN at Market B as collateral. The contract asks its oracle for the price, hears $4 and books the collateral at $4M. It has no way of knowing the price is fake."
+        },
+        {
+          "label": "Drain",
+          "what": "Against $4M of collateral on paper, Market B lends out $3M in real dollars, its usual 75%."
+        },
+        {
+          "label": "Exit",
+          "what": "The attacker repays the $2M flash loan and walks away with $1M. The pool price sinks back to about $1, so Market B holds collateral worth about $1M against a $3M loan. One transaction, a few seconds."
+        }
+      ],
+      "safeSteps": [
+        "The attacker posts the 1M TOKEN at Market B. This oracle averages many markets over time, so one small pool barely moves it: it still says about $1. The collateral is booked at about $1M.",
+        "Against $1M of collateral, Market B lends at most $0.75M.",
+        "The attacker owes $2M and holds $0.75M. The flash loan cannot be repaid, so the whole transaction is cancelled: no loan, no trade, nothing happened. The attempt costs only gas."
+      ],
+      "toggleLabel": "Try it: which price does Market B trust?",
+      "toggleSpot": "Market A's live price",
+      "toggleSafe": "An aggregated feed",
+      "result": {
+        "profit": "Attacker keeps $1M",
+        "badDebt": "$2M hole",
+        "reverted": "Reverted: nothing happened",
+        "safe": "Untouched"
+      },
+      "back": "← Back",
+      "next": "Next step →",
+      "restart": "↺ Run it again",
+      "realLabel": "Same pattern, real money:",
+      "real": "bZx (2020), Harvest Finance (2020), Mango Markets (2022, about $110M).",
+      "footnote": "Numbers here are illustrative; fees ignored.",
+      "hood": [
+        "flash loan",
+        "spot price",
+        "TWAP",
+        "slippage",
+        "bad debt"
+      ]
+    }
+  },
   "reshape": {
     "heading": "How Smart Contracts Reshape Traditional Business",
     "subtitle": "Five structural shifts.",
@@ -493,24 +801,44 @@
     "patternBody": " traditional businesses centralise trust in an intermediary; smart-contract businesses move it into code and consensus. Build one when many parties must share one record without a referee; otherwise a database is cheaper. The next section shows where this works in practice."
   },
   "quiz": {
-    "question": "In the smart contract execution workflow, what triggers a contract to run?",
+    "question": "The conditions written into a deployed smart contract are finally met. What actually makes its code run?",
     "options": [
-      "A scheduled cron job on the blockchain's servers",
-      "A transaction sent to the contract's address on the blockchain",
-      "The developer manually calling the contract from their machine",
-      "The Ethereum Foundation approving the execution request"
+      "A timer inside the contract that checks its conditions at set intervals",
+      "A transaction that someone sends, calling one of its functions",
+      "The contract itself: it executes automatically the moment the conditions are met",
+      "A validator who notices that the conditions are met and triggers it"
     ],
-    "explanation": "Smart contracts are passive — they sit on the blockchain and do nothing until triggered. A transaction sent to the contract address kicks off execution on the EVM. The contract then runs, updates state, and emits events — all within that single transaction."
+    "explanation": "A contract never acts on its own: it has no timer and cannot watch the world. It sits idle until a signed transaction calls one of its functions, directly or through another contract. Only then does it run its checks, update state and emit events, all within that one transaction."
   },
   "quiz2": {
-    "question": "In the escrow walkthrough, a stranger (not the buyer) calls the contract's deposit() function. What happens?",
+    "question": "In the escrow walkthrough, a stranger (not the buyer) calls deposit() with 2 ETH. What happens?",
     "options": [
-      "The contract accepts the money and makes the stranger the new buyer",
-      "The transaction waits in a queue until the seller approves it manually",
-      "The check fails, the transaction reverts and nothing changes — but the caller still pays gas",
-      "The contract is frozen until its developer redeploys it"
+      "The contract keeps the 2 ETH but leaves the deal marked Unpaid",
+      "The transaction reverts, nothing changes, and the stranger's gas is refunded",
+      "The transaction reverts, nothing changes, and the stranger still pays the gas",
+      "The transaction stays pending until the real buyer approves it"
     ],
-    "explanation": "The contract checks its rules before anything moves. A failed check reverts the whole transaction: balances, status and events stay exactly as they were. The nodes still did the work of running it, so the caller still pays the gas."
+    "explanation": "The contract checks its rules before anything moves. A failed check reverts the whole transaction: balances, status and events stay exactly as they were, so nothing half-happens. The nodes still did the work of running it, so the gas already used is not refunded."
+  },
+  "quiz3": {
+    "question": "A crop-insurance contract must pay out when rainfall is below 10 mm. Why can't the contract simply call a weather API itself?",
+    "options": [
+      "Every node re-runs the contract and must get the identical result; a live API could answer each node differently",
+      "Calling an API would cost more gas than most contracts can afford",
+      "Weather data is too large to fit inside a block",
+      "It can, but only through APIs that the validators have approved in advance"
+    ],
+    "explanation": "Contract code runs in a sealed virtual machine on thousands of nodes, and all of them must reach the same result. A live API could answer each node differently, so outside calls are simply not available. An oracle solves this by writing the data on-chain in a transaction; from then on every node reads the same stored value."
+  },
+  "quiz4": {
+    "question": "A lending protocol values collateral using the live price from one small trading pool. An attacker pushes that price up 4× for a few seconds and borrows against the inflated collateral. What was the root weakness?",
+    "options": [
+      "A bug in the lending contract's code miscalculated the loan",
+      "Flash loans make it possible to borrow without collateral",
+      "The validators failed to spot and reject the fake price",
+      "The contract trusted a single price source that was cheap to manipulate"
+    ],
+    "explanation": "The lending contract ran exactly as written, and validators only check that the rules were followed, not that a price is fair. The weakness was the oracle design: one small pool is cheap to move, even for a few seconds. Flash loans merely make the attack cheaper to fund. Safer feeds combine many markets and average over time."
   },
   "takeaways": {
     "title": "Section 02 — Key Takeaways",
@@ -520,7 +848,8 @@
       "Every run is the same loop: a transaction calls a function, the code checks its rules, state changes, an event fires",
       "A failed check reverts everything — nothing half-happens",
       "Every node computes the same result, and that work is paid for in gas by whoever sends the transaction",
-      "The business effect: programmable money and automated settlement with no middleman to pay or trust"
+      "The business effect: programmable money and automated settlement with no middleman to pay or trust",
+      "A contract cannot see the outside world: oracles write real-world data on-chain, and the contract is only as safe as that data"
     ]
   },
   "keyPoints": {
@@ -536,6 +865,12 @@
     "s2-capabilities": "The new capability is automation that no single party, including the operator, can override.",
     "s2-gas": "Every step costs real money, so good design keeps heavy data off-chain and puts only the proof on-chain.",
     "s2-standards": "Standards are why one wallet works with thousands of tokens.",
+    "s2-oracle-why": "A smart contract is blind by design: it sees only what is already on its own chain.",
+    "s2-oracle-what": "An oracle does not make a contract smarter; it puts outside facts on-chain where the contract can read them.",
+    "s2-oracle-how": "Many reporters and a median replace \"trust this one company\" with \"trust that most of them are honest\".",
+    "s2-oracle-risks": "The chain executes faithfully on whatever the oracle says: wrong data in, wrong payout out.",
+    "s2-oracle-paris": "Before trusting an automated payout, ask which exact source decides, and who can touch it.",
+    "s2-oracle-attack": "A smart contract is only as safe as the oracle feeding it.",
     "s2-reshape": "Smart-contract businesses stop earning as the trusted middleman; the revenue model moves."
   }
 }
