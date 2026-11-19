@@ -28,8 +28,9 @@ const chapterIds = [
 
 // ─── Interactive: Contract or not? ──────────────────────────────────────────
 
-// Language-neutral data: true = could run as a smart contract, false = needs a human / institution.
-const SCENARIO_ANSWERS = [true, false, true, false, false, true];
+// Language-neutral data: true = good fit for a smart contract, false = better without one
+// (one trusted owner → a database wins; a judgement call → a person decides).
+const SCENARIO_ANSWERS = [true, false, false, true, true, false];
 
 interface Scenario { title: string; desc: string; reason: string; }
 
@@ -657,6 +658,13 @@ export function SC_Section1() {
 
   const quizOptionTexts = t('quiz.options', { returnObjects: true }) as string[];
   const quizOptions = quizOptionTexts.map((text, i) => ({ text, correct: i === 1 }));
+  // Follow-up quizzes: index of the correct option for each (language-neutral).
+  const extraQuizzes = ([['quiz2', 2], ['quiz3', 0]] as const).map(([key, correctIndex]) => ({
+    key,
+    question: t(`${key}.question`),
+    options: (t(`${key}.options`, { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === correctIndex })),
+    explanation: t(`${key}.explanation`),
+  }));
 
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
@@ -808,8 +816,14 @@ export function SC_Section1() {
             question={t('quiz.question')}
             options={quizOptions}
             explanation={t('quiz.explanation')}
+            compact
           />
         </div>
+        {extraQuizzes.map((q) => (
+          <div key={q.key} className="h-full">
+            <QuizSlide question={q.question} options={q.options} explanation={q.explanation} compact />
+          </div>
+        ))}
 
         {/* ═══════ TAKEAWAYS ═══════ */}
         <div id="s1-takeaways" className="h-full">
