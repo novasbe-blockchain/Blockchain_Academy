@@ -2938,6 +2938,15 @@ export function Section1() {
             />
           </div>
 
+          {/* ── Quick check: double-spending / why a middleman ── */}
+          <div className="h-full">
+            <QuizSlide
+              question={t('quizDoubleSpend.question')}
+              options={(t('quizDoubleSpend.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
+              explanation={t('quizDoubleSpend.explanation')}
+            />
+          </div>
+
           {/* ═══════ 02 — THE SHARED LEDGER (NEW) ═══════ */}
           <div id="s1-ledger" className="h-full">
             <ConceptSlide
@@ -2999,6 +3008,15 @@ export function Section1() {
                 </div>
               }
               keyPoints={t('whatIs.keyPoints', { returnObjects: true }) as string[]}
+            />
+          </div>
+
+          {/* ── Quick check: pseudonymous ≠ anonymous ── */}
+          <div className="h-full">
+            <QuizSlide
+              question={t('quizPseudonymous.question')}
+              options={(t('quizPseudonymous.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }))}
+              explanation={t('quizPseudonymous.explanation')}
             />
           </div>
 
@@ -3078,6 +3096,15 @@ export function Section1() {
           {/* ═══════ 05 — THE CASCADE (NEW) ═══════ */}
           <div id="s1-cascade" className="h-full flex items-center justify-center p-6">
             <TamperCascade />
+          </div>
+
+          {/* ── Quick check: tamper-evident, not tamper-proof ── */}
+          <div className="h-full">
+            <QuizSlide
+              question={t('quizTamperEvident.question')}
+              options={(t('quizTamperEvident.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 3 }))}
+              explanation={t('quizTamperEvident.explanation')}
+            />
           </div>
 
           {/* ═══════ 06 — THE NETWORK ═══════ */}
@@ -3203,6 +3230,15 @@ export function Section1() {
             <NetworkTypeSorter />
           </div>
 
+          {/* ── Quick check: shape is not control ── */}
+          <div className="h-full">
+            <QuizSlide
+              question={t('quizShapeControl.question')}
+              options={(t('quizShapeControl.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+              explanation={t('quizShapeControl.explanation')}
+            />
+          </div>
+
           {/* ── Quick check: network resilience ── */}
           <div className="h-full">
             <QuizSlide
@@ -3262,6 +3298,15 @@ export function Section1() {
           {/* ═══════ 10b — WHAT A WALLET DOES ═══════ */}
           <div id="s1-wallet-basics" className="h-full flex items-center justify-center p-6 lg:p-10">
             <WalletBasics />
+          </div>
+
+          {/* ── Quick check: what a wallet holds ── */}
+          <div className="h-full">
+            <QuizSlide
+              question={t('quizWallet.question')}
+              options={(t('quizWallet.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
+              explanation={t('quizWallet.explanation')}
+            />
           </div>
 
           {/* ═══════ 11 — TAKEAWAYS ═══════ */}

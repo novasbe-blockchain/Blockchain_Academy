@@ -2896,6 +2896,51 @@ export function Section2() {
           />
         </div>
 
+        {/* Quiz: UTXO — spending a coin */}
+        <div className="h-full">
+          <QuizSlide
+            question={t('quizUtxo.question')}
+            options={(t('quizUtxo.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }))}
+            explanation={t('quizUtxo.explanation')}
+          />
+        </div>
+
+        {/* Quiz: keys — one-way derivation */}
+        <div className="h-full">
+          <QuizSlide
+            question={t('quizKeysOneWay.question')}
+            options={(t('quizKeysOneWay.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 3 }))}
+            explanation={t('quizKeysOneWay.explanation')}
+          />
+        </div>
+
+        {/* Quiz: seed phrase & self-custody */}
+        <div className="h-full">
+          <QuizSlide
+            question={t('quizSelfCustody.question')}
+            options={(t('quizSelfCustody.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+            explanation={t('quizSelfCustody.explanation')}
+          />
+        </div>
+
+        {/* Quiz: difficulty adjustment */}
+        <div className="h-full">
+          <QuizSlide
+            question={t('quizDifficulty.question')}
+            options={(t('quizDifficulty.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
+            explanation={t('quizDifficulty.explanation')}
+          />
+        </div>
+
+        {/* Quiz: Bitcoin Script — limited by design */}
+        <div className="h-full">
+          <QuizSlide
+            question={t('quizScript.question')}
+            options={(t('quizScript.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }))}
+            explanation={t('quizScript.explanation')}
+          />
+        </div>
+
         {/* ═══════ TAKEAWAYS ═══════ */}
         <div id="s2-takeaways" className="h-full">
           <TakeawaySlide

@@ -1034,6 +1034,56 @@
     ],
     "explanation": "Banks closed for nearly two weeks, withdrawals were capped, and uninsured deposits took a 47.5% haircut. That made the control question concrete: a bank balance can be frozen or clipped from above. Bitcoin's appeal was censorship resistance and self-custody — no operator to seize funds. (How much of the 2013 rally was Cyprus versus existing momentum is still debated.)"
   },
+  "quizUtxo": {
+    "question": "A Alice tem uma única moeda de 0,5 BTC (um UTXO) e quer pagar 0,4 BTC ao Bob. Ignorando a taxa do mineiro, o que acontece?",
+    "options": [
+      "A moeda de 0,5 é consumida por inteiro e criam-se duas novas: 0,4 para o Bob e 0,1 de troco para a Alice",
+      "O valor da moeda desce de 0,5 para 0,1 e o saldo do Bob sobe 0,4",
+      "A Alice pede a um mineiro que divida a moeda em partes e depois envia uma delas",
+      "0,4 vão para o Bob e os 0,1 que sobram são destruídos"
+    ],
+    "explanation": "O Bitcoin funciona como dinheiro vivo, não como um saldo bancário: a moeda é gasta por inteiro e a transação cria o pagamento e o troco. Como a moeda antiga deixa de existir, não pode ser gasta duas vezes."
+  },
+  "quizKeysOneWay": {
+    "question": "Porque é que é seguro dares o teu endereço Bitcoin a qualquer pessoa que te queira pagar?",
+    "options": [
+      "Porque o endereço muda automaticamente depois de cada pagamento",
+      "Porque a rede mantém os endereços escondidos de todos, exceto dos mineiros",
+      "Porque um endereço só funciona depois de o destinatário introduzir uma password",
+      "Porque a matemática só funciona num sentido: ninguém consegue chegar à tua chave privada a partir do endereço"
+    ],
+    "explanation": "Chave privada → chave pública → endereço é fácil de calcular para a frente e praticamente impossível de inverter. Essa assimetria permite-te partilhar o endereço enquanto a chave privada continua secreta."
+  },
+  "quizSelfCustody": {
+    "question": "Guardas as tuas próprias bitcoins (self-custody) e perdes a seed phrase e todos os dispositivos com a tua carteira. O que acontece às moedas?",
+    "options": [
+      "A equipa de apoio do Bitcoin devolve-te o acesso depois de provares a tua identidade",
+      "Continuam na cadeia, mas nunca mais ninguém as consegue gastar",
+      "São apagadas da blockchain ao fim de um período de espera",
+      "Passam automaticamente para os mineiros"
+    ],
+    "explanation": "Não há reset de password nem linha de apoio: a seed phrase é a carteira. As moedas continuam visíveis no registo, mas ficam permanentemente impossíveis de gastar — como no caso do disco rígido no aterro."
+  },
+  "quizDifficulty": {
+    "question": "Milhares de novas máquinas de mineração potentes juntam-se à rede Bitcoin. Como é que a rede responde?",
+    "options": [
+      "Aumenta a recompensa por bloco para que cada mineiro continue a ganhar o mesmo",
+      "Deixa os blocos chegarem cada vez mais depressa, e as moedas são todas emitidas mais cedo",
+      "Aumenta automaticamente a dificuldade de mineração, para que os blocos continuem a chegar a cada ~10 minutos",
+      "Bloqueia as novas máquinas até os mineiros existentes votarem a sua admissão"
+    ],
+    "explanation": "A cada 2 016 blocos (cerca de duas semanas) a dificuldade é reajustada para manter os blocos a cerca de 10 minutos de distância, por muito hash power que entre ou saia — mais mineiros não aceleram a emissão."
+  },
+  "quizScript": {
+    "question": "A linguagem de scripting do Bitcoin é deliberadamente limitada — sem loops, sem lógica complexa. Qual foi o raciocínio?",
+    "options": [
+      "Quantas menos coisas uma linguagem conseguir fazer, menos formas tem de correr mal",
+      "Os computadores de 2009 eram demasiado lentos para executar algo mais complexo",
+      "Os reguladores proibiam dinheiro programável na altura",
+      "O Satoshi planeava acrescentar programabilidade completa mais tarde, mas ficou sem tempo"
+    ],
+    "explanation": "A simplicidade foi uma escolha de segurança: mais funcionalidades significam mais superfície de ataque. A comunidade do Bitcoin manteve-o como uma ferramenta de propósito único — e por isso quem queria dinheiro programável construiu o Ethereum."
+  },
   "supply": {
     "interactiveBadge": "🧩 Interativo",
     "heading": "Modelo de Oferta do Bitcoin",

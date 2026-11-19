@@ -504,6 +504,56 @@
       { "tag": "Liga",    "body": "O teu browser a dApps — DeFi, NFTs, jogos on-chain, tudo o que vive na Ethereum e cadeias semelhantes." }
     ]
   },
+  "quizDoubleSpend": {
+    "question": "Uma fotografia digital pode ser copiada vezes sem conta. Porque é que o dinheiro digital precisou tradicionalmente de um intermediário, como um banco?",
+    "options": [
+      "Porque só os bancos têm computadores capazes de processar pagamentos",
+      "Porque o dinheiro digital tem de ser convertido em notas antes de poder ser gasto",
+      "Porque alguém tem de manter o registo para o dinheiro não ser gasto duas vezes",
+      "Porque enviar dinheiro pela internet é ilegal sem uma licença bancária"
+    ],
+    "explanation": "É o problema do gasto duplo: sem um árbitro a manter o registo, o mesmo dólar digital podia ser gasto duas vezes. Esse árbitro foi sempre uma instituição — a blockchain pergunta se tem mesmo de o ser."
+  },
+  "quizPseudonymous": {
+    "question": "Numa blockchain pública és 'pseudónimo, não anónimo'. O que significa isso?",
+    "options": [
+      "As tuas transações são visíveis para todos sob o teu endereço, mas o endereço não mostra o teu nome legal",
+      "As tuas transações ficam escondidas de todos, exceto do remetente e do destinatário",
+      "O teu nome legal fica guardado na cadeia, mas só os mineiros o conseguem ler",
+      "Ninguém consegue alguma vez descobrir que endereço te pertence, faças o que fizeres"
+    ],
+    "explanation": "Ages através de um endereço, não do teu nome — mas tudo o que esse endereço faz é público, para sempre. A privacidade depende de o endereço não ser ligado a ti, não de esconder a atividade."
+  },
+  "quizTamperEvident": {
+    "question": "Alguém edita os dados de um bloco antigo. Porque é que se diz que uma blockchain é 'adulteração-evidente' e não 'à prova de adulteração'?",
+    "options": [
+      "A edição é fisicamente impossível, porque os blocos antigos ficam trancados",
+      "A edição é desfeita silenciosamente pelo bloco génesis",
+      "A edição só é aceite se o mineiro original do bloco a aprovar",
+      "A edição é possível, mas o hash do bloco muda e a ligação a partir do bloco seguinte quebra-se de forma visível"
+    ],
+    "explanation": "A cadeia não te impede de mudar os dados — torna a alteração óbvia: o bloco editado fica com um novo hash, e os blocos seguintes continuam a apontar para o antigo."
+  },
+  "quizShapeControl": {
+    "question": "A Google funciona em milhares de servidores, em centros de dados espalhados pelo mundo. Porque é que continua a ser um exemplo de controlo centralizado?",
+    "options": [
+      "Porque os seus servidores estão todos num único país",
+      "Porque uma só empresa pode mudar as regras ou desligar o serviço, por muitas máquinas que utilize",
+      "Porque tem menos computadores do que a rede Bitcoin",
+      "Porque os sistemas distribuídos são sempre controlados centralmente"
+    ],
+    "explanation": "Forma não é controlo. 'Distribuído' descreve onde estão as máquinas; 'descentralizado' diz respeito a quem detém o poder. A Google é distribuída mas controlada centralmente; o Bitcoin é distribuído e descentralizado."
+  },
+  "quizWallet": {
+    "question": "O que é que uma carteira cripto guarda realmente?",
+    "options": [
+      "As próprias moedas, guardadas como ficheiros no teu dispositivo",
+      "Uma cópia completa da blockchain",
+      "As chaves privadas que provam que controlas um endereço — as moedas ficam na cadeia",
+      "A tua identidade legal, verificada pela empresa da carteira"
+    ],
+    "explanation": "Uma carteira guarda chaves, não moedas. As moedas vivem na cadeia; a carteira usa a tua chave privada para assinar transações e provar que vêm de ti."
+  },
   "takeaways": {
     "title": "Secção 1 — Conclusões-chave",
     "items": [
