@@ -3,7 +3,7 @@
     "s1-why": "Porquê um smart contract?",
     "s1-recap": "Revisão em 20 segundos",
     "s1-hype": "Hype vs Value",
-    "s1-exercise": "🧩 Contract or not?",
+    "s1-exercise": "🧩 Contrato ou não?",
     "s1-history": "30 anos de lições",
     "s1-quiz": "Quiz",
     "s1-takeaways": "Conclusões"
@@ -183,57 +183,77 @@
     ]
   },
   "exercise": {
-    "badge": "🧩 Interactive",
-    "heading": "Contract or not?",
-    "subtitle": "Six everyday agreements. Tap: could this run as code, or does it still need a person or an institution?",
-    "scoreLabel": "correct so far",
-    "reset": "↺ Reset",
-    "yes": "Could be a smart contract",
-    "no": "Needs a human / institution",
-    "resultSc": "Could be a smart contract",
-    "resultNotSc": "Needs a human / institution",
+    "badge": "Interativo",
+    "heading": "Contrato ou não?",
+    "subtitle": "Seis situações reais. Um smart contract é uma boa solução, ou a base de dados de uma empresa ou uma decisão humana resolvem melhor?",
+    "scoreLabel": "certas até agora",
+    "reset": "↺ Recomeçar",
+    "yes": "Boa solução",
+    "no": "Melhor sem ele",
+    "resultSc": "Boa solução para um smart contract",
+    "resultNotSc": "Melhor sem smart contract",
     "scenarios": [
       {
-        "title": "A vending machine",
-        "desc": "Insert coins, pick a snack, get it — or get your coins back.",
-        "reason": "Fixed rule, instant check, automatic delivery — Szabo's original smart contract."
+        "title": "Seguro de atraso de voo",
+        "desc": "Uma seguradora promete: se o teu voo aterrar com mais de duas horas de atraso, recebes automaticamente, sem preencher qualquer pedido.",
+        "reason": "Uma regra simples, acionada por um facto público. O pagamento fica fixado, por isso o cliente não tem de confiar que a seguradora o vai cumprir. Continua a precisar de uma fonte fiável das horas de chegada."
       },
       {
-        "title": "A Netflix subscription",
-        "desc": "Pay monthly for access to a video library run by one company.",
-        "reason": "One company runs the content, the servers and the rules — nothing needs trustless enforcement. A billing database wins."
+        "title": "Uma subscrição de streaming",
+        "desc": "Pagas uma mensalidade a uma empresa para veres o catálogo de vídeo dela.",
+        "reason": "Uma só empresa é dona do conteúdo, das contas e da faturação, e já lhe confias o teu cartão. Mais ninguém precisa de verificar a regra, por isso uma base de dados normal sai mais barata."
       },
       {
-        "title": "Escrow for a house sale",
-        "desc": "Buyer's money is held until the title transfer is confirmed, then released.",
-        "reason": "Funds move only when a verifiable condition is met — the textbook pattern (Propy does this today). The title itself still needs the land registry."
+        "title": "A culpa num acidente de carro",
+        "desc": "Dois condutores não se entendem sobre quem causou o acidente nem sobre quanto valem os danos.",
+        "reason": "É preciso alguém que pese as provas e decida o que é justo. O código só executa uma regra fixada de antemão; não julga."
       },
       {
-        "title": "A loyalty-points scheme",
-        "desc": "Earn points at one retailer, spend them at the same retailer.",
-        "reason": "A single issuer defines, prices and can cancel the points. It is their database — a blockchain adds cost, not trust."
+        "title": "Crowdfunding tudo-ou-nada",
+        "desc": "Centenas de desconhecidos prometem dinheiro a um projeto. Se o objetivo não for atingido até ao prazo, todos são reembolsados.",
+        "reason": "Desconhecidos, dinheiro em comum e uma regra que é pura aritmética: objetivo atingido até ao prazo, ou não. O código guarda os fundos, por isso não é preciso confiar numa plataforma para o fazer."
       },
       {
-        "title": "A court judgement",
-        "desc": "A judge decides who was at fault and what the compensation is.",
-        "reason": "Needs interpretation of facts, intent and fairness. Code executes; it does not judge."
+        "title": "Dividir as receitas de uma canção",
+        "desc": "Três coautores combinam que cada pagamento que a canção render é dividido em 50 / 30 / 20 entre eles.",
+        "reason": "Uma divisão fixa entre várias partes que, de outro modo, dependeriam das contas de um único gestor. O código reparte cada pagamento à chegada, à vista de todos."
       },
       {
-        "title": "Flight-delay insurance payout",
-        "desc": "If your flight lands more than two hours late, you are paid automatically.",
-        "reason": "The delay is a public, checkable fact — an oracle reports it and the payout fires by itself (parametric insurance)."
+        "title": "Os salários de uma empresa",
+        "desc": "Um empregador paga todos os meses aos seus próprios trabalhadores e corrige os erros quando acontecem.",
+        "reason": "Um só empregador, os seus próprios registos e erros que têm de ser reversíveis. Uma regra pública e difícil de alterar exporia os salários e dificultaria as correções."
       }
     ]
   },
   "quiz": {
-    "question": "Três transportadoras concorrentes e a sua seguradora querem uma regra partilhada: pagar a compensação automaticamente quando uma remessa chega atrasada. Qual é a razão mais forte para usar um smart contract em vez da base de dados de uma das empresas?",
+    "question": "Três transportadoras concorrentes e a sua seguradora querem uma regra partilhada: pagar a compensação automaticamente quando uma remessa chega atrasada. Qual é a razão mais forte para aplicar essa regra com um smart contract em vez de a pôr na base de dados de uma das empresas?",
     "options": [
       "É mais barato e mais rápido de operar do que uma base de dados.",
-      "Nenhuma das partes tem de ser a entidade de confiança que aplica a regra, e nenhuma a pode alterar depois.",
+      "Nenhuma empresa tem de ser a entidade de confiança que aplica a regra, e nenhuma a pode alterar às escondidas.",
       "O código passa automaticamente a ser um contrato juridicamente vinculativo entre elas.",
-      "É suficientemente inteligente para tratar casos invulgares de forma justa."
+      "Consegue usar discernimento para tratar casos invulgares de forma justa."
     ],
-    "explanation": "Concorrentes não aceitam uma regra guardada na base de dados de um rival, porque o dono a pode alterar. Um smart contract dá-lhes uma regra que ninguém controla. As outras respostas são o hype: uma base de dados é mais barata e mais rápida, o código não é por si só um contrato legal, e não tem discernimento, por isso executa exatamente o que foi escrito."
+    "explanation": "Concorrentes não aceitam uma regra guardada na base de dados de um rival, porque o dono a pode alterar. Um smart contract dá-lhes uma regra que nenhuma parte controla sozinha. As outras respostas são o hype: uma base de dados é mais barata e mais rápida, o código não é por si só um contrato legal, e um smart contract não tem discernimento, por isso executa exatamente o que foi escrito."
+  },
+  "quiz2": {
+    "question": "Uma cadeia de supermercados quer pôr os seus pontos de fidelização \"na blockchain\". Os pontos só se ganham e só se gastam nas suas próprias lojas. Qual é o melhor conselho?",
+    "options": [
+      "Avançar: um smart contract tornaria os pontos mais baratos de gerir.",
+      "Não avançar: um smart contract não consegue manter o registo de saldos.",
+      "Não avançar: uma só empresa emite e controla os pontos, por isso a sua própria base de dados faz o mesmo por menos.",
+      "Avançar: os clientes passariam a ser donos de pontos que a cadeia nunca poderia cancelar."
+    ],
+    "explanation": "Um smart contract compensa quando várias partes precisam de uma regra que nenhuma delas controla. Aqui, uma só empresa de confiança emite os pontos, define o seu valor e aceita-os, por isso não há mais ninguém para convencer e uma base de dados sai mais barata. As outras respostas falham nos factos: cada passo on-chain custa uma taxa de rede, os contratos registam saldos sem dificuldade (é isso que os tokens são), e pontos que só se gastam nas lojas da cadeia valem o que a cadeia decidir aceitar."
+  },
+  "quiz3": {
+    "question": "Em 2016, um atacante retirou cerca de 60 milhões de dólares da DAO, um fundo de investimento gerido inteiramente por um smart contract. Que lição deve uma empresa tirar desse episódio?",
+    "options": [
+      "Um contrato executa exatamente o que foi escrito, falhas incluídas, por isso tem de ser auditado antes de receber dinheiro.",
+      "A própria rede Ethereum foi invadida, por isso as chains públicas não são seguras.",
+      "Os smart contracts são demasiado simples para guardar grandes quantias.",
+      "O código de um contrato deve ser mantido em segredo para que os atacantes não o possam ler."
+    ],
+    "explanation": "A rede funcionou como previsto. A falha estava no código do próprio contrato, e o código fez exatamente o que lá estava escrito, sem nenhum gestor que pudesse intervir e travá-lo. É por isso que os contratos que guardam dinheiro a sério são auditados antes do lançamento. Esconder o código não é solução: é o código público que permite a todos verificar a regra em que confiam."
   },
   "takeaways": {
     "title": "Secção 01 — Conclusões",
@@ -304,7 +324,7 @@
     "s1-why": "Um smart contract só merece o lugar quando uma regra partilhada e inalterável vale mais do que confiar num advogado, num agente ou no dono de uma base de dados.",
     "s1-recap": "Um smart contract é código que se executa sozinho numa chain partilhada: lógica de máquina de vending, sem funcionário.",
     "s1-hype": "Não é legal, nem inteligente, nem gratuito, nem imparável; o valor está em eliminar um intermediário, fixar uma regra e liquidar depressa.",
-    "s1-exercise": "If one trusted institution already runs the process well, a smart contract adds cost, not trust.",
+    "s1-exercise": "Um smart contract faz sentido quando partes que não confiam umas nas outras partilham uma regra que o código consegue verificar. Com um único dono de confiança, ou uma decisão de julgamento, acrescenta custo, não confiança.",
     "s1-history": "Em trinta anos, todas as lições caras vieram de código a fazer exatamente o que lhe mandaram."
   }
 }
