@@ -15,10 +15,15 @@
     "s4-case-success": "✅ Estónia eRes",
     "s4-case-sc-fail": "⚠️ The DAO",
     "s4-case-org-fail": "❌ ASX CHESS",
+    "s4-case-est-quiz": "Quiz · Estónia",
     "s4-case-dao-quiz": "Quiz · DAO",
     "s4-case-asx-quiz": "Quiz · ASX",
     "s4-adoption": "Três Verificações",
-    "s4-quiz": "Quiz",
+    "s4-quiz-tree": "Quiz 1 · Árvore de Decisão",
+    "s4-quiz-fit": "Quiz 2 · Sinais de Alerta",
+    "s4-quiz-checks": "Quiz 3 · Três Verificações",
+    "s4-quiz-cases": "Quiz 4 · Casos",
+    "s4-quiz": "Quiz 5 · Obrigação Bancária",
     "s4-takeaways": "Conclusões"
   },
   "title": {
@@ -213,6 +218,16 @@
     "lessonLabel": "A lição:",
     "lessonBody": " só porque PODES usar blockchain não significa que DEVAS. A disciplina de perguntar \"uma base de dados seria melhor?\" importa mais do que o hype tecnológico."
   },
+  "estQuiz": {
+    "question": "A e-Residency da Estónia é o caso de sucesso entre os três. De acordo com esta secção, porque é que funciona?",
+    "options": [
+      "Publica os registos de todos os cidadãos numa blockchain pública, para que qualquer pessoa os possa verificar.",
+      "Junta uma instituição em que as pessoas já confiam (o Estado) com uma blockchain usada de forma restrita, para provar que os registos não foram alterados.",
+      "Substituiu os serviços do Estado por smart contracts, pelo que os cidadãos já não precisam de confiar em nenhuma instituição.",
+      "Emitiu um token nacional cujas vendas financiam os serviços públicos digitais do país."
+    ],
+    "explanation": "A Estónia é um híbrido: o Estado continua a ser a âncora de confiança e é a lei que dá valor às assinaturas digitais, enquanto a blockchain KSI faz uma única tarefa, provar que os registos não foram adulterados. Os registos propriamente ditos ficam nas bases de dados do Estado; não são publicados numa chain pública. Nenhuma instituição foi substituída e não foi emitido nenhum token. Aqui a blockchain é infraestrutura de integridade, não o produto."
+  },
   "daoQuiz": {
     "question": "O ataque à The DAO em 2016 drenou 60M$ através de um bug de reentrância. A comunidade Ethereum executou um hard fork para reverter o ataque — dividindo a chain em ETH e ETC. Qual é a LIÇÃO mais importante para quem desenha smart contracts?",
     "options": [
@@ -281,6 +296,48 @@
       "progress": { "label": "Até aqui, tudo bem.", "body": "Marca as verificações que faltam." },
       "stop": { "label": "Ainda não:", "body": "Resolve isto antes de gastar em desenvolvimento, ou volta à árvore de decisão." },
       "go": { "label": "Avança.", "body": "As três verificam-se. Começa por um piloto pequeno, não por uma implementação completa." }
+    }
+  },
+  "quizMore": {
+    "tree": {
+      "question": "Cinco empresas de logística têm todas de escrever num único registo partilhado de envios. Não confiam totalmente umas nas outras, mas todas aceitam a mesma câmara de compensação do setor como operador neutro. Seguindo a árvore de decisão, onde vão parar?",
+      "options": [
+        "Uma plataforma de smart contracts.",
+        "Uma base de dados tradicional com controlo de acessos.",
+        "Uma blockchain simples, do tipo Bitcoin.",
+        "Uma base de dados gerida pelo terceiro de confiança."
+      ],
+      "explanation": "Percorre a árvore: base de dados partilhada? Sim. Várias partes a escrever? Sim. Confiam totalmente umas nas outras? Não, por isso o controlo de acessos não chega. Existe um terceiro aceite por todas? Sim, e a árvore termina aí: a câmara de compensação gere a base de dados. As blockchains só entram em cena quando esse terceiro não existe; os smart contracts só quando, além disso, é precisa lógica de negócio complexa."
+    },
+    "fit": {
+      "question": "Um retalhista quer passar o seu processo interno de escalas de pessoal e aprovação de férias \"para a blockchain\". É gerido por uma única empresa, as regras de aprovação mudam de poucos em poucos meses e os registos contêm dados pessoais dos trabalhadores. O que diz a estrutura de decisão desta secção?",
+      "options": [
+        "Usar um smart contract numa chain pública: a imutabilidade impede os gestores de alterarem as regras.",
+        "Usar uma base de dados tradicional: um único operador de confiança, regras que mudam com frequência e dados pessoais são todos sinais de alerta.",
+        "Usar um smart contract, mas só depois de uma auditoria de segurança independente.",
+        "Usar uma blockchain simples, do tipo Bitcoin, porque a lógica não é complexa."
+      ],
+      "explanation": "Surgem ao mesmo tempo três sinais de alerta de \"Quando repensar\": já existe uma parte de confiança a gerir o processo, as regras têm de continuar flexíveis (logo, a imutabilidade é um passivo e não uma vantagem) e os dados pessoais não pertencem a um registo que não pode apagar. Uma auditoria torna um contrato mais seguro; não faz com que o caso de uso se adeque. A árvore de decisão concorda: com uma única parte a escrever, termina numa base de dados tradicional muito antes de qualquer opção de blockchain."
+    },
+    "checks": {
+      "question": "A ideia de uma startup passa na árvore de decisão: várias partes que não confiam entre si, poupanças reais com a automação e parceiros dispostos a aderir. Tem orçamento para uma auditoria e um plano de pausa. Mas o desenho guarda nomes e moradas de clientes diretamente numa chain pública. Qual das três verificações falha?",
+      "options": [
+        "Jurídico e regulatório: dados pessoais num registo que não pode apagar entram em conflito com o direito ao apagamento do RGPD.",
+        "Adequação estratégica: havendo dados pessoais, as partes deixam de precisar de minimizar a confiança.",
+        "Risco e custo: guardar nomes e moradas torna a auditoria de segurança demasiado cara.",
+        "Nenhuma: uma ideia que passa na árvore de decisão já passou nas três verificações."
+      ],
+      "explanation": "A verificação jurídica e regulatória pergunta se a lei vai apoiar o código, e um dos seus pontos é: sem dados pessoais on-chain, porque o direito ao apagamento do RGPD esbarra num registo que não apaga. A adequação estratégica mantém-se (partes que não confiam entre si, valor real na automação, parceiros dispostos) e o risco e custo também (auditoria e plano de pausa estão orçamentados). A árvore de decisão só diz que um smart contract pode funcionar; as três verificações são um teste à parte. A correção habitual é manter os dados pessoais off-chain."
+    },
+    "cases": {
+      "question": "A The DAO e a substituição do CHESS da ASX falharam ambas. Qual é a diferença essencial entre as duas falhas?",
+      "options": [
+        "A The DAO foi travada pelos reguladores; a ASX foi drenada por um bug de reentrância.",
+        "A The DAO dependia de um único operador de confiança; a ASX não tinha ninguém responsável.",
+        "O caso de uso da The DAO adequava-se a uma blockchain, mas o código do contrato tinha uma falha; o caso de uso da ASX nunca precisou de blockchain.",
+        "Nenhuma: ambas mostram que as blockchains não servem para aplicações financeiras."
+      ],
+      "explanation": "A The DAO foi \"ferramenta certa, desenho de contrato errado\": financiamento conjunto entre desconhecidos, sem árbitro de confiança, adequa-se a uma blockchain, mas um bug de reentrância num contrato que não podia ser pausado deixou escapar 60M$. A ASX foi \"ferramenta errada\": já existia um operador de confiança a gerir o registo, pelo que uma base de dados teria bastado. Em termos das três verificações, a The DAO falhou no risco e custo e a ASX na adequação estratégica, e é por isso que precisas das três antes de construir."
     }
   },
   "quiz": {

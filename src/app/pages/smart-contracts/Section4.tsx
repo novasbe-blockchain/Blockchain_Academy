@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
@@ -6,7 +6,7 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
-import { Brain, Target, Scale, ShieldAlert, Check, X, ArrowUpRight } from 'lucide-react';
+import { Brain, Target, Scale, ShieldAlert, Check, X, ArrowUpRight, Lightbulb } from 'lucide-react';
 import { ClassDiscussion } from '../../components/shared/ClassDiscussion';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
@@ -29,6 +29,7 @@ const chapterShape = [
   { id: 's4-case-success' },
   { id: 's4-case-sc-fail' },
   { id: 's4-case-org-fail' },
+  { id: 's4-case-est-quiz' },
   { id: 's4-case-dao-quiz' },
   { id: 's4-case-asx-quiz' },
 
@@ -36,6 +37,10 @@ const chapterShape = [
   { id: 's4-adoption' },
 
   { kind: 'group' as const, id: 'g-close' },
+  { id: 's4-quiz-tree' },
+  { id: 's4-quiz-fit' },
+  { id: 's4-quiz-checks' },
+  { id: 's4-quiz-cases' },
   { id: 's4-quiz' },
   { id: 's4-takeaways' },
 ] as const;
@@ -261,6 +266,81 @@ function AdoptionChecks() {
   );
 }
 
+// ─── Case-study slide ────────────────────────────────────────────────────────
+// One layout for all three field cases: header, three full-height panels
+// (context / what happened / outcome), then the lesson as its own band.
+interface CasePanel { label: string; color: string; items?: string[]; stats?: ResultStat[] }
+interface QuizItem { question: string; options: string[]; explanation: string }
+
+function CaseSlide({ id, accent, kicker, heading, subtitle, image, panels, lessonLabel, lessonBody, keyPoint }: {
+  id: string; accent: string; kicker: string; heading: string; subtitle: string; image?: ReactNode;
+  panels: CasePanel[]; lessonLabel: string; lessonBody: string; keyPoint: string;
+}) {
+  // Longer copy (mostly the PT strings) steps the bullets down one size so every panel still fits.
+  const dense = panels.some((p) => (p.items ?? []).join('').length > 260);
+  return (
+    <div id={id} className="h-full flex flex-col p-6 lg:p-10">
+      <div className="shrink-0 flex items-center gap-5">
+        {image}
+        <div className="min-w-0">
+          <div className="text-sm font-bold uppercase tracking-widest mb-1" style={{ color: accent }}>{kicker}</div>
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground leading-tight">{heading}</h2>
+          <p className="text-muted-foreground text-base lg:text-lg mt-1">{subtitle}</p>
+        </div>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5 mt-5">
+        {panels.map((panel, i) => (
+          <div key={panel.label} className="min-h-0 p-5 lg:p-6 border-2 rounded-2xl flex flex-col"
+            style={{ borderColor: panel.color + '4d', background: `linear-gradient(135deg, ${panel.color}1a, transparent 70%)` }}>
+            <div className="shrink-0 flex items-center gap-2.5 pb-3 mb-1 border-b" style={{ borderColor: panel.color + '33' }}>
+              <span className="size-7 rounded-full flex items-center justify-center text-sm font-black text-white shrink-0" style={{ backgroundColor: panel.color }}>{i + 1}</span>
+              <span className="text-base font-black uppercase tracking-wider" style={{ color: panel.color }}>{panel.label}</span>
+            </div>
+            {panel.items && (
+              <ul className={`flex-1 min-h-0 flex flex-col justify-evenly gap-2 text-foreground leading-snug ${dense ? 'text-base' : 'text-base lg:text-lg'}`}>
+                {panel.items.map((item, j) => (
+                  <li key={j} className="flex gap-2.5">
+                    <span className="font-black shrink-0" style={{ color: panel.color }}>›</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {panel.stats && (
+              <div className="flex-1 min-h-0 flex flex-col justify-evenly gap-2">
+                {panel.stats.map((r, j) => (
+                  <div key={j} className="px-4 py-3 bg-card border border-border rounded-xl">
+                    <div className="font-mono font-black text-3xl lg:text-4xl leading-none" style={{ color: panel.color }}>{r.value}</div>
+                    <div className="text-base text-muted-foreground mt-1.5 leading-snug">{r.label}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="shrink-0 mt-4 px-5 py-3 rounded-2xl border-2 flex items-center gap-3.5"
+        style={{ borderColor: accent + '80', backgroundColor: accent + '14' }}>
+        <Lightbulb className="size-7 shrink-0" style={{ color: accent }} />
+        <p className="text-lg lg:text-xl text-foreground leading-snug">
+          <span className="font-black" style={{ color: accent }}>{lessonLabel}</span>{lessonBody}
+        </p>
+      </div>
+      <KeyPointBar text={keyPoint} className="mt-3" />
+    </div>
+  );
+}
+
+// Correct-option index per quiz (language-neutral; option text lives in the locale files).
+const EXTRA_QUIZ = [
+  { id: 's4-quiz-tree',   key: 'tree',   correct: 3 },
+  { id: 's4-quiz-fit',    key: 'fit',    correct: 1 },
+  { id: 's4-quiz-checks', key: 'checks', correct: 0 },
+  { id: 's4-quiz-cases',  key: 'cases',  correct: 2 },
+] as const;
+
 export function SC_Section4() {
   const { t } = useTranslation('smart-contracts/section-4');
 
@@ -292,6 +372,8 @@ export function SC_Section4() {
   const daoQuizOptions = t('daoQuiz.options', { returnObjects: true }) as string[];
   const asxQuizOptions = t('asxQuiz.options', { returnObjects: true }) as string[];
 
+  const estQuizOptionsTyped = (t('estQuiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
+  const extraQuiz = t('quizMore', { returnObjects: true }) as Record<string, QuizItem>;
   const daoQuizOptionsTyped = daoQuizOptions.map((text, i) => ({ text, correct: i === 0 }));
   const asxQuizOptionsTyped = asxQuizOptions.map((text, i) => ({ text, correct: i === 2 }));
   const mainQuizOptions = (t('quiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
@@ -450,129 +532,66 @@ export function SC_Section4() {
 
 
         {/* ═══════ CASE: ESTONIA — SUCCESS ═══════ */}
-        <div id="s4-case-success" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-1">
-            <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-1">{t('caseSuccess.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('caseSuccess.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('caseSuccess.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
-            <div className="p-4 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest">{t('caseSuccess.backgroundLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {successBg.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('caseSuccess.useCasesLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {successUse.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#6366f1]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#39B54A]/10 to-transparent border border-[#39B54A]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('caseSuccess.resultsLabel')}</div>
-              <div className="grid grid-cols-1 gap-2">
-                {successRes.map((r, i) => (
-                  <div key={i} className="p-2 bg-card border border-border rounded-lg">
-                    <div className="font-mono font-black text-base text-[#39B54A]">{r.value}</div>
-                    <div className="text-[10px] text-muted-foreground">{r.label}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="text-xs text-muted-foreground p-2 bg-[#39B54A]/10 rounded-lg mt-auto">
-                <span className="font-semibold text-foreground">{t('caseSuccess.whyLabel')}</span>{t('caseSuccess.whyBody')}
-              </div>
-            </div>
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-case-success')} className="mt-3" />
-        </div>
+        <CaseSlide
+          id="s4-case-success"
+          accent="#39B54A"
+          kicker={t('caseSuccess.kicker')}
+          heading={t('caseSuccess.heading')}
+          subtitle={t('caseSuccess.subtitle')}
+          panels={[
+            { label: t('caseSuccess.backgroundLabel'), color: '#22d3ee', items: successBg },
+            { label: t('caseSuccess.useCasesLabel'),   color: '#6366f1', items: successUse },
+            { label: t('caseSuccess.resultsLabel'),    color: '#39B54A', stats: successRes },
+          ]}
+          lessonLabel={t('caseSuccess.whyLabel')}
+          lessonBody={t('caseSuccess.whyBody')}
+          keyPoint={t('keyPoints.s4-case-success')}
+        />
 
         {/* ═══════ CASE: THE DAO — SMART CONTRACT FAILURE ═══════ */}
-        <div id="s4-case-sc-fail" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-1 flex items-start gap-4">
-            <img src={imgDaoTimeline} alt={t('caseScFail.imgAlt')} className="hidden lg:block h-24 rounded-lg object-contain shrink-0 bg-white p-1" />
-            <div>
-              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest mb-1">{t('caseScFail.kicker')}</div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('caseScFail.heading')}</h2>
-              <p className="text-muted-foreground text-sm mt-1">{t('caseScFail.subtitle')}</p>
-            </div>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
-            <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('caseScFail.visionLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {scFailVision.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#6366f1]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#ED1C24]/10 to-transparent border border-[#ED1C24]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">{t('caseScFail.hackLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {scFailHack.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest">{t('caseScFail.responseLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {scFailResponse.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>{item}</li>
-                ))}
-              </ul>
-              <div className="p-2 bg-[#f59e0b]/10 rounded-lg text-xs text-muted-foreground mt-auto">
-                <span className="font-semibold text-foreground">{t('caseScFail.lessonsLabel')}</span>{t('caseScFail.lessonsBody')}
-              </div>
-            </div>
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-case-sc-fail')} className="mt-3" />
-        </div>
+        <CaseSlide
+          id="s4-case-sc-fail"
+          accent="#f59e0b"
+          kicker={t('caseScFail.kicker')}
+          heading={t('caseScFail.heading')}
+          subtitle={t('caseScFail.subtitle')}
+          image={<img src={imgDaoTimeline} alt={t('caseScFail.imgAlt')} className="hidden lg:block h-28 rounded-xl object-contain shrink-0 bg-white p-1.5" />}
+          panels={[
+            { label: t('caseScFail.visionLabel'),   color: '#6366f1', items: scFailVision },
+            { label: t('caseScFail.hackLabel'),     color: '#ED1C24', items: scFailHack },
+            { label: t('caseScFail.responseLabel'), color: '#f59e0b', items: scFailResponse },
+          ]}
+          lessonLabel={t('caseScFail.lessonsLabel')}
+          lessonBody={t('caseScFail.lessonsBody')}
+          keyPoint={t('keyPoints.s4-case-sc-fail')}
+        />
 
         {/* ═══════ CASE: ASX — ORGANISATIONAL FAILURE ═══════ */}
-        <div id="s4-case-org-fail" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-1 flex items-start gap-4">
-            <img src={imgAsxAsic} alt={t('caseOrgFail.imgAlt')} className="hidden lg:block h-24 rounded-lg object-cover shrink-0" />
-            <div>
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest mb-1">{t('caseOrgFail.kicker')}</div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('caseOrgFail.heading')}</h2>
-              <p className="text-muted-foreground text-sm mt-1">{t('caseOrgFail.subtitle')}</p>
-            </div>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
-            <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('caseOrgFail.backgroundLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {orgFailBg.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#6366f1]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#ED1C24]/10 to-transparent border border-[#ED1C24]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">{t('caseOrgFail.happenedLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {orgFailHappened.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest">{t('caseOrgFail.whyLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {orgFailWhy.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>{item}</li>
-                ))}
-              </ul>
-              <div className="p-2 bg-[#f59e0b]/10 rounded-lg text-xs text-muted-foreground mt-auto">
-                <span className="font-semibold text-foreground">{t('caseOrgFail.lessonLabel')}</span>{t('caseOrgFail.lessonBody')}
-              </div>
-            </div>
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-case-org-fail')} className="mt-3" />
+        <CaseSlide
+          id="s4-case-org-fail"
+          accent="#ED1C24"
+          kicker={t('caseOrgFail.kicker')}
+          heading={t('caseOrgFail.heading')}
+          subtitle={t('caseOrgFail.subtitle')}
+          image={<img src={imgAsxAsic} alt={t('caseOrgFail.imgAlt')} className="hidden lg:block h-28 rounded-xl object-cover shrink-0" />}
+          panels={[
+            { label: t('caseOrgFail.backgroundLabel'), color: '#6366f1', items: orgFailBg },
+            { label: t('caseOrgFail.happenedLabel'),   color: '#ED1C24', items: orgFailHappened },
+            { label: t('caseOrgFail.whyLabel'),        color: '#f59e0b', items: orgFailWhy },
+          ]}
+          lessonLabel={t('caseOrgFail.lessonLabel')}
+          lessonBody={t('caseOrgFail.lessonBody')}
+          keyPoint={t('keyPoints.s4-case-org-fail')}
+        />
+
+        {/* ═══════ QUIZ — ESTONIA ═══════ */}
+        <div id="s4-case-est-quiz" className="h-full">
+          <QuizSlide
+            compact
+            question={t('estQuiz.question')}
+            options={estQuizOptionsTyped}
+            explanation={t('estQuiz.explanation')}
+          />
         </div>
 
         {/* ═══════ QUIZ — DAO ═══════ */}
@@ -606,7 +625,19 @@ export function SC_Section4() {
           <KeyPointBar text={t('keyPoints.s4-adoption')} className="mt-3" />
         </div>
 
-        {/* ═══════ QUIZ ═══════ */}
+        {/* ═══════ QUIZ — section review (decision tree, fit, three checks, cases) ═══════ */}
+        {EXTRA_QUIZ.map((q) => (
+          <div key={q.id} id={q.id} className="h-full">
+            <QuizSlide
+              compact
+              question={extraQuiz[q.key].question}
+              options={extraQuiz[q.key].options.map((text, i) => ({ text, correct: i === q.correct }))}
+              explanation={extraQuiz[q.key].explanation}
+            />
+          </div>
+        ))}
+
+        {/* ═══════ QUIZ — bank bond ═══════ */}
         <div id="s4-quiz" className="h-full">
           <QuizSlide
             compact

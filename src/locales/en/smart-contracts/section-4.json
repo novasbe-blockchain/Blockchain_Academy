@@ -15,10 +15,15 @@
     "s4-case-success": "Estonia e-Residency",
     "s4-case-sc-fail": "The DAO",
     "s4-case-org-fail": "ASX CHESS",
+    "s4-case-est-quiz": "Quiz · Estonia",
     "s4-case-dao-quiz": "Quiz · DAO",
     "s4-case-asx-quiz": "Quiz · ASX",
     "s4-adoption": "Three Checks",
-    "s4-quiz": "Quiz",
+    "s4-quiz-tree": "Quiz 1 · Decision Tree",
+    "s4-quiz-fit": "Quiz 2 · Red Flags",
+    "s4-quiz-checks": "Quiz 3 · Three Checks",
+    "s4-quiz-cases": "Quiz 4 · Cases",
+    "s4-quiz": "Quiz 5 · Bank Bond",
     "s4-takeaways": "Takeaways"
   },
   "title": {
@@ -213,6 +218,16 @@
     "lessonLabel": "The lesson:",
     "lessonBody": " being able to use blockchain is not a reason to. Ask \"is a database better?\" first."
   },
+  "estQuiz": {
+    "question": "Estonia's e-Residency is the success story among the three cases. According to this section, why does it work?",
+    "options": [
+      "It publishes every citizen's records on a public blockchain, so anyone can verify them.",
+      "It pairs an institution people already trust (the state) with blockchain used narrowly, to prove records have not been altered.",
+      "It replaced government offices with smart contracts, so citizens no longer need to trust any institution.",
+      "It issued a national token whose sales fund the country's digital public services."
+    ],
+    "explanation": "Estonia is a hybrid: the government remains the trust anchor and the law gives digital signatures their weight, while the KSI blockchain does one narrow job, proving that records have not been tampered with. The records themselves stay in state databases; they are not published on a public chain. No institution was replaced and no token was issued. Blockchain here is infrastructure for integrity, not the product."
+  },
   "daoQuiz": {
     "question": "The DAO hack of 2016 drained $60M via a reentrancy bug. The Ethereum community executed a hard fork to reverse the attack — splitting the chain into ETH and ETC. What is the most important LESSON for smart contract designers?",
     "options": [
@@ -281,6 +296,48 @@
       "progress": { "label": "So far so good.", "body": "Mark the remaining checks." },
       "stop": { "label": "Not yet:", "body": "Fix this before spending on development, or go back to the decision tree." },
       "go": { "label": "Go.", "body": "All three hold. Start with a small pilot, not a full rollout." }
+    }
+  },
+  "quizMore": {
+    "tree": {
+      "question": "Five logistics companies must all write to one shared shipment record. They do not fully trust one another, but every one of them accepts the same industry clearing house as a neutral operator. Following the decision tree, where do they land?",
+      "options": [
+        "A smart contract platform.",
+        "A traditional database with access controls.",
+        "A simple, Bitcoin-like blockchain.",
+        "A database managed by the trusted third party."
+      ],
+      "explanation": "Walk the tree: shared database? Yes. Several writers? Yes. Do they fully trust each other? No, so access controls alone are not enough. Is there a third party everyone accepts? Yes, and the tree stops there: let the clearing house run the database. Blockchains only enter the picture when no such party exists; smart contracts only when, on top of that, complex business logic is needed."
+    },
+    "fit": {
+      "question": "A retailer wants to move its internal staff-rota and holiday-approval workflow \"onto the blockchain\". One company runs it, the approval rules change every few months, and the records contain employees' personal data. What does this section's framework say?",
+      "options": [
+        "Use a public-chain smart contract: immutability will stop managers from changing the rules.",
+        "Use a traditional database: a single trusted operator, frequently changing rules and personal data are all red flags.",
+        "Use a smart contract, but only after an independent security audit.",
+        "Use a simple, Bitcoin-like blockchain, because the logic is not complex."
+      ],
+      "explanation": "Three red flags from \"When to rethink\" appear at once: one party is already trusted to run the process, the rules must stay flexible (so immutability is a liability, not a benefit), and personal data does not belong on a ledger that cannot erase. An audit makes a contract safer; it does not make the use case fit. The decision tree agrees: with a single writer it exits at a traditional database long before any blockchain option."
+    },
+    "checks": {
+      "question": "A startup's idea passes the decision tree: several parties that distrust each other, real savings from automation, and partners willing to join. It has budgeted for an audit and has a pause plan. But the design stores customers' names and addresses directly on a public chain. Which of the three checks fails?",
+      "options": [
+        "Legal & regulatory: personal data on a ledger that cannot erase conflicts with GDPR's right to erasure.",
+        "Strategic fit: once personal data is involved, the parties no longer need trust-minimisation.",
+        "Risk & cost: storing names and addresses makes the security audit too expensive to afford.",
+        "None: an idea that passes the decision tree has already passed all three checks."
+      ],
+      "explanation": "The legal & regulatory check asks whether the law will stand behind the code, and one of its points is: no personal data on-chain, because GDPR's right to erasure meets a ledger that cannot erase. Strategic fit still holds (distrusting parties, real automation value, willing partners), and so does risk & cost (audit and pause plan are budgeted). The decision tree only says a smart contract could work; the three checks are a separate test. The usual fix is to keep personal data off-chain."
+    },
+    "cases": {
+      "question": "The DAO and the ASX CHESS replacement both failed. What is the key difference between the two failures?",
+      "options": [
+        "The DAO was stopped by regulators; ASX was drained by a reentrancy bug.",
+        "The DAO relied on one trusted operator; ASX had no one in charge at all.",
+        "The DAO's use case suited a blockchain but its contract code was flawed; ASX's use case never needed a blockchain in the first place.",
+        "There is none: both show that blockchains cannot handle financial applications."
+      ],
+      "explanation": "The DAO was \"right tool, wrong contract design\": pooled funding among strangers with no trusted referee fits a blockchain, but a reentrancy bug in a contract that could not be paused let $60M drain away. ASX was \"wrong tool\": one trusted operator already ran the record, so a database would have done the job. In terms of the three checks, The DAO failed on risk & cost and ASX failed on strategic fit, which is why you need all three before you build."
     }
   },
   "quiz": {
