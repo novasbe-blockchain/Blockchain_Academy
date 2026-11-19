@@ -21,7 +21,7 @@
     },
     "criticalThinking": {
       "title": "Critical Thinking & Adoption",
-      "description": "Apply a decision framework to determine when a smart contract is the right tool — and when a database is better. Run three checks before committing: strategic fit, legal & regulatory, risk & cost."
+      "description": "Apply a decision framework to determine when a smart contract is the right tool — and when a database is better. Explain what makes adoption succeed or fail across five pillars (strategy, technology, legal, risk, finance), and run three checks before committing."
     },
     "limitations": {
       "title": "Limitations & Security",

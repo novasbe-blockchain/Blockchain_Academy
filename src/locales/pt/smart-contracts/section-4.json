@@ -2,7 +2,8 @@
   "groups": {
     "g-decide": "🤔 Decidir",
     "g-cases": "📁 Três Lições",
-    "g-adopt": "🛠 Antes de Construir",
+    "g-adopt": "🛠 Adoção",
+    "g-strat": "📈 Estratégia",
     "g-close": "✅ Conclusão"
   },
   "chapters": {
@@ -18,7 +19,15 @@
     "s4-case-est-quiz": "Quiz · Estónia",
     "s4-case-dao-quiz": "Quiz · DAO",
     "s4-case-asx-quiz": "Quiz · ASX",
-    "s4-adoption": "Três Verificações",
+    "s4-adoption-intro": "Considerações de Adoção",
+    "s4-adoption-strategy": "Alinhamento Estratégico",
+    "s4-adoption-tech": "Infraestrutura Técnica",
+    "s4-adoption-legal": "Jurídico e Regulatório",
+    "s4-adoption-risk": "Gestão de Risco",
+    "s4-adoption-finance": "Planeamento Financeiro",
+    "s4-adoption": "🧩 Três Verificações",
+    "s4-opps-challenges": "Oportunidades e Desafios",
+    "s4-strategies": "Estratégia Competitiva",
     "s4-quiz-tree": "Quiz 1 · Árvore de Decisão",
     "s4-quiz-fit": "Quiz 2 · Sinais de Alerta",
     "s4-quiz-checks": "Quiz 3 · Três Verificações",
@@ -29,7 +38,7 @@
   "title": {
     "sectionNumber": "SECÇÃO 04",
     "title": "Pensamento Crítico",
-    "subtitle": "Quando usar um smart contract, quando não usar, e três verificações antes de construir."
+    "subtitle": "Quando usar um smart contract, quando não usar, e o que faz a adoção ter sucesso ou falhar."
   },
   "decisionFlow": {
     "badge": "🧩 Interativo",
@@ -248,10 +257,175 @@
     ],
     "explanation": "O CHESS é gerido por um único operador de confiança (a ASX), com um conjunto reduzido e conhecido de participantes. A blockchain ajuda quando partes que não confiam entre si precisam de um registo único sem intermediário; a ASX é esse intermediário, por mandato. Pergunta primeiro \"em quem não confiamos?\"; se a resposta for \"em ninguém\", ganha a base de dados."
   },
+  "sf": {
+    "ok": "Tem sucesso quando",
+    "ko": "Falha quando",
+    "caseLabel": "Nos casos:"
+  },
+  "adoptionIntro": {
+    "kicker": "Considerações de adoção",
+    "heading": "O que faz um projeto de blockchain ter sucesso ou falhar",
+    "subtitle": "Adotar smart contracts é uma mudança organizacional, não apenas um projeto tecnológico. Cinco pilares decidem o resultado; só um é a tecnologia.",
+    "pillars": [
+      { "label": "Alinhamento Estratégico", "desc": "Caso de uso, métricas de sucesso, apoio da direção, formação do pessoal", "ok": "Um problema real, com um número associado", "ko": "Uma solução à procura de um problema", "caseName": "ASX CHESS", "caseNote": "a necessidade nunca existiu" },
+      { "label": "Infraestrutura Técnica", "desc": "Plataforma escalável, integração com sistemas legados, preparação de TI", "ok": "Liga-se aos sistemas que a empresa já usa", "ko": "Uma demo que nunca se liga a nada", "caseName": "ASX CHESS", "caseNote": "não cumpriu os requisitos de desempenho" },
+      { "label": "Jurídico e Regulatório", "desc": "Exequibilidade, conformidade em todas as jurisdições", "ok": "Os juristas entram antes da primeira linha de código", "ko": "A revisão jurídica só chega depois do lançamento", "caseName": "Estónia", "caseNote": "a lei reconhece as suas assinaturas digitais" },
+      { "label": "Gestão de Risco", "desc": "Auditorias, resposta a incidentes, planeamento da imutabilidade", "ok": "Auditado, monitorizado, e alguém o pode pausar", "ko": "Um bug e nenhuma forma de o travar", "caseName": "The DAO", "caseNote": "um bug, 60M$ drenados, sem pausa" },
+      { "label": "Planeamento Financeiro", "desc": "Custos iniciais, gas contínuo, prazo de ROI", "ok": "O orçamento dura até as poupanças chegarem", "ko": "O dinheiro acaba antes de a rede ser usada", "caseName": "ASX CHESS", "caseNote": "mais de 255M$ AUD gastos, nada entregue" }
+    ],
+    "footnote": "A seguir: um slide por pilar; depois passas a tua própria ideia por três verificações."
+  },
+  "adoptionStrategy": {
+    "kicker": "Pilar 01 de 05",
+    "heading": "Alinhamento Estratégico",
+    "subtitle": "O projeto serve um propósito de negócio claro, ou é blockchain pela blockchain?",
+    "items": [
+      { "title": "Caso de uso", "ok": "Parte de um problema real: trabalho manual, um intermediário dispendioso ou registos partilhados sem confiança.", "ko": "Parte da tecnologia e vai à procura de um problema que a justifique." },
+      { "title": "Métricas de sucesso", "ok": "Metas mensuráveis acordadas à partida: custos reduzidos, dias transformados em minutos, menos erros.", "ko": "Sem números, ninguém sabe dizer se resultou nem quando parar." },
+      { "title": "Apoio da direção", "ok": "Um patrocinador sénior assume o projeto e mantém-no financiado nos primeiros contratempos.", "ko": "Sem patrocinador, estagna ao primeiro obstáculo técnico." },
+      { "title": "Formação do pessoal", "ok": "Quem usa e apoia o sistema recebe formação, e essa formação está no orçamento.", "ko": "O pessoal não o compreende e continua a trabalhar à maneira antiga." }
+    ],
+    "caseBody": " a ASX CHESS falhou aqui. Já existia um operador de confiança a gerir o registo, e a bolsa, os corretores e o fornecedor nunca estiveram alinhados."
+  },
+  "adoptionTech": {
+    "kicker": "Pilar 02 de 05",
+    "heading": "Infraestrutura Técnica",
+    "subtitle": "Há uma base sólida por baixo do contrato: plataforma, integração e pessoas para o operar?",
+    "items": [
+      { "title": "Plataforma escalável", "ok": "A chain responde às tuas necessidades de volume, velocidade e finalidade.", "ko": "A plataforma é escolhida pelo hype e não aguenta a carga." },
+      { "title": "Integração com sistemas legados", "ok": "As ligações ao ERP, ao CRM e a outros sistemas são planeadas desde o primeiro dia.", "ko": "Funciona numa demo, mas nunca comunica com os sistemas que o negócio usa." },
+      { "title": "Capacidade de TI e operações", "ok": "Há engenheiros contratados ou formados para incidentes de blockchain antes do lançamento.", "ko": "Ninguém na empresa o sabe operar, e contratar leva meses." },
+      { "title": "Identidade e acesso", "ok": "KYC, papéis e gestão de chaves (multisig) ficam definidos antes da implementação.", "ko": "Uma única pessoa detém a única chave." },
+      { "title": "Arquitetura de dados", "ok": "Os dados sensíveis ficam off-chain; a chain guarda apenas hashes.", "ko": "Dados confidenciais são escritos numa chain pública, onde ficam para sempre." },
+      { "title": "Monitorização e análise", "ok": "Explorers, indexadores e painéis funcionam como qualquer monitorização de produção.", "ko": "Ninguém está a vigiar; o primeiro alerta é a queixa de um cliente." }
+    ]
+  },
+  "adoptionLegal": {
+    "kicker": "Pilar 03 de 05",
+    "heading": "Jurídico e Regulatório",
+    "subtitle": "Os smart contracts misturam código e direito. A lei vai apoiar o código, em todos os países em que toca?",
+    "items": [
+      { "title": "Exequibilidade", "ok": "O código é acompanhado de um acordo escrito que a lei reconhece como contrato.", "ko": "O código é o único acordo." },
+      { "title": "Estatuto do token", "ok": "Qualquer token é avaliado face às regras de valores mobiliários antes da emissão (teste de Howey, MiCA).", "ko": "O token é vendido primeiro e classificado por um regulador depois." },
+      { "title": "Litígios", "ok": "Uma via de arbitragem e um mecanismo de pausa são acordados de antemão.", "ko": "Não há forma de parar ou desfazer nada quando as partes discordam." },
+      { "title": "Utilizadores e fronteiras", "ok": "As verificações de KYC/AML e de sanções cobrem todos os países de onde vêm os utilizadores.", "ko": "Aberto a qualquer pessoa, em qualquer lugar, sem verificações." },
+      { "title": "Privacidade de dados", "ok": "Nada que acione o RGPD é guardado on-chain.", "ko": "Há dados pessoais num registo que não pode apagar." },
+      { "title": "Fiscalidade", "ok": "Fica definido cedo onde se acumula a receita e onde os utilizadores devem impostos.", "ko": "O tratamento fiscal só é descoberto na altura da auditoria." }
+    ],
+    "crossLabel": "Uma venda de tokens, três respostas:",
+    "cross": [
+      { "place": "Singapura", "note": "pode ser legal" },
+      { "place": "Estados Unidos", "note": "pode levar a uma ação da SEC" },
+      { "place": "União Europeia", "note": "aplicam-se as regras do MiCA (desde 2024)" }
+    ]
+  },
+  "adoptionRisk": {
+    "kicker": "Pilar 04 de 05",
+    "heading": "Gestão de Risco",
+    "subtitle": "Os contratos implementados são difíceis de alterar e executam-se automaticamente. O que acontece no dia em que algo falha?",
+    "phases": [
+      {
+        "label": "Antes do lançamento",
+        "items": [
+          { "title": "Auditorias de segurança", "ok": "Pelo menos uma auditoria independente, idealmente duas, antes do lançamento.", "ko": "Lançar sem auditoria para cumprir um prazo." },
+          { "title": "Verificação formal", "ok": "Nos contratos de alto valor, as propriedades-chave são provadas matematicamente.", "ko": "Só os testes protegem código que guarda milhões." }
+        ]
+      },
+      {
+        "label": "Incluído no desenho",
+        "items": [
+          { "title": "Caminho de atualização", "ok": "As atualizações são possíveis, mas só através de um timelock e de um multisig.", "ko": "Não há forma de corrigir, ou uma única chave de administração pode mudar tudo." },
+          { "title": "Plano de resposta a incidentes", "ok": "Está escrito quem pausa o contrato e quem avisa os utilizadores.", "ko": "Decidir quem manda enquanto os fundos são drenados." }
+        ]
+      },
+      {
+        "label": "Depois do lançamento",
+        "items": [
+          { "title": "Bug bounty", "ok": "Pessoas de fora são pagas para reportar bugs.", "ko": "Os únicos à procura de bugs são os atacantes." },
+          { "title": "Monitorização em produção", "ok": "Alertas em tempo real assinalam fluxos invulgares.", "ko": "Ficas a saber do ataque pelas redes sociais." }
+        ]
+      }
+    ],
+    "caseBody": " a The DAO falhou aqui: um bug de reentrância, 60M$ drenados e nenhuma forma de pausar o contrato."
+  },
+  "adoptionFinance": {
+    "kicker": "Pilar 05 de 05",
+    "heading": "Planeamento Financeiro",
+    "subtitle": "Os custos iniciais são reais. As poupanças da automação chegam mais tarde, e só se a rede for usada.",
+    "chart": {
+      "title": "Posição de caixa acumulada (ilustrativo)",
+      "build": "Construção",
+      "launch": "Lançamento",
+      "breakeven": "Ponto de equilíbrio",
+      "time": "Tempo",
+      "ok": "Sucesso",
+      "ko": "Falha"
+    },
+    "ok": "a rede é usada, as poupanças superam os custos correntes e o orçamento cobriu os anos intermédios.",
+    "ko": "ninguém adere, e os custos de gas, monitorização e conformidade continuam sem poupanças que os paguem.",
+    "upfrontLabel": "Custos iniciais (uma só vez)",
+    "upfront": [
+      { "label": "Montagem da infraestrutura", "range": "5k$–50k$" },
+      { "label": "Desenvolvimento de smart contracts", "range": "30k$–300k$" },
+      { "label": "Auditorias de segurança", "range": "20k$–150k$" },
+      { "label": "Consultoria jurídica e regulatória", "range": "10k$–100k$+" },
+      { "label": "Formação do pessoal", "range": "5k$–50k$" }
+    ],
+    "ongoingLabel": "Custos contínuos (recorrentes)",
+    "ongoing": [
+      { "label": "Taxas de gas", "range": "variável" },
+      { "label": "Infraestrutura de nós", "range": "200$–5k$/mês" },
+      { "label": "Manutenção e monitorização", "range": "5k$–30k$/mês" },
+      { "label": "Fundo de bug bounty", "range": "10k$–1M$+" },
+      { "label": "Conformidade e reporte", "range": "5k$–50k$/mês" }
+    ],
+    "footnote": "Os intervalos são ilustrativos e variam muito consoante a região, a complexidade e os requisitos."
+  },
+  "oppsChallenges": {
+    "kicker": "Oportunidades e desafios",
+    "heading": "Oportunidades e Desafios",
+    "subtitle": "Cada oportunidade é uma razão para os projetos terem sucesso. O desafio ao lado é uma razão para falharem.",
+    "opportunitiesLabel": "Oportunidades: porque têm sucesso",
+    "challengesLabel": "Desafios: porque falham",
+    "vs": "vs",
+    "opportunities": [
+      { "label": "Velocidade de liquidação", "desc": "Segundos em vez de dias; o valor atravessa fronteiras à velocidade da internet." },
+      { "label": "Fluxos de caixa programáveis", "desc": "Escrow, royalties e pagamentos por etapas executam-se sozinhos." },
+      { "label": "Novos modelos de negócio", "desc": "DAO, ativos tokenizados, propriedade fracionada, pagamentos máquina a máquina." },
+      { "label": "Efeitos de rede", "desc": "Cada novo contrato pode ligar-se a todos os outros na mesma chain." }
+    ],
+    "challenges": [
+      { "label": "Limites de escalabilidade", "desc": "As chains públicas limitam o débito; as L2 ajudam, mas trazem a sua própria complexidade." },
+      { "label": "Experiência do utilizador", "desc": "Carteiras, chaves, taxas de gas e tempos de espera são atrito que o utilizador comum não tolera." },
+      { "label": "Talento escasso", "desc": "Poucos engenheiros dominam Solidity, a mecânica do gas e a EVM." },
+      { "label": "Interoperabilidade", "desc": "As bridges entre chains são frágeis e uma das principais fontes de exploits." }
+    ],
+    "ok": "o projeto garante uma oportunidade mensurável e tem um plano para o desafio ao lado.",
+    "ko": "a proposta conta com todas as oportunidades e não põe preço em nenhum dos desafios.",
+    "sources": "Fontes: Nzuva (2019); Perlman (2019); Dal Mas, Dicuonzo, Massaro & Dell'Atti (2019); Khan et al. (2021); Virani (2024)."
+  },
+  "strategies": {
+    "kicker": "Estratégia competitiva",
+    "heading": "Estratégias para Vantagem Competitiva",
+    "subtitle": "Seis tentativas reais de transformar smart contracts numa vantagem. Duas delas encerraram.",
+    "workedLabel": "Resultou: um custo real eliminado",
+    "closedLabel": "Encerrou: faltou o negócio",
+    "items": [
+      { "name": "Compound", "moat": "Crédito sem intermediário", "desc": "As taxas de juro são definidas por um algoritmo on-chain; não há banco no meio.", "why": "Elimina um intermediário que mutuários e mutuantes estavam a pagar." },
+      { "name": "Uniswap", "moat": "Liquidez sem permissão", "desc": "Qualquer pessoa pode listar um token; um market maker automático substitui o livro de ordens.", "why": "Outras aplicações constroem sobre ela, e cada nova aumenta a sua liquidez." },
+      { "name": "Propy", "moat": "Atrito imobiliário", "desc": "Vendas de imóveis registadas como escrituras em NFT, onde a lei o permite.", "why": "Ataca um processo em papel lento e caro, e trabalha com a lei, não contra ela." },
+      { "name": "Home Depot", "moat": "Verdade na cadeia de abastecimento", "desc": "Partilha registos de entregas com fornecedores na IBM Blockchain.", "why": "Litígios que levavam meses a rastrear ficam visíveis para ambos quase em tempo real." },
+      { "name": "we.trade", "moat": "Financiamento ao comércio B2B", "status": "Encerrou em 2022", "desc": "Consórcio bancário (Hyperledger Fabric) para o comércio transfronteiriço de PME. Governar em consórcio é difícil.", "why": "Ficou sem dinheiro quando os bancos acionistas não quiseram investir mais." },
+      { "name": "AXA Fizzy", "moat": "Seguro paramétrico", "status": "Encerrou em 2019", "desc": "Seguro de atraso de voos na Ethereum, com pagamentos automáticos via oracle. Provou o padrão, não o mercado.", "why": "Os pagamentos funcionaram, mas poucos clientes compraram o seguro." }
+    ],
+    "lessonLabel": "O padrão:",
+    "lessonBody": " nenhuma das seis ganhou só pela tecnologia. As que resultaram eliminaram um custo real e deram aos outros uma razão para aderir.",
+    "sources": "Fontes: IBM (2017, 2019); Gemini Cryptopedia (2025); Eurofinance (2024); Global Trade Review (2022); Insurance Post (2019)."
+  },
   "adoption": {
-    "kicker": "Antes de construir",
+    "kicker": "A tua vez",
     "heading": "Três verificações antes de te comprometeres",
-    "subtitle": "A árvore de decisão diz que um smart contract pode funcionar. Passa a tua própria ideia por estas três: cada uma verifica-se?",
+    "subtitle": "Os cinco pilares, resumidos em três verificações de avançar ou parar. Passa a tua própria ideia por elas: cada uma verifica-se?",
     "checkLabel": "Verificação {{num}}",
     "seenIn": "Visto em:",
     "pass": "Verifica-se",
@@ -357,7 +531,7 @@
       "Sinais a favor de um smart contract: várias partes, nenhum árbitro de confiança, valor real na automação, imutabilidade como vantagem",
       "Sinais de alerta: um único operador de confiança, dados privados, regras que mudam com frequência, sem retorno claro",
       "Três lições do terreno: Estónia (ferramenta certa, organização certa), The DAO (ferramenta certa, desenho de contrato errado), ASX CHESS (ferramenta errada)",
-      "Antes de construir, três verificações: adequação estratégica, jurídico e regulatório, risco e custo. Se uma falhar, resolve-a primeiro",
+      "Os projetos têm sucesso ou falham em cinco pilares: estratégia, tecnologia, jurídico, risco e finanças. Antes de construir, faz as três verificações; se uma falhar, resolve-a primeiro",
       "A vantagem vem de eliminar um problema genuíno de intermediação, não de \"fazer blockchain\""
     ]
   },
@@ -370,6 +544,14 @@
     "s4-case-success": "Estonia won by treating blockchain as boring infrastructure for integrity — not as a product to sell.",
     "s4-case-sc-fail": "The DAO's use case fit blockchain perfectly; one bug drained $60M because code is enforced even when it is wrong.",
     "s4-case-org-fail": "ASX spent $255M on a blockchain for a problem one trusted party already solved — the framework would have said no on day one.",
-    "s4-adoption": "The decision tree asks whether a smart contract could work; these three checks ask whether your organisation should build it."
+    "s4-adoption-intro": "Adoption is an organisational change; strategy, legal and risk teams decide the outcome.",
+    "s4-adoption-strategy": "Start from the business problem and the parties who must join; a blockchain nobody joins is an expensive database.",
+    "s4-adoption-tech": "The chain removes a middleman, not your IT department.",
+    "s4-adoption-legal": "Pair the code with a normal legal agreement; courts enforce contracts, not code.",
+    "s4-adoption-risk": "Audits, timelocks and upgrade paths are the price of code you cannot patch.",
+    "s4-adoption-finance": "High upfront cost, low marginal cost; the savings arrive only if the network is used.",
+    "s4-adoption": "The decision tree asks whether a smart contract could work; these three checks ask whether your organisation should build it.",
+    "s4-opps-challenges": "Settlement speed and programmable cash flows are measurable wins; scale, interoperability and usability are problems no single company can fix alone.",
+    "s4-strategies": "Advantage comes from the network, not the technology; the code is open to every competitor."
   }
 }
