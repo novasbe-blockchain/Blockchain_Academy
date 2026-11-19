@@ -185,55 +185,75 @@
   "exercise": {
     "badge": "Interactive",
     "heading": "Contract or not?",
-    "subtitle": "Six everyday agreements. Could each run as code, or does it need a person or an institution?",
+    "subtitle": "Six real situations. Is a smart contract a good fit, or would a company database or a human decision do the job better?",
     "scoreLabel": "correct so far",
     "reset": "↺ Reset",
-    "yes": "Could be a smart contract",
-    "no": "Needs a human / institution",
-    "resultSc": "Could be a smart contract",
-    "resultNotSc": "Needs a human / institution",
+    "yes": "Good fit",
+    "no": "Better without one",
+    "resultSc": "Good fit for a smart contract",
+    "resultNotSc": "Better without a smart contract",
     "scenarios": [
       {
-        "title": "A vending machine",
-        "desc": "Insert coins, pick a snack, get it — or get your coins back.",
-        "reason": "Fixed rule, instant check, automatic delivery — Szabo's original smart contract."
+        "title": "Flight-delay insurance",
+        "desc": "An insurer promises: if your flight lands more than two hours late, you are paid automatically, with no claim form.",
+        "reason": "A simple rule triggered by a public fact. The payout is locked in, so the customer does not have to trust the insurer to honour it. It still needs a reliable feed of arrival times."
       },
       {
-        "title": "A Netflix subscription",
-        "desc": "Pay monthly for access to a video library run by one company.",
-        "reason": "One company runs the content, the servers and the rules — nothing needs trustless enforcement. A billing database wins."
+        "title": "A streaming subscription",
+        "desc": "You pay one company a monthly fee to watch its video library.",
+        "reason": "One company owns the content, the accounts and the billing, and you already trust it with your card. Nobody else needs to check the rule, so an ordinary database is cheaper."
       },
       {
-        "title": "Escrow for a house sale",
-        "desc": "Buyer's money is held until the title transfer is confirmed, then released.",
-        "reason": "Funds move only when a verifiable condition is met — the textbook pattern (Propy does this today). The title itself still needs the land registry."
+        "title": "Fault in a car accident",
+        "desc": "Two drivers disagree about who caused a crash and how much the damage is worth.",
+        "reason": "This needs someone to weigh evidence and decide what is fair. Code can only run a rule that was fixed in advance; it cannot judge."
       },
       {
-        "title": "A loyalty-points scheme",
-        "desc": "Earn points at one retailer, spend them at the same retailer.",
-        "reason": "A single issuer defines, prices and can cancel the points. It is their database — a blockchain adds cost, not trust."
+        "title": "All-or-nothing crowdfunding",
+        "desc": "Hundreds of strangers pledge money to a project. If the target is not reached by the deadline, everyone is refunded.",
+        "reason": "Strangers, pooled money and a rule that is pure arithmetic: target met by the deadline, or not. Code can hold the funds, so no platform has to be trusted with them."
       },
       {
-        "title": "A court judgement",
-        "desc": "A judge decides who was at fault and what the compensation is.",
-        "reason": "Needs interpretation of facts, intent and fairness. Code executes; it does not judge."
+        "title": "Splitting a song's income",
+        "desc": "Three co-writers agree that every payment the song earns is divided 50 / 30 / 20 between them.",
+        "reason": "A fixed split between several parties who would otherwise rely on one manager's accounting. Code divides each payment as it arrives, for all to see."
       },
       {
-        "title": "Flight-delay insurance payout",
-        "desc": "If your flight lands more than two hours late, you are paid automatically.",
-        "reason": "The delay is a public, checkable fact — an oracle reports it and the payout fires by itself (parametric insurance)."
+        "title": "A company's payroll",
+        "desc": "One employer pays its own staff every month and corrects mistakes when they happen.",
+        "reason": "One employer, its own records, and errors that must be reversible. A public rule that is hard to change would expose salaries and make corrections difficult."
       }
     ]
   },
   "quiz": {
-    "question": "Three rival freight companies and their insurer want one shared rule: pay compensation automatically when a shipment arrives late. What is the strongest reason to use a smart contract instead of one company's database?",
+    "question": "Three rival freight companies and their insurer want one shared rule: pay compensation automatically when a shipment arrives late. What is the strongest reason to run that rule as a smart contract instead of in one company's database?",
     "options": [
       "It is cheaper and faster to run than a database.",
-      "No single party has to be trusted to run the rule, and none of them can change it afterwards.",
+      "No single company has to be trusted to run the rule, and none of them can quietly change it.",
       "The code automatically counts as a legally binding contract between them.",
-      "It is smart enough to handle unusual cases fairly."
+      "It can use judgement to treat unusual cases fairly."
     ],
-    "explanation": "Rivals will not accept a rule that sits in one competitor's database, because its owner could change it. A smart contract gives them one rule that nobody controls. The other answers are the hype: a database is cheaper and faster, the code is not a legal contract by itself, and it has no judgement, so it runs exactly what was written."
+    "explanation": "Rivals will not accept a rule that sits in one competitor's database, because its owner could change it. A smart contract gives them one rule that no single party controls. The other answers are the hype: a database is cheaper and faster, code is not a legal contract by itself, and a smart contract has no judgement, so it runs exactly what was written."
+  },
+  "quiz2": {
+    "question": "A supermarket chain wants to move its loyalty points \"onto the blockchain\". Points are earned and spent only in its own stores. What is the best advice?",
+    "options": [
+      "Go ahead: a smart contract would make the points cheaper to run.",
+      "Do not: a smart contract cannot keep track of balances.",
+      "Do not: one company issues and controls the points, so its own database does the same job for less.",
+      "Go ahead: customers would then own points the chain could never cancel."
+    ],
+    "explanation": "A smart contract pays off when several parties need a rule that none of them controls. Here one trusted company issues, prices and redeems the points, so there is no one else to convince and a database is cheaper. The other answers fail on the facts: every on-chain step costs a network fee, contracts track balances perfectly well (that is what tokens are), and points spent only in the chain's own stores are worth whatever the chain decides to honour."
+  },
+  "quiz3": {
+    "question": "In 2016 an attacker drained about $60M from The DAO, an investment fund run entirely by a smart contract. What should a business take from that episode?",
+    "options": [
+      "A contract runs exactly what was written, flaws included, so it must be audited before money goes in.",
+      "The Ethereum network itself was broken into, so public chains are unsafe.",
+      "Smart contracts are too simple to hold large sums.",
+      "Contract code should be kept secret so that attackers cannot read it."
+    ],
+    "explanation": "The network worked as designed. The flaw was in the contract's own code, and the code did exactly what it said, with no manager able to step in and stop it. That is why contracts holding real money are audited before launch. Hiding the code is not the fix: public code is what lets everyone check the rule they are relying on."
   },
   "takeaways": {
     "title": "Section 01 — Key Takeaways",
@@ -304,7 +324,7 @@
     "s1-why": "A smart contract earns its place only when one shared, un-bendable rule beats trusting a lawyer, an agent or a database owner.",
     "s1-recap": "A smart contract is self-running code on a shared chain: vending-machine logic, no clerk.",
     "s1-hype": "Not legal, not smart, not free, not unstoppable; the value is removing a middleman, locking a rule and settling fast.",
-    "s1-exercise": "If one trusted institution already runs the process well, a smart contract adds cost, not trust.",
+    "s1-exercise": "A smart contract fits when parties who do not trust each other share a rule that code can check. With one trusted owner, or a judgement call, it adds cost, not trust.",
     "s1-history": "Every expensive lesson in thirty years came from code doing exactly what it was told."
   }
 }
