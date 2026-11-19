@@ -6,7 +6,7 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
-import { Brain } from 'lucide-react';
+import { Brain, Target, Scale, ShieldAlert, Check, X, ArrowUpRight } from 'lucide-react';
 import { ClassDiscussion } from '../../components/shared/ClassDiscussion';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
@@ -33,16 +33,7 @@ const chapterShape = [
   { id: 's4-case-asx-quiz' },
 
   { kind: 'group' as const, id: 'g-adopt' },
-  { id: 's4-adoption-intro' },
-  { id: 's4-adoption-strategy' },
-  { id: 's4-adoption-tech' },
-  { id: 's4-adoption-legal' },
-  { id: 's4-adoption-risk' },
-  { id: 's4-adoption-finance' },
-
-  { kind: 'group' as const, id: 'g-strat' },
-  { id: 's4-opps-challenges' },
-  { id: 's4-strategies' },
+  { id: 's4-adoption' },
 
   { kind: 'group' as const, id: 'g-close' },
   { id: 's4-quiz' },
@@ -165,35 +156,111 @@ function DecisionFlow() {
 interface TitleDesc { title: string; desc: string }
 interface ChartStep { q: string; verdict: string }
 interface ResultStat { value: string; label: string }
-interface PillarItem { label: string; desc: string }
-interface CostItem { label: string; range: string; desc: string }
-interface OppItem { label: string; desc: string }
-interface StrategyItem { name: string; moat: string; desc: string }
+interface CheckItem { title: string; question: string; points: string[]; caseName: string; caseNote: string }
 const YES_EMOJI = ['👥', '⚡', '🔍', '💰', '🔓', '🔒', '🌍'];
 const NO_EMOJI = ['🏢', '⚡', '🔄', '📦', '🤐', '⚖️', '🧑', '💸'];
-const PILLAR_META = [
-  { num: '01', emoji: '🎯', color: '#6366f1' },
-  { num: '02', emoji: '🏗', color: '#8b5cf6' },
-  { num: '03', emoji: '⚖️', color: '#22d3ee' },
-  { num: '04', emoji: '🛡', color: '#ED1C24' },
-  { num: '05', emoji: '💰', color: '#39B54A' },
-];
-const STRATEGY_META = [
-  { color: '#6366f1' }, { color: '#8b5cf6' }, { color: '#39B54A' },
-  { color: '#22d3ee' }, { color: '#f59e0b' }, { color: '#ec4899' },
-];
-const ADOPTION_STRATEGY_COLORS = ['#6366f1', '#8b5cf6', '#22d3ee', '#39B54A'];
-const ADOPTION_TECH_META = [
-  { emoji: '⚡', color: '#8b5cf6' }, { emoji: '🔌', color: '#6366f1' }, { emoji: '🛠', color: '#22d3ee' },
-  { emoji: '🔐', color: '#39B54A' }, { emoji: '💾', color: '#f59e0b' }, { emoji: '📊', color: '#ec4899' },
-];
-const RISK_META = [
-  { emoji: '🔍', color: '#ED1C24' }, { emoji: '🧮', color: '#f59e0b' }, { emoji: '💰', color: '#8b5cf6' },
-  { emoji: '⚙️', color: '#6366f1' }, { emoji: '🚨', color: '#22d3ee' }, { emoji: '📡', color: '#39B54A' },
-];
-const STRATEGY_EMOJI = ['🏦', '🌐', '🦄', '🏡', '✈️', '🛠'];
 
-// Rebuild a rich-text bullet (text + bold/italic spans) from a structured item.
+// ─── Adoption: three checks before you build ─────────────────────────────────
+// Language-neutral: icon, colour and the case slide each check points back to.
+const CHECK_META = [
+  { id: 'fit',   Icon: Target,      color: '#6366f1', caseId: 's4-case-org-fail' },
+  { id: 'legal', Icon: Scale,       color: '#22d3ee', caseId: 's4-case-success' },
+  { id: 'risk',  Icon: ShieldAlert, color: '#f59e0b', caseId: 's4-case-sc-fail' },
+] as const;
+const PASS = '#39B54A';
+const FAIL = '#ED1C24';
+
+function AdoptionChecks() {
+  const { t } = useTranslation('smart-contracts/section-4');
+  const items = t('adoption.items', { returnObjects: true }) as CheckItem[];
+  const [marks, setMarks] = useState<Record<string, 'pass' | 'fail'>>({});
+
+  const mark = (id: string, v: 'pass' | 'fail') =>
+    setMarks((m) => {
+      const next = { ...m };
+      if (next[id] === v) delete next[id]; else next[id] = v;
+      return next;
+    });
+
+  const answered = Object.keys(marks).length;
+  const failing = CHECK_META.map((m, i) => ({ m, item: items[i] })).filter(({ m }) => marks[m.id] === 'fail');
+  const state: 'idle' | 'progress' | 'stop' | 'go' =
+    failing.length > 0 ? 'stop' : answered === CHECK_META.length ? 'go' : answered > 0 ? 'progress' : 'idle';
+  const stateColor = state === 'stop' ? FAIL : state === 'go' ? PASS : '#6366f1';
+
+  const goToCase = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+
+  return (
+    <>
+      <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
+        {CHECK_META.map((meta, i) => {
+          const item = items[i];
+          const m = marks[meta.id];
+          const border = m === 'pass' ? PASS : m === 'fail' ? FAIL : meta.color + '40';
+          return (
+            <div key={meta.id} className="p-4 lg:p-5 bg-card border-2 rounded-xl flex flex-col gap-3 transition-colors" style={{ borderColor: border }}>
+              <div className="flex items-center gap-3">
+                <div className="size-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: meta.color + '1f' }}>
+                  <meta.Icon className="size-6" style={{ color: meta.color }} />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: meta.color }}>{t('adoption.checkLabel', { num: i + 1 })}</div>
+                  <div className="font-bold text-base text-foreground leading-tight">{item.title}</div>
+                </div>
+              </div>
+              <div className="text-lg lg:text-xl font-black text-foreground leading-snug">{item.question}</div>
+              <ul className="text-xs text-muted-foreground space-y-1.5">
+                {item.points.map((pt, j) => (
+                  <li key={j} className="flex gap-1.5"><span style={{ color: meta.color }}>›</span>{pt}</li>
+                ))}
+              </ul>
+              <button type="button" onClick={() => goToCase(meta.caseId)}
+                className="mt-auto p-2 rounded-lg text-left text-xs text-muted-foreground hover:brightness-110 transition"
+                style={{ backgroundColor: meta.color + '1a' }}>
+                <span className="font-semibold text-foreground inline-flex items-center gap-1">
+                  {t('adoption.seenIn')} {item.caseName}<ArrowUpRight className="size-3" />
+                </span>
+                <span className="block mt-0.5">{item.caseNote}</span>
+              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button type="button" aria-pressed={m === 'pass'} onClick={() => mark(meta.id, 'pass')}
+                  className="px-3 py-1.5 rounded-lg border text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors"
+                  style={m === 'pass' ? { backgroundColor: PASS, borderColor: PASS, color: '#fff' } : { borderColor: PASS + '66', color: PASS }}>
+                  <Check className="size-3.5" strokeWidth={3} />{t('adoption.pass')}
+                </button>
+                <button type="button" aria-pressed={m === 'fail'} onClick={() => mark(meta.id, 'fail')}
+                  className="px-3 py-1.5 rounded-lg border text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors"
+                  style={m === 'fail' ? { backgroundColor: FAIL, borderColor: FAIL, color: '#fff' } : { borderColor: FAIL + '66', color: FAIL }}>
+                  <X className="size-3.5" strokeWidth={3} />{t('adoption.fail')}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Verdict strip — updates as the class marks each check for its own idea */}
+      <div className="shrink-0 mt-4 px-4 py-2.5 rounded-xl border-2 flex items-center gap-3 transition-colors"
+        style={{ borderColor: stateColor + '80', backgroundColor: stateColor + '14' }}>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {CHECK_META.map((meta) => {
+            const m = marks[meta.id];
+            return (
+              <span key={meta.id} className="size-3 rounded-full border-2"
+                style={{ borderColor: m === 'pass' ? PASS : m === 'fail' ? FAIL : 'var(--border)', backgroundColor: m === 'pass' ? PASS : m === 'fail' ? FAIL : 'transparent' }} />
+            );
+          })}
+        </div>
+        <div className="text-sm text-foreground">
+          <span className="font-black" style={{ color: stateColor }}>{t(`adoption.verdict.${state}.label`)}</span>{' '}
+          {state === 'stop' && <span className="font-semibold">{failing.map(({ item }) => item.title).join(' · ')}. </span>}
+          <span className="text-muted-foreground">{t(`adoption.verdict.${state}.body`)}</span>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export function SC_Section4() {
   const { t } = useTranslation('smart-contracts/section-4');
 
@@ -224,20 +291,6 @@ export function SC_Section4() {
 
   const daoQuizOptions = t('daoQuiz.options', { returnObjects: true }) as string[];
   const asxQuizOptions = t('asxQuiz.options', { returnObjects: true }) as string[];
-
-  const pillars        = t('adoptionIntro.pillars', { returnObjects: true }) as PillarItem[];
-  const strategyItems  = t('adoptionStrategy.items', { returnObjects: true }) as TitleDesc[];
-  const techItems      = t('adoptionTech.items', { returnObjects: true }) as TitleDesc[];
-  const legalEngage    = t('adoptionLegal.engage', { returnObjects: true }) as string[];
-  const legalCross     = t('adoptionLegal.crossPoints', { returnObjects: true }) as string[];
-  const riskItems      = t('adoptionRisk.items', { returnObjects: true }) as TitleDesc[];
-  const upfrontCosts   = t('adoptionFinance.upfront', { returnObjects: true }) as CostItem[];
-  const ongoingCosts   = t('adoptionFinance.ongoing', { returnObjects: true }) as CostItem[];
-
-  const oppItems       = t('oppsChallenges.opportunities', { returnObjects: true }) as OppItem[];
-  const challengeItems = t('oppsChallenges.challenges', { returnObjects: true }) as TitleDesc[];
-  const competitive    = t('strategies.items', { returnObjects: true }) as StrategyItem[];
-
 
   const daoQuizOptionsTyped = daoQuizOptions.map((text, i) => ({ text, correct: i === 0 }));
   const asxQuizOptionsTyped = asxQuizOptions.map((text, i) => ({ text, correct: i === 2 }));
@@ -313,7 +366,7 @@ export function SC_Section4() {
               {chartSteps.map((step, i) => {
                 const color = ['#ED1C24', '#ED1C24', '#f59e0b', '#f59e0b', '#22d3ee', '#39B54A'][i];
                 return (
-                  <div key={i} className="p-2 bg-card border border-border rounded-lg" style={{ borderColor: color + '40' }}>
+                  <div key={i} className="px-2 py-1 bg-card border border-border rounded-lg" style={{ borderColor: color + '40' }}>
                     <div className="text-[10px] text-muted-foreground">Q{i + 1}</div>
                     <div className="font-semibold text-xs text-foreground">{step.q}</div>
                     <div className="text-[10px] font-bold mt-0.5" style={{ color }}>{step.verdict}</div>
@@ -334,7 +387,9 @@ export function SC_Section4() {
           <div className="flex-1 min-h-0">
             <DecisionFlow />
           </div>
-          <KeyPointBar text={t('keyPoints.s4-decision-flow')} className="mx-6 lg:mx-8 mb-6 -mt-3" />
+          <div className="shrink-0 px-6 lg:px-8 pb-6 -mt-3">
+            <KeyPointBar text={t('keyPoints.s4-decision-flow')} />
+          </div>
         </div>
 
         {/* ═══════ DISCUSSION — RUN THE FRAMEWORK TOGETHER ═══════ */}
@@ -523,6 +578,7 @@ export function SC_Section4() {
         {/* ═══════ QUIZ — DAO ═══════ */}
         <div id="s4-case-dao-quiz" className="h-full">
           <QuizSlide
+            compact
             question={t('daoQuiz.question')}
             options={daoQuizOptionsTyped}
             explanation={t('daoQuiz.explanation')}
@@ -532,250 +588,28 @@ export function SC_Section4() {
         {/* ═══════ QUIZ — ASX ═══════ */}
         <div id="s4-case-asx-quiz" className="h-full">
           <QuizSlide
+            compact
             question={t('asxQuiz.question')}
             options={asxQuizOptionsTyped}
             explanation={t('asxQuiz.explanation')}
           />
         </div>
 
-        {/* ═══════ ADOPTION INTRO — 5 PILLARS ═══════ */}
-        <div id="s4-adoption-intro" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionIntro.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionIntro.subtitle')}</p>
+        {/* ═══════ ADOPTION — THREE CHECKS BEFORE YOU BUILD ═══════ */}
+        <div id="s4-adoption" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest mb-1">{t('adoption.kicker')}</div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoption.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('adoption.subtitle')}</p>
           </div>
-
-          <div className="flex-1 min-h-0 grid grid-cols-5 gap-3 content-center">
-            {pillars.map((p, i) => {
-              const meta = PILLAR_META[i];
-              return (
-                <div key={meta.num} className="p-4 bg-card border rounded-xl flex flex-col gap-2"
-                  style={{ borderColor: meta.color + '40' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="size-8 rounded-lg flex items-center justify-center text-white text-xs font-black" style={{ backgroundColor: meta.color }}>{meta.num}</div>
-                    <div className="text-2xl">{meta.emoji}</div>
-                  </div>
-                  <div className="font-bold text-sm text-foreground">{p.label}</div>
-                  <div className="text-xs text-muted-foreground leading-snug">{p.desc}</div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="shrink-0 mt-4 p-3 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground italic">
-            {t('adoptionIntro.footnote')}
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-adoption-intro')} className="mt-3" />
-        </div>
-
-        {/* ═══════ STRATEGIC ALIGNMENT ═══════ */}
-        <div id="s4-adoption-strategy" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest mb-1">{t('adoptionStrategy.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionStrategy.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionStrategy.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            {strategyItems.map((c, i) => {
-              const color = ADOPTION_STRATEGY_COLORS[i];
-              return (
-                <div key={c.title} className="p-5 bg-card border rounded-xl flex flex-col gap-3" style={{ borderColor: color + '30' }}>
-                  <div className="font-bold text-sm" style={{ color }}>{c.title}</div>
-                  <p className="text-xs text-muted-foreground leading-relaxed flex-1">{c.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-adoption-strategy')} className="mt-3" />
-        </div>
-
-        {/* ═══════ TECHNICAL INFRASTRUCTURE ═══════ */}
-        <div id="s4-adoption-tech" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest mb-1">{t('adoptionTech.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionTech.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionTech.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
-            {techItems.map((c, i) => {
-              const meta = ADOPTION_TECH_META[i];
-              return (
-                <div key={c.title} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: meta.color + '30' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="size-9 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: meta.color + '15' }}>{meta.emoji}</div>
-                    <div className="font-bold text-sm" style={{ color: meta.color }}>{c.title}</div>
-                  </div>
-                  <div className="text-xs text-muted-foreground leading-snug">{c.desc}</div>
-                </div>
-              );
-            })}
-          </div>
-          <UnderTheHood terms={['RPC node', 'indexer', 'HSM / multisig', 'IPFS + encryption']} className="shrink-0 mt-3" />
-          <KeyPointBar text={t('keyPoints.s4-adoption-tech')} className="mt-3" />
-        </div>
-
-        {/* ═══════ LEGAL & REGULATORY ═══════ */}
-        <div id="s4-adoption-legal" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest mb-1">{t('adoptionLegal.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionLegal.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionLegal.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#22d3ee]">{t('adoptionLegal.engageLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
-                {legalEngage.map((item, i) => (
-                  <li key={i} className="flex gap-2"><span className="text-[#22d3ee]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-5 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#22d3ee]">{t('adoptionLegal.crossLabel')}</div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {t('adoptionLegal.crossBody')}
-              </p>
-              <ul className="text-xs text-muted-foreground space-y-1.5 mt-1">
-                {legalCross.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>{item}</li>
-                ))}
-              </ul>
-              <div className="p-2 bg-[#22d3ee]/10 rounded-lg text-xs text-muted-foreground mt-auto">
-                <span className="font-semibold text-foreground">{t('adoptionLegal.practicalLabel')}</span>{t('adoptionLegal.practicalBody')}
-              </div>
-            </div>
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-adoption-legal')} className="mt-3" />
-        </div>
-
-        {/* ═══════ RISK MANAGEMENT ═══════ */}
-        <div id="s4-adoption-risk" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest mb-1">{t('adoptionRisk.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionRisk.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionRisk.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
-            {riskItems.map((c, i) => {
-              const meta = RISK_META[i];
-              return (
-                <div key={c.title} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: meta.color + '30' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="size-9 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: meta.color + '15' }}>{meta.emoji}</div>
-                    <div className="font-bold text-sm" style={{ color: meta.color }}>{c.title}</div>
-                  </div>
-                  <div className="text-xs text-muted-foreground leading-snug flex-1">{c.desc}</div>
-                </div>
-              );
-            })}
-          </div>
-          <UnderTheHood terms={['audit', 'formal verification', 'proxy upgrade', 'timelock', 'bug bounty']} className="shrink-0 mt-3" />
-          <KeyPointBar text={t('keyPoints.s4-adoption-risk')} className="mt-3" />
-        </div>
-
-        {/* ═══════ FINANCIAL PLANNING ═══════ */}
-        <div id="s4-adoption-finance" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-1">{t('adoptionFinance.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionFinance.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionFinance.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('adoptionFinance.upfrontLabel')}</div>
-              {upfrontCosts.map((c) => (
-                <div key={c.label} className="p-3 bg-card border border-[#39B54A]/25 rounded-xl">
-                  <div className="flex items-center justify-between">
-                    <div className="font-bold text-sm text-foreground">{c.label}</div>
-                    <div className="font-mono text-xs text-[#39B54A]">{c.range}</div>
-                  </div>
-                  <div className="text-[10px] text-muted-foreground mt-1">{c.desc}</div>
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('adoptionFinance.ongoingLabel')}</div>
-              {ongoingCosts.map((c) => (
-                <div key={c.label} className="p-3 bg-card border border-[#6366f1]/25 rounded-xl">
-                  <div className="flex items-center justify-between">
-                    <div className="font-bold text-sm text-foreground">{c.label}</div>
-                    <div className="font-mono text-xs text-[#6366f1]">{c.range}</div>
-                  </div>
-                  <div className="text-[10px] text-muted-foreground mt-1">{c.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="shrink-0 mt-3 p-3 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground italic">
-            {t('adoptionFinance.footnote')}
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-adoption-finance')} className="mt-3" />
-        </div>
-
-        {/* ═══════ OPPORTUNITIES & CHALLENGES ═══════ */}
-        <div id="s4-opps-challenges" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('oppsChallenges.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('oppsChallenges.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('oppsChallenges.opportunitiesLabel')}</div>
-              {oppItems.map((o) => (
-                <div key={o.label} className="p-3 bg-card border border-[#39B54A]/25 rounded-xl">
-                  <div className="font-bold text-sm text-foreground">{o.label}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{o.desc}</div>
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">{t('oppsChallenges.challengesLabel')}</div>
-              {challengeItems.map((c) => (
-                <div key={c.title} className="p-3 bg-card border border-[#ED1C24]/25 rounded-xl">
-                  <div className="font-bold text-sm text-foreground">{c.title}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{c.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="shrink-0 mt-3 text-[10px] text-muted-foreground italic">
-            {t('oppsChallenges.sources')}
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-opps-challenges')} className="mt-3" />
-        </div>
-
-        {/* ═══════ STRATEGIES — APPLIED ═══════ */}
-        <div id="s4-strategies" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('strategies.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('strategies.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
-            {competitive.map((s, i) => {
-              const color = STRATEGY_META[i].color;
-              const emoji = STRATEGY_EMOJI[i];
-              return (
-                <div key={s.name} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: color + '30' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="text-3xl">{emoji}</div>
-                    <div>
-                      <div className="font-black text-sm text-foreground">{s.name}</div>
-                      <div className="text-[10px] text-muted-foreground uppercase tracking-widest">{s.moat}</div>
-                    </div>
-                  </div>
-                  <div className="text-xs text-muted-foreground leading-snug flex-1">{s.desc}</div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="shrink-0 mt-3 text-[10px] text-muted-foreground italic">
-            {t('strategies.sources')}
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-strategies')} className="mt-3" />
+          <AdoptionChecks />
+          <KeyPointBar text={t('keyPoints.s4-adoption')} className="mt-3" />
         </div>
 
         {/* ═══════ QUIZ ═══════ */}
         <div id="s4-quiz" className="h-full">
           <QuizSlide
+            compact
             question={t('quiz.question')}
             options={mainQuizOptions}
             explanation={t('quiz.explanation')}

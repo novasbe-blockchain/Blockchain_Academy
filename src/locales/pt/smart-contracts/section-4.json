@@ -2,8 +2,7 @@
   "groups": {
     "g-decide": "🤔 Decidir",
     "g-cases": "📁 Três Lições",
-    "g-adopt": "🛠 Adoção",
-    "g-strat": "📈 Estratégia",
+    "g-adopt": "🛠 Antes de Construir",
     "g-close": "✅ Conclusão"
   },
   "chapters": {
@@ -18,21 +17,14 @@
     "s4-case-org-fail": "❌ ASX CHESS",
     "s4-case-dao-quiz": "Quiz · DAO",
     "s4-case-asx-quiz": "Quiz · ASX",
-    "s4-adoption-intro": "Considerações de Adoção",
-    "s4-adoption-strategy": "Alinhamento Estratégico",
-    "s4-adoption-tech": "Infraestrutura Técnica",
-    "s4-adoption-legal": "Jurídico e Regulatório",
-    "s4-adoption-risk": "Gestão de Risco",
-    "s4-adoption-finance": "Planeamento Financeiro",
-    "s4-opps-challenges": "Opportunities & Challenges",
-    "s4-strategies": "Estratégia Competitiva",
+    "s4-adoption": "Três Verificações",
     "s4-quiz": "Quiz",
     "s4-takeaways": "Conclusões"
   },
   "title": {
     "sectionNumber": "SECÇÃO 04",
     "title": "Pensamento Crítico",
-    "subtitle": "Quando usar um smart contract — e quando não usar. Considerações de adoção para uma implementação empresarial séria."
+    "subtitle": "Quando usar um smart contract, quando não usar, e três verificações antes de construir."
   },
   "decisionFlow": {
     "badge": "🧩 Interativo",
@@ -229,7 +221,7 @@
       "À Ethereum Foundation deveria ser permitido reverter todos os grandes exploits para proteger os utilizadores.",
       "As organizações descentralizadas são tecnicamente impossíveis e não devem ser tentadas."
     ],
-    "explanation": "O ataque à The DAO expôs uma tensão que ainda hoje define a governação da blockchain: imutabilidade pura vs valores humanos. A comunidade Ethereum escolheu fazer fork porque deixar um atacante ficar com 60M$ era inaceitável — mas fazê-lo minou o ideal de \"code is law\" que a blockchain reivindica. A lição para quem constrói: 1) auditar obsessivamente antes de implementar, sobretudo contratos críticos de segurança; 2) considerar padrões de atualização ou kill-switches para contratos que detêm valor; 3) compreender que a \"imutabilidade\" é uma vantagem com limites — falhas extremas serão socialmente renegociadas. A reentrância é evitável (Checks-Effects-Interactions, ReentrancyGuard); o bug da DAO era um anti-padrão conhecido, apenas implementado em escala."
+    "explanation": "A comunidade fez o fork porque deixar um atacante ficar com 60M$ era inaceitável, e isso minou o ideal de \"code is law\": as falhas extremas acabam renegociadas socialmente. Para quem constrói: audita antes de implementar e dá aos contratos que detêm valor um botão de pausa ou um caminho de atualização. A reentrância é evitável com padrões de programação conhecidos; não é razão para desistir dos smart contracts."
   },
   "asxQuiz": {
     "question": "A Australian Securities Exchange (ASX) gastou mais de 255M$ AUD ao longo de 6 anos a tentar substituir o seu sistema de compensação CHESS por blockchain — e cancelou o projeto em 2022. Qual é a causa raiz mais provável desta falha?",
@@ -239,133 +231,57 @@
       "O caso de uso não exigia, de facto, blockchain — uma base de dados tradicional teria sido mais simples, mais rápida e mais barata.",
       "Os reguladores australianos forçaram o abandono do projeto por razões políticas."
     ],
-    "explanation": "A substituição do CHESS pela ASX é o caso canónico de \"blockchain pela blockchain\". O CHESS é operado por uma única entidade de confiança (a ASX), com um conjunto reduzido e conhecido de participantes (corretores). A blockchain brilha quando temos múltiplas partes que não confiam entre si a precisar de uma única fonte de verdade sem um intermediário de confiança — mas a ASX É o intermediário de confiança, por mandato. Uma base de dados moderna com trilhos de auditoria adequados teria entregado melhor desempenho, desenvolvimento mais rápido e menor custo. A lição: antes de escolher a blockchain, pergunta \"em quem não confiamos?\". Se a resposta for \"em ninguém — nós somos a parte de confiança\", uma base de dados é quase sempre melhor. O hype não é uma justificação."
+    "explanation": "O CHESS é gerido por um único operador de confiança (a ASX), com um conjunto reduzido e conhecido de participantes. A blockchain ajuda quando partes que não confiam entre si precisam de um registo único sem intermediário; a ASX é esse intermediário, por mandato. Pergunta primeiro \"em quem não confiamos?\"; se a resposta for \"em ninguém\", ganha a base de dados."
   },
-  "adoptionIntro": {
-    "heading": "Considerações-Chave para a Adoção Empresarial",
-    "subtitle": "Introduzir smart contracts não é apenas um projeto tecnológico — é uma mudança organizacional.",
-    "pillars": [
-      { "label": "Alinhamento Estratégico", "desc": "Clareza do caso de uso, métricas de sucesso, apoio da direção, formação do pessoal" },
-      { "label": "Infraestrutura Técnica", "desc": "Plataforma escalável, integração com sistemas legados, preparação de TI" },
-      { "label": "Jurídico e Regulatório", "desc": "Exequibilidade, conformidade jurisdicional" },
-      { "label": "Gestão de Risco", "desc": "Auditorias, resposta a incidentes, planeamento da imutabilidade do contrato" },
-      { "label": "Planeamento Financeiro", "desc": "Custos iniciais, gas contínuo, prazo de ROI" }
-    ],
-    "footnote": "Os Smart Contracts têm um enorme potencial de mercado. Mas não são plug-and-play — as empresas precisam de propósito estratégico, infraestrutura, competências, conformidade, controlos de risco e recursos. Os próximos 5 capítulos cobrem cada pilar."
-  },
-  "adoptionStrategy": {
-    "kicker": "Pilar 01",
-    "heading": "Alinhamento Estratégico",
-    "subtitle": "Adotar smart contracts deve servir um propósito de negócio claro e alinhar-se com a estratégia da empresa.",
+  "adoption": {
+    "kicker": "Antes de construir",
+    "heading": "Três verificações antes de te comprometeres",
+    "subtitle": "A árvore de decisão diz que um smart contract pode funcionar. Passa a tua própria ideia por estas três: cada uma verifica-se?",
+    "checkLabel": "Verificação {{num}}",
+    "seenIn": "Visto em:",
+    "pass": "Verifica-se",
+    "fail": "Não se verifica",
     "items": [
-      { "title": "Clarificar o caso de uso", "desc": "Identifica onde um smart contract resolve um problema real — automatizar um fluxo de trabalho manual, remover um intermediário dispendioso ou construir uma verdade partilhada entre partes que não confiam umas nas outras. Alinha isto com as prioridades estratégicas da empresa — e não o contrário." },
-      { "title": "Definir métricas de sucesso", "desc": "Estabelece metas específicas e mensuráveis: redução de custos (ex.: 30% na resolução de litígios), melhoria de velocidade (ex.: dias → minutos), redução da taxa de erro. Constitui a base de um caso de negócio para as partes interessadas." },
-      { "title": "Garantir o apoio da direção", "desc": "Demonstra como os smart contracts apoiam a visão mais ampla do negócio — desintermediação, transparência, automação. Sem o apoio da direção de topo, os projetos estagnam ao primeiro obstáculo técnico." },
-      { "title": "Formar o pessoal", "desc": "Educa os colaboradores sobre os fundamentos da blockchain e as especificidades da plataforma/ferramentas escolhidas. Disponibiliza formação prática a quem usa ou apoia diretamente os smart contracts. Isto não é trivial — orça para isso." }
-    ]
-  },
-  "adoptionTech": {
-    "kicker": "Pilar 02",
-    "heading": "Infraestrutura Técnica",
-    "subtitle": "Implementar smart contracts exige uma base técnica sólida — plataforma, integração e capacidade de TI.",
-    "items": [
-      { "title": "Plataforma escalável", "desc": "Escolhe uma chain que satisfaça as tuas necessidades de débito, latência e finalidade (a Secção 6 aprofunda isto). Compatibilidade com a EVM = vasto ecossistema de ferramentas." },
-      { "title": "Integração com sistemas legados", "desc": "Os smart contracts têm de comunicar com ERP, CRM e sistemas SaaS. Planeia middleware (The Graph, Moralis), event listeners e sincronização de dados desde o primeiro dia." },
-      { "title": "Capacidade de TI e operações", "desc": "Precisas de engenheiros de prevenção que compreendam a resposta a incidentes em blockchain. Contratá-los ou formá-los leva meses — começa antes de implementar." },
-      { "title": "Identidade e acesso", "desc": "On-chain != anónimo em contextos empresariais. Planeia KYC, acesso baseado em papéis e gestão de chaves (HSM, multisig) antes de qualquer implementação real." },
-      { "title": "Arquitetura de dados", "desc": "Decide cedo a divisão on-chain vs off-chain. Dados sensíveis NUNCA vivem numa chain pública — usa hashes + IPFS + encriptação." },
-      { "title": "Monitorização e análise", "desc": "Block explorers, indexadores e painéis (Dune, The Graph) — estas são as ferramentas de produção. Configura-as como configurarias qualquer stack de SRE." }
-    ]
-  },
-  "adoptionLegal": {
-    "kicker": "Pilar 03",
-    "heading": "Jurídico e Regulatório",
-    "subtitle": "Os smart contracts misturam código e direito — levantando desafios em torno da exequibilidade, jurisdição e conformidade.",
-    "engageLabel": "Questões a colocar cedo ao aconselhamento jurídico",
-    "engage": [
-      "É este contrato um \"contrato\" à luz do direito da tua jurisdição?",
-      "O token emitido constitui um valor mobiliário (teste de Howey nos EUA, MiCA na UE)?",
-      "Como lidas com litígios? Existe um \"kill switch\" ou mecanismo de arbitragem?",
-      "De que jurisdições podem vir os utilizadores? Implicações de KYC/AML?",
-      "Privacidade de dados: a chain armazena algo que aciona o RGPD?",
-      "Tratamento fiscal: onde se acumula a receita? Onde devem os utilizadores impostos?"
+      {
+        "title": "Adequação estratégica",
+        "question": "Precisa mesmo de minimizar a confiança?",
+        "points": [
+          "Várias partes partilham o registo e nenhuma tem a confiança de todas",
+          "A automação elimina um custo real, não apenas um incómodo",
+          "Os parceiros que têm de aderir estão dispostos a aderir"
+        ],
+        "caseName": "ASX CHESS",
+        "caseNote": "Já existia um operador de confiança a gerir o registo; a necessidade nunca existiu."
+      },
+      {
+        "title": "Jurídico e regulatório",
+        "question": "A lei vai apoiar o código?",
+        "points": [
+          "Um acordo escrito define quem é responsável e como se resolvem os litígios",
+          "Qualquer token é avaliado face às regras financeiras (MiCA na UE, lei de valores mobiliários nos EUA)",
+          "Sem dados pessoais on-chain: o direito ao apagamento do RGPD esbarra num registo que não apaga"
+        ],
+        "caseName": "Estónia",
+        "caseNote": "As assinaturas digitais valem porque a lei as reconhece, não porque um registo as guarda."
+      },
+      {
+        "title": "Risco e custo",
+        "question": "Consegues suportá-lo, incluindo no dia em que falhar?",
+        "points": [
+          "Uma auditoria de segurança independente antes do lançamento; código implementado é difícil de corrigir",
+          "Um plano para o dia mau: quem o pode pausar e quem avisa os utilizadores",
+          "Os custos vêm primeiro (desenvolvimento, auditoria, jurídico); as poupanças só chegam se a rede for usada"
+        ],
+        "caseName": "The DAO",
+        "caseNote": "Um bug, 60M$ drenados e nenhuma forma de pausar o contrato."
+      }
     ],
-    "crossLabel": "Realidade transjurisdicional",
-    "crossBody": "Com transações globais, o que é válido num país pode ser ilegal noutro. Uma venda de tokens legal em Singapura pode atrair a atuação da SEC nos EUA. Um contrato exequível na UE pode ser inexequível em países sem enquadramento de DLT.",
-    "crossPoints": [
-      "Aplica geo-fencing com cautela — a conformidade com sanções não é negociável",
-      "O MiCA da UE (2024) estabelece um precedente global — espera imitação",
-      "\"Code is law\" foi rejeitado pelos tribunais no caso The DAO — planeia caminhos de sobreposição humana"
-    ],
-    "practicalLabel": "Na prática:",
-    "practicalBody": " uma revisão jurídica precoce é mais barata do que correções jurídicas tardias. Envolve o aconselhamento jurídico antes de escreveres a primeira linha de código do contrato."
-  },
-  "adoptionRisk": {
-    "kicker": "Pilar 04",
-    "heading": "Gestão de Risco",
-    "subtitle": "Uma vez implementados, os smart contracts são tipicamente imutáveis e executam-se automaticamente. Há pouca margem para erro.",
-    "items": [
-      { "title": "Auditorias pré-implementação", "desc": "Pelo menos uma — idealmente duas auditorias de segurança independentes — antes da mainnet. Orça 20k$–100k$+ consoante a complexidade do contrato." },
-      { "title": "Verificação formal", "desc": "Para contratos de alto valor, a verificação formal (Certora, Halmos) prova propriedades matematicamente — para além do que as auditorias detetam." },
-      { "title": "Programa de bug bounty", "desc": "A Immunefi e programas semelhantes oferecem revisão de segurança contínua e coletiva. Trata as recompensas como um custo de fazer negócio." },
-      { "title": "Padrão de atualização (com cuidado)", "desc": "Os contratos proxy permitem atualizações da lógica — mas introduzem chaves de administração. Usa apenas quando necessário; protege com timelocks e multisig." },
-      { "title": "Plano de resposta a incidentes", "desc": "Quando (não se) algo correr mal, quem pausa o contrato, contacta os utilizadores, comunica com a imprensa e coordena com as exchanges?" },
-      { "title": "Monitorizar em produção", "desc": "Configura alertas em tempo real para fluxos suspeitos, padrões de gas invulgares ou ataques de governação. A Forta e a OpenZeppelin Defender automatizam isto." }
-    ]
-  },
-  "adoptionFinance": {
-    "kicker": "Pilar 05",
-    "heading": "Planeamento Financeiro / de Recursos",
-    "subtitle": "A adoção de smart contracts exige um planeamento financeiro sólido. As poupanças de automação a longo prazo podem ser significativas — mas os custos iniciais são reais.",
-    "upfrontLabel": "Custos iniciais (uma só vez)",
-    "upfront": [
-      { "label": "Montagem da infraestrutura", "range": "5k$–50k$", "desc": "Nós, monitorização, pipeline de implementação, ambientes de desenvolvimento" },
-      { "label": "Desenvolvimento de smart contracts", "range": "30k$–300k$", "desc": "Arquitetura, desenvolvimento em Solidity, testes — depende muito da complexidade" },
-      { "label": "Auditorias de segurança", "range": "20k$–150k$", "desc": "Empresas independentes (Trail of Bits, OpenZeppelin, ConsenSys Diligence)" },
-      { "label": "Consultoria jurídica e regulatória", "range": "10k$–100k$+", "desc": "Sobretudo em setores regulados — financeiro, saúde, governo" },
-      { "label": "Formação do pessoal", "range": "5k$–50k$", "desc": "Workshops, certificações, tempo fora das tarefas durante a integração" }
-    ],
-    "ongoingLabel": "Custos contínuos (recorrentes)",
-    "ongoing": [
-      { "label": "Taxas de gas", "range": "Variável", "desc": "Pagamento por transação; podem disparar 10–100× durante congestão. As L2 ajudam significativamente." },
-      { "label": "Infraestrutura de nós", "range": "200$–5k$/mês", "desc": "Full nodes auto-alojados, ou geridos (Infura, Alchemy, QuickNode)" },
-      { "label": "Manutenção e monitorização", "range": "5k$–30k$/mês", "desc": "Engenheiros de prevenção, alertas, contrato de resposta a incidentes" },
-      { "label": "Programa de bug bounty", "range": "10k$–1M$+ de pool", "desc": "Reserva financiada para pagar vulnerabilidades divulgadas de forma responsável" },
-      { "label": "Conformidade e reporte", "range": "5k$–50k$/mês", "desc": "Fornecedores de KYC, monitorização de AML, ferramentas de reporte fiscal" }
-    ],
-    "footnote": "Os intervalos são ilustrativos e variam muito consoante a região, a complexidade e os requisitos específicos. Usa-os como ponto de partida para conversas com fornecedores e com a área financeira."
-  },
-  "oppsChallenges": {
-    "heading": "Opportunities and Challenges",
-    "subtitle": "What the research adds beyond the decision framework.",
-    "opportunitiesLabel": "Opportunities",
-    "opportunities": [
-      { "label": "Speed of settlement", "desc": "Seconds instead of days; cross-border value moves at internet speed." },
-      { "label": "Programmable cash flows", "desc": "Escrow, royalties and milestone payments run themselves." },
-      { "label": "New business models", "desc": "DAOs, tokenised assets, fractional ownership, machine-to-machine payments." },
-      { "label": "Network effects", "desc": "Each new contract can plug into every other one on the same chain." }
-    ],
-    "challengesLabel": "Challenges",
-    "challenges": [
-      { "title": "Scarce talent", "desc": "Few engineers know Solidity, gas mechanics and the EVM well." },
-      { "title": "Scalability limits", "desc": "Public chains cap throughput; L2s help but add their own complexity." },
-      { "title": "Interoperability", "desc": "Cross-chain bridges are fragile and a major source of exploits." },
-      { "title": "User experience", "desc": "Wallets, keys, gas fees and confirmation times are friction mainstream users will not tolerate." }
-    ],
-    "sources": "Sources: Nzuva (2019); Perlman (2019); Dal Mas, Dicuonzo, Massaro & Dell'Atti (2019); Khan et al. (2021); Virani (2024)."
-  },
-  "strategies": {
-    "heading": "Estratégias para Vantagem Competitiva",
-    "subtitle": "Como empresas reais transformam smart contracts num fosso estratégico duradouro — exemplos aplicados.",
-    "items": [
-      { "name": "Compound", "moat": "Empréstimos sem necessidade de confiança", "desc": "Elimina intermediários; taxas de juro on-chain definidas algoritmicamente. Eficiência de capital que os bancos tradicionais não conseguem igualar." },
-      { "name": "We.trade", "moat": "Financiamento ao comércio B2B", "desc": "Plataforma de consórcio bancário construída sobre o Hyperledger Fabric para comércio transfronteiriço de PME. Acabou por encerrar — ilustrando que a governação de \"consórcio\" é difícil." },
-      { "name": "Uniswap", "moat": "Liquidez sem permissão", "desc": "Qualquer pessoa pode listar qualquer token instantaneamente. O modelo AMM remove a complexidade do livro de ordens. O fosso mais profundo: a componibilidade com o resto do DeFi." },
-      { "name": "Propy", "moat": "Atrito imobiliário", "desc": "Escrituras em NFT para vendas legítimas de imóveis. Comprime um fecho de 30 dias em horas, onde a lei o permite." },
-      { "name": "AXA Fizzy", "moat": "Seguro paramétrico", "desc": "Seguro de atraso de voos com pagamentos automáticos via Ethereum + oracle de voos. Acabou por ser descontinuado — mas provou o padrão paramétrico." },
-      { "name": "Home Depot", "moat": "Verdade na cadeia de abastecimento", "desc": "Hyperledger Fabric para litígios com fornecedores. Reduziu o tempo de resolução de semanas para horas — vantagem competitiva na margem operacional." }
-    ],
-    "sources": "Fontes: IBM (2017, 2019); Gemini Cryptopedia (2025); Eurofinance (2024)."
+    "verdict": {
+      "idle": { "label": "A tua vez.", "body": "Marca cada verificação para a tua própria ideia." },
+      "progress": { "label": "Até aqui, tudo bem.", "body": "Marca as verificações que faltam." },
+      "stop": { "label": "Ainda não:", "body": "Resolve isto antes de gastar em desenvolvimento, ou volta à árvore de decisão." },
+      "go": { "label": "Avança.", "body": "As três verificam-se. Começa por um piloto pequeno, não por uma implementação completa." }
+    }
   },
   "quiz": {
     "question": "Um banco quer emitir obrigações digitais. A sua equipa de auditoria interna detém o registo mestre. Tem 5 compradores institucionais de confiança, todos com KYC. A liquidação é atualmente T+2. Qual é a razão mais forte para AINDA ASSIM escolher um smart contract numa blockchain pública?",
@@ -375,21 +291,17 @@
       "As blockchains públicas são mais baratas do que as bases de dados para qualquer volume de transações.",
       "Os smart contracts não podem ser pirateados, pelo que são inerentemente mais seguros do que a base de dados do banco."
     ],
-    "explanation": "As três primeiras opções refletem equívocos comuns: (1) as blockchains NÃO substituem as funções de auditoria — os auditores continuam a verificar a lógica de negócio, apenas com melhores evidências. (2) As chains públicas têm custos de gas contínuos que excedem as bases de dados em uso interno de elevado volume. (3) Os smart contracts são pirateados com regularidade — a segurança é uma disciplina, não uma propriedade. A razão legítima neste cenário é a liquidação transjurisdicional: mesmo com partes com KYC, remover os bancos correspondentes reduz atrito, custos de câmbio e tempo. Foi exatamente por isto que o Santander escolheu a Ethereum para a sua obrigação de 20M$. Se a obrigação permanecesse inteiramente numa só jurisdição, com um emissor e compradores de confiança, uma base de dados venceria — mas no momento em que atravessas fronteiras, a blockchain liberta valor real."
+    "explanation": "As outras três são equívocos comuns: (A) uma blockchain não substitui os auditores; continuam a verificar a lógica de negócio, com melhores evidências. (C) As chains públicas cobram uma taxa por transação, pelo que não são mais baratas para qualquer volume. (D) Os smart contracts são pirateados com regularidade; a segurança é uma disciplina, não uma propriedade. O ganho real aqui é a liquidação transfronteiriça: eliminar os bancos correspondentes reduz atrito, custos de câmbio e tempo. A obrigação de 20M$ do Santander na Ethereum pública (2019) foi um dos primeiros testes de liquidação de uma obrigação on-chain com menos intermediários. Dentro de uma só jurisdição, com um emissor e compradores de confiança, uma base de dados venceria."
   },
   "takeaways": {
     "title": "Secção 04 — Conclusões-Chave",
     "items": [
-      "Nem todos os problemas precisam de blockchain — começa por perguntar \"em quem não confiamos?\". Se a resposta for \"em ninguém\", usa uma base de dados",
-      "7 sinais a favor dos smart contracts: multipartido, valor da automação, transparência, custo de intermediários, desintermediação, imutabilidade-como-vantagem, propriedade portável",
-      "8 sinais de alerta: única parte de confiança, centralizado é mais rápido/barato, flexibilidade crítica, dados off-chain dominam, privacidade fundamental, regulação hostil, baixa literacia técnica dos utilizadores, sem ROI claro",
-      "Três lições do terreno — ✅ Estónia (ferramenta certa + organização certa), ⚠️ The DAO (ferramenta certa, desenho de contrato errado), ❌ ASX CHESS (ferramenta completamente errada)",
-      "Estrutura de adoção de 5 pilares: Alinhamento Estratégico · Infraestrutura Técnica · Jurídico e Regulatório · Gestão de Risco · Planeamento Financeiro",
-      "Estratégico: caso de uso claro, métricas de sucesso, apoio da direção, formação do pessoal — sem isto, o projeto vai estagnar",
-      "Jurídico: envolve o aconselhamento ANTES de escrever código. Classificação de valores mobiliários, alcance jurisdicional e RGPD importam desde o primeiro dia",
-      "Risco: as auditorias não são opcionais. Bug bounties, verificação formal, resposta a incidentes — todos requisitos de base",
-      "Realidade de custos: 50k$–500k$+ para implementar um contrato sério. Planeia o gas contínuo, a monitorização e a manutenção",
-      "A verdadeira vantagem estratégica vem de remover um problema genuíno de intermediação — não de \"fazer blockchain\""
+      "Nem todos os problemas precisam de blockchain. Pergunta \"em quem não confiamos?\"; se a resposta for \"em ninguém\", usa uma base de dados",
+      "Sinais a favor de um smart contract: várias partes, nenhum árbitro de confiança, valor real na automação, imutabilidade como vantagem",
+      "Sinais de alerta: um único operador de confiança, dados privados, regras que mudam com frequência, sem retorno claro",
+      "Três lições do terreno: Estónia (ferramenta certa, organização certa), The DAO (ferramenta certa, desenho de contrato errado), ASX CHESS (ferramenta errada)",
+      "Antes de construir, três verificações: adequação estratégica, jurídico e regulatório, risco e custo. Se uma falhar, resolve-a primeiro",
+      "A vantagem vem de eliminar um problema genuíno de intermediação, não de \"fazer blockchain\""
     ]
   },
   "keyPoints": {
@@ -401,13 +313,6 @@
     "s4-case-success": "Estonia won by treating blockchain as boring infrastructure for integrity — not as a product to sell.",
     "s4-case-sc-fail": "The DAO's use case fit blockchain perfectly; one bug drained $60M because code is enforced even when it is wrong.",
     "s4-case-org-fail": "ASX spent $255M on a blockchain for a problem one trusted party already solved — the framework would have said no on day one.",
-    "s4-adoption-intro": "Adoption is an organisational change with a technology inside it — strategy, legal and risk teams decide the outcome.",
-    "s4-adoption-strategy": "Start from the business problem and the parties who must join — a blockchain nobody else joins is an expensive database.",
-    "s4-adoption-tech": "You still run servers, keys and integrations — the chain removes a middleman, not your IT department.",
-    "s4-adoption-legal": "Pair the code with a normal legal agreement — courts enforce contracts, not Solidity.",
-    "s4-adoption-risk": "Immutability cuts both ways: audits, timelocks and upgrade paths are the price of code you cannot patch on Friday night.",
-    "s4-adoption-finance": "Budget like infrastructure: high upfront cost, then low marginal cost — the savings arrive only if the network is actually used.",
-    "s4-opps-challenges": "Settlement speed and programmable cash flows are measurable wins; scale, interoperability and usability are problems no single company can fix alone.",
-    "s4-strategies": "Advantage comes from owning the network effects, not the technology — the code is open to every competitor."
+    "s4-adoption": "The decision tree asks whether a smart contract could work; these three checks ask whether your organisation should build it."
   }
 }
