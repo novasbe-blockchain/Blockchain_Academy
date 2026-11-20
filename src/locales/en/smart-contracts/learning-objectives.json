@@ -29,7 +29,7 @@
     },
     "build": {
       "title": "Build & Integration",
-      "description": "(Optional) Navigate ERC standards, the EIP process, frameworks, platform comparison and integration patterns — the developer-oriented material your technical teammates will own."
+      "description": "Describe how a contract goes from design to live: pick an ERC standard, remix an audited OpenZeppelin template, choose a tool and a network, and deploy to a testnet — wallet, test ETH, deploy, one transaction."
     },
     "zkPrivacy": {
       "title": "Zero-Knowledge & Privacy",

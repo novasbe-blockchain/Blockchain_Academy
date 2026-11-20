@@ -40,7 +40,7 @@
     },
     "section6": {
       "title": "Construção e Integração",
-      "description": "Normas ERC, processo EIP, frameworks (Hardhat / Foundry), comparação de 17 plataformas, padrões de integração e desenvolvimento com IA."
+      "description": "Como um smart contract é realmente construído e posto no ar: standards ERC, templates OpenZeppelin, escolha de ferramenta e de rede, e um deploy numa testnet passo a passo."
     },
     "section7": {
       "title": "Zero-Knowledge e Privacidade",

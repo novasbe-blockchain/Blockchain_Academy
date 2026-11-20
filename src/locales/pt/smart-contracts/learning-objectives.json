@@ -29,7 +29,7 @@
     },
     "build": {
       "title": "Construção e Integração",
-      "description": "Navegar pelas normas ERC, o processo EIP, frameworks (Hardhat / Foundry), comparação de 17 plataformas, padrões de integração e onde se enquadram as ferramentas de IA no desenvolvimento de smart contracts."
+      "description": "Descrever como um contrato passa do desenho à produção: escolher um standard ERC, adaptar um template auditado da OpenZeppelin, escolher uma ferramenta e uma rede, e fazer deploy numa testnet — carteira, ETH de teste, deploy, uma transação."
     },
     "zkPrivacy": {
       "title": "Zero-Knowledge e Privacidade",
