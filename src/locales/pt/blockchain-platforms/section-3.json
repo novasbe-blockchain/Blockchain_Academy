@@ -380,6 +380,56 @@
     ],
     "explanation": "A política de endorsement é a regra de negócio e aplica-se independentemente de quem submete. A aplicação do Retalhista envia a proposta a peers do Produtor e do Distribuidor, recolhe os resultados assinados e só então passa a transação ao serviço de ordering. Os orderers sequenciam transações; nunca endossam. Depois, cada peer volta a verificar as assinaturas face à política antes de confirmar: uma transação que não a cumpra fica registada no bloco, mas marcada como inválida e sem efeito."
   },
+  "quiz4": {
+    "question": "Numa rede Fabric, qual é a função do serviço de ordering?",
+    "options": [
+      {"text": "Executa o chaincode e decide se cada transação faz sentido para o negócio."},
+      {"text": "Coloca as transações endossadas numa única ordem acordada e agrupa-as em blocos, sem executar chaincode nem avaliar o conteúdo."},
+      {"text": "Emite os certificados que identificam as pessoas, aplicações e nós de cada organização."},
+      {"text": "Guarda a única cópia-mestra do ledger, que todas as organizações consultam."}
+    ],
+    "explanation": "O Fabric divide em dois o trabalho do validador. Os peers de endorsement simulam o chaincode e assinam; o serviço de ordering apenas sequencia — como um funcionário do registo que carimba cada documento com um número: ordem, não conteúdo. Os certificados vêm da autoridade de certificação (MSP) de cada organização, e não existe cópia-mestra: o peer de cada organização guarda a sua própria cópia do ledger e volta a verificar cada bloco."
+  },
+  "quiz5": {
+    "question": "Um retalhista rastreia alface da quinta à loja em Fabric. Qual destes dados deve ficar no ledger partilhado?",
+    "options": [
+      {"text": "O preço por quilo que o agricultor negociou com a fábrica de processamento."},
+      {"text": "O preço de venda que o supermercado define nas suas próprias caixas."},
+      {"text": "A entrega que o distribuidor introduz no seu sistema ERP interno."},
+      {"text": "As temperaturas registadas no camião refrigerado durante o transporte."}
+    ],
+    "explanation": "Põe on-chain os factos partilhados que os outros têm de poder verificar: os registos da cadeia de frio são prova de segurança alimentar, e adulterá-los poderia ocultar uma contaminação. Preços, margens e registos internos ficam off-chain — são informação concorrencial ou puramente interna, que não exige verificação entre várias partes."
+  },
+  "quiz6": {
+    "question": "Os nós de ordering de um consórcio vão ser operados por bancos rivais que não confiam totalmente uns nos outros. Que opção de ordering indica esta secção, e a que custo?",
+    "options": [
+      {"text": "Ordering BFT (SmartBFT): tolera também um orderer desonesto, à custa de mais orderers e menor velocidade."},
+      {"text": "Raft: tolera orderers desonestos, além dos que falham, sem custo adicional."},
+      {"text": "Proof of Work: quando os operadores são concorrentes, só a mineração os mantém honestos."},
+      {"text": "Nenhum serviço de ordering: cada banco ordena as transações no seu próprio channel."}
+    ],
+    "explanation": "O consenso segue a governação. O Raft, a opção por omissão, resiste a nós que falham e serve para operadores que confiam uns nos outros. O BFT resiste também a nós desonestos, por isso serve para concorrentes — mas precisa de mais orderers e é mais lento. Em qualquer dos casos, não há mineração nem staking."
+  },
+  "quiz7": {
+    "question": "As chains públicas cobram uma taxa em cada transação, em parte para travar spam. O Fabric não tem gas nem token. Porque é que pode dispensá-los?",
+    "options": [
+      {"text": "As taxas continuam a existir, mas são liquidadas em ETH nos bastidores."},
+      {"text": "Em vez disso, os nós de ordering são pagos em moedas Fabric recém-criadas."},
+      {"text": "Todos os membros são organizações verificadas e identificadas, por isso não é precisa uma taxa para travar spam; o consórcio paga os nós como qualquer TI partilhada."},
+      {"text": "As transações em Fabric não envolvem computação, por isso não há nada para pagar."}
+    ],
+    "explanation": "Numa chain pública qualquer pessoa pode submeter transações, por isso é a taxa que impede que a chain seja inundada. Numa rede permissionada todos os participantes têm um certificado e são legalmente responsáveis, por isso esse travão não é necessário. O custo não desaparece: o consórcio opera e paga os nós — de forma previsível e sem exposição a cripto."
+  },
+  "quiz8": {
+    "question": "Qual destes projetos encaixa mal numa chain permissionada como o Fabric?",
+    "options": [
+      {"text": "Cinco fornecedores conhecidos e um retalhista a partilhar registos de entrega, mantendo os preços entre cada par."},
+      {"text": "Uma moeda digital neutra que nenhum grupo de empresas deve poder congelar, reverter ou encerrar."},
+      {"text": "Hospitais e seguradoras a partilhar pedidos de reembolso ao abrigo das regras de dados de saúde, com o regulador na rede."},
+      {"text": "Universidades a emitir diplomas que empregadores de outros países conseguem verificar, sob a coordenação de um organismo público."}
+    ],
+    "explanation": "Um consórcio pode remover membros, reverter registos e mudar as regras — bom para a conformidade, fatal para a neutralidade. O Fabric encaixa em parceiros conhecidos e regulados que partilham de forma seletiva; a participação aberta, ou um ativo neutro que tenha de sobreviver ao consórcio, apontam para uma chain pública."
+  },
   "takeaways": {
     "title": "Secção 03 — Conclusões",
     "items": [

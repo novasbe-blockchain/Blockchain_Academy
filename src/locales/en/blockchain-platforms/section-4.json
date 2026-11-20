@@ -26,6 +26,12 @@
     "s4-xrp-how": "XRPL: How It Works",
     "s4-layers": "L0 · L1 · L2",
     "s4-quiz": "Quiz",
+    "s4-quiz-2": "Quiz 2",
+    "s4-quiz-3": "Quiz 3",
+    "s4-quiz-4": "Quiz 4",
+    "s4-quiz-5": "Quiz 5",
+    "s4-quiz-6": "Quiz 6",
+    "s4-quiz-7": "Quiz 7",
     "s4-takeaways": "Takeaways"
   },
   "title": {
@@ -509,6 +515,66 @@
       "Nothing at all — wrapped tokens are deleted automatically when a vault is drained."
     ],
     "explanation": "A bridge never moves a coin. Your 1 ETH stayed in the vault on the first chain, and the wETH was only a claim ticket on it. Once the vault is empty the ticket is still in your wallet, but nothing backs it, so its price collapses — unless someone refills the vault, as Wormhole's backer did with $320M in 2022. That is why one shared vault guarded by a few keys makes bridges the biggest target in crypto, and why IBC and Layer 0 designs try to remove the middleman."
+  },
+  "quiz2": {
+    "question": "Every Bitcoin node and every Ethereum node is connected to the same internet. Why can an Ethereum app still not simply use a bitcoin?",
+    "options": [
+      "Each chain's nodes accept only what they can re-check under their own rules, and a bitcoin exists only as an entry in Bitcoin's ledger.",
+      "Bitcoin encrypts its ledger, so nobody outside the network can read it.",
+      "Regulators require each blockchain to be kept legally separate from the others.",
+      "It could, but Ethereum's validators charge a fee that makes it uneconomic."
+    ],
+    "explanation": "Being on the internet is not being interoperable. Each chain has its own validators, its own rules and its own ledger, and a blockchain is trusted because every node re-checks everything itself. Facts from another chain cannot be re-checked that way, so the chain ignores them — the same wall as the oracle problem. To use a bitcoin's value elsewhere, someone must hold the real coin and issue a stand-in."
+  },
+  "quiz3": {
+    "question": "Two Cosmos chains exchange tokens over IBC. Who are you trusting?",
+    "options": [
+      "A company that holds the tokens in a vault while they are in transit.",
+      "A committee of signers — say 5 of 9 — who approve each transfer.",
+      "The maths and the two chains' own validators: each chain checks the other's proofs itself, and a relayer only carries the message.",
+      "One shared validator set that secures both chains at once."
+    ],
+    "explanation": "Three routes, one question: who do you trust? A bridge: an operator, a company or a few signers. A Layer 0: one shared validator set. IBC: no middleman — each chain keeps a light client of the other and checks every proof itself. Its limits: it is only as strong as the weaker of the two chains, and both must speak IBC."
+  },
+  "quiz4": {
+    "question": "The Ronin bridge was guarded by 9 signer keys. In 2022 attackers stole 5 of them and took $625 million. Why were 5 keys enough to take everything?",
+    "options": [
+      "Each key unlocked one user's account, and those five accounts held most of the money.",
+      "With 5 keys the attackers could rewrite Ethereum's transaction history.",
+      "The keys let them create new ETH on Ethereum out of nothing.",
+      "The bridge released funds whenever 5 of the 9 signers approved, and every user's coins sat in the same vault."
+    ],
+    "explanation": "A bridge puts everyone's coins in one vault and lets a few keys open it. Five of nine signatures were enough to approve any withdrawal, so the whole vault opened at once — not just one account. That is why bridges are structurally risky, and why the advice is to prefer a chain's official (canonical) bridge and move only what you need."
+  },
+  "quiz5": {
+    "question": "A team is launching a new chain. It wants to be secure from day one without recruiting its own validators. Which option fits, and what does it give up?",
+    "options": [
+      "Launch as a fully sovereign chain: sovereign chains get their security for free.",
+      "Rent security from a Layer 0 (for example as a Polkadot parachain): secure from the start, but it must follow the Layer 0's rules and pay for that security.",
+      "Connect through LayerZero, the Layer 0 that lends its validators to new chains.",
+      "Open a lock-and-mint bridge to Ethereum: a bridge passes Ethereum's security on to the new chain."
+    ],
+    "explanation": "Shared security or full sovereignty: you rent one or build the other. Renting from a Layer 0 means inheriting its validators on day one, with messaging built in, in exchange for following its rules and paying it. A sovereign chain keeps full control but must recruit and pay its own validators. And despite the name, LayerZero is not a Layer 0: it is a messaging protocol, closer to a bridge."
+  },
+  "quiz6": {
+    "question": "How does the XRP Ledger agree on which transactions are final?",
+    "options": [
+      "Known validators vote: when 80% of the validators a node trusts agree, the ledger closes — every 3–5 seconds, with no mining and no staking.",
+      "Miners race to solve a puzzle, as on Bitcoin, only with much smaller blocks.",
+      "Validators lock up XRP as a stake and are drawn at random to propose blocks, as on Ethereum.",
+      "A single company server approves each payment and publishes the result."
+    ],
+    "explanation": "XRPL agrees by a vote among known validators: they propose, vote in rounds, and at 80% agreement the ledger is final — no rewards, no mining. Below 80% the network pauses rather than splits. The trade-off: most nodes use the default published list of validators, so you trust that list not to collude — a different bet from proof of work or proof of stake."
+  },
+  "quiz7": {
+    "question": "Which line describes the division of labour between the layers correctly?",
+    "options": [
+      "L0 adds cheap scale, L1 connects chains to each other, L2 secures and settles.",
+      "L2 secures and settles, L1 adds cheap scale on top of it, L0 stores the data.",
+      "L1 secures and settles, L2 adds cheap scale on top of it, L0 lets many chains share security and talk to each other.",
+      "L1 secures and settles, L0 adds cheap scale on top of it, L2 lets many chains share security."
+    ],
+    "explanation": "Layers are a division of labour. An L1 such as Bitcoin or Ethereum secures and settles. L2s — Lightning, rollups — stack on an L1 for speed and low fees and settle their results on it. A Layer 0 such as Polkadot sits underneath and gives the chains plugged into it shared security and messaging. Bitcoin, Ethereum and Solana have no Layer 0 underneath: they secure themselves."
   },
   "takeaways": {
     "title": "Section 04 — Key Takeaways",

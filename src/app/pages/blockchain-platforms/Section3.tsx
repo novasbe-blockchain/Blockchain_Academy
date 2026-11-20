@@ -1215,12 +1215,22 @@ export function BP_Section3() {
   const quizOptions = t('quiz.options', { returnObjects: true }) as { text: string }[];
   const quiz2Options = t('quiz2.options', { returnObjects: true }) as { text: string }[];
   const quiz3Options = t('quiz3.options', { returnObjects: true }) as { text: string }[];
+  const quiz4Options = t('quiz4.options', { returnObjects: true }) as { text: string }[];
+  const quiz5Options = t('quiz5.options', { returnObjects: true }) as { text: string }[];
+  const quiz6Options = t('quiz6.options', { returnObjects: true }) as { text: string }[];
+  const quiz7Options = t('quiz7.options', { returnObjects: true }) as { text: string }[];
+  const quiz8Options = t('quiz8.options', { returnObjects: true }) as { text: string }[];
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
   // Correct-answer flags stay in code (language-neutral); text comes from t().
   const quizCorrect = [false, false, true, false];
   const quiz2Correct = [true, false, false, false];
   const quiz3Correct = [false, false, false, true];
+  const quiz4Correct = [false, true, false, false];
+  const quiz5Correct = [false, false, false, true];
+  const quiz6Correct = [true, false, false, false];
+  const quiz7Correct = [false, false, true, false];
+  const quiz8Correct = [false, true, false, false];
 
   return (
     <div className="h-full w-full flex overflow-hidden">
@@ -1436,6 +1446,56 @@ export function BP_Section3() {
             question={t('quiz3.question')}
             options={quiz3Options.map((o, i) => ({ text: o.text, correct: quiz3Correct[i] }))}
             explanation={t('quiz3.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 4 — ordering service role ═══════ */}
+        <div id="s3-quiz-4" className="h-full">
+          <QuizSlide
+            question={t('quiz4.question')}
+            options={quiz4Options.map((o, i) => ({ text: o.text, correct: quiz4Correct[i] }))}
+            explanation={t('quiz4.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 5 — on-chain vs off-chain data ═══════ */}
+        <div id="s3-quiz-5" className="h-full">
+          <QuizSlide
+            question={t('quiz5.question')}
+            options={quiz5Options.map((o, i) => ({ text: o.text, correct: quiz5Correct[i] }))}
+            explanation={t('quiz5.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 6 — Raft vs BFT ordering ═══════ */}
+        <div id="s3-quiz-6" className="h-full">
+          <QuizSlide
+            question={t('quiz6.question')}
+            options={quiz6Options.map((o, i) => ({ text: o.text, correct: quiz6Correct[i] }))}
+            explanation={t('quiz6.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 7 — why no gas / token ═══════ */}
+        <div id="s3-quiz-7" className="h-full">
+          <QuizSlide
+            question={t('quiz7.question')}
+            options={quiz7Options.map((o, i) => ({ text: o.text, correct: quiz7Correct[i] }))}
+            explanation={t('quiz7.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 8 — permissioned fit ═══════ */}
+        <div id="s3-quiz-8" className="h-full">
+          <QuizSlide
+            question={t('quiz8.question')}
+            options={quiz8Options.map((o, i) => ({ text: o.text, correct: quiz8Correct[i] }))}
+            explanation={t('quiz8.explanation')}
             compact
           />
         </div>

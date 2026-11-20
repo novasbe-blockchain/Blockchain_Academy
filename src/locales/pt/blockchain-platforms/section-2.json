@@ -40,6 +40,11 @@
     "s2-quiz": "Quiz",
     "s2-quiz-2": "Quiz 2",
     "s2-quiz-3": "Quiz 3",
+    "s2-quiz-4": "Quiz 4",
+    "s2-quiz-5": "Quiz 5",
+    "s2-quiz-6": "Quiz 6",
+    "s2-quiz-7": "Quiz 7",
+    "s2-quiz-8": "Quiz 8",
     "s2-takeaways": "Conclusões"
   },
   "title": {
@@ -1031,6 +1036,56 @@
       "Os fundos são queimados, tal como acontece a um validador que faz batota e sofre slashing."
     ],
     "explanation": "Uma prova mostra que o lote seguiu as regras; não contém as transações. Para sair sem o operador, o utilizador tem de provar o seu saldo ao contrato na Ethereum, e para isso precisa dos dados. É por isso que os rollups os publicam na Ethereum (em blobs desde 2024), e é por isso que as cadeias que guardam os dados off-chain são mais baratas mas obrigam a confiar em mais alguém."
+  },
+  "quiz4": {
+    "question": "Um contrato de empréstimos na Ethereum guarda milhões de dólares em ETH. Pode o contrato decidir, sozinho, enviar um pagamento à meia-noite?",
+    "options": [
+      "Sim — um contrato tem a sua própria chave privada e assina as suas próprias transações.",
+      "Não — um contrato só reage. Uma carteira (EOA) tem de assinar e enviar uma transação que o acione, e é essa carteira que paga o gas.",
+      "Sim, desde que tenha ETH suficiente para pagar o seu próprio gas.",
+      "Não — os contratos não podem ter saldo, por isso não haveria nada para enviar."
+    ],
+    "explanation": "Só as contas de propriedade externa (EOA) — carteiras controladas por uma chave privada — podem iniciar uma transação. Uma conta de contrato tem código, armazenamento e saldo em ETH, mas não tem chave: só corre quando é chamada, e quem paga o gas é a carteira que desencadeou a chamada. Todas as alterações na Ethereum começam como uma mensagem assinada por uma carteira."
+  },
+  "quiz5": {
+    "question": "Chamas um smart contract, mas o gas que autorizaste esgota-se a meio da execução. O que acontece?",
+    "options": [
+      "A metade que foi executada mantém-se, e o resto é-te devolvido.",
+      "O validador termina o trabalho por conta própria para que o bloco continue válido.",
+      "A transação é cancelada e a taxa é devolvida por inteiro, como se nada tivesse acontecido.",
+      "A transação reverte — as alterações são desfeitas — mas continuas a pagar o gas já consumido."
+    ],
+    "explanation": "O gas põe um preço em cada passo de computação e garante que todos os programas param. Quando se esgota a meio da execução, a transação reverte, mas continuas a pagar o gas já consumido. É o preço de deixar uma máquina Turing-completa correr em milhares de computadores sem nunca ficar presa num ciclo infinito."
+  },
+  "quiz6": {
+    "question": "Levantar fundos de um rollup optimistic de volta para a Ethereum demora cerca de 7 dias; de um rollup ZK demora horas. Porquê a diferença?",
+    "options": [
+      "Um rollup optimistic assume que cada lote é válido e deixa uma janela de ~7 dias para qualquer pessoa submeter uma prova de fraude; um rollup ZK envia uma prova de validade com cada lote.",
+      "Os rollups optimistic só publicam os dados na Ethereum uma vez por semana; os rollups ZK publicam de poucas em poucas horas.",
+      "Os rollups ZK mantêm as transações secretas, por isso a Ethereum não tem nada para verificar e liberta os fundos mais cedo.",
+      "Os rollups optimistic usam Proof of Work e precisam de mais confirmações; os rollups ZK usam Proof of Stake."
+    ],
+    "explanation": "Ambos agrupam transações off-chain e liquidam na Ethereum; diferem na forma como a L1 verifica o lote. O optimistic é \"inocente até prova em contrário\": é aceite por predefinição, por isso os levantamentos esperam pela janela de contestação. O ZK é \"prova primeiro\": a Ethereum verifica a matemática e não é precisa contestação. E aqui \"ZK\" compra verificação barata, não segredo — um rollup ZK é tão público como a própria Ethereum."
+  },
+  "quiz7": {
+    "question": "A TerraUSD (UST) perdeu a paridade com o dólar em maio de 2022 e destruiu cerca de 60 mil milhões de dólares. Que tipo de stablecoin era, e o que correu mal?",
+    "options": [
+      "Garantida por fiat: o banco que guardava as reservas em dólares faliu.",
+      "Garantida por cripto: o ETH bloqueado como colateral caiu mais depressa do que as posições puderam ser liquidadas.",
+      "Algorítmica: o peg dependia de incentivos de cunhagem e queima, não de reservas completas, e quando a confiança quebrou entrou em espiral.",
+      "Garantida por cripto: um bug no contrato permitiu aos atacantes cunhar tokens de graça."
+    ],
+    "explanation": "Uma stablecoin só é tão estável quanto aquilo que a garante. As garantidas por fiat detêm dólares e títulos do Tesouro 1:1 e quebram quando o banco do emissor falha (o USDC caiu para 0,87 $ em março de 2023). As garantidas por cripto bloqueiam mais colateral do que aquilo que cunham e quebram quando uma queda é mais rápida do que as liquidações. As algorítmicas têm pouco ou nenhum colateral, por isso quando a confiança quebra o peg entra em espiral — nenhum modelo puramente algorítmico sobreviveu."
+  },
+  "quiz8": {
+    "question": "O ETH não tem limite máximo, mas quando a rede está movimentada a oferta total chega a diminuir. O que faz com que isso aconteça?",
+    "options": [
+      "Um halving corta a recompensa dos validadores de quatro em quatro anos, como na Bitcoin.",
+      "A base fee de cada transação é queimada (EIP-1559); quando a rede está movimentada, queima-se mais ETH do que aquele que é emitido para os validadores.",
+      "Os validadores sofrem slashing com mais frequência quando a rede está movimentada, e o seu stake é destruído.",
+      "O protocolo deixa de emitir ETH novo sempre que a oferta ultrapassa os 120 milhões."
+    ],
+    "explanation": "A oferta de ETH é aquilo que o protocolo emite para os validadores menos aquilo que queima. O Merge cortou a emissão em cerca de 88%, e a EIP-1559 destrói a base fee de cada transação. Rede calma: a emissão supera a queima e a oferta sobe ligeiramente. Rede movimentada: a queima supera a emissão e a oferta diminui. A Bitcoin vende escassez por regra (limite de 21M, halvings); a Ethereum vende escassez pelo uso."
   },
   "takeaways": {
     "title": "Secção 02 — Conclusões-Chave",

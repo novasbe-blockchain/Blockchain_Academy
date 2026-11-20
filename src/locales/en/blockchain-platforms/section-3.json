@@ -419,6 +419,56 @@
     ],
     "explanation": "The endorsement policy is the business rule, and it applies no matter who submits. The Retailer's application sends the proposal to Producer and Distributor peers, collects their signed results, and only then passes the transaction to the ordering service. Orderers sequence transactions; they never endorse. Every peer then re-checks the signatures against the policy before committing: a transaction that falls short is still recorded in the block, but flagged invalid and has no effect."
   },
+  "quiz4": {
+    "question": "In a Fabric network, what is the ordering service's job?",
+    "options": [
+      {"text": "It runs the chaincode and decides whether each transaction makes business sense."},
+      {"text": "It puts endorsed transactions into one agreed order and cuts them into blocks, without running chaincode or judging their content."},
+      {"text": "It issues the certificates that identify each organisation's people, apps and nodes."},
+      {"text": "It holds the single master copy of the ledger that every organisation reads from."}
+    ],
+    "explanation": "Fabric splits the validator's job in two. Endorsing peers simulate the chaincode and sign; the ordering service only sequences — like a registry clerk stamping each filing with a number: order, not content. Certificates come from each organisation's certificate authority (MSP), and there is no master copy: every organisation's peer keeps its own copy of the ledger and re-checks every block."
+  },
+  "quiz5": {
+    "question": "A retailer traces lettuce from farm to store on Fabric. Which of these belongs on the shared ledger?",
+    "options": [
+      {"text": "The price per kilo the farmer negotiated with the processing plant."},
+      {"text": "The shelf price the supermarket sets in its own tills."},
+      {"text": "The delivery entry the distributor types into its internal ERP system."},
+      {"text": "The temperature readings logged in the refrigerated truck during transport."}
+    ],
+    "explanation": "Put on chain the shared facts that others must be able to verify: cold-chain readings are food-safety evidence, and tampering with them could conceal contamination. Prices, margins and internal records stay off chain — they are competitive or purely internal information that needs no multi-party verification."
+  },
+  "quiz6": {
+    "question": "A consortium's ordering nodes will be run by rival banks that do not fully trust one another. Which ordering choice does this section point to, and at what cost?",
+    "options": [
+      {"text": "BFT ordering (SmartBFT): it also tolerates a dishonest orderer, at the cost of more orderers and lower speed."},
+      {"text": "Raft: it tolerates dishonest orderers as well as crashed ones, at no extra cost."},
+      {"text": "Proof of Work: when the operators are competitors, only mining keeps them honest."},
+      {"text": "No ordering service at all: each bank orders the transactions on its own channel."}
+    ],
+    "explanation": "Consensus follows governance. Raft, the default, survives crashed nodes and suits operators who trust each other. BFT also survives dishonest ones, so it fits competitors — but it needs more orderers and runs slower. Either way there is no mining and no staking."
+  },
+  "quiz7": {
+    "question": "Public chains charge a fee on every transaction, partly to stop spam. Fabric has no gas and no token. Why can it do without them?",
+    "options": [
+      {"text": "Fees still exist, but they are settled in ETH behind the scenes."},
+      {"text": "The ordering nodes are paid in newly created Fabric coins instead."},
+      {"text": "Every member is a vetted, identified organisation, so no fee is needed to deter spam; the consortium pays for the nodes like any shared IT."},
+      {"text": "Fabric transactions involve no computation, so there is nothing to pay for."}
+    ],
+    "explanation": "On a public chain anyone can submit transactions, so a fee is what keeps the chain from being flooded. In a permissioned network every participant holds a certificate and is legally accountable, so that deterrent is not needed. The cost does not disappear: the consortium runs and pays for the nodes — predictable, with no crypto exposure."
+  },
+  "quiz8": {
+    "question": "Which of these projects is a poor fit for a permissioned chain like Fabric?",
+    "options": [
+      {"text": "Five known suppliers and a retailer sharing delivery records while keeping prices between each pair."},
+      {"text": "A neutral digital currency that no group of companies should be able to freeze, reverse or shut down."},
+      {"text": "Hospitals and insurers sharing claims under health-data rules, with the regulator on the network."},
+      {"text": "Universities issuing diplomas that employers in other countries can verify, convened by a public body."}
+    ],
+    "explanation": "A consortium can remove members, reverse entries and change the rules — good for compliance, fatal for neutrality. Fabric fits known, regulated partners who share selectively; open participation, or a neutral asset that must outlive the consortium, points to a public chain."
+  },
   "takeaways": {
     "title": "Section 03 — Key Takeaways",
     "items": [

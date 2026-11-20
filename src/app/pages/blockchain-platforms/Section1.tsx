@@ -17,7 +17,9 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-s1-arch' },
   { id: 's1-architecture' },
+  { id: 's1-quiz-security' },
   { id: 's1-tx-lifecycle' },
+  { id: 's1-quiz-txflow' },
 
   { kind: 'group' as const, id: 'g-s1-tradeoffs' },
   { id: 's1-trilemma' },
@@ -27,6 +29,8 @@ const chapterShape = [
   { id: 's1-apps' },
   { id: 's1-apps-assets' },
   { id: 's1-lightning' },
+  { id: 's1-quiz-lightning' },
+  { id: 's1-quiz-sidechains' },
 
   { kind: 'group' as const, id: 'g-s1-fit' },
   { id: 's1-bestfits' },
@@ -1141,9 +1145,29 @@ export function BP_Section1() {
           <BitcoinArchitectureSlide />
         </div>
 
+        {/* ═══════ QUIZ — what the security budget buys ═══════ */}
+        <div id="s1-quiz-security" className="h-full">
+          <QuizSlide
+            question={t('quizSecurity.question')}
+            options={(t('quizSecurity.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
+            explanation={t('quizSecurity.explanation')}
+            compact
+          />
+        </div>
+
         {/* ═══════ TRANSACTION FLOW — end-to-end systemisation recap ═══════ */}
         <div id="s1-tx-lifecycle" className="h-full">
           <TxLifecycleAnimated />
+        </div>
+
+        {/* ═══════ QUIZ — mempool & fee queue ═══════ */}
+        <div id="s1-quiz-txflow" className="h-full">
+          <QuizSlide
+            question={t('quizTxFlow.question')}
+            options={(t('quizTxFlow.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }))}
+            explanation={t('quizTxFlow.explanation')}
+            compact
+          />
         </div>
 
         {/* ═══════ TRILEMMA ═══════ */}
@@ -1174,6 +1198,26 @@ export function BP_Section1() {
         {/* ─── Lightning: Channel Lifecycle ─── */}
         <div id="s1-lightning" className="h-full">
           <LightningVaultDemo />
+        </div>
+
+        {/* ═══════ QUIZ — Lightning: what touches the chain ═══════ */}
+        <div id="s1-quiz-lightning" className="h-full">
+          <QuizSlide
+            question={t('quizLightning.question')}
+            options={(t('quizLightning.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+            explanation={t('quizLightning.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ — sidechain trust model ═══════ */}
+        <div id="s1-quiz-sidechains" className="h-full">
+          <QuizSlide
+            question={t('quizSidechains.question')}
+            options={(t('quizSidechains.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 3 }))}
+            explanation={t('quizSidechains.explanation')}
+            compact
+          />
         </div>
 
         {/* ═══════ BEST FITS — WHERE BITCOIN WINS ═══════ */}

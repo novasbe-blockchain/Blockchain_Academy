@@ -46,6 +46,12 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-s4-wrap' },
   { id: 's4-quiz' },
+  { id: 's4-quiz-2' },
+  { id: 's4-quiz-3' },
+  { id: 's4-quiz-4' },
+  { id: 's4-quiz-5' },
+  { id: 's4-quiz-6' },
+  { id: 's4-quiz-7' },
   { id: 's4-takeaways' },
 ] as const;
 
@@ -1158,6 +1164,12 @@ export function BP_Section4() {
   const xrpStats = t('xrp.stats', { returnObjects: true }) as MetricItem[];
 
   const quizOptions = t('quiz.options', { returnObjects: true }) as string[];
+  const quiz2Options = t('quiz2.options', { returnObjects: true }) as string[];
+  const quiz3Options = t('quiz3.options', { returnObjects: true }) as string[];
+  const quiz4Options = t('quiz4.options', { returnObjects: true }) as string[];
+  const quiz5Options = t('quiz5.options', { returnObjects: true }) as string[];
+  const quiz6Options = t('quiz6.options', { returnObjects: true }) as string[];
+  const quiz7Options = t('quiz7.options', { returnObjects: true }) as string[];
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
   // Color/style data kept language-neutral; merged with translated text below.
@@ -2099,6 +2111,66 @@ export function BP_Section4() {
             question={t('quiz.question')}
             options={quizOptions.map((text, i) => ({ text, correct: i === 2 }))}
             explanation={t('quiz.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 2 — closed systems ═══════ */}
+        <div id="s4-quiz-2" className="h-full">
+          <QuizSlide
+            question={t('quiz2.question')}
+            options={quiz2Options.map((text, i) => ({ text, correct: i === 0 }))}
+            explanation={t('quiz2.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 3 — IBC trust model ═══════ */}
+        <div id="s4-quiz-3" className="h-full">
+          <QuizSlide
+            question={t('quiz3.question')}
+            options={quiz3Options.map((text, i) => ({ text, correct: i === 2 }))}
+            explanation={t('quiz3.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 4 — bridge keys & shared vault ═══════ */}
+        <div id="s4-quiz-4" className="h-full">
+          <QuizSlide
+            question={t('quiz4.question')}
+            options={quiz4Options.map((text, i) => ({ text, correct: i === 3 }))}
+            explanation={t('quiz4.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 5 — Layer 0: rent vs build ═══════ */}
+        <div id="s4-quiz-5" className="h-full">
+          <QuizSlide
+            question={t('quiz5.question')}
+            options={quiz5Options.map((text, i) => ({ text, correct: i === 1 }))}
+            explanation={t('quiz5.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 6 — XRPL consensus ═══════ */}
+        <div id="s4-quiz-6" className="h-full">
+          <QuizSlide
+            question={t('quiz6.question')}
+            options={quiz6Options.map((text, i) => ({ text, correct: i === 0 }))}
+            explanation={t('quiz6.explanation')}
+            compact
+          />
+        </div>
+
+        {/* ═══════ QUIZ 7 — L0 · L1 · L2 roles ═══════ */}
+        <div id="s4-quiz-7" className="h-full">
+          <QuizSlide
+            question={t('quiz7.question')}
+            options={quiz7Options.map((text, i) => ({ text, correct: i === 2 }))}
+            explanation={t('quiz7.explanation')}
             compact
           />
         </div>

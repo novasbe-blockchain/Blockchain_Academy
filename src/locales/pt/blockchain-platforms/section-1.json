@@ -9,12 +9,16 @@
   "chapters": {
     "s1-handoff": "↩ Handoff",
     "s1-architecture": "Arquitetura",
+    "s1-quiz-security": "Quiz: Segurança",
     "s1-tx-lifecycle": "🧩 Ciclo de Vida da Tx",
+    "s1-quiz-txflow": "Quiz: Fluxo da Tx",
     "s1-trilemma": "Trilema",
     "s1-quiz-trilemma": "Quiz: Trilemma",
     "s1-apps": "Apps: scaling",
     "s1-apps-assets": "Apps: assets",
     "s1-lightning": "🧩 Lightning Network",
+    "s1-quiz-lightning": "Quiz: Lightning",
+    "s1-quiz-sidechains": "Quiz: Sidechains",
     "s1-bestfits": "🎯 Melhores Encaixes",
     "s1-quiz-fit": "Quiz: Right tool?",
     "s1-takeaways": "Conclusões"
@@ -384,6 +388,46 @@
       "Private invoices between four B2B partners who already know each other."
     ],
     "explanation": "Bitcoin wins where neutrality and scarcity matter more than features: a fixed supply, no issuer, and a security budget that makes rewriting history unaffordable — exactly what a long-term reserve needs. Loyalty points have one trusted issuer who must be able to change the rules — a database. A game economy needs fast, cheap, programmable trades — a smart-contract platform. Private B2B invoices need confidentiality between known parties — a permissioned chain (Section 3)."
+  },
+  "quizSecurity": {
+    "question": "Os mineradores da Bitcoin gastam uma enorme fatura de eletricidade em cada bloco. Segundo esta secção, o que é que uma empresa que depende da Bitcoin lhes está realmente a pagar?",
+    "options": [
+      "Velocidade — quanto mais energia os mineradores gastam, mais depressa os pagamentos são processados.",
+      "Apoio ao cliente — pode pedir-se aos mineradores que revertam um pagamento enviado por engano.",
+      "Segurança — o custo de acrescentar blocos torna reescrever o histórico de pagamentos mais caro do que aquilo que se ganharia.",
+      "Armazenamento — os mineradores guardam as chaves privadas dos utilizadores nas suas máquinas."
+    ],
+    "explanation": "O Proof of Work é um custo, não um enigma: não pagas aos mineradores para processarem pagamentos, pagas-lhes para tornarem incomportável reescrever o histórico. Isso compra finalidade sem árbitro — não se pode pedir a ninguém que reverta um pagamento — e custa blocos lentos, capacidade limitada e uma grande fatura de energia."
+  },
+  "quizTxFlow": {
+    "question": "Envias um pagamento em Bitcoin com uma assinatura válida e uma taxa muito baixa. Horas depois continua por confirmar, enquanto pagamentos enviados depois do teu já passaram. Qual é a explicação mais provável?",
+    "options": [
+      "Está à espera na mempool: a fila é ordenada pela taxa, por isso as transações com taxa mais alta são escolhidas primeiro para os blocos.",
+      "Os nós rejeitaram-no na verificação de relay, por isso tem de ser assinado de novo.",
+      "Já está num bloco; a Bitcoin apenas esconde um pagamento até ele ter seis confirmações.",
+      "A tua carteira ainda está a resolver o enigma de Proof of Work para ele."
+    ],
+    "explanation": "Uma transação válida espera na mempool, uma fila ordenada pela taxa que oferece: taxa mais alta, escolha mais rápida. A espera pode ser de segundos ou de horas. As transações inválidas nem chegam lá — os nós travam-nas na verificação de relay — e quem faz o Proof of Work são os mineradores, não as carteiras. As confirmações só começam a contar depois de um minerador incluir a transação num bloco."
+  },
+  "quizLightning": {
+    "question": "A Alice e o Bob abrem um canal Lightning, pagam um ao outro 500 vezes ao longo de um mês e depois fecham-no. Quantas dessas transações ficam registadas na blockchain da Bitcoin?",
+    "options": [
+      "502 — a abertura, o fecho e todos os pagamentos pelo meio.",
+      "2 — apenas a abertura e o fecho; os 500 pagamentos acontecem off-chain.",
+      "500 — todos os pagamentos ficam registados, só que com uma taxa mais baixa.",
+      "Nenhuma — a Lightning é uma blockchain separada, com os seus próprios mineradores."
+    ],
+    "explanation": "O canal é um cofre 2-de-2 na Bitcoin. Cada pagamento lá dentro é apenas um acordo assinado sobre como dividir o cofre, por isso a blockchain só vê duas transações: a abertura e o fecho. É assim que a Lightning torna os pagamentos do dia a dia instantâneos e quase gratuitos, usando a Bitcoin apenas para abrir e liquidar."
+  },
+  "quizSidechains": {
+    "question": "Uma startup diz aos investidores: \"A nossa app corre numa sidechain da Bitcoin, por isso é exatamente tão segura como a própria Bitcoin.\" Segundo esta secção, o que está errado nesta afirmação?",
+    "options": [
+      "Nada — todos os full nodes da Bitcoin validam também as transações da sidechain.",
+      "As sidechains são na verdade mais seguras do que a Bitcoin, porque menos partes têm de concordar.",
+      "A Bitcoin não tem sidechains; a Lightning é a única coisa construída à sua volta.",
+      "Uma sidechain é uma chain separada, ancorada a BTC, com o seu próprio modelo de confiança (federação ou merge-mining); não herda a segurança da Bitcoin."
+    ],
+    "explanation": "A Stacks, a Liquid e a Rootstock são chains programáveis separadas, ancoradas a BTC. Cada uma tem o seu próprio modelo de confiança — uma federação, ou merge-mining — e nenhuma herda a segurança da Bitcoin. A camada base da Bitcoin mantém-se simples de propósito; tudo o que se constrói à volta traz o seu próprio modelo de confiança."
   },
   "takeaways": {
     "title": "Section 01 — Key Takeaways",

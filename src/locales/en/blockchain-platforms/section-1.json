@@ -9,12 +9,16 @@
   "chapters": {
     "s1-handoff": "↩ Handoff",
     "s1-architecture": "Architecture",
+    "s1-quiz-security": "Quiz: Security",
     "s1-tx-lifecycle": "🧩 Tx Flow",
+    "s1-quiz-txflow": "Quiz: Tx Flow",
     "s1-trilemma": "Trilemma",
     "s1-quiz-trilemma": "Quiz: Trilemma",
     "s1-apps": "Apps: scaling",
     "s1-apps-assets": "Apps: assets",
     "s1-lightning": "🧩 Lightning Network",
+    "s1-quiz-lightning": "Quiz: Lightning",
+    "s1-quiz-sidechains": "Quiz: Sidechains",
     "s1-bestfits": "🎯 Best Fits",
     "s1-quiz-fit": "Quiz: Right tool?",
     "s1-takeaways": "Takeaways"
@@ -431,6 +435,46 @@
       "Private invoices between four B2B partners who already know each other."
     ],
     "explanation": "Bitcoin wins where neutrality and scarcity matter more than features: a fixed supply, no issuer, and a security budget that makes rewriting history unaffordable — exactly what a long-term reserve needs. Loyalty points have one trusted issuer who must be able to change the rules — a database. A game economy needs fast, cheap, programmable trades — a smart-contract platform. Private B2B invoices need confidentiality between known parties — a permissioned chain (Section 3)."
+  },
+  "quizSecurity": {
+    "question": "Bitcoin's miners spend a large electricity bill on every block. According to this section, what is a business that relies on Bitcoin really paying them for?",
+    "options": [
+      "Speed — the more energy miners spend, the faster payments are processed.",
+      "Customer service — miners can be asked to reverse a payment that was sent by mistake.",
+      "Security — the cost of adding blocks makes rewriting the payment history more expensive than it is worth.",
+      "Storage — miners keep users' private keys safe on their machines."
+    ],
+    "explanation": "Proof of Work is a cost, not a puzzle: you are not paying miners to process payments, you are paying them to make rewriting history unaffordable. That buys finality without a referee — nobody can be asked to reverse a payment — and it costs slow blocks, limited throughput and a large energy bill."
+  },
+  "quizTxFlow": {
+    "question": "You send a Bitcoin payment with a valid signature and a very low fee. Hours later it is still unconfirmed, while payments sent after yours have gone through. What is the most likely explanation?",
+    "options": [
+      "It is waiting in the mempool: the queue is ranked by fee, so higher-fee transactions are picked for blocks first.",
+      "The nodes rejected it at the relay check, so it has to be signed again.",
+      "It is already in a block; Bitcoin simply hides a payment until it has six confirmations.",
+      "Your wallet is still solving the Proof-of-Work puzzle for it."
+    ],
+    "explanation": "A valid transaction waits in the mempool, a queue ranked by the fee it offers: higher fee, sooner pick. The wait can be seconds or hours. Invalid transactions never get that far — nodes stop them at the relay check — and it is miners, not wallets, who do the Proof of Work. Confirmations only start counting once a miner has put the transaction in a block."
+  },
+  "quizLightning": {
+    "question": "Alice and Bob open a Lightning channel, pay each other 500 times over a month, then close it. How many of those transactions does the Bitcoin blockchain record?",
+    "options": [
+      "502 — the opening, the closing and every payment in between.",
+      "2 — only the opening and the closing; the 500 payments happen off-chain.",
+      "500 — every payment is recorded, just with a lower fee.",
+      "None — Lightning is a separate blockchain with its own miners."
+    ],
+    "explanation": "The channel is a 2-of-2 vault on Bitcoin. Each payment inside it is just a signed agreement on how to split the vault, so the blockchain only ever sees two transactions: open and close. That is how Lightning makes everyday payments instant and almost free while Bitcoin is used only to open and settle."
+  },
+  "quizSidechains": {
+    "question": "A startup tells investors: \"Our app runs on a Bitcoin sidechain, so it is exactly as secure as Bitcoin itself.\" Going by this section, what is wrong with that claim?",
+    "options": [
+      "Nothing — every Bitcoin full node validates the sidechain's transactions too.",
+      "Sidechains are actually safer than Bitcoin, because fewer parties have to agree.",
+      "Bitcoin has no sidechains; Lightning is the only thing built around it.",
+      "A sidechain is a separate chain pegged to BTC with its own trust model (a federation or merge-mining); it does not inherit Bitcoin's security."
+    ],
+    "explanation": "Stacks, Liquid and Rootstock are separate programmable chains pegged to BTC. Each has its own trust model — a federation, or merge-mining — and none inherits Bitcoin's security. Bitcoin's base layer stays deliberately simple; everything built around it brings its own trust model."
   },
   "takeaways": {
     "title": "Section 01 — Key Takeaways",
