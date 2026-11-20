@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { Fragment, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
@@ -13,36 +13,54 @@ import { ShieldAlert, KeyRound, ArrowRight, ArrowDown } from 'lucide-react';
 // Language-neutral shape — only IDs. Labels come from t() at render time.
 const chapterIds = [
   's5-oracle',
+  's5-ex-oracle',
   's5-challenges',
   's5-technical',
-  's5-ex-oracle',
   's5-risks-security',
   's5-admin-key',
   's5-failures',
   's5-risks-cost',
   's5-risks-regulatory',
   's5-quiz',
+  's5-quiz-2',
+  's5-quiz-3',
   's5-takeaways',
 ] as const;
 
-// ─── Exercise: Oracle Attack Scenario ───────────────────────────────────────
-// Language-neutral data: emoji + color + presence of a mitigation. Text via t().
-
-const ORACLE_ROW_META = [
-  { emoji: '🌾', color: '#39B54A', hasMitigation: false },
-  { emoji: '🏢', color: '#6366f1', hasMitigation: true },
-  { emoji: '🔓', color: '#ED1C24', hasMitigation: true },
-  { emoji: '📡', color: '#ED1C24', hasMitigation: true },
-  { emoji: '💸', color: '#f59e0b', hasMitigation: true },
-  { emoji: '🔒', color: '#ED1C24', hasMitigation: false },
+// ─── Oracle recap: the chain of trust from Section 2, read as a risk ─────────
+// Language-neutral: emoji, colour and how many of three strength pips are lit.
+const ORACLE_LINK_META = [
+  { emoji: '🌍', color: '#ED1C24', strength: 1 },
+  { emoji: '🔮', color: '#f59e0b', strength: 2 },
+  { emoji: '📜', color: '#39B54A', strength: 3 },
 ] as const;
 
-interface OracleRowText {
-  actor: string;
-  event: string;
-  consequence: string;
-  mitigation?: { title: string; desc: string };
+interface OracleLinkText { label: string; guard: string; level: string }
+
+// ─── Exercise: Defend the Oracle ────────────────────────────────────────────
+// Section 2 already steps through the attack itself; here students work the defence side.
+const DEFENCE_META = [
+  { emoji: '🏢', color: '#6366f1' },
+  { emoji: '🌡️', color: '#8b5cf6' },
+  { emoji: '⚡', color: '#ED1C24' },
+  { emoji: '🕒', color: '#f59e0b' },
+] as const;
+
+interface DefenceItem {
+  title: string;
+  desc: string;
+  defence: string;
+  defenceDesc: string;
+  residual: string;
 }
+
+interface QuizItem { question: string; options: string[]; explanation: string }
+
+// Correct-option index per extra quiz (language-neutral; text lives in the locale files).
+const EXTRA_QUIZ = [
+  { id: 's5-quiz-2', key: 'adminKey', correct: 2 },
+  { id: 's5-quiz-3', key: 'pattern', correct: 0 },
+] as const;
 
 interface CardItem {
   label: string;
@@ -84,91 +102,93 @@ const FAILURE_META = [
   { emoji: '📉', color: '#7c2d12' },
 ];
 
-function OracleAttackExercise() {
+function DefendOracleExercise() {
   const { t } = useTranslation('smart-contracts/section-5');
-  const [revealed, setRevealed] = useState(0);
-  const rows = t('exercise.rows', { returnObjects: true }) as OracleRowText[];
-  const allDone = revealed >= ORACLE_ROW_META.length;
-  const reset = () => setRevealed(0);
+  const items = t('exercise.items', { returnObjects: true }) as DefenceItem[];
+  const [open, setOpen] = useState<boolean[]>(() => DEFENCE_META.map(() => false));
+  const shown = open.filter(Boolean).length;
+  const allDone = shown === DEFENCE_META.length;
 
   return (
-    <div className="h-full flex flex-col p-6 lg:p-8">
-      <div className="shrink-0 flex items-center justify-between mb-4">
-        <div>
+    <>
+      <div className="shrink-0 flex items-start justify-between gap-4 mb-4">
+        <div className="min-w-0">
           <span className="px-2.5 py-0.5 rounded-full bg-[#ED1C24]/15 border border-[#ED1C24]/40 text-[#ED1C24] text-xs font-bold">{t('exercise.badge')}</span>
           <h2 className="text-2xl font-bold text-foreground mt-1">{t('exercise.title')}</h2>
-          <p className="text-muted-foreground text-sm">{t('exercise.subtitle')}</p>
+          <p className="text-muted-foreground text-sm max-w-4xl">{t('exercise.subtitle')}</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="text-xs text-muted-foreground">{Math.min(revealed, ORACLE_ROW_META.length)} / {ORACLE_ROW_META.length} {t('exercise.stepsLabel')}</div>
-          {allDone && <button onClick={reset} className="px-3 py-1.5 rounded-lg bg-muted text-xs font-semibold text-muted-foreground hover:bg-muted/80 transition-colors">{t('exercise.reset')}</button>}
+        <div className="shrink-0 flex items-center gap-3">
+          <div className="text-xs text-muted-foreground whitespace-nowrap">{t('exercise.progress', { n: shown, total: DEFENCE_META.length })}</div>
+          {shown > 0 && (
+            <button
+              type="button"
+              onClick={() => setOpen(DEFENCE_META.map(() => false))}
+              className="px-3 py-1.5 rounded-lg bg-muted text-xs font-semibold text-muted-foreground hover:bg-muted/80 transition-colors cursor-pointer whitespace-nowrap"
+            >
+              {t('exercise.reset')}
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="shrink-0 grid grid-cols-2 gap-4 mb-2 px-1">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('exercise.whatHappened')}</p>
-        <p className="text-xs font-semibold text-[#39B54A] uppercase tracking-widest">{t('exercise.howToPrevent')}</p>
-      </div>
-
-      <div className="flex-1 min-h-0 flex flex-col gap-2">
-        {ORACLE_ROW_META.map((meta, i) => {
-          const row = rows[i];
+      <div className="flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-4">
+        {DEFENCE_META.map((meta, i) => {
+          const item = items[i];
+          const isOpen = open[i];
           return (
-          <motion.div
-            key={i}
-            className="flex-1 grid grid-cols-2 gap-4 min-h-0"
-            initial={{ opacity: 0.15 }}
-            animate={{ opacity: i < revealed ? 1 : 0.15 }}
-          >
             <div
-              className="flex items-start gap-2.5 p-3 rounded-xl border transition-colors"
-              style={{
-                borderColor: i < revealed ? meta.color + '40' : 'var(--border)',
-                backgroundColor: i < revealed ? meta.color + '08' : 'transparent',
-              }}
+              key={i}
+              className="min-h-0 flex flex-col gap-2.5 rounded-xl border-2 p-4"
+              style={{ borderColor: meta.color + '50', backgroundColor: meta.color + '08' }}
             >
-              <div className="size-7 rounded-full flex items-center justify-center text-base shrink-0"
-                style={{ backgroundColor: i < revealed ? meta.color + '20' : 'var(--muted)' }}>
-                {i < revealed ? meta.emoji : '?'}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
-                  <span className="text-xs font-bold shrink-0" style={{ color: i < revealed ? meta.color : 'var(--muted-foreground)' }}>{row.actor}</span>
-                  <span className="text-xs font-semibold text-foreground">{i < revealed ? row.event : t('exercise.unknownEvent')}</span>
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: meta.color + '18' }}>{meta.emoji}</div>
+                <div className="min-w-0">
+                  <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: meta.color }}>{t('exercise.weakLabel')} {i + 1}</div>
+                  <div className="font-black text-base text-foreground leading-tight">{item.title}</div>
                 </div>
-                {i < revealed && <div className="text-xs text-muted-foreground leading-snug">{row.consequence}</div>}
               </div>
-            </div>
+              <p className="text-sm text-foreground leading-snug">{item.desc}</p>
 
-            <div className="p-3 rounded-xl border transition-colors"
-              style={{
-                borderColor: meta.hasMitigation && allDone ? '#39B54A40' : 'transparent',
-                backgroundColor: meta.hasMitigation && allDone ? '#39B54A08' : 'transparent',
-              }}
-            >
-              {meta.hasMitigation && allDone && row.mitigation && (
-                <motion.div initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
-                  <div className="font-bold text-xs text-[#39B54A] mb-1">✓ {row.mitigation.title}</div>
-                  <div className="text-xs text-muted-foreground leading-snug">{row.mitigation.desc}</div>
+              {isOpen ? (
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="mt-auto grid grid-cols-2 gap-2.5">
+                  <div className="rounded-lg border bg-card p-2.5" style={{ borderColor: '#39B54A55' }}>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-[#39B54A]">🛡️ {t('exercise.defenceLabel')}</div>
+                    <div className="text-xs font-bold text-foreground mt-1 leading-tight">{item.defence}</div>
+                    <p className="text-xs text-muted-foreground leading-snug mt-0.5">{item.defenceDesc}</p>
+                  </div>
+                  <div className="rounded-lg border bg-card p-2.5" style={{ borderColor: '#f59e0b55' }}>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-[#f59e0b]">⚠ {t('exercise.residualLabel')}</div>
+                    <p className="text-xs text-foreground leading-snug mt-1">{item.residual}</p>
+                  </div>
                 </motion.div>
+              ) : (
+                <div className="mt-auto flex items-center justify-between gap-3 rounded-lg border border-dashed border-border px-3 py-2.5">
+                  <span className="text-sm italic text-muted-foreground">{t('exercise.prompt')}</span>
+                  <button
+                    type="button"
+                    onClick={() => setOpen(o => o.map((v, k) => (k === i ? true : v)))}
+                    className="shrink-0 px-3 py-1.5 rounded-lg text-white text-xs font-bold cursor-pointer whitespace-nowrap"
+                    style={{ backgroundColor: meta.color }}
+                  >
+                    {t('exercise.reveal')}
+                  </button>
+                </div>
               )}
             </div>
-          </motion.div>
           );
         })}
       </div>
 
-      {!allDone && (
-        <div className="shrink-0 mt-3">
-          <button
-            onClick={() => setRevealed(r => r + 1)}
-            className="px-4 py-2 rounded-lg bg-[#ED1C24] text-white text-xs font-bold hover:bg-[#ED1C24]/90 transition-colors"
-          >
-            {t('exercise.revealNext')}
-          </button>
-        </div>
-      )}
-    </div>
+      <motion.div
+        initial={false}
+        animate={{ opacity: allDone ? 1 : 0.35 }}
+        className="shrink-0 mt-3 px-3.5 py-2 rounded-xl border text-sm text-foreground"
+        style={{ borderColor: '#6366f140', backgroundColor: '#6366f10f' }}
+      >
+        <span className="font-bold text-[#6366f1]">{t('exercise.verdictLabel')}</span>{t('exercise.verdict')}
+      </motion.div>
+    </>
   );
 }
 
@@ -180,13 +200,11 @@ export function SC_Section5() {
     [t]
   );
 
-  const oracleCards = t('oracle.cards', { returnObjects: true }) as CardItem[];
-  const oracleColors = ['#ED1C24', '#6366f1', '#f59e0b'];
-  const oracleEmojis = ['🔒', '🌉', '⚠️'];
-  const oracleNetworks = t('oracle.networks.items', { returnObjects: true }) as { n: string; d: string }[];
-  const oracleNetworkColors = ['#375BD2', '#8b5cf6', '#6366f1', '#f59e0b'];
+  const oracleLinks = t('oracle.links', { returnObjects: true }) as OracleLinkText[];
+  const oracleSeen = t('oracle.seen', { returnObjects: true }) as string[];
+  const oracleAsks = t('oracle.asks', { returnObjects: true }) as { q: string; a: string }[];
 
-  const challengeItems = t('challenges.items', { returnObjects: true }) as WhyFixItem[];
+  const challengeItems = t('challenges.items', { returnObjects: true }) as (WhyFixItem & { chain: string; web: string })[];
   const challengeMeta = [
     { emoji: '🚦', color: '#ED1C24' },
     { emoji: '⏱️', color: '#f59e0b' },
@@ -229,9 +247,9 @@ export function SC_Section5() {
     { emoji: '🏃', color: '#f59e0b' },
   ];
 
-  const quizOptionsText = t('quiz.options', { returnObjects: true }) as string[];
-  const quizCorrect = [false, true, false, false];
-  const quizOptions = quizOptionsText.map((text, i) => ({ text, correct: quizCorrect[i] }));
+  const quizOptions = (t('quiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
+  const extraQuiz = t('quizMore', { returnObjects: true }) as Record<string, QuizItem>;
+  const quizTotal = EXTRA_QUIZ.length + 1;
 
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
@@ -253,61 +271,78 @@ export function SC_Section5() {
           />
         </div>
 
-        {/* ═══════ THE ORACLE PROBLEM ═══════ */}
+        {/* ═══════ ORACLE RISK — recap bridge from Section 2 ═══════ */}
         <div id="s5-oracle" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('oracle.heading')}</h2>
+            <span className="text-xs font-black uppercase tracking-widest text-[#6366f1]">{t('oracle.kicker')}</span>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('oracle.heading')}</h2>
             <p className="text-muted-foreground text-sm mt-1">{t('oracle.subtitle')}</p>
           </div>
 
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4">
-            {oracleCards.map((c, i) => {
-              const color = oracleColors[i];
-              return (
-              <motion.div
-                key={c.label}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3 }}
-                className="flex flex-col gap-3 rounded-xl border-2 p-5 justify-center"
-                style={{ borderColor: color + '50', backgroundColor: color + '08' }}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: color + '18' }}>{oracleEmojis[i]}</div>
-                  <div>
-                    <div className="font-black text-base text-foreground leading-tight">{c.label}</div>
-                    <div className="text-sm font-semibold mt-0.5" style={{ color }}>{c.what}</div>
-                  </div>
-                </div>
-                <p className="text-sm text-foreground leading-relaxed flex-1">{c.body}</p>
-                <p className="text-xs italic text-muted-foreground border-l-2 pl-2" style={{ borderColor: color }}>{c.tag}</p>
-              </motion.div>
-              );
-            })}
-          </div>
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-5 gap-5 content-center">
 
-          <div className="shrink-0 mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="rounded-xl border p-4" style={{ borderColor: '#6366f140', backgroundColor: '#6366f10a' }}>
-              <div className="text-xs font-black uppercase tracking-widest text-[#6366f1] mb-1">{t('oracle.example.label')}</div>
-              <p className="text-sm text-foreground leading-snug">
-                {t('oracle.example.bodyA')}<span className="font-semibold">{t('oracle.example.bodyStrong')}</span>{t('oracle.example.bodyB')}
-              </p>
-            </div>
-            <div className="rounded-xl border bg-card p-4">
-              <div className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">{t('oracle.networks.label')}</div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                {oracleNetworks.map((o, i) => (
-                  <div key={o.n} className="flex items-baseline gap-1.5">
-                    <span className="font-bold shrink-0" style={{ color: oracleNetworkColors[i] }}>{o.n}</span>
-                    <span className="text-muted-foreground leading-snug">{o.d}</span>
-                  </div>
+            {/* Chain of trust: the weakest link sits off-chain */}
+            <div className="lg:col-span-3 rounded-2xl border border-border bg-card/50 p-5 flex flex-col gap-4 justify-center">
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('oracle.chainLabel')}</div>
+              <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-2">
+                {ORACLE_LINK_META.map((m, i) => (
+                  <Fragment key={i}>
+                    {i > 0 && <ArrowRight className="size-5 text-muted-foreground self-center shrink-0" />}
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.3, delay: i * 0.1 }}
+                      className="rounded-xl border-2 bg-card px-3 py-4 flex flex-col items-center gap-1.5 text-center"
+                      style={{ borderColor: m.color }}
+                    >
+                      <span className="text-3xl leading-none">{m.emoji}</span>
+                      <span className="text-sm font-black text-foreground leading-tight">{oracleLinks[i].label}</span>
+                      <span className="text-xs text-muted-foreground leading-tight">{oracleLinks[i].guard}</span>
+                      <div className="mt-auto pt-2 flex gap-1" role="img" aria-label={`${t('oracle.strengthLabel')}: ${oracleLinks[i].level}`}>
+                        {[1, 2, 3].map((n) => (
+                          <span key={n} className="h-1.5 w-7 rounded-full" style={{ backgroundColor: n <= m.strength ? m.color : 'var(--muted)' }} />
+                        ))}
+                      </div>
+                      <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: m.color }}>{oracleLinks[i].level}</span>
+                    </motion.div>
+                  </Fragment>
+                ))}
+              </div>
+              <p className="text-sm text-foreground leading-snug">{t('oracle.chainNote')}</p>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mr-1">{t('oracle.seenLabel')}</span>
+                {oracleSeen.map((x) => (
+                  <span key={x} className="text-xs font-semibold px-2.5 py-1 rounded-full bg-card border border-border text-foreground">{x}</span>
                 ))}
               </div>
             </div>
+
+            {/* The risk lens: three questions */}
+            <div className="lg:col-span-2 flex flex-col gap-3 justify-center">
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('oracle.askLabel')}</div>
+              {oracleAsks.map((x, i) => (
+                <div key={x.q} className="flex items-start gap-3 p-3 bg-card border border-border rounded-xl">
+                  <span className="size-7 shrink-0 rounded-full flex items-center justify-center text-xs font-black text-white bg-[#6366f1]">{i + 1}</span>
+                  <div className="min-w-0">
+                    <div className="font-bold text-sm text-foreground leading-tight">{x.q}</div>
+                    <div className="text-xs text-muted-foreground mt-1 leading-snug">{x.a}</div>
+                  </div>
+                </div>
+              ))}
+              <div className="p-3 rounded-xl border border-[#f59e0b]/30 text-sm text-foreground" style={{ backgroundColor: '#f59e0b0f' }}>
+                <span className="font-bold text-[#f59e0b]">{t('oracle.limitLabel')}</span>{t('oracle.limit')}
+              </div>
+            </div>
+
           </div>
-          <UnderTheHood terms={['data feed', 'TWAP', 'signed report', 'VRF (randomness)']} className="shrink-0 mt-3" />
           <KeyPointBar text={t('keyPoints.s5-oracle')} className="mt-3" />
+        </div>
+
+        {/* ═══════ EXERCISE: DEFEND THE ORACLE ═══════ */}
+        <div id="s5-ex-oracle" className="h-full flex flex-col p-6 lg:p-10">
+          <DefendOracleExercise />
+          <KeyPointBar text={t('keyPoints.s5-ex-oracle')} className="mt-3" />
         </div>
 
         {/* ═══════ CHALLENGES & LIMITATIONS ═══════ */}
@@ -327,25 +362,33 @@ export function SC_Section5() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.3 }}
-                className="flex flex-col gap-3 rounded-xl border-2 p-5 justify-center"
+                className="min-h-0 flex flex-col gap-2 rounded-xl border-2 px-5 py-3 justify-center"
                 style={{ borderColor: color + '50', backgroundColor: color + '08' }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="size-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ backgroundColor: color + '18' }}>{challengeMeta[i].emoji}</div>
+                  <div className="size-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: color + '18' }}>{challengeMeta[i].emoji}</div>
                   <div>
                     <div className="font-black text-base text-foreground leading-tight">{c.title}</div>
                     <div className="text-sm font-semibold mt-0.5" style={{ color }}>{c.what}</div>
                   </div>
                 </div>
-                <div className="rounded-lg bg-card border p-3" style={{ borderColor: color + '25' }}>
+                <div className="rounded-lg bg-card border px-3 py-2" style={{ borderColor: color + '25' }}>
                   <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('challenges.whyLabel')}</span>
                   <p className="text-sm text-foreground leading-snug mt-0.5">{c.why}</p>
                 </div>
-                <div className="rounded-lg p-3 border-l-2" style={{ borderColor: color, backgroundColor: color + '12' }}>
+                <div className="rounded-lg px-3 py-2 border-l-2" style={{ borderColor: color, backgroundColor: color + '12' }}>
                   <span className="text-xs font-black uppercase tracking-widest" style={{ color }}>{t('challenges.fixLabel')}</span>
                   <p className="text-sm text-foreground leading-snug mt-0.5">{c.fix}</p>
                 </div>
-                <p className="text-xs text-muted-foreground italic">{c.stat}</p>
+                <div className="flex items-center gap-2 flex-wrap text-xs">
+                  <span className="px-2 py-1 rounded-md font-bold" style={{ backgroundColor: '#ED1C2414', color: '#ED1C24' }}>
+                    <span className="font-black uppercase tracking-wider text-[10px] opacity-80 mr-1.5">{t('challenges.onChainLabel')}</span>{c.chain}
+                  </span>
+                  <span className="text-muted-foreground font-semibold">{t('challenges.vs')}</span>
+                  <span className="px-2 py-1 rounded-md font-bold" style={{ backgroundColor: '#39B54A14', color: '#39B54A' }}>
+                    <span className="font-black uppercase tracking-wider text-[10px] opacity-80 mr-1.5">{t('challenges.offChainLabel')}</span>{c.web}
+                  </span>
+                </div>
               </motion.div>
               );
             })}
@@ -394,14 +437,6 @@ export function SC_Section5() {
             })}
           </div>
           <KeyPointBar text={t('keyPoints.s5-technical')} className="mt-3" />
-        </div>
-
-        {/* ═══════ EXERCISE: ORACLE ATTACK ═══════ */}
-        <div id="s5-ex-oracle" className="h-full flex flex-col">
-          <div className="flex-1 min-h-0">
-            <OracleAttackExercise />
-          </div>
-          <KeyPointBar text={t('keyPoints.s5-ex-oracle')} className="mx-6 lg:mx-8 mb-6 -mt-3" />
         </div>
 
         {/* ═══════ SECURITY RISKS ═══════ */}
@@ -627,11 +662,24 @@ export function SC_Section5() {
         {/* ═══════ QUIZ ═══════ */}
         <div id="s5-quiz" className="h-full">
           <QuizSlide
+            compact
+            label={`Quiz · 1 / ${quizTotal}`}
             question={t('quiz.question')}
             options={quizOptions}
             explanation={t('quiz.explanation')}
           />
         </div>
+        {EXTRA_QUIZ.map((q, i) => (
+          <div key={q.id} id={q.id} className="h-full">
+            <QuizSlide
+              compact
+              label={`Quiz · ${i + 2} / ${quizTotal}`}
+              question={extraQuiz[q.key].question}
+              options={extraQuiz[q.key].options.map((text, k) => ({ text, correct: k === q.correct }))}
+              explanation={extraQuiz[q.key].explanation}
+            />
+          </div>
+        ))}
 
         <div id="s5-takeaways" className="h-full">
           <TakeawaySlide
