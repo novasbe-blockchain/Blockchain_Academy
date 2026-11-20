@@ -1,438 +1,413 @@
 {
   "chapters": {
-    "s6-standards-intro": "Standards Intro",
-    "s6-erc-explain": "What is an ERC",
-    "s6-erc-table": "🧩 ERC Explorer",
-    "s6-erc-evolve": "Why Standards Evolve",
-    "s6-eip-process": "🧩 EIP Process",
-    "s6-erc-example": "OpenZeppelin Example",
-    "s6-frameworks-intro": "Frameworks Intro",
-    "s6-frameworks-table": "🧩 Frameworks Compare",
-    "s6-tools": "Useful Tools",
-    "s6-platform-checklist": "🧩 Platform Checklist",
-    "s6-platform-table": "🧩 Platforms",
-    "s6-platform-usecase": "Use Case → Platform",
-    "s6-integration-intro": "Integration Intro",
-    "s6-integration-nodes": "Node Infrastructure",
-    "s6-integration-api": "API & Middleware",
-    "s6-integration-events": "Event-Driven",
-    "s6-integration-oracles": "Oracles",
-    "s6-integration-data": "On vs Off-Chain",
-    "s6-ai-dev": "AI-Driven Dev",
+    "s6-why": "Why: design → live",
+    "s6-erc": "🧩 ERC Standards",
+    "s6-template": "Vetted Template",
+    "s6-where": "🧩 Tools & Network",
+    "s6-deploy": "▶ Deploy to a Testnet",
+    "s6-deeper": "Going Deeper · optional",
     "s6-takeaways": "Takeaways",
+    "s6-quiz-template": "Quiz · Template",
+    "s6-quiz-testnet": "Quiz · Testnet",
     "s6-final-quiz": "Final Quiz"
   },
   "title": {
     "sectionNumber": "SECTION 06",
     "title": "Build & Integration",
-    "subtitle": "Optional developer material: standards, frameworks, platforms and integration patterns. Not covered in lecture."
+    "subtitle": "How a smart contract actually gets built and deployed: a standard, a template, a tool, a testnet."
   },
-  "ercData": {
-    "erc-20": {
-      "purpose": "Cryptocurrencies, DeFi tokens, governance tokens, stablecoins.",
-      "takeaway": "The \"standard money\" of Ethereum — every wallet and exchange supports it."
+  "recapLabel": "Already covered",
+  "why": {
+    "kicker": "Why this section",
+    "heading": "You have designed the contract. How does it actually go live?",
+    "subtitle": "Four moves take a contract from a whiteboard to a public blockchain. This section walks them in order.",
+    "stepTag": "Step {{n}}",
+    "heroTag": "hands-on",
+    "start": {
+      "label": "Designed",
+      "desc": "Sections 1–5: you know what it should do, and whether it deserves a chain."
     },
-    "erc-721": {
-      "purpose": "Unique digital items: art, collectibles, tickets, in-game assets, real-estate deeds.",
-      "takeaway": "Enables NFTs — one-of-a-kind, ownable digital assets."
+    "end": {
+      "label": "Live",
+      "desc": "A public address that anyone can call."
     },
-    "erc-777": {
-      "purpose": "Complex DeFi apps and tokens needing smart-contract receive hooks.",
-      "takeaway": "Smarter version of ERC-20 — more flexible for contract-to-contract use. Adoption limited; ERC-20 dominates."
-    },
-    "erc-2981": {
-      "purpose": "Provide royalty payout info to NFT marketplaces in a standardized way.",
-      "takeaway": "Standard way to support artist and creator royalties on resales — fixes a gap in ERC-721."
-    },
-    "erc-1155": {
-      "purpose": "Both fungible and non-fungible tokens in a single contract; ideal for gaming and batch transfers.",
-      "takeaway": "Batch transfers cut gas costs substantially. Common in gaming and NFTs."
-    }
+    "steps": [
+      {
+        "label": "Standard",
+        "desc": "Build to a shape the ecosystem already supports: an ERC."
+      },
+      {
+        "label": "Template",
+        "desc": "Start from vetted OpenZeppelin code instead of a blank page."
+      },
+      {
+        "label": "Tool & network",
+        "desc": "Pick where you write it and which chain it lands on."
+      },
+      {
+        "label": "Deploy",
+        "desc": "Put it on a testnet yourself and send it one transaction."
+      }
+    ],
+    "deployChips": [
+      "wallet",
+      "testnet",
+      "deploy",
+      "1 transaction"
+    ],
+    "bridge": "Coming up: a hands-on assignment where you prompt an AI for a contract and deploy it to a testnet yourself. These slides are the map.",
+    "bridgeCta": "Jump to the walkthrough ↓"
   },
-  "eipSteps": {
-    "1": { "label": "Community discussion", "actor": "Community", "desc": "Idea proposed informally on forums, social media, conferences." },
-    "2": { "label": "Ethereum Magicians", "actor": "Magicians forum", "desc": "Informal feedback from technical contributors. Discussion thread refines the proposal." },
-    "3": { "label": "Draft EIP on GitHub", "actor": "Author", "desc": "PR submitted to ethereum/EIPs repository in standardized format." },
-    "4": { "label": "EIP Editors review format", "actor": "EIP Editors", "desc": "Editors review for completeness and adherence to template — not technical merit." },
-    "5": { "label": "Repository assigns number", "actor": "Repository", "desc": "EIP assigned a unique number and merged in Draft status." },
-    "6": { "label": "Public discussion", "actor": "Community", "desc": "Wider technical and economic review. Proposal evolves through revisions." },
-    "7": { "label": "Client teams review feasibility", "actor": "Client devs", "desc": "Geth, Nethermind, Besu, Reth, Erigon teams assess implementation feasibility." },
-    "8": { "label": "AllCoreDevs decision", "actor": "AllCoreDevs call", "desc": "For protocol-level EIPs: rough consensus among core developers across clients." },
-    "9": { "label": "EIP Status: Final / Accepted", "actor": "EIP process", "desc": "Status updated to Final. Specification frozen — no further edits." },
-    "10": { "label": "Clients implement", "actor": "Client devs", "desc": "Each Ethereum client implements the EIP in code, tests across testnets." },
-    "11": { "label": "Network activates (fork)", "actor": "Network", "desc": "Hard fork at scheduled block height activates the change for everyone." }
-  },
-  "frameworks": {
-    "hardhat": { "language": "TypeScript / JS", "chains": "Ethereum + EVM", "testing": "Mocha + Chai", "deploy": "Hardhat Deploy", "plugins": "Rich (gas reporter, etherscan)", "strengths": "Popular, extensible, fast local network", "cons": "Can be overkill for small projects", "ideal": "Pro EVM developers" },
-    "foundry": { "language": "Solidity (tests)", "chains": "EVM-compatible", "testing": "Native (Forge)", "deploy": "Forge script CLI", "plugins": "Native via CLI", "strengths": "Fastest, Rust-based, minimal deps", "cons": "Less IDE-friendly, newer", "ideal": "Speed-focused power users" },
-    "truffle": { "name": "Truffle (deprecated)", "language": "JavaScript", "chains": "Ethereum + EVM", "testing": "Mocha + Chai", "deploy": "Truffle CLI", "plugins": "Many legacy plugins", "strengths": "Mature, early leader, good tutorials", "cons": "Heavier, slower, discontinued", "ideal": "Beginners, educational use" },
-    "brownie": { "language": "Python (Solidity/Vyper)", "chains": "Ethereum + EVM", "testing": "pytest", "deploy": "CLI + scripts", "plugins": "Moderate", "strengths": "Pythonic workflow, easy scripting", "cons": "Slower updates, Python-only devs", "ideal": "Python devs, scripting" },
-    "anchor": { "language": "Rust", "chains": "Solana", "testing": "Built-in (cargo test)", "deploy": "Anchor CLI", "plugins": "Some", "strengths": "Structured Solana dev, Rust-native", "cons": "Steeper curve, Solana-specific", "ideal": "Rust devs on Solana" }
-  },
-  "platforms": {
-    "eth": { "type": "Public L1", "language": "Solidity, Vyper", "erc": "Full", "desc": "Global consensus (PoS). Most mature ecosystem; high gas, broad tooling." },
-    "fabric": { "type": "Permissioned", "language": "Go, Java, JS", "erc": "None", "desc": "Pluggable consensus, channel-based privacy. No gas. Enterprise-grade." },
-    "sol": { "type": "Public L1", "language": "Rust", "erc": "None", "desc": "PoH + PoS. High throughput. Rust required; Sealevel parallel runtime." },
-    "cardano": { "type": "Public L1", "language": "Plutus (Haskell), Marlowe", "erc": "None", "desc": "UTxO-based, Ouroboros PoS. Formal verification focus." },
-    "bnb": { "type": "Public L1", "language": "Solidity", "erc": "Full", "desc": "EVM-compatible fork. Fast, low-cost, broad tool support." },
-    "polygon": { "type": "Public L2/sidechain", "language": "Solidity", "erc": "Full", "desc": "EVM. Low fees, Ethereum-compatible bridges." },
-    "avax": { "type": "Public L1 + subnets", "language": "Solidity", "erc": "Full", "desc": "EVM-compatible subnets supported. Custom chains possible." },
-    "arb": { "type": "Public L2 (Optimistic)", "language": "Solidity", "erc": "Full", "desc": "Lower fees, uses Ethereum L1 for security. Mature L2." },
-    "op": { "type": "Public L2 (Optimistic)", "language": "Solidity", "erc": "Full", "desc": "Near-identical to Ethereum dev flow. OP Stack used by Base." },
-    "base": { "type": "Public L2 (OP Stack)", "language": "Solidity", "erc": "Full", "desc": "Coinbase-hosted L2. Same stack as Optimism, friendly UX." },
-    "near": { "type": "Public L1 (non-EVM)", "language": "Rust, AssemblyScript", "erc": "Partial (Aurora bridge)", "desc": "Custom toolchain (NEAR CLI), WebAssembly-based." },
-    "starknet": { "type": "Public L2 (ZK-STARK)", "language": "Cairo", "erc": "None native", "desc": "ZK-rollup with custom VM. Cairo language. Growing ecosystem." },
-    "zksync": { "type": "Public L2 (ZK-EVM)", "language": "Solidity (ZK-EVM)", "erc": "Full", "desc": "Mostly Ethereum-compatible. Verify edge-case compatibility." },
-    "dot": { "type": "L0 relay + parachains", "language": "Ink! (Rust), Solidity via Moonbeam", "erc": "Partial (via Moonbeam)", "desc": "Modular setup, high customisation across parachains." },
-    "algo": { "type": "Public L1", "language": "PyTeal, Reach", "erc": "None", "desc": "Layer-1 logic. Fast finality, pure PoS." },
-    "aleo": { "type": "Public ZK-L1", "language": "Leo", "erc": "None", "desc": "Privacy-first, ZK-focused. Still emerging." },
-    "corda": { "type": "Permissioned", "language": "Kotlin, Java", "erc": "No ERC concept", "desc": "Finance-oriented. State machines, no global gossip." }
-  },
-  "ercExplorer": {
-    "badge": "Interactive",
-    "heading": "ERC Standards Explorer",
-    "subtitle": "Click an ERC to see its functions, events and where it is used.",
+  "erc": {
+    "kicker": "Step 1 · Standard",
+    "recapWhere": "Section 02 · Tokens recap",
+    "heading": "ERC standards: build to the shape everyone already supports",
+    "subtitle": "An ERC (Ethereum Request for Comments) is a published interface: a fixed list of functions and events. Follow it, and wallets, exchanges and marketplaces can talk to your contract from day one.",
+    "hint": "Click a standard",
     "purposeLabel": "Purpose",
     "functionsLabel": "Core functions",
     "eventsLabel": "Events",
     "examplesLabel": "Real examples in production",
     "takeawayLabel": "Key takeaway",
-    "specLink": "Read the {{name}} spec"
+    "specLink": "Read the {{name}} spec",
+    "evolveLabel": "Standards keep evolving: ",
+    "evolveBody": "anyone can propose one through the open EIP process. ERC-721 had no way to describe royalties, so ERC-2981 added it.",
+    "browseLink": "Browse all ERCs",
+    "noEvents": "No events required by this standard"
   },
-  "eipFlow": {
-    "badge": "Interactive",
-    "heading": "How an EIP becomes a standard",
-    "subtitle": "From idea to network upgrade — click any step to see what happens.",
-    "timelineLabel": "Process timeline",
-    "timelineStart": "idea",
-    "timelineEnd": "network upgrade"
-  },
-  "fwCompare": {
-    "badge": "Interactive",
-    "heading": "Smart Contract Frameworks · Side by Side",
-    "subtitle": "Click a row label to highlight that comparison dimension across all frameworks.",
-    "rows": {
-      "language": "Language",
-      "chains": "Chains supported",
-      "testing": "Testing approach",
-      "deploy": "Deployment",
-      "plugins": "Plugin ecosystem",
-      "strengths": "Strengths",
-      "cons": "Cons",
-      "ideal": "Ideal for"
+  "ercData": {
+    "erc-20": {
+      "kind": "Fungible token",
+      "purpose": "Cryptocurrencies, DeFi tokens, governance tokens, stablecoins.",
+      "takeaway": "The \"standard money\" of Ethereum: every wallet and exchange supports it.",
+      "examples": "USDC · USDT · UNI · LINK · DAI"
+    },
+    "erc-721": {
+      "kind": "Non-fungible token (NFT)",
+      "purpose": "Unique digital items: art, collectibles, tickets, in-game assets, real-estate deeds.",
+      "takeaway": "Enables NFTs: one-of-a-kind, ownable digital assets.",
+      "examples": "BAYC · ENS names · Uniswap v3 positions · Propy real-estate deeds"
+    },
+    "erc-1155": {
+      "kind": "Multi-token standard",
+      "purpose": "Fungible and non-fungible tokens in a single contract; built for batch transfers.",
+      "takeaway": "One contract, many token types. Batch transfers save gas. Common in gaming.",
+      "examples": "Game items · event tickets · limited editions"
+    },
+    "erc-2981": {
+      "kind": "NFT royalty standard",
+      "purpose": "Tell NFT marketplaces, in a standard way, who should receive a royalty and how much.",
+      "takeaway": "Fills a gap in ERC-721. It only reports the royalty: paying it is still up to the marketplace.",
+      "examples": "Read by NFT marketplaces such as OpenSea and Rarible"
     }
   },
-  "checklist": {
-    "badge": "Interactive",
-    "heading": "Platform Selection Checklist",
-    "subtitle": "Toggle the requirements that matter for your use case. The top 5 matching platforms surface live.",
-    "topMatches": "Top matches",
-    "empty": "Toggle some requirements on the left to see ranked recommendations.",
-    "items": {
-      "evm": "Need EVM compatibility (broad tooling, audited contracts)?",
-      "public": "Public, permissionless network (vs permissioned consortium)?",
-      "cheap": "Low transaction fees critical?",
-      "fast": "High throughput / low latency required?",
-      "erc": "Need full ERC standard support?",
-      "privacy": "Privacy-focused (zero-knowledge or permissioned)?",
-      "enterprise": "Enterprise / regulated industry?",
-      "devs": "Large existing developer ecosystem important?"
-    }
-  },
-  "platformsTable": {
-    "badge": "Interactive",
-    "heading": "Platforms · Filter & Compare",
-    "subtitle": "17 production platforms — filter by capability.",
-    "filters": {
-      "all": "All",
-      "evm": "EVM",
-      "public": "Public",
-      "permissioned": "Permissioned",
-      "l2": "L2"
-    },
-    "headers": {
-      "platform": "Platform",
-      "type": "Type",
-      "evm": "EVM",
-      "language": "Language",
-      "erc": "ERC",
-      "notes": "Notes"
-    },
-    "yes": "YES",
-    "no": "NO"
-  },
-  "standardsIntro": {
-    "heading": "Smart Contract Standards",
-    "subtitle": "Formalised guidelines that make smart contracts interoperable, secure, and predictable across platforms.",
-    "cards": [
-      { "name": "Token standards (ERCs)", "items": ["ERC-20 (fungible)", "ERC-721 (NFTs)", "ERC-1155 (multi-token)"] },
-      { "name": "Identity standards", "items": ["DID (Decentralized Identifiers)", "Verifiable Credentials", "EUDI Wallet (EU)", "W3C VC standard"] },
-      { "name": "Governance modules", "items": ["Standard voting contracts", "Proposal patterns", "OpenZeppelin Governor"] }
-    ],
-    "whyLabel": "Why standards matter:",
-    "whyBody": " a contract that follows a standard works with every wallet, exchange, marketplace and protocol that already supports it."
-  },
-  "ercExplain": {
-    "heading": "What is an ERC?",
-    "subtitle": "\"Ethereum Request for Comments\" — community-driven proposals that become standards.",
-    "definitionTitle": "Definition",
-    "definitionTermErc": "ERC",
-    "definitionBody1A": "An ",
-    "definitionBody1B": " is a set of proposals from the Ethereum community suggesting new features and improvements to the Ethereum network. Each ERC defines specific functions, interfaces, and behaviors enabling compatibility across wallets, exchanges, and other Ethereum-based tools.",
-    "definitionBody2": "The naming follows other open standards bodies — IETF RFCs, Python PEPs, Bitcoin BIPs. Ethereum took inspiration from all of them to create the EIP/ERC process.",
-    "eipsVsErcsTitle": "EIPs vs ERCs",
-    "eipsVsErcs": [
-      "= Ethereum Improvement Proposal — covers protocol-level, networking, ERC, and informational changes",
-      "= a sub-category of EIPs specifically for application-level standards (tokens, contracts, conventions)",
-      "All ERCs are EIPs, but not all EIPs are ERCs",
-      "Both follow the same standardization process"
-    ],
-    "eipTerm": "EIP",
-    "ercTerm": "ERC",
-    "browseLink": "Browse all ERCs"
-  },
-  "ercEvolve": {
-    "heading": "Why Standards Evolve",
-    "subtitle": "New use cases emerge; old standards expose limitations; community innovation drives proposals forward.",
-    "cards": [
-      { "title": "New use cases", "desc": "DAOs, decentralized identity, gaming, DePIN — each expansion of the ecosystem reveals patterns that benefit from formal standardization." },
-      { "title": "Limitations exposed", "desc": "ERC-721 had no royalty mechanism — leading to ERC-2981. Marketplaces ignored royalties → led to operator filters → led to renewed efforts." },
-      { "title": "Community innovation", "desc": "Anyone can submit an EIP. Community discussion through Magicians forum, GitHub, AllCoreDevs calls drives proposals to maturity." }
-    ],
-    "exampleLabel": "Real example:",
-    "exampleBody": " ERC-721 had no royalty mechanism, so artists were not paid on secondary sales. ERC-2981 standardised a royaltyInfo function that marketplaces can query. It took about two years from proposal to wide adoption, and payment still depends on marketplace policy."
-  },
-  "ercExample": {
-    "heading": "ERC-20 in Solidity · OpenZeppelin",
-    "subtitle": "The standard way to deploy a fungible token.",
+  "template": {
+    "kicker": "Step 2 · Template",
+    "heading": "Do not write it from scratch: remix a vetted template",
+    "subtitle": "OpenZeppelin publishes open-source, audited implementations of the standards. You inherit one and add only what is yours.",
     "fileName": "MyToken.sol",
-    "givesYouTitle": "What this code gives you",
-    "points": [
-      { "label": "Importing", "desc": "import \"@openzeppelin/contracts/…/ERC20.sol\"; brings in all the audited functions, events, and behaviors of the ERC-20 standard." },
-      { "label": "Inheriting", "desc": "contract MyToken is ERC20 — your contract follows the standard interface. Wallets, DEXs, block explorers all recognise it without configuration." },
-      { "label": "Extending", "desc": "You can add custom logic on top — burn(), pause(), mint controls, transfer fees — by inheriting more OpenZeppelin modules." },
-      { "label": "Compatibility", "desc": "Works with wallets, DEXs and indexers without integration work." }
-    ],
-    "whyOzLabel": "Why use OpenZeppelin?",
-    "whyOzBody": " The contracts are audited and secure billions of dollars in production. Writing your own ERC-20 is a risk you rarely need to take."
-  },
-  "frameworksIntro": {
-    "heading": "Smart Contract Frameworks",
-    "subtitle": "Developer toolkits for the entire contract lifecycle — write, compile, test, deploy, upgrade.",
-    "lifecycleTitle": "Project lifecycle",
-    "lifecycle": [
-      { "label": "Project scaffolding", "desc": "Folder structure, config files, sensible defaults" },
-      { "label": "Compilation", "desc": "Compile Solidity → bytecode + ABI; manage compiler versions" },
-      { "label": "Local blockchain simulation", "desc": "Spin up an in-memory chain with funded test accounts" },
-      { "label": "Scriptable deployments", "desc": "Reproducible deploys to testnets and mainnets" },
-      { "label": "Testing frameworks", "desc": "Unit and integration tests with assertions and fixtures" }
-    ],
-    "productionTitle": "Production capabilities",
-    "production": [
-      { "label": "Gas analysis", "desc": "Per-function gas usage; optimise hot paths before deployment" },
-      { "label": "Contract verification", "desc": "Submit source to Etherscan/Sourcify — increases user trust" },
-      { "label": "Frontend integration", "desc": "ABI generation, TypeScript types, wagmi/ethers helpers" },
-      { "label": "Plugin ecosystem", "desc": "Extend with linting, deployment helpers, security scanners" },
-      { "label": "Upgradeable contracts", "desc": "Proxy patterns (UUPS, Transparent) for live upgrades" }
-    ]
-  },
-  "tools": {
-    "heading": "Useful Tools",
-    "subtitle": "Browser playgrounds and learning resources.",
-    "items": [
-      { "name": "Remix IDE", "desc": "Browser-based Solidity IDE — write, compile, deploy, debug, all in your browser. Ideal for prototyping." },
-      { "name": "Eth.build", "desc": "Visual sandbox for understanding Ethereum mechanics — drag-and-drop building of contract interactions." },
-      { "name": "SpeedRun Ethereum", "desc": "Curriculum of progressively harder challenges — staker, vendor, dice game, multi-sig — gives you portfolio projects." },
-      { "name": "Scaffold-ETH", "desc": "Open-source toolkit for building dApps on Ethereum. Comes with Hardhat, Next.js, ethers, debug UI — full stack." }
-    ]
-  },
-  "platformUsecase": {
-    "heading": "Use Case → Recommended Platforms",
-    "subtitle": "Quick-reference mapping from common use cases to platforms that fit them.",
-    "items": [
-      { "use": "DeFi / NFT", "platforms": "Ethereum · Arbitrum · Optimism · Polygon · BNB Chain · zkSync" },
-      { "use": "Low-Cost dApps", "platforms": "Polygon · BNB Chain · Avalanche · zkSync · Base" },
-      { "use": "High Throughput / Gaming", "platforms": "Solana · Near · Polygon · Arbitrum · Avalanche subnets" },
-      { "use": "Privacy-focused", "platforms": "Aleo · StarkNet · Secret Network (Cosmos) · zkSync" },
-      { "use": "Enterprise / Consortium", "platforms": "Hyperledger Fabric · Corda · Quorum" },
-      { "use": "Multi-chain / Interoperable", "platforms": "Cosmos · Near · Polkadot (via Moonbeam) · LayerZero" }
-    ]
-  },
-  "integrationIntro": {
-    "heading": "Integration Best Practices",
-    "subtitle": "Connecting smart contracts to existing systems without breaking either side.",
-    "lead": "Existing systems must keep working while the contract is added. Five patterns cover most production deployments:",
-    "patterns": [
-      { "label": "Node infrastructure" },
-      { "label": "API & middleware" },
-      { "label": "Event-driven architecture" },
-      { "label": "Oracle orchestration" },
-      { "label": "On vs off-chain data" }
-    ]
-  },
-  "nodes": {
-    "patternLabel": "Pattern 01",
-    "heading": "Node Infrastructure",
-    "subtitle": "Every interaction with a smart contract passes through a node. Choose carefully.",
-    "prosLabel": "Pros",
-    "consLabel": "Cons",
-    "cards": [
+    "parts": [
       {
-        "title": "Run your own node",
-        "pros": ["Full control", "Compliance-friendly (no third-party logs)", "Lower latency for high-volume apps", "No rate limits"],
-        "cons": ["Operational overhead", "Hardware + bandwidth cost", "Sync time (hours to days)", "Pager duty for outages"]
+        "label": "Import",
+        "desc": "One line pulls in OpenZeppelin's ERC-20: every function and event of the standard, already written and reviewed."
       },
       {
-        "title": "Managed providers",
-        "pros": ["Zero ops burden", "Multi-region SLA", "Scales automatically", "Fast to start"],
-        "cons": ["Rate limits / pricing tiers", "Trust the provider", "Dependency on a third party", "Possible single point of failure"]
+        "label": "Inherit",
+        "desc": "\"is ERC20\" makes your contract a standard token. Wallets and exchanges recognise it with no extra work."
       },
       {
-        "title": "Hybrid",
-        "pros": ["Provider as fallback", "Provider for dev/staging", "Self-hosted for production validation", "Resilience via redundancy"],
-        "cons": ["Two systems to maintain", "More complex deployment", "Sync logic between sources", "Higher initial setup cost"]
+        "label": "Yours",
+        "desc": "The only part you decide: the name, the symbol, and how many tokens exist at launch."
       }
     ],
-    "providersLabel": "Common providers:",
-    "providersValue": " Infura · Alchemy · QuickNode · Ankr · Blast API · Tenderly. ",
-    "selfHostLabel": "Self-host:",
-    "selfHostValue": " Geth · Nethermind · Besu · Erigon · Reth."
+    "inheritedLabel": "Inherited, not written by you",
+    "aiLabel": "With an AI assistant: ",
+    "aiBody": "ask it to remix this template, not to invent a token from scratch. Then read what it wrote before you deploy it.",
+    "wizardLink": "Try the OpenZeppelin Contracts Wizard"
   },
-  "api": {
-    "patternLabel": "Pattern 02",
-    "heading": "API & Middleware",
-    "subtitle": "Bridges between smart contracts and legacy systems (ERPs, CRMs, databases).",
-    "doesTitle": "What middleware does",
-    "does": [
-      { "label": "Trigger contract functions", "desc": "Off-chain backend calls a contract method without manual blockchain knowledge" },
-      { "label": "Pull data for dashboards", "desc": "Index events and state for analytics, reporting, user-facing UIs" },
-      { "label": "Abstract complexity", "desc": "Wallet connection, gas estimation, RPC retries — handled by the library" }
-    ],
-    "stacksTitle": "Common stacks",
-    "stacks": [
-      { "name": "Ethers.js / viem", "desc": "Direct contract interaction libraries — closest to the metal. Most production dApps use these." },
-      { "name": "The Graph", "desc": "Decentralized indexer — write a \"subgraph\" that turns on-chain events into a queryable GraphQL API." },
-      { "name": "Moralis", "desc": "Web3-as-a-service: indexed data, cross-chain APIs, auth. Faster to start, but more vendor lock-in." },
-      { "name": "Alchemy SDK / Infura SDK", "desc": "Provider-specific SDKs with batching, websockets, and enriched APIs (NFT metadata, transaction history)." }
+  "where": {
+    "kicker": "Step 3 · Tool & network",
+    "heading": "Pick a tool and a network",
+    "subtitle": "Same contract, same steps. Only the stakes change.",
+    "modes": {
+      "learn": "Learning today",
+      "real": "Shipping for real"
+    },
+    "here": {
+      "learn": "You, today",
+      "real": "Production"
+    },
+    "cards": {
+      "tool": {
+        "label": "Tool",
+        "learn": {
+          "name": "Remix",
+          "desc": "An IDE in your browser. Write, compile and deploy from one tab. Nothing to install.",
+          "chips": [
+            "remix.ethereum.org"
+          ]
+        },
+        "real": {
+          "name": "Hardhat or Foundry",
+          "desc": "A project on your own machine, with automated tests and scripted, repeatable deployments.",
+          "chips": [
+            "automated tests",
+            "deploy scripts"
+          ]
+        }
+      },
+      "network": {
+        "label": "Network",
+        "learn": {
+          "name": "Sepolia testnet",
+          "desc": "A public Ethereum test network. It behaves like the real chain, so the steps you learn carry over.",
+          "chips": [
+            "public",
+            "chain ID 11155111"
+          ]
+        },
+        "real": {
+          "name": "Ethereum mainnet or a Layer 2",
+          "desc": "Layer 2s such as Arbitrum or Base run the same Solidity code, usually at lower fees.",
+          "chips": [
+            "EVM-compatible"
+          ]
+        }
+      },
+      "stakes": {
+        "label": "What is at stake",
+        "learn": {
+          "name": "Nothing",
+          "desc": "Gas is paid in free test ETH from a faucet. It has no real value, so a mistake costs nothing.",
+          "chips": [
+            "free test ETH"
+          ]
+        },
+        "real": {
+          "name": "Real money",
+          "desc": "Gas costs real ETH and the contract may hold real funds. Deployed code cannot simply be edited: test and audit first.",
+          "chips": [
+            "test",
+            "audit",
+            "then launch"
+          ]
+        }
+      }
+    },
+    "ladderLabel": "The rehearsal ladder",
+    "ladder": [
+      {
+        "label": "Sandbox",
+        "desc": "Remix VM: a private chain inside your browser tab"
+      },
+      {
+        "label": "Public testnet",
+        "desc": "Sepolia: a real network, play money"
+      },
+      {
+        "label": "Mainnet or Layer 2",
+        "desc": "A real network, real money"
+      }
     ]
   },
-  "events": {
-    "patternLabel": "Pattern 03",
-    "heading": "Event-Driven Architecture",
-    "subtitle": "Smart contracts emit events. Off-chain services listen and act on them — like webhooks for the blockchain.",
-    "flowTitle": "How it flows",
-    "flowSteps": [
-      "Smart contract executes a function and emits an event (e.g. ",
-      "Off-chain service subscribes to that event via Web3 WebSocket / The Graph / Moralis",
-      "On event arrival, the service triggers downstream actions: update CRM, send email, generate document, update dashboard",
-      "State stays in sync between blockchain and traditional systems"
+  "deploy": {
+    "kicker": "Step 4 · Deploy",
+    "badge": "Walkthrough",
+    "heading": "Deploy to a testnet: wallet → testnet → deploy → one transaction",
+    "subtitle": "Four steps, a few minutes, zero real money. Click through them.",
+    "stepOf": "Step {{n}} of {{total}}",
+    "youDo": "you do",
+    "youSee": "You see",
+    "illustrative": "Illustrative screens, example values",
+    "bridgeLabel": "What just happened: ",
+    "back": "Back",
+    "next": "Next step",
+    "restart": "Start over",
+    "artifactsLabel": "What you have so far",
+    "artifacts": [
+      "Your address",
+      "Test ETH",
+      "Contract address",
+      "Transaction hash"
     ],
-    "flowStep1Suffix": ")",
-    "examplesTitle": "Real-world examples",
-    "examples": [
-      { "label": "Supply chain:", "text": " Delivery confirmed event → ERP marks invoice as paid → notify finance" },
-      { "label": "DeFi:", "text": " Liquidity added event → analytics dashboard updates → user gets push notification" },
-      { "label": "Compliance:", "text": " Large transfer event → AML system creates suspicious activity report" },
-      { "label": "Gaming:", "text": " Item minted event → Discord bot announces in player guild channel" }
+    "steps": [
+      {
+        "label": "Wallet",
+        "title": "Create a wallet",
+        "actions": [
+          "Install a browser wallet such as MetaMask and create an account.",
+          "Write the secret recovery phrase down on paper. Never share it, never type it into a website.",
+          "Use a fresh wallet for testing, not one that holds real funds."
+        ],
+        "bridge": "you generated a key pair. The address is public; the phrase is the key. This is the identity that will sign everything that follows."
+      },
+      {
+        "label": "Testnet",
+        "title": "Switch to the testnet and get test ETH",
+        "actions": [
+          "In the wallet, switch the network to Sepolia (turn on test networks if it is hidden).",
+          "Copy your address into a Sepolia faucet and request test ETH.",
+          "Wait for the balance to appear. That is your gas money."
+        ],
+        "bridge": "even a test network charges gas. Test ETH pays for it exactly like real ETH, but it is free and has no real value."
+      },
+      {
+        "label": "Deploy",
+        "title": "Deploy the contract",
+        "actions": [
+          "Open Remix, paste the contract and press Compile.",
+          "In Deploy & Run, choose your browser wallet as the environment.",
+          "Press Deploy and confirm in the wallet. Seconds later the contract has an address."
+        ],
+        "bridge": "deploying is itself a transaction. You signed it, the network stored your code, and that code now lives at a permanent public address."
+      },
+      {
+        "label": "One transaction",
+        "title": "Send it one transaction",
+        "actions": [
+          "In Remix, open the deployed contract and call a function, for example transfer 10 tokens to a classmate.",
+          "Confirm in the wallet: you sign, and you pay gas.",
+          "Look the transaction hash up on the block explorer."
+        ],
+        "bridge": "trigger, execute, update, emit: the Section 02 workflow, this time run by you. The explorer page is public proof that it happened."
+      }
     ],
-    "whyLabel": "Why it matters:",
-    "whyBody": " real-time responsiveness for dynamic workflows like supply chain updates, DeFi flows, or compliance alerts."
+    "mock": {
+      "walletTitle": "Wallet · MetaMask",
+      "mainnet": "Ethereum Mainnet",
+      "account": "Account 1",
+      "phraseTitle": "Secret recovery phrase",
+      "phraseNote": "12 words. Whoever has them controls the wallet.",
+      "addressTitle": "Address: ",
+      "addressNote": "public, safe to share. It is how others pay you and how a faucet finds you.",
+      "faucetTitle": "{{testnet}} faucet",
+      "faucetField": "Your wallet address",
+      "faucetButton": "Send me test ETH",
+      "faucetNote": "A faucet is a website that gives away small amounts of test ETH.",
+      "faucetFlow": "test ETH",
+      "remixTitle": "Remix · Deploy & Run",
+      "environment": "Environment",
+      "environmentValue": "Browser wallet · MetaMask",
+      "contract": "Contract",
+      "confirmTitle": "Wallet · confirm",
+      "confirmKind": "Contract deployment",
+      "fee": "Network fee",
+      "reject": "Reject",
+      "confirm": "Confirm",
+      "deployed": "Deployed at",
+      "deployedTitle": "Remix · your contract",
+      "writeFn": "changes state, costs gas",
+      "unitsNote": "Amounts are in the smallest unit: 10 MTK is 10 followed by 18 zeros.",
+      "explorerTitle": "{{testnet}} block explorer",
+      "rowHash": "Transaction",
+      "rowStatus": "Status",
+      "success": "Success",
+      "rowFrom": "From",
+      "rowTo": "To",
+      "rowTransfer": "Token transfer",
+      "rowFee": "Fee"
+    }
   },
-  "oracles": {
-    "patternLabel": "Pattern 04",
-    "heading": "Orchestration with Oracles",
-    "subtitle": "Smart contracts can't natively access real-world data. Oracles are the bridges.",
-    "doTitle": "What oracles do",
-    "do": [
-      { "label": "Pull data:", "text": " weather, stock prices, sports scores, ID verification, IoT sensor readings" },
-      { "label": "Push events:", "text": " trigger an IoT actuator, notify a user via Telegram, send a text message" },
-      { "label": "Compute off-chain:", "text": " run heavy computation, submit only the result on-chain" },
-      { "label": "Cross-chain:", "text": " bridge state between blockchains" }
+  "deeper": {
+    "kicker": "If you go further",
+    "badge": "Optional · skim",
+    "heading": "Going deeper: the stack around a live contract",
+    "subtitle": "A deployed contract is one piece. A real product wraps ordinary software around it. Skim this now and come back when you build.",
+    "spineLabel": "The path of one click",
+    "spine": [
+      {
+        "label": "Your app",
+        "desc": "The website or back-office system people actually use.",
+        "tools": ""
+      },
+      {
+        "label": "Library",
+        "desc": "Turns a button click into a transaction for the wallet to sign.",
+        "tools": "ethers.js · viem"
+      },
+      {
+        "label": "Node access",
+        "desc": "The doorway to the network: a provider, or a node you run yourself.",
+        "tools": "Infura · Alchemy"
+      },
+      {
+        "label": "Your contract",
+        "desc": "The code you deployed, at its permanent address.",
+        "tools": ""
+      }
     ],
-    "criticalLabel": "Critical:",
-    "criticalBody": " a single oracle = a single point of failure. Use decentralized oracle networks for any value-bearing contract.",
-    "chooseTitle": "Choose by use case",
-    "providers": [
-      { "name": "Chainlink", "desc": "Industry standard. Decentralized network, broad data feeds, strong security track record." },
-      { "name": "Pyth Network", "desc": "High-frequency financial data — direct from exchanges and market makers. ~400ms latency." },
-      { "name": "API3", "desc": "First-party oracles — data providers run their own nodes. No middleman." },
-      { "name": "UMA Optimistic", "desc": "Assume data correct unless disputed within a window. Cheaper, slower for edge cases." }
-    ]
+    "aroundLabel": "Around the contract",
+    "around": [
+      {
+        "label": "Oracles",
+        "desc": "Bring outside facts on-chain. The contract is only as safe as that data.",
+        "tools": "Chainlink · Pyth"
+      },
+      {
+        "label": "Events",
+        "desc": "The contract emits an event; your systems listen and react, like a webhook.",
+        "tools": "The Graph · WebSockets"
+      },
+      {
+        "label": "Off-chain data",
+        "desc": "Large or private data stays off-chain. The chain keeps only a hash that proves it.",
+        "tools": "IPFS · a database"
+      },
+      {
+        "label": "AI tools",
+        "desc": "Fast for drafts, documentation and prototypes. Not a substitute for review and an audit.",
+        "tools": "draft → read → test → audit"
+      }
+    ],
+    "oracleRecap": "Section 02"
   },
-  "data": {
-    "patternLabel": "Pattern 05",
-    "heading": "Data Management · On-chain vs Off-chain",
-    "subtitle": "Blockchain is not designed for large-scale, mutable, or sensitive data. Be deliberate.",
-    "onchainTitle": "Store on-chain",
-    "onchain": [
-      "Hashes (proof of existence, integrity anchors)",
-      "Identifiers / IDs / minimal metadata",
-      "State transitions and ownership records",
-      "Permissions and access rules",
-      "Anything that NEEDS the trust guarantees of the chain"
-    ],
-    "offchainTitle": "Keep off-chain",
-    "offchain": [
-      "Documents, images, video — too expensive on-chain",
-      "PII (names, emails, health data) — privacy / GDPR risk",
-      "Mutable data (frequently changing values, indexes)",
-      "Bulk historical data (move to archive nodes / data lakes)",
-      "Anything you might need to delete (right to be forgotten)"
-    ],
-    "storage": [
-      { "name": "IPFS", "desc": "Content-addressed; pin via Pinata or Filebase" },
-      { "name": "Filecoin", "desc": "IPFS + paid persistence with crypto-economic guarantees" },
-      { "name": "Arweave", "desc": "One-time payment for permanent storage" },
-      { "name": "BTFS", "desc": "BitTorrent-based decentralized storage on TRON" }
-    ]
-  },
-  "aiDev": {
-    "heading": "AI-Driven Smart Contract Development",
-    "subtitle": "Use AI tools where they shine — and know where they don't belong.",
-    "helpsTitle": "Where AI helps",
-    "helps": [
-      { "label": "Ideation:", "text": " brainstorm contract designs, explore alternatives" },
-      { "label": "Documentation:", "text": " generate NatSpec, README, function docs" },
-      { "label": "Project overview / business plan:", "text": " structure, edit, polish" },
-      { "label": "Prototyping:", "text": " Remix + ChatGPT for quick PoCs and learning" },
-      { "label": "Coding agents", "text": " (Codex, Claude Code) for implementation work" }
-    ],
-    "helpsFooter": "Use AI as a faster way to learn, prototype, and document. Treat its output as a draft.",
-    "notTitle": "Where AI does not belong",
-    "not": [
-      { "label": "Production smart contracts", "text": " without expert review and audit" },
-      { "label": "Security-critical logic", "text": " — AI hallucinates plausible-looking but vulnerable code" },
-      { "label": "Trusting outputs blindly", "text": " — verify every line, especially around access control and arithmetic" },
-      { "label": "Replacing audits", "text": " — AI cannot reliably catch reentrancy, oracle manipulation, MEV, or flash-loan attacks" }
-    ],
-    "bottomLabel": "Bottom line:",
-    "bottomBody": " AI accelerates prototyping and learning. Production contracts still require human expertise, peer review, and professional audit."
+  "keyPoints": {
+    "s6-why": "Shipping a contract is a short, repeatable routine: standard, template, tool, testnet.",
+    "s6-erc": "A standard is a promise about your contract's buttons, so tools built by strangers work with it.",
+    "s6-template": "The safest line of code is the one you did not have to write.",
+    "s6-where": "A testnet is a dress rehearsal: same tools, same steps, nothing at stake.",
+    "s6-deploy": "Do these four steps once on a testnet and you know the routine: mainnet is the same, with real money.",
+    "s6-deeper": "The contract is the smallest part of the product. Everything around it is ordinary software."
   },
   "takeaways": {
     "title": "Section 06 — Key Takeaways",
     "items": [
-      "Standards (ERC-20/721/777/1155/2981) make contracts interoperable with the entire wallet/exchange/marketplace ecosystem",
-      "EIP process is open: anyone can propose; community + clients + AllCoreDevs decide. From idea to network upgrade can take months to years",
-      "Use OpenZeppelin contracts as the base; they are audited and widely used",
-      "Hardhat / Foundry are the dominant frameworks for EVM. Foundry is fastest; Hardhat is most extensible. Brownie/Truffle are legacy. Anchor for Solana",
-      "Free tools to know: remix.ethereum.org · eth.build · speedrunethereum.com · scaffoldeth.io",
-      "Platform selection is multi-dimensional: EVM compatibility · public vs permissioned · throughput · cost · ecosystem · regulatory fit",
-      "Integration patterns: nodes (own/managed/hybrid) · APIs (Ethers, viem) · events (subscribe + react) · oracles (Chainlink/Pyth) · on/off-chain split",
-      "AI helps with ideation, prototyping, documentation. AI does NOT replace audits, security review, or expert engineering for production code"
+      "Shipping a contract is a routine: pick a standard, remix a template, choose a tool and a network, deploy",
+      "An ERC is a shared interface: follow one and wallets, exchanges and marketplaces work with your contract from day one",
+      "Do not write from scratch: inherit OpenZeppelin's audited contracts and add only your own rules",
+      "Rehearse on a testnet such as Sepolia: the same steps as mainnet, paid in free test ETH, with nothing at stake",
+      "A deployment leaves public facts anyone can check on a block explorer: a contract address and a transaction hash",
+      "AI can draft the code. You still read it, test it on a testnet, and have anything that holds real money audited"
     ]
   },
-  "quiz": {
-    "question": "Your team is building a tokenized real-estate platform. You need: (a) full ERC-20 and ERC-721 support, (b) low gas fees for frequent rent distributions, (c) the ability to deploy proven smart contracts (OpenZeppelin), (d) a regulated EU market presence. Which platform stack fits BEST?",
+  "quizTemplate": {
+    "question": "Your team needs a loyalty-points token for a pilot. What is the most sensible way to build the contract?",
     "options": [
-      "Hyperledger Fabric — permissioned, enterprise-grade, no gas fees.",
-      "Solana — high throughput, low cost, fast finality.",
-      "Polygon (or Arbitrum / Base) — EVM-compatible L2 with full ERC support, low gas fees, OpenZeppelin compatibility, and EU MiCA framework awareness.",
-      "Cardano — formal verification focus, Plutus/Marlowe for finance."
+      "Write every function yourselves, so that no outside code is involved.",
+      "Inherit OpenZeppelin's audited ERC-20 and add only your own rules on top.",
+      "Design your own token interface, so wallets and exchanges have to integrate with you.",
+      "Skip the standard: ERC standards only matter for NFTs."
     ],
-    "explanation": "The use case has 4 specific constraints: full ERC support (rules out non-EVM Solana, Cardano, Hyperledger Fabric), low gas (rules out Ethereum L1 mainnet for frequent distributions), OpenZeppelin compatibility (favors EVM), and EU regulatory fit (favors public chains with MiCA-compliant pathways). Polygon, Arbitrum, and Base all check every box. Hyperledger Fabric is great for enterprise but has zero ERC support and would force you to rebuild every standard. Solana is fast but requires Rust + custom token standards. Cardano's tooling is less mature for tokenized real-estate. The answer is an EVM-compatible L2."
+    "explanation": "ERC-20 is the interface wallets and exchanges already understand, and OpenZeppelin's implementation has been reviewed and used far more than anything a team writes in a week. Inheriting it leaves you with a few lines of your own to get right. Writing it all yourself adds risk for no benefit, a custom interface throws away compatibility, and ERC-20 is itself a token standard that has nothing to do with NFTs."
   },
-  "optionalNote": {
-    "label": "Optional section.",
-    "body": " Nothing here is required for the in-class assignment. Skim the Platform Checklist and the On vs Off-Chain slide if you want the two most useful pieces for a business reader."
+  "quizTestnet": {
+    "question": "Why deploy to a testnet such as Sepolia before going to mainnet?",
+    "options": [
+      "A testnet is private, so competitors cannot see your code.",
+      "A contract that works on a testnet is copied to mainnet automatically.",
+      "Ethereum requires every contract to spend time on a testnet first.",
+      "The tools and steps are the same, but the ETH is free and worthless, so mistakes cost nothing."
+    ],
+    "explanation": "A public testnet behaves like mainnet and uses the same wallet, tools and steps, but gas is paid in test ETH that has no real value. That makes it the place to make your mistakes. Testnets are public, not private. Nothing moves to mainnet automatically: going live is a separate deployment that you pay for in real ETH. And no rule forces you to use a testnet; it is simply good practice."
+  },
+  "quiz": {
+    "question": "Your team is building a tokenized real-estate platform. You need: (a) standard ERC-20 and ERC-721 tokens, (b) low fees, because rent is distributed often, (c) to reuse audited OpenZeppelin contracts. Which platform fits BEST?",
+    "options": [
+      "Hyperledger Fabric: permissioned, enterprise-grade, no gas fees.",
+      "Solana: high throughput, low cost, fast finality.",
+      "An EVM-compatible Layer 2 such as Arbitrum or Base: the same Solidity code and ERC standards as Ethereum, at lower fees.",
+      "Cardano: a focus on formal verification, with its own contract languages."
+    ],
+    "explanation": "All three requirements point to the EVM. ERC standards and OpenZeppelin's contracts are written in Solidity for EVM chains, and a Layer 2 runs that same code while charging lower fees than Ethereum mainnet. Fabric, Solana and Cardano are capable platforms, but none of them runs Solidity ERC contracts natively: you would be rebuilding the standards and giving up the audited code you wanted to reuse."
   }
 }

@@ -40,7 +40,7 @@
     },
     "section6": {
       "title": "Build & Integration",
-      "description": "Optional, developer-oriented: ERC standards, EIP process, frameworks, platform comparison and integration patterns. Skipped in lecture."
+      "description": "How a smart contract actually gets built and deployed: ERC standards, OpenZeppelin templates, picking a tool and a network, and a step-by-step testnet deploy."
     },
     "section7": {
       "title": "Zero-Knowledge & Privacy",
