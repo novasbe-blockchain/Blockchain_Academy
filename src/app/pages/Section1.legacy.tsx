@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { sha256Hex } from '../utils/sha256';
 import { TitleSlide } from '../components/templates/TitleSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { ComparisonSlide } from '../components/templates/ComparisonSlide';
@@ -82,20 +83,7 @@ const brickColors = [
 
 function InteractiveHash() {
   const [input, setInput] = useState('');
-  const [hash, setHash] = useState('');
-
-  useEffect(() => {
-    if (!input) {
-      setHash('');
-      return;
-    }
-    const encoder = new TextEncoder();
-    const data = encoder.encode(input);
-    crypto.subtle.digest('SHA-256', data).then(buffer => {
-      const hashArray = Array.from(new Uint8Array(buffer));
-      setHash(hashArray.map(b => b.toString(16).padStart(2, '0')).join(''));
-    });
-  }, [input]);
+  const hash = useMemo(() => (input ? sha256Hex(input) : ''), [input]);
 
   return (
     <div className="p-5 bg-card rounded-xl border-2 border-[#39B54A]">
@@ -119,15 +107,6 @@ function InteractiveHash() {
   );
 }
 
-/* ── SHA-256 helper ─────────────────────────────────── */
-async function sha256(text: string): Promise<string> {
-  const data = new TextEncoder().encode(text);
-  const buffer = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(buffer))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
-}
-
 function short(hash: string) {
   return hash ? hash.slice(0, 10) + '…' : '—';
 }
@@ -139,17 +118,15 @@ function InteractiveMerkleTree() {
   const [midHashes, setMidHashes] = useState(['', '']);
   const [root, setRoot] = useState('');
 
-  const recompute = useCallback(async (values: string[]) => {
-    const leaves = await Promise.all(
-      values.map(v => (v ? sha256(v) : Promise.resolve('')))
-    );
+  const recompute = useCallback((values: string[]) => {
+    const leaves = values.map(v => (v ? sha256Hex(v) : ''));
     setLeafHashes(leaves);
 
-    const mid0 = leaves[0] && leaves[1] ? await sha256(leaves[0] + leaves[1]) : '';
-    const mid1 = leaves[2] && leaves[3] ? await sha256(leaves[2] + leaves[3]) : '';
+    const mid0 = leaves[0] && leaves[1] ? sha256Hex(leaves[0] + leaves[1]) : '';
+    const mid1 = leaves[2] && leaves[3] ? sha256Hex(leaves[2] + leaves[3]) : '';
     setMidHashes([mid0, mid1]);
 
-    const r = mid0 && mid1 ? await sha256(mid0 + mid1) : '';
+    const r = mid0 && mid1 ? sha256Hex(mid0 + mid1) : '';
     setRoot(r);
   }, []);
 

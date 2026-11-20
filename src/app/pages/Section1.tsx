@@ -28,6 +28,7 @@ import { ConsensusVisualization } from '../components/blockchain/ConsensusVisual
 import { SectionNav } from '../components/navigation/SectionNav';
 import { SiteFooter } from '../components/shared/SiteFooter';
 import { Blocks, ExternalLink } from 'lucide-react';
+import { sha256Hex } from '../utils/sha256';
 import rabbyIcon from '../../rabby-icon.png';
 import zerionIcon from '../../zerion-icon.png';
 
@@ -64,33 +65,15 @@ const section1ChaptersShape: ReadonlyArray<{ id: string; kind?: 'group' }> = [
   { id: 's1-takeaways' },
 ];
 
-/* ── SHA-256 helper ─────────────────────────────────── */
-async function sha256(text: string): Promise<string> {
-  const data = new TextEncoder().encode(text);
-  const buffer = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(buffer))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
-}
+// Hashing uses the synchronous pure-JS SHA-256 in utils/sha256 rather than crypto.subtle:
+// Web Crypto only exists in secure contexts (HTTPS / localhost), so over plain HTTP on a
+// LAN address (classroom projector, phone on the same Wi-Fi) it is undefined.
 
 /* ── Interactive SHA-256 input ─────────────────────────────────── */
 function InteractiveHash() {
   const { t } = useTranslation('blockchain-fundamentals/section-1');
   const [input, setInput] = useState('');
-  const [hash, setHash] = useState('');
-
-  useEffect(() => {
-    if (!input) {
-      setHash('');
-      return;
-    }
-    const encoder = new TextEncoder();
-    const data = encoder.encode(input);
-    crypto.subtle.digest('SHA-256', data).then(buffer => {
-      const hashArray = Array.from(new Uint8Array(buffer));
-      setHash(hashArray.map(b => b.toString(16).padStart(2, '0')).join(''));
-    });
-  }, [input]);
+  const hash = useMemo(() => (input ? sha256Hex(input) : ''), [input]);
 
   return (
     <div className="p-5 bg-card rounded-xl border-2 border-[#39B54A]">
@@ -965,28 +948,28 @@ interface CascadeBlock {
   hash: string;
 }
 
-async function computeCascadeHash(b: { index: number; data: string; prevHash: string }): Promise<string> {
-  return sha256(`${b.index}|${b.data}|${b.prevHash}|0`);
+function computeCascadeHash(b: { index: number; data: string; prevHash: string }): string {
+  return sha256Hex(`${b.index}|${b.data}|${b.prevHash}|0`);
 }
 
-async function buildCascadeChain(items: string[]): Promise<CascadeBlock[]> {
+function buildCascadeChain(items: string[]): CascadeBlock[] {
   const blocks: CascadeBlock[] = [];
   let prev = ZERO_HASH;
   for (let i = 0; i < items.length; i++) {
     const data = items[i] ?? '';
-    const hash = await computeCascadeHash({ index: i, data, prevHash: prev });
+    const hash = computeCascadeHash({ index: i, data, prevHash: prev });
     blocks.push({ index: i, data, prevHash: prev, hash });
     prev = hash;
   }
   return blocks;
 }
 
-async function recomputeFromEdit(blocks: CascadeBlock[], editedIndex: number, newData: string): Promise<CascadeBlock[]> {
+function recomputeFromEdit(blocks: CascadeBlock[], editedIndex: number, newData: string): CascadeBlock[] {
   const next = blocks.map(b => ({ ...b }));
   const edited = next[editedIndex];
   if (!edited) return next;
   edited.data = newData;
-  edited.hash = await computeCascadeHash(edited);
+  edited.hash = computeCascadeHash(edited);
   return next;
 }
 
@@ -1099,15 +1082,11 @@ function TamperCascade() {
   }, []);
 
   useEffect(() => {
-    let cancelled = false;
-    buildCascadeChain(cascadeInitial).then(chain => {
-      if (cancelled) return;
-      const v = chainValidity(chain);
-      setBlocks(chain);
-      setActualValidity(v.blocks);
-      setActualLinks(v.links);
-    });
-    return () => { cancelled = true; };
+    const chain = buildCascadeChain(cascadeInitial);
+    const v = chainValidity(chain);
+    setBlocks(chain);
+    setActualValidity(v.blocks);
+    setActualLinks(v.links);
   }, [cascadeInitial]);
 
   const clearTimers = useCallback(() => {
@@ -1149,8 +1128,8 @@ function TamperCascade() {
 
   function handleChange(blockIndex: number, newData: string) {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(async () => {
-      const next = await recomputeFromEdit(blocksRef.current, blockIndex, newData);
+    debounceRef.current = setTimeout(() => {
+      const next = recomputeFromEdit(blocksRef.current, blockIndex, newData);
       const v = chainValidity(next);
       setBlocks(next);
       setActualValidity(v.blocks);
@@ -1159,10 +1138,10 @@ function TamperCascade() {
     }, 200);
   }
 
-  async function handleReset() {
+  function handleReset() {
     clearTimers();
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    const chain = await buildCascadeChain(cascadeInitial);
+    const chain = buildCascadeChain(cascadeInitial);
     const v = chainValidity(chain);
     setBlocks(chain);
     setActualValidity(v.blocks);

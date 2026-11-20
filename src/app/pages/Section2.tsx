@@ -11,6 +11,7 @@ import { DefinitionBox } from '../components/shared/DefinitionBox';
 import { Bitcoin, ExternalLink, AlertTriangle } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
 import { SiteFooter } from '../components/shared/SiteFooter';
+import { sha256Hex } from '../utils/sha256';
 import secpCurve from '../../assets/bf/secp256k1-curve.svg';
 
 /** Sidebar shape — labels resolved at render time via i18n */
@@ -832,18 +833,11 @@ interface MerkleNode {
 
 // ─── Interactive: Build a Merkle Tree (4 leaves, type-it-yourself) ──────────
 //
-// Lifted from the v1 Section 1 (Section1.legacy.tsx). Uses real SHA-256 via
-// crypto.subtle so the learner watches actual hashes ripple up the tree as
-// they type. The downstream MerkleTreeDemo is the "tamper a populated tree"
+// Lifted from the v1 Section 1 (Section1.legacy.tsx). Uses real SHA-256 (the
+// synchronous pure-JS helper in utils/sha256 — Web Crypto is undefined over
+// plain HTTP on a LAN address) so the learner watches actual hashes ripple up
+// the tree as they type. The downstream MerkleTreeDemo is the "tamper a populated tree"
 // counterpart — this one is the "build it from scratch" counterpart.
-
-async function sha256(text: string): Promise<string> {
-  const data   = new TextEncoder().encode(text);
-  const buffer = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(buffer))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
-}
 
 function shortHash(hash: string) {
   return hash ? hash.slice(0, 10) + '…' : '—';
@@ -855,17 +849,15 @@ function InteractiveMerkleTree() {
   const [midHashes,  setMidHashes]  = useState(['', '']);
   const [root,       setRoot]       = useState('');
 
-  const recompute = useCallback(async (values: string[]) => {
-    const leaves = await Promise.all(
-      values.map(v => (v ? sha256(v) : Promise.resolve('')))
-    );
+  const recompute = useCallback((values: string[]) => {
+    const leaves = values.map(v => (v ? sha256Hex(v) : ''));
     setLeafHashes(leaves);
 
-    const mid0 = leaves[0] && leaves[1] ? await sha256(leaves[0] + leaves[1]) : '';
-    const mid1 = leaves[2] && leaves[3] ? await sha256(leaves[2] + leaves[3]) : '';
+    const mid0 = leaves[0] && leaves[1] ? sha256Hex(leaves[0] + leaves[1]) : '';
+    const mid1 = leaves[2] && leaves[3] ? sha256Hex(leaves[2] + leaves[3]) : '';
     setMidHashes([mid0, mid1]);
 
-    const r = mid0 && mid1 ? await sha256(mid0 + mid1) : '';
+    const r = mid0 && mid1 ? sha256Hex(mid0 + mid1) : '';
     setRoot(r);
   }, []);
 
