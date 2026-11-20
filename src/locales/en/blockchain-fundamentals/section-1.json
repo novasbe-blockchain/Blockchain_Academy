@@ -548,6 +548,56 @@
       { "tag": "Connects", "body": "You to dApps — DeFi, NFTs, on-chain games, anything that lives on Ethereum and similar chains." }
     ]
   },
+  "quizDoubleSpend": {
+    "question": "A digital photo can be copied endlessly. Why has digital money traditionally needed a middleman such as a bank?",
+    "options": [
+      "Because only banks own computers powerful enough to process payments",
+      "Because digital money must be converted into cash before it can be spent",
+      "Because someone has to keep score so the same money isn't spent twice",
+      "Because sending money over the internet is illegal without a bank licence"
+    ],
+    "explanation": "This is the double-spending problem: without a referee keeping the record, the same digital dollar could be spent twice. Historically that referee was always an institution — blockchain asks whether it has to be."
+  },
+  "quizPseudonymous": {
+    "question": "On a public blockchain you are 'pseudonymous, not anonymous'. What does that mean?",
+    "options": [
+      "Your transactions are visible to everyone under your address, but the address doesn't show your legal name",
+      "Your transactions are hidden from everyone except the sender and the receiver",
+      "Your legal name is stored on the chain, but only miners are able to read it",
+      "Nobody can ever work out which address belongs to you, whatever you do"
+    ],
+    "explanation": "You act through an address, not your name — but everything that address does is public, forever. Privacy depends on the address not being linked to you, not on hiding the activity."
+  },
+  "quizTamperEvident": {
+    "question": "Someone edits the data in an old block. Why is a blockchain called 'tamper-evident' rather than 'tamper-proof'?",
+    "options": [
+      "The edit is physically impossible, because old blocks are locked",
+      "The edit is silently undone by the genesis block",
+      "The edit goes through only if the block's original miner approves it",
+      "The edit is possible, but the block's hash changes, so the link from the next block visibly breaks"
+    ],
+    "explanation": "The chain doesn't stop you changing data — it makes the change obvious: the edited block gets a new hash, and the blocks after it still point to the old one."
+  },
+  "quizShapeControl": {
+    "question": "Google runs on thousands of servers in data centres around the world. Why is it still an example of centralized control?",
+    "options": [
+      "Because its servers are all located in a single country",
+      "Because one company can change the rules or switch the service off, however many machines it runs on",
+      "Because it has fewer computers than the Bitcoin network",
+      "Because distributed systems are always centrally controlled"
+    ],
+    "explanation": "Shape is not control. 'Distributed' describes where the machines sit; 'decentralized' is about who holds the power. Google is distributed but centrally controlled; Bitcoin is distributed and decentralized."
+  },
+  "quizWallet": {
+    "question": "What does a crypto wallet actually hold?",
+    "options": [
+      "The coins themselves, saved as files on your device",
+      "A full copy of the blockchain",
+      "The private keys that prove you control an address — the coins stay on the chain",
+      "Your legal identity, verified by the wallet company"
+    ],
+    "explanation": "A wallet holds keys, not coins. The coins live on the chain; the wallet uses your private key to sign transactions and prove they come from you."
+  },
   "takeaways": {
     "title": "Section 1 — Key Takeaways",
     "items": [

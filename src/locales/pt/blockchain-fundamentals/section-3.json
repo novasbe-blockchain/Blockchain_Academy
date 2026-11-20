@@ -804,6 +804,56 @@
     ],
     "explanation": "Ethereum, Solana e Polygon são blockchains L1 ou soluções de escalabilidade L2. Ficam entre a infraestrutura crua (nós, validadores, rede P2P) e os protocolos de aplicação (DeFi, NFTs, DAOs) construídos por cima delas."
   },
+  "quizContractBug": {
+    "question": "Um smart contract que guarda fundos tem um bug, e alguém aproveita-o para retirar dinheiro. O que nos diz a ideia da 'máquina de venda automática'?",
+    "options": [
+      "O autor do contrato pode pausá-lo e reembolsar toda a gente",
+      "O código corre exatamente como foi escrito — bug incluído — e ninguém pode simplesmente desfazer o resultado",
+      "A rede deteta o bug e recusa-se a executar essa parte do código",
+      "O contrato apaga-se a si próprio assim que um bug é usado"
+    ],
+    "explanation": "Um smart contract corre exatamente como foi escrito, para todos, e não há 'desfazer'. No hack da DAO de 2016, cerca de 60 milhões de dólares foram drenados por código a fazer exatamente o que dizia — é por isso que as auditorias são importantes."
+  },
+  "quizAccounts": {
+    "question": "Qual destas afirmações sobre os dois tipos de conta do Ethereum está correta?",
+    "options": [
+      "Um smart contract é controlado por uma chave privada guardada pelo seu autor",
+      "Uma conta de carteira (EOA) contém código que corre automaticamente",
+      "Um smart contract nunca age por si: só corre quando uma carteira, ou outro contrato, o chama",
+      "Um smart contract pode acordar sozinho a uma hora que ele próprio agendou"
+    ],
+    "explanation": "Todas as ações começam com a chave de uma carteira; os contratos apenas reagem. Um contrato não tem chave nem relógio — se nada o chamar, nada acontece."
+  },
+  "quizOracle": {
+    "question": "Um contrato de seguro de atraso de voo tem de pagar quando um voo se atrasa. Como é que fica a saber do atraso?",
+    "options": [
+      "Um oráculo escreve o facto na cadeia — o que significa que passas a ter de confiar no oráculo",
+      "O contrato consulta sozinho o site da companhia aérea",
+      "Os mineiros votam se o voo se atrasou ou não",
+      "A carteira do passageiro deteta o atraso automaticamente"
+    ],
+    "explanation": "Um contrato só vê a cadeia. Os factos do mundo exterior têm de ser trazidos por um oráculo — e o contrato passa a ser tão fiável quanto esse oráculo."
+  },
+  "quizGas": {
+    "question": "Porque é que o Ethereum cobra uma taxa (gas) por cada passo de computação?",
+    "options": [
+      "Para pagar dividendos à empresa dona do Ethereum",
+      "Para converter ETH em dólares antes de a transação ser registada",
+      "Para recompensar os utilizadores que guardam os seus tokens há mais tempo",
+      "Para pagar o trabalho e impedir que loops infinitos ou spam bloqueiem a rede partilhada"
+    ],
+    "explanation": "Um contrato corre em milhares de computadores ao mesmo tempo. Cobrar por instrução paga esse trabalho e impede que um loop infinito ou spam congelem a rede para todos."
+  },
+  "quizFungible": {
+    "question": "Qual destes seria representado por um token único, não fungível (ERC-721), em vez de um token fungível (ERC-20)?",
+    "options": [
+      "Pontos de fidelização de um programa de uma companhia aérea",
+      "Ações de uma empresa",
+      "A escritura de uma casa específica",
+      "Uma stablecoin que vale um dólar"
+    ],
+    "explanation": "Se qualquer unidade pode ser trocada por qualquer outra, é fungível — contas-as. Uma escritura refere-se a uma casa específica, por isso é única — dás-lhe nome."
+  },
   "takeaways": {
     "title": "Secção 3 — Conclusões-chave",
     "items": [

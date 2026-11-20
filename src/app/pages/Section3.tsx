@@ -1968,6 +1968,46 @@ export function Section3() {
           />
         </div>
 
+        <div className="h-full">
+          <QuizSlide
+            question={t('quizContractBug.question')}
+            options={(t('quizContractBug.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
+            explanation={t('quizContractBug.explanation')}
+          />
+        </div>
+
+        <div className="h-full">
+          <QuizSlide
+            question={t('quizAccounts.question')}
+            options={(t('quizAccounts.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
+            explanation={t('quizAccounts.explanation')}
+          />
+        </div>
+
+        <div className="h-full">
+          <QuizSlide
+            question={t('quizOracle.question')}
+            options={(t('quizOracle.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }))}
+            explanation={t('quizOracle.explanation')}
+          />
+        </div>
+
+        <div className="h-full">
+          <QuizSlide
+            question={t('quizGas.question')}
+            options={(t('quizGas.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 3 }))}
+            explanation={t('quizGas.explanation')}
+          />
+        </div>
+
+        <div className="h-full">
+          <QuizSlide
+            question={t('quizFungible.question')}
+            options={(t('quizFungible.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
+            explanation={t('quizFungible.explanation')}
+          />
+        </div>
+
         {/* ═══════ TAKEAWAYS ═══════ */}
         <div id="s3-takeaways" className="h-full">
           <TakeawaySlide

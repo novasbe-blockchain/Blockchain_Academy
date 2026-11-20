@@ -804,6 +804,56 @@
     ],
     "explanation": "Ethereum, Solana and Polygon are L1 chains or L2 scaling solutions. They sit between the infrastructure (nodes, validators) and the applications built on them."
   },
+  "quizContractBug": {
+    "question": "A smart contract holding funds turns out to have a bug, and someone uses it to take money. What does the 'vending machine' idea tell you?",
+    "options": [
+      "The contract's author can pause it and refund everyone",
+      "The code runs exactly as written — bug included — and nobody can simply undo the result",
+      "The network spots the bug and refuses to run that part of the code",
+      "The contract deletes itself as soon as a bug is used"
+    ],
+    "explanation": "A smart contract runs exactly as written, for everyone, and there is no undo. In the 2016 DAO hack about $60M was drained by code doing exactly what it said — which is why audits matter."
+  },
+  "quizAccounts": {
+    "question": "Which statement about Ethereum's two kinds of account is correct?",
+    "options": [
+      "A smart contract is controlled by a private key held by its author",
+      "A wallet account (EOA) contains code that runs automatically",
+      "A smart contract never acts on its own: it runs only when a wallet, or another contract, calls it",
+      "A smart contract can wake itself up at a time it has scheduled"
+    ],
+    "explanation": "Every action starts with a wallet's key; contracts only react. A contract has no key and no clock — if nothing calls it, nothing happens."
+  },
+  "quizOracle": {
+    "question": "A flight-delay insurance contract must pay out when a flight is late. How does it find out about the delay?",
+    "options": [
+      "An oracle writes the fact onto the chain — which means you now have to trust the oracle",
+      "The contract looks up the airline's website by itself",
+      "Miners vote on whether the flight was late",
+      "The passenger's wallet detects the delay automatically"
+    ],
+    "explanation": "A contract sees only the chain. Outside facts must be brought in by an oracle — and then the contract is only as trustworthy as that oracle."
+  },
+  "quizGas": {
+    "question": "Why does Ethereum charge a fee (gas) for every step of computation?",
+    "options": [
+      "To pay dividends to the company that owns Ethereum",
+      "To convert ETH into dollars before a transaction is recorded",
+      "To reward the users who have held their tokens the longest",
+      "To pay for the work, and to stop endless loops or spam from jamming the shared network"
+    ],
+    "explanation": "A contract runs on thousands of computers at once. Charging per instruction pays for that work and stops an endless loop or spam from freezing the network for everyone."
+  },
+  "quizFungible": {
+    "question": "Which of these would be represented by a unique, non-fungible token (ERC-721) rather than a fungible one (ERC-20)?",
+    "options": [
+      "Loyalty points in an airline programme",
+      "Shares in a company",
+      "The deed to one specific house",
+      "A stablecoin worth one dollar"
+    ],
+    "explanation": "If any unit can be swapped for any other, it is fungible — you count them. A deed refers to one specific house, so it is one of a kind — you name it."
+  },
   "takeaways": {
     "title": "Section 3 — Key Takeaways",
     "items": [

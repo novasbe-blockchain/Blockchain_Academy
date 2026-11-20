@@ -944,6 +944,56 @@
     ],
     "explanation": "Banks closed for nearly two weeks, withdrawals were capped, and uninsured deposits took a 47.5% haircut. That made the control question concrete: a bank balance can be frozen or clipped from above. Bitcoin's appeal was censorship resistance and self-custody — no operator to seize funds. (How much of the 2013 rally was Cyprus versus existing momentum is still debated.)"
   },
+  "quizUtxo": {
+    "question": "Alice holds a single 0.5 BTC coin (a UTXO) and wants to pay Bob 0.4 BTC. Ignoring the miner fee, what happens?",
+    "options": [
+      "The whole 0.5 coin is consumed, creating two new ones: 0.4 for Bob and 0.1 back to Alice as change",
+      "The coin's value is lowered from 0.5 to 0.1, and Bob's balance goes up by 0.4",
+      "Alice first asks a miner to split her coin into smaller coins, then sends one of them",
+      "0.4 goes to Bob and the leftover 0.1 is destroyed"
+    ],
+    "explanation": "Bitcoin works like cash, not a bank balance: a coin is spent whole, and the transaction creates fresh outputs — the payment and the change. Because the old coin is gone, it can't be spent twice."
+  },
+  "quizKeysOneWay": {
+    "question": "Why is it safe to give your Bitcoin address to anyone who wants to pay you?",
+    "options": [
+      "Because the address changes automatically after every payment",
+      "Because the network keeps addresses hidden from everyone but miners",
+      "Because an address only works once the receiver enters a password",
+      "Because the maths only runs one way: nobody can work back from the address to your private key"
+    ],
+    "explanation": "Private key → public key → address is easy to compute forwards and practically impossible to reverse. That asymmetry lets you share the address while the private key stays secret."
+  },
+  "quizSelfCustody": {
+    "question": "You hold your own bitcoin (self-custody) and lose your seed phrase and every device with your wallet. What happens to the coins?",
+    "options": [
+      "Bitcoin's support team restores access once you prove your identity",
+      "They stay on the chain, but nobody can ever spend them",
+      "They are deleted from the blockchain after a waiting period",
+      "They are automatically passed on to the miners"
+    ],
+    "explanation": "There is no password reset and no support line: the seed phrase is the wallet. The coins remain visible on the ledger but are permanently unspendable — as in the landfill hard-drive case."
+  },
+  "quizDifficulty": {
+    "question": "Thousands of powerful new mining machines join the Bitcoin network. How does the network respond?",
+    "options": [
+      "It raises the block reward so that every miner still earns the same",
+      "It lets blocks arrive faster and faster, so all the coins are issued sooner",
+      "It automatically raises the mining difficulty so blocks still arrive about every 10 minutes",
+      "It blocks the new machines until the existing miners vote to admit them"
+    ],
+    "explanation": "Every 2,016 blocks (about two weeks) the difficulty retargets to keep blocks roughly 10 minutes apart, however much hash power joins or leaves — so extra miners don't speed up issuance."
+  },
+  "quizScript": {
+    "question": "Bitcoin's scripting language is deliberately limited — no loops, no complex logic. What was the reasoning?",
+    "options": [
+      "The fewer things a language can do, the fewer ways it can go wrong",
+      "Computers in 2009 were too slow to run anything more complex",
+      "Regulators prohibited programmable money at the time",
+      "Satoshi planned to add full programmability later, but ran out of time"
+    ],
+    "explanation": "Simplicity was a security choice: more features mean more attack surface. Bitcoin's community kept it a single-purpose tool — which is why people who wanted programmable money built Ethereum instead."
+  },
   "supply": {
     "interactiveBadge": "🧩 Interactive",
     "heading": "Bitcoin Supply Model",
