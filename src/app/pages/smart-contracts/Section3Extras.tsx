@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Check, X, KeyRound } from 'lucide-react';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
+import { HookHeader } from './Section3Family';
 
-// Section 3 — NFT Utility & DAO applications block + TradeLens failure case.
+// Section 3 — NFT utility & DAO interactives and real cases + TradeLens failure case.
 // Text lives in smart-contracts/section-3.json; this file holds layout + language-neutral data.
 
 const NS = 'smart-contracts/section-3';
@@ -90,11 +91,7 @@ export function TokenGateDemo() {
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
-      <div className="shrink-0 mb-3">
-        <span className="px-2.5 py-0.5 rounded-full bg-[#8b5cf6]/15 border border-[#8b5cf6]/40 text-[#8b5cf6] text-xs font-bold">{t('interactiveBadge')}</span>
-        <h2 className="text-2xl font-bold text-foreground mt-1">{t('nftGate.title')}</h2>
-        <p className="text-muted-foreground text-sm">{t('nftGate.subtitle')}</p>
-      </div>
+      <HookHeader color="#8b5cf6" badge={t('interactiveBadge')} hook={t('hooks.gate')} title={t('nftGate.title')} subtitle={t('nftGate.subtitle')} />
 
       <div className="flex-1 min-h-0 grid grid-cols-[1fr_1.2fr] gap-5">
         {/* Wallets */}
@@ -221,61 +218,6 @@ export function NftHonestSlide() {
   );
 }
 
-// ─── What is a DAO ───────────────────────────────────────────────────────────
-
-export function DaoIntroSlide() {
-  const { t } = useTranslation(NS);
-  const trad = t('daoIntro.tradChain', { returnObjects: true }) as { label: string; sub: string }[];
-  const dao = t('daoIntro.daoChain', { returnObjects: true }) as { label: string; sub: string }[];
-
-  const Chain = ({ items, color, label, note }: { items: { label: string; sub: string }[]; color: string; label: string; note: string }) => (
-    <div className="flex-1 flex flex-col rounded-2xl border-2 bg-card p-4 min-h-0" style={{ borderColor: color + '50' }}>
-      <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color }}>{label}</div>
-      <div className="flex-1 flex flex-col justify-center gap-1">
-        {items.map((it, i) => (
-          <div key={it.label} className="flex flex-col items-center">
-            <div className="w-full px-3 py-2 rounded-lg border text-center" style={{ borderColor: color + '50', backgroundColor: color + (i === items.length - 1 ? '20' : '0c') }}>
-              <div className="font-bold text-sm text-foreground leading-tight">{it.label}</div>
-              <div className="text-[10px] text-muted-foreground">{it.sub}</div>
-            </div>
-            {i < items.length - 1 && <div className="text-lg leading-none" style={{ color }}>↓</div>}
-          </div>
-        ))}
-      </div>
-      <div className="mt-3 text-[11px] text-muted-foreground italic leading-snug">{note}</div>
-    </div>
-  );
-
-  return (
-    <div className="h-full flex flex-col p-6 lg:p-10">
-      <div className="shrink-0 mb-4">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('daoIntro.heading')}</h2>
-        <p className="text-muted-foreground text-sm mt-1">{t('daoIntro.subtitle')}</p>
-      </div>
-      <div className="flex-1 min-h-0 grid grid-cols-[1fr_1fr_1.3fr] gap-4">
-        <Chain items={trad} color="#ED1C24" label={t('daoIntro.tradLabel')} note={t('daoIntro.tradEnforced')} />
-        <Chain items={dao} color="#8b5cf6" label={t('daoIntro.daoLabel')} note={t('daoIntro.daoEnforced')} />
-        <div className="flex flex-col gap-3 min-h-0">
-          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('daoIntro.twoLabel')}</div>
-          <div className="flex-1 p-4 rounded-xl border bg-card flex flex-col gap-1.5" style={{ borderColor: '#6366f140' }}>
-            <div className="flex items-center gap-2"><span className="text-xl">🏢</span><div className="font-bold text-sm text-[#6366f1]">{t('daoIntro.mimicTitle')}</div></div>
-            <p className="text-xs text-muted-foreground leading-snug">{t('daoIntro.mimicBody')}</p>
-          </div>
-          <div className="flex-1 p-4 rounded-xl border bg-card flex flex-col gap-1.5" style={{ borderColor: '#39B54A40' }}>
-            <div className="flex items-center gap-2"><span className="text-xl">🧬</span><div className="font-bold text-sm text-[#39B54A]">{t('daoIntro.newTitle')}</div></div>
-            <p className="text-xs text-muted-foreground leading-snug">{t('daoIntro.newBody')}</p>
-          </div>
-          <div className="p-3 rounded-xl border border-[#8b5cf6]/30 text-xs text-muted-foreground" style={{ backgroundColor: '#8b5cf60f' }}>
-            <span className="font-bold text-[#8b5cf6]">{t('daoIntro.defLabel')}</span>{t('daoIntro.defBody')}
-          </div>
-          <UnderTheHood terms={['Governor contract', 'proposal', 'quorum', 'timelock', 'Safe multisig']} />
-        </div>
-      </div>
-      <KeyPointBar text={t('keyPoints.s3-dao-intro')} className="mt-3" />
-    </div>
-  );
-}
-
 // ─── Governance building blocks explorer ─────────────────────────────────────
 
 type BlockId = 'tokenVote' | 'multisig' | 'nested' | 'quadratic' | 'timelock' | 'roles' | 'ragequit';
@@ -325,11 +267,7 @@ export function GovernanceBlocksExplorer() {
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
-      <div className="shrink-0 mb-3">
-        <span className="px-2.5 py-0.5 rounded-full bg-[#8b5cf6]/15 border border-[#8b5cf6]/40 text-[#8b5cf6] text-xs font-bold">{t('interactiveBadge')}</span>
-        <h2 className="text-2xl font-bold text-foreground mt-1">{t('daoStructures.title')}</h2>
-        <p className="text-muted-foreground text-sm">{t('daoStructures.subtitle')}</p>
-      </div>
+      <HookHeader color="#8b5cf6" badge={t('interactiveBadge')} hook={t('hooks.blocks')} title={t('daoStructures.title')} subtitle={t('daoStructures.subtitle')} />
 
       <div className="flex-1 min-h-0 grid grid-cols-[1.25fr_1fr] gap-5">
         <div className="flex flex-col gap-2 min-h-0">
@@ -408,11 +346,7 @@ export function VotingPowerSim() {
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
-      <div className="shrink-0 mb-3">
-        <span className="px-2.5 py-0.5 rounded-full bg-[#8b5cf6]/15 border border-[#8b5cf6]/40 text-[#8b5cf6] text-xs font-bold">{t('interactiveBadge')}</span>
-        <h2 className="text-2xl font-bold text-foreground mt-1">{t('daoVote.title')}</h2>
-        <p className="text-muted-foreground text-sm">{t('daoVote.subtitle')}</p>
-      </div>
+      <HookHeader color="#8b5cf6" badge={t('interactiveBadge')} hook={t('hooks.vote')} title={t('daoVote.title')} subtitle={t('daoVote.subtitle')} />
 
       <div className="shrink-0 mb-3 p-2.5 rounded-xl border border-[#8b5cf6]/30 text-sm font-semibold text-foreground text-center" style={{ backgroundColor: '#8b5cf60f' }}>
         📜 {t('daoVote.proposal')}

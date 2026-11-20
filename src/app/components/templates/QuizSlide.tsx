@@ -11,6 +11,8 @@ interface QuizSlideProps {
   question: string;
   options: QuizOption[];
   explanation?: string;
+  /** Text of the pill above the question, e.g. "Quiz · 2 / 6". Defaults to "Quiz". */
+  label?: string;
   /**
    * Dense layout for quizzes with long question / option text. Smaller type and
    * tighter spacing so four multi-line options plus the explanation fit on one
@@ -20,7 +22,7 @@ interface QuizSlideProps {
   compact?: boolean;
 }
 
-export function QuizSlide({ question, options, explanation, compact = false }: QuizSlideProps) {
+export function QuizSlide({ question, options, explanation, label = 'Quiz', compact = false }: QuizSlideProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showAnswer, setShowAnswer] = useState(false);
 
@@ -53,7 +55,7 @@ export function QuizSlide({ question, options, explanation, compact = false }: Q
               compact ? 'px-3 py-1 mb-2 lg:mb-3 text-sm' : 'px-4 py-2 mb-3 lg:mb-4'
             }`}
           >
-            <span className="text-[#6366f1] font-bold">Quiz</span>
+            <span className="text-[#6366f1] font-bold">{label}</span>
           </div>
           <h2
             className={`font-bold text-foreground ${

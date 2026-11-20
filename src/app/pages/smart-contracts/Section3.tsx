@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
@@ -6,18 +6,23 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
-import { Building2 } from 'lucide-react';
+import {
+  Building2, Check, GraduationCap, Minus, ShieldAlert, ShieldCheck, UserX, X, type LucideIcon,
+} from 'lucide-react';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { ClassDiscussion } from '../../components/shared/ClassDiscussion';
+import { sha256Hex } from '../../utils/sha256';
 import {
   NftUtilitySlide, TokenGateDemo, NftHonestSlide,
-  DaoIntroSlide, GovernanceBlocksExplorer, VotingPowerSim, DaoExamplesSlide,
+  GovernanceBlocksExplorer, VotingPowerSim, DaoExamplesSlide,
   TradeLensCase,
 } from './Section3Extras';
+import {
+  HookHeader, WinsBreaksSlide, FamilyDivider, DefiWhySlide, DefiProductionSlide, NftWhySlide, DaoWhySlide,
+  type RecapBridge,
+} from './Section3Family';
 
-import imgDefiIntro      from '../../../assets/sc/defi-intro.png';
-import imgNftGaming      from '../../../assets/sc/nft-gaming.png';
 import imgRwaProcess     from '../../../assets/sc/rwa-process.png';
 import imgSupplyProv     from '../../../assets/sc/supply-provenance.png';
 import imgCertDecent     from '../../../assets/sc/cert-decentralization.png';
@@ -28,20 +33,24 @@ const chapterShape = [
   { id: 's3-industries-intro' },
 
   { kind: 'group' as const, id: 'g-defi' },
+  { id: 's3-defi-title' },
   { id: 's3-defi-intro' },
+  { id: 's3-defi-real' },
   { id: 's3-defi-amm' },
   { id: 's3-defi-stablecoins' },
   { id: 's3-defi-prosCons' },
 
   { kind: 'group' as const, id: 'g-nft' },
+  { id: 's3-nft-title' },
   { id: 's3-nft-intro' },
   { id: 's3-nft-real' },
-  { id: 's3-nft-prosCons' },
-
-  { kind: 'group' as const, id: 'g-apps' },
   { id: 's3-nft-utility' },
   { id: 's3-nft-gate' },
   { id: 's3-nft-honest' },
+  { id: 's3-nft-prosCons' },
+
+  { kind: 'group' as const, id: 'g-dao' },
+  { id: 's3-dao-title' },
   { id: 's3-dao-intro' },
   { id: 's3-dao-structures' },
   { id: 's3-dao-vote' },
@@ -50,16 +59,19 @@ const chapterShape = [
   { id: 's3-dao-prosCons' },
 
   { kind: 'group' as const, id: 'g-rwa' },
+  { id: 's3-rwa-title' },
   { id: 's3-rwa-spectrum' },
   { id: 's3-rwa-real' },
   { id: 's3-rwa-prosCons' },
 
   { kind: 'group' as const, id: 'g-sc' },
+  { id: 's3-sc-title' },
   { id: 's3-sc-provenance' },
   { id: 's3-sc-real' },
   { id: 's3-sc-prosCons' },
 
   { kind: 'group' as const, id: 'g-cert' },
+  { id: 's3-cert-title' },
   { id: 's3-cert-howitworks' },
   { id: 's3-cert-real' },
   { id: 's3-cert-prosCons' },
@@ -74,47 +86,12 @@ const chapterShape = [
   { id: 's3-takeaways' },
 ];
 
-// ─── Pros / Cons Slide Helper ────────────────────────────────────────────────
+// Every family follows the same frame: a title divider (FamilyDivider), a one-line recap bridge
+// and a "why do we even need this?" hook (HookHeader), then the interactive / real cases, then
+// one WinsBreaksSlide.
 
-function ProsConsSlide({
-  title, accent, pros, cons, keyPoint,
-}: {
-  title: string; accent: string;
-  pros: { label: string; desc: string }[];
-  cons: { label: string; desc: string }[];
-  keyPoint: string;
-}) {
-  const { t } = useTranslation('smart-contracts/section-3');
-  return (
-    <div className="h-full flex flex-col p-6 lg:p-10">
-      <div className="shrink-0 mb-5">
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{title}</h2>
-      </div>
-      <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
-        <div className="flex flex-col gap-2 overflow-y-auto">
-          <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-1">{t('prosCons.prosLabel')}</div>
-          {pros.map(p => (
-            <div key={p.label} className="p-3 bg-card border border-[#39B54A]/25 rounded-xl">
-              <div className="font-bold text-sm text-foreground">{p.label}</div>
-              <div className="text-xs text-muted-foreground mt-1">{p.desc}</div>
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-col gap-2 overflow-y-auto">
-          <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest mb-1">{t('prosCons.consLabel')}</div>
-          {cons.map(c => (
-            <div key={c.label} className="p-3 bg-card border border-[#ED1C24]/25 rounded-xl">
-              <div className="font-bold text-sm text-foreground">{c.label}</div>
-              <div className="text-xs text-muted-foreground mt-1">{c.desc}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="shrink-0 mt-3 h-1 rounded-full" style={{ backgroundColor: accent + '30' }} />
-      <KeyPointBar text={keyPoint} className="mt-3" />
-    </div>
-  );
-}
+// Index of the correct option for each quiz.items[] entry, in the same order as the locale files.
+const QUIZ_ANSWERS = [1, 2, 3, 0, 2, 1];
 
 // ─── Interactive AMM Bonding Curve ───────────────────────────────────────────
 
@@ -156,12 +133,10 @@ function InteractiveAMM() {
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
-      <div className="shrink-0 mb-3">
-        <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">{t('interactiveBadge')}</span>
-        <h2 className="text-2xl font-bold text-foreground mt-1">{t('amm.title')}<code className="text-[#6366f1]">x · y = k</code></h2>
-        <p className="text-muted-foreground text-sm">{t('amm.subtitle')}</p>
+      <HookHeader color="#6366f1" badge={t('interactiveBadge')} hook={t('hooks.amm')}
+        title={<>{t('amm.title')}<code className="text-[#6366f1]">x · y = k</code></>} subtitle={t('amm.subtitle')}>
         <UnderTheHood terms={['constant product', 'liquidity pool', 'slippage', 'LP fee']} className="mt-1.5" />
-      </div>
+      </HookHeader>
 
       <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
 
@@ -177,7 +152,7 @@ function InteractiveAMM() {
               <line x1="22" y1={H - 24} x2={W - 8} y2={H - 24} stroke="currentColor" strokeOpacity="0.2" />
               <line x1="22" y1="6"        x2="22"     y2={H - 24} stroke="currentColor" strokeOpacity="0.2" />
               <text x="22" y={H - 4} fontSize="9" fill="currentColor" opacity="0.5">{t('amm.axisX')}</text>
-              <text x="6" y="14" fontSize="9" fill="currentColor" opacity="0.5">{t('amm.axisY')}</text>
+              <text x="27" y="14" fontSize="9" fill="currentColor" opacity="0.5">{t('amm.axisY')}</text>
 
               {/* Curve */}
               <polyline points={points.join(' ')} fill="none" stroke="#6366f1" strokeWidth="2" />
@@ -315,18 +290,15 @@ const RWA_TIERS = [
   { id: 'infra',    complexity: 9, color: '#ED1C24' },
 ];
 
-function RWASpectrum() {
+function RWASpectrum({ recap }: { recap: RecapBridge }) {
   const { t } = useTranslation('smart-contracts/section-3');
   const [selected, setSelected] = useState<string>('sov');
   const tier = RWA_TIERS.find(t => t.id === selected)!;
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
-      <div className="shrink-0 mb-3">
-        <span className="px-2.5 py-0.5 rounded-full bg-[#39B54A]/15 border border-[#39B54A]/40 text-[#39B54A] text-xs font-bold">{t('interactiveBadge')}</span>
-        <h2 className="text-2xl font-bold text-foreground mt-1">{t('rwaSpectrum.title')}</h2>
-        <p className="text-muted-foreground text-sm">{t('rwaSpectrum.subtitle')}</p>
-      </div>
+      <HookHeader color="#39B54A" badge={t('interactiveBadge')} hook={t('family.rwa.hook')} recap={recap}
+        title={t('rwaSpectrum.title')} subtitle={t('rwaSpectrum.subtitle')} />
 
       <div className="flex-1 min-h-0 grid grid-cols-3 gap-5">
         {/* Left: spectrum bars */}
@@ -390,78 +362,161 @@ function RWASpectrum() {
 
 // ─── Interactive Proof-of-Existence (SHA-256) ────────────────────────────────
 
-async function sha256Hex(input: string): Promise<string> {
-  if (typeof crypto === 'undefined' || !crypto.subtle) return '0000…unavailable';
-  const buf  = new TextEncoder().encode(input);
-  const hash = await crypto.subtle.digest('SHA-256', buf);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+// Hashing is done by a synchronous pure-JS SHA-256 (utils/sha256) rather than crypto.subtle:
+// Web Crypto only exists in secure contexts, so over plain HTTP on a LAN address the demo used
+// to show a placeholder for every input — and a tampered document would have "matched".
+
+// A matching hash only proves the document is unchanged. Anyone can write a hash on-chain, so the
+// verifier also checks WHO wrote the record: the university's known issuer contract, or someone else.
+
+type IssuerId = 'uni' | 'rogue';
+type CheckState = 'pass' | 'fail' | 'skip';
+
+// Language-neutral: illustrative addresses + colour + icon. Names come from t().
+const ISSUERS: Record<IssuerId, { address: string; color: string; Icon: LucideIcon }> = {
+  uni:   { address: '0x71C7…E3a9', color: '#39B54A', Icon: GraduationCap },
+  rogue: { address: '0xBAD0…51f0', color: '#ED1C24', Icon: UserX },
+};
+
+const CHECK_STYLE: Record<CheckState, { color: string; Icon: LucideIcon }> = {
+  pass: { color: '#39B54A', Icon: Check },
+  fail: { color: '#ED1C24', Icon: X },
+  skip: { color: '#9ca3af', Icon: Minus },
+};
+
+function VerifyCheck({ n, state, title, delay, testId, children }: {
+  n: number; state: CheckState; title: string; delay: number; testId: string; children: ReactNode;
+}) {
+  const s = CHECK_STYLE[state];
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay }}
+      data-testid={testId} data-state={state}
+      className="flex items-start gap-2.5 p-2.5 rounded-xl border-2 bg-card"
+      style={{ borderColor: s.color + '70' }}
+    >
+      <div className="size-7 rounded-full flex items-center justify-center text-white shrink-0" style={{ backgroundColor: s.color }}>
+        <s.Icon className="size-4" strokeWidth={3} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="text-xs font-bold text-foreground leading-tight">
+          <span className="font-mono mr-1.5" style={{ color: s.color }}>{n}</span>{title}
+        </div>
+        <div className="font-mono text-[10px] text-muted-foreground break-all leading-relaxed mt-0.5">{children}</div>
+      </div>
+    </motion.div>
+  );
 }
 
-function ProofOfExistenceDemo() {
+function ProofOfExistenceDemo({ recap }: { recap: RecapBridge }) {
   const { t } = useTranslation('smart-contracts/section-3');
   const [doc, setDoc]   = useState(t('poe.defaultDoc'));
-  const [hash, setHash] = useState<string>('');
-  const [anchored, setAnchored] = useState<{ hash: string; ts: number } | null>(null);
+  const [issuer, setIssuer] = useState<IssuerId>('uni');
+  const [anchored, setAnchored] = useState<{ hash: string; ts: number; issuer: IssuerId } | null>(null);
   const [verifyDoc, setVerifyDoc] = useState('');
   const [verifyHash, setVerifyHash] = useState('');
 
-  useEffect(() => { sha256Hex(doc).then(setHash); }, [doc]);
+  // Live fingerprint of whatever is in the credential box.
+  const hash = useMemo(() => sha256Hex(doc), [doc]);
 
   const onDocChange = (v: string) => setDoc(v);
 
-  const anchor = () => setAnchored({ hash, ts: Date.now() });
+  // A verdict belongs to one (document, anchor) pair: drop it when either side changes.
+  const anchor = () => { setAnchored({ hash, ts: Date.now(), issuer }); setVerifyHash(''); };
+  const onVerifyDocChange = (v: string) => { setVerifyDoc(v); setVerifyHash(''); };
 
-  const verify = async () => {
-    setVerifyHash(await sha256Hex(verifyDoc));
-  };
+  const verify = () => setVerifyHash(sha256Hex(verifyDoc));
 
-  const verifyMatches = anchored && verifyHash && verifyHash === anchored.hash;
+  // Check 1: the document's hash equals the on-chain record.
+  const hashOk = !!anchored && verifyHash !== '' && verifyHash === anchored.hash;
+  // Check 2: that record was written by the university's issuer contract. With no matching record
+  // there is no writer to look at, so the check is skipped rather than failed.
+  const issuerOk = hashOk && anchored?.issuer === 'uni';
+  const issuerState: CheckState = !hashOk ? 'skip' : issuerOk ? 'pass' : 'fail';
+  const verdict = !hashOk ? 'altered' : issuerOk ? 'authentic' : 'forged';
+  const verdictColor = verdict === 'authentic' ? '#39B54A' : '#ED1C24';
+  const VerdictIcon = verdict === 'authentic' ? ShieldCheck : ShieldAlert;
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
-      <div className="shrink-0 mb-3">
-        <span className="px-2.5 py-0.5 rounded-full bg-[#22d3ee]/15 border border-[#22d3ee]/40 text-[#22d3ee] text-xs font-bold">{t('interactiveBadge')}</span>
-        <h2 className="text-2xl font-bold text-foreground mt-1">{t('poe.title')}</h2>
-        <p className="text-muted-foreground text-sm">{t('poe.subtitle')}</p>
-      </div>
+      <HookHeader color="#22d3ee" badge={t('interactiveBadge')} hook={t('family.cert.hook')} recap={recap}
+        title={t('poe.title')} subtitle={t('poe.subtitle')} />
 
       <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
 
         {/* Issue */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5">
           <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest">{t('poe.issueStep')}</div>
           <div className="p-3 bg-card border border-border rounded-xl flex flex-col gap-2">
             <div className="text-[10px] font-semibold text-muted-foreground">{t('poe.credentialText')}</div>
             <textarea
               value={doc}
               onChange={e => onDocChange(e.target.value)}
-              rows={3}
+              rows={2}
               className="w-full p-2 bg-muted rounded-lg text-xs font-mono text-foreground resize-none border border-border focus:outline-none focus:ring-1 focus:ring-[#22d3ee]"
             />
           </div>
           <div className="p-3 bg-card border border-border rounded-xl">
             <div className="text-[10px] font-semibold text-muted-foreground mb-1">{t('poe.hashLabel')}</div>
-            <div className="font-mono text-[10px] text-[#6366f1] break-all leading-relaxed">{hash || '…'}</div>
+            <div className="font-mono text-[10px] text-[#6366f1] break-all leading-relaxed" data-testid="poe-hash">{hash}</div>
           </div>
+
+          {/* Who writes the record: the chain accepts either, which is the point of check 2 */}
+          <div>
+            <div className="text-[10px] font-semibold text-muted-foreground mb-1">{t('poe.writerLabel')}</div>
+            <div className="grid grid-cols-2 gap-2">
+              {(Object.keys(ISSUERS) as IssuerId[]).map(id => {
+                const m = ISSUERS[id];
+                const active = id === issuer;
+                return (
+                  <button key={id} onClick={() => setIssuer(id)} aria-pressed={active} data-testid={`poe-issuer-${id}`}
+                    className="flex items-center gap-2 p-2 rounded-xl border-2 text-left transition-colors"
+                    style={{ borderColor: active ? m.color : 'var(--border)', backgroundColor: active ? m.color + '12' : 'var(--card)' }}>
+                    <m.Icon className="size-4 shrink-0" style={{ color: m.color }} />
+                    <span className="min-w-0 leading-tight">
+                      <span className="block text-[11px] font-bold text-foreground">{t(`poe.writers.${id}.name`)}</span>
+                      <span className="block font-mono text-[10px] text-muted-foreground">{m.address}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <button
             onClick={anchor}
-            disabled={!hash}
+            data-testid="poe-anchor"
             className="px-4 py-2.5 rounded-xl bg-[#22d3ee] text-white text-xs font-black hover:bg-[#22d3ee]/90 disabled:opacity-40 transition-colors"
           >
             {t('poe.anchorButton')}
           </button>
           {anchored && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-3 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-xl">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} data-testid="poe-record"
+              className="p-3 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-xl">
               <div className="font-bold text-xs text-[#22d3ee] mb-1">{t('poe.anchored')}</div>
               <div className="text-[10px] text-muted-foreground">{t('poe.blockTimestamp', { ts: new Date(anchored.ts).toISOString() })}</div>
               <div className="text-[10px] text-muted-foreground">{t('poe.anchoredHash')}<span className="font-mono">{anchored.hash.slice(0, 24)}…</span></div>
+              <div className="text-[10px] text-muted-foreground">
+                {t('poe.writtenByLabel')}
+                <span className="font-mono font-bold" style={{ color: ISSUERS[anchored.issuer].color }}>{ISSUERS[anchored.issuer].address}</span>
+                {' · '}{t(`poe.writers.${anchored.issuer}.name`)}
+              </div>
+              {anchored.issuer === 'rogue' && (
+                <div className="text-[10px] font-semibold text-[#ED1C24] mt-0.5">{t('poe.chainAccepts')}</div>
+              )}
             </motion.div>
           )}
         </div>
 
         {/* Verify */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5">
           <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('poe.verifyStep')}</div>
+          {/* The verifier's reference point: the issuer address the university publishes */}
+          <div className="flex items-center gap-2 flex-wrap px-2.5 py-1.5 rounded-lg border border-[#39B54A]/40 bg-[#39B54A]/10 text-[11px]">
+            <GraduationCap className="size-4 shrink-0 text-[#39B54A]" />
+            <span className="text-muted-foreground">{t('poe.knownIssuerLabel')}</span>
+            <span className="font-mono font-bold text-foreground">{ISSUERS.uni.address}</span>
+          </div>
           {!anchored ? (
             <div className="p-4 rounded-xl border border-dashed border-border flex-1 flex items-center justify-center text-center">
               <p className="text-xs text-muted-foreground italic">{t('poe.verifyPlaceholderPrompt')}</p>
@@ -472,35 +527,59 @@ function ProofOfExistenceDemo() {
                 <div className="text-[10px] font-semibold text-muted-foreground">{t('poe.reenterCredential')}</div>
                 <textarea
                   value={verifyDoc}
-                  onChange={e => setVerifyDoc(e.target.value)}
+                  onChange={e => onVerifyDocChange(e.target.value)}
                   placeholder={t('poe.verifyTextareaPlaceholder')}
-                  rows={3}
+                  rows={2}
+                  data-testid="poe-verify-input"
                   className="w-full p-2 bg-muted rounded-lg text-xs font-mono text-foreground resize-none border border-border focus:outline-none focus:ring-1 focus:ring-[#39B54A]"
                 />
-                <button
-                  onClick={verify}
-                  disabled={!verifyDoc}
-                  className="self-start px-3 py-1.5 rounded-lg bg-[#39B54A] text-white text-xs font-bold hover:bg-[#39B54A]/90 disabled:opacity-40 transition-colors"
-                >
-                  {t('poe.computeHash')}
-                </button>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <button
+                    onClick={verify}
+                    disabled={!verifyDoc}
+                    data-testid="poe-verify"
+                    className="px-3 py-1.5 rounded-lg bg-[#39B54A] text-white text-xs font-bold hover:bg-[#39B54A]/90 disabled:opacity-40 transition-colors"
+                  >
+                    {t('poe.computeHash')}
+                  </button>
+                  <button
+                    onClick={() => onVerifyDocChange(doc)}
+                    data-testid="poe-paste"
+                    className="text-[11px] font-semibold text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+                  >
+                    {t('poe.pasteIssued')}
+                  </button>
+                </div>
               </div>
 
+              {/* Two checks, in order: is the document unchanged, and did the right contract write the record? */}
               {verifyHash && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="p-3 rounded-xl border-2"
-                  style={{ borderColor: verifyMatches ? '#39B54A' : '#ED1C24', backgroundColor: (verifyMatches ? '#39B54A' : '#ED1C24') + '12' }}
-                >
-                  <div className="font-black mb-1" style={{ color: verifyMatches ? '#39B54A' : '#ED1C24' }}>
-                    {verifyMatches ? t('poe.verifiedMatch') : t('poe.verifiedMismatch')}
-                  </div>
-                  <div className="font-mono text-[10px] text-muted-foreground break-all leading-relaxed">
-                    {t('poe.computedLabel')}{verifyHash.slice(0, 32)}…<br/>
-                    {t('poe.anchoredLabelShort')}{anchored.hash.slice(0, 32)}…
-                  </div>
-                </motion.div>
+                <div key={`${verifyHash}-${anchored.ts}`} className="flex flex-col gap-2" data-testid="poe-result" data-verdict={verdict}>
+                  <VerifyCheck n={1} state={hashOk ? 'pass' : 'fail'} title={t('poe.checkHash')} delay={0} testId="poe-check-hash">
+                    {t('poe.computedLabel')}{verifyHash.slice(0, 24)}…<br />
+                    {hashOk ? '= ' : '≠ '}{t('poe.anchoredLabelShort')}{anchored.hash.slice(0, 24)}…
+                  </VerifyCheck>
+                  <VerifyCheck n={2} state={issuerState} title={t('poe.checkIssuer')} delay={0.3} testId="poe-check-issuer">
+                    {issuerState === 'skip' ? t('poe.issuerSkipped') : (
+                      <>
+                        {t('poe.writtenByLabel')}
+                        <span className="font-bold" style={{ color: ISSUERS[anchored.issuer].color }}>{ISSUERS[anchored.issuer].address}</span><br />
+                        {issuerOk ? '= ' : '≠ '}{t('poe.knownIssuerLabel')} {ISSUERS.uni.address}
+                      </>
+                    )}
+                  </VerifyCheck>
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+                    data-testid="poe-verdict"
+                    className="p-2.5 rounded-xl border-2"
+                    style={{ borderColor: verdictColor, backgroundColor: verdictColor + '12' }}
+                  >
+                    <div className="flex items-center gap-2 font-black text-sm leading-tight" style={{ color: verdictColor }}>
+                      <VerdictIcon className="size-4 shrink-0" />{t(`poe.verdict.${verdict}.title`)}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground leading-snug mt-0.5">{t(`poe.verdict.${verdict}.body`)}</div>
+                  </motion.div>
+                </div>
               )}
             </>
           )}
@@ -508,7 +587,8 @@ function ProofOfExistenceDemo() {
 
       </div>
 
-      <div className="shrink-0 mt-3 p-2 bg-muted/50 rounded-lg text-[11px] text-muted-foreground">
+      {/* lg:pr-16 keeps the note clear of the floating slide-nav buttons */}
+      <div className="shrink-0 mt-3 p-2 lg:pr-16 bg-muted/50 rounded-lg text-[11px] text-muted-foreground">
         <span className="font-semibold text-foreground">{t('poe.whyWorksLabel')}</span>{t('poe.whyWorksBody')}
       </div>
       <KeyPointBar text={t('keyPoints.s3-cert-howitworks')} className="mt-3" />
@@ -582,11 +662,8 @@ function PegSimulator() {
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
-      <div className="shrink-0 mb-3">
-        <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">{t('interactiveBadge')}</span>
-        <h2 className="text-2xl font-bold text-foreground mt-1">{t('stablecoinsIntro.heading')}</h2>
-        <p className="text-muted-foreground text-sm">{t('pegSim.subtitle')}</p>
-      </div>
+      <HookHeader color="#6366f1" badge={t('interactiveBadge')} hook={t('hooks.peg')}
+        title={t('stablecoinsIntro.heading')} subtitle={t('pegSim.subtitle')} />
 
       <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
         {/* Controls */}
@@ -695,18 +772,15 @@ const PROVENANCE_STEPS = [
   { emoji: '🛒', who: 'Carrefour Lyon Part-Dieu',    ts: '2026-05-06 08:15', sig: '0xa1f5…3e90' },
 ];
 
-function ProvenanceQR() {
+function ProvenanceQR({ recap }: { recap: RecapBridge }) {
   const { t } = useTranslation('smart-contracts/section-3');
   const [scanned, setScanned] = useState(false);
   const [active, setActive]   = useState(0);
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
-      <div className="shrink-0 mb-3">
-        <span className="px-2.5 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold">{t('interactiveBadge')}</span>
-        <h2 className="text-2xl font-bold text-foreground mt-1">{t('provenance.title')}</h2>
-        <p className="text-muted-foreground text-sm">{t('provenance.subtitle')}</p>
-      </div>
+      <HookHeader color="#f59e0b" badge={t('interactiveBadge')} hook={t('family.sc.hook')} recap={recap}
+        title={t('provenance.title')} subtitle={t('provenance.subtitle')} />
 
       <div className="flex-1 min-h-0 grid grid-cols-[260px_1fr] gap-5">
 
@@ -940,9 +1014,8 @@ function DesignYourOwnExercise() {
   );
 }
 
-interface ProsConsItem { label: string; desc: string }
-interface ExampleChip { name: string; tag: string; stat: string; desc: string }
 interface RealColumn { kicker: string; title: string; tag: string; points: string[]; footnote: string }
+interface QuizItem { question: string; options: string[]; explanation: string }
 interface CaseCard { industry: string; name: string; problem: string; solution: string; metric: string; metricLabel: string; platform: string }
 
 const CASE_META = [
@@ -1011,19 +1084,11 @@ export function SC_Section3() {
   );
   const kp = (id: string) => t(`keyPoints.${id}`);
 
-  // Pros/Cons
-  const defiPros = t('defiProsCons.pros', { returnObjects: true }) as ProsConsItem[];
-  const defiCons = t('defiProsCons.cons', { returnObjects: true }) as ProsConsItem[];
-  const nftPros = t('nftProsCons.pros', { returnObjects: true }) as ProsConsItem[];
-  const nftCons = t('nftProsCons.cons', { returnObjects: true }) as ProsConsItem[];
-  const rwaPros = t('rwaProsCons.pros', { returnObjects: true }) as ProsConsItem[];
-  const rwaCons = t('rwaProsCons.cons', { returnObjects: true }) as ProsConsItem[];
-  const scPros = t('scProsCons.pros', { returnObjects: true }) as ProsConsItem[];
-  const scCons = t('scProsCons.cons', { returnObjects: true }) as ProsConsItem[];
-  const certPros = t('certProsCons.pros', { returnObjects: true }) as ProsConsItem[];
-  const certCons = t('certProsCons.cons', { returnObjects: true }) as ProsConsItem[];
-  const daoPros = t('daoProsCons.pros', { returnObjects: true }) as ProsConsItem[];
-  const daoCons = t('daoProsCons.cons', { returnObjects: true }) as ProsConsItem[];
+  // One-line recap bridge per family: where it was first taught + the 10-second version.
+  const bridge = (fam: string, to: string, color: string): RecapBridge => ({
+    where: t(`family.${fam}.where`), line: t(`family.${fam}.recap`), to, color,
+  });
+  const F3 = '/blockchain-fundamentals/section-3';
 
   // Language-neutral presentation data
   const industryVerticals = [
@@ -1032,20 +1097,6 @@ export function SC_Section3() {
     { key: 'rwa',  emoji: '🏢', color: '#39B54A' },
     { key: 'sc',   emoji: '🚚', color: '#f59e0b' },
     { key: 'cert', emoji: '📜', color: '#22d3ee' },
-  ];
-  const defiPrimitives = [
-    { key: 'dex', color: '#6366f1' },
-    { key: 'lending', color: '#8b5cf6' },
-    { key: 'stablecoins', color: '#39B54A' },
-    { key: 'yield', color: '#f59e0b' },
-    { key: 'derivatives', color: '#22d3ee' },
-  ];
-  const defiExamples = t('defiIntro.examples', { returnObjects: true }) as ExampleChip[];
-  const defiExampleColors = ['#6366f1', '#8b5cf6', '#39B54A'];
-  const nftEcoCards = [
-    { key: 'before',    emoji: '🏛', color: '#ED1C24' },
-    { key: 'withNft',   emoji: '🎯', color: '#8b5cf6' },
-    { key: 'parallels', emoji: '💼', color: '#39B54A' },
   ];
 
   // "In production" columns
@@ -1056,7 +1107,7 @@ export function SC_Section3() {
   const cases    = t('caseGallery.items', { returnObjects: true }) as CaseCard[];
 
   // Closing
-  const quizOptionTexts = t('quiz.options', { returnObjects: true }) as string[];
+  const quizItems = t('quiz.items', { returnObjects: true }) as QuizItem[];
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
   return (
@@ -1114,117 +1165,27 @@ export function SC_Section3() {
         {/* DeFi                                                        */}
         {/* ═══════════════════════════════════════════════════════════ */}
 
-        {/* DeFi: what it is + what runs today */}
-        <div id="s3-defi-intro" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-4 flex items-start gap-4">
-            <img src={imgDefiIntro} alt="" className="hidden lg:block h-16 object-contain shrink-0" />
-            <div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('defiWhat.heading')}</h2>
-              <p className="text-muted-foreground text-sm mt-1">{t('defiWhat.subtitle')}</p>
-            </div>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5">
-            <div className="flex flex-col gap-3 justify-center">
-              <div className="p-4 bg-card border border-[#6366f1]/30 rounded-xl">
-                <div className="font-bold text-sm text-[#6366f1] mb-1">{t('defiWhat.coreIdeaTitle')}</div>
-                <p className="text-xs text-muted-foreground leading-relaxed">{t('defiWhat.coreIdeaBody')}</p>
-              </div>
-              <div className="p-4 bg-card border border-[#8b5cf6]/30 rounded-xl">
-                <div className="font-bold text-sm text-[#8b5cf6] mb-1">{t('defiWhat.valueCodeTitle')}</div>
-                <p className="text-xs text-muted-foreground leading-relaxed">{t('defiWhat.valueCodeBody')}</p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2 justify-center">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t('defiWhat.primitivesLabel')}</div>
-              {defiPrimitives.map(p => (
-                <div key={p.key} className="flex items-start gap-3 p-2 bg-card border border-border rounded-lg">
-                  <div className="px-2 py-0.5 rounded font-bold text-xs shrink-0 text-white" style={{ backgroundColor: p.color }}>{t(`defiWhat.primitives.${p.key}.name`)}</div>
-                  <div className="text-xs text-muted-foreground">{t(`defiWhat.primitives.${p.key}.desc`)}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="shrink-0 mt-3">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5">{t('defiIntro.examplesLabel')}</div>
-            <div className="grid grid-cols-3 gap-3">
-              {defiExamples.map((e, i) => (
-                <div key={e.name} className="p-2.5 rounded-xl border bg-card flex flex-col gap-0.5" style={{ borderColor: defiExampleColors[i] + '40' }}>
-                  <div className="flex items-baseline justify-between gap-2">
-                    <div className="font-black text-sm text-foreground">{e.name}</div>
-                    <div className="font-mono text-[11px] font-bold shrink-0" style={{ color: defiExampleColors[i] }}>{e.stat}</div>
-                  </div>
-                  <div className="text-[10px] font-semibold" style={{ color: defiExampleColors[i] }}>{e.tag}</div>
-                  <div className="text-[11px] text-muted-foreground leading-snug">{e.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <KeyPointBar text={kp('s3-defi-intro')} className="mt-3" />
-        </div>
+        <div id="s3-defi-title" className="h-full"><FamilyDivider family="defi" /></div>
 
+        {/* DeFi: recap → why → two rails + the bank unbundled; then what runs today, on its own slide */}
+        <div id="s3-defi-intro" className="h-full">
+          <DefiWhySlide recap={bridge('defi', '/blockchain-platforms/section-2', '#39B54A')} />
+        </div>
+        <div id="s3-defi-real" className="h-full"><DefiProductionSlide /></div>
         <div id="s3-defi-amm" className="h-full"><InteractiveAMM /></div>
         <div id="s3-defi-stablecoins" className="h-full"><PegSimulator /></div>
-        <div id="s3-defi-prosCons" className="h-full">
-          <ProsConsSlide title={t('defiProsCons.title')} accent="#6366f1" pros={defiPros} cons={defiCons} keyPoint={kp('s3-defi-prosCons')} />
-        </div>
+        <div id="s3-defi-prosCons" className="h-full"><WinsBreaksSlide family="defi" keyPoint={kp('s3-defi-prosCons')} /></div>
 
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* Gaming & NFTs                                               */}
         {/* ═══════════════════════════════════════════════════════════ */}
 
-        {/* NFTs: what they are + true ownership */}
-        <div id="s3-nft-intro" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-4 flex items-start gap-4">
-            <img src={imgNftGaming} alt="" className="hidden lg:block h-16 object-contain shrink-0" />
-            <div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('nftIntro.heading')}</h2>
-              <p className="text-muted-foreground text-sm mt-1">{t('nftIntro.subtitle')}</p>
-            </div>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-[1fr_1.6fr] gap-5">
-            <div className="p-5 bg-card border border-[#8b5cf6]/30 rounded-xl flex flex-col gap-3 justify-center">
-              <div className="font-bold text-base text-[#8b5cf6]">{t('nftIntro.unlikeTitle')}</div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t('nftIntro.unlikeBodyA')}<span className="font-semibold text-foreground">{t('nftIntro.unlikeBodyStrong')}</span>{t('nftIntro.unlikeBodyB')}
-              </p>
-              <div className="grid grid-cols-2 gap-2 mt-auto">
-                <div className="p-2 bg-[#8b5cf6]/10 rounded-lg">
-                  <div className="text-xs text-muted-foreground">{t('nftIntro.standardLabel')}</div>
-                  <div className="font-mono font-black text-base text-[#8b5cf6]">ERC-721</div>
-                </div>
-                <div className="p-2 bg-[#8b5cf6]/10 rounded-lg">
-                  <div className="text-xs text-muted-foreground">{t('nftIntro.multiTokenLabel')}</div>
-                  <div className="font-mono font-black text-base text-[#8b5cf6]">ERC-1155</div>
-                </div>
-              </div>
-              <UnderTheHood terms={['tokenId', 'tokenURI', 'metadata', 'IPFS']} />
-            </div>
-            <div className="flex flex-col gap-2 min-h-0">
-              <div>
-                <div className="font-bold text-sm text-foreground">{t('nftEconomies.heading')}</div>
-                <div className="text-xs text-muted-foreground">{t('nftEconomies.subtitle')}</div>
-              </div>
-              <div className="flex-1 min-h-0 grid grid-cols-3 gap-3">
-                {nftEcoCards.map(c => {
-                  const points = t(`nftEconomies.cards.${c.key}.points`, { returnObjects: true }) as string[];
-                  return (
-                    <div key={c.key} className="p-3 bg-card border rounded-xl flex flex-col gap-1.5 min-h-0 overflow-y-auto" style={{ borderColor: c.color + '30' }}>
-                      <div className="text-2xl">{c.emoji}</div>
-                      <div className="font-bold text-xs" style={{ color: c.color }}>{t(`nftEconomies.cards.${c.key}.title`)}</div>
-                      <ul className="space-y-1.5 text-xs text-muted-foreground leading-snug">
-                        {points.map((p, i) => (
-                          <li key={i} className="flex gap-1.5"><span style={{ color: c.color }} className="shrink-0">›</span>{p}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-          <KeyPointBar text={kp('s3-nft-intro')} className="mt-3" />
-        </div>
+        <div id="s3-nft-title" className="h-full"><FamilyDivider family="nft" /></div>
 
+        {/* NFTs: recap → why → database row vs token in your wallet */}
+        <div id="s3-nft-intro" className="h-full">
+          <NftWhySlide recap={bridge('nft', F3, '#ED1C24')} />
+        </div>
         <div id="s3-nft-real" className="h-full">
           <RealWorldSlide
             heading={t('nftReal.heading')} subtitle={t('nftReal.subtitle')}
@@ -1233,31 +1194,36 @@ export function SC_Section3() {
             keyPoint={kp('s3-nft-real')}
           />
         </div>
-        <div id="s3-nft-prosCons" className="h-full">
-          <ProsConsSlide title={t('nftProsCons.title')} accent="#8b5cf6" pros={nftPros} cons={nftCons} keyPoint={kp('s3-nft-prosCons')} />
-        </div>
-
-        {/* ═══════════════════════════════════════════════════════════ */}
-        {/* NFT Utility & DAOs                                          */}
-        {/* ═══════════════════════════════════════════════════════════ */}
-
         <div id="s3-nft-utility" className="h-full"><NftUtilitySlide /></div>
         <div id="s3-nft-gate" className="h-full"><TokenGateDemo /></div>
         <div id="s3-nft-honest" className="h-full"><NftHonestSlide /></div>
-        <div id="s3-dao-intro" className="h-full"><DaoIntroSlide /></div>
+        <div id="s3-nft-prosCons" className="h-full"><WinsBreaksSlide family="nft" keyPoint={kp('s3-nft-prosCons')} /></div>
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* DAOs                                                        */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+
+        <div id="s3-dao-title" className="h-full"><FamilyDivider family="dao" /></div>
+
+        {/* DAOs: recap → why → one payment through a company and through a DAO */}
+        <div id="s3-dao-intro" className="h-full">
+          <DaoWhySlide recap={bridge('dao', F3, '#ED1C24')} />
+        </div>
         <div id="s3-dao-structures" className="h-full"><GovernanceBlocksExplorer /></div>
         <div id="s3-dao-vote" className="h-full"><VotingPowerSim /></div>
         <div id="s3-dao-examples" className="h-full"><DaoExamplesSlide variant="works" /></div>
         <div id="s3-dao-broke" className="h-full"><DaoExamplesSlide variant="broke" /></div>
-        <div id="s3-dao-prosCons" className="h-full">
-          <ProsConsSlide title={t('daoProsCons.title')} accent="#a855f7" pros={daoPros} cons={daoCons} keyPoint={kp('s3-dao-prosCons')} />
-        </div>
+        <div id="s3-dao-prosCons" className="h-full"><WinsBreaksSlide family="dao" keyPoint={kp('s3-dao-prosCons')} /></div>
 
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* Real-World Assets                                           */}
         {/* ═══════════════════════════════════════════════════════════ */}
 
-        <div id="s3-rwa-spectrum" className="h-full"><RWASpectrum /></div>
+        <div id="s3-rwa-title" className="h-full"><FamilyDivider family="rwa" /></div>
+
+        <div id="s3-rwa-spectrum" className="h-full">
+          <RWASpectrum recap={bridge('rwa', '/smart-contracts/section-2', '#6366f1')} />
+        </div>
         <div id="s3-rwa-real" className="h-full">
           <RealWorldSlide
             heading={t('rwaReal.heading')} subtitle={t('rwaReal.subtitle')} image={imgRwaProcess}
@@ -1266,15 +1232,17 @@ export function SC_Section3() {
             keyPoint={kp('s3-rwa-real')}
           />
         </div>
-        <div id="s3-rwa-prosCons" className="h-full">
-          <ProsConsSlide title={t('rwaProsCons.title')} accent="#39B54A" pros={rwaPros} cons={rwaCons} keyPoint={kp('s3-rwa-prosCons')} />
-        </div>
+        <div id="s3-rwa-prosCons" className="h-full"><WinsBreaksSlide family="rwa" keyPoint={kp('s3-rwa-prosCons')} /></div>
 
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* Supply Chain                                                */}
         {/* ═══════════════════════════════════════════════════════════ */}
 
-        <div id="s3-sc-provenance" className="h-full"><ProvenanceQR /></div>
+        <div id="s3-sc-title" className="h-full"><FamilyDivider family="sc" /></div>
+
+        <div id="s3-sc-provenance" className="h-full">
+          <ProvenanceQR recap={bridge('sc', F3, '#ED1C24')} />
+        </div>
         <div id="s3-sc-real" className="h-full">
           <RealWorldSlide
             heading={t('scReal.heading')} subtitle={t('scReal.subtitle')} image={imgSupplyProv}
@@ -1283,15 +1251,17 @@ export function SC_Section3() {
             keyPoint={kp('s3-sc-real')}
           />
         </div>
-        <div id="s3-sc-prosCons" className="h-full">
-          <ProsConsSlide title={t('scProsCons.title')} accent="#f59e0b" pros={scPros} cons={scCons} keyPoint={kp('s3-sc-prosCons')} />
-        </div>
+        <div id="s3-sc-prosCons" className="h-full"><WinsBreaksSlide family="sc" keyPoint={kp('s3-sc-prosCons')} /></div>
 
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* Digital Certification                                       */}
         {/* ═══════════════════════════════════════════════════════════ */}
 
-        <div id="s3-cert-howitworks" className="h-full"><ProofOfExistenceDemo /></div>
+        <div id="s3-cert-title" className="h-full"><FamilyDivider family="cert" /></div>
+
+        <div id="s3-cert-howitworks" className="h-full">
+          <ProofOfExistenceDemo recap={bridge('cert', '/blockchain-fundamentals/section-1', '#ED1C24')} />
+        </div>
         <div id="s3-cert-real" className="h-full">
           <RealWorldSlide
             heading={t('certReal.heading')} subtitle={t('certReal.subtitle')} image={imgCertDecent}
@@ -1300,9 +1270,7 @@ export function SC_Section3() {
             keyPoint={kp('s3-cert-real')}
           />
         </div>
-        <div id="s3-cert-prosCons" className="h-full">
-          <ProsConsSlide title={t('certProsCons.title')} accent="#22d3ee" pros={certPros} cons={certCons} keyPoint={kp('s3-cert-prosCons')} />
-        </div>
+        <div id="s3-cert-prosCons" className="h-full"><WinsBreaksSlide family="cert" keyPoint={kp('s3-cert-prosCons')} /></div>
 
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* Case gallery + the one that was shut down                   */}
@@ -1353,13 +1321,18 @@ export function SC_Section3() {
         {/* ═══════ WRAP UP ═══════ */}
         <div id="s3-exercise" className="h-full"><DesignYourOwnExercise /></div>
 
-        <div id="s3-quiz" className="h-full">
-          <QuizSlide
-            question={t('quiz.question')}
-            options={quizOptionTexts.map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quiz.explanation')}
-          />
-        </div>
+        {/* One question per slide; the first carries the chapter id for the sidebar. */}
+        {quizItems.map((q, qi) => (
+          <div key={qi} id={qi === 0 ? 's3-quiz' : undefined} className="h-full">
+            <QuizSlide
+              label={t('quiz.label', { n: qi + 1, total: quizItems.length })}
+              question={q.question}
+              options={q.options.map((text, i) => ({ text, correct: i === QUIZ_ANSWERS[qi] }))}
+              explanation={q.explanation}
+              compact
+            />
+          </div>
+        ))}
 
         <div id="s3-takeaways" className="h-full">
           <TakeawaySlide title={t('takeaways.title')} takeaways={takeawayItems} />

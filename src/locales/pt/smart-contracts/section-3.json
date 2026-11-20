@@ -2,31 +2,38 @@
   "chapters": {
     "s3-discussion": "💬 Discussion",
     "s3-industries-intro": "Visão das Indústrias",
-    "s3-defi-intro": "What is DeFi?",
+    "s3-defi-title": "1 · DeFi",
+    "s3-defi-intro": "Porquê DeFi?",
+    "s3-defi-real": "Em Produção",
     "s3-defi-amm": "🧩 Curva AMM",
     "s3-defi-stablecoins": "🧩 Simulador de Peg",
-    "s3-defi-prosCons": "Prós e Contras",
-    "s3-nft-intro": "What is an NFT?",
+    "s3-defi-prosCons": "Ganha / Falha",
+    "s3-nft-title": "2 · NFTs",
+    "s3-nft-intro": "Porquê NFTs?",
     "s3-nft-real": "In Production",
-    "s3-nft-prosCons": "Prós e Contras",
     "s3-nft-utility": "NFTs Beyond Art",
     "s3-nft-gate": "🧩 Token Gate",
     "s3-nft-honest": "The Honest NFT Story",
-    "s3-dao-intro": "What is a DAO?",
+    "s3-nft-prosCons": "Ganha / Falha",
+    "s3-dao-title": "3 · DAOs",
+    "s3-dao-intro": "Porquê DAOs?",
     "s3-dao-structures": "🧩 Governance Blocks",
     "s3-dao-vote": "🧩 Who Holds Power?",
     "s3-dao-examples": "Real DAOs: What Works",
     "s3-dao-broke": "Real DAOs: What Broke",
-    "s3-dao-prosCons": "DAO Pros & Cons",
+    "s3-dao-prosCons": "Ganha / Falha",
+    "s3-rwa-title": "4 · Ativos do Mundo Real",
     "s3-rwa-spectrum": "🧩 Espetro",
     "s3-rwa-real": "In Production",
-    "s3-rwa-prosCons": "Prós e Contras",
+    "s3-rwa-prosCons": "Ganha / Falha",
+    "s3-sc-title": "5 · Cadeia de Abastecimento",
     "s3-sc-provenance": "🧩 Proveniência",
     "s3-sc-real": "In Production",
-    "s3-sc-prosCons": "Prós e Contras",
+    "s3-sc-prosCons": "Ganha / Falha",
+    "s3-cert-title": "6 · Certificados",
     "s3-cert-howitworks": "🧩 Prova de Existência",
     "s3-cert-real": "In Production",
-    "s3-cert-prosCons": "Prós e Contras",
+    "s3-cert-prosCons": "Ganha / Falha",
     "s3-case-gallery": "Case Gallery",
     "s3-tradelens": "TradeLens ✗",
     "s3-exercise": "🧩 Cria o Teu",
@@ -36,23 +43,60 @@
   "groups": {
     "g-defi": "💸 DeFi",
     "g-nft": "🎮 Jogos e NFTs",
+    "g-dao": "🏛 DAOs",
     "g-rwa": "🏢 RWA",
     "g-sc": "🚚 Cadeia de Abastecimento",
     "g-cert": "📜 Certificação",
     "g-cases": "📁 Estudos de Caso",
-    "g-close": "✅ Conclusão",
-    "g-apps": "🏛 NFT Utility & DAOs"
+    "g-close": "✅ Conclusão"
   },
   "title": {
     "sectionNumber": "SECÇÃO 03",
     "title": "Indústrias e Estudos de Caso",
     "subtitle": "Onde os smart contracts estão a transformar indústrias reais — e os estudos de caso que o comprovam (e os que falharam)"
   },
-  "prosCons": {
-    "prosLabel": "✓ Prós",
-    "consLabel": "✗ Contras"
-  },
   "interactiveBadge": "🧩 Interativo",
+  "whyLabel": "Porque é que precisamos disto?",
+  "recapLabel": "Já abordado",
+  "family": {
+    "defi": {
+      "where": "Plataformas §2 · Mecânica do DeFi",
+      "recap": "DeFi são serviços financeiros geridos por smart contracts em vez de instituições. Já lá viste AMMs, empréstimos e stablecoins; aqui vais pô-los a funcionar.",
+      "hook": "Porque é que enviar o teu próprio dinheiro para o estrangeiro ainda demora dias, custa até $50 e fica parado ao fim de semana?"
+    },
+    "nft": {
+      "where": "Fundamentos §3 · NFTs",
+      "recap": "Um NFT é um token único cujo dono fica registado on-chain, por isso a posse pode ser provada e transferida sem pedir ao emissor.",
+      "hook": "Pagaste por aquela skin, bilhete ou música. Então porque é que a plataforma to pode tirar?"
+    },
+    "dao": {
+      "where": "Fundamentos §3 · DAOs",
+      "recap": "Uma DAO é uma organização cujo regulamento é um smart contract: os membros propõem e votam, e a tesouraria executa o resultado.",
+      "hook": "17 000 desconhecidos juntaram $47M numa semana. Quem é que assina o cheque?"
+    },
+    "rwa": {
+      "where": "Secção 2 · Resumo dos tokens",
+      "recap": "Um token pode representar algo que vive fora da chain: uma participação num fundo, uma obrigação, um edifício. O contrato move o token; um invólucro legal liga-o ao ativo.",
+      "hook": "Podes comprar $10 de bitcoin num domingo à noite. Porque não $10 de um bilhete do Tesouro, ou de um edifício?"
+    },
+    "sc": {
+      "where": "Fundamentos §3 · Proveniência",
+      "recap": "Um registo partilhado dá a todos os parceiros o mesmo histórico, onde qualquer adulteração se nota, e cada passagem é assinada por quem a fez.",
+      "hook": "O rótulo diz «biológico, criado ao ar livre». Como é que alguma vez o podias confirmar?"
+    },
+    "cert": {
+      "where": "Fundamentos §1 · Hashing",
+      "recap": "Um hash é a impressão digital de um documento: muda um carácter e a impressão digital muda por completo.",
+      "hook": "Qualquer pessoa pode imprimir um diploma. Como é que um empregador sabe que o teu é verdadeiro sem ligar para a universidade?"
+    }
+  },
+  "hooks": {
+    "amm": "São 3 da manhã e ninguém quer o outro lado da tua troca. Quem é que te vende o ETH?",
+    "peg": "O ETH pode variar 10% num dia. Fixavas o preço de um empréstimo, ou recebias o teu salário, em ETH?",
+    "gate": "Cada clube, loja e evento guarda a sua própria lista de membros. E se a porta só verificasse a tua wallet?",
+    "blocks": "Não há CEO. Então como é que uma decisão é realmente tomada, e cumprida?",
+    "vote": "Dizem que é descentralizado, mas uma só wallet detém 62% dos tokens. Quem decide?"
+  },
   "discussion": {
     "badge": "💬 Class discussion",
     "duration": "5 min",
@@ -65,26 +109,45 @@
     ],
     "note": "Keep your answer in mind — the Section 4 framework and the Section 8 one-pager both start from exactly this question."
   },
-  "defiIntro": {
-    "examplesLabel": "In production today",
-    "examples": [
+  "defiReal": {
+    "kicker": "DeFi · protocolos reais",
+    "heading": "Em produção hoje",
+    "subtitle": "Três exemplos em funcionamento, um para cada função do slide anterior: trocar, emprestar, pagar.",
+    "noteLabel": "Sobre os números:",
+    "noteBody": " são valores arredondados e ilustrativos, de cerca de novembro de 2026 (valor bloqueado na Aave segundo a DefiLlama). Mudam todos os dias, por isso confirma num painel em tempo real antes de os citar.",
+    "cards": [
       {
+        "job": "Trocar",
         "name": "Uniswap",
-        "tag": "DEX · token swaps",
-        "stat": "~$1.5B / day",
-        "desc": "Any wallet swaps thousands of tokens in one on-chain call; the contract quotes the price and never takes custody of user funds."
+        "tag": "DEX com AMM · trocas de tokens on-chain",
+        "line": "Troca um token por outro contra uma pool. Uma fórmula define o preço e a troca liquida numa só transação, diretamente da tua wallet.",
+        "flow": ["Token A", "Pool de liquidez", "Token B"],
+        "stats": [
+          { "value": "~$1,5 mil M", "label": "trocados por dia (aprox.)" },
+          { "value": "2018", "label": "ativo na Ethereum desde" }
+        ]
       },
       {
-        "name": "CoW Swap",
-        "tag": "DEX · intent-based",
-        "stat": "no front-running",
-        "desc": "Users sign an intent; solvers batch and match orders off-chain and settle them in one transaction, with MEV protection built in."
+        "job": "Emprestar",
+        "name": "Aave",
+        "tag": "Protocolo de empréstimos · crédito com garantia",
+        "line": "Deposita cripto para receber juros, ou bloqueia-a como garantia e pede emprestado. Sem verificação de crédito; se a garantia cair demasiado, o empréstimo é liquidado.",
+        "flow": ["Depositantes", "Pool de empréstimos", "Mutuários"],
+        "stats": [
+          { "value": "~$16 mil M", "label": "valor bloqueado (aprox., nov. 2026)" },
+          { "value": "10+", "label": "redes blockchain (aprox.)" }
+        ]
       },
       {
-        "name": "USDC on an L2",
-        "tag": "Borderless transfer",
-        "stat": "seconds · cent fees",
-        "desc": "A SWIFT wire takes 3–5 days and $25–50 plus FX spread; a stablecoin on Base or Arbitrum settles wallet-to-wallet in seconds — irreversibly, and the on/off-ramp still needs a bank."
+        "job": "Pagar",
+        "name": "Stablecoins",
+        "tag": "Transferências internacionais · USDC, USDT",
+        "line": "Envia dólares de wallet para wallet entre países, em qualquer dia da semana. Final é final: não há chargeback.",
+        "flow": ["Remetente", "Contrato do token", "Destinatário"],
+        "stats": [
+          { "value": "Segundos", "label": "para liquidar numa Layer 2" },
+          { "value": "Cêntimos", "label": "taxa de rede por transferência" }
+        ]
       }
     ]
   },
@@ -142,7 +205,7 @@
           "Brickblock (Frankfurt) issued property tokens on Ethereum under BaFin supervision",
           "A Zurich Bahnhofstrasse building was tokenised through a Swiss GmbH — investors receive rent and trade shares under FINMA guidelines"
         ],
-        "footnote": "EU MiCA (2024) gives crypto-assets one legal framework across 27 states — the clarity these pilots were waiting for."
+        "footnote": "O MiCA da UE (2024) dá aos criptoativos um regulamento único em 27 Estados; os valores mobiliários tokenizados continuam sob a MiFID II e o Regime Piloto DLT da UE."
       },
       {
         "kicker": "Lending",
@@ -192,7 +255,7 @@
           "Each eBL is cryptographically signed, shared in seconds and tamper-evident; contracts notify customs on loading and release goods on ownership transfer",
           "Live since 2021: 2M+ containers processed, document turnaround cut from days to hours"
         ],
-        "footnote": "Same industry as TradeLens — this one works because the carriers own it together."
+        "footnote": "Same industry as TradeLens — this one works because carriers and port operators own it together."
       }
     ]
   },
@@ -263,7 +326,7 @@
       {
         "industry": "Government",
         "name": "California DMV",
-        "problem": "42M paper vehicle titles — easy to lose or forge, and a 2–3 hour DMV visit to transfer one.",
+        "problem": "42M paper vehicle titles — easy to lose or forge, and about two weeks to transfer one through the traditional process.",
         "solution": "Each title becomes an NFT on a permissioned Avalanche subnet; transfers and lien releases are blockchain transactions.",
         "metric": "42 million",
         "metricLabel": "titles digitised (2024)",
@@ -272,7 +335,7 @@
       {
         "industry": "Food supply",
         "name": "Walmart",
-        "problem": "Tracing contaminated lettuce to its farm took 7 days; whole categories were pulled from shelves.",
+        "problem": "Rastrear uma embalagem de manga fatiada até à quinta demorava quase 7 dias; num surto, categorias inteiras são retiradas das prateleiras.",
         "solution": "Farmers, packers, distributors and stores record each hand-off on IBM Food Trust; QR codes link the product to its provenance.",
         "metric": "7 days → 2.2 s",
         "metricLabel": "trace-back time",
@@ -292,7 +355,7 @@
   "exerciseBadge": "🧩 Exercício",
   "amm": {
     "title": "Curva de Bonding AMM · ",
-    "subtitle": "Arrasta o cursor para simular negociação numa pool ao estilo da Uniswap. Observa como a curva, os preços e o slippage se movem em tempo real.",
+    "subtitle": "Uma pool vende: tem sempre um preço para dar. Arrasta o cursor para negociar contra ela e observa o preço e o slippage a mexer.",
     "curveTitle": "Curva de produto constante",
     "axisX": "x = reserva de ETH",
     "axisY": "y = USDC",
@@ -346,30 +409,54 @@
   },
   "poe": {
     "title": "Prova de Existência · Experimenta tu mesmo",
-    "subtitle": "Faz o hash de uma credencial, ancora-a on-chain e depois verifica-a. A blockchain nunca vê o documento — apenas o hash.",
+    "subtitle": "Ancora o hash e verifica duas coisas: o hash coincide, e foi o contrato da universidade que o registou.",
     "defaultDoc": "Licenciatura em Ciências — Alice Smith — 2024-06-15",
     "issueStep": "① Emitir e ancorar",
     "credentialText": "Texto da credencial",
     "hashLabel": "Hash SHA-256 (impressão digital)",
+    "writerLabel": "Quem escreve o registo on-chain?",
+    "writers": {
+      "uni": { "name": "Contrato emissor da universidade" },
+      "rogue": { "name": "Contrato de outra pessoa" }
+    },
     "anchorButton": "⛓ Ancorar hash na blockchain",
     "anchored": "✓ Ancorado",
     "blockTimestamp": "Carimbo temporal do bloco: {{ts}}",
     "anchoredHash": "Hash ancorado: ",
+    "writtenByLabel": "Escrito por: ",
+    "chainAccepts": "A chain aceitou-o. Qualquer pessoa pode escrever um hash.",
     "verifyStep": "② Verificar (qualquer pessoa, a qualquer momento)",
-    "verifyPlaceholderPrompt": "Ancora primeiro um hash e depois volta aqui para verificar uma credencial (possivelmente adulterada).",
+    "knownIssuerLabel": "Contrato emissor publicado pela universidade:",
+    "verifyPlaceholderPrompt": "Ancora primeiro um hash e depois volta aqui para verificar uma credencial (possivelmente adulterada ou forjada).",
     "reenterCredential": "Reintroduz o texto da credencial",
     "verifyTextareaPlaceholder": "Cola o documento que queres verificar…",
-    "computeHash": "Calcular hash",
-    "verifiedMatch": "✓ Verificado — os hashes coincidem",
-    "verifiedMismatch": "✗ Não coincide — o documento foi alterado",
+    "computeHash": "Verificar",
+    "pasteIssued": "Usar o texto emitido",
+    "checkHash": "O hash coincide com o registo on-chain",
+    "checkIssuer": "O registo foi escrito pelo contrato emissor da universidade",
+    "issuerSkipped": "Nenhum registo on-chain corresponde a este documento, por isso não há emissor para verificar.",
     "computedLabel": "Calculado: ",
     "anchoredLabelShort": "Ancorado: ",
+    "verdict": {
+      "authentic": {
+        "title": "Autêntico: as duas verificações passam",
+        "body": "O documento não foi alterado e foi o contrato da própria universidade que o registou."
+      },
+      "forged": {
+        "title": "Forjado: hash certo, emissor errado",
+        "body": "O hash está on-chain, mas foi um contrato desconhecido que o lá pôs. Um hash que coincide não prova, por si só, quem emitiu o diploma."
+      },
+      "altered": {
+        "title": "Não coincide: alterado ou nunca emitido",
+        "body": "Muda um carácter e o hash fica completamente diferente, por isso não se encontra nenhum registo."
+      }
+    },
     "whyWorksLabel": "Porque é que isto funciona:",
-    "whyWorksBody": " O SHA-256 é determinístico e resistente a colisões. Mesma entrada → mesmo hash. Qualquer alteração à entrada — mesmo um único caráter — produz um hash completamente diferente. Ancorar o hash on-chain prova que o documento existia naquele momento, sem revelar o seu conteúdo."
+    "whyWorksBody": " O SHA-256 dá o mesmo hash para a mesma entrada e um hash totalmente diferente após qualquer alteração, e o documento nunca vai para a chain. Mas qualquer pessoa pode ancorar um hash, por isso quem verifica também confirma que foi o contrato conhecido da universidade a escrever o registo."
   },
   "pegSim": {
     "title": "Simulador de Peg de Stablecoin",
-    "subtitle": "Escolhe um design de stablecoin e aplica stress de mercado. Observa o peg aguentar — ou quebrar.",
+    "subtitle": "Por isso o DeFi funciona com tokens indexados a $1. Escolhe um design, aplica stress de mercado e vê o que realmente segura o peg.",
     "design": "Design da stablecoin",
     "shockLabel": "Choque de mercado — % da oferta vendida",
     "shockDesc": "Pressão de venda súbita (um evento de \"corrida ao banco\"). 100% = toda a oferta atinge a procura em simultâneo.",
@@ -525,23 +612,74 @@
       "cert": { "name": "Certificação Digital", "tag": "Registos de Confiança", "desc": "Diplomas, registos governamentais, autenticação de luxo" }
     },
     "commonThreadLabel": "Fio condutor:",
-    "commonThreadBody": " em cada vertical abaixo, os smart contracts substituem um processo lento e dependente de intermediários por uma execução imposta pelo código. Vamos examinar cada uma e depois ver cinco estudos de caso emblemáticos — incluindo dois que falharam."
+    "commonThreadBody": " em cada vertical, um smart contract substitui um processo lento e dependente de intermediários por uma execução imposta pelo código. Cada uma abre com o problema que resolve e fecha com onde ganha e onde falha. As DAOs recebem o mesmo tratamento, e depois vêm seis estudos de caso, incluindo um que foi encerrado."
   },
-  "defiWhat": {
-    "heading": "O que é DeFi?",
-    "subtitle": "Um sistema financeiro peer-to-peer emergente que usa criptomoedas e smart contracts.",
-    "coreIdeaTitle": "A Ideia Central",
-    "coreIdeaBody": "Remover os intermediários de terceiros. Em vez de um banco a impor um empréstimo ou uma câmara de compensação a liquidar uma negociação, um smart contract executa automaticamente essas funções quando as condições são cumpridas. Eliminar intermediários reduz taxas e tempos de liquidação e dá aos utilizadores mais controlo sobre os seus ativos.",
-    "valueCodeTitle": "\"Valor e Código ao mesmo nível\"",
-    "valueCodeBody": "Na finança tradicional, as regras de negociação vivem em documentos legais e sistemas de back-office separados do próprio dinheiro. Em DeFi, o valor (ETH, USDC, NFTs) e as regras que o governam (o código do contrato) ficam na mesma blockchain — componíveis, atómicos, transparentes.",
-    "primitivesLabel": "Primitivas DeFi",
-    "primitives": {
-      "dex": { "name": "DEXs / AMMs", "desc": "Exchanges descentralizadas que usam liquidity pools (Uniswap, CoW Swap, Curve)" },
-      "lending": { "name": "Empréstimos", "desc": "Empréstimos sobre-garantidos sem verificação de crédito (Aave, Compound)" },
-      "stablecoins": { "name": "Stablecoins", "desc": "Tokens indexados ao USD/EUR (USDC, DAI, USDT) — dinheiro global e programável" },
-      "yield": { "name": "Yield", "desc": "Estratégias automatizadas que encaminham depósitos para as pools de maior retorno (Yearn)" },
-      "derivatives": { "name": "Derivados", "desc": "Perpétuos, opções, sintéticos — negociação sem intermediários (dYdX, GMX)" }
-    }
+  "defiWhy": {
+    "railsLabel": "Um pagamento para o estrangeiro, dois caminhos",
+    "wire": {
+      "name": "Transferência bancária internacional",
+      "hops": [
+        "Tu",
+        "O teu banco",
+        "Banco correspondente",
+        "O banco de destino",
+        "Destinatário"
+      ],
+      "stats": [
+        "1–5 dias úteis",
+        "$25–50 + spread cambial",
+        "Horário bancário"
+      ]
+    },
+    "chain": {
+      "name": "Stablecoin numa Layer 2",
+      "hops": [
+        "Tu",
+        "Contrato do token",
+        "Destinatário"
+      ],
+      "stats": [
+        "Segundos",
+        "Cêntimos",
+        "24/7"
+      ]
+    },
+    "catchLabel": "O senão:",
+    "catchBody": " uma transferência on-chain não pode ser revertida, e pôr e tirar dinheiro da chain continua a precisar de um banco.",
+    "desksLabel": "Um banco, desmontado em contratos · clica num balcão",
+    "desks": {
+      "dex": {
+        "bank": "Mesa de negociação",
+        "name": "DEX / AMM",
+        "desc": "Uma pool de dois tokens e uma fórmula dão o preço. Sem livro de ordens, sem corretor.",
+        "live": "Uniswap · Curve · CoW Swap"
+      },
+      "lending": {
+        "bank": "Balcão de crédito",
+        "name": "Pool de empréstimos",
+        "desc": "Pede emprestado contra uma garantia que vale mais do que o empréstimo. Sem verificação de crédito; abaixo do limite, és liquidado.",
+        "live": "Aave · Compound"
+      },
+      "stablecoins": {
+        "bank": "Conta em dólares",
+        "name": "Stablecoin",
+        "desc": "Um token indexado a $1 que circula como qualquer outro token: dinheiro global e programável.",
+        "live": "USDC · DAI · USDT"
+      },
+      "yield": {
+        "bank": "Gestão de ativos",
+        "name": "Vault de yield",
+        "desc": "O código encaminha os depósitos para onde o retorno é maior e distribui as comissões.",
+        "live": "Yearn"
+      },
+      "derivatives": {
+        "bank": "Mesa de derivados",
+        "name": "Perpétuos e opções",
+        "desc": "Alavancagem e cobertura liquidadas por um contrato em vez de um corretor e de uma câmara de compensação.",
+        "live": "dYdX · GMX"
+      }
+    },
+    "nextTag": "a seguir"
   },
   "stablecoinsIntro": {
     "heading": "Stablecoins — Cripto que Mantém $1",
@@ -567,155 +705,268 @@
     "nextLabel": "A seguir: ",
     "nextBody": "testa um peg ao stress tu mesmo — força a garantia e a procura até uma stablecoin quebrar."
   },
-  "defiProsCons": {
-    "title": "DeFi · Prós e Contras",
-    "pros": [
-      { "label": "Acesso Global 24/7", "desc": "Mercados, pagamentos e saldos indexados ao dólar permanecem abertos o dia todo — sem janelas de corte nem fronteiras." },
-      { "label": "Liquidação Instantânea", "desc": "Negociações e transferências compensam num único bloco (segundos), eliminando atrasos de compensação." },
-      { "label": "Custos Reduzidos", "desc": "Os smart contracts substituem bancos, redes de cartões e corretores — as taxas em trocas e pagamentos transfronteiriços caem drasticamente." },
-      { "label": "Auto-custódia", "desc": "Os utilizadores mantêm as suas próprias chaves. O valor move-se peer-to-peer sem contas congeladas nem limites de levantamento." },
-      { "label": "Valor Previsível", "desc": "As stablecoins permitem aos utilizadores deter e gastar um token que mantém uma paridade fiat (sobretudo USD)." },
-      { "label": "Fluxos de Caixa Programáveis", "desc": "O código automatiza trocas, pagamentos e transferências recorrentes quando condições predefinidas são cumpridas." },
-      { "label": "Mercados sem Permissão", "desc": "Qualquer pessoa pode listar e lançar um novo par de tokens ou liquidity pool. Sem porteiros." }
-    ],
-    "cons": [
-      { "label": "Incerteza Regulatória", "desc": "As regras sobre KYC, estatuto de valor mobiliário e garantia de stablecoins diferem por jurisdição e continuam a evoluir." },
-      { "label": "Bugs em Smart Contracts", "desc": "Vulnerabilidades técnicas ou exploits podem esvaziar pools, congelar fundos ou quebrar o peg de uma stablecoin." },
-      { "label": "Fragmentação de Liquidez", "desc": "Os ativos espalham-se por muitas cadeias e pools. Grandes negociações enfrentam slippage ou pouca profundidade." },
-      { "label": "Instabilidade do Peg", "desc": "Mesmo moedas \"estáveis\" podem perder o peg se as reservas, rácios de garantia ou algoritmos falharem." },
-      { "label": "Complexidade de UX", "desc": "Configurar carteiras, proteger seed phrases, pagar gas — tudo isto dissuade a adoção generalizada." },
-      { "label": "Atrito de Entrada/Saída", "desc": "Mover fundos entre bancos e carteiras de blockchain ainda depende de exchanges centralizadas e de KYC." }
-    ]
-  },
-  "nftIntro": {
-    "heading": "O que é um NFT?",
-    "subtitle": "Um ativo digital único registado on-chain que certifica a posse e a autenticidade.",
-    "unlikeTitle": "Ao contrário dos tokens fungíveis…",
-    "unlikeBodyA": "As criptomoedas (ETH, USDC) são ",
-    "unlikeBodyStrong": "intercambiáveis",
-    "unlikeBodyB": " — o teu 1 ETH é igual ao meu 1 ETH. Os NFTs não são. Cada NFT tem o seu próprio ID e metadados, registados no padrão ERC-721 (ou ERC-1155). Possuir o token significa possuir esse ativo específico.",
-    "standardLabel": "Padrão",
-    "multiTokenLabel": "Multi-token",
-    "gamingTitle": "Nos jogos…",
-    "gamingBody": "Os NFTs podem representar espadas, skins, personagens ou terrenos virtuais. Como o NFT está na carteira Web3 do jogador — e não no servidor do publisher — pode ser listado, transacionado ou alugado peer-to-peer. Surgem mercados abertos, controlados pelos jogadores.",
-    "gamingPoints": [
-      "Os itens sobrevivem ao encerramento de servidores",
-      "Transacionáveis em marketplaces de terceiros",
-      "Potencial de interoperabilidade entre jogos",
-      "Royalties incorporados para os criadores"
-    ]
-  },
-  "nftEconomies": {
-    "heading": "Posse Real, IP Digital e Economias Virtuais",
-    "subtitle": "Os smart contracts transformam linhas de base de dados do lado do servidor em ativos detidos pelos jogadores, transferíveis e programáveis.",
-    "cards": {
-      "before": {
-        "title": "Antes da Web3",
-        "points": [
-          "Os ativos digitais viviam em servidores centralizados, propriedade dos publishers",
-          "Conta banida = itens perdidos, sem recurso",
-          "Sem portabilidade entre jogos",
-          "Os criadores recebiam zero royalties nas revendas"
-        ]
-      },
-      "withNft": {
-        "title": "Com NFTs",
-        "points": [
-          "A posse do ativo vive na carteira do utilizador on-chain",
-          "Os royalties incorporados pagam aos criadores em cada venda secundária",
-          "Itens transacionáveis, emprestáveis, passíveis de staking e fracionáveis",
-          "Metadados do ativo transparentes e verificáveis"
-        ]
-      },
-      "parallels": {
-        "title": "Paralelos com o mundo real",
-        "points": [
-          "Vender itens por valor real (tal como bens físicos)",
-          "Emprestar NFTs para obter yield (como o arrendamento imobiliário)",
-          "Usar NFTs como garantia de empréstimos (hipotecar arte digital)",
-          "Vender participações fracionadas (REITs para ativos digitais)"
-        ]
-      }
+  "winsBreaks": {
+    "kicker": "O veredicto",
+    "headWins": "onde ganha",
+    "headBreaks": "onde falha",
+    "winsLabel": "Onde ganha",
+    "breaksLabel": "Onde falha",
+    "defi": {
+      "title": "DeFi",
+      "wins": [
+        {
+          "label": "Sempre aberto, liquida em segundos",
+          "desc": "Sem horas de fecho nem atrasos de compensação: uma troca ou transferência confirma em segundos.",
+          "proof": "24/7"
+        },
+        {
+          "label": "Sem porteiro",
+          "desc": "Qualquer pessoa com uma wallet pode negociar, emprestar ou lançar um mercado, e fica com as suas próprias chaves.",
+          "proof": "autocustódia"
+        },
+        {
+          "label": "Dinheiro programável",
+          "desc": "Trocas, pagamentos e regras de garantia são código, e um contrato liga-se a outro.",
+          "proof": "componível"
+        }
+      ],
+      "breaks": [
+        {
+          "label": "O código é a contraparte",
+          "desc": "Um bug ou exploit pode esvaziar uma pool. Não há apoio ao cliente nem reversão.",
+          "proof": "The DAO · $60M"
+        },
+        {
+          "label": "Pegs e liquidez podem quebrar",
+          "desc": "Pools pouco profundas dão slippage, e uma moeda «estável» perde o peg quando a garantia falha.",
+          "proof": "UST · ~$40 mil M"
+        },
+        {
+          "label": "As pontas continuam a ser bancos",
+          "desc": "As rampas de entrada e saída, o KYC e a regulação ficam off-chain e variam de país para país.",
+          "proof": "on/off-ramp"
+        }
+      ]
+    },
+    "nft": {
+      "title": "Jogos e NFTs",
+      "wins": [
+        {
+          "label": "Posse que consegues provar",
+          "desc": "O item está na tua wallet, não na base de dados de uma editora, e podes revendê-lo.",
+          "proof": "ERC-721"
+        },
+        {
+          "label": "O token como chave",
+          "desc": "Bilhetes, adesões e credenciais que qualquer parceiro verifica sem uma base de dados partilhada.",
+          "proof": "POAP · GET Protocol"
+        },
+        {
+          "label": "Ativos que encaixam",
+          "desc": "Empresta-o, aluga-o ou usa-o como garantia sem novo acordo com o emissor.",
+          "proof": "Zharta · NFTfi"
+        }
+      ],
+      "breaks": [
+        {
+          "label": "Os royalties não são impostos",
+          "desc": "O standard só declara um royalty. É o marketplace que decide se o paga.",
+          "proof": "pagamentos −90%"
+        },
+        {
+          "label": "A maior parte do ativo está off-chain",
+          "desc": "Servidores, arte e jogabilidade ficam com uma empresa. O token pode só apontar para um URL.",
+          "proof": "tokenURI → servidor"
+        },
+        {
+          "label": "A procura não é garantida",
+          "desc": "O valor depende de uma comunidade ativa. Quando o hype ou o jogo desaparecem, o preço vai atrás.",
+          "proof": "queda 2021 → 2023"
+        }
+      ]
+    },
+    "dao": {
+      "title": "DAOs",
+      "wins": [
+        {
+          "label": "Transparente por defeito",
+          "desc": "Cada voto, pagamento e alteração de regras é público e permanente.",
+          "proof": "sem atas com data falsa"
+        },
+        {
+          "label": "O voto move o dinheiro",
+          "desc": "Orçamentos, limites de despesa e assinaturas são impostos pelo código, não por quem tem o livro de cheques.",
+          "proof": "MakerDAO · desde 2017"
+        },
+        {
+          "label": "Capital de desconhecidos, depressa",
+          "desc": "Qualquer pessoa com uma wallet pode aderir e financiar, e os direitos de saída protegem quem discorda.",
+          "proof": "$47M numa semana"
+        }
+      ],
+      "breaks": [
+        {
+          "label": "Baleias e apatia",
+          "desc": "Ponderado por tokens é ponderado por dinheiro, e a maioria dos tokens nunca vota.",
+          "proof": "participação < 10%"
+        },
+        {
+          "label": "A governação pode ser atacada",
+          "desc": "Beanstalk: com um flash loan, um atacante obteve bem mais do que o limiar de 67% dos votos (cerca de 70% ou mais) e drenou $182M numa só transação.",
+          "proof": "Beanstalk · $182M"
+        },
+        {
+          "label": "Exposta na lei, lenta numa crise",
+          "desc": "Quem vota numa DAO sem personalidade jurídica pode responder pessoalmente, e os timelocks atam as mãos a todos.",
+          "proof": "Ooki DAO"
+        }
+      ]
+    },
+    "rwa": {
+      "title": "Tokenização de RWA",
+      "wins": [
+        {
+          "label": "Liquida no próprio dia, em qualquer dia",
+          "desc": "O token move-se em minutos em vez de T+2 por uma cadeia de intermediários.",
+          "proof": "T+2 → mesmo dia"
+        },
+        {
+          "label": "Fatias mais pequenas",
+          "desc": "Fundos e edifícios divididos em unidades que mais investidores podem deter e negociar.",
+          "proof": "fracionado"
+        },
+        {
+          "label": "Fluxos de caixa em piloto automático",
+          "desc": "Cupões, rendas e verificações de conformidade correm dentro do contrato.",
+          "proof": "KYC on-chain"
+        }
+      ],
+      "breaks": [
+        {
+          "label": "O invólucro é o risco",
+          "desc": "O token é só um direito. Uma empresa, um custodiante ou um registo continua a deter o ativo real.",
+          "proof": "SPV · custodiante"
+        },
+        {
+          "label": "A lei anda mais devagar do que os tokens",
+          "desc": "As regras de propriedade e de valores mobiliários variam de país para país e continuam off-chain.",
+          "proof": "transmissão de título"
+        },
+        {
+          "label": "Um token não cria compradores",
+          "desc": "Os mercados secundários continuam pouco líquidos e o preço pode afastar-se do valor do ativo.",
+          "proof": "pouca liquidez"
+        }
+      ]
+    },
+    "sc": {
+      "title": "Cadeia de abastecimento",
+      "wins": [
+        {
+          "label": "Um registo para todos os parceiros",
+          "desc": "Concorrentes, alfândegas e reguladores leem o mesmo histórico, onde qualquer adulteração se nota.",
+          "proof": "GSBN · desde 2021"
+        },
+        {
+          "label": "Rastrear em segundos, não em dias",
+          "desc": "Encontra a origem de um lote com problemas antes de toda a categoria ser retirada das prateleiras.",
+          "proof": "Walmart · 7 dias → 2,2 s"
+        },
+        {
+          "label": "Papelada que se aciona sozinha",
+          "desc": "Uma entrega conferida liberta o pagamento e assinala a disputa automaticamente.",
+          "proof": "Home Depot · IBM"
+        }
+      ],
+      "breaks": [
+        {
+          "label": "Lixo que entra, lixo para sempre",
+          "desc": "A chain prova quem registou o quê e quando, não que o frango era biológico.",
+          "proof": "problema do oráculo"
+        },
+        {
+          "label": "Os concorrentes têm de aderir",
+          "desc": "O valor exige participação quase universal, e quem é dono da plataforma decide quem adere.",
+          "proof": "TradeLens · fechou em 2023"
+        },
+        {
+          "label": "Caro de integrar",
+          "desc": "Sensores, ERPs antigos e standards de consórcios concorrentes tornam a integração lenta e cara.",
+          "proof": "ERP · IoT"
+        }
+      ]
+    },
+    "cert": {
+      "title": "Certificação digital",
+      "wins": [
+        {
+          "label": "Verificar sem o emissor",
+          "desc": "Qualquer pessoa confere um registo na chain em segundos. Sem email para a secretaria.",
+          "proof": "MIT Blockcerts"
+        },
+        {
+          "label": "Qualquer adulteração nota-se, para sempre",
+          "desc": "Muda um carácter e o hash deixa de coincidir.",
+          "proof": "Estónia KSI · desde 2012"
+        },
+        {
+          "label": "Fica com o titular",
+          "desc": "Partilhas a tua própria credencial, e só a impressão digital dela fica on-chain.",
+          "proof": "só o hash"
+        }
+      ],
+      "breaks": [
+        {
+          "label": "Um registo verdadeiro de uma afirmação falsa",
+          "desc": "A chain não sabe se o emissor mentiu ou se enganou ao criá-lo.",
+          "proof": "honestidade do emissor"
+        },
+        {
+          "label": "Difícil de revogar ou corrigir",
+          "desc": "O que está escrito fica escrito. Revogar exige lógica adicional no contrato.",
+          "proof": "registo de revogação"
+        },
+        {
+          "label": "Nem sempre é prova legal",
+          "desc": "Muitas jurisdições ainda não aceitam um registo on-chain como oficial, e os standards competem entre si.",
+          "proof": "reconhecimento legal"
+        }
+      ]
     }
   },
-  "nftProsCons": {
-    "title": "Jogos e NFTs · Prós e Contras",
-    "pros": [
-      { "label": "Posse Digital Real", "desc": "Os itens vivem na carteira do jogador, não podem ser revogados e sobrevivem ao encerramento de servidores." },
-      { "label": "Economias Geridas pelos Jogadores", "desc": "Mercados abertos on-chain definem preços; a oferta e a procura determinam o valor, não os publishers." },
-      { "label": "Fluxos de Caixa Programáveis", "desc": "Os smart contracts automatizam alugueres, partilha de receita, staking e empréstimos garantidos." },
-      { "label": "Royalties Perpétuos para Criadores", "desc": "Cada venda secundária encaminha automaticamente uma percentagem de volta a programadores e artistas, gerando rendimento contínuo." },
-      { "label": "Escassez Transparente", "desc": "Os limites de cunhagem e a oferta são públicos on-chain — evitando a inflação oculta de itens raros." },
-      { "label": "Mercados Globais 24/7", "desc": "Qualquer pessoa com uma carteira pode comprar, vender ou ganhar recompensas instantaneamente, além-fronteiras." },
-      { "label": "Componibilidade", "desc": "Os NFTs ligam-se a DeFi ou dApps sociais, desbloqueando governação, yield ou bónus de utilidade." }
-    ],
-    "cons": [
-      { "label": "Volatilidade de Preço", "desc": "Os valores de itens e tokens podem disparar ou colapsar — perturbando o equilíbrio do jogo e a confiança dos jogadores." },
-      { "label": "Zonas Cinzentas Regulatórias", "desc": "Drops ao estilo de loot box e recompensas em tokens podem enfrentar escrutínio de jogo ou de valores mobiliários." },
-      { "label": "Atrito de UX", "desc": "A configuração de carteiras, a gestão de chaves e as taxas de gas são barreiras para os jogadores convencionais." },
-      { "label": "Burlas e Contrafações", "desc": "Sites de phishing e coleções falsas enganam os jogadores, levando-os a assinar transações maliciosas." },
-      { "label": "Dependência da Saúde do Jogo", "desc": "O valor do ativo depende de uma base de jogadores ativa. Se o jogo desaparecer, os preços colapsam." },
-      { "label": "Saturação do Mercado", "desc": "Uma enxurrada de drops de baixa qualidade dilui a atenção e deprime a procura de revenda." }
-    ]
-  },
-  "rwaProsCons": {
-    "title": "Tokenização de RWA · Prós e Contras",
-    "pros": [
-      { "label": "Posse Fracionada", "desc": "Pequenos investidores ganham acesso a imobiliário, arte ou fundos institucionais de elevado valor com pouco capital." },
-      { "label": "Maior Liquidez", "desc": "Os ativos tokenizados podem ser transacionados em mercados secundários — melhorando as opções de saída de posições historicamente ilíquidas." },
-      { "label": "Acesso Global 24/7", "desc": "Os investidores participam de qualquer lugar, a qualquer hora — sem horários de corretor nem restrições geográficas." },
-      { "label": "Custos Reduzidos", "desc": "Os smart contracts automatizam fluxos de conformidade, transferência e pagamento — cortando a sobrecarga administrativa." },
-      { "label": "Registos Transparentes", "desc": "A blockchain garante título, histórico de transações e trilhos de auditoria invioláveis." },
-      { "label": "Fluxos de Caixa Programáveis", "desc": "Rendimento de arrendamento, dividendos e cupões distribuem-se automaticamente via smart contracts." },
-      { "label": "Liquidação Mais Rápida", "desc": "As transferências de imóveis e a liquidação de valores mobiliários comprimem-se de semanas para minutos/dias." }
-    ],
-    "cons": [
-      { "label": "Incerteza Regulatória", "desc": "As regras variam por país e evoluem rapidamente — a conformidade pode tornar-se um alvo em movimento." },
-      { "label": "Baixa Maturidade do Mercado", "desc": "Poucas plataformas ativas; o volume do mercado secundário permanece reduzido face aos locais tradicionais." },
-      { "label": "Complexidade Técnica", "desc": "Os investidores precisam de entender carteiras, smart contracts e custódia — a UX ainda não é de nível de consumo." },
-      { "label": "Risco de Cibersegurança", "desc": "Vulnerabilidades em smart contracts ou plataformas podem expor os investidores a perda total." },
-      { "label": "Iliquidez Persistente", "desc": "Apesar da tokenização, alguns ativos imobiliários simplesmente não têm compradores — os encapsulamentos não criam procura." },
-      { "label": "Encapsulamentos de Custódia Necessários", "desc": "Os ativos do mundo real continuam a precisar de entidades legais (SPVs, fiduciários) para deter a propriedade subjacente." },
-      { "label": "Desvio de Avaliação", "desc": "Os preços dos tokens on-chain podem divergir do NAV do ativo subjacente — a fiabilidade do preço é um problema em aberto." }
-    ]
-  },
-  "scProsCons": {
-    "title": "Cadeia de Abastecimento · Prós e Contras",
-    "pros": [
-      { "label": "Transparência", "desc": "Todos os parceiros veem o mesmo registo inviolável — eliminando a assimetria de informação." },
-      { "label": "Rastreabilidade em Tempo Real", "desc": "A jornada completa de um produto pode ser localizada em segundos — não em dias." },
-      { "label": "Automação de Processos", "desc": "Os smart contracts acionam pagamentos, libertações e alertas sem verificações manuais." },
-      { "label": "Resolução de Disputas Mais Rápida", "desc": "Os dados partilhados eliminam o disse-que-disse — investigações e estornos encurtam drasticamente." },
-      { "label": "Redução de Custos", "desc": "Menos papelada, menos taxas de estafeta, auditorias simplificadas — a sobrecarga geral diminui." },
-      { "label": "Conformidade Regulatória", "desc": "Os registos imutáveis fornecem prova instantânea para inspeções alimentares, farmacêuticas e alfandegárias." },
-      { "label": "Confiança do Consumidor", "desc": "Os compradores fazem scan a um código para verificar origem, qualidade e condições de manuseamento." }
-    ],
-    "cons": [
-      { "label": "Integridade dos Dados de Entrada", "desc": "\"Lixo à entrada, lixo para sempre\" — dados de sensores incorretos continuam a escrever de forma imutável na cadeia." },
-      { "label": "Complexidade de Integração", "desc": "ERPs legados, dispositivos IoT e sistemas portuários exigem ligações dispendiosas e complicadas." },
-      { "label": "Fragmentação de Normas", "desc": "Consórcios concorrentes prejudicam os efeitos de rede e a interoperabilidade global." },
-      { "label": "Custo de Implementação", "desc": "Sensores, middleware e gestão da mudança exigem um investimento inicial significativo." },
-      { "label": "Escalabilidade", "desc": "As cadeias públicas podem ter dificuldade com volumes de transações ao nível dos contentores." },
-      { "label": "Coordenação entre Intervenientes", "desc": "Empresas rivais têm de cooperar. A adoção estagna se parceiros-chave recusarem participar." }
-    ]
-  },
-  "certProsCons": {
-    "title": "Certificação Digital · Prós e Contras",
-    "pros": [
-      { "label": "Inviolável e Verificável", "desc": "Os certificados são alvo de hash e armazenados on-chain — tornando-os imutáveis." },
-      { "label": "Elimina a Falsificação", "desc": "Mesmo alterações de um único caráter são detetáveis. Reduz diplomas, licenças e credenciais falsos a ~zero." },
-      { "label": "Sem Intermediários", "desc": "Remove a necessidade de notários, conservatórias ou e-mails de verificação institucional." },
-      { "label": "Instantâneo e Global", "desc": "Os destinatários partilham credenciais digitalmente; os empregadores verificam-nas em segundos, em qualquer lugar." },
-      { "label": "Eficiência de Custo e Tempo", "desc": "Acabou a impressão, os portes, as verificações manuais. A emissão e a verificação aceleram drasticamente." },
-      { "label": "Auto-soberania", "desc": "Os utilizadores detêm as suas próprias credenciais — reduzindo o controlo institucional." }
-    ],
-    "cons": [
-      { "label": "Reconhecimento Legal", "desc": "Em muitos países, os registos baseados em blockchain não são legalmente reconhecidos como prova oficial." },
-      { "label": "Literacia do Utilizador", "desc": "Os utilizadores precisam de conhecimentos básicos de blockchain, carteiras ou ferramentas de verificação para participar." },
-      { "label": "Custo de Implementação", "desc": "Montar um sistema de certificação robusto exige conhecimento técnico e investimento inicial." },
-      { "label": "Preocupações de Privacidade", "desc": "Mesmo metadados alvo de hash podem expor informação pessoal se não forem cuidadosamente concebidos." },
-      { "label": "Complexidade de Revogação", "desc": "Uma vez escrito numa blockchain, é permanente. Revogar ou atualizar exige lógica de contrato adicional." },
-      { "label": "Dependência do Fornecedor", "desc": "Diferentes consórcios usam diferentes cadeias — a interoperabilidade ainda está a emergir." }
+  "nftWhy": {
+    "scenarioLabel": "O que acontece quando…",
+    "scenarios": { "ban": "a tua conta é banida", "shutdown": "o jogo é encerrado", "resell": "queres revender" },
+    "cols": { "item": "item", "owner": "dono", "control": "quem o controla" },
+    "item": "Skin de dragão",
+    "db": {
+      "tag": "Hoje",
+      "title": "Uma linha na base de dados da plataforma",
+      "owner": "tu (diz a plataforma)",
+      "control": "a plataforma",
+      "outcomes": {
+        "ban": "Desaparece com a conta. Sem recurso.",
+        "shutdown": "Tudo o que compraste desaparece com os servidores.",
+        "resell": "Só na loja da própria plataforma, nas condições dela, se for possível."
+      }
+    },
+    "token": {
+      "tag": "Com um NFT",
+      "title": "Um token na tua wallet",
+      "owner": "0xA1…f3 (a tua wallet)",
+      "control": "só a tua chave",
+      "outcomes": {
+        "ban": "Continua na tua wallet. Vende-o ou leva-o para outro lado.",
+        "shutdown": "Continuas a ter o token, mas sem jogo onde o usar pode não valer nada.",
+        "resell": "Põe-no à venda em qualquer marketplace. As condições de royalty acompanham o token, mas só são pagas se o marketplace as respeitar."
+      }
+    },
+    "unlocksLabel": "O que a posse comprovável permite",
+    "unlocks": [
+      { "label": "Vendê-lo", "like": "como um bem físico" },
+      { "label": "Alugá-lo", "like": "como um apartamento" },
+      { "label": "Usá-lo como garantia", "like": "como numa hipoteca" },
+      { "label": "Dividi-lo em partes", "like": "como um REIT" }
     ]
   },
   "common": {
@@ -724,28 +975,113 @@
     "theResults": "Os Resultados",
     "whatHappened": "What Happened"
   },
+  "dividers": {
+    "kicker": "Parte {{n}} de {{total}}",
+    "defi": {
+      "name": "DeFi",
+      "tag": "Finança Descentralizada",
+      "line": "Negociação, empréstimos e dólares geridos por smart contracts em vez de bancos, abertos a qualquer hora."
+    },
+    "nft": {
+      "name": "NFTs",
+      "tag": "Posse Digital",
+      "line": "Tokens únicos que põem o item de jogo, o bilhete ou a adesão na tua wallet, e não na base de dados de uma empresa."
+    },
+    "dao": {
+      "name": "DAOs",
+      "tag": "Governação Partilhada",
+      "line": "Organizações cujo regulamento é código: os membros propõem e votam, e a tesouraria executa o resultado."
+    },
+    "rwa": {
+      "name": "Ativos do Mundo Real",
+      "tag": "Tokenização de RWA",
+      "line": "Fundos, obrigações e edifícios representados por tokens que liquidam em minutos, ligados ao ativo por um invólucro legal."
+    },
+    "sc": {
+      "name": "Cadeia de Abastecimento",
+      "tag": "Proveniência e Logística",
+      "line": "Um registo partilhado de cada passagem, da quinta ou da fábrica até à prateleira, onde qualquer adulteração se nota."
+    },
+    "cert": {
+      "name": "Certificados",
+      "tag": "Registos de Confiança",
+      "line": "Diplomas, registos oficiais e certificados de autenticidade que qualquer pessoa pode verificar sem contactar o emissor."
+    }
+  },
   "quiz": {
-    "question": "O DMV da Califórnia digitalizou 42 milhões de títulos de veículos na blockchain. Qual é a principal vantagem da blockchain face ao sistema tradicional de títulos em papel?",
-    "options": [
-      "O armazenamento em blockchain é mais barato do que o arquivo em papel, reduzindo significativamente o orçamento operacional do DMV.",
-      "As transferências de título e a verificação de posse podem ocorrer em minutos sem contactar o DMV — eliminando a fraude através de registos de proveniência imutáveis.",
-      "Os títulos de veículos são agora publicamente visíveis para qualquer pessoa sem verificação de identidade, aumentando a transparência.",
-      "O furto de veículos torna-se impossível porque os títulos são armazenados on-chain e não podem ser clonados."
-    ],
-    "explanation": "A vantagem central da blockchain aqui é a verificação da posse sem necessidade de confiança no histórico de propriedade. Os títulos em papel tradicionais exigem transferência física, verificação manual e semanas de processamento. Com a blockchain, um comprador pode verificar instantaneamente toda a cadeia de posse, detetar fraude de quilometragem e confirmar que o vendedor tem o título sem ónus — tudo sem confiar na base de dados do DMV nem na palavra do vendedor. A imutabilidade torna a falsificação estruturalmente impossível em vez de meramente difícil. O armazenamento em blockchain é na verdade mais caro do que o papel — o valor está na rapidez de verificação e na eliminação de fraude, não no custo."
+    "label": "Quiz · {{n}} / {{total}}",
+    "items": [
+      {
+        "question": "A TerraUSD (UST) colapsou em maio de 2022 e aniquilou cerca de $40 mil milhões. Qual foi a causa de fundo?",
+        "options": [
+          "O banco que guardava as suas reservas em dólares faliu, por isso os tokens deixaram de poder ser resgatados por $1.",
+          "O peg assentava num token-irmão volátil (LUNA), e não em reservas resgatáveis, e a perda de confiança gerou uma espiral da morte.",
+          "Um bug no smart contract deixou um atacante cunhar tokens sem limite e vendê-los no mercado aberto, fazendo cair o preço.",
+          "Os reguladores congelaram as contas do emissor, o que suspendeu toda a negociação e quebrou o peg de um dia para o outro."
+        ],
+        "explanation": "A UST era uma stablecoin algorítmica: o peg era mantido trocando UST por LUNA, um token volátil do mesmo projeto, e não por dólares ou garantia excedentária que os detentores pudessem resgatar. Quando a confiança caiu, os detentores venderam UST, foi cunhada e despejada LUNA, o preço desta colapsou e a almofada desapareceu. Nenhum banco faliu e nenhum contrato foi atacado: o próprio design era reflexivo. A falência de um banco é o risco das stablecoins garantidas por fiat (a USDC vacilou em março de 2023, quando o SVB detinha $3,3 mil milhões das suas reservas)."
+      },
+      {
+        "question": "Um artista define um royalty de revenda de 5% numa coleção de NFTs com o standard ERC-2981. O que garante que o artista é de facto pago em cada revenda?",
+        "options": [
+          "A blockchain: os validadores rejeitam qualquer transferência de NFT que não inclua o pagamento do royalty.",
+          "O contrato do token: cada transferência ERC-721 desconta automaticamente o royalty do preço de venda e envia-o ao artista.",
+          "Nada no standard: o ERC-2981 apenas declara o royalty, e cada marketplace decide se o paga.",
+          "A wallet do comprador: acrescenta o royalty ao preço antes de assinar a transação de compra."
+        ],
+        "explanation": "O ERC-2981 é um sinal, não uma regra. Permite que um contrato diga aos marketplaces qual é o royalty esperado e quem o deve receber, mas a transferência acontece com ou sem esse pagamento. Uma transferência ERC-721 nem sequer conhece o preço de venda. A Blur foi lançada com royalties opcionais em 2022 e a OpenSea deixou de os impor em 2023; com a queda do volume de transações e da taxa efetivamente paga, o rendimento dos criadores com royalties ficou mais de 90% abaixo do pico do início de 2022. Um modelo de receita que depende de os marketplaces pagarem voluntariamente não é imposto pelo código."
+      },
+      {
+        "question": "Em abril de 2022, um atacante drenou cerca de $182M do protocolo Beanstalk numa única transação. Como?",
+        "options": [
+          "Roubou as chaves privadas da wallet multisig que guardava os fundos do protocolo.",
+          "Explorou um bug de reentrância para levantar o mesmo depósito vezes sem conta.",
+          "Dividiu os seus tokens por milhares de wallets para contornar uma regra de uma pessoa, um voto.",
+          "Obteve uma supermaioria do poder de voto com um flash loan e fez aprovar a sua própria proposta."
+        ],
+        "explanation": "O Beanstalk contava o poder de voto no momento da votação, por isso este podia ser pedido emprestado. Com um flash loan (pedido e reembolsado dentro de uma só transação), o atacante deteve mais do que a supermaioria de dois terços exigida, executou uma proposta submetida um dia antes, que enviava os fundos do protocolo para a sua wallet, e reembolsou o empréstimo. Nenhuma chave foi roubada e o código fez o que a governação mandou. As defesas são estruturais: medir o poder de voto a partir de um snapshot anterior e pôr um timelock entre a votação e a sua execução. O bug de reentrância pertence à The DAO (2016)."
+      },
+      {
+        "question": "Numa tokenização de imobiliário como a venda de uma casa como NFT pela Propy, o que é que o detentor do token possui de facto?",
+        "options": [
+          "A propriedade de uma empresa (uma LLC) que detém a escritura, e não o imóvel em si.",
+          "O título legal do próprio imóvel, registado na blockchain e não no registo predial.",
+          "O direito de ocupar parte do imóvel, que o smart contract faz cumprir automaticamente.",
+          "Um token cujo preço o contrato mantém indexado ao último valor de avaliação do imóvel."
+        ],
+        "explanation": "O contrato move o token em segundos, mas o título legal do imóvel continua num registo predial e muda de mãos fora da chain. Por isso o imóvel é colocado numa empresa e o token representa a propriedade dessa empresa. É nesse invólucro legal que está o risco: se a entidade, o custodiante ou a lei não honrarem a ligação, o token não se faz cumprir sozinho. Tokenizar também não cria compradores: o mercado secundário pode continuar pouco líquido e o preço pode afastar-se do valor do ativo."
+      },
+      {
+        "question": "A TradeLens (Maersk e IBM) foi encerrada em 2023, enquanto a GSBN, uma plataforma de transporte marítimo semelhante, continua a funcionar. O que explica melhor a diferença?",
+        "options": [
+          "Tecnologia: o registo permissionado por trás da TradeLens não aguentava o volume de documentos de transporte que recebia.",
+          "Regulação: as alfândegas de portos importantes recusaram-se a aceitar conhecimentos de embarque eletrónicos emitidos pela TradeLens.",
+          "Propriedade: a TradeLens era da Maersk e da IBM, o que afastava os concorrentes; a GSBN é detida por armadores e operadores portuários.",
+          "Financiamento: a Maersk e a IBM ficaram sem orçamento antes de a plataforma entrar em produção com clientes pagantes."
+        ],
+        "explanation": "A TradeLens esteve em produção de 2018 até ao início de 2023, bem financiada e tecnicamente sólida, com mais de 100 organizações a bordo. O que nunca alcançou foi a colaboração de toda a indústria que dá valor a um registo partilhado: os concorrentes desconfiavam de uma plataforma controlada pela Maersk e, mesmo depois de vários grandes armadores terem aderido, a razão oficial do encerramento foi não ter atingido «o nível de viabilidade comercial necessário». A GSBN ataca o mesmo problema como um consórcio detido em conjunto por armadores e operadores portuários. Quem é dono da plataforma decide quem adere."
+      },
+      {
+        "question": "O DMV da Califórnia pôs 42 milhões de títulos de veículos numa blockchain permissionada. O que é que a chain acrescenta, de facto, face aos títulos em papel?",
+        "options": [
+          "Custos de armazenamento mais baixos: guardar registos numa blockchain é mais barato do que em papel ou numa base de dados.",
+          "Um título digital em que qualquer adulteração se nota, transferível em minutos em vez de semanas e ainda emitido pelo DMV.",
+          "Transparência pública total: qualquer pessoa pode agora consultar quem é dono de qualquer carro, sem verificação de identidade.",
+          "O fim do furto de carros e da fraude com títulos, porque nada do que fica registado on-chain pode estar errado ou ser falsificado."
+        ],
+        "explanation": "O ganho é um registo partilhado em que qualquer adulteração se nota: um título em papel pode perder-se ou ser falsificado e demora dias ou semanas de papelada a transferir, enquanto um título digital pode ser verificado e transferido em minutos. O DMV continua a emitir todos os títulos e a gerir a rede permissionada, por isso continuas a confiar no DMV, não o eliminas. O armazenamento on-chain custa mais do que uma base de dados, os registos não estão abertos ao público, e a chain não impede que um carro seja roubado nem corrige um dado falso introduzido na origem."
+      }
+    ]
   },
   "takeaways": {
     "title": "Secção 03 — Conclusões-Chave",
     "items": [
-      "Five industry verticals — DeFi, Gaming/NFTs, RWA, Supply Chain, Digital Cert — all show smart contracts in production today",
-      "DeFi: AMMs, stablecoins and borderless transfers reshape financial rails — and each stablecoin design has its own failure mode",
-      "NFTs work best as keys, not pictures: tickets, memberships, credentials, provenance twins. Royalties were never enforced by the chain",
-      "DAOs can mimic a company transparently or build structures no charter allows — token votes, nested multisigs, quadratic funding, timelocks, rage-quit",
-      "DAO reality check: low turnout, whale power, legal exposure, governance attacks (Beanstalk) — and ConstitutionDAO's $47M lesson in planning for failure",
-      "RWA tokenization spans the spectrum from sovereign debt (BlackRock BUIDL) to real estate (Sweden, Brickblock, Zurich)",
-      "Supply chain wins when rivals agree to share truth — Walmart and GSBN run; Maersk's TradeLens shut down because competitors would not join",
-      "The common thread for success: many parties, no trusted authority, value from automation and shared truth — and an owner everyone can accept",
-      "Coming up in Section 4 — three lessons from the field: when blockchain wins (Estonia), when it backfires (The DAO), when it should never have been picked (ASX)"
+      "O DeFi desmonta o banco em contratos que nunca fecham; o risco passa para o código, os pegs e as chaves de administração, e cada design de stablecoin falha à sua maneira",
+      "Os NFTs funcionam melhor como chaves do que como imagens: bilhetes, adesões, credenciais, gémeos de proveniência. Os royalties nunca foram impostos pela chain",
+      "As DAOs deixam um voto público mover o dinheiro. O preço: pouca participação, poder das baleias, exposição legal e ataques de governação; a ConstitutionDAO juntou $47M sem plano para perder",
+      "Os ativos tokenizados liquidam em minutos, dos fundos do Tesouro (BlackRock BUIDL) ao imobiliário, mas o risco está no invólucro legal por trás do token",
+      "Os registos partilhados ganham quando os concorrentes aderem (Walmart, GSBN, Estónia) e falham quando não aderem (TradeLens); a chain não corrige um dado falso",
+      "O padrão nas seis: funciona com muitas partes, nenhuma autoridade de confiança e um dono que todos aceitem, e falha num sítio previsível. A Secção 4 acrescenta três lições: Estónia, The DAO e ASX"
     ]
   },
   "nftUtility": {
@@ -801,8 +1137,8 @@
     "patternBody": " the NFT is rarely the product. It is the key that unlocks one — and keys are portable, verifiable and resellable in a way logins and paper never were."
   },
   "nftGate": {
-    "title": "Token-gated access · Try it",
-    "subtitle": "Pick a wallet and try to enter the members-only area. The gate never asks who you are — only what you hold.",
+    "title": "Acesso por token · Experimenta",
+    "subtitle": "Escolhe uma wallet e tenta entrar na área reservada a membros. A porta nunca pergunta quem és, só o que tens.",
     "walletsLabel": "Choose a wallet",
     "wallets": {
       "member": { "name": "Wallet A", "holds": "Holds Membership NFT #0421" },
@@ -857,35 +1193,35 @@
     ]
   },
   "daoIntro": {
-    "heading": "What is a DAO?",
-    "subtitle": "An organisation whose rulebook is a smart contract: members propose and vote, and the treasury acts on the result — no CEO signs off.",
-    "tradLabel": "Traditional company",
+    "tradLabel": "Empresa tradicional",
     "tradChain": [
-      { "label": "Shareholders", "sub": "own, vote once a year" },
-      { "label": "Board", "sub": "oversees" },
-      { "label": "Executives", "sub": "decide & sign" },
-      { "label": "Bank & lawyers", "sub": "execute & enforce" }
+      { "label": "Acionistas", "sub": "detêm, votam uma vez por ano" },
+      { "label": "Conselho de administração", "sub": "supervisiona" },
+      { "label": "Executivos", "sub": "decidem e assinam" },
+      { "label": "Banco e advogados", "sub": "executam e fazem cumprir" }
     ],
-    "tradEnforced": "Enforced by bylaws, courts and HR — mostly behind closed doors.",
+    "tradEnforced": "Imposto por estatutos, tribunais e RH, quase sempre à porta fechada.",
     "daoLabel": "DAO",
     "daoChain": [
-      { "label": "Token holders", "sub": "anyone with the token" },
-      { "label": "Proposal", "sub": "\"Pay 50k to project X\"" },
-      { "label": "On-chain vote", "sub": "counted by the contract" },
-      { "label": "Treasury contract", "sub": "pays automatically" }
+      { "label": "Detentores de tokens", "sub": "qualquer pessoa com o token" },
+      { "label": "Proposta", "sub": "«Pagar 50 mil ao projeto X»" },
+      { "label": "Votação on-chain", "sub": "contada pelo contrato" },
+      { "label": "Contrato de tesouraria", "sub": "paga automaticamente" }
     ],
-    "daoEnforced": "Enforced by code — every vote, payment and rule change is public forever.",
-    "twoLabel": "Two things a DAO can do",
-    "mimicTitle": "Mimic a real organisation — transparently",
-    "mimicBody": "Shareholder votes, committees, spending limits, dual signatures: the familiar structures, but with no backdated minutes, no quiet transfers, and an audit trail nobody can edit. Harder to cheat; easier to hold to account.",
-    "newTitle": "Build structures no charter allows",
-    "newBody": "Votes that cost more the more you cast, committees that are themselves contracts, mandatory delays that let members exit before a rule bites, instant withdrawal of your share. New organisational designs — with new failure modes.",
-    "defLabel": "DAO = Decentralised Autonomous Organisation.",
-    "defBody": " \"Autonomous\" is generous: people still write proposals, debate on forums and vote. What is automatic is the execution — the money moves because the vote passed, not because someone approved it."
+    "daoEnforced": "Imposto pelo código: cada voto, pagamento e alteração de regras fica público para sempre.",
+    "run": "Segue um pagamento pelos dois",
+    "runAgain": "Repetir",
+    "twoLabel": "Duas coisas que uma DAO pode fazer",
+    "mimicTitle": "Imitar uma organização real, com transparência",
+    "mimicBody": "Votações, comités, limites de despesa e dupla assinatura, sem atas com data falsa e com um registo de auditoria que ninguém pode editar.",
+    "newTitle": "Criar estruturas que nenhum estatuto permite",
+    "newBody": "Votos que custam mais quanto mais usas, comités que são contratos, o direito de sair com a tua parte. Novos modelos, novos modos de falha.",
+    "noteLabel": "«Autónoma» é generoso:",
+    "noteBody": " as pessoas continuam a escrever propostas, a discutir em fóruns e a votar. O que é automático é a execução."
   },
   "daoStructures": {
-    "title": "Governance building blocks · Explore",
-    "subtitle": "Click a block. Some copy structures every company has; others are only possible in code. Real DAOs combine four or five of them.",
+    "title": "Blocos de governação · Explora",
+    "subtitle": "Clica num bloco. Uns copiam estruturas que qualquer empresa tem; outros só são possíveis em código. As DAOs reais combinam quatro ou cinco.",
     "mimicTag": "Mimics the real world",
     "newTag": "Only possible in code",
     "analogyLabel": "Real-world equivalent",
@@ -945,8 +1281,8 @@
     }
   },
   "daoVote": {
-    "title": "Who really holds the power?",
-    "subtitle": "Five members vote on the same proposal. Change the counting rule — and watch who wins.",
+    "title": "Simulador de poder de voto",
+    "subtitle": "Cinco membros votam a mesma proposta. Muda a regra de contagem e vê quem ganha.",
     "proposal": "Proposal: spend 10% of the treasury on a marketing campaign",
     "modeLabel": "Counting rule",
     "modes": {
@@ -1028,25 +1364,6 @@
     "legalLabel": "Legal status is unsettled:",
     "legalBody": " Wyoming recognises DAO LLCs (2021), but a US court treated Ooki DAO's token voters as members of an unincorporated association — personally exposed to its liabilities (2022–23). Most serious DAOs now pair the contracts with a legal wrapper."
   },
-  "daoProsCons": {
-    "title": "DAOs · Pros & Cons",
-    "pros": [
-      { "label": "Transparency by default", "desc": "Every vote, payment and rule change is public and permanent — no backdated minutes." },
-      { "label": "Global membership", "desc": "Anyone with a wallet can join, contribute and vote — no incorporation, no bank account." },
-      { "label": "Programmable treasury", "desc": "Budgets, vesting and payouts execute from the vote — no finance department in the loop." },
-      { "label": "Hard to cheat", "desc": "Spending limits and signature rules are enforced by code, not by whoever holds the chequebook." },
-      { "label": "Minority protection", "desc": "Timelocks and rage-quit let dissenters exit before a decision bites — rare in company law." },
-      { "label": "New coordination tools", "desc": "Quadratic funding, nested sub-DAOs, instant pooled capital — structures a charter cannot express." }
-    ],
-    "cons": [
-      { "label": "Voter apathy", "desc": "Turnout is often under 10% of tokens; a few dozen delegates decide most votes." },
-      { "label": "Plutocracy", "desc": "Token-weighted means money-weighted. Whales and VCs can carry any vote they care about." },
-      { "label": "Legal exposure", "desc": "Unincorporated DAOs may leave members personally liable (Ooki DAO). Wrappers add back lawyers and jurisdictions." },
-      { "label": "Slow in a crisis", "desc": "Timelocks protect members but tie hands. The DAO had 27 days' warning and still could not act." },
-      { "label": "Governance attacks", "desc": "Beanstalk (2022): an attacker flash-loaned 67% of the votes, passed a proposal and drained $182M in one transaction." },
-      { "label": "Off-chain reality", "desc": "Forums, Discord, lawyers and core teams do the real work. The chain records the decision; people make it." }
-    ]
-  },
   "tradelens": {
     "kicker": "Case Study 06 — Shipping · ❌ Shut down",
     "heading": "TradeLens: Maersk × IBM",
@@ -1079,15 +1396,16 @@
       "Value required near-universal participation — a network-effect and ownership problem, not a technology problem"
     ],
     "lessonLabel": "The lesson:",
-    "lessonBody": " a consortium chain is only as useful as the rivals willing to join it. Who owns the platform decides who adopts it — compare GSBN, owned jointly by several carriers, which is still running."
+    "lessonBody": " a consortium chain is only as useful as the rivals willing to join it. Who owns the platform decides who adopts it — compare GSBN, owned jointly by carriers and port operators, which is still running."
   },
   "keyPoints": {
     "s3-industries-intro": "Every winning use case here replaces a slow, paid-for middleman with a shared rule — look for that pattern first.",
-    "s3-defi-intro": "What is DeFi?",
+    "s3-defi-intro": "DeFi replaces the bank or clearinghouse with a contract that settles when its conditions are met.",
+    "s3-defi-real": "Swap, lend, pay: each job a bank does already runs as a contract anyone can call.",
     "s3-defi-amm": "Price comes from a formula, not a market maker — big trades move it, so liquidity depth is the product.",
     "s3-defi-stablecoins": "The most-used thing on Ethereum is a dollar — and every stablecoin design is a bet on what backs it.",
     "s3-defi-prosCons": "DeFi removes the bank but not the risk — it moves risk into code, collateral and the people holding the admin keys.",
-    "s3-nft-intro": "What is an NFT?",
+    "s3-nft-intro": "An NFT is a unique token whose owner is recorded on-chain, so ownership can be proved and transferred without the issuer.",
     "s3-nft-real": "The NFT only controls ownership — the game servers, the artwork and the marketplace are still run by companies.",
     "s3-nft-prosCons": "Ownership you can prove and resell is new; demand for the asset is not guaranteed by the blockchain.",
     "s3-nft-utility": "Think of an NFT as a key, not a picture — tickets, memberships and credentials are where the utility is.",
@@ -1105,7 +1423,7 @@
     "s3-sc-provenance": "The chain proves who recorded what and when — it cannot prove the goods are what the record says.",
     "s3-sc-real": "LVMH, Carrefour and GSBN work because rivals agreed to share one record — the hard part was the consortium, not the code.",
     "s3-sc-prosCons": "Traceability pays when recalls, counterfeits or paperwork are expensive — and only if every partner actually uploads.",
-    "s3-cert-howitworks": "Store the fingerprint, not the document — a hash proves a record existed unchanged without revealing it.",
+    "s3-cert-howitworks": "Store the fingerprint, not the document: the hash proves the record is unchanged, and the contract that wrote it proves who issued it.",
     "s3-cert-real": "Estonia, MIT and the luxury brands use the chain for one thing: letting anyone verify a record without calling the issuer.",
     "s3-cert-prosCons": "Verification becomes instant and free; the issuer's honesty when creating the record is still the weak point.",
     "s3-case-gallery": "Five production deployments share one pattern: many parties, one shared record, and a measurable cost that disappeared.",
