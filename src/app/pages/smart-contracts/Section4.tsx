@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
@@ -6,7 +6,14 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { QuizSlide } from '../../components/templates/QuizSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
-import { Brain } from 'lucide-react';
+import {
+  Brain, Target, Scale, ShieldAlert, Check, X, ArrowUpRight, Lightbulb, type LucideIcon,
+  Server, Coins, Crosshair, BarChart3, Megaphone, GraduationCap,
+  Gauge, Plug, Wrench, KeyRound, Database, Activity,
+  FileSignature, Gavel, Globe, EyeOff, Receipt,
+  SearchCheck, Sigma, GitBranch, Siren, Bug, Radar,
+  Zap, Banknote, Sparkles, Network, Smartphone, Unplug, Users,
+} from 'lucide-react';
 import { ClassDiscussion } from '../../components/shared/ClassDiscussion';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
@@ -29,6 +36,7 @@ const chapterShape = [
   { id: 's4-case-success' },
   { id: 's4-case-sc-fail' },
   { id: 's4-case-org-fail' },
+  { id: 's4-case-est-quiz' },
   { id: 's4-case-dao-quiz' },
   { id: 's4-case-asx-quiz' },
 
@@ -39,12 +47,17 @@ const chapterShape = [
   { id: 's4-adoption-legal' },
   { id: 's4-adoption-risk' },
   { id: 's4-adoption-finance' },
+  { id: 's4-adoption' },
 
   { kind: 'group' as const, id: 'g-strat' },
   { id: 's4-opps-challenges' },
   { id: 's4-strategies' },
 
   { kind: 'group' as const, id: 'g-close' },
+  { id: 's4-quiz-tree' },
+  { id: 's4-quiz-fit' },
+  { id: 's4-quiz-checks' },
+  { id: 's4-quiz-cases' },
   { id: 's4-quiz' },
   { id: 's4-takeaways' },
 ] as const;
@@ -165,35 +178,380 @@ function DecisionFlow() {
 interface TitleDesc { title: string; desc: string }
 interface ChartStep { q: string; verdict: string }
 interface ResultStat { value: string; label: string }
-interface PillarItem { label: string; desc: string }
-interface CostItem { label: string; range: string; desc: string }
-interface OppItem { label: string; desc: string }
-interface StrategyItem { name: string; moat: string; desc: string }
+interface CheckItem { title: string; question: string; points: string[]; caseName: string; caseNote: string }
 const YES_EMOJI = ['👥', '⚡', '🔍', '💰', '🔓', '🔒', '🌍'];
 const NO_EMOJI = ['🏢', '⚡', '🔄', '📦', '🤐', '⚖️', '🧑', '💸'];
-const PILLAR_META = [
-  { num: '01', emoji: '🎯', color: '#6366f1' },
-  { num: '02', emoji: '🏗', color: '#8b5cf6' },
-  { num: '03', emoji: '⚖️', color: '#22d3ee' },
-  { num: '04', emoji: '🛡', color: '#ED1C24' },
-  { num: '05', emoji: '💰', color: '#39B54A' },
-];
-const STRATEGY_META = [
-  { color: '#6366f1' }, { color: '#8b5cf6' }, { color: '#39B54A' },
-  { color: '#22d3ee' }, { color: '#f59e0b' }, { color: '#ec4899' },
-];
-const ADOPTION_STRATEGY_COLORS = ['#6366f1', '#8b5cf6', '#22d3ee', '#39B54A'];
-const ADOPTION_TECH_META = [
-  { emoji: '⚡', color: '#8b5cf6' }, { emoji: '🔌', color: '#6366f1' }, { emoji: '🛠', color: '#22d3ee' },
-  { emoji: '🔐', color: '#39B54A' }, { emoji: '💾', color: '#f59e0b' }, { emoji: '📊', color: '#ec4899' },
-];
-const RISK_META = [
-  { emoji: '🔍', color: '#ED1C24' }, { emoji: '🧮', color: '#f59e0b' }, { emoji: '💰', color: '#8b5cf6' },
-  { emoji: '⚙️', color: '#6366f1' }, { emoji: '🚨', color: '#22d3ee' }, { emoji: '📡', color: '#39B54A' },
-];
-const STRATEGY_EMOJI = ['🏦', '🌐', '🦄', '🏡', '✈️', '🛠'];
 
-// Rebuild a rich-text bullet (text + bold/italic spans) from a structured item.
+// ─── Adoption: three checks before you build ─────────────────────────────────
+// Language-neutral: icon, colour and the case slide each check points back to.
+const CHECK_META = [
+  { id: 'fit',   Icon: Target,      color: '#6366f1', caseId: 's4-case-org-fail' },
+  { id: 'legal', Icon: Scale,       color: '#22d3ee', caseId: 's4-case-success' },
+  { id: 'risk',  Icon: ShieldAlert, color: '#f59e0b', caseId: 's4-case-sc-fail' },
+] as const;
+const PASS = '#39B54A';
+const FAIL = '#ED1C24';
+
+function AdoptionChecks() {
+  const { t } = useTranslation('smart-contracts/section-4');
+  const items = t('adoption.items', { returnObjects: true }) as CheckItem[];
+  const [marks, setMarks] = useState<Record<string, 'pass' | 'fail'>>({});
+
+  const mark = (id: string, v: 'pass' | 'fail') =>
+    setMarks((m) => {
+      const next = { ...m };
+      if (next[id] === v) delete next[id]; else next[id] = v;
+      return next;
+    });
+
+  const answered = Object.keys(marks).length;
+  const failing = CHECK_META.map((m, i) => ({ m, item: items[i] })).filter(({ m }) => marks[m.id] === 'fail');
+  const state: 'idle' | 'progress' | 'stop' | 'go' =
+    failing.length > 0 ? 'stop' : answered === CHECK_META.length ? 'go' : answered > 0 ? 'progress' : 'idle';
+  const stateColor = state === 'stop' ? FAIL : state === 'go' ? PASS : '#6366f1';
+
+
+  return (
+    <>
+      <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
+        {CHECK_META.map((meta, i) => {
+          const item = items[i];
+          const m = marks[meta.id];
+          const border = m === 'pass' ? PASS : m === 'fail' ? FAIL : meta.color + '40';
+          return (
+            <div key={meta.id} className="p-4 lg:p-5 bg-card border-2 rounded-xl flex flex-col gap-3 transition-colors" style={{ borderColor: border }}>
+              <div className="flex items-center gap-3">
+                <div className="size-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: meta.color + '1f' }}>
+                  <meta.Icon className="size-6" style={{ color: meta.color }} />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: meta.color }}>{t('adoption.checkLabel', { num: i + 1 })}</div>
+                  <div className="font-bold text-base text-foreground leading-tight">{item.title}</div>
+                </div>
+              </div>
+              <div className="text-lg lg:text-xl font-black text-foreground leading-snug">{item.question}</div>
+              <ul className="text-xs text-muted-foreground space-y-1.5">
+                {item.points.map((pt, j) => (
+                  <li key={j} className="flex gap-1.5"><span style={{ color: meta.color }}>›</span>{pt}</li>
+                ))}
+              </ul>
+              <button type="button" onClick={() => scrollToSlide(meta.caseId)}
+                className="mt-auto p-2 rounded-lg text-left text-xs text-muted-foreground hover:brightness-110 transition"
+                style={{ backgroundColor: meta.color + '1a' }}>
+                <span className="font-semibold text-foreground inline-flex items-center gap-1">
+                  {t('adoption.seenIn')} {item.caseName}<ArrowUpRight className="size-3" />
+                </span>
+                <span className="block mt-0.5">{item.caseNote}</span>
+              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button type="button" aria-pressed={m === 'pass'} onClick={() => mark(meta.id, 'pass')}
+                  className="px-3 py-1.5 rounded-lg border text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors"
+                  style={m === 'pass' ? { backgroundColor: PASS, borderColor: PASS, color: '#fff' } : { borderColor: PASS + '66', color: PASS }}>
+                  <Check className="size-3.5" strokeWidth={3} />{t('adoption.pass')}
+                </button>
+                <button type="button" aria-pressed={m === 'fail'} onClick={() => mark(meta.id, 'fail')}
+                  className="px-3 py-1.5 rounded-lg border text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors"
+                  style={m === 'fail' ? { backgroundColor: FAIL, borderColor: FAIL, color: '#fff' } : { borderColor: FAIL + '66', color: FAIL }}>
+                  <X className="size-3.5" strokeWidth={3} />{t('adoption.fail')}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Verdict strip — updates as the class marks each check for its own idea */}
+      <div className="shrink-0 mt-4 px-4 py-2.5 rounded-xl border-2 flex items-center gap-3 transition-colors"
+        style={{ borderColor: stateColor + '80', backgroundColor: stateColor + '14' }}>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {CHECK_META.map((meta) => {
+            const m = marks[meta.id];
+            return (
+              <span key={meta.id} className="size-3 rounded-full border-2"
+                style={{ borderColor: m === 'pass' ? PASS : m === 'fail' ? FAIL : 'var(--border)', backgroundColor: m === 'pass' ? PASS : m === 'fail' ? FAIL : 'transparent' }} />
+            );
+          })}
+        </div>
+        <div className="text-sm text-foreground">
+          <span className="font-black" style={{ color: stateColor }}>{t(`adoption.verdict.${state}.label`)}</span>{' '}
+          {state === 'stop' && <span className="font-semibold">{failing.map(({ item }) => item.title).join(' · ')}. </span>}
+          <span className="text-muted-foreground">{t(`adoption.verdict.${state}.body`)}</span>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ─── Adoption set: every slide reads as "succeeds when / fails when" ─────────
+// Language-neutral metadata (icons, colours, case links) lives here; all copy is in the locale files.
+interface SFItem { title: string; ok: string; ko: string }
+interface PillarItem { label: string; desc: string; ok: string; ko: string; caseName: string; caseNote: string }
+interface RiskPhase { label: string; items: SFItem[] }
+interface CostRow { label: string; range: string }
+interface CrossItem { place: string; note: string }
+interface LabelDesc { label: string; desc: string }
+interface StrategyItem { name: string; moat: string; desc: string; why: string; status?: string }
+
+const INDIGO = '#6366f1';
+const AMBER = '#f59e0b';
+const PILLAR_META: { id: string; Icon: LucideIcon; caseId: string; caseColor: string }[] = [
+  { id: 's4-adoption-strategy', Icon: Target,      caseId: 's4-case-org-fail', caseColor: FAIL },
+  { id: 's4-adoption-tech',     Icon: Server,      caseId: 's4-case-org-fail', caseColor: FAIL },
+  { id: 's4-adoption-legal',    Icon: Scale,       caseId: 's4-case-success',  caseColor: PASS },
+  { id: 's4-adoption-risk',     Icon: ShieldAlert, caseId: 's4-case-sc-fail',  caseColor: AMBER },
+  { id: 's4-adoption-finance',  Icon: Coins,       caseId: 's4-case-org-fail', caseColor: FAIL },
+];
+const STRATEGY_ICONS = [Crosshair, BarChart3, Megaphone, GraduationCap];
+const TECH_ICONS = [Gauge, Plug, Wrench, KeyRound, Database, Activity];
+const LEGAL_ICONS = [FileSignature, Coins, Gavel, Globe, EyeOff, Receipt];
+const RISK_ICONS = [[SearchCheck, Sigma], [GitBranch, Siren], [Bug, Radar]];
+const OPP_ICONS = [Zap, Banknote, Sparkles, Network];
+const CHALLENGE_ICONS = [Gauge, Smartphone, Users, Unplug];
+const CROSS_TONE = [PASS, FAIL, AMBER];
+// Strategy examples in locale order; the last two are the ones that closed.
+// Grid order puts the four that worked in a 2×2 block and the two that closed in the third column.
+const STRATEGY_CLOSED_FROM = 4;
+const STRATEGY_ORDER = [0, 1, 4, 2, 3, 5];
+
+// One text size per slide: the longest statement decides, so every block still fits (PT copy runs longer).
+const longest = (items: { ok: string; ko: string }[]) => Math.max(...items.flatMap((i) => [i.ok.length, i.ko.length]));
+
+const scrollToSlide = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+
+function SlideHead({ kicker, heading, subtitle }: { kicker: string; heading: string; subtitle: string }) {
+  return (
+    <div className="shrink-0">
+      <div className="text-sm font-bold uppercase tracking-widest mb-1 text-[#6366f1]">{kicker}</div>
+      <h2 className="text-3xl lg:text-4xl font-bold text-foreground leading-tight">{heading}</h2>
+      <p className="text-muted-foreground text-base lg:text-lg mt-1">{subtitle}</p>
+    </div>
+  );
+}
+
+// Round ✓ / ✗ marker: the icon carries the meaning, colour only reinforces it.
+function Mark({ ok, className = 'size-6' }: { ok: boolean; className?: string }) {
+  const Icon = ok ? Check : X;
+  return (
+    <span className={`${className} rounded-full flex items-center justify-center text-white shrink-0`} style={{ backgroundColor: ok ? PASS : FAIL }}>
+      <Icon className="size-[62%]" strokeWidth={3.5} />
+    </span>
+  );
+}
+
+function SFLabel({ ok, children, className = '' }: { ok: boolean; children: ReactNode; className?: string }) {
+  return (
+    <div className={`flex items-center gap-2 text-sm lg:text-base font-black uppercase tracking-wider ${className}`} style={{ color: ok ? PASS : FAIL }}>
+      <Mark ok={ok} />{children}
+    </div>
+  );
+}
+
+// One "succeeds / fails" statement block, tinted green or red.
+function SFCell({ ok, children, className = '' }: { ok: boolean; children: ReactNode; className?: string }) {
+  const c = ok ? PASS : FAIL;
+  return (
+    <div className={`min-h-0 flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border ${className}`} style={{ borderColor: c + '40', backgroundColor: c + '12' }}>
+      <Mark ok={ok} className="size-5" />
+      <span className="text-foreground leading-snug">{children}</span>
+    </div>
+  );
+}
+
+// Band under a slide: either a case tie-in or a lesson (same shape as the case slides' lesson band).
+function NoteBand({ color, label, children }: { color: string; label: string; children: ReactNode }) {
+  return (
+    <div className="shrink-0 mt-4 px-5 py-2.5 rounded-2xl border-2 flex items-center gap-3.5" style={{ borderColor: color + '80', backgroundColor: color + '14' }}>
+      <Lightbulb className="size-6 shrink-0" style={{ color }} />
+      <p className="text-base lg:text-lg text-foreground leading-snug">
+        <span className="font-black" style={{ color }}>{label}</span>{children}
+      </p>
+    </div>
+  );
+}
+
+// "Versus" rows: succeeds-when on the left, the consideration in the middle, fails-when on the right.
+function VersusRows({ items, icons, okLabel, koLabel, dense = false }: {
+  items: SFItem[]; icons: LucideIcon[]; okLabel: string; koLabel: string; dense?: boolean;
+}) {
+  const long = longest(items) > (dense ? 100 : 105);
+  const text = dense ? (long ? 'text-sm' : 'text-sm lg:text-base') : (long ? 'text-base' : 'text-base lg:text-lg');
+  return (
+    <div className="flex-1 min-h-0 flex flex-col mt-4">
+      <div className="shrink-0 grid grid-cols-[1fr_12rem_1fr] lg:grid-cols-[1fr_15rem_1fr] gap-3 mb-2">
+        <SFLabel ok className="justify-end">{okLabel}</SFLabel>
+        <div />
+        <SFLabel ok={false}>{koLabel}</SFLabel>
+      </div>
+      <div className="flex-1 min-h-0 grid gap-2.5" style={{ gridTemplateRows: `repeat(${items.length}, minmax(0, 1fr))` }}>
+        {items.map((item, i) => {
+          const Icon = icons[i];
+          return (
+            <div key={item.title} className="min-h-0 grid grid-cols-[1fr_12rem_1fr] lg:grid-cols-[1fr_15rem_1fr] gap-3">
+              <SFCell ok className={`${text} flex-row-reverse text-right`}>{item.ok}</SFCell>
+              <div className="min-h-0 flex items-center gap-2.5 px-3 rounded-xl bg-card border-2 border-[#6366f1]/40">
+                <div className="size-9 rounded-lg flex items-center justify-center shrink-0 bg-[#6366f1]/15">
+                  <Icon className="size-5 text-[#6366f1]" />
+                </div>
+                <div className={`font-bold text-foreground leading-tight ${dense ? 'text-sm lg:text-base' : 'text-base lg:text-lg'}`}>{item.title}</div>
+              </div>
+              <SFCell ok={false} className={text}>{item.ko}</SFCell>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Labelled consideration tile: icon + title, then the succeed and fail statements stacked.
+function SFTile({ item, Icon, okLabel, koLabel, small = false }: { item: SFItem; Icon: LucideIcon; okLabel: string; koLabel: string; small?: boolean }) {
+  const text = small ? 'text-sm' : 'text-sm lg:text-base';
+  return (
+    <div className="flex-1 min-h-0 p-3.5 bg-card border-2 border-[#6366f1]/30 rounded-2xl flex flex-col gap-2">
+      <div className="shrink-0 flex items-center gap-2.5">
+        <div className="size-9 rounded-lg flex items-center justify-center shrink-0 bg-[#6366f1]/15">
+          <Icon className="size-5 text-[#6366f1]" />
+        </div>
+        <div className="font-bold text-base lg:text-lg text-foreground leading-tight">{item.title}</div>
+      </div>
+      <SFCell ok className={`flex-1 ${text}`}><span className="sr-only">{okLabel}: </span>{item.ok}</SFCell>
+      <SFCell ok={false} className={`flex-1 ${text}`}><span className="sr-only">{koLabel}: </span>{item.ko}</SFCell>
+    </div>
+  );
+}
+
+// Legend row for the tile slides, so the ✓ / ✗ blocks are named once instead of on every tile.
+function SFLegend({ okLabel, koLabel }: { okLabel: string; koLabel: string }) {
+  return (
+    <div className="shrink-0 flex items-center gap-6 mt-3">
+      <SFLabel ok>{okLabel}</SFLabel>
+      <SFLabel ok={false}>{koLabel}</SFLabel>
+    </div>
+  );
+}
+
+// Illustrative J-curve: both paths pay the upfront cost; they split on whether the network gets used.
+function CostCurve({ labels }: { labels: { title: string; build: string; launch: string; breakeven: string; time: string; ok: string; ko: string } }) {
+  return (
+    <figure className="flex-1 min-h-0 flex flex-col">
+      <figcaption className="shrink-0 text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">{labels.title}</figcaption>
+      <svg viewBox="0 0 600 350" className="flex-1 min-h-0 w-full" role="img" aria-label={`${labels.title}. ${labels.ok} / ${labels.ko}`}>
+        {/* build phase */}
+        <rect x="16" y="8" width="190" height="312" rx="10" fill="var(--muted)" opacity="0.6" />
+        <text x="111" y="32" textAnchor="middle" fontSize="16" fontWeight="700" fill="currentColor" className="text-muted-foreground">{labels.build}</text>
+        <line x1="206" y1="8" x2="206" y2="320" stroke="currentColor" strokeWidth="1.5" strokeDasharray="5 5" className="text-muted-foreground" />
+        <text x="216" y="32" fontSize="16" fontWeight="700" fill="currentColor" className="text-muted-foreground">{labels.launch}</text>
+        {/* break-even baseline + time axis */}
+        <line x1="16" y1="130" x2="584" y2="130" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground" opacity="0.7" />
+        <text x="26" y="120" fontSize="15" fontWeight="600" fill="currentColor" className="text-muted-foreground">{labels.breakeven}</text>
+        <text x="584" y="342" textAnchor="end" fontSize="15" fill="currentColor" className="text-muted-foreground">{labels.time} →</text>
+        {/* shared descent, then the two outcomes */}
+        <path d="M16 130 C 80 134, 150 220, 206 258" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" className="text-foreground" />
+        <path d="M206 258 C 270 300, 330 170, 400 130 S 510 62, 556 48" fill="none" stroke={PASS} strokeWidth="3.5" strokeLinecap="round" />
+        <path d="M206 258 C 280 284, 410 300, 556 306" fill="none" stroke={FAIL} strokeWidth="3.5" strokeLinecap="round" strokeDasharray="8 7" />
+        <circle cx="400" cy="130" r="6" fill={PASS} stroke="var(--card)" strokeWidth="2.5" />
+        <circle cx="556" cy="48" r="11" fill={PASS} />
+        <path d="M550.5 48.5 l4 4 l7 -8" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+        <text x="538" y="34" textAnchor="end" fontSize="18" fontWeight="800" fill="currentColor" className="text-foreground">{labels.ok}</text>
+        <circle cx="556" cy="306" r="11" fill={FAIL} />
+        <path d="M551.5 301.5 l9 9 M560.5 301.5 l-9 9" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+        <text x="538" y="286" textAnchor="end" fontSize="18" fontWeight="800" fill="currentColor" className="text-foreground">{labels.ko}</text>
+      </svg>
+    </figure>
+  );
+}
+
+function CostCard({ label, rows, color }: { label: string; rows: CostRow[]; color: string }) {
+  return (
+    <div className="flex-1 min-h-0 p-3.5 bg-card border-2 rounded-2xl flex flex-col" style={{ borderColor: color + '4d' }}>
+      <div className="shrink-0 text-sm font-black uppercase tracking-wider pb-1.5 mb-1 border-b" style={{ color, borderColor: color + '33' }}>{label}</div>
+      <div className="flex-1 min-h-0 flex flex-col justify-evenly">
+        {rows.map((r) => (
+          <div key={r.label} className="flex items-baseline justify-between gap-3 text-sm lg:text-base">
+            <span className="text-foreground leading-tight">{r.label}</span>
+            <span className="font-mono font-bold text-foreground whitespace-nowrap">{r.range}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Case-study slide ────────────────────────────────────────────────────────
+// One layout for all three field cases: header, three full-height panels
+// (context / what happened / outcome), then the lesson as its own band.
+interface CasePanel { label: string; color: string; items?: string[]; stats?: ResultStat[] }
+interface QuizItem { question: string; options: string[]; explanation: string }
+
+function CaseSlide({ id, accent, kicker, heading, subtitle, image, panels, lessonLabel, lessonBody, keyPoint }: {
+  id: string; accent: string; kicker: string; heading: string; subtitle: string; image?: ReactNode;
+  panels: CasePanel[]; lessonLabel: string; lessonBody: string; keyPoint: string;
+}) {
+  // Longer copy (mostly the PT strings) steps the bullets down one size so every panel still fits.
+  const dense = panels.some((p) => (p.items ?? []).join('').length > 260);
+  return (
+    <div id={id} className="h-full flex flex-col p-6 lg:p-10">
+      <div className="shrink-0 flex items-center gap-5">
+        {image}
+        <div className="min-w-0">
+          <div className="text-sm font-bold uppercase tracking-widest mb-1" style={{ color: accent }}>{kicker}</div>
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground leading-tight">{heading}</h2>
+          <p className="text-muted-foreground text-base lg:text-lg mt-1">{subtitle}</p>
+        </div>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5 mt-5">
+        {panels.map((panel, i) => (
+          <div key={panel.label} className="min-h-0 p-5 lg:p-6 border-2 rounded-2xl flex flex-col"
+            style={{ borderColor: panel.color + '4d', background: `linear-gradient(135deg, ${panel.color}1a, transparent 70%)` }}>
+            <div className="shrink-0 flex items-center gap-2.5 pb-3 mb-1 border-b" style={{ borderColor: panel.color + '33' }}>
+              <span className="size-7 rounded-full flex items-center justify-center text-sm font-black text-white shrink-0" style={{ backgroundColor: panel.color }}>{i + 1}</span>
+              <span className="text-base font-black uppercase tracking-wider" style={{ color: panel.color }}>{panel.label}</span>
+            </div>
+            {panel.items && (
+              <ul className={`flex-1 min-h-0 flex flex-col justify-evenly gap-2 text-foreground leading-snug ${dense ? 'text-base' : 'text-base lg:text-lg'}`}>
+                {panel.items.map((item, j) => (
+                  <li key={j} className="flex gap-2.5">
+                    <span className="font-black shrink-0" style={{ color: panel.color }}>›</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {panel.stats && (
+              <div className="flex-1 min-h-0 flex flex-col justify-evenly gap-2">
+                {panel.stats.map((r, j) => (
+                  <div key={j} className="px-4 py-3 bg-card border border-border rounded-xl">
+                    <div className="font-mono font-black text-3xl lg:text-4xl leading-none" style={{ color: panel.color }}>{r.value}</div>
+                    <div className="text-base text-muted-foreground mt-1.5 leading-snug">{r.label}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="shrink-0 mt-4 px-5 py-3 rounded-2xl border-2 flex items-center gap-3.5"
+        style={{ borderColor: accent + '80', backgroundColor: accent + '14' }}>
+        <Lightbulb className="size-7 shrink-0" style={{ color: accent }} />
+        <p className="text-lg lg:text-xl text-foreground leading-snug">
+          <span className="font-black" style={{ color: accent }}>{lessonLabel}</span>{lessonBody}
+        </p>
+      </div>
+      <KeyPointBar text={keyPoint} className="mt-3" />
+    </div>
+  );
+}
+
+// Correct-option index per quiz (language-neutral; option text lives in the locale files).
+const EXTRA_QUIZ = [
+  { id: 's4-quiz-tree',   key: 'tree',   correct: 3 },
+  { id: 's4-quiz-fit',    key: 'fit',    correct: 1 },
+  { id: 's4-quiz-checks', key: 'checks', correct: 0 },
+  { id: 's4-quiz-cases',  key: 'cases',  correct: 2 },
+] as const;
+
 export function SC_Section4() {
   const { t } = useTranslation('smart-contracts/section-4');
 
@@ -225,25 +583,28 @@ export function SC_Section4() {
   const daoQuizOptions = t('daoQuiz.options', { returnObjects: true }) as string[];
   const asxQuizOptions = t('asxQuiz.options', { returnObjects: true }) as string[];
 
-  const pillars        = t('adoptionIntro.pillars', { returnObjects: true }) as PillarItem[];
-  const strategyItems  = t('adoptionStrategy.items', { returnObjects: true }) as TitleDesc[];
-  const techItems      = t('adoptionTech.items', { returnObjects: true }) as TitleDesc[];
-  const legalEngage    = t('adoptionLegal.engage', { returnObjects: true }) as string[];
-  const legalCross     = t('adoptionLegal.crossPoints', { returnObjects: true }) as string[];
-  const riskItems      = t('adoptionRisk.items', { returnObjects: true }) as TitleDesc[];
-  const upfrontCosts   = t('adoptionFinance.upfront', { returnObjects: true }) as CostItem[];
-  const ongoingCosts   = t('adoptionFinance.ongoing', { returnObjects: true }) as CostItem[];
-
-  const oppItems       = t('oppsChallenges.opportunities', { returnObjects: true }) as OppItem[];
-  const challengeItems = t('oppsChallenges.challenges', { returnObjects: true }) as TitleDesc[];
-  const competitive    = t('strategies.items', { returnObjects: true }) as StrategyItem[];
-
-
+  const estQuizOptionsTyped = (t('estQuiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
+  const extraQuiz = t('quizMore', { returnObjects: true }) as Record<string, QuizItem>;
   const daoQuizOptionsTyped = daoQuizOptions.map((text, i) => ({ text, correct: i === 0 }));
   const asxQuizOptionsTyped = asxQuizOptions.map((text, i) => ({ text, correct: i === 2 }));
   const mainQuizOptions = (t('quiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
 
   const takeaways = t('takeaways.items', { returnObjects: true }) as string[];
+
+  const okLabel = t('sf.ok');
+  const koLabel = t('sf.ko');
+  const pillars       = t('adoptionIntro.pillars', { returnObjects: true }) as PillarItem[];
+  const strategyItems = t('adoptionStrategy.items', { returnObjects: true }) as SFItem[];
+  const techItems     = t('adoptionTech.items', { returnObjects: true }) as SFItem[];
+  const legalItems    = t('adoptionLegal.items', { returnObjects: true }) as SFItem[];
+  const legalCross    = t('adoptionLegal.cross', { returnObjects: true }) as CrossItem[];
+  const riskPhases    = t('adoptionRisk.phases', { returnObjects: true }) as RiskPhase[];
+  const costUpfront   = t('adoptionFinance.upfront', { returnObjects: true }) as CostRow[];
+  const costOngoing   = t('adoptionFinance.ongoing', { returnObjects: true }) as CostRow[];
+  const opportunities = t('oppsChallenges.opportunities', { returnObjects: true }) as LabelDesc[];
+  const challenges    = t('oppsChallenges.challenges', { returnObjects: true }) as LabelDesc[];
+  const strategyCases = t('strategies.items', { returnObjects: true }) as StrategyItem[];
+  const strategyLong  = Math.max(...strategyCases.map((c) => c.why.length)) > 80;
 
   return (
     <div className="h-full w-full flex overflow-hidden">
@@ -308,12 +669,12 @@ export function SC_Section4() {
               />
             </div>
             {/* Walkthrough */}
-            <div className="flex flex-col gap-2 overflow-y-auto">
+            <div className="flex flex-col gap-1.5 overflow-y-auto">
               <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('decisionChart.howToRead')}</div>
               {chartSteps.map((step, i) => {
                 const color = ['#ED1C24', '#ED1C24', '#f59e0b', '#f59e0b', '#22d3ee', '#39B54A'][i];
                 return (
-                  <div key={i} className="p-2 bg-card border border-border rounded-lg" style={{ borderColor: color + '40' }}>
+                  <div key={i} className="px-2 py-0.5 bg-card border border-border rounded-lg" style={{ borderColor: color + '40' }}>
                     <div className="text-[10px] text-muted-foreground">Q{i + 1}</div>
                     <div className="font-semibold text-xs text-foreground">{step.q}</div>
                     <div className="text-[10px] font-bold mt-0.5" style={{ color }}>{step.verdict}</div>
@@ -334,7 +695,9 @@ export function SC_Section4() {
           <div className="flex-1 min-h-0">
             <DecisionFlow />
           </div>
-          <KeyPointBar text={t('keyPoints.s4-decision-flow')} className="mx-6 lg:mx-8 mb-6 -mt-3" />
+          <div className="shrink-0 px-6 lg:px-8 pb-6 -mt-3">
+            <KeyPointBar text={t('keyPoints.s4-decision-flow')} />
+          </div>
         </div>
 
         {/* ═══════ DISCUSSION — RUN THE FRAMEWORK TOGETHER ═══════ */}
@@ -395,134 +758,72 @@ export function SC_Section4() {
 
 
         {/* ═══════ CASE: ESTONIA — SUCCESS ═══════ */}
-        <div id="s4-case-success" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-1">
-            <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-1">{t('caseSuccess.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('caseSuccess.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('caseSuccess.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
-            <div className="p-4 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest">{t('caseSuccess.backgroundLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {successBg.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('caseSuccess.useCasesLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {successUse.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#6366f1]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#39B54A]/10 to-transparent border border-[#39B54A]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('caseSuccess.resultsLabel')}</div>
-              <div className="grid grid-cols-1 gap-2">
-                {successRes.map((r, i) => (
-                  <div key={i} className="p-2 bg-card border border-border rounded-lg">
-                    <div className="font-mono font-black text-base text-[#39B54A]">{r.value}</div>
-                    <div className="text-[10px] text-muted-foreground">{r.label}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="text-xs text-muted-foreground p-2 bg-[#39B54A]/10 rounded-lg mt-auto">
-                <span className="font-semibold text-foreground">{t('caseSuccess.whyLabel')}</span>{t('caseSuccess.whyBody')}
-              </div>
-            </div>
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-case-success')} className="mt-3" />
-        </div>
+        <CaseSlide
+          id="s4-case-success"
+          accent="#39B54A"
+          kicker={t('caseSuccess.kicker')}
+          heading={t('caseSuccess.heading')}
+          subtitle={t('caseSuccess.subtitle')}
+          panels={[
+            { label: t('caseSuccess.backgroundLabel'), color: '#22d3ee', items: successBg },
+            { label: t('caseSuccess.useCasesLabel'),   color: '#6366f1', items: successUse },
+            { label: t('caseSuccess.resultsLabel'),    color: '#39B54A', stats: successRes },
+          ]}
+          lessonLabel={t('caseSuccess.whyLabel')}
+          lessonBody={t('caseSuccess.whyBody')}
+          keyPoint={t('keyPoints.s4-case-success')}
+        />
 
         {/* ═══════ CASE: THE DAO — SMART CONTRACT FAILURE ═══════ */}
-        <div id="s4-case-sc-fail" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-1 flex items-start gap-4">
-            <img src={imgDaoTimeline} alt={t('caseScFail.imgAlt')} className="hidden lg:block h-24 rounded-lg object-contain shrink-0 bg-white p-1" />
-            <div>
-              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest mb-1">{t('caseScFail.kicker')}</div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('caseScFail.heading')}</h2>
-              <p className="text-muted-foreground text-sm mt-1">{t('caseScFail.subtitle')}</p>
-            </div>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
-            <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('caseScFail.visionLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {scFailVision.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#6366f1]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#ED1C24]/10 to-transparent border border-[#ED1C24]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">{t('caseScFail.hackLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {scFailHack.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest">{t('caseScFail.responseLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {scFailResponse.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>{item}</li>
-                ))}
-              </ul>
-              <div className="p-2 bg-[#f59e0b]/10 rounded-lg text-xs text-muted-foreground mt-auto">
-                <span className="font-semibold text-foreground">{t('caseScFail.lessonsLabel')}</span>{t('caseScFail.lessonsBody')}
-              </div>
-            </div>
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-case-sc-fail')} className="mt-3" />
-        </div>
+        <CaseSlide
+          id="s4-case-sc-fail"
+          accent="#f59e0b"
+          kicker={t('caseScFail.kicker')}
+          heading={t('caseScFail.heading')}
+          subtitle={t('caseScFail.subtitle')}
+          image={<img src={imgDaoTimeline} alt={t('caseScFail.imgAlt')} className="hidden lg:block h-28 rounded-xl object-contain shrink-0 bg-white p-1.5" />}
+          panels={[
+            { label: t('caseScFail.visionLabel'),   color: '#6366f1', items: scFailVision },
+            { label: t('caseScFail.hackLabel'),     color: '#ED1C24', items: scFailHack },
+            { label: t('caseScFail.responseLabel'), color: '#f59e0b', items: scFailResponse },
+          ]}
+          lessonLabel={t('caseScFail.lessonsLabel')}
+          lessonBody={t('caseScFail.lessonsBody')}
+          keyPoint={t('keyPoints.s4-case-sc-fail')}
+        />
 
         {/* ═══════ CASE: ASX — ORGANISATIONAL FAILURE ═══════ */}
-        <div id="s4-case-org-fail" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-1 flex items-start gap-4">
-            <img src={imgAsxAsic} alt={t('caseOrgFail.imgAlt')} className="hidden lg:block h-24 rounded-lg object-cover shrink-0" />
-            <div>
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest mb-1">{t('caseOrgFail.kicker')}</div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('caseOrgFail.heading')}</h2>
-              <p className="text-muted-foreground text-sm mt-1">{t('caseOrgFail.subtitle')}</p>
-            </div>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center mt-4">
-            <div className="p-4 bg-gradient-to-br from-[#6366f1]/10 to-transparent border border-[#6366f1]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('caseOrgFail.backgroundLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {orgFailBg.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#6366f1]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#ED1C24]/10 to-transparent border border-[#ED1C24]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">{t('caseOrgFail.happenedLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {orgFailHappened.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#ED1C24]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-[#f59e0b]/10 to-transparent border border-[#f59e0b]/30 rounded-xl flex flex-col gap-2">
-              <div className="text-xs font-bold text-[#f59e0b] uppercase tracking-widest">{t('caseOrgFail.whyLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-1.5">
-                {orgFailWhy.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#f59e0b]">›</span>{item}</li>
-                ))}
-              </ul>
-              <div className="p-2 bg-[#f59e0b]/10 rounded-lg text-xs text-muted-foreground mt-auto">
-                <span className="font-semibold text-foreground">{t('caseOrgFail.lessonLabel')}</span>{t('caseOrgFail.lessonBody')}
-              </div>
-            </div>
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-case-org-fail')} className="mt-3" />
+        <CaseSlide
+          id="s4-case-org-fail"
+          accent="#ED1C24"
+          kicker={t('caseOrgFail.kicker')}
+          heading={t('caseOrgFail.heading')}
+          subtitle={t('caseOrgFail.subtitle')}
+          image={<img src={imgAsxAsic} alt={t('caseOrgFail.imgAlt')} className="hidden lg:block h-28 rounded-xl object-cover shrink-0" />}
+          panels={[
+            { label: t('caseOrgFail.backgroundLabel'), color: '#6366f1', items: orgFailBg },
+            { label: t('caseOrgFail.happenedLabel'),   color: '#ED1C24', items: orgFailHappened },
+            { label: t('caseOrgFail.whyLabel'),        color: '#f59e0b', items: orgFailWhy },
+          ]}
+          lessonLabel={t('caseOrgFail.lessonLabel')}
+          lessonBody={t('caseOrgFail.lessonBody')}
+          keyPoint={t('keyPoints.s4-case-org-fail')}
+        />
+
+        {/* ═══════ QUIZ — ESTONIA ═══════ */}
+        <div id="s4-case-est-quiz" className="h-full">
+          <QuizSlide
+            compact
+            question={t('estQuiz.question')}
+            options={estQuizOptionsTyped}
+            explanation={t('estQuiz.explanation')}
+          />
         </div>
 
         {/* ═══════ QUIZ — DAO ═══════ */}
         <div id="s4-case-dao-quiz" className="h-full">
           <QuizSlide
+            compact
             question={t('daoQuiz.question')}
             options={daoQuizOptionsTyped}
             explanation={t('daoQuiz.explanation')}
@@ -532,250 +833,258 @@ export function SC_Section4() {
         {/* ═══════ QUIZ — ASX ═══════ */}
         <div id="s4-case-asx-quiz" className="h-full">
           <QuizSlide
+            compact
             question={t('asxQuiz.question')}
             options={asxQuizOptionsTyped}
             explanation={t('asxQuiz.explanation')}
           />
         </div>
 
-        {/* ═══════ ADOPTION INTRO — 5 PILLARS ═══════ */}
-        <div id="s4-adoption-intro" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionIntro.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionIntro.subtitle')}</p>
-          </div>
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* ADOPTION — WHAT MAKES A PROJECT SUCCEED OR FAIL             */}
+        {/* ═══════════════════════════════════════════════════════════ */}
 
-          <div className="flex-1 min-h-0 grid grid-cols-5 gap-3 content-center">
+        {/* ═══════ ADOPTION OVERVIEW — FIVE PILLARS ═══════ */}
+        <div id="s4-adoption-intro" className="h-full flex flex-col p-6 lg:p-10">
+          <SlideHead kicker={t('adoptionIntro.kicker')} heading={t('adoptionIntro.heading')} subtitle={t('adoptionIntro.subtitle')} />
+          <div className="flex-1 min-h-0 grid grid-cols-5 gap-3 mt-5">
             {pillars.map((p, i) => {
               const meta = PILLAR_META[i];
               return (
-                <div key={meta.num} className="p-4 bg-card border rounded-xl flex flex-col gap-2"
-                  style={{ borderColor: meta.color + '40' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="size-8 rounded-lg flex items-center justify-center text-white text-xs font-black" style={{ backgroundColor: meta.color }}>{meta.num}</div>
-                    <div className="text-2xl">{meta.emoji}</div>
-                  </div>
-                  <div className="font-bold text-sm text-foreground">{p.label}</div>
-                  <div className="text-xs text-muted-foreground leading-snug">{p.desc}</div>
+                <div key={p.label} className="min-h-0 p-3 lg:p-3.5 bg-card border-2 border-[#6366f1]/30 rounded-2xl flex flex-col gap-2.5">
+                  <button type="button" onClick={() => scrollToSlide(meta.id)} className="shrink-0 text-left group">
+                    <div className="flex items-center justify-between">
+                      <div className="size-11 rounded-xl flex items-center justify-center bg-[#6366f1]/15">
+                        <meta.Icon className="size-6 text-[#6366f1]" />
+                      </div>
+                      <span className="font-mono font-black text-3xl leading-none text-[#6366f1]/35">0{i + 1}</span>
+                    </div>
+                    <div className="font-bold text-lg text-foreground leading-tight mt-2 inline-flex items-center gap-1 group-hover:text-[#6366f1] transition-colors">
+                      {p.label}<ArrowUpRight className="size-4 shrink-0" />
+                    </div>
+                    <div className="text-sm text-muted-foreground leading-snug mt-1">{p.desc}</div>
+                  </button>
+                  <SFCell ok className={`flex-1 ${longest(pillars) > 46 ? 'text-sm' : 'text-sm lg:text-base'}`}><span className="sr-only">{okLabel}: </span>{p.ok}</SFCell>
+                  <SFCell ok={false} className={`flex-1 ${longest(pillars) > 46 ? 'text-sm' : 'text-sm lg:text-base'}`}><span className="sr-only">{koLabel}: </span>{p.ko}</SFCell>
+                  <button type="button" onClick={() => scrollToSlide(meta.caseId)}
+                    className="shrink-0 px-2.5 py-1.5 rounded-lg text-left text-sm leading-snug hover:brightness-110 transition"
+                    style={{ backgroundColor: meta.caseColor + '1a' }}>
+                    <span className="font-bold text-foreground">{p.caseName}:</span>{' '}
+                    <span className="text-muted-foreground">{p.caseNote}</span>
+                  </button>
                 </div>
               );
             })}
           </div>
-          <div className="shrink-0 mt-4 p-3 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground italic">
-            {t('adoptionIntro.footnote')}
+          <div className="shrink-0 flex items-center justify-between gap-6 mt-3">
+            <div className="flex items-center gap-6">
+              <SFLabel ok>{okLabel}</SFLabel>
+              <SFLabel ok={false}>{koLabel}</SFLabel>
+            </div>
+            <p className="text-sm text-muted-foreground italic text-right">{t('adoptionIntro.footnote')}</p>
           </div>
           <KeyPointBar text={t('keyPoints.s4-adoption-intro')} className="mt-3" />
         </div>
 
-        {/* ═══════ STRATEGIC ALIGNMENT ═══════ */}
+        {/* ═══════ PILLAR 1 — STRATEGIC ALIGNMENT ═══════ */}
         <div id="s4-adoption-strategy" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest mb-1">{t('adoptionStrategy.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionStrategy.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionStrategy.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            {strategyItems.map((c, i) => {
-              const color = ADOPTION_STRATEGY_COLORS[i];
-              return (
-                <div key={c.title} className="p-5 bg-card border rounded-xl flex flex-col gap-3" style={{ borderColor: color + '30' }}>
-                  <div className="font-bold text-sm" style={{ color }}>{c.title}</div>
-                  <p className="text-xs text-muted-foreground leading-relaxed flex-1">{c.desc}</p>
-                </div>
-              );
-            })}
-          </div>
+          <SlideHead kicker={t('adoptionStrategy.kicker')} heading={t('adoptionStrategy.heading')} subtitle={t('adoptionStrategy.subtitle')} />
+          <VersusRows items={strategyItems} icons={STRATEGY_ICONS} okLabel={okLabel} koLabel={koLabel} />
+          <NoteBand color={FAIL} label={t('sf.caseLabel')}>{t('adoptionStrategy.caseBody')}</NoteBand>
           <KeyPointBar text={t('keyPoints.s4-adoption-strategy')} className="mt-3" />
         </div>
 
-        {/* ═══════ TECHNICAL INFRASTRUCTURE ═══════ */}
+        {/* ═══════ PILLAR 2 — TECHNICAL INFRASTRUCTURE ═══════ */}
         <div id="s4-adoption-tech" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#8b5cf6] uppercase tracking-widest mb-1">{t('adoptionTech.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionTech.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionTech.subtitle')}</p>
+          <SlideHead kicker={t('adoptionTech.kicker')} heading={t('adoptionTech.heading')} subtitle={t('adoptionTech.subtitle')} />
+          <SFLegend okLabel={okLabel} koLabel={koLabel} />
+          <div className="flex-1 min-h-0 grid grid-cols-3 grid-rows-2 gap-3 mt-3">
+            {techItems.map((item, i) => (
+              <SFTile key={item.title} item={item} Icon={TECH_ICONS[i]} okLabel={okLabel} koLabel={koLabel} small={longest(techItems) > 78} />
+            ))}
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
-            {techItems.map((c, i) => {
-              const meta = ADOPTION_TECH_META[i];
-              return (
-                <div key={c.title} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: meta.color + '30' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="size-9 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: meta.color + '15' }}>{meta.emoji}</div>
-                    <div className="font-bold text-sm" style={{ color: meta.color }}>{c.title}</div>
-                  </div>
-                  <div className="text-xs text-muted-foreground leading-snug">{c.desc}</div>
-                </div>
-              );
-            })}
-          </div>
-          <UnderTheHood terms={['RPC node', 'indexer', 'HSM / multisig', 'IPFS + encryption']} className="shrink-0 mt-3" />
           <KeyPointBar text={t('keyPoints.s4-adoption-tech')} className="mt-3" />
         </div>
 
-        {/* ═══════ LEGAL & REGULATORY ═══════ */}
+        {/* ═══════ PILLAR 3 — LEGAL & REGULATORY ═══════ */}
         <div id="s4-adoption-legal" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#22d3ee] uppercase tracking-widest mb-1">{t('adoptionLegal.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionLegal.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionLegal.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="p-5 bg-card border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#22d3ee]">{t('adoptionLegal.engageLabel')}</div>
-              <ul className="text-xs text-muted-foreground space-y-2 flex-1">
-                {legalEngage.map((item, i) => (
-                  <li key={i} className="flex gap-2"><span className="text-[#22d3ee]">›</span>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-5 bg-gradient-to-br from-[#22d3ee]/10 to-transparent border border-[#22d3ee]/30 rounded-xl flex flex-col gap-3">
-              <div className="font-bold text-sm text-[#22d3ee]">{t('adoptionLegal.crossLabel')}</div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {t('adoptionLegal.crossBody')}
-              </p>
-              <ul className="text-xs text-muted-foreground space-y-1.5 mt-1">
-                {legalCross.map((item, i) => (
-                  <li key={i} className="flex gap-1.5"><span className="text-[#22d3ee]">›</span>{item}</li>
-                ))}
-              </ul>
-              <div className="p-2 bg-[#22d3ee]/10 rounded-lg text-xs text-muted-foreground mt-auto">
-                <span className="font-semibold text-foreground">{t('adoptionLegal.practicalLabel')}</span>{t('adoptionLegal.practicalBody')}
-              </div>
+          <SlideHead kicker={t('adoptionLegal.kicker')} heading={t('adoptionLegal.heading')} subtitle={t('adoptionLegal.subtitle')} />
+          <VersusRows dense items={legalItems} icons={LEGAL_ICONS} okLabel={okLabel} koLabel={koLabel} />
+          <div className="shrink-0 mt-3 px-4 py-2.5 rounded-2xl border-2 border-[#6366f1]/40 bg-[#6366f1]/10 flex items-center gap-4">
+            <Globe className="size-6 shrink-0 text-[#6366f1]" />
+            <div className="shrink-0 font-black text-base text-foreground">{t('adoptionLegal.crossLabel')}</div>
+            <div className="flex-1 grid grid-cols-3 gap-2.5">
+              {legalCross.map((c, i) => (
+                <div key={c.place} className="px-3 py-1.5 rounded-xl bg-card border-2 leading-tight flex items-center gap-2.5" style={{ borderColor: CROSS_TONE[i] + '80' }}>
+                  {i < 2
+                    ? <Mark ok={i === 0} className="size-5" />
+                    : <span className="size-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: AMBER }}><Scale className="size-3 text-white" strokeWidth={3} /></span>}
+                  <div className="min-w-0">
+                    <div className="font-bold text-sm text-foreground">{c.place}</div>
+                    <div className="text-sm text-muted-foreground">{c.note}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
           <KeyPointBar text={t('keyPoints.s4-adoption-legal')} className="mt-3" />
         </div>
 
-        {/* ═══════ RISK MANAGEMENT ═══════ */}
+        {/* ═══════ PILLAR 4 — RISK MANAGEMENT ═══════ */}
         <div id="s4-adoption-risk" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest mb-1">{t('adoptionRisk.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionRisk.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionRisk.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
-            {riskItems.map((c, i) => {
-              const meta = RISK_META[i];
-              return (
-                <div key={c.title} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: meta.color + '30' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="size-9 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: meta.color + '15' }}>{meta.emoji}</div>
-                    <div className="font-bold text-sm" style={{ color: meta.color }}>{c.title}</div>
-                  </div>
-                  <div className="text-xs text-muted-foreground leading-snug flex-1">{c.desc}</div>
+          <SlideHead kicker={t('adoptionRisk.kicker')} heading={t('adoptionRisk.heading')} subtitle={t('adoptionRisk.subtitle')} />
+          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 mt-4">
+            {riskPhases.map((phase, i) => (
+              <div key={phase.label} className="min-h-0 flex flex-col gap-2.5">
+                <div className="shrink-0 flex items-center gap-2.5">
+                  <span className="size-7 rounded-full flex items-center justify-center text-sm font-black text-white shrink-0 bg-[#6366f1]">{i + 1}</span>
+                  <span className="text-base font-black uppercase tracking-wider text-[#6366f1]">{phase.label}</span>
+                  <span className="flex-1 h-0.5 rounded-full bg-[#6366f1]/30" />
                 </div>
-              );
-            })}
+                {phase.items.map((item, j) => (
+                  <SFTile key={item.title} item={item} Icon={RISK_ICONS[i][j]} okLabel={okLabel} koLabel={koLabel} small={longest(riskPhases.flatMap((p) => p.items)) > 78} />
+                ))}
+              </div>
+            ))}
           </div>
-          <UnderTheHood terms={['audit', 'formal verification', 'proxy upgrade', 'timelock', 'bug bounty']} className="shrink-0 mt-3" />
+          <NoteBand color={AMBER} label={t('sf.caseLabel')}>{t('adoptionRisk.caseBody')}</NoteBand>
           <KeyPointBar text={t('keyPoints.s4-adoption-risk')} className="mt-3" />
         </div>
 
-        {/* ═══════ FINANCIAL PLANNING ═══════ */}
+        {/* ═══════ PILLAR 5 — FINANCIAL PLANNING ═══════ */}
         <div id="s4-adoption-finance" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest mb-1">{t('adoptionFinance.kicker')}</div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoptionFinance.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('adoptionFinance.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('adoptionFinance.upfrontLabel')}</div>
-              {upfrontCosts.map((c) => (
-                <div key={c.label} className="p-3 bg-card border border-[#39B54A]/25 rounded-xl">
-                  <div className="flex items-center justify-between">
-                    <div className="font-bold text-sm text-foreground">{c.label}</div>
-                    <div className="font-mono text-xs text-[#39B54A]">{c.range}</div>
-                  </div>
-                  <div className="text-[10px] text-muted-foreground mt-1">{c.desc}</div>
-                </div>
-              ))}
+          <SlideHead kicker={t('adoptionFinance.kicker')} heading={t('adoptionFinance.heading')} subtitle={t('adoptionFinance.subtitle')} />
+          <div className="flex-1 min-h-0 grid grid-cols-[1.25fr_1fr] gap-5 mt-4">
+            <div className="min-h-0 flex flex-col gap-2.5">
+              <div className="flex-1 min-h-0 p-4 bg-card border-2 border-[#6366f1]/30 rounded-2xl flex flex-col">
+                <CostCurve labels={{
+                  title: t('adoptionFinance.chart.title'), build: t('adoptionFinance.chart.build'), launch: t('adoptionFinance.chart.launch'),
+                  breakeven: t('adoptionFinance.chart.breakeven'), time: t('adoptionFinance.chart.time'), ok: t('adoptionFinance.chart.ok'), ko: t('adoptionFinance.chart.ko'),
+                }} />
+              </div>
+              <SFCell ok className="shrink-0 text-sm lg:text-base"><span className="font-black" style={{ color: PASS }}>{okLabel}</span> {t('adoptionFinance.ok')}</SFCell>
+              <SFCell ok={false} className="shrink-0 text-sm lg:text-base"><span className="font-black" style={{ color: FAIL }}>{koLabel}</span> {t('adoptionFinance.ko')}</SFCell>
             </div>
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('adoptionFinance.ongoingLabel')}</div>
-              {ongoingCosts.map((c) => (
-                <div key={c.label} className="p-3 bg-card border border-[#6366f1]/25 rounded-xl">
-                  <div className="flex items-center justify-between">
-                    <div className="font-bold text-sm text-foreground">{c.label}</div>
-                    <div className="font-mono text-xs text-[#6366f1]">{c.range}</div>
-                  </div>
-                  <div className="text-[10px] text-muted-foreground mt-1">{c.desc}</div>
-                </div>
-              ))}
+            <div className="min-h-0 flex flex-col gap-2.5">
+              <CostCard label={t('adoptionFinance.upfrontLabel')} rows={costUpfront} color={INDIGO} />
+              <CostCard label={t('adoptionFinance.ongoingLabel')} rows={costOngoing} color={AMBER} />
+              <p className="shrink-0 text-xs text-muted-foreground italic">{t('adoptionFinance.footnote')}</p>
             </div>
-          </div>
-          <div className="shrink-0 mt-3 p-3 rounded-xl border border-border bg-muted/30 text-xs text-muted-foreground italic">
-            {t('adoptionFinance.footnote')}
           </div>
           <KeyPointBar text={t('keyPoints.s4-adoption-finance')} className="mt-3" />
         </div>
 
-        {/* ═══════ OPPORTUNITIES & CHALLENGES ═══════ */}
-        <div id="s4-opps-challenges" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('oppsChallenges.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('oppsChallenges.subtitle')}</p>
+        {/* ═══════ ADOPTION — THREE CHECKS BEFORE YOU BUILD ═══════ */}
+        <div id="s4-adoption" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest mb-1">{t('adoption.kicker')}</div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoption.heading')}</h2>
+            <p className="text-muted-foreground text-sm mt-1">{t('adoption.subtitle')}</p>
           </div>
-          <div className="flex-1 min-h-0 grid grid-cols-2 gap-5 content-center">
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#39B54A] uppercase tracking-widest">{t('oppsChallenges.opportunitiesLabel')}</div>
-              {oppItems.map((o) => (
-                <div key={o.label} className="p-3 bg-card border border-[#39B54A]/25 rounded-xl">
-                  <div className="font-bold text-sm text-foreground">{o.label}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{o.desc}</div>
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="text-xs font-bold text-[#ED1C24] uppercase tracking-widest">{t('oppsChallenges.challengesLabel')}</div>
-              {challengeItems.map((c) => (
-                <div key={c.title} className="p-3 bg-card border border-[#ED1C24]/25 rounded-xl">
-                  <div className="font-bold text-sm text-foreground">{c.title}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{c.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="shrink-0 mt-3 text-[10px] text-muted-foreground italic">
-            {t('oppsChallenges.sources')}
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-opps-challenges')} className="mt-3" />
+          <AdoptionChecks />
+          <KeyPointBar text={t('keyPoints.s4-adoption')} className="mt-3" />
         </div>
 
-        {/* ═══════ STRATEGIES — APPLIED ═══════ */}
-        <div id="s4-strategies" className="h-full flex flex-col p-6 lg:p-10">
-          <div className="shrink-0 mb-5">
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('strategies.heading')}</h2>
-            <p className="text-muted-foreground text-sm mt-1">{t('strategies.subtitle')}</p>
-          </div>
-          <div className="flex-1 min-h-0 grid grid-cols-3 gap-4 content-center">
-            {competitive.map((s, i) => {
-              const color = STRATEGY_META[i].color;
-              const emoji = STRATEGY_EMOJI[i];
-              return (
-                <div key={s.name} className="p-4 bg-card border rounded-xl flex flex-col gap-2" style={{ borderColor: color + '30' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="text-3xl">{emoji}</div>
-                    <div>
-                      <div className="font-black text-sm text-foreground">{s.name}</div>
-                      <div className="text-[10px] text-muted-foreground uppercase tracking-widest">{s.moat}</div>
+        {/* ═══════ OPPORTUNITIES & CHALLENGES ═══════ */}
+        <div id="s4-opps-challenges" className="h-full flex flex-col p-6 lg:p-10">
+          <SlideHead kicker={t('oppsChallenges.kicker')} heading={t('oppsChallenges.heading')} subtitle={t('oppsChallenges.subtitle')} />
+          <div className="flex-1 min-h-0 flex flex-col mt-4">
+            <div className="shrink-0 grid grid-cols-[1fr_2.5rem_1fr] gap-3 mb-2">
+              <SFLabel ok>{t('oppsChallenges.opportunitiesLabel')}</SFLabel>
+              <div />
+              <SFLabel ok={false}>{t('oppsChallenges.challengesLabel')}</SFLabel>
+            </div>
+            <div className="flex-1 min-h-0 grid grid-rows-4 gap-2.5">
+              {opportunities.map((opp, i) => {
+                const ch = challenges[i];
+                const OppIcon = OPP_ICONS[i];
+                const ChIcon = CHALLENGE_ICONS[i];
+                return (
+                  <div key={opp.label} className="min-h-0 grid grid-cols-[1fr_2.5rem_1fr] gap-3 items-stretch">
+                    <div className="min-h-0 flex items-center gap-3 px-4 py-2 rounded-xl border-2" style={{ borderColor: PASS + '4d', backgroundColor: PASS + '12' }}>
+                      <div className="size-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: PASS + '26' }}>
+                        <OppIcon className="size-5" style={{ color: PASS }} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-bold text-base lg:text-lg text-foreground leading-tight">{opp.label}</div>
+                        <div className="text-sm lg:text-base text-muted-foreground leading-snug">{opp.desc}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <span className="size-9 rounded-full border-2 border-border bg-card flex items-center justify-center text-[11px] font-black uppercase text-muted-foreground">{t('oppsChallenges.vs')}</span>
+                    </div>
+                    <div className="min-h-0 flex items-center gap-3 px-4 py-2 rounded-xl border-2" style={{ borderColor: FAIL + '4d', backgroundColor: FAIL + '12' }}>
+                      <div className="size-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: FAIL + '26' }}>
+                        <ChIcon className="size-5" style={{ color: FAIL }} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-bold text-base lg:text-lg text-foreground leading-tight">{ch.label}</div>
+                        <div className="text-sm lg:text-base text-muted-foreground leading-snug">{ch.desc}</div>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-xs text-muted-foreground leading-snug flex-1">{s.desc}</div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="shrink-0 grid grid-cols-2 gap-3 mt-3">
+            <SFCell ok className="text-sm lg:text-base"><span><span className="font-black" style={{ color: PASS }}>{okLabel}</span> {t('oppsChallenges.ok')}</span></SFCell>
+            <SFCell ok={false} className="text-sm lg:text-base"><span><span className="font-black" style={{ color: FAIL }}>{koLabel}</span> {t('oppsChallenges.ko')}</span></SFCell>
+          </div>
+          <p className="shrink-0 text-xs text-muted-foreground italic mt-2">{t('oppsChallenges.sources')}</p>
+          <KeyPointBar text={t('keyPoints.s4-opps-challenges')} className="mt-2" />
+        </div>
+
+        {/* ═══════ STRATEGIES FOR COMPETITIVE ADVANTAGE ═══════ */}
+        <div id="s4-strategies" className="h-full flex flex-col p-6 lg:p-10">
+          <SlideHead kicker={t('strategies.kicker')} heading={t('strategies.heading')} subtitle={t('strategies.subtitle')} />
+          <div className="flex-1 min-h-0 grid grid-cols-3 grid-rows-[auto_minmax(0,1fr)_minmax(0,1fr)] gap-x-4 gap-y-2.5 mt-4">
+            <SFLabel ok className="col-span-2">{t('strategies.workedLabel')}</SFLabel>
+            <SFLabel ok={false}>{t('strategies.closedLabel')}</SFLabel>
+            {STRATEGY_ORDER.map((idx) => {
+              const item = strategyCases[idx];
+              const worked = idx < STRATEGY_CLOSED_FROM;
+              const c = worked ? PASS : FAIL;
+              return (
+                <div key={item.name} className="min-h-0 px-3.5 py-2.5 border-2 rounded-2xl flex flex-col gap-1"
+                  style={{ borderColor: c + '4d', background: `linear-gradient(135deg, ${c}1a, transparent 70%)` }}>
+                  <div className="shrink-0 flex items-center justify-between gap-2">
+                    <div className="font-black text-xl lg:text-2xl text-foreground leading-tight">{item.name}</div>
+                    {item.status && (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-black uppercase tracking-wider text-white whitespace-nowrap" style={{ backgroundColor: FAIL }}>{item.status}</span>
+                    )}
+                  </div>
+                  <div className="shrink-0 text-xs font-black uppercase tracking-widest text-[#6366f1] leading-tight">{item.moat}</div>
+                  <p className="text-sm text-muted-foreground leading-snug mt-0.5">{item.desc}</p>
+                  <div className={`mt-auto flex items-start gap-2 pt-1.5 border-t text-foreground leading-snug ${strategyLong ? 'text-sm' : 'text-sm lg:text-base'}`} style={{ borderColor: c + '33' }}>
+                    <Mark ok={worked} className="size-5 mt-0.5" />
+                    <span>{item.why}</span>
+                  </div>
                 </div>
               );
             })}
           </div>
-          <div className="shrink-0 mt-3 text-[10px] text-muted-foreground italic">
-            {t('strategies.sources')}
-          </div>
-          <KeyPointBar text={t('keyPoints.s4-strategies')} className="mt-3" />
+          <NoteBand color={INDIGO} label={t('strategies.lessonLabel')}>{t('strategies.lessonBody')}</NoteBand>
+          <p className="shrink-0 text-xs text-muted-foreground italic mt-2">{t('strategies.sources')}</p>
+          <KeyPointBar text={t('keyPoints.s4-strategies')} className="mt-2" />
         </div>
 
-        {/* ═══════ QUIZ ═══════ */}
+        {/* ═══════ QUIZ — section review (decision tree, fit, three checks, cases) ═══════ */}
+        {EXTRA_QUIZ.map((q) => (
+          <div key={q.id} id={q.id} className="h-full">
+            <QuizSlide
+              compact
+              question={extraQuiz[q.key].question}
+              options={extraQuiz[q.key].options.map((text, i) => ({ text, correct: i === q.correct }))}
+              explanation={extraQuiz[q.key].explanation}
+            />
+          </div>
+        ))}
+
+        {/* ═══════ QUIZ — bank bond ═══════ */}
         <div id="s4-quiz" className="h-full">
           <QuizSlide
+            compact
             question={t('quiz.question')}
             options={mainQuizOptions}
             explanation={t('quiz.explanation')}
