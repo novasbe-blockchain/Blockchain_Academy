@@ -1,16 +1,23 @@
 {
   "chapters": {
-    "s5-oracle":           "O Problema do Oracle",
+    "s5-oracle":           "Risco do Oracle · recap",
+    "s5-ex-oracle":        "🧩 Defender o Oracle",
     "s5-challenges":       "Desafios e Limites",
     "s5-technical":        "Desafios Técnicos",
-    "s5-ex-oracle":        "🧩 Ataque ao Oracle",
     "s5-risks-security":   "Riscos de Segurança",
-    "s5-admin-key":        "Admin Keys & Proxies",
+    "s5-admin-key":        "Admin Keys e Proxies",
+    "s5-failures":         "Quando Correu Mal",
     "s5-risks-cost":       "Riscos de Custo",
     "s5-risks-regulatory": "Riscos Regulatórios",
     "s5-quiz":             "Quiz",
-    "s5-takeaways":        "Conclusões",
-    "s5-failures": "When It Went Wrong"
+    "s5-quiz-2":           "Quiz 2",
+    "s5-quiz-3":           "Quiz 3",
+    "s5-quiz-4":           "Quiz 4",
+    "s5-quiz-5":           "Quiz 5",
+    "s5-quiz-6":           "Quiz 6",
+    "s5-quiz-7":           "Quiz 7",
+    "s5-quiz-8":           "Quiz 8",
+    "s5-takeaways":        "Conclusões"
   },
   "title": {
     "sectionNumber": "SECÇÃO 05",
@@ -18,99 +25,109 @@
     "subtitle": "Um olhar honesto sobre o problema do oracle, as limitações reais e onde os smart contracts ficam aquém"
   },
   "oracle": {
-    "heading": "O Problema do Oracle",
-    "subtitle": "Os smart contracts são fechados e determinísticos — chegar ao mundo exterior é a parte difícil.",
-    "cards": [
-      {
-        "label": "O Problema",
-        "what": "As chains são fechadas e determinísticas",
-        "body": "Um contrato não consegue obter por si só um preço, um resultado ou um estado de entrega — uma chamada externa devolveria resultados diferentes em nós diferentes e quebraria o consenso.",
-        "tag": "A chain nada sabe para além de si própria"
-      },
-      {
-        "label": "A Solução — Oracles",
-        "what": "Dados reais assinados, publicados on-chain",
-        "body": "Um serviço off-chain obtém os dados e submete-os como uma transação assinada. O contrato lê-os depois como qualquer outro valor on-chain. A Chainlink é a rede dominante.",
-        "tag": "Uma ponte de dados: mundo → blockchain"
-      },
-      {
-        "label": "O Senão",
-        "what": "Os oracles reintroduzem confiança",
-        "body": "Um único oracle controlado ou comprometido torna-se o ponto de manipulação — e pode drenar todos os contratos que dependem dele.",
-        "tag": "Tão descentralizado quanto a sua fonte de dados mais fraca"
-      }
+    "kicker": "Recapitulação da Secção 2",
+    "heading": "O problema do oracle, agora como risco",
+    "subtitle": "Já viste porque é que os contratos precisam de oracles e como se adultera um feed. Aqui, isso entra no registo de riscos.",
+    "chainLabel": "Onde está a confiança",
+    "strengthLabel": "Dificuldade de corromper",
+    "zoneOff": "Off-chain · por confiança",
+    "zoneOn": "On-chain · verificado",
+    "boundary": "fronteira de confiança",
+    "links": [
+      { "label": "Fonte de dados", "guard": "Um sensor, uma API, um mercado", "level": "O mais fraco" },
+      { "label": "Oracle", "guard": "De poucos a algumas dezenas de nós", "level": "Mais forte" },
+      { "label": "Smart contract", "guard": "Milhares de validadores", "level": "O mais forte" }
     ],
-    "example": {
-      "label": "Exemplo — seguro agrícola paramétrico",
-      "bodyA": "Prémio pago → o contrato guarda \"se a precipitação < X até à data Z → pagar $5k\" → ",
-      "bodyStrong": "Chainlink + NOAA",
-      "bodyB": " publica a precipitação diária → condição cumprida → o pagamento dispara automaticamente. Sem perito de sinistros — mas um oracle avariado paralisa tudo."
-    },
-    "networks": {
-      "label": "Redes de oracle na prática",
-      "items": [
-        { "n": "Chainlink", "d": "Descentralizada, agregação de muitos nós" },
-        { "n": "Pyth", "d": "Feeds de preços institucionais sub-segundo" },
-        { "n": "API3", "d": "First-party — os fornecedores correm o nó" },
-        { "n": "UMA", "d": "Otimista — correto salvo se contestado" }
-      ]
+    "chainNote": "A chain protege o contrato. Nada on-chain protege o número sobre o qual ele age, por isso o sistema é tão forte quanto o seu elo mais fraco.",
+    "seenLabel": "Visto na Secção 2",
+    "seen": [
+      "Os contratos são cegos por design",
+      "Os oracles trazem factos externos para on-chain",
+      "Sensor de Paris · ataque ao feed de preços"
+    ],
+    "askLabel": "Três perguntas para qualquer contrato que leia dados externos",
+    "asks": [
+      { "q": "Quem fornece o número?", "a": "Um único operador ou uma única fonte é um ponto único de falha." },
+      { "q": "E se chegar tarde ou errado?", "a": "O contrato age na mesma. Não consegue distinguir." },
+      { "q": "Quanto custaria adulterá-lo?", "a": "Se for menos do que o dinheiro que o número controla, conta com um ataque." }
+    ],
+    "limitLabel": "Uma limitação, não um bug: ",
+    "limit": "oracles melhores reduzem este risco. Nenhum o elimina.",
+    "reading": {
+      "label": "Leitura adicional",
+      "note": "Uma sistematização dos designs de oracles, dos ataques que sofrem e das mitigações."
     }
   },
   "challenges": {
     "heading": "Desafios e Limitações",
-    "subtitle": "Os smart contracts herdam as restrições da sua chain — quatro que moldam cada decisão de design.",
+    "subtitle": "Os smart contracts herdam as restrições da sua chain. Quatro delas moldam cada decisão de design.",
+    "colLabel": "Restrição",
     "whyLabel": "Porquê",
     "fixLabel": "O que ajuda",
+    "onChainLabel": "On-chain",
+    "offChainLabel": "Off-chain",
+    "vs": "vs",
     "items": [
       {
         "title": "Débito (Throughput)",
         "what": "A L1 não acompanha o volume da Web2",
-        "why": "O consenso é o estrangulamento — cada nó reexecuta cada transação, por isso o débito bruto da L1 mantém-se baixo.",
-        "fix": "Os rollups L2 elevam-no a milhares de TPS sem abdicar da segurança da L1.",
-        "stat": "BTC 7 · ETH ~15 · Visa ~24.000 TPS"
+        "why": "Cada nó reexecuta cada transação, por isso o débito da camada base mantém-se baixo.",
+        "fix": "Os rollups L2 chegam a milhares de TPS e continuam a liquidar na L1.",
+        "chain": "BTC ~7 · ETH ~15 TPS",
+        "web": "Visa ~24.000 TPS"
       },
       {
         "title": "Latência",
         "what": "Tempos de bloco vs a web em milissegundos",
-        "why": "Uma tx espera pelo próximo bloco e por várias confirmações antes de ser seguro depender dela.",
-        "fix": "Usar uma L2 para uma UX instantânea; liquidar na L1 por baixo.",
-        "stat": "Bloco ETH 12s · BTC ~10 min · L2 ~250 ms"
+        "why": "Uma transação espera pelo próximo bloco e depois por confirmações antes de ser seguro depender dela.",
+        "fix": "Uma L2 confirma em cerca de 250 ms e liquida na L1 por baixo.",
+        "chain": "ETH 12 s · BTC ~10 min",
+        "web": "API web ~100 ms"
       },
       {
         "title": "Custo de Armazenamento",
-        "what": "Os bytes on-chain são extraordinariamente caros",
-        "why": "Cada nó completo guarda-os para sempre, por isso o protocolo cobra o armazenamento para desencorajar o inchaço.",
-        "fix": "Manter apenas um hash on-chain; colocar os dados no IPFS / Arweave.",
-        "stat": "~$1.000/MB on-chain vs ~$0,02 no S3 — 50.000×"
+        "what": "O armazenamento on-chain é muito caro",
+        "why": "Cada nó completo guarda os dados para sempre, por isso o protocolo cobra o armazenamento para desencorajar o inchaço.",
+        "fix": "Manter apenas um hash on-chain; colocar os dados no IPFS ou Arweave.",
+        "chain": "Milhares de $ por MB",
+        "web": "Cloud: cêntimos por GB/mês"
       },
       {
         "title": "Limites de Computação",
-        "what": "O gas limita o que uma tx pode computar",
-        "why": "Cada bloco tem um teto de gas, por isso inferência de ML ou ciclos pesados simplesmente não correm on-chain.",
-        "fix": "Computar off-chain, publicar o resultado + uma prova ZK que a chain consiga verificar.",
-        "stat": "~30M de gas/bloco · on-chain ~1.000.000× mais caro"
+        "what": "O gas limita o que uma transação pode computar",
+        "why": "Cada bloco tem um teto rígido de gas, por isso inferência de ML ou ciclos pesados não correm on-chain.",
+        "fix": "Computar off-chain; publicar o resultado com uma prova ZK que a chain consiga verificar.",
+        "chain": "Teto rígido de gas por bloco",
+        "web": "Tanto quanto alugares"
       }
     ]
   },
   "technical": {
     "heading": "Desafios e Limitações Técnicas",
-    "subtitle": "Quatro problemas estruturais — o que são, porque acontecem e como a área os está a resolver.",
+    "subtitle": "Quatro problemas estruturais: o que são, porque acontecem e como a área os está a resolver.",
     "whyLabel": "Porquê",
     "fixLabel": "O que ajuda",
+    "diagrams": {
+      "mevCaption": "ordem dentro do bloco",
+      "mev": ["O bot compra primeiro", "A tua troca", "O bot vende depois"],
+      "upgrade": ["v1 · em produção", "bug", "patch"],
+      "trilemma": ["Segurança", "Escalabilidade", "Descentralização"],
+      "growth": ["antes", "agora"]
+    },
     "items": [
       {
         "title": "MEV — Maximal Extractable Value",
         "what": "Os produtores de blocos reordenam transações por lucro",
-        "why": "Decidem quais as txs que entram e em que ordem — por isso podem fazer front-run ou sandwich a uma operação que veem à espera na mempool.",
-        "fix": "Mempools privadas, commit-reveal, DEXs cientes de MEV (CoW Protocol, Flashbots SUAVE).",
-        "stat": "$1,3 mil milhões+ extraídos aos utilizadores desde 2020"
+        "why": "Escolhem que transações entram e por que ordem, por isso podem fazer front-run ou sandwich a uma operação à espera na mempool.",
+        "fix": "Encaminhamento privado de transações (Flashbots Protect), commit-reveal, DEXs de leilão em lote (CoW Protocol).",
+        "stat": "Mais de mil milhões de dólares extraídos aos utilizadores desde 2020"
       },
       {
         "title": "Atualizabilidade",
         "what": "Código imutável não pode ser corrigido",
-        "why": "O código implementado é permanente. Um bug crítico fica explorável para sempre — a The DAO perdeu $60M e forçou um hard fork da Ethereum.",
-        "fix": "Auditar antes do deploy; adicionar proxies de atualização apenas quando essencial, atrás de um timelock + multisig.",
-        "stat": "Chave de admin do proxy = um ponto de centralização"
+        "why": "Um bug crítico fica explorável. A The DAO perdeu $60M e forçou um hard fork da Ethereum.",
+        "fix": "Auditar antes do deploy; adicionar um proxy de atualização só se for essencial, atrás de um timelock e de um multisig.",
+        "stat": "A admin key do proxy é um novo ponto de centralização → Admin Keys"
       },
       {
         "title": "O Trilema da Blockchain",
@@ -121,76 +138,63 @@
       },
       {
         "title": "Crescimento do Estado",
-        "what": "A chain cresce ~50 GB/ano — para sempre",
-        "why": "O histórico é só de adição e cada nó completo tem de guardá-lo todo, por isso eventualmente só datacenters conseguem correr um.",
-        "fix": "A expiração de histórico da EIP-4444, os clientes stateless e as Verkle trees desacoplam o armazenamento de correr um nó.",
-        "stat": "ETH completo ~1,2 TB · arquivo 15+ TB"
+        "what": "A chain só cresce",
+        "why": "O histórico é só de adição e os nós completos guardam-no, por isso correr um nó aproxima-se de hardware de datacenter.",
+        "fix": "A expiração de histórico (EIP-4444) e os clientes stateless reduzem o que um nó tem de guardar.",
+        "stat": "Nó completo Ethereum: 1 TB+ · nó de arquivo: muitos TB"
       }
     ]
   },
   "exercise": {
-    "badge": "🧩 Exercício",
-    "title": "Ataque ao Oracle — Passo a Passo",
-    "subtitle": "Um contrato de seguro agrícola é atacado através do seu oracle. Percorre cada passo — e vê como o prevenir.",
-    "stepsLabel": "passos",
+    "badge": "Exercício",
+    "title": "Defender o Oracle",
+    "subtitle": "Um contrato de seguro agrícola paga $5.000 se a precipitação de junho ficar abaixo de 50 mm. Já sabes como se ataca um feed. Para cada ponto fraco, decide o que mudarias e depois vê o que a defesa ainda deixa exposto.",
+    "progress": "{{n}} / {{total}} revelados",
     "reset": "↺ Reiniciar",
-    "whatHappened": "O que aconteceu",
-    "howToPrevent": "Como o prevenir",
-    "unknownEvent": "···",
-    "revealNext": "Revelar próximo passo →",
-    "rows": [
+    "weakLabel": "Ponto fraco",
+    "journeyLabel": "O percurso do número",
+    "stages": ["Estação meteorológica", "Operador do oracle", "O contrato lê o valor", "Pagamento"],
+    "prompt": "O que mudarias?",
+    "reveal": "Mostrar a defesa",
+    "defenceLabel": "Defesa",
+    "residualLabel": "Ainda exposto",
+    "items": [
       {
-        "actor": "Agricultor",
-        "event": "Paga um prémio de $500 ao smart contract",
-        "consequence": "O contrato guarda: se a precipitação < 50mm em junho → pagar $5.000 automaticamente."
+        "title": "Uma única fonte de dados",
+        "desc": "Todas as leituras vêm de uma só estação meteorológica. Quem conseguir tocar na estação consegue mexer no pagamento.",
+        "defence": "Várias fontes independentes",
+        "defenceDesc": "Cruzar o serviço meteorológico, dados de satélite e estações locais; descartar valores atípicos.",
+        "residual": "As fontes discordam. Alguém tem de definir qual delas conta, e essa definição passa a ser o alvo."
       },
       {
-        "actor": "Fornecedor de Oracle",
-        "event": "Uma única empresa corre o único oracle meteorológico",
-        "consequence": "O smart contract confia totalmente neste oracle. É a única fonte de verdade para os dados de precipitação.",
-        "mitigation": {
-          "title": "Oracle Descentralizado (Chainlink)",
-          "desc": "Agregar a partir de 15+ nós independentes — o atacante tem de comprometer uma maioria em simultâneo."
-        }
+        "title": "Um único operador",
+        "desc": "Uma só empresa corre o único oracle meteorológico. Basta atacá-la, suborná-la ou desligá-la, e o contrato vai atrás.",
+        "defence": "Rede de oracles descentralizada",
+        "defenceDesc": "Muitos nós independentes reportam; o contrato usa a mediana.",
+        "residual": "Cada atualização custa mais, e os nós podem estar todos a ler a mesma fonte a montante."
       },
       {
-        "actor": "Atacante",
-        "event": "O hacker compromete a chave de API do oracle",
-        "consequence": "O atacante pode agora submeter qualquer valor de precipitação que queira — a blockchain não tem forma de o verificar.",
-        "mitigation": {
-          "title": "Múltiplas Fontes de Dados",
-          "desc": "Cruzar NOAA + Weather.com + dados de satélite — uma fonte comprometida é apanhada pelas outras."
-        }
+        "title": "Qualquer valor, qualquer idade",
+        "desc": "O contrato aceita o que chegar: a leitura da semana passada, ou 0 mm a meio de uma tempestade.",
+        "defence": "Verificações de sanidade e uma pausa",
+        "defenceDesc": "Rejeitar timestamps antigos e valores fora do intervalo; pausar os pagamentos quando o feed parece errado.",
+        "residual": "Uma pausa também congela os pedidos honestos, e quem controla o botão de pausa é uma nova parte de confiança (ver Admin Keys)."
       },
       {
-        "actor": "Atacante",
-        "event": "Submete dados falsos: \"precipitação = 10mm\"",
-        "consequence": "O smart contract lê este valor, vê que a condição é cumprida (10 < 50) e executa automaticamente.",
-        "mitigation": {
-          "title": "Janela de Contestação",
-          "desc": "Adicionar um período de contestação de 24h antes do pagamento — os observadores podem sinalizar dados de oracle suspeitos."
-        }
-      },
-      {
-        "actor": "Smart Contract",
-        "event": "Liberta $5.000 para a carteira do atacante",
-        "consequence": "O contrato comportou-se exatamente como foi codificado. Não fez nada de errado. A vulnerabilidade foi o oracle — não o contrato.",
-        "mitigation": {
-          "title": "Controlo de Oracle por Multisig",
-          "desc": "Exigir que 3 de 5 operadores de oracle assinem os dados — sem ponto único de controlo."
-        }
-      },
-      {
-        "actor": "Agricultor",
-        "event": "Tenta contestar o pagamento",
-        "consequence": "A transação é imutável. O código já foi executado. Não há processo de recurso, nem reversão."
+        "title": "Pagamento imediato e final",
+        "desc": "O contrato paga no instante em que o número chega. Não há recurso nem reversão.",
+        "defence": "Janela de contestação",
+        "defenceDesc": "Reter o pagamento durante 24 horas para que qualquer pessoa possa contestar a leitura (o modelo de oracle otimista).",
+        "residual": "Pagamentos mais lentos, alguém tem de estar a vigiar, e uma disputa continua a precisar de um juiz."
       }
-    ]
+    ],
+    "verdictLabel": "O padrão: ",
+    "verdict": "cada defesa desloca a confiança para outro lado ou põe-lhe um preço. Nenhuma a elimina."
   },
   "security": {
     "heading": "Riscos de Segurança",
     "subtitle": "Os bugs são públicos, permanentes e explorados em horas. Os mais caros são os mais simples.",
-    "fixLabel": "Solução: ",
+    "cols": { "bug": "Tipo de bug", "dont": "O erro", "do": "A solução", "wild": "Na prática" },
     "items": [
       {
         "title": "Reentrância",
@@ -200,7 +204,7 @@
       },
       {
         "title": "Ataques de Flash Loan",
-        "what": "Pedir milhões sem garantia, dobrar um oracle de preços, explorar, devolver — uma tx atómica.",
+        "what": "O ataque de preço da Secção 2: pedir milhões sem garantia, adulterar um preço spot, lucrar, devolver. Uma só transação.",
         "fix": "Preços TWAP · oracles descentralizados e multi-fonte",
         "stat": "Harvest (2020): $34M"
       },
@@ -208,7 +212,7 @@
         "title": "Controlo de Acesso",
         "what": "Funções críticas (mint, withdraw, upgrade) ficam sem o modificador adequado.",
         "fix": "Acesso baseado em papéis (OZ AccessControl) · auditorias",
-        "stat": "Parity (2017): $30M congelados"
+        "stat": "Parity (julho de 2017): $30M roubados"
       },
       {
         "title": "Over/Underflow",
@@ -221,37 +225,46 @@
         "what": "O código corre como foi escrito, mas a lógica está errada — off-by-one, sinal errado, argumento errado.",
         "fix": "Auditorias independentes · verificação formal",
         "stat": "As ferramentas falham estes — os humanos apanham-nos"
-      },
-      {
-        "title": "Perda Cumulativa",
-        "what": "Milhares de incidentes — geralmente um modificador em falta ou um deslize de copy-paste.",
-        "fix": "As auditorias são uma disciplina, não uma checkbox",
-        "stat": "$6 mil milhões+ perdidos desde 2016"
       }
-    ]
+    ],
+    "total": {
+      "title": "Perda Cumulativa",
+      "big": "$6 mil M+",
+      "sub": "perdidos desde 2016",
+      "what": "Milhares de incidentes — geralmente um modificador em falta ou um deslize de copy-paste.",
+      "fix": "As auditorias são uma disciplina, não uma checkbox"
+    }
   },
   "cost": {
     "heading": "Riscos de Custo",
-    "subtitle": "Os smart contracts não são plug-and-play — orça para o investimento inicial e para o contínuo.",
+    "subtitle": "Orça para os custos iniciais e para os contínuos.",
     "whyLabel": "Porquê",
     "fixLabel": "Como gerir",
+    "phases": {
+      "upfront": "Inicial",
+      "upfrontNote": "antes do lançamento",
+      "deploy": "Deploy",
+      "deployNote": "a parte barata",
+      "ongoing": "Contínuo",
+      "ongoingNote": "após o lançamento, enquanto o contrato correr"
+    },
     "items": [
       {
         "title": "Imutabilidade e Reimplementação",
         "what": "Não consegues corrigir — voltas a fazer deploy",
-        "why": "Uma correção significa implementar um novo contrato e migrar utilizadores + estado. O ship-and-iterate não se aplica.",
-        "fix": "Testes intensivos e design seguro antes do lançamento; planear um caminho de migração v1→v2."
+        "why": "Uma correção significa um novo contrato e a migração de utilizadores e estado. O ship-and-iterate não se aplica.",
+        "fix": "Testar a fundo antes do lançamento; planear desde o início o caminho de migração v1→v2."
       },
       {
         "title": "Desenvolvimento e Manutenção",
         "what": "Competências escassas e caras",
-        "why": "Solidity é complexa e evolui depressa; até bons devs introduzem bugs, e a imutabilidade bloqueia a correção normal.",
-        "fix": "Orça tarifas premium para auditores e engenheiros de segurança como rubrica fixa, não como reflexão tardia."
+        "why": "A experiência em Solidity é escassa, e até bons programadores lançam bugs que não conseguem corrigir a quente.",
+        "fix": "Orça auditores e engenheiros de segurança como rubrica fixa, não como reflexão tardia."
       },
       {
         "title": "Gas e Execução",
         "what": "As taxas variam e acumulam",
-        "why": "Os custos disparam 10–100× sob congestão, e código ineficiente onera para sempre cada utilizador futuro.",
+        "why": "As taxas disparam 10–100× sob congestão, e código ineficiente onera cada utilizador futuro.",
         "fix": "Otimizar escritas de armazenamento e chamadas externas; reconsiderar a economia de micropagamentos."
       },
       {
@@ -264,138 +277,229 @@
   },
   "regulatory": {
     "heading": "Riscos Regulatórios",
-    "subtitle": "Os smart contracts esbatem código e lei — e a lei não acompanhou.",
+    "subtitle": "Código e lei sobrepõem-se, e a lei ainda não acompanhou.",
+    "codeLabel": "On-chain",
+    "lawLabel": "Na lei",
     "items": [
       {
         "title": "Adjudicação Legal",
         "what": "Pode não contar como um contrato válido",
-        "body": "Muitas vezes sem assinaturas nem consentimento mútuo, por isso a execução judicial é incerta — e o \"código é lei\" é anulado quando o que está em jogo é elevado (o fork da The DAO).",
+        "code": "Executa automaticamente, muitas vezes sem assinaturas nem consentimento mútuo.",
+        "law": "Um tribunal pode não o tratar como contrato, por isso a execução judicial é incerta.",
+        "note": "O \"código é lei\" é anulado quando o que está em jogo é elevado (o fork da The DAO).",
         "tag": "Combinar a lógica on-chain com um invólucro legal"
       },
       {
         "title": "Privacidade vs Transparência",
         "what": "Público por design choca com o RGPD",
-        "body": "Cada tx é visível para todos os nós — colidindo com o direito a ser esquecido e com a HIPAA. Até os hashes vazam via metadados e ligabilidade.",
+        "code": "Cada transação é visível para todos os nós.",
+        "law": "O direito a ser esquecido (RGPD) e a privacidade dos dados de saúde (HIPAA).",
+        "note": "Até os hashes vazam via metadados e ligabilidade.",
         "tag": "Provas ZK · chains permissionadas · cifragem off-chain"
       },
       {
         "title": "A Tecnologia Ultrapassa a Lei",
         "what": "As regras ficam anos atrás da tecnologia",
-        "body": "Os casos de uso mudam em meses enquanto os enquadramentos demoram anos; um contrato legal em Singapura pode ser ilegal nos EUA.",
+        "code": "Os casos de uso mudam em meses.",
+        "law": "Os enquadramentos demoram anos a escrever.",
+        "note": "Um contrato legal em Singapura pode ser ilegal nos EUA.",
         "tag": "A MiCA da UE (2024) é a primeira exceção abrangente"
       }
     ]
   },
   "quiz": {
-    "question": "Um protocolo de empréstimo DeFi usa um único preço spot de um DEX on-chain como oracle de garantia. Um atacante contrai um flash loan de $50M, manipula o preço no DEX, pede emprestado contra garantia inflacionada e devolve o empréstimo — tudo numa só transação. Que propriedade dos flash loans torna este ataque único face a uma manipulação de mercado normal?",
+    "question": "Um protocolo de empréstimo DeFi usa um único preço spot de um DEX on-chain como oracle de garantia. Um atacante contrai um flash loan de $50M, manipula o preço no DEX, pede emprestado contra garantia inflacionada e devolve o empréstimo — tudo numa só transação. Que propriedade dos flash loans distingue isto de uma manipulação de mercado normal?",
     "options": [
       "Os flash loans são anónimos — o atacante não pode ser rastreado nem processado.",
-      "Os flash loans não exigem capital — todo o ataque é atómico e autofinanciado dentro de um único bloco, não deixando rasto entre blocos.",
+      "Os flash loans não exigem capital inicial — pedir, atacar e devolver acontecem numa única transação atómica, por isso o atacante arrisca apenas a taxa de gas.",
       "Os flash loans exploram um bug no próprio protocolo Ethereum, tornando-os impossíveis de prevenir ao nível do contrato.",
       "Os flash loans permitem aos atacantes contornar as taxas de gas, tornando o ataque economicamente viável mesmo para protocolos pequenos."
     ],
-    "explanation": "A manipulação de mercado tradicional exige grande capital em risco ao longo do tempo. Os flash loans mudam a economia por completo: o atacante pede emprestado um montante enorme, executa o ataque e devolve tudo dentro de uma única transação atómica. Se algum passo falhar, toda a transação é revertida — o atacante arrisca apenas as taxas de gas. Isto significa que qualquer protocolo que use um único preço spot on-chain está vulnerável a um adversário com praticamente zero capital. A solução: os preços médios ponderados pelo tempo (TWAP) não podem ser manipulados dentro de um único bloco, e as redes de oracle descentralizadas agregam a partir de múltiplas fontes independentes."
+    "explanation": "O empréstimo é pedido, usado e devolvido dentro de uma única transação atómica, que reverte se algum passo falhar; por isso o atacante não precisa de capital e arrisca apenas o gas. Um TWAP ou um oracle multi-fonte é muito mais difícil de mover numa só transação."
+  },
+  "quizMore": {
+    "adminKey": {
+      "question": "Um protocolo anuncia \"smart contracts imutáveis e auditados\". Os contratos estão atrás de um proxy atualizável controlado por uma única chave, sem timelock. Qual é a avaliação de risco mais correta?",
+      "options": [
+        "Risco baixo: a auditoria cobre também qualquer versão futura da lógica.",
+        "Risco baixo: um proxy apenas reencaminha chamadas, por isso não pode alterar a forma como os fundos são tratados.",
+        "Quem tiver essa chave pode trocar a lógica a qualquer momento, por isso os utilizadores confiam no detentor da chave e não apenas no código auditado.",
+        "O único inconveniente é que as chamadas através de um proxy custam um pouco mais de gas."
+      ],
+      "explanation": "Uma auditoria cobre a versão que foi revista, não a que um admin instalar amanhã; com uma única chave e sem timelock, as regras podem mudar de imediato e os utilizadores não têm tempo para sair."
+    },
+    "pattern": {
+      "question": "Ronin ($625M), Beanstalk ($182M), Mango Markets ($114M) e Terra (~$40 mil milhões) estão entre as maiores perdas da área. O que têm em comum?",
+      "options": [
+        "O código do contrato fez, no essencial, o que estava escrito; a falha esteve nas chaves, na governação, nos dados de preço ou no design económico.",
+        "Os quatro foram bugs de reentrância do tipo que drenou a The DAO.",
+        "Os quatro foram causados por overflow de inteiros em Solidity pré-0.8.",
+        "Os quatro exploraram uma falha no protocolo de consenso da Ethereum."
+      ],
+      "explanation": "Chaves roubadas (Ronin), um voto com flash loan (Beanstalk), um preço manipulado (Mango) e um design económico que vivia de crença (Terra): nenhum precisou de um bug clássico de código, por isso uma auditoria apenas ao código não os teria apanhado."
+    },
+    "sameSource": {
+      "question": "Um contrato de seguro agrícola substitui o seu único oracle meteorológico por uma rede de 21 nós independentes e usa a mediana. Os 21 nós leem todos a mesma API meteorológica. O que é que a mudança conseguiu?",
+      "options": [
+        "O risco do oracle desapareceu: a maioria dos 21 nós teria agora de conspirar.",
+        "Nada: uma rede de oracles descentralizada acrescenta custo e nenhuma segurança.",
+        "Os validadores da chain passam a verificar o valor da precipitação antes de ser usado.",
+        "Nenhum operador consegue, sozinho, adulterar o número, mas um valor errado da API passa intacto pela mediana."
+      ],
+      "explanation": "A mediana protege contra um nó que mente, não contra uma fonte que mente: a confiança passou do operador para a única API a montante."
+    },
+    "proxyGuard": {
+      "question": "Uma equipa quer manter a capacidade de corrigir bugs através do seu proxy atualizável. Que mudança reduz mais o risco para os utilizadores?",
+      "options": [
+        "Renunciar à admin key, para que ninguém possa voltar a alterar a lógica.",
+        "Pôr as atualizações atrás de um multisig e de um timelock, para que nenhuma chave aja sozinha e os utilizadores tenham aviso.",
+        "Encomendar uma segunda auditoria ao contrato de lógica que está atualmente em produção.",
+        "Passar a única admin key para uma hardware wallet guardada pelo CEO."
+      ],
+      "explanation": "Um multisig elimina a chave única e um timelock dá tempo aos utilizadores para sair; renunciar acaba de vez com as atualizações, e uma auditoria nada diz sobre a versão seguinte."
+    },
+    "budget": {
+      "question": "Uma equipa orçamenta o desenvolvimento de um contrato e assume que pode corrigir problemas depois do lançamento, como faria numa aplicação web. Que custo está mais provavelmente a subestimar?",
+      "options": [
+        "As auditorias antes do lançamento, e um novo deploy com migração de utilizadores se surgir um bug.",
+        "A própria transação de deploy, que costuma ser o maior custo individual de um projeto.",
+        "As faturas dos servidores dos nós que correm o contrato, que a equipa paga todos os meses.",
+        "As licenças por utilizador do compilador de Solidity e da EVM."
+      ],
+      "explanation": "O código em produção não pode ser corrigido, por isso o deploy é a parte barata: as auditorias (cerca de $50K por ~500 linhas) e um eventual novo deploy com migração são o verdadeiro orçamento."
+    },
+    "erasure": {
+      "question": "Uma aplicação de saúde escreve dados pessoais dos pacientes diretamente numa blockchain pública. Mais tarde, um paciente invoca o direito a ser esquecido do RGPD. Qual é o problema central?",
+      "options": [
+        "Nenhum: os endereços são pseudónimos, por isso a lei de proteção de dados não se aplica.",
+        "Nenhum: o admin do contrato pode apagar da chain os registos do paciente.",
+        "Os dados estão em todos os nós e não podem ser apagados, por isso o pedido não pode ser cumprido.",
+        "Apenas o custo em gas: apagar dados on-chain é possível, mas caro."
+      ],
+      "explanation": "Público e permanente por design choca com o direito a ser esquecido; é por isso que os dados pessoais devem ficar off-chain."
+    },
+    "audited": {
+      "question": "A Euler Finance tinha sido auditada e, mesmo assim, em março de 2023 uma única verificação em falta numa função custou $197M. Que conclusão é que o incidente melhor sustenta?",
+      "options": [
+        "As auditorias não acrescentam segurança real, por isso uma equipa pode dispensá-las.",
+        "A perda veio de admin keys roubadas, que nenhuma auditoria consegue cobrir.",
+        "A verificação formal teria tornado o contrato comprovadamente livre de todos os bugs.",
+        "As auditorias baixam a probabilidade de um bug, mas não o excluem; é preciso planear também para o incidente."
+      ],
+      "explanation": "O bug escapou à revisão: as auditorias reduzem o risco, não o eliminam, por isso planeia para o incidente e não só para a prevenção."
+    }
   },
   "takeaways": {
     "title": "Secção 05 — Conclusões",
+    "jumpLabel": "Voltar ao slide",
     "items": [
-      "The oracle problem: smart contracts cannot access external data trustlessly — bridges introduce new attack surfaces",
-      "Immutability is a double-edged sword — bugs are permanent unless upgrade patterns are used",
-      "\"Code is law\" means users have no recourse when code behaves correctly but harmfully",
-      "Gas costs make complex on-chain logic economically impractical for many use cases",
-      "Smart contracts are not always the answer — a database is faster, cheaper, and easier in many contexts",
-      "Keys, votes, oracles and economic design fail as often as code — Ronin, Beanstalk, Mango and Terra lost ~$41B between them without a single \"hack\" of the contract logic",
-      "Security audits are not optional — $6B+ lost since 2016; treat smart contract security as a discipline",
-      "Regulatory uncertainty: laws move in years, contracts move in months — privacy, enforceability, and jurisdiction all matter"
+      "O risco do oracle (Secção 2) nunca desaparece: as defesas deslocam a confiança, não a eliminam",
+      "A imutabilidade tem dois gumes: os bugs são permanentes, e os proxies atualizáveis trocam isso por confiança numa admin key",
+      "\"Código é lei\": não há recurso quando o código funciona corretamente mas causa dano",
+      "Débito, latência, armazenamento e gas: em muitos contextos, uma base de dados é mais rápida e barata",
+      "Chaves, votos, oracles e design económico falham tanto quanto o código: Ronin, Beanstalk, Mango e Terra perderam ~$41 mil milhões sem um bug no contrato",
+      "As auditorias são o bilhete de entrada, não uma garantia; $6 mil milhões+ perdidos desde 2016",
+      "Incerteza regulatória: as leis movem-se em anos, os contratos em meses; privacidade, executoriedade e jurisdição contam"
     ]
   },
   "adminKey": {
-    "heading": "Admin Keys and Upgradeable Proxies",
-    "subtitle": "How \"immutable\" contracts get changed, and who is allowed to do it.",
+    "heading": "Admin Keys e Proxies Atualizáveis",
+    "subtitle": "Como é que contratos \"imutáveis\" são alterados, e quem o pode fazer.",
     "diagram": {
-      "user": "User",
-      "userNote": "always calls the same address",
-      "proxy": "Proxy contract",
-      "proxyNote": "fixed address · holds the funds and data · forwards every call to the current logic",
-      "logicOld": "Logic v1",
-      "logicNew": "Logic v2",
-      "logicNote": "the rules; can be swapped",
+      "user": "Utilizador",
+      "userNote": "chama sempre o mesmo endereço",
+      "proxy": "Contrato proxy",
+      "proxyNote": "endereço fixo · guarda os fundos e os dados · reencaminha cada chamada para a lógica atual",
+      "logicOld": "Lógica v1",
+      "logicNew": "Lógica v2",
+      "logicNote": "as regras; podem ser trocadas",
       "admin": "Admin key",
-      "adminNote": "whoever holds it can point the proxy at new rules"
+      "adminNote": "quem a tiver pode apontar o proxy para novas regras"
     },
     "points": [
-      { "title": "What it is", "desc": "A proxy is a fixed front door that forwards calls to a separate logic contract. The admin key is the permission to change which logic the door points to." },
-      { "title": "Why it exists", "desc": "Deployed code cannot be patched. Teams add a proxy so they can fix bugs and ship features without asking every user to move." },
-      { "title": "Why it matters to you", "desc": "The key holder can change the rules, pause the contract or move the funds. The trust you removed from a bank now sits with whoever holds that key." }
+      { "title": "O que é", "desc": "Um proxy é uma porta de entrada fixa que reencaminha chamadas para um contrato de lógica separado. A admin key é a permissão para mudar a lógica para onde a porta aponta." },
+      { "title": "Porque existe", "desc": "O código implementado não pode ser corrigido. As equipas adicionam um proxy para corrigir bugs e lançar funcionalidades sem pedir a cada utilizador que migre." },
+      { "title": "Porque te interessa", "desc": "O detentor da chave pode mudar as regras, pausar o contrato ou mover os fundos. A confiança que retiraste a um banco está agora em quem tiver essa chave." }
     ],
-    "askLabel": "Before relying on a contract, ask: ",
-    "askBody": "who holds the admin key, is it a multisig, is there a timelock, and can the key be renounced?"
+    "askLabel": "Antes de confiar num contrato, pergunta:",
+    "checks": [
+      "Quem detém a admin key?",
+      "É um multisig?",
+      "Há um timelock?",
+      "A chave pode ser renunciada?"
+    ]
   },
   "failures": {
-    "heading": "When it went wrong — six real incidents",
-    "subtitle": "Each maps to one risk from the previous slides. Notice how often the contract did exactly what it was told.",
-    "lessonLabel": "Lesson: ",
-    "footer": "Pattern: keys, votes, data feeds and economic design fail at least as often as the code itself. Security is a property of the whole system — not of the contract alone.",
+    "heading": "Quando correu mal — seis incidentes reais",
+    "subtitle": "Cada um corresponde a um risco desta secção. Na maioria, o contrato fez exatamente o que lhe mandaram.",
+    "lessonLabel": "Lição",
+    "whatLabel": "O que aconteceu",
+    "caseLabel": "Processo",
+    "pickLabel": "Seis processos · escolhe um",
+    "codeOk": "O código fez o que lhe mandaram",
+    "codeBug": "Um bug no código",
+    "tally": "{{n}} de {{total}}: o código fez o que lhe mandaram",
+    "footer": "Chaves, votos, feeds de dados e design económico falham pelo menos tantas vezes quanto o código. A segurança é uma propriedade de todo o sistema.",
     "items": [
       {
         "name": "Ronin Bridge (Axie Infinity)",
-        "date": "March 2022",
+        "date": "Março de 2022",
         "loss": "$625M",
-        "category": "Key compromise",
-        "what": "The bridge needed 5 of 9 validator signatures. Attackers obtained five keys through social engineering — four run by one company — and withdrew everything.",
-        "lesson": "A multisig is only as decentralised as the people holding the keys."
+        "category": "Comprometimento de chaves",
+        "what": "A bridge exigia 5 de 9 assinaturas de validadores. Os atacantes obtiveram cinco chaves por engenharia social — quatro geridas pela mesma empresa — e levantaram tudo.",
+        "lesson": "Um multisig é tão descentralizado quanto as pessoas que detêm as chaves."
       },
       {
         "name": "Beanstalk",
-        "date": "April 2022",
+        "date": "Abril de 2022",
         "loss": "$182M",
-        "category": "Governance attack",
-        "what": "An attacker flash-loaned enough tokens to hold 67% of the votes, passed a proposal that sent the treasury to themselves, and repaid the loan — in one transaction.",
-        "lesson": "On-chain voting without a timelock turns governance itself into an attack surface."
+        "category": "Ataque de governação",
+        "what": "Um atacante obteve por flash loan tokens suficientes para deter 67% dos votos, aprovou uma proposta que lhe enviava a tesouraria e devolveu o empréstimo — numa só transação.",
+        "lesson": "Votação on-chain sem timelock transforma a própria governação numa superfície de ataque."
       },
       {
         "name": "Mango Markets",
-        "date": "October 2022",
+        "date": "Outubro de 2022",
         "loss": "$114M",
-        "category": "Oracle manipulation",
-        "what": "The attacker pumped the thinly traded MNGO token on the exchange that fed Mango's price oracle, then borrowed against the inflated collateral and left.",
-        "lesson": "If your price comes from one shallow market, the oracle is the vault door."
+        "category": "Manipulação de oracle",
+        "what": "O ataque de preço da Secção 2 com dinheiro real: o atacante inflacionou o MNGO, pouco transacionado, nas exchanges que alimentavam o oracle de preços da Mango, pediu emprestado contra a garantia inflacionada e saiu.",
+        "lesson": "Se o teu preço vem de um mercado pouco profundo, o oracle é a porta do cofre."
       },
       {
         "name": "Euler Finance",
-        "date": "March 2023",
+        "date": "Março de 2023",
         "loss": "$197M",
-        "category": "Logic bug",
-        "what": "A single missing health check in a donate function let a flash-loan attacker create bad debt and liquidate it for profit. Audited — the bug slipped through. Most funds were later returned.",
-        "lesson": "Audits reduce risk; they do not remove it. Plan for the incident, not just the prevention."
+        "category": "Bug de lógica",
+        "what": "Uma única verificação de saúde em falta numa função de doação permitiu a um atacante com flash loan criar dívida incobrável e liquidá-la com lucro. Auditado — o bug escapou. A maior parte dos fundos foi depois devolvida.",
+        "lesson": "As auditorias reduzem o risco; não o eliminam. Planeia para o incidente, não só para a prevenção."
       },
       {
-        "name": "Parity multisig wallet",
-        "date": "November 2017",
-        "loss": "~$150M frozen",
-        "category": "Access control + immutability",
-        "what": "A user accidentally took ownership of a shared library contract and then destroyed it. Every wallet built on it froze — permanently. The funds are still there, unreachable.",
-        "lesson": "Immutability means a mistake is forever. Who can call what must be designed, not assumed."
+        "name": "Carteira multisig Parity",
+        "date": "Novembro de 2017",
+        "loss": "~$150M congelados",
+        "category": "Controlo de acesso + imutabilidade",
+        "what": "Um utilizador assumiu por acidente a posse de um contrato de biblioteca partilhado e depois destruiu-o. Todas as carteiras construídas sobre ele congelaram — para sempre. Os fundos continuam lá, inacessíveis.",
+        "lesson": "Imutabilidade significa que um erro é para sempre. Quem pode chamar o quê tem de ser desenhado, não presumido."
       },
       {
         "name": "Terra / UST",
-        "date": "May 2022",
-        "loss": "~$40B",
-        "category": "Economic design",
-        "what": "The algorithmic stablecoin held its peg only while people believed it would. A large sell-off broke the peg; the sister token minted to defend it collapsed to zero within days.",
-        "lesson": "The code worked as designed. The design was the flaw — a risk no audit can catch."
+        "date": "Maio de 2022",
+        "loss": "~$40 mil M",
+        "category": "Design económico",
+        "what": "A stablecoin algorítmica só mantinha a paridade enquanto as pessoas acreditassem nela. Uma grande venda quebrou a paridade; o token irmão emitido para a defender caiu para zero em poucos dias.",
+        "lesson": "O código funcionou como desenhado. O design era a falha — um risco que nenhuma auditoria apanha."
       }
     ]
   },
   "keyPoints": {
-    "s5-oracle": "A contract is only as trustworthy as the data feed that triggers it — the oracle is where the middleman comes back in.",
-    "s5-challenges": "Slow, expensive, public and permanent — every design decision is a trade against one of these four.",
-    "s5-technical": "The fixes exist — layer 2s, bridges, upgradeable proxies, privacy tech — but each one reintroduces a party you must trust.",
-    "s5-ex-oracle": "Attack the input, not the code: a perfect contract pays out on a corrupted price feed without hesitation.",
-    "s5-risks-security": "Bugs are public, permanent and exploited within hours — an audit is not optional, it is the entry ticket.",
-    "s5-admin-key": "An upgradeable contract is only as trustworthy as the holder of its admin key; ask who holds it and what limits them.",
-    "s5-failures": "In most of these incidents the contract did exactly what it was told — the failure was in the design, the data or the people.",
-    "s5-risks-cost": "The cheap part is the deployment; audits, monitoring, upgrades and gas during peaks are the real budget.",
-    "s5-risks-regulatory": "When code and law disagree, the law wins — plan for jurisdiction, data protection and who is liable when it breaks."
+    "s5-oracle": "O risco do oracle pode ser reduzido e ter um preço, nunca eliminado: trata o feed de dados como qualquer outra contraparte.",
+    "s5-challenges": "Lento, caro, público e permanente: cada decisão de design é uma troca contra um destes.",
+    "s5-technical": "As soluções existem, mas cada uma reintroduz uma parte em quem tens de confiar.",
+    "s5-ex-oracle": "Cada defesa do oracle desloca a confiança para outro lado; sabe para onde foi.",
+    "s5-risks-security": "Os bugs são públicos, permanentes e explorados em horas; uma auditoria é o bilhete de entrada.",
+    "s5-admin-key": "Um contrato atualizável é tão fiável quanto o detentor da sua admin key; pergunta quem a detém e o que o limita.",
+    "s5-failures": "Na maioria dos incidentes o contrato fez o que lhe mandaram; a falha esteve no design, nos dados ou nas pessoas.",
+    "s5-risks-cost": "A parte barata é o deploy; auditorias, monitorização, atualizações e gas em picos são o verdadeiro orçamento.",
+    "s5-risks-regulatory": "Quando código e lei discordam, a lei ganha; planeia para jurisdição, proteção de dados e responsabilidade."
   }
 }
