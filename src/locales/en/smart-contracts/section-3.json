@@ -985,7 +985,6 @@
     }
   },
   "quiz": {
-    "label": "Quiz · {{n}} / {{total}}",
     "items": [
       {
         "question": "TerraUSD (UST) collapsed in May 2022, wiping out about $40B. What was the root cause?",

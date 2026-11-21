@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { DeepDiveBadge } from '../../components/shared/DeepDiveBadge';
@@ -35,9 +35,7 @@ const chapterIds = [
   's6-events',
   's6-deeper',
   's6-takeaways',
-  's6-quiz-template',
-  's6-quiz-testnet',
-  's6-final-quiz',
+  's6-quiz',
 ] as const;
 
 // ═══ DATA (language-neutral: IDs, code identifiers, colors, names) ══════════
@@ -2041,9 +2039,8 @@ export function SC_Section6() {
       explanation: q.explanation,
     };
   };
-  const quizTemplate = quiz('quizTemplate', 1);
-  const quizTestnet = quiz('quizTestnet', 3);
-  const quizFinal = quiz('quiz', 2);
+  // In order: why remix a template · why a testnet first · where to deploy for real.
+  const quizQuestions = [quiz('quizTemplate', 1), quiz('quizTestnet', 3), quiz('quiz', 2)];
 
   return (
     <div className="h-full w-full flex overflow-hidden">
@@ -2099,19 +2096,9 @@ export function SC_Section6() {
           />
         </div>
 
-        {/* ═══════ QUIZ 1 · why remix a template ═══════ */}
-        <div id="s6-quiz-template" className="h-full">
-          <QuizSlide compact {...quizTemplate} />
-        </div>
-
-        {/* ═══════ QUIZ 2 · why a testnet first ═══════ */}
-        <div id="s6-quiz-testnet" className="h-full">
-          <QuizSlide compact {...quizTestnet} />
-        </div>
-
-        {/* ═══════ FINAL QUIZ · where to deploy for real ═══════ */}
-        <div id="s6-final-quiz" className="h-full">
-          <QuizSlide compact {...quizFinal} />
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
+        <div id="s6-quiz" className="h-full">
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         </div>

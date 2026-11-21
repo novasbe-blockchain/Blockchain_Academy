@@ -7,6 +7,7 @@ export { ProcessSlide } from './templates/ProcessSlide';
 export { ComparisonSlide } from './templates/ComparisonSlide';
 export { TakeawaySlide } from './templates/TakeawaySlide';
 export { QuizSlide } from './templates/QuizSlide';
+export { GroupedQuiz } from './templates/GroupedQuiz';
 export { DiscussionSlide } from './templates/DiscussionSlide';
 export { WhiteboardSlide } from './templates/WhiteboardSlide';
 

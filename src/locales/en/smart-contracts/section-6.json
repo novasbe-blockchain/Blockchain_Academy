@@ -11,9 +11,7 @@
     "s6-events": "🧩 Event-Driven Apps",
     "s6-deeper": "Going Deeper · optional",
     "s6-takeaways": "Takeaways",
-    "s6-quiz-template": "Quiz · Template",
-    "s6-quiz-testnet": "Quiz · Testnet",
-    "s6-final-quiz": "Final Quiz"
+    "s6-quiz": "Quiz"
   },
   "title": {
     "sectionNumber": "SECTION 06",

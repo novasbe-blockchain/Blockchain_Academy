@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Check, X } from 'lucide-react';
 import { trackEvent } from '../../analytics';
 
-interface QuizOption {
+export interface QuizOption {
   text: string;
   correct: boolean;
 }
@@ -20,15 +20,31 @@ interface QuizSlideProps {
    * clipping.
    */
   compact?: boolean;
+  /**
+   * Start already answered with this option picked. Lets a wrapper such as
+   * GroupedQuiz restore a question the student answered earlier.
+   */
+  defaultSelectedIndex?: number | null;
+  /** Called once, when the student picks an option. */
+  onAnswer?: (index: number, correct: boolean) => void;
 }
 
-export function QuizSlide({ question, options, explanation, label = 'Quiz', compact = false }: QuizSlideProps) {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [showAnswer, setShowAnswer] = useState(false);
+export function QuizSlide({
+  question,
+  options,
+  explanation,
+  label = 'Quiz',
+  compact = false,
+  defaultSelectedIndex = null,
+  onAnswer,
+}: QuizSlideProps) {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(defaultSelectedIndex);
+  const [showAnswer, setShowAnswer] = useState(defaultSelectedIndex !== null);
 
   const handleSelect = (index: number) => {
     setSelectedIndex(index);
     setShowAnswer(true);
+    onAnswer?.(index, !!options[index]?.correct);
     trackEvent('quiz_answer', {
       quiz: question,
       quiz_type: 'multiple_choice',

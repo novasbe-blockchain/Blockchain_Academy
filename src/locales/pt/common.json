@@ -132,6 +132,18 @@
       ]
     }
   },
+  "quiz": {
+    "progress": "Pergunta {{n}} / {{total}}",
+    "next": "Pergunta seguinte",
+    "previous": "Anterior",
+    "finish": "Terminar quiz",
+    "doneTitle": "Chegaste ao fim do quiz",
+    "doneScore": "Acertaste {{correct}} de {{total}}.",
+    "doneScorePartial": "Respondeste a {{answered}} de {{total}} perguntas e acertaste {{correct}}.",
+    "review": "Rever respostas",
+    "restart": "Tentar de novo",
+    "continueHint": "Desce para continuar a secção."
+  },
   "underTheHood": "under the hood →",
   "keyPoint": "Key point",
   "optionalAdvanced": "Optional · Developer-oriented"

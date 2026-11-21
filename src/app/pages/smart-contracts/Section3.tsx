@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import {
@@ -1107,7 +1107,11 @@ export function SC_Section3() {
   const cases    = t('caseGallery.items', { returnObjects: true }) as CaseCard[];
 
   // Closing
-  const quizItems = t('quiz.items', { returnObjects: true }) as QuizItem[];
+  const quizQuestions = (t('quiz.items', { returnObjects: true }) as QuizItem[]).map((q, qi) => ({
+    question: q.question,
+    options: q.options.map((text, i) => ({ text, correct: i === QUIZ_ANSWERS[qi] })),
+    explanation: q.explanation,
+  }));
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
   return (
@@ -1321,18 +1325,10 @@ export function SC_Section3() {
         {/* ═══════ WRAP UP ═══════ */}
         <div id="s3-exercise" className="h-full"><DesignYourOwnExercise /></div>
 
-        {/* One question per slide; the first carries the chapter id for the sidebar. */}
-        {quizItems.map((q, qi) => (
-          <div key={qi} id={qi === 0 ? 's3-quiz' : undefined} className="h-full">
-            <QuizSlide
-              label={t('quiz.label', { n: qi + 1, total: quizItems.length })}
-              question={q.question}
-              options={q.options.map((text, i) => ({ text, correct: i === QUIZ_ANSWERS[qi] }))}
-              explanation={q.explanation}
-              compact
-            />
-          </div>
-        ))}
+        {/* Quiz — one slide, stepped question by question */}
+        <div id="s3-quiz" className="h-full">
+          <GroupedQuiz questions={quizQuestions} compact />
+        </div>
 
         <div id="s3-takeaways" className="h-full">
           <TakeawaySlide title={t('takeaways.title')} takeaways={takeawayItems} />

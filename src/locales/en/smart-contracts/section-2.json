@@ -31,9 +31,6 @@
     "s2-oracle-paris": "Case: Paris Sensor",
     "s2-oracle-attack":"▶ Case: Price Attack",
     "s2-quiz":         "Quiz",
-    "s2-quiz-2":       "Quiz 2",
-    "s2-quiz-3":       "Quiz 3",
-    "s2-quiz-4":       "Quiz 4",
     "s2-takeaways":    "Takeaways"
   },
   "recapLabel": "Already covered",

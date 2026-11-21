@@ -77,6 +77,7 @@ Ten pre-built templates in `src/app/components/templates/`:
 | `DiagramSlide` | Large diagram + caption + annotations |
 | `ProcessSlide` | Sequential step-by-step flow |
 | `QuizSlide` | Interactive multiple choice with instant feedback |
+| `GroupedQuiz` | A section's whole quiz on ONE slide: takes `questions[]` (QuizSlide's shape), shows one at a time with "Question N / total" + Next question. Use this instead of several `QuizSlide` slides in a row |
 | `DiscussionSlide` | Discussion prompts for class engagement |
 | `TakeawaySlide` | Bulleted summary with checkmarks |
 | `TimelineSlide` | Chronological history view |

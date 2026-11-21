@@ -132,6 +132,18 @@
       ]
     }
   },
+  "quiz": {
+    "progress": "Question {{n}} / {{total}}",
+    "next": "Next question",
+    "previous": "Previous",
+    "finish": "Finish quiz",
+    "doneTitle": "That's the quiz",
+    "doneScore": "You got {{correct}} of {{total}} right.",
+    "doneScorePartial": "You answered {{answered}} of {{total}} questions and got {{correct}} right.",
+    "review": "Review answers",
+    "restart": "Try again",
+    "continueHint": "Scroll down to carry on with the section."
+  },
   "underTheHood": "under the hood →",
   "keyPoint": "Key point",
   "optionalAdvanced": "Optional · Developer-oriented"

@@ -16,9 +16,6 @@
     "s4-case-success": "Estonia e-Residency",
     "s4-case-sc-fail": "The DAO",
     "s4-case-org-fail": "ASX CHESS",
-    "s4-case-est-quiz": "Quiz · Estonia",
-    "s4-case-dao-quiz": "Quiz · DAO",
-    "s4-case-asx-quiz": "Quiz · ASX",
     "s4-adoption-intro": "Adoption Considerations",
     "s4-adoption-strategy": "Strategic Alignment",
     "s4-adoption-tech": "Tech Infrastructure",
@@ -28,11 +25,7 @@
     "s4-adoption": "🧩 Three Checks",
     "s4-opps-challenges": "Opportunities & Challenges",
     "s4-strategies": "Competitive Strategy",
-    "s4-quiz-tree": "Quiz 1 · Decision Tree",
-    "s4-quiz-fit": "Quiz 2 · Red Flags",
-    "s4-quiz-checks": "Quiz 3 · Three Checks",
-    "s4-quiz-cases": "Quiz 4 · Cases",
-    "s4-quiz": "Quiz 5 · Bank Bond",
+    "s4-quiz": "Quiz",
     "s4-takeaways": "Takeaways"
   },
   "title": {
