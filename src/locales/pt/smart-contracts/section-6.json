@@ -2,9 +2,13 @@
   "chapters": {
     "s6-why": "Porquê: desenho → live",
     "s6-erc": "🧩 Standards ERC",
+    "s6-eip": "🧩 EIP → Standard",
     "s6-template": "Template Validado",
+    "s6-ai": "🧩 Desenvolver com IA",
     "s6-where": "🧩 Ferramenta & Rede",
     "s6-deploy": "▶ Deploy numa Testnet",
+    "s6-hosting": "🧩 Nós & Alojamento",
+    "s6-events": "🧩 Eventos → Reações",
     "s6-deeper": "Ir Mais Longe · opc.",
     "s6-takeaways": "Conclusões",
     "s6-quiz-template": "Quiz · Template",
@@ -101,6 +105,123 @@
       "examples": "Lido por marketplaces de NFT como a OpenSea e a Rarible"
     }
   },
+  "eip": {
+    "kicker": "Passo 1 · Por trás do standard",
+    "heading": "Como um EIP se torna um standard",
+    "subtitle": "Porquê? Ninguém é dono do ERC-20: um standard nasce de um EIP (Ethereum Improvement Proposal) que qualquer um pode escrever.",
+    "zoomLabel": "Visão geral: quem faz avançar uma proposta",
+    "hereTag": "A proposta está aqui",
+    "actors": [
+      {
+        "label": "Proponente",
+        "desc": "Escreve o EIP e constrói consenso"
+      },
+      {
+        "label": "Editores de EIPs",
+        "desc": "Verificam a forma, não o mérito da ideia"
+      },
+      {
+        "label": "Comunidade",
+        "desc": "Programadores, carteiras e equipas dos nós reveem-na em público"
+      },
+      {
+        "label": "Standard final",
+        "desc": "Texto congelado sobre o qual todos constroem"
+      }
+    ],
+    "flows": [
+      "pull request",
+      "revisão",
+      "last call"
+    ],
+    "hint": "Clica num estado, ou usa o botão para avançar",
+    "stageOf": "Estado {{n}} de {{total}}",
+    "sideKicker": "Estado lateral",
+    "sideLabel": "Saídas laterais",
+    "sideReachable": "possível agora",
+    "rows": {
+      "who": "Quem age",
+      "what": "O que acontece",
+      "rule": "A regra"
+    },
+    "stages": {
+      "idea": {
+        "tagline": "uma ideia, ainda não um documento",
+        "who": "O proponente: qualquer pessoa.",
+        "what": "Tens uma ideia para um standard. Antes de escreveres algo formal, testa-la em público, normalmente numa discussão no fórum Ethereum Magicians: é original, e alguém precisa dela?",
+        "rule": "Ainda não é acompanhada no repositório de EIPs: sem número, sem estado."
+      },
+      "draft": {
+        "tagline": "recebe um número",
+        "who": "O proponente e, depois, um editor de EIPs.",
+        "what": "Escreves a proposta no modelo oficial e abres um pull request no GitHub. Um editor de EIPs verifica se está completa e bem formatada, atribui-lhe um número e faz o merge.",
+        "rule": "A primeira fase formalmente acompanhada. Os editores tratam da parte administrativa e editorial: não avaliam o mérito da ideia."
+      },
+      "review": {
+        "tagline": "revisão aberta por pares",
+        "who": "O proponente e a comunidade.",
+        "what": "Marcas o EIP como pronto para revisão por pares. Programadores, equipas de carteiras e auditores analisam-no ao pormenor, em público, e o texto vai mudando em resposta.",
+        "rule": "Cabe ao autor construir consenso e documentar as opiniões discordantes."
+      },
+      "lastCall": {
+        "tagline": "última oportunidade para objeções",
+        "who": "A comunidade, com um prazo.",
+        "what": "A última janela de revisão antes de Final. É publicado um prazo, normalmente a 14 dias, para que quem tenha uma última objeção a possa apresentar.",
+        "rule": "Se o Last Call revelar uma alteração necessária à própria especificação, o EIP volta a Review."
+      },
+      "final": {
+        "tagline": "o standard",
+        "who": "Todos os que constroem sobre ele.",
+        "what": "O EIP é agora o standard final. O texto fica congelado: só é atualizado para corrigir erratas e acrescentar clarificações não normativas.",
+        "rule": "Um ERC adota-se por escolha: carteiras e apps decidem suportá-lo. Um EIP Core tem de ser implementado no software dos nós e entra em vigor numa atualização da rede."
+      }
+    },
+    "side": {
+      "stagnant": "Inativo durante 6 meses ou mais em Draft, Review ou Last Call. Os autores ou um editor podem reativá-lo, devolvendo-o a Draft ou ao estado anterior.",
+      "withdrawn": "Os autores retiraram a proposta. É definitivo: não pode ser reativada com o mesmo número. Se a ideia regressar, é uma nova proposta.",
+      "living": "Um estado especial para EIPs pensados para serem atualizados continuamente, sem nunca chegarem a Final. O exemplo mais conhecido é o EIP-1, o documento que define este processo."
+    },
+    "back": "Anterior",
+    "next": "Avançar para {{status}}",
+    "restart": "Recomeçar",
+    "doc": {
+      "forumTitle": "Ilustrativo · fórum Ethereum Magicians",
+      "forumPost": "Ideia: uma forma standard de os contratos de NFT indicarem royalties?",
+      "forumMeta": "Discussão aberta · ainda sem número de EIP",
+      "repoTitle": "Ilustrativo · cabeçalho no GitHub",
+      "deadlineTag": "prazo: cerca de 14 dias",
+      "frozen": "congelado"
+    },
+    "typesLabel": "Que tipo de EIP? Clica num tipo",
+    "standardsTrackDesc": "afeta a maioria ou todas as implementações",
+    "exampleLabel": "Exemplo: ",
+    "types": {
+      "core": {
+        "desc": "Alterações ao próprio protocolo. A maioria exige um fork de consenso: todos os nós têm de atualizar.",
+        "example": "EIP-1559, a alteração de 2021 às taxas de transação."
+      },
+      "networking": {
+        "desc": "Como os nós falam entre si: os protocolos de rede peer-to-peer.",
+        "example": "EIP-8, regras de compatibilidade futura entre nós."
+      },
+      "interface": {
+        "desc": "Convenções partilhadas ao nível da interface, como nomes de métodos e ABIs de contratos.",
+        "example": "EIP-1193, como um site fala com uma carteira como a MetaMask."
+      },
+      "erc": {
+        "desc": "Standards ao nível das aplicações: tokens, registos de nomes, formatos de carteira. Têm repositório próprio, o ethereum/ERCs.",
+        "example": "ERC-20, ERC-721, ERC-2981."
+      },
+      "meta": {
+        "desc": "Descreve um processo à volta da Ethereum, ou uma alteração a um processo. Não altera o protocolo.",
+        "example": "EIP-1, as regras deste mesmo processo."
+      },
+      "informational": {
+        "desc": "Orientações ou informação para a comunidade. Não propõe nenhuma funcionalidade nova.",
+        "example": "EIP-2228, que fixa o nome oficial da rede: \"Ethereum Mainnet\"."
+      }
+    }
+  },
   "template": {
     "kicker": "Passo 2 · Template",
     "heading": "Não escrevas de raiz: adapta um template validado",
@@ -124,6 +245,92 @@
     "aiLabel": "Com um assistente de IA: ",
     "aiBody": "pede-lhe que adapte este template, não que invente um token de raiz. Depois lê o que ele escreveu antes de fazeres deploy.",
     "wizardLink": "Experimenta o OpenZeppelin Contracts Wizard"
+  },
+  "ai": {
+    "kicker": "Passo 2 · Com IA",
+    "heading": "Desenvolvimento com IA: a IA redige, o autor és tu",
+    "subtitle": "Porque importa: já não precisas de escrever código para teres um contrato funcional, e o trabalho prático pede exatamente isso. Mas é a tua carteira que assina o deploy, por isso tens de perceber cada linha.",
+    "hint": "Escolhe um prompt, copia-o e cola-o em qualquer assistente de IA",
+    "promptTag": "Prompt {{n}}",
+    "goalLabel": "Serve para: ",
+    "pasteLabel": "Cola isto",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "checksLabel": "Antes de confiares na resposta",
+    "prompts": [
+      {
+        "tab": "Redigir",
+        "goal": "obter uma primeira versão construída sobre o template validado, com cada linha explicada.",
+        "prompt": "Escreve um token ERC-20 mínimo em Solidity chamado ClassToken (símbolo CLS), com um fornecimento fixo de 1 000 000 de tokens, todos emitidos para quem faz o deploy. Herda dos OpenZeppelin Contracts v5: não reescrevas o ERC-20. Sem owner, sem função de mint, sem funcionalidades extra. Acrescenta um comentário em português simples a explicar cada linha a alguém que não programa. Depois, lista os passos para fazer o deploy na testnet Sepolia com o Remix e a MetaMask.",
+        "checks": [
+          "Importa a OpenZeppelin em vez de reescrever o ERC-20 à mão.",
+          "Compila no Remix sem alterações.",
+          "Consegues dizer por palavras tuas o que cada linha faz."
+        ]
+      },
+      {
+        "tab": "Explicar",
+        "goal": "perceber um contrato que não escreveste, incluindo um que uma IA te acabou de entregar.",
+        "prompt": "Explica em português simples o que este contrato Solidity faz, uma função de cada vez. Para cada função, diz-me: quem a pode chamar, o que ela altera, e se pode criar, mover ou destruir tokens. Existe algum owner ou administrador com poderes especiais?\n\n[cola aqui o contrato]",
+        "checks": [
+          "A explicação corresponde ao que pediste no prompt 1.",
+          "Não aparece nenhuma função que não tenhas pedido.",
+          "Faz a mesma pergunta a uma segunda IA e compara as respostas."
+        ]
+      },
+      {
+        "tab": "Verificar",
+        "goal": "obter uma segunda opinião antes do deploy.",
+        "prompt": "Age como revisor de segurança de smart contracts. O contrato abaixo é seguro para fazer deploy numa testnet? Lista tudo o que seja arriscado ou invulgar: mint ilimitado, poderes exclusivos do owner, chamadas externas, qualquer diferença face ao ERC-20 standard da OpenZeppelin. Para cada ponto, explica porque importa e como corrigir. Se não tiveres a certeza de algo, di-lo em vez de adivinhares.\n\n[cola aqui o contrato]",
+        "checks": [
+          "Uma revisão por IA é uma segunda opinião, não uma auditoria.",
+          "Os modelos deixam passar bugs reais e inventam bugs falsos: confirma cada afirmação no código.",
+          "Tudo o que vá guardar dinheiro real precisa de uma auditoria profissional."
+        ]
+      }
+    ],
+    "toolsLabel": "Onde o colar",
+    "tools": [
+      {
+        "label": "Assistentes de chat",
+        "desc": "Colas um prompt, recebes o contrato e a explicação. O sítio mais fácil para começar.",
+        "tools": "Claude · ChatGPT · Gemini"
+      },
+      {
+        "label": "Agentes de programação",
+        "desc": "Trabalham dentro de um editor de código: criam os ficheiros, compilam e conseguem escrever e correr testes.",
+        "tools": "Cursor · GitHub Copilot · Claude Code"
+      },
+      {
+        "label": "RemixAI Assistant",
+        "desc": "Integrado no Remix, onde fazes o deploy. Escreve um contrato a partir de uma descrição, explica um contrato e explica erros do compilador.",
+        "tools": "remix.ethereum.org"
+      },
+      {
+        "label": "OpenZeppelin Wizard & MCP",
+        "desc": "O Wizard monta um contrato standard com caixas de seleção, sem IA: uma referência para comparar. O servidor MCP permite aos agentes de IA gerar a partir dos mesmos templates validados.",
+        "tools": "Contracts Wizard · Contracts MCP"
+      }
+    ],
+    "loop": [
+      {
+        "label": "Pedir",
+        "desc": "Adapta um template validado"
+      },
+      {
+        "label": "Ler",
+        "desc": "Até conseguires explicar tu"
+      },
+      {
+        "label": "Testar",
+        "desc": "Numa testnet: errar é grátis"
+      },
+      {
+        "label": "Auditar",
+        "desc": "Antes de haver dinheiro real"
+      }
+    ],
+    "secretWarning": "Nunca coles uma frase de recuperação ou uma chave privada numa IA ou num site. Os prompts podem ficar guardados pelo fornecedor."
   },
   "where": {
     "kicker": "Passo 3 · Ferramenta & rede",
@@ -308,6 +515,175 @@
       "rowFee": "Taxa"
     }
   },
+  "hosting": {
+    "kicker": "Depois do deploy · Alojamento",
+    "heading": "Infraestrutura de nós e onde alojar",
+    "subtitle": "Porque importa: o teu contrato está no ar, mas as pessoas precisam de um site onde clicar, e esse site precisa de uma forma de chegar à chain. São duas questões de alojamento distintas.",
+    "scenarios": {
+      "load": {
+        "label": "Abrir o site",
+        "desc": "O browser descarrega os ficheiros do teu site a partir do alojamento estático. Ainda não há blockchain envolvida: é um site como outro qualquer."
+      },
+      "read": {
+        "label": "Ler da chain",
+        "desc": "O site faz uma pergunta a um nó, como \"qual é o meu saldo?\". Gratuito, quase instantâneo e sem nada para assinar."
+      },
+      "write": {
+        "label": "Enviar uma transação",
+        "desc": "A carteira mostra o pedido, o utilizador confirma, a carteira assina e entrega a transação a um nó, que a passa à rede. Isto custa gas."
+      }
+    },
+    "zones": {
+      "front": "Front-end: um site estático que tu alojas",
+      "chain": "Acesso à chain: uma carteira e um nó (RPC)"
+    },
+    "walletSkipped": "nada para assinar",
+    "nodes": {
+      "host": {
+        "label": "Alojamento estático",
+        "desc": "Guarda os ficheiros do teu site e serve-os a qualquer visitante.",
+        "chips": [
+          "GitHub Pages",
+          "Cloudflare Pages"
+        ]
+      },
+      "browser": {
+        "label": "O browser do utilizador",
+        "desc": "Corre o teu site. É a app que as pessoas realmente veem.",
+        "chips": [
+          "a tua dapp"
+        ]
+      },
+      "wallet": {
+        "label": "Carteira",
+        "desc": "Guarda as chaves do utilizador e assina o que ele confirma.",
+        "chips": [
+          "MetaMask"
+        ]
+      },
+      "rpc": {
+        "label": "Acesso a um nó (RPC)",
+        "desc": "Um nó que recebe perguntas e transações e fala com a rede por ti.",
+        "chips": [
+          "Infura",
+          "Alchemy",
+          "o teu próprio nó"
+        ]
+      },
+      "chain": {
+        "label": "Rede Ethereum",
+        "desc": "Muitos nós independentes. Cada um já guarda uma cópia do teu contrato.",
+        "chips": [
+          "o teu contrato"
+        ]
+      }
+    },
+    "front": {
+      "title": "Onde vive o front-end?",
+      "lead": "O front-end de uma dapp são apenas ficheiros (HTML, CSS, JavaScript): qualquer alojamento estático serve.",
+      "options": [
+        {
+          "name": "GitHub Pages",
+          "desc": "Publica um site diretamente a partir de um repositório do GitHub."
+        },
+        {
+          "name": "Cloudflare Pages",
+          "desc": "Ligas um repositório: cada push volta a publicar o site na rede global da Cloudflare."
+        }
+      ],
+      "also": "A mesma ideia: Vercel, Netlify. Um plano gratuito costuma chegar para um projeto de aula."
+    },
+    "chain": {
+      "title": "Como chega à chain?",
+      "lead": "Cada leitura e cada transação passam por um nó, numa linguagem standard chamada JSON-RPC.",
+      "startHere": "começa aqui",
+      "options": [
+        {
+          "name": "A ligação da carteira",
+          "desc": "A MetaMask já traz uma (Infura, por omissão). Nada para configurar."
+        },
+        {
+          "name": "Um fornecedor de RPC",
+          "desc": "Infura, Alchemy e outros gerem os nós; tu registas-te e recebes uma chave de API."
+        },
+        {
+          "name": "O teu próprio nó",
+          "desc": "Sem intermediários, controlo total. Pagas em armazenamento, largura de banda e manutenção."
+        }
+      ],
+      "tradeoff": "Compromisso: um fornecedor poupa-te o trabalho, mas põe uma empresa entre o teu produto e a chain."
+    }
+  },
+  "events": {
+    "kicker": "Depois do deploy · Integração",
+    "heading": "Arquitetura orientada a eventos: o contrato anuncia, a tua app reage",
+    "subtitle": "Porque importa: um contrato não consegue enviar um email, atualizar um ecrã nem chamar o teu CRM. Só consegue anunciar que algo aconteceu. Um evento é esse anúncio, e é o gatilho de que os teus sistemas off-chain estão à espera.",
+    "hint": "Escolhe uma situação e depois envia a transação",
+    "scenarios": {
+      "payment": {
+        "label": "Um cliente paga em tokens",
+        "reactions": [
+          "Recibo enviado por email ao cliente",
+          "O saldo atualiza-se no dashboard",
+          "Encomenda marcada como paga, o envio arranca"
+        ]
+      },
+      "delivery": {
+        "label": "Uma entrega é confirmada",
+        "reactions": [
+          "Comprador avisado de que a encomenda chegou",
+          "A página de seguimento passa a \"Entregue\"",
+          "O ERP liberta a fatura do fornecedor para pagamento"
+        ]
+      },
+      "ticket": {
+        "label": "Um bilhete NFT é emitido",
+        "reactions": [
+          "Bilhete e código QR enviados por email ao comprador",
+          "O contador de \"lugares livres\" desce um",
+          "Comprador acrescentado à lista de convidados no CRM"
+        ]
+      }
+    },
+    "reactionKinds": [
+      "Enviar um email",
+      "Atualizar um ecrã",
+      "Arrancar um fluxo de trabalho"
+    ],
+    "onChain": "On-chain",
+    "contractTitle": "O teu contrato",
+    "send": "Enviar a transação",
+    "again": "Correr outra vez",
+    "contractSteps": {
+      "executed": "A função corre, o estado é atualizado",
+      "emitted": "Evento emitido"
+    },
+    "arrowEmit": "emite",
+    "arrowHear": "escuta",
+    "eventLabel": "Evento",
+    "eventNote": "Escrito no log da transação, onde qualquer pessoa o pode ler.",
+    "offChain": "Off-chain",
+    "listening": "à escuta…",
+    "heard": "evento recebido",
+    "appTitle": "A tua app reage",
+    "listenerNote": "o listener inteiro, numa linha (ethers.js)",
+    "facts": [
+      {
+        "label": "Um registo, não uma mensagem",
+        "desc": "O contrato não chama ninguém. Escreve o evento no log da transação, e quem estiver à escuta apanha-o."
+      },
+      {
+        "label": "Sentido único",
+        "desc": "Os contratos não conseguem ler eventos, nem sequer os seus. Os eventos existem para o mundo exterior."
+      },
+      {
+        "label": "Em direto ou mais tarde",
+        "desc": "Uma app pode subscrever através de um nó e receber os eventos à medida que acontecem, ou pesquisar os antigos em qualquer altura."
+      }
+    ],
+    "fitLabel": "Onde encaixa: ",
+    "fitBody": "o listener chega à chain pelo mesmo acesso a um nó do slide anterior. É assim que os teus sistemas existentes acompanham o contrato sem ninguém a vigiar um block explorer."
+  },
   "deeper": {
     "kicker": "Se fores mais longe",
     "badge": "Opcional · leitura rápida",
@@ -364,19 +740,23 @@
   "keyPoints": {
     "s6-why": "Shipping a contract is a short, repeatable routine: standard, template, tool, testnet.",
     "s6-erc": "A standard is a promise about your contract's buttons, so tools built by strangers work with it.",
+    "s6-eip": "A standard is not decreed. Anyone can propose it, editors check its form, and open review makes it Final.",
     "s6-template": "The safest line of code is the one you did not have to write.",
+    "s6-ai": "AI can write the contract. Only you can answer for it: if you cannot explain a line, do not deploy it.",
     "s6-where": "A testnet is a dress rehearsal: same tools, same steps, nothing at stake.",
     "s6-deploy": "Do these four steps once on a testnet and you know the routine: mainnet is the same, with real money.",
+    "s6-hosting": "You host a website and borrow a doorway to the chain. The contract itself is already hosted, by the network.",
+    "s6-events": "A contract cannot reach out to your systems. It emits an event, and everything off-chain is a reaction to it.",
     "s6-deeper": "The contract is the smallest part of the product. Everything around it is ordinary software."
   },
   "takeaways": {
     "title": "Secção 06 — Conclusões",
     "items": [
       "Pôr um contrato no ar é uma rotina: escolher um standard, adaptar um template, escolher uma ferramenta e uma rede, fazer deploy",
-      "Um ERC é uma interface partilhada: segue um e carteiras, exchanges e marketplaces funcionam com o teu contrato desde o primeiro dia",
+      "Um ERC é uma interface partilhada, acordada em público através do processo de EIPs: segue um e carteiras, exchanges e marketplaces funcionam com o teu contrato desde o primeiro dia",
       "Não escrevas de raiz: herda os contratos auditados da OpenZeppelin e acrescenta apenas as tuas regras",
-      "Ensaia numa testnet como a Sepolia: os mesmos passos da mainnet, pagos com ETH de teste gratuito, sem nada em jogo",
-      "Um deploy deixa factos públicos que qualquer pessoa pode verificar num block explorer: um endereço de contrato e um hash de transação",
+      "Ensaia numa testnet como a Sepolia: os mesmos passos da mainnet, com ETH de teste gratuito. No fim tens um endereço de contrato e um hash de transação que qualquer pessoa pode verificar",
+      "À volta do contrato: um site estático para o front-end, uma carteira e um nó (RPC) para chegar à chain, e eventos que avisam os teus outros sistemas do que aconteceu",
       "A IA pode redigir o código. Continuas a ter de o ler, de o testar numa testnet e de mandar auditar tudo o que guarde dinheiro real"
     ]
   },

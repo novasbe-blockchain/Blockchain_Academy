@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
@@ -14,6 +14,9 @@ import {
   Check, ChevronLeft, ChevronRight, RotateCcw, KeyRound, Hammer, Network, Coins, FlaskConical,
   GraduationCap, Building2, Monitor, Plug, Server, FileCode2, Eye, Radio, Database, Bot,
   ArrowDown, ExternalLink, MousePointerClick,
+  GitPullRequest, MessagesSquare, Timer, BadgeCheck, Hourglass, Undo2, Infinity as InfinityIcon,
+  UserPen, ClipboardCheck, Users, ZoomOut, PenLine, BookOpen, ShieldCheck, Copy, MessageSquare,
+  SquareTerminal, Sparkles, TriangleAlert, Cloud, AppWindow, Mail, LayoutDashboard, Workflow, Zap,
 } from 'lucide-react';
 
 const NS = 'smart-contracts/section-6';
@@ -23,9 +26,13 @@ const NS = 'smart-contracts/section-6';
 const chapterIds = [
   's6-why',
   's6-erc',
+  's6-eip',
   's6-template',
+  's6-ai',
   's6-where',
   's6-deploy',
+  's6-hosting',
+  's6-events',
   's6-deeper',
   's6-takeaways',
   's6-quiz-template',
@@ -41,6 +48,8 @@ const SKY = '#0ea5e9';
 const GREEN = '#39B54A';
 const AMBER = '#f59e0b';
 const REMIX_ORANGE = '#f97316';
+const RED = '#ef4444';
+const SLATE = '#64748b';
 
 // The public testnet the walkthrough uses. ethereum.org lists Sepolia as the
 // recommended default testnet for application development (checked 2026-11).
@@ -130,6 +139,99 @@ const AROUND_META = [
   { Icon: Bot,      color: VIOLET },
 ];
 
+// ── EIP lifecycle ────────────────────────────────────────────────────────────
+// Statuses, side states and types follow EIP-1 (eips.ethereum.org/EIPS/eip-1,
+// checked 2026-11). Status and type names are the official English terms, so
+// they stay untranslated; the explanations live in the locale files.
+// `actor` = who holds the proposal in the zoomed-out strip (index into EIP_ACTORS).
+const EIP_STAGES = [
+  { id: 'idea',     name: 'Idea',      Icon: Lightbulb,      color: AMBER,  actor: 0 },
+  { id: 'draft',    name: 'Draft',     Icon: GitPullRequest, color: INDIGO, actor: 1 },
+  { id: 'review',   name: 'Review',    Icon: MessagesSquare, color: VIOLET, actor: 2 },
+  { id: 'lastCall', name: 'Last Call', Icon: Timer,          color: SKY,    actor: 2 },
+  { id: 'final',    name: 'Final',     Icon: BadgeCheck,     color: GREEN,  actor: 3 },
+];
+// `from` = indexes of the stages this side state can be entered from.
+// Stagnant: EIP-1 names Draft, Review and Last Call. Withdrawn: EIP-1's text does
+// not list source statuses; a proposal exists in the repo from Draft and is
+// frozen at Final, so the same three stages are marked.
+const EIP_SIDE = [
+  { id: 'stagnant',  name: 'Stagnant',  Icon: Hourglass,    color: SLATE, from: [1, 2, 3] },
+  { id: 'withdrawn', name: 'Withdrawn', Icon: Undo2,        color: RED,   from: [1, 2, 3] },
+  { id: 'living',    name: 'Living',    Icon: InfinityIcon, color: SKY,   from: [] as number[] },
+];
+const EIP_ACTORS = [
+  { Icon: UserPen,        color: AMBER },
+  { Icon: ClipboardCheck, color: INDIGO },
+  { Icon: Users,          color: VIOLET },
+  { Icon: BadgeCheck,     color: GREEN },
+];
+// Examples verified on eips.ethereum.org: 1559 Core, 8 Networking, 1193 Interface,
+// 20/721/2981 ERC, 1 Meta, 2228 Informational.
+const EIP_TYPES = [
+  { id: 'core',          name: 'Core',          color: AMBER,  track: true },
+  { id: 'networking',    name: 'Networking',    color: SKY,    track: true },
+  { id: 'interface',     name: 'Interface',     color: VIOLET, track: true },
+  { id: 'erc',           name: 'ERC',           color: INDIGO, track: true },
+  { id: 'meta',          name: 'Meta',          color: SLATE,  track: false },
+  { id: 'informational', name: 'Informational', color: GREEN,  track: false },
+];
+// The running example: ERC-2981 (NFT Royalty Standard), the standard the ERC slide ends on.
+const EIP_EXAMPLE = { number: '2981', title: 'NFT Royalty Standard' };
+
+// ── AI-driven development ────────────────────────────────────────────────────
+const AI_PROMPTS = [
+  { Icon: PenLine,     color: INDIGO },
+  { Icon: BookOpen,    color: SKY },
+  { Icon: ShieldCheck, color: GREEN },
+];
+const AI_TOOLS = [
+  { Icon: MessageSquare,  color: INDIGO,       href: '' },
+  { Icon: SquareTerminal, color: VIOLET,       href: '' },
+  { Icon: Sparkles,       color: REMIX_ORANGE, href: 'https://remix-ide.readthedocs.io/en/latest/ai.html' },
+  { Icon: Blocks,         color: SKY,          href: 'https://mcp.openzeppelin.com/' },
+];
+const AI_LOOP = [
+  { Icon: MessageSquare, color: INDIGO },
+  { Icon: Eye,           color: SKY },
+  { Icon: FlaskConical,  color: VIOLET },
+  { Icon: ShieldCheck,   color: GREEN },
+];
+
+// ── Hosting: front end vs chain access ───────────────────────────────────────
+// Left to right: static host → browser → wallet → node (RPC) → network.
+const HOST_NODES = [
+  { id: 'host',    Icon: Cloud,     color: SKY },
+  { id: 'browser', Icon: AppWindow, color: INDIGO },
+  { id: 'wallet',  Icon: Wallet,    color: AMBER },
+  { id: 'rpc',     Icon: Server,    color: VIOLET },
+  { id: 'chain',   Icon: Network,   color: GREEN },
+];
+// Which nodes each scenario lights up (indexes into HOST_NODES).
+const HOST_SCENARIOS = [
+  { id: 'load',  Icon: Globe, color: SKY,    nodes: [0, 1] },
+  { id: 'read',  Icon: Eye,   color: VIOLET, nodes: [1, 3, 4] },
+  { id: 'write', Icon: PenLine, color: GREEN, nodes: [1, 2, 3, 4] },
+];
+
+// ── Event-driven architecture ────────────────────────────────────────────────
+// `call` / `event` / `listener` are code, so they are not translated. Transfer is the
+// real ERC-20 / ERC-721 event (a mint is a Transfer from the zero address);
+// DeliveryConfirmed is an illustrative custom event.
+const EVENT_SCENARIOS = [
+  { id: 'payment',  call: 'transfer(to, 10 MTK)',    event: 'Transfer(from, to, 10 MTK)',       listener: 'token.on("Transfer", …)' },
+  { id: 'delivery', call: 'confirmDelivery(#1042)',  event: 'DeliveryConfirmed(#1042)',         listener: 'orders.on("DeliveryConfirmed", …)' },
+  { id: 'ticket',   call: 'mint(buyer)',             event: 'Transfer(0x0, buyer, ticket #42)', listener: 'tickets.on("Transfer", …)' },
+];
+const REACTION_META = [
+  { Icon: Mail,            color: SKY },
+  { Icon: LayoutDashboard, color: INDIGO },
+  { Icon: Workflow,        color: VIOLET },
+];
+// Simulation phases: 0 idle · 1 executing · 2 event emitted · 3 received · 4–6 reactions fire.
+const EVENT_LAST_PHASE = 6;
+const EVENT_PHASE_MS = [0, 800, 900, 600, 550, 550];
+
 // ═══ TYPES FOR returnObjects ARRAYS ═════════════════════════════════════════
 
 interface LabelDesc { label: string; desc: string; }
@@ -137,6 +239,9 @@ interface PathOption { name: string; desc: string; chips: string[]; }
 interface DeployStepCopy { label: string; title: string; actions: string[]; bridge: string; }
 interface StackItem { label: string; desc: string; tools: string; }
 interface QuizCopy { question: string; options: string[]; explanation: string; }
+interface AiPromptCopy { tab: string; goal: string; prompt: string; checks: string[]; }
+interface HostOption { name: string; desc: string; }
+interface EventScenarioCopy { label: string; reactions: string[]; }
 
 // ═══ SHARED BITS ════════════════════════════════════════════════════════════
 
@@ -352,13 +457,340 @@ function ErcSlide() {
         <ERCExplorer />
       </div>
       {/* The whole "why standards evolve / EIP process" story, in one line */}
-      <p className="shrink-0 mt-3 text-xs text-muted-foreground">
+      <p className="shrink-0 mt-3 text-xs text-muted-foreground lg:pr-20">
         <span className="font-bold text-foreground">{t('erc.evolveLabel')}</span>{t('erc.evolveBody')}{' '}
         <a href="https://eips.ethereum.org/erc" target="_blank" rel="noreferrer" className="font-bold text-[#6366f1] hover:underline whitespace-nowrap">
           {t('erc.browseLink')} ↗
         </a>
       </p>
       <KeyPointBar text={t('keyPoints.s6-erc')} className="mt-3" />
+    </div>
+  );
+}
+
+// ═══ SLIDE 2b · INTERACTIVE: HOW AN EIP BECOMES A STANDARD ══════════════════
+
+/** What the proposal physically is at each stage: a forum thread first, then a file in the EIPs repository. */
+function EipDocument({ stageIndex }: { stageIndex: number }) {
+  const { t } = useTranslation(NS);
+  const stage = EIP_STAGES[stageIndex];
+
+  if (stageIndex === 0) {
+    return (
+      <MockWindow title={t('eip.doc.forumTitle')} accent={stage.color} className="w-full">
+        <div className="flex items-start gap-2.5">
+          <div className="size-8 rounded-full shrink-0" style={{ background: `linear-gradient(135deg, ${AMBER}, ${REMIX_ORANGE})` }} />
+          <div className="min-w-0">
+            <div className="text-xs font-bold text-foreground leading-snug">{t('eip.doc.forumPost')}</div>
+            <div className="text-[11px] text-muted-foreground mt-0.5">{t('eip.doc.forumMeta')}</div>
+          </div>
+        </div>
+        <div className="mt-2 space-y-1.5 pl-10" aria-hidden>
+          {[80, 62].map(w => (
+            <div key={w} className="flex items-center gap-2">
+              <span className="size-4 rounded-full bg-foreground/15 shrink-0" />
+              <span className="h-2 rounded bg-foreground/10" style={{ width: `${w}%` }} />
+            </div>
+          ))}
+        </div>
+      </MockWindow>
+    );
+  }
+
+  // Last Call carries a published deadline (the real header field is `last-call-deadline`); Final is frozen.
+  const statusTag = stage.id === 'lastCall' ? t('eip.doc.deadlineTag') : stage.id === 'final' ? t('eip.doc.frozen') : '';
+  const rows: [string, string][] = [
+    ['eip', EIP_EXAMPLE.number],
+    ['title', EIP_EXAMPLE.title],
+    ['status', stage.name],
+    ['type', 'Standards Track'],
+    ['category', 'ERC'],
+  ];
+  return (
+    <MockWindow title={t('eip.doc.repoTitle')} accent={stage.color} className="w-full">
+      <div className="font-mono text-xs leading-5 space-y-0.5">
+        {rows.map(([key, value]) => {
+          const isStatus = key === 'status';
+          return (
+            <div key={key} className="flex items-center gap-2 px-2 rounded" style={isStatus ? { backgroundColor: stage.color + '1f', boxShadow: `inset 3px 0 0 ${stage.color}` } : undefined}>
+              <span className="text-muted-foreground">{key}:</span>
+              {isStatus ? (
+                <motion.span key={stage.id} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} className="font-black" style={{ color: stage.color }}>{value}</motion.span>
+              ) : (
+                <span className="text-foreground truncate">{value}</span>
+              )}
+              {isStatus && statusTag && (
+                <span className="ml-auto font-sans text-[10px] font-black px-1.5 rounded-full whitespace-nowrap" style={{ backgroundColor: stage.color + '22', color: stage.color }}>{statusTag}</span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </MockWindow>
+  );
+}
+
+function EipSlide() {
+  const { t } = useTranslation(NS);
+  const [active, setActive] = useState(0);
+  const [side, setSide] = useState<string | null>(null);
+  const [typeId, setTypeId] = useState('erc');
+  const last = EIP_STAGES.length - 1;
+  const stage = EIP_STAGES[active];
+  const sideMeta = side ? EIP_SIDE.find(s => s.id === side) : undefined;
+  const panel = sideMeta ?? stage;
+  const actors = t('eip.actors', { returnObjects: true }) as LabelDesc[];
+  const flows = t('eip.flows', { returnObjects: true }) as string[];
+  const type = EIP_TYPES.find(ty => ty.id === typeId)!;
+  const pos = (i: number) => `${(i / last) * 100}%`;
+  const go = (i: number) => { setActive(i); setSide(null); };
+
+  const typeChip = (ty: typeof EIP_TYPES[number]) => (
+    <button
+      key={ty.id}
+      type="button"
+      onClick={() => setTypeId(ty.id)}
+      aria-pressed={typeId === ty.id}
+      className="px-2 py-1.5 rounded-lg border-2 text-xs font-black transition-colors cursor-pointer"
+      style={{
+        borderColor: typeId === ty.id ? ty.color : ty.color + '40',
+        backgroundColor: typeId === ty.id ? ty.color : 'transparent',
+        color: typeId === ty.id ? 'white' : ty.color,
+      }}
+    >
+      {ty.name}
+    </button>
+  );
+
+  return (
+    <div className="h-full flex flex-col p-6 lg:px-8 lg:py-6">
+      <SlideHeader kicker={t('eip.kicker')} heading={t('eip.heading')} subtitle={t('eip.subtitle')} />
+
+      <div className="flex-1 min-h-0 flex flex-col gap-3">
+        {/* Zoomed out: the whole information flow, with the proposal's current holder lit */}
+        <div className="shrink-0 rounded-2xl border border-border bg-card/50 px-4 pt-2.5 pb-3">
+          <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2.5">
+            <ZoomOut className="size-3.5" />{t('eip.zoomLabel')}
+            <span className="ml-auto flex items-center gap-1.5 transition-colors duration-300" style={{ color: EIP_ACTORS[stage.actor].color }}>
+              <span className="size-2.5 rounded-full" style={{ backgroundColor: EIP_ACTORS[stage.actor].color }} />{t('eip.hereTag')}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-stretch gap-2">
+            {EIP_ACTORS.map((a, ai) => {
+              const here = stage.actor === ai;
+              return [
+                ai > 0 && (
+                  <div key={`flow-${ai}`} className="hidden lg:flex items-center">
+                    <FlowArrow color={a.color} label={flows[ai - 1]} />
+                  </div>
+                ),
+                <div
+                  key={ai}
+                  className="relative flex items-center gap-2.5 px-2.5 py-2 rounded-xl border-2 transition-all duration-300"
+                  style={{
+                    borderColor: here ? a.color : 'transparent',
+                    backgroundColor: here ? a.color + '14' : 'var(--muted)',
+                    opacity: here ? 1 : 0.8,
+                  }}
+                >
+                  <div className="size-9 rounded-full border-2 bg-card flex items-center justify-center shrink-0" style={{ borderColor: a.color }}>
+                    <a.Icon className="size-[18px]" style={{ color: a.color }} />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-black text-foreground leading-tight">{actors[ai].label}</div>
+                    <div className="text-[11px] text-muted-foreground leading-snug">{actors[ai].desc}</div>
+                  </div>
+                  {here && (
+                    <motion.span layoutId="s6-eip-here" className="absolute top-2 right-2 size-3 flex items-center justify-center" aria-hidden>
+                      <motion.span
+                        className="absolute inset-0 rounded-full"
+                        style={{ backgroundColor: a.color }}
+                        animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+                        transition={{ duration: 1.4, repeat: Infinity, ease: 'easeOut' }}
+                      />
+                      <span className="relative size-2.5 rounded-full" style={{ backgroundColor: a.color }} />
+                    </motion.span>
+                  )}
+                </div>,
+              ];
+            })}
+          </div>
+        </div>
+
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-3">
+          {/* Stepper: walk one proposal through the statuses */}
+          <div data-fit className="min-h-0 rounded-2xl border-2 bg-card p-4 flex flex-col transition-colors duration-300" style={{ borderColor: panel.color + '77' }}>
+            <div className="shrink-0 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#6366f1]">
+              <MousePointerClick className="size-3.5" />{t('eip.hint')}
+            </div>
+
+            {/* Status rail */}
+            <div className="shrink-0 relative h-1.5 rounded-full bg-border mx-[8%] mt-7 mb-10">
+              <motion.div
+                className="absolute left-0 top-0 h-full rounded-full"
+                style={{ background: `linear-gradient(90deg, ${AMBER}, ${INDIGO}, ${VIOLET}, ${SKY}, ${GREEN})` }}
+                initial={false}
+                animate={{ width: pos(active) }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
+              />
+              {EIP_STAGES.map((st, i) => (
+                <button
+                  key={st.id}
+                  type="button"
+                  onClick={() => go(i)}
+                  aria-current={i === active ? 'step' : undefined}
+                  className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                  style={{ left: pos(i) }}
+                >
+                  <span
+                    className="size-10 rounded-full border-2 flex items-center justify-center bg-card transition-all duration-300"
+                    style={{
+                      borderColor: i <= active ? st.color : 'var(--border)',
+                      boxShadow: i === active ? `0 0 0 5px ${st.color}33` : undefined,
+                      transform: i === active ? 'scale(1.12)' : undefined,
+                    }}
+                  >
+                    {i < active
+                      ? <Check className="size-5" style={{ color: st.color }} strokeWidth={3} />
+                      : <st.Icon className="size-5" style={{ color: i === active ? st.color : 'var(--muted-foreground)' }} />}
+                  </span>
+                  <span
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 text-xs font-bold whitespace-nowrap transition-colors"
+                    style={{ color: i === active ? st.color : 'var(--muted-foreground)' }}
+                  >
+                    {st.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Side exits */}
+            <div className="shrink-0 flex items-center gap-2 flex-wrap mb-2.5">
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('eip.sideLabel')}</span>
+              {EIP_SIDE.map(s => {
+                const reachable = s.from.includes(active);
+                const on = side === s.id;
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setSide(on ? null : s.id)}
+                    aria-pressed={on}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border-2 text-xs font-bold transition-all cursor-pointer"
+                    style={{
+                      borderColor: on ? s.color : reachable ? s.color + 'aa' : 'var(--border)',
+                      borderStyle: on ? 'solid' : 'dashed',
+                      backgroundColor: on ? s.color : reachable ? s.color + '12' : 'transparent',
+                      color: on ? 'white' : reachable ? s.color : 'var(--muted-foreground)',
+                    }}
+                  >
+                    <s.Icon className="size-3.5" />{s.name}
+                    {reachable && !on && <span className="text-[10px] font-semibold opacity-80">· {t('eip.sideReachable')}</span>}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Detail for the current status, or for the side state being inspected */}
+            <motion.div
+              key={side ?? stage.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.25 }}
+              className="flex-1 min-h-0 rounded-xl px-3.5 py-3 flex flex-col gap-2"
+              style={{ backgroundColor: panel.color + '10' }}
+            >
+              <div className="flex items-center gap-3">
+                <div className="size-11 rounded-xl flex items-center justify-center text-white shrink-0" style={{ backgroundColor: panel.color }}>
+                  <panel.Icon className="size-6" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: panel.color }}>
+                    {sideMeta ? t('eip.sideKicker') : t('eip.stageOf', { n: active + 1, total: EIP_STAGES.length })}
+                  </div>
+                  <div className="font-black text-xl text-foreground leading-tight">
+                    {panel.name}{!sideMeta && <span className="font-semibold text-sm text-muted-foreground"> · {t(`eip.stages.${stage.id}.tagline`)}</span>}
+                  </div>
+                </div>
+              </div>
+              {sideMeta ? (
+                <p className="text-sm text-foreground leading-snug">{t(`eip.side.${sideMeta.id}`)}</p>
+              ) : (
+                <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-2 text-sm leading-snug">
+                  {(['who', 'what', 'rule'] as const).map(row => (
+                    <div key={row} className="contents">
+                      <dt className="text-[10px] font-black uppercase tracking-widest pt-0.5 whitespace-nowrap" style={{ color: panel.color }}>{t(`eip.rows.${row}`)}</dt>
+                      <dd className={row === 'what' ? 'text-foreground' : 'text-muted-foreground'}>{t(`eip.stages.${stage.id}.${row}`)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+            </motion.div>
+
+            <div className="shrink-0 mt-3 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => go(Math.max(0, active - 1))}
+                disabled={active === 0}
+                className="flex items-center gap-1 px-3 py-2 rounded-xl border border-border text-sm font-bold text-muted-foreground hover:text-foreground transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-default"
+              >
+                <ChevronLeft className="size-4" />{t('eip.back')}
+              </button>
+              {active < last ? (
+                <button
+                  type="button"
+                  onClick={() => go(active + 1)}
+                  className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-bold text-white transition-colors cursor-pointer"
+                  style={{ backgroundColor: stage.color }}
+                >
+                  {t('eip.next', { status: EIP_STAGES[active + 1].name })}<ChevronRight className="size-4" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => go(0)}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl border-2 text-sm font-bold transition-colors cursor-pointer"
+                  style={{ borderColor: stage.color, color: stage.color }}
+                >
+                  <RotateCcw className="size-4" />{t('eip.restart')}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* The proposal itself + what kind of EIP it is */}
+          <div className="min-h-0 flex flex-col gap-3">
+            <EipDocument stageIndex={active} />
+
+            <div data-fit className="flex-1 min-h-0 rounded-2xl border border-border bg-card px-3.5 py-3 flex flex-col gap-2">
+              <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('eip.typesLabel')}</div>
+              <div className="rounded-xl border border-dashed border-border p-2">
+                <div className="text-[10px] font-black uppercase tracking-widest text-foreground">Standards Track <span className="font-semibold normal-case tracking-normal text-muted-foreground">· {t('eip.standardsTrackDesc')}</span></div>
+                <div className="mt-1.5 grid grid-cols-4 gap-1.5">
+                  {EIP_TYPES.filter(ty => ty.track).map(typeChip)}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-1.5">
+                {EIP_TYPES.filter(ty => !ty.track).map(typeChip)}
+              </div>
+              {/* lg:pr-20 keeps the text clear of the floating slide-nav buttons */}
+              <motion.div
+                key={type.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+                className="mt-auto rounded-xl p-2.5 lg:pr-20"
+                style={{ backgroundColor: type.color + '12' }}
+              >
+                <p className="text-xs text-foreground leading-snug"><span className="font-black" style={{ color: type.color }}>{type.name}: </span>{t(`eip.types.${type.id}.desc`)}</p>
+                <p className="mt-1 text-[11px] text-muted-foreground leading-snug"><span className="font-bold">{t('eip.exampleLabel')}</span>{t(`eip.types.${type.id}.example`)}</p>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <KeyPointBar text={t('keyPoints.s6-eip')} className="mt-3" />
     </div>
   );
 }
@@ -463,6 +895,180 @@ function TemplateSlide() {
       </div>
 
       <KeyPointBar text={t('keyPoints.s6-template')} className="mt-3" />
+    </div>
+  );
+}
+
+// ═══ SLIDE 3b · INTERACTIVE: AI-DRIVEN DEVELOPMENT ══════════════════════════
+
+/** Copy to the clipboard; falls back to a hidden textarea where the async API is unavailable (plain-HTTP dev hosts). */
+async function copyText(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch { /* fall through to the legacy path */ }
+  const area = document.createElement('textarea');
+  area.value = text;
+  area.setAttribute('readonly', '');
+  area.style.position = 'fixed';
+  area.style.opacity = '0';
+  document.body.appendChild(area);
+  area.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch { ok = false; }
+  document.body.removeChild(area);
+  return ok;
+}
+
+function AiSlide() {
+  const { t } = useTranslation(NS);
+  const [active, setActive] = useState(0);
+  const [copied, setCopied] = useState(false);
+  const prompts = t('ai.prompts', { returnObjects: true }) as AiPromptCopy[];
+  const tools = t('ai.tools', { returnObjects: true }) as StackItem[];
+  const loop = t('ai.loop', { returnObjects: true }) as LabelDesc[];
+  const meta = AI_PROMPTS[active];
+  const copy = prompts[active];
+
+  useEffect(() => {
+    if (!copied) return;
+    const id = window.setTimeout(() => setCopied(false), 1600);
+    return () => window.clearTimeout(id);
+  }, [copied]);
+
+  const pick = (i: number) => { setActive(i); setCopied(false); };
+
+  return (
+    <div className="h-full flex flex-col p-6 lg:px-8 lg:py-6">
+      <SlideHeader kicker={t('ai.kicker')} heading={t('ai.heading')} subtitle={t('ai.subtitle')} color={SKY} />
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] gap-3">
+        {/* Prompt workbench */}
+        <div data-fit className="min-h-0 rounded-2xl border-2 bg-card p-4 flex flex-col gap-3 transition-colors duration-300" style={{ borderColor: meta.color + '77' }}>
+          <div className="shrink-0 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#6366f1]">
+            <MousePointerClick className="size-3.5" />{t('ai.hint')}
+          </div>
+          <div className="shrink-0 grid grid-cols-3 gap-2">
+            {AI_PROMPTS.map((p, pi) => {
+              const on = pi === active;
+              return (
+                <button
+                  key={pi}
+                  type="button"
+                  onClick={() => pick(pi)}
+                  aria-pressed={on}
+                  className="flex items-center gap-2 p-2.5 rounded-xl border-2 text-left transition-all cursor-pointer"
+                  style={{ borderColor: on ? p.color : p.color + '40', backgroundColor: on ? p.color + '14' : 'transparent' }}
+                >
+                  <span className="size-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: on ? p.color : p.color + '1f' }}>
+                    <p.Icon className="size-4" style={{ color: on ? 'white' : p.color }} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[10px] font-black uppercase tracking-widest" style={{ color: p.color }}>{t('ai.promptTag', { n: pi + 1 })}</span>
+                    <span className="block text-sm font-black text-foreground leading-tight">{prompts[pi].tab}</span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <motion.div key={active} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="flex-1 min-h-0 flex flex-col gap-3">
+            <p className="shrink-0 text-sm text-muted-foreground leading-snug"><span className="font-bold" style={{ color: meta.color }}>{t('ai.goalLabel')}</span>{copy.goal}</p>
+
+            {/* The prompt, as a chat message ready to paste */}
+            <div className="shrink-0 rounded-xl border overflow-hidden" style={{ borderColor: meta.color + '66' }}>
+              <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-border" style={{ backgroundColor: meta.color + '14' }}>
+                <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest" style={{ color: meta.color }}>
+                  <MessageSquare className="size-3.5" />{t('ai.pasteLabel')}
+                </span>
+                <button
+                  type="button"
+                  onClick={async () => setCopied(await copyText(copy.prompt))}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-black text-white transition-colors cursor-pointer"
+                  style={{ backgroundColor: copied ? GREEN : meta.color }}
+                >
+                  {copied ? <Check className="size-3.5" strokeWidth={3} /> : <Copy className="size-3.5" />}
+                  {copied ? t('ai.copied') : t('ai.copy')}
+                </button>
+              </div>
+              <p className="px-3.5 py-2.5 bg-muted font-mono text-xs leading-relaxed text-foreground whitespace-pre-line">{copy.prompt}</p>
+            </div>
+
+            <div className="mt-auto rounded-xl p-3" style={{ backgroundColor: meta.color + '10' }}>
+              <div className="text-[10px] font-black uppercase tracking-widest mb-1.5" style={{ color: meta.color }}>{t('ai.checksLabel')}</div>
+              <ul className="space-y-1">
+                {copy.checks.map((c, ci) => (
+                  <li key={ci} className="flex gap-2 text-xs text-foreground leading-snug">
+                    <Check className="size-3.5 shrink-0 mt-0.5" style={{ color: meta.color }} strokeWidth={3} />
+                    <span>{c}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Where to paste it */}
+        <div className="min-h-0 flex flex-col gap-2 min-w-0">
+          <div className="shrink-0 text-xs font-bold uppercase tracking-widest" style={{ color: SKY }}>{t('ai.toolsLabel')}</div>
+          <div className="flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {tools.map((tool, ti) => {
+              const { Icon, color, href } = AI_TOOLS[ti];
+              return (
+                <div key={ti} className="p-3.5 bg-card border rounded-xl flex flex-col gap-1.5" style={{ borderColor: color + '50' }}>
+                  <div className="flex items-center gap-2.5">
+                    <div className="size-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: color + '18' }}>
+                      <Icon className="size-5" style={{ color }} />
+                    </div>
+                    <div className="font-black text-sm leading-tight" style={{ color }}>{tool.label}</div>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-snug">{tool.desc}</p>
+                  <div className="mt-auto pt-1 flex flex-wrap items-center gap-1.5">
+                    {tool.tools.split(' · ').map(name => (
+                      <span key={name} className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ backgroundColor: color + '15', color }}>{name}</span>
+                    ))}
+                    {href && (
+                      <a href={href} target="_blank" rel="noreferrer" aria-label={tool.label} className="hover:opacity-70 transition-opacity" style={{ color }}>
+                        <ExternalLink className="size-3.5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="shrink-0 flex items-start gap-2 px-3 py-2 rounded-xl border" style={{ borderColor: RED + '55', backgroundColor: RED + '10' }}>
+            <TriangleAlert className="size-4 shrink-0 mt-0.5" style={{ color: RED }} />
+            <p className="text-[11px] text-foreground leading-snug">{t('ai.secretWarning')}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* The loop that keeps you the author */}
+      {/* lg:pr-20 keeps the last step clear of the floating slide-nav buttons */}
+      <div className="shrink-0 mt-3 rounded-2xl border border-border bg-card/50 px-4 py-2 lg:pr-20">
+        <div className="grid grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-center gap-2">
+          {loop.map((l, li) => {
+            const { Icon, color } = AI_LOOP[li];
+            return [
+              li > 0 && <ChevronRight key={`sep-${li}`} className="hidden lg:block size-5 text-muted-foreground" />,
+              <div key={li} className="flex items-center gap-2.5 min-w-0">
+                <div className="size-9 rounded-full border-2 bg-card flex items-center justify-center shrink-0" style={{ borderColor: color }}>
+                  <Icon className="size-4" style={{ color }} />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-sm font-black text-foreground leading-tight">{l.label}</div>
+                  <div className="text-[11px] text-muted-foreground leading-snug">{l.desc}</div>
+                </div>
+              </div>,
+            ];
+          })}
+        </div>
+      </div>
+
+      <KeyPointBar text={t('keyPoints.s6-ai')} className="mt-3" />
     </div>
   );
 }
@@ -957,6 +1563,334 @@ function DeployWalkthrough() {
   );
 }
 
+// ═══ SLIDE 5b · INTERACTIVE: NODE INFRASTRUCTURE & WHERE TO HOST ════════════
+
+function HostingSlide() {
+  const { t } = useTranslation(NS);
+  const [scenario, setScenario] = useState(0);
+  const sc = HOST_SCENARIOS[scenario];
+  const frontOptions = t('hosting.front.options', { returnObjects: true }) as HostOption[];
+  const chainOptions = t('hosting.chain.options', { returnObjects: true }) as HostOption[];
+  const lit = (i: number) => sc.nodes.includes(i);
+  // An arrow is live when the node on its right is lit and some node to its left is lit too.
+  const arrowLit = (i: number) => lit(i) && sc.nodes.some(n => n < i);
+
+  return (
+    <div className="h-full flex flex-col p-6 lg:p-8">
+      <SlideHeader kicker={t('hosting.kicker')} heading={t('hosting.heading')} subtitle={t('hosting.subtitle')} color={SKY} />
+
+      <div className="flex-1 min-h-0 flex flex-col justify-center gap-3">
+        {/* Scenario picker + what happens */}
+        <div className="shrink-0 flex flex-col lg:flex-row lg:items-center gap-3">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-muted border border-border self-start">
+            {HOST_SCENARIOS.map((s, si) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => setScenario(si)}
+                aria-pressed={scenario === si}
+                className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-bold transition-colors cursor-pointer whitespace-nowrap"
+                style={{
+                  backgroundColor: scenario === si ? s.color : 'transparent',
+                  color: scenario === si ? 'white' : 'var(--muted-foreground)',
+                }}
+              >
+                <s.Icon className="size-4" />{t(`hosting.scenarios.${s.id}.label`)}
+              </button>
+            ))}
+          </div>
+          <motion.p key={sc.id} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} className="flex-1 text-sm text-foreground leading-snug">
+            {t(`hosting.scenarios.${sc.id}.desc`)}
+          </motion.p>
+        </div>
+
+        {/* The split: ① front end on a static host  ·  ② chain access through a wallet and a node */}
+        <div className="shrink-0 rounded-2xl border border-border bg-card/50 p-3">
+          <div className="hidden lg:grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] gap-2 mb-2">
+            <div className="col-span-3 flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ backgroundColor: SKY + '14' }}>
+              <span className="size-5 rounded-full text-[10px] font-black text-white flex items-center justify-center shrink-0" style={{ backgroundColor: SKY }}>1</span>
+              <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: SKY }}>{t('hosting.zones.front')}</span>
+            </div>
+            <div />
+            <div className="col-span-5 flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ backgroundColor: VIOLET + '14' }}>
+              <span className="size-5 rounded-full text-[10px] font-black text-white flex items-center justify-center shrink-0" style={{ backgroundColor: VIOLET }}>2</span>
+              <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: VIOLET }}>{t('hosting.zones.chain')}</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-stretch gap-2">
+            {HOST_NODES.map((n, ni) => {
+              const on = lit(ni);
+              const chips = t(`hosting.nodes.${n.id}.chips`, { returnObjects: true }) as string[];
+              return [
+                ni > 0 && (
+                  <div key={`arrow-${ni}`} className="hidden lg:flex items-center transition-opacity duration-300" style={{ opacity: arrowLit(ni) ? 1 : 0.2 }}>
+                    <FlowArrow color={arrowLit(ni) ? sc.color : SLATE} />
+                  </div>
+                ),
+                <div
+                  key={n.id}
+                  className="relative flex flex-col items-center text-center gap-1 px-2.5 py-2.5 rounded-xl border-2 bg-card transition-all duration-300"
+                  style={{
+                    borderColor: on ? n.color : 'var(--border)',
+                    boxShadow: on ? `0 0 0 4px ${n.color}22` : undefined,
+                    opacity: on ? 1 : 0.5,
+                  }}
+                >
+                  <div className="size-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: n.color + (on ? '' : '18') }}>
+                    <n.Icon className="size-5" style={{ color: on ? 'white' : n.color }} />
+                  </div>
+                  <div className="font-black text-sm text-foreground leading-tight">{t(`hosting.nodes.${n.id}.label`)}</div>
+                  <p className="text-[11px] text-muted-foreground leading-snug">{t(`hosting.nodes.${n.id}.desc`)}</p>
+                  <div className="mt-auto pt-1 flex flex-wrap justify-center gap-1">
+                    {chips.map(c => (
+                      <span key={c} className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ backgroundColor: n.color + '18', color: n.color }}>{c}</span>
+                    ))}
+                  </div>
+                  {!on && sc.id === 'read' && n.id === 'wallet' && (
+                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-muted border border-border text-muted-foreground whitespace-nowrap">
+                      {t('hosting.walletSkipped')}
+                    </span>
+                  )}
+                </div>,
+              ];
+            })}
+          </div>
+        </div>
+
+        {/* The two decisions */}
+        <div className="shrink-0 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.45fr)] gap-3">
+          <div className="rounded-2xl border bg-card px-4 py-3 flex flex-col gap-2" style={{ borderColor: SKY + '55' }}>
+            <div className="flex items-center gap-2">
+              <span className="size-6 rounded-full text-xs font-black text-white flex items-center justify-center shrink-0" style={{ backgroundColor: SKY }}>1</span>
+              <span className="font-black text-sm text-foreground">{t('hosting.front.title')}</span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-snug">{t('hosting.front.lead')}</p>
+            <div className="grid grid-cols-2 gap-2">
+              {frontOptions.map(o => (
+                <div key={o.name} className="rounded-xl p-2.5" style={{ backgroundColor: SKY + '10' }}>
+                  <div className="text-xs font-black" style={{ color: SKY }}>{o.name}</div>
+                  <div className="text-[11px] text-muted-foreground leading-snug">{o.desc}</div>
+                </div>
+              ))}
+            </div>
+            <p className="text-[11px] text-muted-foreground leading-snug">{t('hosting.front.also')}</p>
+          </div>
+
+          <div className="rounded-2xl border bg-card px-4 py-3 flex flex-col gap-2" style={{ borderColor: VIOLET + '55' }}>
+            <div className="flex items-center gap-2">
+              <span className="size-6 rounded-full text-xs font-black text-white flex items-center justify-center shrink-0" style={{ backgroundColor: VIOLET }}>2</span>
+              <span className="font-black text-sm text-foreground">{t('hosting.chain.title')}</span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-snug">{t('hosting.chain.lead')}</p>
+            <div className="grid grid-cols-3 gap-2">
+              {chainOptions.map((o, oi) => (
+                <div key={o.name} className="rounded-xl p-2.5" style={{ backgroundColor: VIOLET + '10' }}>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-xs font-black" style={{ color: VIOLET }}>{o.name}</span>
+                    {oi === 0 && (
+                      <span className="text-[10px] font-black uppercase tracking-wider px-1.5 rounded-full text-white whitespace-nowrap" style={{ backgroundColor: GREEN }}>{t('hosting.chain.startHere')}</span>
+                    )}
+                  </div>
+                  <div className="text-[11px] text-muted-foreground leading-snug">{o.desc}</div>
+                </div>
+              ))}
+            </div>
+            {/* lg:pr-20 keeps the line clear of the floating slide-nav buttons */}
+            <p className="text-[11px] text-muted-foreground leading-snug lg:pr-20">{t('hosting.chain.tradeoff')}</p>
+          </div>
+        </div>
+      </div>
+
+      <KeyPointBar text={t('keyPoints.s6-hosting')} className="mt-3" />
+    </div>
+  );
+}
+
+// ═══ SLIDE 5c · INTERACTIVE: EVENT-DRIVEN ARCHITECTURE ══════════════════════
+
+function EventsSlide() {
+  const { t } = useTranslation(NS);
+  const [scenario, setScenario] = useState(0);
+  const [phase, setPhase] = useState(0);
+  const sc = EVENT_SCENARIOS[scenario];
+  const copy = t(`events.scenarios.${sc.id}`, { returnObjects: true }) as EventScenarioCopy;
+  const reactionKinds = t('events.reactionKinds', { returnObjects: true }) as string[];
+  const facts = t('events.facts', { returnObjects: true }) as LabelDesc[];
+  const running = phase > 0 && phase < EVENT_LAST_PHASE;
+
+  // Advance the simulation one phase at a time once it has been started.
+  useEffect(() => {
+    if (phase === 0 || phase >= EVENT_LAST_PHASE) return;
+    const id = window.setTimeout(() => setPhase(p => p + 1), EVENT_PHASE_MS[phase]);
+    return () => window.clearTimeout(id);
+  }, [phase]);
+
+  const pick = (i: number) => { setScenario(i); setPhase(0); };
+  const emitted = phase >= 2;
+  const received = phase >= 3;
+
+  return (
+    <div className="h-full flex flex-col p-6 lg:p-8">
+      <SlideHeader kicker={t('events.kicker')} heading={t('events.heading')} subtitle={t('events.subtitle')} color={VIOLET} />
+
+      <div className="flex-1 min-h-0 flex flex-col justify-center gap-3">
+        {/* Scenario picker */}
+        <div className="shrink-0 flex items-center gap-2 flex-wrap">
+          <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#6366f1]">
+            <MousePointerClick className="size-3.5" />{t('events.hint')}
+          </span>
+          {EVENT_SCENARIOS.map((s, si) => (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => pick(si)}
+              aria-pressed={scenario === si}
+              className="px-3 py-1.5 rounded-full border-2 text-xs font-bold transition-colors cursor-pointer"
+              style={{
+                borderColor: scenario === si ? VIOLET : 'var(--border)',
+                backgroundColor: scenario === si ? VIOLET : 'transparent',
+                color: scenario === si ? 'white' : 'var(--muted-foreground)',
+              }}
+            >
+              {t(`events.scenarios.${s.id}.label`)}
+            </button>
+          ))}
+        </div>
+
+        {/* contract --emit event--> your app reacts */}
+        <div className="shrink-0 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,0.9fr)_auto_minmax(0,1.25fr)] items-center gap-2">
+          {/* On-chain: the contract */}
+          <div className="rounded-2xl border-2 bg-card p-4 flex flex-col gap-2.5" style={{ borderColor: GREEN + '66' }}>
+            <div className="flex items-center gap-2">
+              <FileCode2 className="size-4" style={{ color: GREEN }} />
+              <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: GREEN }}>{t('events.onChain')}</span>
+            </div>
+            <div className="font-black text-base text-foreground leading-tight">{t('events.contractTitle')}</div>
+            <div className="px-2.5 py-1.5 rounded-lg bg-muted font-mono text-xs text-foreground truncate">{sc.call}</div>
+            <button
+              type="button"
+              onClick={() => setPhase(1)}
+              disabled={running}
+              className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-sm font-bold text-white transition-opacity cursor-pointer disabled:opacity-60 disabled:cursor-default"
+              style={{ backgroundColor: GREEN }}
+            >
+              {phase >= EVENT_LAST_PHASE ? <RotateCcw className="size-4" /> : <Play className="size-4" />}
+              {phase >= EVENT_LAST_PHASE ? t('events.again') : t('events.send')}
+            </button>
+            <div className="space-y-1">
+              {(['executed', 'emitted'] as const).map((k, ki) => {
+                const done = phase >= ki + 2;
+                const busy = phase === ki + 1;
+                return (
+                  <div key={k} className="flex items-center gap-2 text-xs transition-opacity duration-300" style={{ opacity: done || busy ? 1 : 0.4 }}>
+                    <span className="size-4 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: done ? GREEN : 'var(--border)' }}>
+                      {done && <Check className="size-3 text-white" strokeWidth={3} />}
+                    </span>
+                    <span className="text-foreground">{t(`events.contractSteps.${k}`)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="hidden lg:flex items-center transition-opacity duration-300" style={{ opacity: emitted ? 1 : 0.25 }}>
+            <FlowArrow color={emitted ? AMBER : SLATE} label={t('events.arrowEmit')} />
+          </div>
+
+          {/* The event itself */}
+          <div
+            className="rounded-2xl border-2 border-dashed px-4 py-5 flex flex-col items-center justify-center text-center gap-2 transition-all duration-300"
+            style={{ borderColor: emitted ? AMBER : 'var(--border)', backgroundColor: emitted ? AMBER + '12' : 'transparent' }}
+          >
+            <motion.div
+              animate={emitted ? { scale: [1, 1.18, 1] } : { scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="size-12 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: emitted ? AMBER : 'var(--muted)' }}
+            >
+              <Zap className="size-6" style={{ color: emitted ? 'white' : 'var(--muted-foreground)' }} />
+            </motion.div>
+            <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: emitted ? AMBER : 'var(--muted-foreground)' }}>{t('events.eventLabel')}</span>
+            <div className="max-w-full px-2.5 py-1.5 rounded-lg bg-card border border-border font-mono text-xs text-foreground transition-opacity duration-300" style={{ opacity: emitted ? 1 : 0.35 }}>
+              {sc.event}
+            </div>
+            <p className="text-[11px] text-muted-foreground leading-snug">{t('events.eventNote')}</p>
+          </div>
+
+          <div className="hidden lg:flex items-center transition-opacity duration-300" style={{ opacity: received ? 1 : 0.25 }}>
+            <FlowArrow color={received ? INDIGO : SLATE} label={t('events.arrowHear')} />
+          </div>
+
+          {/* Off-chain: the listener and what it sets off */}
+          <div className="rounded-2xl border-2 bg-card p-4 flex flex-col gap-2.5" style={{ borderColor: INDIGO + '66' }}>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Radio className="size-4" style={{ color: INDIGO }} />
+                <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: INDIGO }}>{t('events.offChain')}</span>
+              </div>
+              <span
+                className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full transition-colors duration-300 whitespace-nowrap"
+                style={received ? { backgroundColor: INDIGO, color: 'white' } : { backgroundColor: INDIGO + '18', color: INDIGO }}
+              >
+                {received ? t('events.heard') : t('events.listening')}
+              </span>
+            </div>
+            <div className="font-black text-base text-foreground leading-tight">{t('events.appTitle')}</div>
+            <div className="space-y-1.5">
+              {REACTION_META.map((r, ri) => {
+                const fired = phase >= ri + 4;
+                return (
+                  <motion.div
+                    key={ri}
+                    animate={fired ? { x: [8, 0] } : { x: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="flex items-center gap-2.5 p-2 rounded-xl border transition-all duration-300"
+                    style={{
+                      borderColor: fired ? r.color + '88' : 'var(--border)',
+                      backgroundColor: fired ? r.color + '14' : 'transparent',
+                      opacity: fired ? 1 : 0.55,
+                    }}
+                  >
+                    <div className="size-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: fired ? r.color : r.color + '1f' }}>
+                      <r.Icon className="size-4" style={{ color: fired ? 'white' : r.color }} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: r.color }}>{reactionKinds[ri]}</div>
+                      <div className="text-xs text-foreground leading-snug">{copy.reactions[ri]}</div>
+                    </div>
+                    {fired && <Check className="size-4 shrink-0" style={{ color: r.color }} strokeWidth={3} />}
+                  </motion.div>
+                );
+              })}
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-2 py-1 rounded-lg bg-muted font-mono text-[11px] text-foreground">{sc.listener}</span>
+              <span className="text-[11px] text-muted-foreground">{t('events.listenerNote')}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* What an event is, and is not */}
+        {/* lg:pr-20 (here and on the line below) keeps the text clear of the floating slide-nav buttons */}
+        <div className="shrink-0 grid grid-cols-1 lg:grid-cols-3 gap-2.5 lg:pr-20">
+          {facts.map((f, fi) => (
+            <div key={fi} className="rounded-xl border border-border bg-card/50 px-3.5 py-2.5">
+              <div className="text-xs font-black text-foreground">{f.label}</div>
+              <div className="text-[11px] text-muted-foreground leading-snug">{f.desc}</div>
+            </div>
+          ))}
+        </div>
+
+        <p className="shrink-0 text-xs text-muted-foreground lg:pr-20">
+          <span className="font-bold text-foreground">{t('events.fitLabel')}</span>{t('events.fitBody')}
+        </p>
+      </div>
+
+      <KeyPointBar text={t('keyPoints.s6-events')} className="mt-3" />
+    </div>
+  );
+}
+
 // ═══ SLIDE 6 · OPTIONAL: GOING DEEPER ═══════════════════════════════════════
 
 function DeeperSlide() {
@@ -1075,14 +2009,26 @@ export function SC_Section6() {
         {/* ═══════ 2 · STANDARD: ERC + EXPLORER ═══════ */}
         <div id="s6-erc" className="h-full"><ErcSlide /></div>
 
+        {/* ═══════ 2b · HOW AN EIP BECOMES A STANDARD ═══════ */}
+        <div id="s6-eip" className="h-full"><EipSlide /></div>
+
         {/* ═══════ 3 · TEMPLATE: OPENZEPPELIN ═══════ */}
         <div id="s6-template" className="h-full"><TemplateSlide /></div>
+
+        {/* ═══════ 3b · AI-DRIVEN DEVELOPMENT ═══════ */}
+        <div id="s6-ai" className="h-full"><AiSlide /></div>
 
         {/* ═══════ 4 · TOOLS & WHERE TO DEPLOY ═══════ */}
         <div id="s6-where" className="h-full"><WhereSlide /></div>
 
         {/* ═══════ 5 · DEPLOY TO A TESTNET (centerpiece) ═══════ */}
         <div id="s6-deploy" className="h-full"><DeployWalkthrough /></div>
+
+        {/* ═══════ 5b · NODE INFRASTRUCTURE & WHERE TO HOST ═══════ */}
+        <div id="s6-hosting" className="h-full"><HostingSlide /></div>
+
+        {/* ═══════ 5c · EVENT-DRIVEN ARCHITECTURE ═══════ */}
+        <div id="s6-events" className="h-full"><EventsSlide /></div>
 
         {/* ═══════ 6 · GOING DEEPER (optional) ═══════ */}
         <div id="s6-deeper" className="h-full"><DeeperSlide /></div>
