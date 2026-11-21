@@ -12,6 +12,11 @@
     "s5-quiz":             "Quiz",
     "s5-quiz-2":           "Quiz 2",
     "s5-quiz-3":           "Quiz 3",
+    "s5-quiz-4":           "Quiz 4",
+    "s5-quiz-5":           "Quiz 5",
+    "s5-quiz-6":           "Quiz 6",
+    "s5-quiz-7":           "Quiz 7",
+    "s5-quiz-8":           "Quiz 8",
     "s5-takeaways":        "Takeaways"
   },
   "title": {
@@ -25,6 +30,9 @@
     "subtitle": "You have seen why contracts need oracles and how a feed gets bent. Here it goes on the risk register.",
     "chainLabel": "Where the trust sits",
     "strengthLabel": "How hard to corrupt",
+    "zoneOff": "Off-chain · trusted",
+    "zoneOn": "On-chain · verified",
+    "boundary": "trust boundary",
     "links": [
       { "label": "Data source", "guard": "One sensor, one API, one market", "level": "Weakest" },
       { "label": "Oracle", "guard": "A few to a few dozen nodes", "level": "Stronger" },
@@ -44,11 +52,16 @@
       { "q": "What would it cost to bend it?", "a": "If that is less than the money the number controls, expect an attack." }
     ],
     "limitLabel": "A limitation, not a bug: ",
-    "limit": "better oracles shrink this risk. None removes it."
+    "limit": "better oracles shrink this risk. None removes it.",
+    "reading": {
+      "label": "Further reading",
+      "note": "A systematisation of oracle designs, the attacks on them and the mitigations."
+    }
   },
   "challenges": {
     "heading": "Challenges & Limitations",
     "subtitle": "Smart contracts inherit their chain's constraints. Four of them shape every design decision.",
+    "colLabel": "Constraint",
     "whyLabel": "Why",
     "fixLabel": "What helps",
     "onChainLabel": "On-chain",
@@ -94,6 +107,13 @@
     "subtitle": "Four structural problems: what they are, why they happen, and how the field is fixing them.",
     "whyLabel": "Why",
     "fixLabel": "What helps",
+    "diagrams": {
+      "mevCaption": "order inside the block",
+      "mev": ["Bot buys first", "Your swap", "Bot sells after"],
+      "upgrade": ["v1 · deployed", "bug", "patch"],
+      "trilemma": ["Security", "Scalability", "Decentralisation"],
+      "growth": ["then", "now"]
+    },
     "items": [
       {
         "title": "MEV — Maximal Extractable Value",
@@ -132,18 +152,13 @@
     "progress": "{{n}} / {{total}} revealed",
     "reset": "↺ Reset",
     "weakLabel": "Weak point",
+    "journeyLabel": "The number's journey",
+    "stages": ["Weather station", "Oracle operator", "Contract reads the value", "Payout"],
     "prompt": "What would you change?",
     "reveal": "Show the defence",
     "defenceLabel": "Defence",
     "residualLabel": "Still exposed",
     "items": [
-      {
-        "title": "One operator",
-        "desc": "A single company runs the only weather oracle. Hack it, bribe it or unplug it, and the contract follows.",
-        "defence": "Decentralised oracle network",
-        "defenceDesc": "Many independent nodes report; the contract takes the median.",
-        "residual": "Costs more per update, and the nodes may all be reading the same upstream source."
-      },
       {
         "title": "One data source",
         "desc": "Every reading comes from one weather station. Whoever can touch the station can move the payout.",
@@ -152,11 +167,11 @@
         "residual": "Sources disagree. Someone must define which one counts, and that definition becomes the target."
       },
       {
-        "title": "Instant, final payout",
-        "desc": "The contract pays the moment the number lands. There is no appeal and no reversal.",
-        "defence": "Dispute window",
-        "defenceDesc": "Hold the payout for 24 hours so anyone can challenge the reading (the optimistic-oracle model).",
-        "residual": "Slower payouts, somebody has to be watching, and a dispute still needs a judge."
+        "title": "One operator",
+        "desc": "A single company runs the only weather oracle. Hack it, bribe it or unplug it, and the contract follows.",
+        "defence": "Decentralised oracle network",
+        "defenceDesc": "Many independent nodes report; the contract takes the median.",
+        "residual": "Costs more per update, and the nodes may all be reading the same upstream source."
       },
       {
         "title": "Any value, any age",
@@ -164,6 +179,13 @@
         "defence": "Sanity checks and a pause",
         "defenceDesc": "Reject stale timestamps and out-of-range values; pause payouts when the feed looks wrong.",
         "residual": "A pause freezes honest claims too, and whoever holds the pause switch is a new trusted party (see Admin Keys)."
+      },
+      {
+        "title": "Instant, final payout",
+        "desc": "The contract pays the moment the number lands. There is no appeal and no reversal.",
+        "defence": "Dispute window",
+        "defenceDesc": "Hold the payout for 24 hours so anyone can challenge the reading (the optimistic-oracle model).",
+        "residual": "Slower payouts, somebody has to be watching, and a dispute still needs a judge."
       }
     ],
     "verdictLabel": "The pattern: ",
@@ -172,7 +194,7 @@
   "security": {
     "heading": "Security Risks",
     "subtitle": "Bugs are public, permanent, and exploited within hours. The most expensive ones are the simplest.",
-    "fixLabel": "Fix: ",
+    "cols": { "bug": "Bug class", "dont": "The mistake", "do": "The fix", "wild": "In the wild" },
     "items": [
       {
         "title": "Reentrancy",
@@ -203,20 +225,29 @@
         "what": "Code runs as written, but the logic is wrong — off-by-one, bad sign, wrong arg.",
         "fix": "Independent audits · formal verification",
         "stat": "Tools miss these — humans catch them"
-      },
-      {
-        "title": "Cumulative Loss",
-        "what": "Thousands of incidents — usually a missing modifier or a copy-paste slip.",
-        "fix": "Audits are a discipline, not a checkbox",
-        "stat": "$6B+ lost since 2016"
       }
-    ]
+    ],
+    "total": {
+      "title": "Cumulative Loss",
+      "big": "$6B+",
+      "sub": "lost since 2016",
+      "what": "Thousands of incidents — usually a missing modifier or a copy-paste slip.",
+      "fix": "Audits are a discipline, not a checkbox"
+    }
   },
   "cost": {
     "heading": "Cost Risks",
     "subtitle": "Budget for the upfront and the ongoing costs.",
     "whyLabel": "Why",
     "fixLabel": "Manage it",
+    "phases": {
+      "upfront": "Upfront",
+      "upfrontNote": "before launch",
+      "deploy": "Deploy",
+      "deployNote": "the cheap part",
+      "ongoing": "Ongoing",
+      "ongoingNote": "after launch, for as long as it runs"
+    },
     "items": [
       {
         "title": "Immutability & Redeployment",
@@ -247,23 +278,31 @@
   "regulatory": {
     "heading": "Regulatory Risks",
     "subtitle": "Code and law overlap, and the law has not caught up.",
+    "codeLabel": "On-chain",
+    "lawLabel": "In law",
     "items": [
       {
         "title": "Legal Adjudication",
         "what": "May not count as a valid contract",
-        "body": "Often no signatures or mutual assent, so court enforcement is uncertain — and \"code is law\" gets overruled when stakes are high (The DAO fork).",
+        "code": "Executes automatically, often with no signatures and no mutual assent.",
+        "law": "A court may not treat it as a contract, so enforcement is uncertain.",
+        "note": "\"Code is law\" gets overruled when stakes are high (The DAO fork).",
         "tag": "Pair on-chain logic with a legal wrapper"
       },
       {
         "title": "Privacy vs Transparency",
         "what": "Public by design clashes with GDPR",
-        "body": "Every tx is visible to all nodes — colliding with the right to be forgotten and HIPAA. Even hashes leak via metadata and linkability.",
+        "code": "Every transaction is visible to all nodes.",
+        "law": "The right to be forgotten (GDPR) and health-data privacy (HIPAA).",
+        "note": "Even hashes leak via metadata and linkability.",
         "tag": "ZK proofs · permissioned chains · off-chain encryption"
       },
       {
         "title": "Tech Outpaces Law",
         "what": "Rules lag the technology by years",
-        "body": "Use cases shift in months while frameworks take years; a contract legal in Singapore may be illegal in the US.",
+        "code": "Use cases shift in months.",
+        "law": "Frameworks take years to write.",
+        "note": "A contract legal in Singapore may be illegal in the US.",
         "tag": "EU's MiCA (2024) is the first comprehensive exception"
       }
     ]
@@ -276,7 +315,7 @@
       "Flash loans exploit a bug in the Ethereum protocol itself, making them impossible to prevent at the contract level.",
       "Flash loans allow attackers to bypass gas fees, making the attack economically viable even for small protocols."
     ],
-    "explanation": "Traditional market manipulation needs large capital held at risk over time. With a flash loan the attacker borrows an enormous amount, executes the attack and repays everything inside one atomic transaction. If any step fails, the whole transaction reverts and the attacker loses only gas. So any protocol relying on a single on-chain spot price is exposed to an adversary with almost no capital. The fix: time-weighted average prices (TWAP) are far harder to move within one transaction, and decentralised oracle networks aggregate many independent sources."
+    "explanation": "The loan is borrowed, used and repaid inside one atomic transaction that reverts if any step fails, so the attacker needs no capital and risks only gas. A TWAP or a multi-source oracle is far harder to move within one transaction."
   },
   "quizMore": {
     "adminKey": {
@@ -287,7 +326,7 @@
         "Whoever holds that key can swap the logic at any moment, so users are trusting the key holder and not only the audited code.",
         "The only downside is that calls through a proxy cost slightly more gas."
       ],
-      "explanation": "A proxy keeps the address and the funds while the logic behind it can be replaced. An audit covers the version that was reviewed, not the one an admin installs tomorrow. With a single key and no timelock, one person (or one stolen key) can change the rules instantly and users get no time to leave. Ask who holds the key, whether it is a multisig, whether there is a timelock, and whether the key can be renounced."
+      "explanation": "An audit covers the version that was reviewed, not the one an admin installs tomorrow; with one key and no timelock, the rules can change instantly and users get no time to leave."
     },
     "pattern": {
       "question": "Ronin ($625M), Beanstalk ($182M), Mango Markets ($114M) and Terra (~$40B) are four of the largest losses in the field. What do they have in common?",
@@ -297,11 +336,62 @@
         "All four were caused by integer overflow in pre-0.8 Solidity.",
         "All four exploited a flaw in Ethereum's consensus protocol."
       ],
-      "explanation": "Ronin fell to stolen validator keys, Beanstalk to a flash-loaned governance vote, Mango to a manipulated price oracle, and Terra to an economic design that only held while people believed in it. None needed a classic coding bug such as reentrancy or overflow, and none broke the underlying chain. An audit of the code alone would not have caught them: security is a property of the whole system, including its people, its data and its incentives."
+      "explanation": "Stolen keys (Ronin), a flash-loaned vote (Beanstalk), a manipulated price (Mango) and an economic design that ran on belief (Terra): none needed a classic coding bug, so a code audit alone would not have caught them."
+    },
+    "sameSource": {
+      "question": "A crop-insurance contract replaces its single weather oracle with a network of 21 independent nodes and takes the median. All 21 nodes read the same weather API. What has the change achieved?",
+      "options": [
+        "Oracle risk is gone: a majority of the 21 nodes would now have to collude.",
+        "Nothing: a decentralised oracle network adds cost and no security.",
+        "The chain's validators now check the rainfall figure before it is used.",
+        "No single operator can bend the number, but one wrong API value still passes the median untouched."
+      ],
+      "explanation": "A median protects against a lying node, not a lying source: the trust has moved from the operator to the one upstream API."
+    },
+    "proxyGuard": {
+      "question": "A team wants to keep the ability to fix bugs through its upgradeable proxy. Which change most reduces the risk to users?",
+      "options": [
+        "Renounce the admin key, so that nobody can ever change the logic again.",
+        "Put upgrades behind a multisig and a timelock, so no single key can act and users get notice.",
+        "Commission a second audit of the logic contract that is currently live.",
+        "Move the single admin key to a hardware wallet held by the CEO."
+      ],
+      "explanation": "A multisig removes the single key and a timelock gives users time to leave; renouncing ends upgrades altogether, and an audit says nothing about the next version."
+    },
+    "budget": {
+      "question": "A team budgets for building a contract and assumes it can fix problems after launch, as it would with a web app. Which cost is it most likely underestimating?",
+      "options": [
+        "Audits before launch, plus a redeploy and user migration if a bug ever appears.",
+        "The deployment transaction itself, which is usually the largest single cost of a project.",
+        "Server bills for the nodes that run the contract, which the team pays every month.",
+        "Per-user licence fees for the Solidity compiler and the EVM."
+      ],
+      "explanation": "Deployed code cannot be patched, so deployment is the cheap part: audits (about $50K per ~500 lines) and any redeploy-and-migrate are the real budget."
+    },
+    "erasure": {
+      "question": "A health app writes patients' personal data directly to a public blockchain. A patient later invokes the GDPR right to be forgotten. What is the core problem?",
+      "options": [
+        "None: addresses are pseudonymous, so data-protection law does not apply.",
+        "None: the contract's admin can delete the patient's records from the chain.",
+        "The data sits on every node and cannot be erased, so the request cannot be honoured.",
+        "Only the gas cost: erasing data on-chain is possible but expensive."
+      ],
+      "explanation": "Public and permanent by design collides with the right to be forgotten, which is why personal data belongs off-chain."
+    },
+    "audited": {
+      "question": "Euler Finance had been audited, yet in March 2023 one missing check in a single function cost $197M. Which conclusion does the incident best support?",
+      "options": [
+        "Audits add no real security, so a team can safely skip them.",
+        "The loss came from stolen admin keys, which no audit can cover.",
+        "Formal verification would have made the contract provably free of all bugs.",
+        "Audits lower the odds of a bug but cannot rule one out, so plan for the incident too."
+      ],
+      "explanation": "The bug slipped past review: audits reduce risk, they do not remove it, so plan for the incident and not only for prevention."
     }
   },
   "takeaways": {
     "title": "Section 05 — Key Takeaways",
+    "jumpLabel": "Back to the slide",
     "items": [
       "Oracle risk (Section 2) never goes away: defences move the trust or put a price on it, they do not delete it",
       "Immutability cuts both ways: bugs are permanent, and upgrade proxies trade that for trust in an admin key",
@@ -331,13 +421,24 @@
       { "title": "Why it exists", "desc": "Deployed code cannot be patched. Teams add a proxy so they can fix bugs and ship features without asking every user to move." },
       { "title": "Why it matters to you", "desc": "The key holder can change the rules, pause the contract or move the funds. The trust you removed from a bank now sits with whoever holds that key." }
     ],
-    "askLabel": "Before relying on a contract, ask: ",
-    "askBody": "who holds the admin key, is it a multisig, is there a timelock, and can the key be renounced?"
+    "askLabel": "Before relying on a contract, ask:",
+    "checks": [
+      "Who holds the admin key?",
+      "Is it a multisig?",
+      "Is there a timelock?",
+      "Can the key be renounced?"
+    ]
   },
   "failures": {
     "heading": "When it went wrong — six real incidents",
     "subtitle": "Each maps to one risk from this section. In most, the contract did exactly what it was told.",
-    "lessonLabel": "Lesson: ",
+    "lessonLabel": "Lesson",
+    "whatLabel": "What happened",
+    "caseLabel": "Case file",
+    "pickLabel": "Six case files · pick one",
+    "codeOk": "The code did what it was told",
+    "codeBug": "A bug in the code",
+    "tally": "{{n}} of {{total}}: the code did what it was told",
     "footer": "Keys, votes, data feeds and economic design fail at least as often as the code. Security is a property of the whole system.",
     "items": [
       {
