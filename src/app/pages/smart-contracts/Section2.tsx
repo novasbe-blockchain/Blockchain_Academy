@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
@@ -55,9 +55,6 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-s2-wrap' },
   { id: 's2-quiz' },
-  { id: 's2-quiz-2' },
-  { id: 's2-quiz-3' },
-  { id: 's2-quiz-4' },
   { id: 's2-takeaways' },
 ] as const;
 
@@ -1035,14 +1032,14 @@ export function SC_Section2() {
   const reshapeStats = t(viaContract ? 'reshape.viz.statsSc' : 'reshape.viz.statsTrad', { returnObjects: true }) as string[];
   const reshapeColor = viaContract ? '#39B54A' : '#ED1C24';
 
-  const quizOptionsText = t('quiz.options', { returnObjects: true }) as string[];
-  const quizOptions = quizOptionsText.map((text, i) => ({ text, correct: i === 1 }));
-  const quiz2OptionsText = t('quiz2.options', { returnObjects: true }) as string[];
-  const quiz2Options = quiz2OptionsText.map((text, i) => ({ text, correct: i === 2 }));
-  const quiz3OptionsText = t('quiz3.options', { returnObjects: true }) as string[];
-  const quiz3Options = quiz3OptionsText.map((text, i) => ({ text, correct: i === 0 }));
-  const quiz4OptionsText = t('quiz4.options', { returnObjects: true }) as string[];
-  const quiz4Options = quiz4OptionsText.map((text, i) => ({ text, correct: i === 3 }));
+  // The section quiz, in order: locale block + index of its correct option (language-neutral).
+  //   quiz  — what triggers a contract        quiz3 — why a contract needs an oracle
+  //   quiz2 — a failed check in the escrow run quiz4 — the root weakness in a price-feed attack
+  const quizQuestions = ([['quiz', 1], ['quiz2', 2], ['quiz3', 0], ['quiz4', 3]] as const).map(([key, correctIndex]) => ({
+    question: t(`${key}.question`),
+    options: (t(`${key}.options`, { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === correctIndex })),
+    explanation: t(`${key}.explanation`),
+  }));
 
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
@@ -1940,44 +1937,9 @@ export function SC_Section2() {
         <div id="s2-oracle-paris" className="h-full"><OracleParisSlide /></div>
         <div id="s2-oracle-attack" className="h-full"><OracleAttackSlide /></div>
 
-        {/* Quiz 1: what triggers a contract */}
+        {/* Quiz — one slide, stepped question by question */}
         <div id="s2-quiz" className="h-full">
-          <QuizSlide
-            compact
-            question={t('quiz.question')}
-            options={quizOptions}
-            explanation={t('quiz.explanation')}
-          />
-        </div>
-
-        {/* Quiz 2: a failed check in the escrow run */}
-        <div id="s2-quiz-2" className="h-full">
-          <QuizSlide
-            compact
-            question={t('quiz2.question')}
-            options={quiz2Options}
-            explanation={t('quiz2.explanation')}
-          />
-        </div>
-
-        {/* Quiz 3: why a contract needs an oracle */}
-        <div id="s2-quiz-3" className="h-full">
-          <QuizSlide
-            compact
-            question={t('quiz3.question')}
-            options={quiz3Options}
-            explanation={t('quiz3.explanation')}
-          />
-        </div>
-
-        {/* Quiz 4: the root weakness in a price-feed attack */}
-        <div id="s2-quiz-4" className="h-full">
-          <QuizSlide
-            compact
-            question={t('quiz4.question')}
-            options={quiz4Options}
-            explanation={t('quiz4.explanation')}
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         <div id="s2-takeaways" className="h-full">

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
@@ -656,11 +656,8 @@ export function SC_Section1() {
   const recapCards = recapText.map((c, i) => ({ ...c, color: recapColors[i], emoji: recapEmojis[i] }));
   const recapParts = t('recap.parts', { returnObjects: true }) as string[];
 
-  const quizOptionTexts = t('quiz.options', { returnObjects: true }) as string[];
-  const quizOptions = quizOptionTexts.map((text, i) => ({ text, correct: i === 1 }));
-  // Follow-up quizzes: index of the correct option for each (language-neutral).
-  const extraQuizzes = ([['quiz2', 2], ['quiz3', 0]] as const).map(([key, correctIndex]) => ({
-    key,
+  // The section quiz, in order: locale block + index of its correct option (language-neutral).
+  const quizQuestions = ([['quiz', 1], ['quiz2', 2], ['quiz3', 0]] as const).map(([key, correctIndex]) => ({
     question: t(`${key}.question`),
     options: (t(`${key}.options`, { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === correctIndex })),
     explanation: t(`${key}.explanation`),
@@ -810,20 +807,10 @@ export function SC_Section1() {
           <KeyPointBar text={t('keyPoints.s1-history')} className="mt-3" />
         </div>
 
-        {/* ═══════ QUIZ ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s1-quiz" className="h-full">
-          <QuizSlide
-            question={t('quiz.question')}
-            options={quizOptions}
-            explanation={t('quiz.explanation')}
-            compact
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
-        {extraQuizzes.map((q) => (
-          <div key={q.key} className="h-full">
-            <QuizSlide question={q.question} options={q.options} explanation={q.explanation} compact />
-          </div>
-        ))}
 
         {/* ═══════ TAKEAWAYS ═══════ */}
         <div id="s1-takeaways" className="h-full">

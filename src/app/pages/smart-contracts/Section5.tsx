@@ -2,7 +2,7 @@ import { Fragment, useState, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
@@ -25,13 +25,6 @@ const chapterIds = [
   's5-risks-cost',
   's5-risks-regulatory',
   's5-quiz',
-  's5-quiz-2',
-  's5-quiz-3',
-  's5-quiz-4',
-  's5-quiz-5',
-  's5-quiz-6',
-  's5-quiz-7',
-  's5-quiz-8',
   's5-takeaways',
 ] as const;
 
@@ -75,15 +68,17 @@ interface DefenceItem {
 
 interface QuizItem { question: string; options: string[]; explanation: string }
 
-// Correct-option index per extra quiz (language-neutral; text lives in the locale files).
-const EXTRA_QUIZ = [
-  { id: 's5-quiz-2', key: 'adminKey', correct: 2 },
-  { id: 's5-quiz-3', key: 'pattern', correct: 0 },
-  { id: 's5-quiz-4', key: 'sameSource', correct: 3 },
-  { id: 's5-quiz-5', key: 'proxyGuard', correct: 1 },
-  { id: 's5-quiz-6', key: 'budget', correct: 0 },
-  { id: 's5-quiz-7', key: 'erasure', correct: 2 },
-  { id: 's5-quiz-8', key: 'audited', correct: 3 },
+// The section quiz, in the order it is asked: locale block + index of its correct option
+// (language-neutral; question and option text live in the locale files).
+const QUIZ = [
+  { key: 'quiz', correct: 1 },
+  { key: 'quizMore.adminKey', correct: 2 },
+  { key: 'quizMore.pattern', correct: 0 },
+  { key: 'quizMore.sameSource', correct: 3 },
+  { key: 'quizMore.proxyGuard', correct: 1 },
+  { key: 'quizMore.budget', correct: 0 },
+  { key: 'quizMore.erasure', correct: 2 },
+  { key: 'quizMore.audited', correct: 3 },
 ] as const;
 
 interface RegulatoryItem {
@@ -500,9 +495,14 @@ export function SC_Section5() {
     { emoji: '🏃', color: '#f59e0b' },
   ];
 
-  const quizOptions = (t('quiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
-  const extraQuiz = t('quizMore', { returnObjects: true }) as Record<string, QuizItem>;
-  const quizTotal = EXTRA_QUIZ.length + 1;
+  const quizQuestions = QUIZ.map(({ key, correct }) => {
+    const q = t(key, { returnObjects: true }) as QuizItem;
+    return {
+      question: q.question,
+      options: q.options.map((text, i) => ({ text, correct: i === correct })),
+      explanation: q.explanation,
+    };
+  });
 
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
@@ -1017,27 +1017,10 @@ export function SC_Section5() {
           <KeyPointBar text={t('keyPoints.s5-risks-regulatory')} className="mt-3" />
         </div>
 
-        {/* ═══════ QUIZ ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s5-quiz" className="h-full">
-          <QuizSlide
-            compact
-            label={`Quiz · 1 / ${quizTotal}`}
-            question={t('quiz.question')}
-            options={quizOptions}
-            explanation={t('quiz.explanation')}
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
-        {EXTRA_QUIZ.map((q, i) => (
-          <div key={q.id} id={q.id} className="h-full">
-            <QuizSlide
-              compact
-              label={`Quiz · ${i + 2} / ${quizTotal}`}
-              question={extraQuiz[q.key].question}
-              options={extraQuiz[q.key].options.map((text, k) => ({ text, correct: k === q.correct }))}
-              explanation={extraQuiz[q.key].explanation}
-            />
-          </div>
-        ))}
 
         {/* ═══════ TAKEAWAYS — each one links back to the slide it summarises ═══════ */}
         <div id="s5-takeaways" className="h-full flex flex-col p-6 lg:p-10">

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
@@ -646,10 +646,15 @@ export function SC_Section7() {
 
         {/* ═══════ QUIZ ═══════ */}
         <div id="s7-quiz" className="h-full">
-          <QuizSlide
-            question={t('quiz.question')}
-            options={quizOptions.map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quiz.explanation')}
+          {/* A single question today, so GroupedQuiz shows it without the stepper.
+              compact: the explanation is long enough to be clipped in the roomy layout. */}
+          <GroupedQuiz
+            compact
+            questions={[{
+              question: t('quiz.question'),
+              options: quizOptions.map((text, i) => ({ text, correct: i === 1 })),
+              explanation: t('quiz.explanation'),
+            }]}
           />
         </div>
 

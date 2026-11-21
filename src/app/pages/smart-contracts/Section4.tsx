@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import {
@@ -36,9 +36,6 @@ const chapterShape = [
   { id: 's4-case-success' },
   { id: 's4-case-sc-fail' },
   { id: 's4-case-org-fail' },
-  { id: 's4-case-est-quiz' },
-  { id: 's4-case-dao-quiz' },
-  { id: 's4-case-asx-quiz' },
 
   { kind: 'group' as const, id: 'g-adopt' },
   { id: 's4-adoption-intro' },
@@ -54,10 +51,6 @@ const chapterShape = [
   { id: 's4-strategies' },
 
   { kind: 'group' as const, id: 'g-close' },
-  { id: 's4-quiz-tree' },
-  { id: 's4-quiz-fit' },
-  { id: 's4-quiz-checks' },
-  { id: 's4-quiz-cases' },
   { id: 's4-quiz' },
   { id: 's4-takeaways' },
 ] as const;
@@ -544,12 +537,18 @@ function CaseSlide({ id, accent, kicker, heading, subtitle, image, panels, lesso
   );
 }
 
-// Correct-option index per quiz (language-neutral; option text lives in the locale files).
-const EXTRA_QUIZ = [
-  { id: 's4-quiz-tree',   key: 'tree',   correct: 3 },
-  { id: 's4-quiz-fit',    key: 'fit',    correct: 1 },
-  { id: 's4-quiz-checks', key: 'checks', correct: 0 },
-  { id: 's4-quiz-cases',  key: 'cases',  correct: 2 },
+// The section quiz, in the order it is asked: locale block + index of its correct option
+// (language-neutral; question and option text live in the locale files). The three case
+// questions come first, then the section review, then the bank-bond question.
+const QUIZ = [
+  { key: 'estQuiz',         correct: 1 },
+  { key: 'daoQuiz',         correct: 0 },
+  { key: 'asxQuiz',         correct: 2 },
+  { key: 'quizMore.tree',   correct: 3 },
+  { key: 'quizMore.fit',    correct: 1 },
+  { key: 'quizMore.checks', correct: 0 },
+  { key: 'quizMore.cases',  correct: 2 },
+  { key: 'quiz',            correct: 1 },
 ] as const;
 
 export function SC_Section4() {
@@ -580,14 +579,14 @@ export function SC_Section4() {
   const orgFailHappened = t('caseOrgFail.happened', { returnObjects: true }) as string[];
   const orgFailWhy      = t('caseOrgFail.why', { returnObjects: true }) as string[];
 
-  const daoQuizOptions = t('daoQuiz.options', { returnObjects: true }) as string[];
-  const asxQuizOptions = t('asxQuiz.options', { returnObjects: true }) as string[];
-
-  const estQuizOptionsTyped = (t('estQuiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
-  const extraQuiz = t('quizMore', { returnObjects: true }) as Record<string, QuizItem>;
-  const daoQuizOptionsTyped = daoQuizOptions.map((text, i) => ({ text, correct: i === 0 }));
-  const asxQuizOptionsTyped = asxQuizOptions.map((text, i) => ({ text, correct: i === 2 }));
-  const mainQuizOptions = (t('quiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
+  const quizQuestions = QUIZ.map(({ key, correct }) => {
+    const q = t(key, { returnObjects: true }) as QuizItem;
+    return {
+      question: q.question,
+      options: q.options.map((text, i) => ({ text, correct: i === correct })),
+      explanation: q.explanation,
+    };
+  });
 
   const takeaways = t('takeaways.items', { returnObjects: true }) as string[];
 
@@ -809,36 +808,6 @@ export function SC_Section4() {
           lessonBody={t('caseOrgFail.lessonBody')}
           keyPoint={t('keyPoints.s4-case-org-fail')}
         />
-
-        {/* ═══════ QUIZ — ESTONIA ═══════ */}
-        <div id="s4-case-est-quiz" className="h-full">
-          <QuizSlide
-            compact
-            question={t('estQuiz.question')}
-            options={estQuizOptionsTyped}
-            explanation={t('estQuiz.explanation')}
-          />
-        </div>
-
-        {/* ═══════ QUIZ — DAO ═══════ */}
-        <div id="s4-case-dao-quiz" className="h-full">
-          <QuizSlide
-            compact
-            question={t('daoQuiz.question')}
-            options={daoQuizOptionsTyped}
-            explanation={t('daoQuiz.explanation')}
-          />
-        </div>
-
-        {/* ═══════ QUIZ — ASX ═══════ */}
-        <div id="s4-case-asx-quiz" className="h-full">
-          <QuizSlide
-            compact
-            question={t('asxQuiz.question')}
-            options={asxQuizOptionsTyped}
-            explanation={t('asxQuiz.explanation')}
-          />
-        </div>
 
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* ADOPTION — WHAT MAKES A PROJECT SUCCEED OR FAIL             */}
@@ -1069,26 +1038,11 @@ export function SC_Section4() {
           <KeyPointBar text={t('keyPoints.s4-strategies')} className="mt-2" />
         </div>
 
-        {/* ═══════ QUIZ — section review (decision tree, fit, three checks, cases) ═══════ */}
-        {EXTRA_QUIZ.map((q) => (
-          <div key={q.id} id={q.id} className="h-full">
-            <QuizSlide
-              compact
-              question={extraQuiz[q.key].question}
-              options={extraQuiz[q.key].options.map((text, i) => ({ text, correct: i === q.correct }))}
-              explanation={extraQuiz[q.key].explanation}
-            />
-          </div>
-        ))}
-
-        {/* ═══════ QUIZ — bank bond ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question:
+            the three cases (Estonia, DAO, ASX), the section review (decision tree, fit,
+            three checks, cases), then the bank bond ═══════ */}
         <div id="s4-quiz" className="h-full">
-          <QuizSlide
-            compact
-            question={t('quiz.question')}
-            options={mainQuizOptions}
-            explanation={t('quiz.explanation')}
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

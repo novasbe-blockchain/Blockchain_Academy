@@ -1009,7 +1009,6 @@
     }
   },
   "quiz": {
-    "label": "Quiz · {{n}} / {{total}}",
     "items": [
       {
         "question": "A TerraUSD (UST) colapsou em maio de 2022 e aniquilou cerca de $40 mil milhões. Qual foi a causa de fundo?",
