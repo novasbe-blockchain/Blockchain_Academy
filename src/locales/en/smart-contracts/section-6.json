@@ -261,7 +261,7 @@
       {
         "tab": "Draft it",
         "goal": "get a first version built on the vetted template, with every line explained.",
-        "prompt": "Write a minimal ERC-20 token in Solidity named ClassToken (symbol CLS) with a fixed supply of 1,000,000 tokens, all minted to the deployer. Inherit OpenZeppelin Contracts v5: do not rewrite ERC-20 yourself. No owner, no mint function, no extra features. Add a comment in plain English explaining each line for a non-programmer. Then list the steps to deploy it on the Sepolia testnet with Remix and MetaMask.",
+        "prompt": "Write a minimal ERC-20 token in Solidity named ClassToken (symbol CLS) with a fixed supply of 1,000,000 tokens, all minted to the deployer. Inherit OpenZeppelin Contracts v5: do not rewrite ERC-20 yourself. No owner, no mint function, no extra features. Add a comment in plain English explaining each line for a non-programmer. Then list the steps to deploy it on the Sepolia testnet with Remix and a phone wallet (Rabby or Zerion).",
         "checks": [
           "It imports OpenZeppelin instead of rewriting ERC-20 by hand.",
           "It compiles in Remix with no changes.",
@@ -442,7 +442,7 @@
         "label": "Wallet",
         "title": "Create a wallet",
         "actions": [
-          "Install a browser wallet such as MetaMask and create an account.",
+          "On your phone, install [Rabby (rabby.io)](https://rabby.io) or [Zerion (zerion.io)](https://zerion.io) from the App Store or Google Play, then create an account.",
           "Write the secret recovery phrase down on paper. Never share it, never type it into a website.",
           "Use a fresh wallet for testing, not one that holds real funds."
         ],
@@ -452,7 +452,7 @@
         "label": "Testnet",
         "title": "Switch to the testnet and get test ETH",
         "actions": [
-          "In the wallet, switch the network to Sepolia (turn on test networks if it is hidden).",
+          "In the wallet, switch the network to Sepolia (turn on test networks, or add Sepolia as a custom network, if it is hidden).",
           "Copy your address into a Sepolia faucet and request test ETH.",
           "Wait for the balance to appear. That is your gas money."
         ],
@@ -463,8 +463,8 @@
         "title": "Deploy the contract",
         "actions": [
           "Open Remix, paste the contract and press Compile.",
-          "In Deploy & Run, choose your browser wallet as the environment.",
-          "Press Deploy and confirm in the wallet. Seconds later the contract has an address."
+          "In Deploy & Run, set the environment to WalletConnect and scan the QR code with your phone wallet.",
+          "Press Deploy and confirm on your phone. Seconds later the contract has an address."
         ],
         "bridge": "deploying is itself a transaction. You signed it, the network stored your code, and that code now lives at a permanent public address."
       },
@@ -480,7 +480,7 @@
       }
     ],
     "mock": {
-      "walletTitle": "Wallet · MetaMask",
+      "walletTitle": "Wallet · Rabby",
       "mainnet": "Ethereum Mainnet",
       "account": "Account 1",
       "phraseTitle": "Secret recovery phrase",
@@ -494,7 +494,7 @@
       "faucetFlow": "test ETH",
       "remixTitle": "Remix · Deploy & Run",
       "environment": "Environment",
-      "environmentValue": "Browser wallet · MetaMask",
+      "environmentValue": "WalletConnect · phone wallet",
       "contract": "Contract",
       "confirmTitle": "Wallet · confirm",
       "confirmKind": "Contract deployment",
@@ -518,7 +518,7 @@
   "hosting": {
     "kicker": "After deploy · Hosting",
     "heading": "Node infrastructure and where to host",
-    "subtitle": "Why it matters: your contract is live, but people need a website to click on, and that website needs a way to reach the chain. Those are two separate hosting questions.",
+    "subtitle": "Why it matters: your contract is live, but people need a website to click on, and that website has to reach the chain. Three pieces, three jobs: a host serves the site, RPC reads the chain, the wallet changes it.",
     "scenarios": {
       "load": {
         "label": "Open the site",
@@ -526,18 +526,17 @@
       },
       "read": {
         "label": "Read from the chain",
-        "desc": "The site asks a node a question, such as \"what is my balance?\". Free, near-instant, and nothing to sign."
+        "desc": "The site asks an RPC provider a question, such as \"what is this balance?\", and the provider's node answers. Free, near-instant, nothing to sign, and nothing on the chain changes."
       },
       "write": {
         "label": "Send a transaction",
-        "desc": "The wallet shows the request, the user confirms, the wallet signs and hands the transaction to a node, which passes it to the network. This costs gas."
+        "desc": "The site asks the wallet to send a transaction. The user confirms, the wallet signs it and sends it to the network. This is the only way anything on the chain changes, and it costs gas."
       }
     },
     "zones": {
       "front": "Front end: a static site you host",
-      "chain": "Chain access: a wallet and a node (RPC)"
+      "chain": "Chain access: RPC to read, the wallet to write"
     },
-    "walletSkipped": "nothing to sign",
     "nodes": {
       "host": {
         "label": "Static host",
@@ -556,14 +555,15 @@
       },
       "wallet": {
         "label": "Wallet",
-        "desc": "Holds the user's keys and signs what the user confirms.",
+        "desc": "Holds the user's keys. Signs each transaction and sends it to the network.",
         "chips": [
-          "MetaMask"
+          "Rabby",
+          "Zerion"
         ]
       },
       "rpc": {
-        "label": "Node access (RPC)",
-        "desc": "A node that takes questions and transactions and talks to the network for you.",
+        "label": "RPC provider",
+        "desc": "Read access to a node. Your site asks it what is on the chain.",
         "chips": [
           "Infura",
           "Alchemy",
@@ -595,23 +595,37 @@
     },
     "chain": {
       "title": "How does it reach the chain?",
-      "lead": "Every read and every transaction goes through a node, in a standard language called JSON-RPC.",
+      "lead": "Two doors: you read through an RPC provider, and you change things through the user's wallet.",
       "startHere": "start here",
       "options": [
         {
-          "name": "The wallet's connection",
-          "desc": "MetaMask comes with one (Infura, by default). Nothing to set up."
+          "name": "Read · RPC provider",
+          "desc": "Infura, Alchemy and others run the node. You get an API key."
         },
         {
-          "name": "An RPC provider",
-          "desc": "Infura, Alchemy and others run the nodes; you sign up and get an API key."
+          "name": "Read · your own node",
+          "desc": "Same read access, no middleman. You pay in storage and upkeep."
         },
         {
-          "name": "Your own node",
-          "desc": "No middleman, full control. You pay in storage, bandwidth and upkeep."
+          "name": "Write · the user's wallet",
+          "desc": "Rabby, Zerion and others. The user signs and sends; your site never holds keys."
         }
       ],
-      "tradeoff": "Trade-off: a provider saves you the work, but puts one company between your product and the chain."
+      "tradeoff": "Trade-off: a provider saves you the work, but puts one company between your site and the chain."
+    },
+    "lanes": {
+      "rpc": "read",
+      "wallet": "write"
+    },
+    "skipped": {
+      "rpc": "no keys",
+      "wallet": "nothing to sign"
+    },
+    "flows": {
+      "ask": "question",
+      "read": "reads state",
+      "request": "asks to sign",
+      "signed": "signed tx"
     }
   },
   "events": {
@@ -745,7 +759,7 @@
     "s6-ai": "AI can write the contract. Only you can answer for it: if you cannot explain a line, do not deploy it.",
     "s6-where": "A testnet is a dress rehearsal: same tools, same steps, nothing at stake.",
     "s6-deploy": "Do these four steps once on a testnet and you know the routine: mainnet is the same, with real money.",
-    "s6-hosting": "You host a website and borrow a doorway to the chain. The contract itself is already hosted, by the network.",
+    "s6-hosting": "The host serves the site, an RPC provider reads the chain, the wallet writes to it. The contract itself is already hosted, by the network.",
     "s6-events": "A contract cannot reach out to your systems. It emits an event, and everything off-chain is a reaction to it.",
     "s6-deeper": "The contract is the smallest part of the product. Everything around it is ordinary software."
   },
@@ -756,7 +770,7 @@
       "An ERC is a shared interface, agreed in the open through the EIP process: follow one and wallets, exchanges and marketplaces work with your contract from day one",
       "Do not write from scratch: inherit OpenZeppelin's audited contracts and add only your own rules",
       "Rehearse on a testnet such as Sepolia: the same steps as mainnet, paid in free test ETH. You end with a public contract address and a transaction hash anyone can check",
-      "Around the contract: a static site for the front end, a wallet and an RPC node to reach the chain, and events that tell your other systems what happened",
+      "Around the contract: a static site for the front end, an RPC provider to read the chain, the user's wallet to sign transactions, and events that tell your other systems what happened",
       "AI can draft the code. You still read it, test it on a testnet, and have anything that holds real money audited"
     ]
   },

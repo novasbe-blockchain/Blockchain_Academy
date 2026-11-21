@@ -261,7 +261,7 @@
       {
         "tab": "Redigir",
         "goal": "obter uma primeira versão construída sobre o template validado, com cada linha explicada.",
-        "prompt": "Escreve um token ERC-20 mínimo em Solidity chamado ClassToken (símbolo CLS), com um fornecimento fixo de 1 000 000 de tokens, todos emitidos para quem faz o deploy. Herda dos OpenZeppelin Contracts v5: não reescrevas o ERC-20. Sem owner, sem função de mint, sem funcionalidades extra. Acrescenta um comentário em português simples a explicar cada linha a alguém que não programa. Depois, lista os passos para fazer o deploy na testnet Sepolia com o Remix e a MetaMask.",
+        "prompt": "Escreve um token ERC-20 mínimo em Solidity chamado ClassToken (símbolo CLS), com um fornecimento fixo de 1 000 000 de tokens, todos emitidos para quem faz o deploy. Herda dos OpenZeppelin Contracts v5: não reescrevas o ERC-20. Sem owner, sem função de mint, sem funcionalidades extra. Acrescenta um comentário em português simples a explicar cada linha a alguém que não programa. Depois, lista os passos para fazer o deploy na testnet Sepolia com o Remix e uma carteira no telemóvel (Rabby ou Zerion).",
         "checks": [
           "Importa a OpenZeppelin em vez de reescrever o ERC-20 à mão.",
           "Compila no Remix sem alterações.",
@@ -442,7 +442,7 @@
         "label": "Carteira",
         "title": "Cria uma carteira",
         "actions": [
-          "Instala uma carteira de browser, como a MetaMask, e cria uma conta.",
+          "No telemóvel, instala a [Rabby (rabby.io)](https://rabby.io) ou a [Zerion (zerion.io)](https://zerion.io) a partir da App Store ou do Google Play e cria uma conta.",
           "Escreve a frase de recuperação secreta em papel. Nunca a partilhes nem a escrevas num site.",
           "Usa uma carteira nova para testes, não uma que guarde fundos reais."
         ],
@@ -452,7 +452,7 @@
         "label": "Testnet",
         "title": "Muda para a testnet e obtém ETH de teste",
         "actions": [
-          "Na carteira, muda a rede para Sepolia (ativa as redes de teste se estiver escondida).",
+          "Na carteira, muda a rede para Sepolia (ativa as redes de teste, ou adiciona a Sepolia como rede personalizada, se estiver escondida).",
           "Copia o teu endereço para uma faucet da Sepolia e pede ETH de teste.",
           "Espera que o saldo apareça. É o teu dinheiro para o gas."
         ],
@@ -463,8 +463,8 @@
         "title": "Faz deploy do contrato",
         "actions": [
           "Abre o Remix, cola o contrato e carrega em Compile.",
-          "Em Deploy & Run, escolhe a tua carteira de browser como ambiente.",
-          "Carrega em Deploy e confirma na carteira. Segundos depois, o contrato tem um endereço."
+          "Em Deploy & Run, escolhe WalletConnect como ambiente e lê o código QR com a carteira do telemóvel.",
+          "Carrega em Deploy e confirma no telemóvel. Segundos depois, o contrato tem um endereço."
         ],
         "bridge": "fazer deploy é, em si, uma transação. Assinaste-a, a rede guardou o teu código, e esse código vive agora num endereço público permanente."
       },
@@ -480,7 +480,7 @@
       }
     ],
     "mock": {
-      "walletTitle": "Carteira · MetaMask",
+      "walletTitle": "Carteira · Rabby",
       "mainnet": "Ethereum Mainnet",
       "account": "Conta 1",
       "phraseTitle": "Frase de recuperação secreta",
@@ -494,7 +494,7 @@
       "faucetFlow": "ETH de teste",
       "remixTitle": "Remix · Deploy & Run",
       "environment": "Ambiente",
-      "environmentValue": "Carteira de browser · MetaMask",
+      "environmentValue": "WalletConnect · carteira no telemóvel",
       "contract": "Contrato",
       "confirmTitle": "Carteira · confirmar",
       "confirmKind": "Deploy de contrato",
@@ -518,7 +518,7 @@
   "hosting": {
     "kicker": "Depois do deploy · Alojamento",
     "heading": "Infraestrutura de nós e onde alojar",
-    "subtitle": "Porque importa: o teu contrato está no ar, mas as pessoas precisam de um site onde clicar, e esse site precisa de uma forma de chegar à chain. São duas questões de alojamento distintas.",
+    "subtitle": "Porque importa: o contrato está no ar, mas as pessoas precisam de um site onde clicar, e esse site tem de chegar à chain. Três peças, três funções: o alojamento serve o site, o RPC lê a chain, a carteira altera-a.",
     "scenarios": {
       "load": {
         "label": "Abrir o site",
@@ -526,18 +526,17 @@
       },
       "read": {
         "label": "Ler da chain",
-        "desc": "O site faz uma pergunta a um nó, como \"qual é o meu saldo?\". Gratuito, quase instantâneo e sem nada para assinar."
+        "desc": "O site faz uma pergunta a um fornecedor de RPC, como \"qual é este saldo?\", e o nó do fornecedor responde. Gratuito, quase instantâneo, sem nada para assinar, e nada muda na chain."
       },
       "write": {
         "label": "Enviar uma transação",
-        "desc": "A carteira mostra o pedido, o utilizador confirma, a carteira assina e entrega a transação a um nó, que a passa à rede. Isto custa gas."
+        "desc": "O site pede à carteira que envie uma transação. O utilizador confirma, a carteira assina-a e envia-a para a rede. É a única forma de alterar algo na chain, e custa gas."
       }
     },
     "zones": {
       "front": "Front-end: um site estático que tu alojas",
-      "chain": "Acesso à chain: uma carteira e um nó (RPC)"
+      "chain": "Acesso à chain: RPC para ler, a carteira para escrever"
     },
-    "walletSkipped": "nada para assinar",
     "nodes": {
       "host": {
         "label": "Alojamento estático",
@@ -556,14 +555,15 @@
       },
       "wallet": {
         "label": "Carteira",
-        "desc": "Guarda as chaves do utilizador e assina o que ele confirma.",
+        "desc": "Guarda as chaves do utilizador. Assina cada transação e envia-a para a rede.",
         "chips": [
-          "MetaMask"
+          "Rabby",
+          "Zerion"
         ]
       },
       "rpc": {
-        "label": "Acesso a um nó (RPC)",
-        "desc": "Um nó que recebe perguntas e transações e fala com a rede por ti.",
+        "label": "Fornecedor de RPC",
+        "desc": "Acesso de leitura a um nó. O teu site pergunta-lhe o que está na chain.",
         "chips": [
           "Infura",
           "Alchemy",
@@ -595,23 +595,37 @@
     },
     "chain": {
       "title": "Como chega à chain?",
-      "lead": "Cada leitura e cada transação passam por um nó, numa linguagem standard chamada JSON-RPC.",
+      "lead": "Duas portas: lê-se através de um fornecedor de RPC e altera-se através da carteira do utilizador.",
       "startHere": "começa aqui",
       "options": [
         {
-          "name": "A ligação da carteira",
-          "desc": "A MetaMask já traz uma (Infura, por omissão). Nada para configurar."
+          "name": "Leitura · fornecedor de RPC",
+          "desc": "Infura, Alchemy e outros gerem o nó. Recebes uma chave de API."
         },
         {
-          "name": "Um fornecedor de RPC",
-          "desc": "Infura, Alchemy e outros gerem os nós; tu registas-te e recebes uma chave de API."
+          "name": "Leitura · o teu próprio nó",
+          "desc": "O mesmo acesso, sem intermediários. Pagas em armazenamento e manutenção."
         },
         {
-          "name": "O teu próprio nó",
-          "desc": "Sem intermediários, controlo total. Pagas em armazenamento, largura de banda e manutenção."
+          "name": "Escrita · carteira do utilizador",
+          "desc": "Rabby, Zerion e outras. O utilizador assina e envia; o site nunca guarda chaves."
         }
       ],
-      "tradeoff": "Compromisso: um fornecedor poupa-te o trabalho, mas põe uma empresa entre o teu produto e a chain."
+      "tradeoff": "Compromisso: um fornecedor poupa-te o trabalho, mas põe uma empresa entre o teu site e a chain."
+    },
+    "lanes": {
+      "rpc": "leitura",
+      "wallet": "escrita"
+    },
+    "skipped": {
+      "rpc": "sem chaves",
+      "wallet": "nada a assinar"
+    },
+    "flows": {
+      "ask": "pergunta",
+      "read": "lê o estado",
+      "request": "pede assinatura",
+      "signed": "tx assinada"
     }
   },
   "events": {
@@ -745,7 +759,7 @@
     "s6-ai": "AI can write the contract. Only you can answer for it: if you cannot explain a line, do not deploy it.",
     "s6-where": "A testnet is a dress rehearsal: same tools, same steps, nothing at stake.",
     "s6-deploy": "Do these four steps once on a testnet and you know the routine: mainnet is the same, with real money.",
-    "s6-hosting": "You host a website and borrow a doorway to the chain. The contract itself is already hosted, by the network.",
+    "s6-hosting": "The host serves the site, an RPC provider reads the chain, the wallet writes to it. The contract itself is already hosted, by the network.",
     "s6-events": "A contract cannot reach out to your systems. It emits an event, and everything off-chain is a reaction to it.",
     "s6-deeper": "The contract is the smallest part of the product. Everything around it is ordinary software."
   },
@@ -756,7 +770,7 @@
       "Um ERC é uma interface partilhada, acordada em público através do processo de EIPs: segue um e carteiras, exchanges e marketplaces funcionam com o teu contrato desde o primeiro dia",
       "Não escrevas de raiz: herda os contratos auditados da OpenZeppelin e acrescenta apenas as tuas regras",
       "Ensaia numa testnet como a Sepolia: os mesmos passos da mainnet, com ETH de teste gratuito. No fim tens um endereço de contrato e um hash de transação que qualquer pessoa pode verificar",
-      "À volta do contrato: um site estático para o front-end, uma carteira e um nó (RPC) para chegar à chain, e eventos que avisam os teus outros sistemas do que aconteceu",
+      "À volta do contrato: um site estático para o front-end, um fornecedor de RPC para ler a chain, a carteira do utilizador para assinar transações, e eventos que avisam os teus outros sistemas do que aconteceu",
       "A IA pode redigir o código. Continuas a ter de o ler, de o testar numa testnet e de mandar auditar tudo o que guarde dinheiro real"
     ]
   },

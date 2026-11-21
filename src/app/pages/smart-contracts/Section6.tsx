@@ -198,20 +198,23 @@ const AI_LOOP = [
   { Icon: ShieldCheck,   color: GREEN },
 ];
 
-// ── Hosting: front end vs chain access ───────────────────────────────────────
-// Left to right: static host → browser → wallet → node (RPC) → network.
-const HOST_NODES = [
-  { id: 'host',    Icon: Cloud,     color: SKY },
-  { id: 'browser', Icon: AppWindow, color: INDIGO },
-  { id: 'wallet',  Icon: Wallet,    color: AMBER },
-  { id: 'rpc',     Icon: Server,    color: VIOLET },
-  { id: 'chain',   Icon: Network,   color: GREEN },
-];
-// Which nodes each scenario lights up (indexes into HOST_NODES).
-const HOST_SCENARIOS = [
-  { id: 'load',  Icon: Globe, color: SKY,    nodes: [0, 1] },
-  { id: 'read',  Icon: Eye,   color: VIOLET, nodes: [1, 3, 4] },
-  { id: 'write', Icon: PenLine, color: GREEN, nodes: [1, 2, 3, 4] },
+// ── Hosting: what each piece is for ──────────────────────────────────────────
+// static host → browser, then two separate lanes to the network:
+//   READ  · browser → RPC provider → network  (the site asks, nothing changes)
+//   WRITE · browser → wallet → network        (the user signs and sends a transaction)
+const HOST_NODES = {
+  host:    { Icon: Cloud,     color: SKY },
+  browser: { Icon: AppWindow, color: INDIGO },
+  rpc:     { Icon: Server,    color: VIOLET },
+  wallet:  { Icon: Wallet,    color: AMBER },
+  chain:   { Icon: Network,   color: GREEN },
+} as const;
+type HostNodeId = keyof typeof HOST_NODES;
+// Which pieces each scenario lights up.
+const HOST_SCENARIOS: { id: 'load' | 'read' | 'write'; Icon: typeof Globe; color: string; nodes: HostNodeId[] }[] = [
+  { id: 'load',  Icon: Globe,   color: SKY,    nodes: ['host', 'browser'] },
+  { id: 'read',  Icon: Eye,     color: VIOLET, nodes: ['browser', 'rpc', 'chain'] },
+  { id: 'write', Icon: PenLine, color: AMBER,  nodes: ['browser', 'wallet', 'chain'] },
 ];
 
 // ── Event-driven architecture ────────────────────────────────────────────────
@@ -1215,6 +1218,21 @@ function MockField({ label, value, mono = false, tag }: { label: string; value: 
   );
 }
 
+/** Renders copy that contains inline [label](https://…) links as real, clickable anchors. */
+function LinkedText({ text, color }: { text: string; color: string }) {
+  const parts = text.split(/(\[[^\]]+\]\(https?:\/\/[^)\s]+\))/g);
+  return (
+    <>
+      {parts.map((part, i) => {
+        const m = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/);
+        return m
+          ? <a key={i} href={m[2]} target="_blank" rel="noopener noreferrer" className="font-bold underline underline-offset-2 hover:opacity-80" style={{ color }}>{m[1]}</a>
+          : part;
+      })}
+    </>
+  );
+}
+
 function FlowArrow({ color, label }: { color: string; label?: string }) {
   return (
     <div className={`shrink-0 flex flex-col items-center gap-1 ${label ? 'w-20' : 'w-12'}`}>
@@ -1475,7 +1493,7 @@ function DeployWalkthrough() {
               {copy.actions.map((a, ai) => (
                 <li key={ai} className="flex gap-2.5 text-sm text-foreground leading-snug">
                   <span className="shrink-0 size-5 rounded-full text-[10px] font-black flex items-center justify-center mt-0.5" style={{ backgroundColor: step.color + '22', color: step.color }}>{ai + 1}</span>
-                  <span>{a}</span>
+                  <span><LinkedText text={a} color={step.color} /></span>
                 </li>
               ))}
             </ol>
@@ -1571,15 +1589,79 @@ function HostingSlide() {
   const sc = HOST_SCENARIOS[scenario];
   const frontOptions = t('hosting.front.options', { returnObjects: true }) as HostOption[];
   const chainOptions = t('hosting.chain.options', { returnObjects: true }) as HostOption[];
-  const lit = (i: number) => sc.nodes.includes(i);
-  // An arrow is live when the node on its right is lit and some node to its left is lit too.
-  const arrowLit = (i: number) => lit(i) && sc.nodes.some(n => n < i);
+  const lit = (id: HostNodeId) => sc.nodes.includes(id);
+  const chipsOf = (id: HostNodeId) => t(`hosting.nodes.${id}.chips`, { returnObjects: true }) as string[];
+
+  // Tall card: the pieces every scenario shares (host, browser, network).
+  const tallNode = (id: HostNodeId, place: string) => {
+    const n = HOST_NODES[id];
+    const on = lit(id);
+    return (
+      <div
+        key={id}
+        className={`flex flex-col items-center justify-center text-center gap-1 px-2.5 py-2.5 rounded-xl border-2 bg-card transition-all duration-300 ${place}`}
+        style={{ borderColor: on ? n.color : 'var(--border)', boxShadow: on ? `0 0 0 4px ${n.color}22` : undefined, opacity: on ? 1 : 0.5 }}
+      >
+        <div className="size-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: n.color + (on ? '' : '18') }}>
+          <n.Icon className="size-5" style={{ color: on ? 'white' : n.color }} />
+        </div>
+        <div className="font-black text-sm text-foreground leading-tight">{t(`hosting.nodes.${id}.label`)}</div>
+        <p className="text-[11px] text-muted-foreground leading-snug">{t(`hosting.nodes.${id}.desc`)}</p>
+        <div className="pt-1 flex flex-wrap justify-center gap-1">
+          {chipsOf(id).map(c => (
+            <span key={c} className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ backgroundColor: n.color + '18', color: n.color }}>{c}</span>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // Lane card: the two doors to the chain. RPC = read, wallet = write.
+  const laneNode = (id: 'rpc' | 'wallet', place: string) => {
+    const n = HOST_NODES[id];
+    const on = lit(id);
+    // When the other lane is in use, the tag says why this piece sits the step out.
+    const skipped = (id === 'wallet' && sc.id === 'read') || (id === 'rpc' && sc.id === 'write');
+    return (
+      <div
+        key={id}
+        className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl border-2 bg-card text-left transition-all duration-300 ${place}`}
+        style={{ borderColor: on ? n.color : 'var(--border)', boxShadow: on ? `0 0 0 4px ${n.color}22` : undefined, opacity: on ? 1 : 0.55 }}
+      >
+        <div className="size-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: n.color + (on ? '' : '18') }}>
+          <n.Icon className="size-5" style={{ color: on ? 'white' : n.color }} />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="font-black text-sm text-foreground leading-tight">{t(`hosting.nodes.${id}.label`)}</span>
+            {skipped ? (
+              <span className="text-[10px] font-black uppercase tracking-wider px-1.5 rounded-full bg-muted border border-border text-muted-foreground whitespace-nowrap">{t(`hosting.skipped.${id}`)}</span>
+            ) : (
+              <span className="text-[10px] font-black uppercase tracking-wider px-1.5 rounded-full text-white whitespace-nowrap" style={{ backgroundColor: n.color }}>{t(`hosting.lanes.${id}`)}</span>
+            )}
+          </div>
+          <p className="text-[11px] text-muted-foreground leading-snug">{t(`hosting.nodes.${id}.desc`)}</p>
+          <div className="pt-0.5 flex flex-wrap gap-1">
+            {chipsOf(id).map(c => (
+              <span key={c} className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ backgroundColor: n.color + '18', color: n.color }}>{c}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const arrow = (key: string, on: boolean, place: string, label?: string) => (
+    <div key={key} className={`hidden lg:flex items-center transition-opacity duration-300 ${place}`} style={{ opacity: on ? 1 : 0.2 }}>
+      <FlowArrow color={on ? sc.color : SLATE} label={label} />
+    </div>
+  );
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
       <SlideHeader kicker={t('hosting.kicker')} heading={t('hosting.heading')} subtitle={t('hosting.subtitle')} color={SKY} />
 
-      <div className="flex-1 min-h-0 flex flex-col justify-center gap-3">
+      <div className="flex-1 min-h-0 flex flex-col justify-center gap-2">
         {/* Scenario picker + what happens */}
         <div className="shrink-0 flex flex-col lg:flex-row lg:items-center gap-3">
           <div className="flex items-center gap-1 p-1 rounded-xl bg-muted border border-border self-start">
@@ -1604,56 +1686,30 @@ function HostingSlide() {
           </motion.p>
         </div>
 
-        {/* The split: ① front end on a static host  ·  ② chain access through a wallet and a node */}
+        {/* ① front end on a static host  ·  ② two doors to the chain: RPC reads, the wallet writes */}
         <div className="shrink-0 rounded-2xl border border-border bg-card/50 p-3">
-          <div className="hidden lg:grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] gap-2 mb-2">
+          <div className="hidden lg:grid grid-cols-[1fr_auto_1fr_auto_2fr_auto_1fr] gap-2 mb-2">
             <div className="col-span-3 flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ backgroundColor: SKY + '14' }}>
               <span className="size-5 rounded-full text-[10px] font-black text-white flex items-center justify-center shrink-0" style={{ backgroundColor: SKY }}>1</span>
               <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: SKY }}>{t('hosting.zones.front')}</span>
             </div>
             <div />
-            <div className="col-span-5 flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ backgroundColor: VIOLET + '14' }}>
+            <div className="col-span-3 flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ backgroundColor: VIOLET + '14' }}>
               <span className="size-5 rounded-full text-[10px] font-black text-white flex items-center justify-center shrink-0" style={{ backgroundColor: VIOLET }}>2</span>
               <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: VIOLET }}>{t('hosting.zones.chain')}</span>
             </div>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-stretch gap-2">
-            {HOST_NODES.map((n, ni) => {
-              const on = lit(ni);
-              const chips = t(`hosting.nodes.${n.id}.chips`, { returnObjects: true }) as string[];
-              return [
-                ni > 0 && (
-                  <div key={`arrow-${ni}`} className="hidden lg:flex items-center transition-opacity duration-300" style={{ opacity: arrowLit(ni) ? 1 : 0.2 }}>
-                    <FlowArrow color={arrowLit(ni) ? sc.color : SLATE} />
-                  </div>
-                ),
-                <div
-                  key={n.id}
-                  className="relative flex flex-col items-center text-center gap-1 px-2.5 py-2.5 rounded-xl border-2 bg-card transition-all duration-300"
-                  style={{
-                    borderColor: on ? n.color : 'var(--border)',
-                    boxShadow: on ? `0 0 0 4px ${n.color}22` : undefined,
-                    opacity: on ? 1 : 0.5,
-                  }}
-                >
-                  <div className="size-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: n.color + (on ? '' : '18') }}>
-                    <n.Icon className="size-5" style={{ color: on ? 'white' : n.color }} />
-                  </div>
-                  <div className="font-black text-sm text-foreground leading-tight">{t(`hosting.nodes.${n.id}.label`)}</div>
-                  <p className="text-[11px] text-muted-foreground leading-snug">{t(`hosting.nodes.${n.id}.desc`)}</p>
-                  <div className="mt-auto pt-1 flex flex-wrap justify-center gap-1">
-                    {chips.map(c => (
-                      <span key={c} className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ backgroundColor: n.color + '18', color: n.color }}>{c}</span>
-                    ))}
-                  </div>
-                  {!on && sc.id === 'read' && n.id === 'wallet' && (
-                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-muted border border-border text-muted-foreground whitespace-nowrap">
-                      {t('hosting.walletSkipped')}
-                    </span>
-                  )}
-                </div>,
-              ];
-            })}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr_auto_2fr_auto_1fr] lg:grid-rows-2 items-stretch gap-2">
+            {tallNode('host', 'lg:col-start-1 lg:row-start-1 lg:row-span-2')}
+            {arrow('a-load', sc.id === 'load', 'lg:col-start-2 lg:row-start-1 lg:row-span-2')}
+            {tallNode('browser', 'lg:col-start-3 lg:row-start-1 lg:row-span-2')}
+            {arrow('a-read-1', sc.id === 'read', 'lg:col-start-4 lg:row-start-1', t('hosting.flows.ask'))}
+            {laneNode('rpc', 'lg:col-start-5 lg:row-start-1')}
+            {arrow('a-read-2', sc.id === 'read', 'lg:col-start-6 lg:row-start-1', t('hosting.flows.read'))}
+            {arrow('a-write-1', sc.id === 'write', 'lg:col-start-4 lg:row-start-2', t('hosting.flows.request'))}
+            {laneNode('wallet', 'lg:col-start-5 lg:row-start-2')}
+            {arrow('a-write-2', sc.id === 'write', 'lg:col-start-6 lg:row-start-2', t('hosting.flows.signed'))}
+            {tallNode('chain', 'lg:col-start-7 lg:row-start-1 lg:row-span-2')}
           </div>
         </div>
 
@@ -1683,17 +1739,19 @@ function HostingSlide() {
             </div>
             <p className="text-xs text-muted-foreground leading-snug">{t('hosting.chain.lead')}</p>
             <div className="grid grid-cols-3 gap-2">
-              {chainOptions.map((o, oi) => (
-                <div key={o.name} className="rounded-xl p-2.5" style={{ backgroundColor: VIOLET + '10' }}>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-xs font-black" style={{ color: VIOLET }}>{o.name}</span>
+              {chainOptions.map((o, oi) => {
+                // The first two options are ways to READ (RPC); the last is the only way to WRITE (the wallet).
+                const c = HOST_NODES[oi === chainOptions.length - 1 ? 'wallet' : 'rpc'].color;
+                return (
+                  <div key={o.name} className="relative rounded-xl p-2.5" style={{ backgroundColor: c + '10' }}>
                     {oi === 0 && (
-                      <span className="text-[10px] font-black uppercase tracking-wider px-1.5 rounded-full text-white whitespace-nowrap" style={{ backgroundColor: GREEN }}>{t('hosting.chain.startHere')}</span>
+                      <span className="absolute -top-1.5 right-2 text-[10px] font-black uppercase tracking-wider px-1.5 rounded-full text-white whitespace-nowrap" style={{ backgroundColor: GREEN }}>{t('hosting.chain.startHere')}</span>
                     )}
+                    <div className="text-xs font-black" style={{ color: c }}>{o.name}</div>
+                    <div className="text-[11px] text-muted-foreground leading-snug">{o.desc}</div>
                   </div>
-                  <div className="text-[11px] text-muted-foreground leading-snug">{o.desc}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             {/* lg:pr-20 keeps the line clear of the floating slide-nav buttons */}
             <p className="text-[11px] text-muted-foreground leading-snug lg:pr-20">{t('hosting.chain.tradeoff')}</p>
