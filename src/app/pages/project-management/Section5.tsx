@@ -1,7 +1,7 @@
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { DiscussionSlide } from '../../components/templates/DiscussionSlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { MicroVaultCallout } from '../../components/shared/MicroVaultCallout';
@@ -22,6 +22,40 @@ const chapters = [
   { id: 's5-discussion',label: 'Discussion' },
   { id: 's5-quiz',      label: 'Quiz' },
   { id: 's5-takeaways', label: 'Takeaways' },
+];
+
+// The section quiz, in order. GroupedQuiz shows it on one slide, one question at a time.
+const quizQuestions = [
+  {
+    question: "(1/3) A smart contract audit has returned with 1 Critical finding, 3 High findings, and 5 Medium findings. The Critical and 2 of the 3 High findings have been resolved and verified. The project sponsor is pushing to deploy to mainnet to meet a public deadline. What is the correct PM response?",
+    options: [
+      { text: 'Approve the mainnet deployment — most findings are resolved and the deadline pressure is real.', correct: false },
+      { text: 'Block the mainnet deployment until all Critical and High findings are resolved and re-verified by the auditor.', correct: true },
+      { text: 'Deploy to mainnet but disable the function affected by the remaining High finding until it is patched.', correct: false },
+      { text: 'Ask the auditor to reclassify the remaining High finding as Medium to unblock the deployment.', correct: false },
+    ],
+    explanation: "No Critical or High finding should remain open at mainnet launch. The Go/No-Go gate is the PM's most important control in a blockchain project. Blockchain deployments are irreversible — a post-launch exploit caused by a known High finding would be a PM governance failure. The deadline is the sponsor's problem to manage; the PM's job is to protect the organization from a catastrophic, publicly visible, and unrecoverable security incident.",
+  },
+  {
+    question: "(2/3) You are PM for a public DeFi protocol. Contributors are pseudonymous and volunteer-driven. A critical bug needs urgent fixing but two core developers publicly disagree on the implementation approach. What leadership posture is most effective?",
+    options: [
+      { text: 'Use positional authority as PM to mandate which solution must be implemented immediately.', correct: false },
+      { text: 'Escalate to the DAO governance forum for a token-holder vote to resolve the technical disagreement.', correct: false },
+      { text: 'Facilitate a time-boxed technical discussion: set a 24-hour decision window, ask both developers to document trade-offs, then drive toward consensus — escalating only if deadlocked.', correct: true },
+      { text: 'Hire an external security contractor to implement a neutral third approach that sidesteps the disagreement entirely.', correct: false },
+    ],
+    explanation: "In public protocols, the PM has no formal authority over volunteer contributors — positional power does not work. DAO votes are far too slow for a critical security bug. Hiring an external contractor introduces trust and context risk. The correct posture is facilitative: create a structured decision space with a clear deadline, let the experts document their options, then drive toward a decision. If genuinely deadlocked, the PM calls it — but only after the technical case has been heard. This is servant leadership applied to a security incident.",
+  },
+  {
+    question: "(3/3) At 12 months post-launch, which set of metrics best demonstrates that your blockchain project has delivered lasting value — not just a successful deployment event?",
+    options: [
+      { text: 'Lines of smart contract code deployed, number of contract functions, and total test coverage percentage.', correct: false },
+      { text: 'On-chain transaction volume growth, 30/60/90-day active wallet retention, governance participation rate, and zero critical security incidents post-launch.', correct: true },
+      { text: 'Number of press releases published, social media follower growth, and conference talks given about the project.', correct: false },
+      { text: "The project's native token market cap and its ranking on CoinGecko or CoinMarketCap.", correct: false },
+    ],
+    explanation: "A successful deployment is a starting line, not a finish line. Lasting value is demonstrated by adoption (transaction volume, active wallets), governance health (participation rate shows the community is engaged), and security resilience (zero critical incidents means the architecture held under real-world conditions). Code metrics measure effort, not value. Token price is driven by market speculation, not project quality. Press coverage is vanity. The PM's 12-month report to the board should tell the story of a living, growing, self-governing protocol — not a launch event.",
+  },
 ];
 
 export function PM_Section5() {
@@ -706,46 +740,9 @@ export function PM_Section5() {
           />
         </div>
 
-        {/* ═══════ QUIZ ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s5-quiz" className="h-full">
-          <QuizSlide
-            question="(1/3) A smart contract audit has returned with 1 Critical finding, 3 High findings, and 5 Medium findings. The Critical and 2 of the 3 High findings have been resolved and verified. The project sponsor is pushing to deploy to mainnet to meet a public deadline. What is the correct PM response?"
-            options={[
-              { text: 'Approve the mainnet deployment — most findings are resolved and the deadline pressure is real.', correct: false },
-              { text: 'Block the mainnet deployment until all Critical and High findings are resolved and re-verified by the auditor.', correct: true },
-              { text: 'Deploy to mainnet but disable the function affected by the remaining High finding until it is patched.', correct: false },
-              { text: 'Ask the auditor to reclassify the remaining High finding as Medium to unblock the deployment.', correct: false },
-            ]}
-            explanation="No Critical or High finding should remain open at mainnet launch. The Go/No-Go gate is the PM's most important control in a blockchain project. Blockchain deployments are irreversible — a post-launch exploit caused by a known High finding would be a PM governance failure. The deadline is the sponsor's problem to manage; the PM's job is to protect the organization from a catastrophic, publicly visible, and unrecoverable security incident."
-          />
-        </div>
-
-        {/* ═══════ QUIZ 2/3 ═══════ */}
-        <div id="s5-quiz-2" className="h-full">
-          <QuizSlide
-            question="(2/3) You are PM for a public DeFi protocol. Contributors are pseudonymous and volunteer-driven. A critical bug needs urgent fixing but two core developers publicly disagree on the implementation approach. What leadership posture is most effective?"
-            options={[
-              { text: 'Use positional authority as PM to mandate which solution must be implemented immediately.', correct: false },
-              { text: 'Escalate to the DAO governance forum for a token-holder vote to resolve the technical disagreement.', correct: false },
-              { text: 'Facilitate a time-boxed technical discussion: set a 24-hour decision window, ask both developers to document trade-offs, then drive toward consensus — escalating only if deadlocked.', correct: true },
-              { text: 'Hire an external security contractor to implement a neutral third approach that sidesteps the disagreement entirely.', correct: false },
-            ]}
-            explanation="In public protocols, the PM has no formal authority over volunteer contributors — positional power does not work. DAO votes are far too slow for a critical security bug. Hiring an external contractor introduces trust and context risk. The correct posture is facilitative: create a structured decision space with a clear deadline, let the experts document their options, then drive toward a decision. If genuinely deadlocked, the PM calls it — but only after the technical case has been heard. This is servant leadership applied to a security incident."
-          />
-        </div>
-
-        {/* ═══════ QUIZ 3/3 ═══════ */}
-        <div id="s5-quiz-3" className="h-full">
-          <QuizSlide
-            question="(3/3) At 12 months post-launch, which set of metrics best demonstrates that your blockchain project has delivered lasting value — not just a successful deployment event?"
-            options={[
-              { text: 'Lines of smart contract code deployed, number of contract functions, and total test coverage percentage.', correct: false },
-              { text: 'On-chain transaction volume growth, 30/60/90-day active wallet retention, governance participation rate, and zero critical security incidents post-launch.', correct: true },
-              { text: 'Number of press releases published, social media follower growth, and conference talks given about the project.', correct: false },
-              { text: "The project's native token market cap and its ranking on CoinGecko or CoinMarketCap.", correct: false },
-            ]}
-            explanation="A successful deployment is a starting line, not a finish line. Lasting value is demonstrated by adoption (transaction volume, active wallets), governance health (participation rate shows the community is engaged), and security resilience (zero critical incidents means the architecture held under real-world conditions). Code metrics measure effort, not value. Token price is driven by market speculation, not project quality. Press coverage is vanity. The PM's 12-month report to the board should tell the story of a living, growing, self-governing protocol — not a launch event."
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

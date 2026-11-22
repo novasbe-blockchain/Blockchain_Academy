@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { TitleSlide } from '../components/templates/TitleSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { ComparisonSlide } from '../components/templates/ComparisonSlide';
-import { QuizSlide } from '../components/templates/QuizSlide';
+import { GroupedQuiz } from '../components/templates/GroupedQuiz';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
 import { CalloutBox } from '../components/shared/CalloutBox';
 import { DefinitionBox } from '../components/shared/DefinitionBox';
@@ -2156,6 +2156,18 @@ export function Section2() {
       ),
     [t],
   );
+
+  // The section quiz, in order: locale block + index of its correct option (language-neutral).
+  const quizQuestions = ([
+    ['quizSupply', 1], ['quizSecurity', 1], ['quizByzantine', 2], ['quizNodes', 3],
+    ['quizCyprus', 1], ['quizUtxo', 0], ['quizKeysOneWay', 3], ['quizSelfCustody', 1],
+    ['quizDifficulty', 2], ['quizScript', 0],
+  ] as const).map(([key, correctIndex]) => ({
+    question: t(`${key}.question`),
+    options: (t(`${key}.options`, { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === correctIndex })),
+    explanation: t(`${key}.explanation`),
+  }));
+
   return (
     <div className="h-full w-full flex overflow-hidden">
       <SectionNav chapters={section2Chapters} />
@@ -2843,94 +2855,9 @@ export function Section2() {
           </div>
         </div>
 
-        {/* ═══════ QUIZ ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s2-quiz" className="h-full">
-          <QuizSlide
-            question={t('quizSupply.question')}
-            options={(t('quizSupply.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizSupply.explanation')}
-          />
-        </div>
-
-        {/* Quiz: security */}
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizSecurity.question')}
-            options={(t('quizSecurity.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizSecurity.explanation')}
-          />
-        </div>
-
-        {/* Quiz: Byzantine Generals Problem */}
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizByzantine.question')}
-            options={(t('quizByzantine.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-            explanation={t('quizByzantine.explanation')}
-          />
-        </div>
-
-        {/* Quiz: Node types */}
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizNodes.question')}
-            options={(t('quizNodes.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 3 }))}
-            explanation={t('quizNodes.explanation')}
-          />
-        </div>
-
-        {/* Quiz: real-world case — Cyprus 2013 */}
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizCyprus.question')}
-            options={(t('quizCyprus.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizCyprus.explanation')}
-          />
-        </div>
-
-        {/* Quiz: UTXO — spending a coin */}
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizUtxo.question')}
-            options={(t('quizUtxo.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }))}
-            explanation={t('quizUtxo.explanation')}
-          />
-        </div>
-
-        {/* Quiz: keys — one-way derivation */}
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizKeysOneWay.question')}
-            options={(t('quizKeysOneWay.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 3 }))}
-            explanation={t('quizKeysOneWay.explanation')}
-          />
-        </div>
-
-        {/* Quiz: seed phrase & self-custody */}
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizSelfCustody.question')}
-            options={(t('quizSelfCustody.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizSelfCustody.explanation')}
-          />
-        </div>
-
-        {/* Quiz: difficulty adjustment */}
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizDifficulty.question')}
-            options={(t('quizDifficulty.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-            explanation={t('quizDifficulty.explanation')}
-          />
-        </div>
-
-        {/* Quiz: Bitcoin Script — limited by design */}
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizScript.question')}
-            options={(t('quizScript.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }))}
-            explanation={t('quizScript.explanation')}
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

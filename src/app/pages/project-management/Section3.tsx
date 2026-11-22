@@ -1,7 +1,7 @@
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { DiscussionSlide } from '../../components/templates/DiscussionSlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { MicroVaultCallout } from '../../components/shared/MicroVaultCallout';
@@ -23,6 +23,40 @@ const chapters = [
   { id: 's3-discussion',   label: 'Discussion' },
   { id: 's3-quiz',         label: 'Quiz' },
   { id: 's3-takeaways',    label: 'Takeaways' },
+];
+
+// The section quiz, in order. GroupedQuiz shows it on one slide, one question at a time.
+const quizQuestions = [
+  {
+    question: "(1/3) Your team is building a DeFi lending protocol and plans to use a single on-chain DEX spot price as the collateral price oracle. What is the primary risk, and how should it be mitigated?",
+    options: [
+      { text: 'Gas cost risk — on-chain price lookups are expensive. Use a centralized API instead to save fees.', correct: false },
+      { text: 'Oracle manipulation risk via flash loans — an attacker can move the DEX price in a single transaction to drain the protocol. Use a time-weighted average price (TWAP) or a decentralized oracle network.', correct: true },
+      { text: 'Latency risk — the DEX price updates too slowly. Use a centralized exchange feed with faster updates.', correct: false },
+      { text: 'Regulatory risk — using on-chain prices constitutes market manipulation under MiFID II.', correct: false },
+    ],
+    explanation: "Single on-chain spot prices are the primary attack surface for flash loan oracle manipulation. An attacker borrows a huge amount in a single transaction, moves the DEX price, triggers the vulnerable protocol, and repays the loan — all atomically. The attack leaves no trace between blocks. Time-weighted average prices (TWAP) and decentralized oracle networks like Chainlink are the standard mitigations because they cannot be manipulated within a single block.",
+  },
+  {
+    question: "(2/3) The DAO hack of 2016 drained $60M due to a reentrancy vulnerability. Which pattern is the primary defense against reentrancy attacks in a smart contract?",
+    options: [
+      { text: 'Apply a 24-hour timelock that delays all external function calls before execution.', correct: false },
+      { text: 'Apply the Checks-Effects-Interactions pattern — update all contract state before making any external call.', correct: true },
+      { text: 'Deploy a multi-sig wallet requiring 3 signatures for every transfer operation.', correct: false },
+      { text: 'Use a centralized price feed instead of on-chain oracles to reduce the attack surface.', correct: false },
+    ],
+    explanation: "Reentrancy happens when a contract makes an external call before it updates its own state — allowing the called contract to re-enter and drain funds repeatedly. The Checks-Effects-Interactions pattern prevents this: first validate all conditions (checks), then update internal state (effects), then and only then interact with external contracts. OpenZeppelin's ReentrancyGuard modifier enforces this automatically. A timelock does not help — it would only delay the attack, not prevent it.",
+  },
+  {
+    question: "(3/3) A security audit returns 0 Critical, 1 High, and 6 Medium findings. The single High finding concerns the upgrade proxy mechanism. The project sponsor wants to launch on the original schedule. What does the Go/No-Go gate require?",
+    options: [
+      { text: 'Launch is approved — zero Critical findings means the gate is passed.', correct: false },
+      { text: 'Launch is approved — Medium findings can safely be resolved post-launch with a quick patch.', correct: false },
+      { text: 'Launch is blocked until the High finding is fully remediated, re-tested, and auditor-verified — regardless of schedule pressure.', correct: true },
+      { text: 'Reclassify the High finding as Medium and document it as a known risk to allow the launch to proceed.', correct: false },
+    ],
+    explanation: "The Go/No-Go gate requires zero open Critical or High findings — not just zero Critical. A High severity finding in the upgrade proxy mechanism means an attacker could potentially upgrade the contract to malicious logic or cause storage collisions. Reclassifying findings to bypass gates is a red flag that destroys auditor trust and creates legal liability. Medium findings can be addressed post-launch; High and Critical cannot. The sponsor's schedule pressure is a stakeholder management problem — the PM's job is to protect the organization from an irreversible security failure.",
+  },
 ];
 
 export function PM_Section3() {
@@ -887,46 +921,9 @@ export function PM_Section3() {
           />
         </div>
 
-        {/* ═══════ QUIZ ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s3-quiz" className="h-full">
-          <QuizSlide
-            question="(1/3) Your team is building a DeFi lending protocol and plans to use a single on-chain DEX spot price as the collateral price oracle. What is the primary risk, and how should it be mitigated?"
-            options={[
-              { text: 'Gas cost risk — on-chain price lookups are expensive. Use a centralized API instead to save fees.', correct: false },
-              { text: 'Oracle manipulation risk via flash loans — an attacker can move the DEX price in a single transaction to drain the protocol. Use a time-weighted average price (TWAP) or a decentralized oracle network.', correct: true },
-              { text: 'Latency risk — the DEX price updates too slowly. Use a centralized exchange feed with faster updates.', correct: false },
-              { text: 'Regulatory risk — using on-chain prices constitutes market manipulation under MiFID II.', correct: false },
-            ]}
-            explanation="Single on-chain spot prices are the primary attack surface for flash loan oracle manipulation. An attacker borrows a huge amount in a single transaction, moves the DEX price, triggers the vulnerable protocol, and repays the loan — all atomically. The attack leaves no trace between blocks. Time-weighted average prices (TWAP) and decentralized oracle networks like Chainlink are the standard mitigations because they cannot be manipulated within a single block."
-          />
-        </div>
-
-        {/* ═══════ QUIZ 2/3 ═══════ */}
-        <div id="s3-quiz-2" className="h-full">
-          <QuizSlide
-            question="(2/3) The DAO hack of 2016 drained $60M due to a reentrancy vulnerability. Which pattern is the primary defense against reentrancy attacks in a smart contract?"
-            options={[
-              { text: 'Apply a 24-hour timelock that delays all external function calls before execution.', correct: false },
-              { text: 'Apply the Checks-Effects-Interactions pattern — update all contract state before making any external call.', correct: true },
-              { text: 'Deploy a multi-sig wallet requiring 3 signatures for every transfer operation.', correct: false },
-              { text: 'Use a centralized price feed instead of on-chain oracles to reduce the attack surface.', correct: false },
-            ]}
-            explanation="Reentrancy happens when a contract makes an external call before it updates its own state — allowing the called contract to re-enter and drain funds repeatedly. The Checks-Effects-Interactions pattern prevents this: first validate all conditions (checks), then update internal state (effects), then and only then interact with external contracts. OpenZeppelin's ReentrancyGuard modifier enforces this automatically. A timelock does not help — it would only delay the attack, not prevent it."
-          />
-        </div>
-
-        {/* ═══════ QUIZ 3/3 ═══════ */}
-        <div id="s3-quiz-3" className="h-full">
-          <QuizSlide
-            question="(3/3) A security audit returns 0 Critical, 1 High, and 6 Medium findings. The single High finding concerns the upgrade proxy mechanism. The project sponsor wants to launch on the original schedule. What does the Go/No-Go gate require?"
-            options={[
-              { text: 'Launch is approved — zero Critical findings means the gate is passed.', correct: false },
-              { text: 'Launch is approved — Medium findings can safely be resolved post-launch with a quick patch.', correct: false },
-              { text: 'Launch is blocked until the High finding is fully remediated, re-tested, and auditor-verified — regardless of schedule pressure.', correct: true },
-              { text: 'Reclassify the High finding as Medium and document it as a known risk to allow the launch to proceed.', correct: false },
-            ]}
-            explanation="The Go/No-Go gate requires zero open Critical or High findings — not just zero Critical. A High severity finding in the upgrade proxy mechanism means an attacker could potentially upgrade the contract to malicious logic or cause storage collisions. Reclassifying findings to bypass gates is a red flag that destroys auditor trust and creates legal liability. Medium findings can be addressed post-launch; High and Critical cannot. The sponsor's schedule pressure is a stakeholder management problem — the PM's job is to protect the organization from an irreversible security failure."
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

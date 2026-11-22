@@ -9,18 +9,13 @@
   "chapters": {
     "s1-handoff": "↩ Handoff",
     "s1-architecture": "Architecture",
-    "s1-quiz-security": "Quiz: Security",
     "s1-tx-lifecycle": "🧩 Tx Flow",
-    "s1-quiz-txflow": "Quiz: Tx Flow",
     "s1-trilemma": "Trilemma",
-    "s1-quiz-trilemma": "Quiz: Trilemma",
     "s1-apps": "Apps: scaling",
     "s1-apps-assets": "Apps: assets",
     "s1-lightning": "🧩 Lightning Network",
-    "s1-quiz-lightning": "Quiz: Lightning",
-    "s1-quiz-sidechains": "Quiz: Sidechains",
     "s1-bestfits": "🎯 Best Fits",
-    "s1-quiz-fit": "Quiz: Right tool?",
+    "s1-quiz": "Quiz",
     "s1-takeaways": "Takeaways"
   },
   "title": {

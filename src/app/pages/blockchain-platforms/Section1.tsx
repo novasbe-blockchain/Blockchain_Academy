@@ -6,7 +6,7 @@ import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { Bitcoin, Zap } from 'lucide-react';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
@@ -17,26 +17,21 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-s1-arch' },
   { id: 's1-architecture' },
-  { id: 's1-quiz-security' },
   { id: 's1-tx-lifecycle' },
-  { id: 's1-quiz-txflow' },
 
   { kind: 'group' as const, id: 'g-s1-tradeoffs' },
   { id: 's1-trilemma' },
-  { id: 's1-quiz-trilemma' },
 
   { kind: 'group' as const, id: 'g-s1-apps' },
   { id: 's1-apps' },
   { id: 's1-apps-assets' },
   { id: 's1-lightning' },
-  { id: 's1-quiz-lightning' },
-  { id: 's1-quiz-sidechains' },
 
   { kind: 'group' as const, id: 'g-s1-fit' },
   { id: 's1-bestfits' },
-  { id: 's1-quiz-fit' },
 
   { kind: 'group' as const, id: 'g-s1-wrap' },
+  { id: 's1-quiz' },
   { id: 's1-takeaways' },
 ] as const;
 
@@ -1118,6 +1113,17 @@ export function BP_Section1() {
     [t]
   );
 
+
+  // The section quiz, in order: locale block + index of its correct option (language-neutral).
+  const quizQuestions = ([
+    ['quizSecurity', 2], ['quizTxFlow', 0], ['quizTrilemma', 1], ['quizLightning', 1],
+    ['quizSidechains', 3], ['quizFit', 1],
+  ] as const).map(([key, correctIndex]) => ({
+    question: t(`${key}.question`),
+    options: (t(`${key}.options`, { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === correctIndex })),
+    explanation: t(`${key}.explanation`),
+  }));
+
   return (
     <div className="h-full w-full flex overflow-hidden">
       <SectionNav chapters={chapters} />
@@ -1145,43 +1151,14 @@ export function BP_Section1() {
           <BitcoinArchitectureSlide />
         </div>
 
-        {/* ═══════ QUIZ — what the security budget buys ═══════ */}
-        <div id="s1-quiz-security" className="h-full">
-          <QuizSlide
-            question={t('quizSecurity.question')}
-            options={(t('quizSecurity.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-            explanation={t('quizSecurity.explanation')}
-            compact
-          />
-        </div>
-
         {/* ═══════ TRANSACTION FLOW — end-to-end systemisation recap ═══════ */}
         <div id="s1-tx-lifecycle" className="h-full">
           <TxLifecycleAnimated />
         </div>
 
-        {/* ═══════ QUIZ — mempool & fee queue ═══════ */}
-        <div id="s1-quiz-txflow" className="h-full">
-          <QuizSlide
-            question={t('quizTxFlow.question')}
-            options={(t('quizTxFlow.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }))}
-            explanation={t('quizTxFlow.explanation')}
-            compact
-          />
-        </div>
-
         {/* ═══════ TRILEMMA ═══════ */}
         <div id="s1-trilemma" className="h-full">
           <TrilemmaSlide />
-        </div>
-
-        {/* ═══════ QUIZ — trilemma scenario ═══════ */}
-        <div id="s1-quiz-trilemma" className="h-full">
-          <QuizSlide
-            question={t('quizTrilemma.question')}
-            options={(t('quizTrilemma.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizTrilemma.explanation')}
-          />
         </div>
 
         {/* ═══════ APPS A — Lightning + sidechains & rollups ═══════ */}
@@ -1198,26 +1175,6 @@ export function BP_Section1() {
         {/* ─── Lightning: Channel Lifecycle ─── */}
         <div id="s1-lightning" className="h-full">
           <LightningVaultDemo />
-        </div>
-
-        {/* ═══════ QUIZ — Lightning: what touches the chain ═══════ */}
-        <div id="s1-quiz-lightning" className="h-full">
-          <QuizSlide
-            question={t('quizLightning.question')}
-            options={(t('quizLightning.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizLightning.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ — sidechain trust model ═══════ */}
-        <div id="s1-quiz-sidechains" className="h-full">
-          <QuizSlide
-            question={t('quizSidechains.question')}
-            options={(t('quizSidechains.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 3 }))}
-            explanation={t('quizSidechains.explanation')}
-            compact
-          />
         </div>
 
         {/* ═══════ BEST FITS — WHERE BITCOIN WINS ═══════ */}
@@ -1252,13 +1209,9 @@ export function BP_Section1() {
           <KeyPointBar text={t('bestFits.keyPoint')} className="shrink-0 mt-2 lg:mr-20" />
         </div>
 
-        {/* ═══════ QUIZ — best/worst fit judgement ═══════ */}
-        <div id="s1-quiz-fit" className="h-full">
-          <QuizSlide
-            question={t('quizFit.question')}
-            options={(t('quizFit.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizFit.explanation')}
-          />
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
+        <div id="s1-quiz" className="h-full">
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

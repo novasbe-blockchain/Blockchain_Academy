@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { TitleSlide } from '../components/templates/TitleSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { DiagramSlide } from '../components/templates/DiagramSlide';
-import { QuizSlide } from '../components/templates/QuizSlide';
+import { GroupedQuiz } from '../components/templates/GroupedQuiz';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
 import { CalloutBox } from '../components/shared/CalloutBox';
 import { BlockchainChain } from '../components/blockchain/BlockchainChain';
@@ -62,6 +62,7 @@ const section1ChaptersShape: ReadonlyArray<{ id: string; kind?: 'group' }> = [
   { id: 's1-wallet-basics' },
 
   { kind: 'group', id: 'g-s1-wrap' },
+  { id: 's1-quiz' },
   { id: 's1-takeaways' },
 ];
 
@@ -2867,6 +2868,17 @@ export function Section1() {
       ),
     [t],
   );
+
+  // The section quiz, in order: locale block + index of its correct option (language-neutral).
+  const quizQuestions = ([
+    ['quizDoubleSpend', 2], ['quizPseudonymous', 0], ['quizAvalanche', 2], ['quizPrevHash', 1],
+    ['quizTamperEvident', 3], ['quizShapeControl', 1], ['quiz51', 1], ['quizWallet', 2],
+  ] as const).map(([key, correctIndex]) => ({
+    question: t(`${key}.question`),
+    options: (t(`${key}.options`, { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === correctIndex })),
+    explanation: t(`${key}.explanation`),
+  }));
+
   return (
     <div className="size-full flex overflow-hidden">
       <SectionNav chapters={section1Chapters} />
@@ -2914,15 +2926,6 @@ export function Section1() {
                 </div>
               }
               keyPoints={t('trust.keyPoints', { returnObjects: true }) as string[]}
-            />
-          </div>
-
-          {/* ── Quick check: double-spending / why a middleman ── */}
-          <div className="h-full">
-            <QuizSlide
-              question={t('quizDoubleSpend.question')}
-              options={(t('quizDoubleSpend.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-              explanation={t('quizDoubleSpend.explanation')}
             />
           </div>
 
@@ -2990,15 +2993,6 @@ export function Section1() {
             />
           </div>
 
-          {/* ── Quick check: pseudonymous ≠ anonymous ── */}
-          <div className="h-full">
-            <QuizSlide
-              question={t('quizPseudonymous.question')}
-              options={(t('quizPseudonymous.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }))}
-              explanation={t('quizPseudonymous.explanation')}
-            />
-          </div>
-
           {/* ═══════ 03b — TRANSACTIONS (animated flow) ═══════ */}
           <div id="s1-transaction" className="h-full flex items-center justify-center p-6 lg:p-10">
             <TransactionFlow />
@@ -3034,15 +3028,6 @@ export function Section1() {
             />
           </div>
 
-          {/* ── Quick check: avalanche ── */}
-          <div className="h-full">
-            <QuizSlide
-              question={t('quizAvalanche.question')}
-              options={(t('quizAvalanche.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-              explanation={t('quizAvalanche.explanation')}
-            />
-          </div>
-
           {/* ═══════ 04 — LINKING BLOCKS ═══════ */}
           <div id="s1-chain" className="h-full flex items-center justify-center p-6 lg:p-10">
             <LinkedBlocksReveal />
@@ -3063,27 +3048,9 @@ export function Section1() {
             <PrevHashExercise />
           </div>
 
-          {/* ── Quick check: prev hash purpose ── */}
-          <div className="h-full">
-            <QuizSlide
-              question={t('quizPrevHash.question')}
-              options={(t('quizPrevHash.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-              explanation={t('quizPrevHash.explanation')}
-            />
-          </div>
-
           {/* ═══════ 05 — THE CASCADE (NEW) ═══════ */}
           <div id="s1-cascade" className="h-full flex items-center justify-center p-6">
             <TamperCascade />
-          </div>
-
-          {/* ── Quick check: tamper-evident, not tamper-proof ── */}
-          <div className="h-full">
-            <QuizSlide
-              question={t('quizTamperEvident.question')}
-              options={(t('quizTamperEvident.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 3 }))}
-              explanation={t('quizTamperEvident.explanation')}
-            />
           </div>
 
           {/* ═══════ 06 — THE NETWORK ═══════ */}
@@ -3209,24 +3176,6 @@ export function Section1() {
             <NetworkTypeSorter />
           </div>
 
-          {/* ── Quick check: shape is not control ── */}
-          <div className="h-full">
-            <QuizSlide
-              question={t('quizShapeControl.question')}
-              options={(t('quizShapeControl.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-              explanation={t('quizShapeControl.explanation')}
-            />
-          </div>
-
-          {/* ── Quick check: network resilience ── */}
-          <div className="h-full">
-            <QuizSlide
-              question={t('quiz51.question')}
-              options={(t('quiz51.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-              explanation={t('quiz51.explanation')}
-            />
-          </div>
-
           {/* ═══════ 07 — CONSENSUS ═══════ */}
           <div id="s1-consensus" className="h-full flex items-center justify-center p-8 lg:p-12">
             <div className="max-w-5xl w-full">
@@ -3279,13 +3228,9 @@ export function Section1() {
             <WalletBasics />
           </div>
 
-          {/* ── Quick check: what a wallet holds ── */}
-          <div className="h-full">
-            <QuizSlide
-              question={t('quizWallet.question')}
-              options={(t('quizWallet.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-              explanation={t('quizWallet.explanation')}
-            />
+          {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
+          <div id="s1-quiz" className="h-full">
+            <GroupedQuiz questions={quizQuestions} compact />
           </div>
 
           {/* ═══════ 11 — TAKEAWAYS ═══════ */}
