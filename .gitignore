@@ -33,3 +33,8 @@ pnpm-debug.log*
 .cache/
 .vite/
 /FullSlides_smart-contracts
+
+# Secrets: deployer keys must never be committed (the wizard's key lives OUTSIDE the repo)
+wizard-deployer.key*
+*.key
+*.pem

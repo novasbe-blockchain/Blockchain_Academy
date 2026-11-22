@@ -7,6 +7,7 @@
     "s6-ai": "🧩 AI-Driven Dev",
     "s6-where": "🧩 Tools & Network",
     "s6-deploy": "▶ Deploy to a Testnet",
+    "s6-first-tx": "▶ Your First Transaction",
     "s6-hosting": "🧩 Nodes & Hosting",
     "s6-events": "🧩 Event-Driven Apps",
     "s6-deeper": "Going Deeper · optional",
@@ -757,6 +758,7 @@
     "s6-ai": "AI can write the contract. Only you can answer for it: if you cannot explain a line, do not deploy it.",
     "s6-where": "A testnet is a dress rehearsal: same tools, same steps, nothing at stake.",
     "s6-deploy": "Do these four steps once on a testnet and you know the routine: mainnet is the same, with real money.",
+    "s6-first-tx": "A transaction is a signed request to change shared state. Once it is mined, it is public and it stays.",
     "s6-hosting": "The host serves the site, an RPC provider reads the chain, the wallet writes to it. The contract itself is already hosted, by the network.",
     "s6-events": "A contract cannot reach out to your systems. It emits an event, and everything off-chain is a reaction to it.",
     "s6-deeper": "The contract is the smallest part of the product. Everything around it is ordinary software."

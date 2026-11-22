@@ -9,6 +9,7 @@ import { SiteFooter } from '../../components/shared/SiteFooter';
 import { DeepDiveBadge } from '../../components/shared/DeepDiveBadge';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { RecapHandoff } from '../../components/shared/RecapHandoff';
+import { FirstTransactionWizard } from '../../components/first-tx/FirstTransactionWizard';
 import {
   Wrench, Puzzle, Blocks, Rocket, Lightbulb, Globe, Play, Wallet, Droplets, ReceiptText,
   Check, ChevronLeft, ChevronRight, RotateCcw, KeyRound, Hammer, Network, Coins, FlaskConical,
@@ -31,6 +32,7 @@ const chapterIds = [
   's6-ai',
   's6-where',
   's6-deploy',
+  's6-first-tx',
   's6-hosting',
   's6-events',
   's6-deeper',
@@ -2078,6 +2080,9 @@ export function SC_Section6() {
 
         {/* ═══════ 5 · DEPLOY TO A TESTNET (centerpiece) ═══════ */}
         <div id="s6-deploy" className="h-full"><DeployWalkthrough /></div>
+
+        {/* ═══════ 5a · YOUR FIRST TRANSACTION (real wallet, real testnet) ═══════ */}
+        <div id="s6-first-tx" className="h-full"><FirstTransactionWizard keyPoint={t('keyPoints.s6-first-tx')} /></div>
 
         {/* ═══════ 5b · NODE INFRASTRUCTURE & WHERE TO HOST ═══════ */}
         <div id="s6-hosting" className="h-full"><HostingSlide /></div>

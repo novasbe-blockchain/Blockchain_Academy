@@ -6,7 +6,10 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "contract:compile": "node scripts/deploy-class-registry.mjs compile",
+    "contract:address": "node scripts/deploy-class-registry.mjs address",
+    "contract:deploy": "node scripts/deploy-class-registry.mjs deploy"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -40,6 +43,8 @@
     "@radix-ui/react-toggle": "1.1.2",
     "@radix-ui/react-toggle-group": "1.1.2",
     "@radix-ui/react-tooltip": "1.1.8",
+    "@rainbow-me/rainbowkit": "2.2.11",
+    "@tanstack/react-query": "5.108.2",
     "@types/animejs": "^3.1.12",
     "animejs": "^3.2.2",
     "class-variance-authority": "0.7.1",
@@ -53,27 +58,30 @@
     "lucide-react": "0.487.0",
     "motion": "12.23.24",
     "next-themes": "0.4.6",
+    "react": "18.3.1",
     "react-day-picker": "8.10.1",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
+    "react-dom": "18.3.1",
     "react-hook-form": "7.55.0",
     "react-i18next": "^15.7.4",
     "react-popper": "2.3.0",
     "react-resizable-panels": "2.1.7",
     "react-responsive-masonry": "2.7.1",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
     "react-router": "7.13.0",
     "react-slick": "0.31.0",
     "recharts": "2.15.2",
     "sonner": "2.0.3",
     "tailwind-merge": "3.2.0",
     "tw-animate-css": "1.3.8",
-    "vaul": "1.1.2"
+    "vaul": "1.1.2",
+    "viem": "2.58.4",
+    "wagmi": "2.19.5"
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
+    "solc": "0.8.39",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"
   },
