@@ -3,6 +3,7 @@
     "g-s7-problem": "The Problem",
     "g-s7-idea": "The Idea",
     "g-s7-business": "In Business",
+    "g-s7-scope": "Alcance e Limites",
     "g-s7-law": "Privacy & the Law",
     "g-s7-wrap": "Wrap Up"
   },
@@ -12,6 +13,8 @@
     "s7-waldo": "ZK: Onde Está o Wally?",
     "s7-kyc": "KYC Without Identity",
     "s7-live": "ZK in Production",
+    "s7-jobs": "Dois Trabalhos do ZK",
+    "s7-limits": "O Que o ZK Não Faz",
     "s7-approaches": "Four Ways to Privacy",
     "s7-tornado": "Tornado Cash",
     "s7-disclosure": "Selective Disclosure",
@@ -26,7 +29,8 @@
   "ui": {
     "hood": "under the hood →",
     "recap": "Already covered",
-    "keyPoint": "Key point"
+    "keyPoint": "Key point",
+    "deeper": "Para aprofundar"
   },
   "privacy": {
     "business": [
@@ -55,8 +59,8 @@
       }
     ],
     "traceLabel": "How one link exposes everything",
-    "heading": "Privacidade num registo público — porque é difícil",
-    "subtitle": "As chains públicas são transparentes por defeito: cada endereço, saldo e transferência é visível para qualquer pessoa, para sempre.",
+    "heading": "Uma chain pública não é privada",
+    "subtitle": "Cada endereço, saldo e transferência é visível para qualquer pessoa, para sempre. Pseudónimo não é anónimo: uma única ligação ao teu nome expõe todo o teu histórico. Fora da chain, um salário ou um extrato bancário é privado por defeito; querer o mesmo on-chain é normal, não é suspeito.",
     "normalLabel": "Uma transação pública normal",
     "normalCaption": "Qualquer pessoa pode ler quem pagou a quem, quanto, e rastreá-la para trás para sempre.",
     "shieldedLabel": "Uma transação shielded",
@@ -166,15 +170,15 @@
     "steps": [
       {
         "label": "O banco emite uma credencial",
-        "desc": "O teu banco verifica-te uma vez e assina uma credencial ZK contendo { name, DOB, residency, sanctions check }. Esta credencial vive na tua carteira — só tu a deténs."
+        "desc": "O teu banco verifica-te uma vez e assina uma credencial digital: nome, data de nascimento, residência, verificação de sanções. Fica na tua carteira — só tu a tens."
       },
       {
         "label": "Geras uma prova",
-        "desc": "Na tua carteira, constróis uma prova STARK: \"credencial assinada pelo Banco · idade ≥ 18 · residência = UE · sanções = false\". Nenhum dado em bruto é incluído na própria prova."
+        "desc": "A tua carteira constrói uma prova: \"assinada pelo banco · idade ≥ 18 · residente na UE · não sancionado\". A prova não contém nenhum dos dados em bruto."
       },
       {
-        "label": "O contrato Cairo verifica",
-        "desc": "O contrato Cairo da dApp na Starknet verifica a prova e concede acesso. O teu nome e data de nascimento nunca saem da tua carteira — nem sequer o operador da dApp os consegue ler."
+        "label": "A app verifica",
+        "desc": "O smart contract da app verifica a prova e deixa-te entrar. O teu nome e a tua data de nascimento nunca saem da tua carteira — nem o operador da app os consegue ler."
       }
     ],
     "businessLabel": "Why a business cares",
@@ -244,6 +248,122 @@
         "since": "Web data · 2023+"
       }
     ]
+  },
+  "zkJobs": {
+    "heading": "Uma prova, dois trabalhos — privacidade e escala",
+    "subtitle": "O mesmo tipo de prova responde a duas perguntas diferentes. Confundi-las é o equívoco mais comum sobre ZK.",
+    "proofChip": "uma prova pequena",
+    "privacy": {
+      "label": "Trabalho 1 · Privacidade",
+      "title": "Manter os dados em segredo",
+      "secrets": [
+        "salário",
+        "nascimento",
+        "saldo"
+      ],
+      "from": "Tu",
+      "fromNote": "os dados ficam contigo",
+      "to": "O verificador",
+      "toVerdict": "✓ a afirmação é verdadeira",
+      "toNote": "não vê nenhum dos dados",
+      "rows": [
+        {
+          "k": "Dispensa",
+          "v": "Ver os teus dados."
+        },
+        {
+          "k": "Oculto?",
+          "v": "Sim. É esse o objetivo."
+        },
+        {
+          "k": "Onde",
+          "v": "Pagamentos privados, verificações de idade e de elegibilidade, provas de conformidade."
+        }
+      ]
+    },
+    "scale": {
+      "label": "Trabalho 2 · Escala",
+      "title": "Dispensar a reverificação",
+      "from": "Um rollup",
+      "fromNote": "5 000 transações, todas públicas",
+      "to": "Ethereum",
+      "toVerdict": "✓ as 5 000 são válidas",
+      "toNote": "não reexecuta nenhuma",
+      "rows": [
+        {
+          "k": "Dispensa",
+          "v": "Refazer milhares de transações, uma a uma."
+        },
+        {
+          "k": "Oculto?",
+          "v": "Não. Todas as transações continuam públicas."
+        },
+        {
+          "k": "Onde",
+          "v": "ZK rollups (zkSync, Starknet, Linea, Scroll): taxas de poucos cêntimos. Também se chama prova de validade."
+        }
+      ]
+    },
+    "sort": {
+      "label": "Que trabalho está o ZK a fazer aqui?",
+      "privacy": "Privacidade",
+      "scale": "Escala",
+      "reset": "Recomeçar",
+      "items": [
+        {
+          "text": "A app à porta de um bar confirma que tens mais de 18 anos e nunca vê o teu documento.",
+          "why": "Os dados ficam ocultos; só sai o sim ou o não."
+        },
+        {
+          "text": "Uma rede junta 5 000 pagamentos e entrega à Ethereum uma prova pequena de que todos eram válidos.",
+          "why": "Nada fica oculto. A Ethereum só evita reexecutar 5 000 pagamentos."
+        },
+        {
+          "text": "Uma exchange mostra que detém os depósitos de todos os clientes sem publicar um único saldo.",
+          "why": "Os saldos ficam confidenciais; o total fica provado."
+        },
+        {
+          "text": "Pagas poucos cêntimos num \"ZK rollup\" e a tua transferência continua visível num explorador público.",
+          "why": "Um ZK rollup é barato, não privado. O nome descreve a prova, não o segredo."
+        }
+      ]
+    },
+    "deeper": "Curso 03 · Secção 02 — Rollups otimistas vs ZK"
+  },
+  "zkLimits": {
+    "heading": "Teste de realidade — o que uma prova ZK não faz",
+    "subtitle": "Uma prova responde a uma pergunta e fica por aí. Quatro afirmações que vais ouvir, e onde cada uma exagera.",
+    "hint": "Toca numa afirmação para a verificar.",
+    "revealAll": "Revelar todas",
+    "reset": "Ocultar todas",
+    "claimLabel": "Afirmação",
+    "realityLabel": "Não é bem assim. ",
+    "tapHint": "Toca para verificar →",
+    "items": [
+      {
+        "claim": "Usa ZK, por isso é privado.",
+        "reality": "Só fica oculto o que quem desenhou o sistema decidiu ocultar. Tudo o resto numa chain pública continua público, e um ZK rollup não oculta nada.",
+        "tag": "Privado de propósito, nunca por defeito"
+      },
+      {
+        "claim": "A prova é válida, por isso o facto é verdadeiro.",
+        "reality": "Uma prova mostra que a afirmação decorre dos dados de entrada. Se o banco assinou uma data de nascimento errada, a prova passa na mesma. Continuas a confiar no emissor: é outra vez o problema do oracle (Secção 05).",
+        "tag": "A confiança passa para o emissor; não desaparece"
+      },
+      {
+        "claim": "Um pagamento shielded não pode ser rastreado.",
+        "reality": "A prova oculta o que está dentro dela, não as pistas à volta: quando o dinheiro entrou, quanto era, quando saiu. Com poucos utilizadores, essas pistas chegam.",
+        "tag": "Esconder-se na multidão exige uma multidão"
+      },
+      {
+        "claim": "Com ZK, o produto está em conformidade.",
+        "reality": "O ZK é uma ferramenta, não uma licença. A mesma matemática serve uma prova de conformidade e um mixer; o que a lei faz de um produto depende de como é desenhado e usado.",
+        "tag": "Legal por desenho, não por matemática"
+      }
+    ],
+    "givesLabel": "O que uma prova te dá",
+    "givesStrong": "Uma afirmação, verificada, sem revelar mais nada.",
+    "givesBody": " O que fica oculto, se os dados de entrada são honestos e se o uso é legal continuam a ser decisões de pessoas."
   },
   "privacyApproaches": {
     "heading": "Quatro formas de obter privacidade on-chain",
@@ -350,23 +470,76 @@
     "bannerC": " — o caminho para finanças reguladas, saúde e governo usarem de facto chains públicas."
   },
   "quiz": {
-    "question": "A lender must confirm that an applicant earns at least €40,000 a year before approving a loan. What does a zero-knowledge approach change?",
+    "question": "Um credor tem de confirmar que um candidato ganha pelo menos 40 000 € por ano antes de aprovar um empréstimo. O que muda com uma abordagem zero-knowledge?",
     "options": [
-      "The payslip is encrypted and stored on-chain, so only the lender can open it.",
-      "The applicant sends a proof that \"income ≥ €40,000, attested by a trusted issuer\" is true. The lender verifies the proof and never sees the payslip or the exact figure.",
-      "The lender no longer needs to check anything: the blockchain guarantees the applicant is honest.",
-      "The salary is hidden from everyone, regulators included, forever."
+      "O recibo de vencimento é cifrado e guardado on-chain, para que só o credor o possa abrir.",
+      "O candidato envia uma prova de que \"rendimento ≥ 40 000 €, atestado por um emissor de confiança\" é verdade. O credor verifica a prova e nunca vê o recibo de vencimento nem o valor exato.",
+      "O credor deixa de precisar de verificar seja o que for: a blockchain garante que o candidato é honesto.",
+      "O salário fica oculto de toda a gente, reguladores incluídos, para sempre."
     ],
-    "explanation": "Zero-knowledge separates the claim from the data behind it. A trusted issuer (an employer or a bank) signs the facts once; the applicant's wallet turns them into a proof of one statement; the lender checks the proof. Nothing is stored on-chain in readable or encrypted form, a check still happens, and the applicant can produce further proofs for a regulator on demand. That is selective disclosure, not blanket secrecy."
+    "explanation": "O zero-knowledge separa a afirmação dos dados que a sustentam. Um emissor de confiança (um empregador ou um banco) assina os factos uma vez; a carteira do candidato transforma-os numa prova de uma única afirmação; o credor verifica a prova. Nada é guardado on-chain, nem em formato legível nem cifrado, continua a haver uma verificação, e o candidato pode produzir outras provas para um regulador quando lhe forem pedidas. Isto é divulgação seletiva, não segredo total."
+  },
+  "quizMore": {
+    "public": {
+      "question": "Uma empresa paga salários em stablecoins a partir de uma única carteira numa chain pública. Um funcionário menciona o endereço da sua carteira a um amigo. O que consegue o amigo ver agora?",
+      "options": [
+        "Nada: os endereços são anónimos, por isso os pagamentos não podem ser associados a uma pessoa.",
+        "Apenas o pagamento mais recente a esse funcionário; os anteriores ficam arquivados.",
+        "Todo o histórico de pagamentos do funcionário e, seguindo a carteira que paga, quanto recebe cada um dos outros endereços da folha salarial.",
+        "Nada, a não ser que o amigo opere um nó validador."
+      ],
+      "explanation": "Uma chain pública é pseudónima, não anónima: uma única ligação entre um endereço e um nome abre todo o rasto, nos dois sentidos e para sempre. A privacidade tem de ser acrescentada de propósito."
+    },
+    "jobs": {
+      "question": "Uma start-up de pagamentos muda para um \"ZK rollup\" e diz aos clientes que as transações deles passaram a ser privadas. A afirmação está certa?",
+      "options": [
+        "Não. Aqui a prova mostra à Ethereum que um lote de transações foi processado corretamente, para que não tenha de o refazer; as transações em si continuam públicas.",
+        "Sim. Qualquer sistema que use zero-knowledge proofs oculta remetente, destinatário e montante.",
+        "Sim. As transações correm fora da Ethereum, por isso já ninguém as consegue ver.",
+        "Só em parte: os montantes ficam ocultos, mas remetentes e destinatários são públicos."
+      ],
+      "explanation": "O ZK tem dois trabalhos. Num rollup é uma prova de validade, que dá verificação barata, não segredo. A privacidade tem de ser desenhada à parte."
+    },
+    "issuer": {
+      "question": "Uma app recebe uma zero-knowledge proof válida de \"maior de 18, credencial assinada pelo Banco X\". O que ficou a app realmente a saber?",
+      "options": [
+        "A data de nascimento exata do utilizador, num formato que só a app consegue ler.",
+        "Que o utilizador tem mais de 18 anos com certeza matemática, seja quem for o emissor da credencial.",
+        "Nada: uma zero-knowledge proof não revela qualquer informação, nem sequer se a afirmação é verdadeira.",
+        "Que o Banco X o atestou e que a prova corresponde a essa credencial. Se o Banco X se enganou, a prova passa na mesma."
+      ],
+      "explanation": "Uma prova garante que a afirmação decorre dos dados de entrada, não que esses dados sejam verdadeiros. A confiança passa para o emissor; não desaparece."
+    },
+    "crowd": {
+      "question": "Uma pool de privacidade teve três utilizadores este mês. Na segunda-feira, um deles deposita 100 ETH; na terça-feira, são levantados 100 ETH para um endereço novo. Nenhuma criptografia foi quebrada. Qual é a lição?",
+      "options": [
+        "A prova tem de estar errada: uma zero-knowledge proof válida torna este tipo de palpite impossível.",
+        "A prova ocultou a ligação, mas o momento, o montante e uma multidão minúscula denunciam-na. A privacidade depende de entre quantos outros te escondes.",
+        "Nada se revela: os depósitos e os levantamentos da pool são invisíveis para quem observa.",
+        "O operador da pool deve ter divulgado quem são os utilizadores."
+      ],
+      "explanation": "O ZK oculta o que está dentro da prova, não as pistas à volta. Com poucos utilizadores e montantes iguais, um observador consegue adivinhar a ligação com confiança, sem quebrar matemática nenhuma."
+    },
+    "tornado": {
+      "question": "O Tesouro dos EUA sancionou o Tornado Cash em 2022 e levantou a sanção em 2025, depois de uma decisão judicial. O que ilustra melhor este episódio?",
+      "options": [
+        "As ferramentas de privacidade só são usadas por criminosos, e foi por isso que a sanção foi imposta.",
+        "Os reguladores não tinham nenhum problema real para resolver: nada de ilícito passou pelo mixer.",
+        "A mesma ferramenta ocultou fundos roubados e protegeu utilizadores legítimos e, com um anonimato de tudo-ou-nada, ninguém conseguia travar uns sem atingir os outros.",
+        "Depois de sancionado, o código pode ser desligado por um governo, por isso os contratos deixaram de correr."
+      ],
+      "explanation": "As duas coisas eram verdade ao mesmo tempo: foram branqueados fundos roubados através dele, incluindo centenas de milhões de dólares pelo Lazarus Group da Coreia do Norte, e utilizadores legítimos foram apanhados pelo caminho, enquanto os contratos continuaram a correr. É este o argumento a favor da divulgação seletiva."
+    }
   },
   "takeaways": {
-    "title": "Section 07 — Key Takeaways",
+    "title": "Secção 07 — Conclusões",
     "items": [
-      "A public chain is transparent by default: one link between a wallet and a name exposes its whole history — a real obstacle for payroll, suppliers and treasury",
-      "Zero-knowledge in one line: prove a statement is true without revealing what makes it true",
-      "It is already in production: private payments, proof of reserves, proof of personhood, private voting and compliance proofs",
-      "KYC without surrendering identity: the issuer checks once, the customer proves only what each service needs, and there is no passport database to leak",
-      "Tornado Cash showed that all-or-nothing anonymity collides with the law; selective, provable disclosure is what lets regulated business use public chains"
+      "Uma chain pública é transparente por defeito: uma única ligação entre uma carteira e um nome expõe todo o seu histórico — um obstáculo real para salários, fornecedores e tesouraria",
+      "Zero-knowledge numa frase: provar que uma afirmação é verdadeira sem revelar o que a torna verdadeira",
+      "O ZK tem dois trabalhos: manter dados privados, ou provar que um trabalho pesado foi feito corretamente (ZK rollups). O segundo torna uma chain mais barata, não privada",
+      "Já está em produção: pagamentos privados, prova de reservas, votação privada, e KYC em que o cliente prova apenas o que cada serviço precisa, sem base de dados de passaportes que possa ser comprometida",
+      "Uma prova resolve uma única afirmação: nada é privado se não tiver sido desenhado para o ser, uma prova é tão honesta quanto os seus dados de entrada, e uma multidão pequena não esconde ninguém",
+      "A privacidade é ao mesmo tempo uma necessidade legítima e um risco de branqueamento: o Tornado Cash mostrou que o anonimato de tudo-ou-nada colide com a lei, e é a divulgação seletiva e comprovável que permite a negócios regulados usar chains públicas"
     ]
   },
   "keyPoints": {
@@ -375,6 +548,8 @@
     "s7-waldo": "A proof convinces by making cheating impossible, not by showing the secret.",
     "s7-kyc": "Verify the claim, not the person: the issuer vouches once and the customer reveals only what each service needs.",
     "s7-live": "ZK is a product, not a paper: payments, solvency, identity and compliance proofs are live today.",
+    "s7-jobs": "ZK can hide the data or skip the re-checking. A ZK rollup does the second: it is cheap, not private.",
+    "s7-limits": "A proof settles one statement. What stays hidden, and whether the inputs are honest, is still a design choice.",
     "s7-approaches": "Mixers hide everything or nothing; ZK reveals exactly what a counterparty needs.",
     "s7-tornado": "Untraceable money shields dissidents and launderers alike; selective disclosure is the way out.",
     "s7-disclosure": "Keep the data confidential and still prove you follow the rules."

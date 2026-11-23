@@ -3,6 +3,7 @@
     "g-s7-problem": "The Problem",
     "g-s7-idea": "The Idea",
     "g-s7-business": "In Business",
+    "g-s7-scope": "Reach & Limits",
     "g-s7-law": "Privacy & the Law",
     "g-s7-wrap": "Wrap Up"
   },
@@ -12,6 +13,8 @@
     "s7-waldo": "ZK: Where's Waldo?",
     "s7-kyc": "KYC Without Identity",
     "s7-live": "ZK in Production",
+    "s7-jobs": "Two Jobs of ZK",
+    "s7-limits": "What ZK Can't Do",
     "s7-approaches": "Four Ways to Privacy",
     "s7-tornado": "Tornado Cash",
     "s7-disclosure": "Selective Disclosure",
@@ -26,11 +29,12 @@
   "ui": {
     "hood": "under the hood →",
     "recap": "Already covered",
-    "keyPoint": "Key point"
+    "keyPoint": "Key point",
+    "deeper": "Goes deeper"
   },
   "privacy": {
     "heading": "A public chain is not private",
-    "subtitle": "Every address, balance and transfer is visible to anyone, forever. Pseudonymous is not anonymous: one link to your name unlocks your whole history.",
+    "subtitle": "Every address, balance and transfer is visible to anyone, forever. Pseudonymous is not anonymous: one link to your name unlocks your whole history. Off-chain, a salary or a bank statement is private by default; wanting the same on-chain is normal, not suspicious.",
     "traceLabel": "How one link exposes everything",
     "trace": [
       {
@@ -245,6 +249,122 @@
       }
     ]
   },
+  "zkJobs": {
+    "heading": "One proof, two jobs — privacy and scale",
+    "subtitle": "The same kind of proof answers two different questions. Mixing them up is the most common misunderstanding about ZK.",
+    "proofChip": "one small proof",
+    "privacy": {
+      "label": "Job 1 · Privacy",
+      "title": "Keep the data secret",
+      "secrets": [
+        "salary",
+        "birth date",
+        "balance"
+      ],
+      "from": "You",
+      "fromNote": "the data stays with you",
+      "to": "The checker",
+      "toVerdict": "✓ the claim is true",
+      "toNote": "sees none of the data",
+      "rows": [
+        {
+          "k": "Skips",
+          "v": "Looking at your data."
+        },
+        {
+          "k": "Hidden?",
+          "v": "Yes. That is the whole point."
+        },
+        {
+          "k": "Where",
+          "v": "Private payments, age and eligibility checks, compliance proofs."
+        }
+      ]
+    },
+    "scale": {
+      "label": "Job 2 · Scale",
+      "title": "Skip the re-checking",
+      "from": "A rollup",
+      "fromNote": "5,000 transactions, all public",
+      "to": "Ethereum",
+      "toVerdict": "✓ all 5,000 are valid",
+      "toNote": "re-runs none of them",
+      "rows": [
+        {
+          "k": "Skips",
+          "v": "Redoing thousands of transactions one by one."
+        },
+        {
+          "k": "Hidden?",
+          "v": "No. Every transaction is still public."
+        },
+        {
+          "k": "Where",
+          "v": "ZK rollups (zkSync, Starknet, Linea, Scroll): fees of a few cents. Also called a validity proof."
+        }
+      ]
+    },
+    "sort": {
+      "label": "Which job is ZK doing here?",
+      "privacy": "Privacy",
+      "scale": "Scale",
+      "reset": "Reset",
+      "items": [
+        {
+          "text": "A bar's door app confirms you are over 18 and never sees your ID.",
+          "why": "The data stays hidden; only the yes or no gets out."
+        },
+        {
+          "text": "A network bundles 5,000 payments and gives Ethereum one small proof that all of them were valid.",
+          "why": "Nothing is hidden. Ethereum just skips re-running 5,000 payments."
+        },
+        {
+          "text": "An exchange shows it holds every customer's deposit without publishing a single balance.",
+          "why": "Balances stay confidential; the total is proven."
+        },
+        {
+          "text": "You pay a few cents on a \"ZK rollup\", and your transfer still shows up on a public block explorer.",
+          "why": "A ZK rollup is cheap, not private. The name describes the proof, not secrecy."
+        }
+      ]
+    },
+    "deeper": "Course 03 · Section 02 — Optimistic vs ZK rollups"
+  },
+  "zkLimits": {
+    "heading": "Reality check — what a ZK proof does not do",
+    "subtitle": "A proof answers one question and stops there. Four claims you will hear, and where each one goes too far.",
+    "hint": "Tap a claim to check it.",
+    "revealAll": "Reveal all",
+    "reset": "Hide all",
+    "claimLabel": "Claim",
+    "realityLabel": "Not quite. ",
+    "tapHint": "Tap to check →",
+    "items": [
+      {
+        "claim": "It uses ZK, so it is private.",
+        "reality": "Only what the designers chose to hide is hidden. Everything else on a public chain stays public, and a ZK rollup hides nothing at all.",
+        "tag": "Private on purpose, never by default"
+      },
+      {
+        "claim": "The proof checks out, so the fact is true.",
+        "reality": "A proof shows the claim follows from its inputs. If the bank signed a wrong birth date, the proof still passes. You are still trusting the issuer: the oracle problem again (Section 05).",
+        "tag": "Trust moves to the issuer; it does not vanish"
+      },
+      {
+        "claim": "A shielded payment cannot be traced.",
+        "reality": "The proof hides what is inside it, not the clues around it: when the money went in, how much, when it came out. With only a few users, those clues are enough.",
+        "tag": "Hiding in a crowd needs a crowd"
+      },
+      {
+        "claim": "With ZK, the product is compliant.",
+        "reality": "ZK is a tool, not a licence. The same maths runs a compliance proof and a mixer; what the law makes of a product depends on how it is designed and used.",
+        "tag": "Lawful by design, not by maths"
+      }
+    ],
+    "givesLabel": "What a proof does give you",
+    "givesStrong": "One statement, checked, with nothing extra revealed.",
+    "givesBody": " What gets hidden, whether the inputs are honest and whether the use is lawful are still decisions people make."
+  },
   "privacyApproaches": {
     "heading": "Four ways to get privacy on-chain",
     "subtitle": "Each makes a different trade-off between strength, flexibility, and how regulators treat it.",
@@ -359,14 +479,67 @@
     ],
     "explanation": "Zero-knowledge separates the claim from the data behind it. A trusted issuer (an employer or a bank) signs the facts once; the applicant's wallet turns them into a proof of one statement; the lender checks the proof. Nothing is stored on-chain in readable or encrypted form, a check still happens, and the applicant can produce further proofs for a regulator on demand. That is selective disclosure, not blanket secrecy."
   },
+  "quizMore": {
+    "public": {
+      "question": "A company pays salaries in stablecoins from a single wallet on a public chain. One employee mentions their wallet address to a friend. What can the friend now see?",
+      "options": [
+        "Nothing: addresses are anonymous, so payments cannot be tied to a person.",
+        "Only the most recent payment to that employee; older ones are archived.",
+        "The employee's whole payment history and, by following the paying wallet, what every other address on the payroll receives.",
+        "Nothing, unless the friend runs a validator node."
+      ],
+      "explanation": "A public chain is pseudonymous, not anonymous: one link between an address and a name opens the whole trail, in both directions, for good. Privacy has to be added on purpose."
+    },
+    "jobs": {
+      "question": "A payments start-up moves to a \"ZK rollup\" and tells customers their transactions are now private. Is that claim right?",
+      "options": [
+        "No. Here the proof shows Ethereum that a batch of transactions was processed correctly, so it need not redo them; the transactions themselves stay public.",
+        "Yes. Any system that uses zero-knowledge proofs hides sender, receiver and amount.",
+        "Yes. The transactions run off Ethereum, so nobody can see them any more.",
+        "Only partly: amounts are hidden, but senders and receivers are public."
+      ],
+      "explanation": "ZK has two jobs. In a rollup it is a validity proof, which buys cheap checking, not secrecy. Privacy has to be designed in separately."
+    },
+    "issuer": {
+      "question": "An app receives a valid zero-knowledge proof of \"over 18, credential signed by Bank X\". What has the app actually established?",
+      "options": [
+        "The user's exact date of birth, in a form only the app can read.",
+        "That the user is over 18 with mathematical certainty, whoever issued the credential.",
+        "Nothing: a zero-knowledge proof reveals no information at all, not even whether the claim holds.",
+        "That Bank X vouched for it and the proof matches that credential. If Bank X got it wrong, the proof still passes."
+      ],
+      "explanation": "A proof guarantees the claim follows from its inputs, not that the inputs are true. Trust moves to the issuer; it does not disappear."
+    },
+    "crowd": {
+      "question": "A privacy pool has had three users this month. On Monday one of them deposits 100 ETH; on Tuesday 100 ETH is withdrawn to a new address. No cryptography is broken. What is the lesson?",
+      "options": [
+        "The proof must be faulty: a valid zero-knowledge proof makes this kind of guess impossible.",
+        "The proof hid the link, but timing, amount and a tiny crowd give it away. Privacy depends on how many others you hide among.",
+        "Nothing leaks: deposits into and withdrawals from the pool are invisible to observers.",
+        "The pool's operator must have disclosed who the users are."
+      ],
+      "explanation": "ZK hides what is inside the proof, not the clues around it. With few users and matching amounts, an observer can make a confident guess without breaking any maths."
+    },
+    "tornado": {
+      "question": "The US Treasury sanctioned Tornado Cash in 2022 and lifted the sanction in 2025 after a court ruling. What does the episode best illustrate?",
+      "options": [
+        "Privacy tools are used only by criminals, which is why the sanction was imposed.",
+        "Regulators had no real problem to solve: nothing illicit ever passed through the mixer.",
+        "The same tool hid stolen funds and protected lawful users, and with all-or-nothing anonymity nobody could stop one without hitting the other.",
+        "Once code is sanctioned a government can switch it off, so the contracts stopped running."
+      ],
+      "explanation": "Both were true at once: stolen funds were laundered through it, including hundreds of millions of dollars by North Korea's Lazarus Group, and lawful users were swept in, while the contracts kept running. That is the case for selective disclosure."
+    }
+  },
   "takeaways": {
     "title": "Section 07 — Key Takeaways",
     "items": [
       "A public chain is transparent by default: one link between a wallet and a name exposes its whole history — a real obstacle for payroll, suppliers and treasury",
       "Zero-knowledge in one line: prove a statement is true without revealing what makes it true",
-      "It is already in production: private payments, proof of reserves, proof of personhood, private voting and compliance proofs",
-      "KYC without surrendering identity: the issuer checks once, the customer proves only what each service needs, and there is no passport database to leak",
-      "Tornado Cash showed that all-or-nothing anonymity collides with the law; selective, provable disclosure is what lets regulated business use public chains"
+      "ZK has two jobs: keep data private, or prove that heavy work was done correctly (ZK rollups). The second makes a chain cheaper, not private",
+      "It is already in production: private payments, proof of reserves, private voting, and KYC where the customer proves only what each service needs, with no passport database to leak",
+      "A proof settles one statement: nothing is private unless it was designed to be, a proof is only as honest as its inputs, and a small crowd hides no one",
+      "Privacy is a legitimate need and a laundering risk at once: Tornado Cash showed that all-or-nothing anonymity collides with the law, and selective, provable disclosure is what lets regulated business use public chains"
     ]
   },
   "keyPoints": {
@@ -375,6 +548,8 @@
     "s7-waldo": "A proof convinces by making cheating impossible, not by showing the secret.",
     "s7-kyc": "Verify the claim, not the person: the issuer vouches once and the customer reveals only what each service needs.",
     "s7-live": "ZK is a product, not a paper: payments, solvency, identity and compliance proofs are live today.",
+    "s7-jobs": "ZK can hide the data or skip the re-checking. A ZK rollup does the second: it is cheap, not private.",
+    "s7-limits": "A proof settles one statement. What stays hidden, and whether the inputs are honest, is still a design choice.",
     "s7-approaches": "Mixers hide everything or nothing; ZK reveals exactly what a counterparty needs.",
     "s7-tornado": "Untraceable money shields dissidents and launderers alike; selective disclosure is the way out.",
     "s7-disclosure": "Keep the data confidential and still prove you follow the rules."

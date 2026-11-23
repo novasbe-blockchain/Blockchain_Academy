@@ -14,7 +14,8 @@ import { EyeOff } from 'lucide-react';
 const NS = 'smart-contracts/section-7';
 
 /* One arc: public chains leak → the ZK idea → what it does for a business →
-   how privacy met the law → selective disclosure as the way through. */
+   its two jobs and where it stops → how privacy met the law → selective
+   disclosure as the way through. */
 const chapterShape = [
   { kind: 'group' as const, id: 'g-s7-problem' },
   { id: 's7-public' },
@@ -27,6 +28,10 @@ const chapterShape = [
   { id: 's7-kyc' },
   { id: 's7-live' },
 
+  { kind: 'group' as const, id: 'g-s7-scope' },
+  { id: 's7-jobs' },
+  { id: 's7-limits' },
+
   { kind: 'group' as const, id: 'g-s7-law' },
   { id: 's7-approaches' },
   { id: 's7-tornado' },
@@ -35,6 +40,19 @@ const chapterShape = [
   { kind: 'group' as const, id: 'g-s7-wrap' },
   { id: 's7-quiz' },
   { id: 's7-takeaways' },
+] as const;
+
+interface QuizItem { question: string; options: string[]; explanation: string }
+
+// The section quiz, in the order it is asked (it follows the slides): locale block +
+// index of its correct option. Question and option text live in the locale files.
+const QUIZ = [
+  { key: 'quizMore.public', correct: 2 },
+  { key: 'quiz', correct: 1 },
+  { key: 'quizMore.jobs', correct: 0 },
+  { key: 'quizMore.issuer', correct: 3 },
+  { key: 'quizMore.crowd', correct: 1 },
+  { key: 'quizMore.tornado', correct: 2 },
 ] as const;
 
 /* ──────────── ZK bouncer demo — pick passport or proof, watch what leaks ──────────── */
@@ -161,6 +179,212 @@ function WaldoScene({ stage, pageLabel, sheetLabel }: { stage: 0 | 1 | 2; pageLa
   );
 }
 
+/* ──────────── Two jobs of ZK — same proof, two different questions ────────────
+   privacy: the checker never sees the data · scale: the checker never redoes the work
+   (a validity proof — nothing is hidden). */
+const JOB_COLORS = { privacy: '#8b5cf6', scale: '#0891b2' } as const;
+type Job = keyof typeof JOB_COLORS;
+const JOBS: Job[] = ['privacy', 'scale'];
+const JOB_ICONS: Record<Job, string> = { privacy: '🙈', scale: '🗜️' };
+// Which job each "which job is it?" scenario shows, by index (language-neutral).
+const SORT_ANSWERS: Job[] = ['privacy', 'scale', 'privacy', 'scale'];
+const TX_DOTS = Array.from({ length: 40 }, (_, i) => i);
+
+function JobPanel({ job }: { job: Job }) {
+  const { t } = useTranslation(NS);
+  const color = JOB_COLORS[job];
+  const rows = t(`zkJobs.${job}.rows`, { returnObjects: true }) as { k: string; v: string }[];
+  const secrets = t('zkJobs.privacy.secrets', { returnObjects: true }) as string[];
+
+  return (
+    <div className="rounded-xl border-2 px-4 py-3 flex flex-col gap-2.5 min-h-0" style={{ borderColor: color + '66', backgroundColor: color + '0a' }}>
+      <div className="flex items-center gap-3 shrink-0">
+        <span className="text-3xl leading-none">{JOB_ICONS[job]}</span>
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-widest" style={{ color }}>{t(`zkJobs.${job}.label`)}</p>
+          <p className="text-lg font-bold text-foreground leading-tight">{t(`zkJobs.${job}.title`)}</p>
+        </div>
+      </div>
+
+      {/* who proves → one small proof → who checks */}
+      <div className="flex-1 min-h-0 flex items-stretch gap-2">
+        <div className="flex-1 min-w-0 rounded-lg border bg-card px-3 py-2 flex flex-col items-center justify-center gap-1.5 text-center" style={{ borderColor: color + '55' }}>
+          {job === 'privacy' ? (
+            <div className="flex flex-col gap-0.5 w-full max-w-[11rem]">
+              {secrets.map((s) => (
+                <div key={s} className="flex items-center justify-between gap-2 rounded-md border border-dashed px-2 text-[11px] leading-5 text-muted-foreground" style={{ borderColor: color + '70' }}>
+                  <span className="truncate">{s}</span>
+                  <span aria-hidden>🔒</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-10 gap-1" aria-hidden>
+              {TX_DOTS.map((i) => (
+                <span key={i} className="size-2 rounded-sm" style={{ backgroundColor: color, opacity: 0.35 + (i % 3) * 0.2 }} />
+              ))}
+            </div>
+          )}
+          <div>
+            <p className="text-sm font-bold text-foreground leading-tight">{t(`zkJobs.${job}.from`)}</p>
+            <p className="text-[11px] text-muted-foreground leading-snug">{t(`zkJobs.${job}.fromNote`)}</p>
+          </div>
+        </div>
+
+        <div className="shrink-0 flex flex-col items-center justify-center gap-1">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.35, delay: 0.15 }}
+            className="rounded-lg border-2 px-2.5 py-1.5 text-xs font-black whitespace-nowrap"
+            style={{ borderColor: color, backgroundColor: color + '1a', color }}
+          >📄 {t('zkJobs.proofChip')}</motion.div>
+          <span className="text-xl leading-none text-muted-foreground" aria-hidden>→</span>
+        </div>
+
+        <div className="flex-1 min-w-0 rounded-lg border bg-card px-3 py-2 flex flex-col items-center justify-center gap-1 text-center" style={{ borderColor: color + '55' }}>
+          <span className="text-xl leading-none" aria-hidden>{job === 'privacy' ? '🏦' : '⛓️'}</span>
+          <p className="text-sm font-bold text-foreground leading-tight">{t(`zkJobs.${job}.to`)}</p>
+          <p className="text-xs font-black text-[#39B54A] leading-tight">{t(`zkJobs.${job}.toVerdict`)}</p>
+          <p className="text-[11px] text-muted-foreground leading-snug">{t(`zkJobs.${job}.toNote`)}</p>
+        </div>
+      </div>
+
+      <dl className="shrink-0 flex flex-col gap-1">
+        {rows.map((r) => (
+          <div key={r.k} className="flex gap-2.5 items-baseline">
+            <dt className="shrink-0 w-28 text-[10px] font-black uppercase tracking-widest" style={{ color }}>{r.k}</dt>
+            <dd className="text-sm text-foreground leading-snug">{r.v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+/* Four everyday scenarios; the student says which of the two jobs ZK is doing. */
+function JobSorter() {
+  const { t } = useTranslation(NS);
+  const items = t('zkJobs.sort.items', { returnObjects: true }) as { text: string; why: string }[];
+  const [picked, setPicked] = useState<Record<number, Job>>({});
+  const anyPicked = Object.keys(picked).length > 0;
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center gap-2.5">
+        <span className="px-2 py-0.5 rounded-full bg-[#8b5cf6]/15 border border-[#8b5cf6]/40 text-[#8b5cf6] text-[10px] font-bold">{t('zkp.demo.badge')}</span>
+        <p className="text-sm font-bold text-foreground">{t('zkJobs.sort.label')}</p>
+        {anyPicked && (
+          <button type="button" onClick={() => setPicked({})} className="ml-auto text-xs font-semibold text-muted-foreground hover:text-foreground underline underline-offset-2 cursor-pointer">
+            {t('zkJobs.sort.reset')}
+          </button>
+        )}
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-2.5">
+        {items.map((it, i) => {
+          const answer = SORT_ANSWERS[i];
+          const pick = picked[i];
+          const done = pick !== undefined;
+          return (
+            <div key={i} className="rounded-xl border border-border bg-card px-3 py-2.5 flex flex-col gap-2">
+              <p className="text-sm text-foreground leading-snug flex-1">{it.text}</p>
+              <div className="grid grid-cols-2 gap-1.5">
+                {JOBS.map((job) => {
+                  const state = !done
+                    ? 'border-border hover:border-[#8b5cf6] hover:bg-[#8b5cf6]/5 cursor-pointer'
+                    : job === answer
+                    ? 'ex-correct border-transparent cursor-default'
+                    : job === pick
+                    ? 'ex-wrong border-transparent cursor-default'
+                    : 'border-border opacity-50 cursor-default';
+                  return (
+                    <button
+                      key={job}
+                      type="button"
+                      disabled={done}
+                      onClick={() => setPicked((prev) => ({ ...prev, [i]: job }))}
+                      className={`rounded-lg border-2 px-2 py-1 text-xs font-bold text-foreground transition-all ${state}`}
+                    >{JOB_ICONS[job]} {t(`zkJobs.sort.${job}`)}</button>
+                  );
+                })}
+              </div>
+              {/* Space is reserved so answering never shifts the slide. */}
+              <p className="text-xs leading-snug min-h-[2.25rem]" style={{ color: done ? (pick === answer ? '#10b981' : '#ef4444') : undefined }}>
+                {done && (
+                  <>
+                    <span className="font-black">{pick === answer ? '✓ ' : '✗ '}</span>
+                    <span className="text-foreground">{it.why}</span>
+                  </>
+                )}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ──────────── What ZK does not do — tap a claim to see where it stops ──────────── */
+const LIMIT_ICONS = ['🙈', '🧾', '🕵️', '⚖️'];
+
+function ZkLimits() {
+  const { t } = useTranslation(NS);
+  const items = t('zkLimits.items', { returnObjects: true }) as { claim: string; reality: string; tag: string }[];
+  const [open, setOpen] = useState<number[]>([]);
+  const allOpen = open.length === items.length;
+  const toggle = (i: number) => setOpen((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
+
+  return (
+    <div className="h-full min-h-0 flex flex-col gap-3">
+      <div className="shrink-0 flex items-center gap-2.5">
+        <span className="px-2 py-0.5 rounded-full bg-[#8b5cf6]/15 border border-[#8b5cf6]/40 text-[#8b5cf6] text-[10px] font-bold">{t('zkp.demo.badge')}</span>
+        <p className="text-sm text-muted-foreground">{t('zkLimits.hint')}</p>
+        <button
+          type="button"
+          onClick={() => setOpen(allOpen ? [] : items.map((_, i) => i))}
+          className="ml-auto shrink-0 rounded-lg border-2 border-border bg-card px-3 py-1 text-xs font-bold text-foreground hover:border-[#8b5cf6] transition-colors cursor-pointer"
+        >{allOpen ? t('zkLimits.reset') : t('zkLimits.revealAll')}</button>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 auto-rows-fr gap-4">
+        {items.map((it, i) => {
+          const isOpen = open.includes(i);
+          return (
+            <button
+              key={i}
+              type="button"
+              onClick={() => toggle(i)}
+              aria-expanded={isOpen}
+              className="text-left rounded-xl border-2 p-5 flex flex-col justify-center gap-3 min-h-0 transition-colors hover:shadow-md cursor-pointer"
+              style={{ borderColor: isOpen ? '#f59e0b90' : '#8b5cf655', backgroundColor: isOpen ? '#f59e0b0d' : '#8b5cf608' }}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-3xl leading-none shrink-0" aria-hidden>{LIMIT_ICONS[i % LIMIT_ICONS.length]}</span>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-[#8b5cf6]">{t('zkLimits.claimLabel')} {i + 1}</p>
+                  <p className={`text-lg font-bold leading-tight ${isOpen ? 'text-muted-foreground line-through decoration-[#ef4444] decoration-2' : 'text-foreground'}`}>“{it.claim}”</p>
+                </div>
+              </div>
+              {isOpen ? (
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-1.5">
+                  <p className="text-sm text-foreground leading-relaxed">
+                    <span className="font-black text-[#d97706]">{t('zkLimits.realityLabel')}</span>{it.reality}
+                  </p>
+                  <p className="text-sm font-black text-foreground"><span className="text-[#d97706]">→ </span>{it.tag}</p>
+                </motion.div>
+              ) : (
+                <p className="text-sm text-muted-foreground italic">{t('zkLimits.tapHint')}</p>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function SC_Section7() {
   const { t } = useTranslation(NS);
 
@@ -192,7 +416,14 @@ export function SC_Section7() {
   const approaches = t('privacyApproaches.items', { returnObjects: true }) as { name: string; sub: string; mech: string; trade: string }[];
   const story = t('privacyRegulation.story', { returnObjects: true }) as { yr: string; t: string; d: string }[];
   const unlocks = t('privacyFuture.items', { returnObjects: true }) as { title: string; d: string }[];
-  const quizOptions = t('quiz.options', { returnObjects: true }) as string[];
+  const quizQuestions = QUIZ.map(({ key, correct }) => {
+    const q = t(key, { returnObjects: true }) as QuizItem;
+    return {
+      question: q.question,
+      options: q.options.map((text, i) => ({ text, correct: i === correct })),
+      explanation: q.explanation,
+    };
+  });
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
   // ── Static visual data, paired with the translated arrays by index ──
@@ -510,6 +741,52 @@ export function SC_Section7() {
           {kp('s7-live')}
         </div>
 
+        {/* ═══════ S7-JOBS — one proof, two jobs: privacy and scale ═══════ */}
+        <div id="s7-jobs" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-3">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('zkJobs.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1 max-w-4xl">{t('zkJobs.subtitle')}</p>
+          </div>
+
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <JobPanel job="privacy" />
+            <JobPanel job="scale" />
+          </div>
+
+          <div className="shrink-0 mt-3">
+            <JobSorter />
+          </div>
+
+          <div className="shrink-0 mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <UnderTheHood label={hoodLabel} terms={['validity proof', 'ZK rollup', 'succinct proof']} />
+            <RecapHandoff label={t('ui.deeper')} text={t('zkJobs.deeper')} to="/blockchain-platforms/section-2" color="#39B54A" />
+          </div>
+          {kp('s7-jobs', '#0891b2')}
+        </div>
+
+        {/* ═══════ S7-LIMITS — what a ZK proof does not do ═══════ */}
+        <div id="s7-limits" className="h-full flex flex-col p-6 lg:p-10">
+          <div className="shrink-0 mb-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('zkLimits.heading')}</h2>
+            <p className="text-sm text-muted-foreground mt-1 max-w-4xl">{t('zkLimits.subtitle')}</p>
+          </div>
+
+          <div className="flex-1 min-h-0">
+            <ZkLimits />
+          </div>
+
+          <div className="shrink-0 mt-4 rounded-xl border-2 p-3.5 flex flex-col lg:flex-row lg:items-center gap-1.5 lg:gap-4" style={{ borderColor: '#39B54A66', backgroundColor: '#39B54A0d' }}>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#39B54A] shrink-0">{t('zkLimits.givesLabel')}</span>
+            <p className="text-sm text-foreground leading-snug">
+              <span className="font-semibold">{t('zkLimits.givesStrong')}</span>{t('zkLimits.givesBody')}
+            </p>
+          </div>
+          <div className="shrink-0 mt-3">
+            <UnderTheHood label={hoodLabel} terms={['trusted issuer', 'metadata', 'anonymity set', 'prover cost']} />
+          </div>
+          {kp('s7-limits', '#f59e0b')}
+        </div>
+
         {/* ═══════ S7-APPROACHES — four ways to get privacy on-chain ═══════ */}
         <div id="s7-approaches" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
@@ -646,16 +923,9 @@ export function SC_Section7() {
 
         {/* ═══════ QUIZ ═══════ */}
         <div id="s7-quiz" className="h-full">
-          {/* A single question today, so GroupedQuiz shows it without the stepper.
-              compact: the explanation is long enough to be clipped in the roomy layout. */}
-          <GroupedQuiz
-            compact
-            questions={[{
-              question: t('quiz.question'),
-              options: quizOptions.map((text, i) => ({ text, correct: i === 1 })),
-              explanation: t('quiz.explanation'),
-            }]}
-          />
+          {/* One slide, stepped question by question.
+              compact: the scenario questions are long enough to be clipped in the roomy layout. */}
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}
