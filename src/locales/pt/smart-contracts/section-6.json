@@ -7,7 +7,6 @@
     "s6-ai": "🧩 Desenvolver com IA",
     "s6-where": "🧩 Ferramenta & Rede",
     "s6-deploy": "▶ Deploy numa Testnet",
-    "s6-first-tx": "▶ Primeira Transação",
     "s6-hosting": "🧩 Nós & Alojamento",
     "s6-events": "🧩 Eventos → Reações",
     "s6-deeper": "Ir Mais Longe · opc.",
@@ -58,7 +57,7 @@
       "deploy",
       "1 transação"
     ],
-    "bridge": "A seguir: um trabalho prático em que pedes um contrato a uma IA e fazes tu mesmo o deploy numa testnet. Estes slides são o mapa.",
+    "bridge": "A seguir, na Secção 8: um trabalho prático em que envias uma transação real para um contrato numa testnet e, como bónus, podes fazer deploy do teu. Estes slides são o mapa.",
     "bridgeCta": "Saltar para o passo a passo ↓"
   },
   "erc": {
@@ -799,7 +798,6 @@
     "s6-template": "The safest line of code is the one you did not have to write.",
     "s6-where": "A testnet is a dress rehearsal: same tools, same steps, nothing at stake.",
     "s6-deploy": "Do these four steps once on a testnet and you know the routine: mainnet is the same, with real money.",
-    "s6-first-tx": "A transaction is a signed request to change shared state. Once it is mined, it is public and it stays.",
     "s6-hosting": "The host serves the site, an RPC provider reads the chain, the wallet writes to it. The contract itself is already hosted, by the network.",
     "s6-events": "A transaction writes on-chain and costs gas. The contract then emits an event, and everything off-chain reacts to it.",
     "s6-deeper": "The contract is the smallest part of the product. Everything around it is ordinary software."

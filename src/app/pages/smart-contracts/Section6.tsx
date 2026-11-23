@@ -9,7 +9,7 @@ import { SiteFooter } from '../../components/shared/SiteFooter';
 import { DeepDiveBadge } from '../../components/shared/DeepDiveBadge';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { RecapHandoff } from '../../components/shared/RecapHandoff';
-import { FirstTransactionWizard } from '../../components/first-tx/FirstTransactionWizard';
+import { ETHERSCAN_ADDRESS, REAL_CONTRACTS, shortAddress } from '../../data/realContracts';
 import {
   Wrench, Puzzle, Blocks, Rocket, Lightbulb, Globe, Play, Wallet, Droplets, ReceiptText,
   Check, ChevronLeft, ChevronRight, RotateCcw, KeyRound, Hammer, Network, Coins, FlaskConical,
@@ -33,7 +33,6 @@ const chapterIds = [
   's6-ai',
   's6-where',
   's6-deploy',
-  's6-first-tx',
   's6-hosting',
   's6-events',
   's6-deeper',
@@ -192,43 +191,8 @@ const AI_PROMPTS: { Icon: typeof PenLine; color: string; attach: 'template' | 'r
   { Icon: ShieldCheck, color: GREEN,  attach: 'real' },
 ];
 
-// Real Ethereum-mainnet contracts to open live in class for "Explain it" / "Check it".
-// Each was checked on 2026-11-23: source code verified on Etherscan. Re-check before reuse;
-// if one ever loses its verified source, replace it here and in the two section-6.json files.
-//   USDC · the address everyone uses is FiatTokenProxy, which holds no token logic: it
-//          forwards every call to an implementation contract (FiatTokenV2_2). So "Code"
-//          opens the IMPLEMENTATION, and "Read as Proxy" opens the main (proxy) address.
-//          The implementation address was read from the proxy's implementation slot on
-//          mainnet on 2026-11-23; if Circle upgrades USDC, update USDC_IMPLEMENTATION.
-//   WETH · WETH9 (solc 0.4.19): the contract itself is 60 lines, with no owner or admin.
-//   DAI  · Dai (solc 0.5.12): one file; mint() is guarded by `auth` (the wards mapping).
-// WETH and DAI are not proxies, so their Code tab is all a student needs.
-// The slide prints a shortened address; the links (and the hover title) carry the full one.
-const ETHERSCAN_ADDRESS = 'https://etherscan.io/address/';
-const USDC_PROXY = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
-const USDC_IMPLEMENTATION = '0x43506849D7C04F9138D1A2050bbF3A0c054402dd';
-// `address` is the one printed on the slide; each link names the address and the Etherscan tab it opens.
-const REAL_CONTRACTS: {
-  id: 'usdc' | 'weth' | 'dai'; name: string; address: string;
-  links: { label: 'code' | 'readProxy'; address: string; tab: string }[];
-}[] = [
-  {
-    id: 'usdc', name: 'USDC', address: USDC_PROXY,
-    links: [
-      { label: 'code',      address: USDC_IMPLEMENTATION, tab: 'code' },
-      { label: 'readProxy', address: USDC_PROXY,          tab: 'readProxyContract' },
-    ],
-  },
-  {
-    id: 'weth', name: 'WETH', address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-    links: [{ label: 'code', address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', tab: 'code' }],
-  },
-  {
-    id: 'dai', name: 'DAI', address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-    links: [{ label: 'code', address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', tab: 'code' }],
-  },
-];
-const shortAddress = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
+// The real Ethereum-mainnet contracts opened live in class for "Explain it" / "Check it"
+// (USDC, WETH, DAI) live in src/app/data/realContracts.ts, shared with Section 8.
 // "Where to paste it": one optional link per bullet, in the order of `ai.tools` in the locale files.
 const AI_TOOL_LINKS = [
   '',
@@ -2302,9 +2266,6 @@ export function SC_Section6() {
 
         {/* ═══════ 5 · DEPLOY TO A TESTNET (centerpiece) ═══════ */}
         <div id="s6-deploy" className="h-full"><DeployWalkthrough /></div>
-
-        {/* ═══════ 5a · YOUR FIRST TRANSACTION (real wallet, real testnet) ═══════ */}
-        <div id="s6-first-tx" className="h-full"><FirstTransactionWizard keyPoint={t('keyPoints.s6-first-tx')} /></div>
 
         {/* ═══════ 5b · NODE INFRASTRUCTURE & WHERE TO HOST ═══════ */}
         <div id="s6-hosting" className="h-full"><HostingSlide /></div>

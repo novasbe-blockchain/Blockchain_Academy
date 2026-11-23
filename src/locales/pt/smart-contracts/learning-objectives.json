@@ -36,8 +36,8 @@
       "description": "Explicar porque as cadeias públicas não são privadas, o que faz uma prova zero-knowledge em termos simples, e como a divulgação seletiva permite transações privadas e KYC sem entregar a identidade."
     },
     "design": {
-      "title": "Business Judgement (in-class assignment)",
-      "description": "In a small group, take a real problem through the course's critical lens and argue in one page whether it deserves a blockchain — problem, proposed solution, pros & cons."
+      "title": "Desenhar e Fazer (Trabalho 3)",
+      "description": "Desenhar o smart contract para um problema teu (o seu estado, as suas funções, quem as pode chamar, o que não consegue fazer) e enviar uma transação real para um contrato numa testnet pública."
     }
   }
 }

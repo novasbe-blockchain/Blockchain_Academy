@@ -47,8 +47,8 @@
       "description": "Public chains expose everything. Zero-knowledge proofs let a business prove what matters — solvency, eligibility, a passed KYC check — and reveal nothing else. Includes the Tornado Cash story."
     },
     "section8": {
-      "title": "In-class Assignment",
-      "description": "In small groups: pick a real-world problem, discuss it, and submit a one-page report — problem, proposed solution, and the pros & cons of using a blockchain."
+      "title": "Assignment: Your Contract, Live",
+      "description": "The hands-on finale: design the contract for your own problem, send a real transaction to a contract on a testnet, and explore live contracts on Etherscan."
     },
     "conclusion": {
       "title": "Conclusion",

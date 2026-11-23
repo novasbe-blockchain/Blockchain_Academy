@@ -51,14 +51,14 @@
     },
     "smartContracts": {
       "title": "Business Applications of Smart Contracts",
-      "description": "From theory to industry disruption — understand what smart contracts can and cannot do for your business, with real case studies, DAO & NFT applications, and an in-class assignment.",
+      "description": "From theory to industry disruption — understand what smart contracts can and cannot do for your business, with real case studies, DAO & NFT applications, and a hands-on testnet assignment.",
       "topics": [
         "Smart Contract Fundamentals",
         "EVM & Web3 Landscape",
         "Case Studies",
         "DAOs & NFTs",
         "Oracle Problem",
-        "In-class Assignment"
+        "Testnet Assignment"
       ]
     },
     "projectManagement": {
@@ -93,7 +93,7 @@
     "hyperledger": "Hyperledger",
     "interoperability": "Interoperability",
     "zkPrivacy": "ZK & Privacy",
-    "inClassAssignment": "In-class Assignment"
+    "assignment": "Assignment"
   },
   "instructors": {
     "helder": {

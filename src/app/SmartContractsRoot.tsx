@@ -21,7 +21,7 @@ export function SmartContractsRoot() {
     { id: '5',    number: '05', label: t('sections.limitations'),        path: `${BASE}/section-5` },
     { id: '6',    number: '06', label: t('sections.build'),              path: `${BASE}/section-6` },
     { id: '7',    number: '07', label: t('sections.zkPrivacy'),          path: `${BASE}/section-7` },
-    { id: '8',    number: '08', label: t('sections.inClassAssignment'),  path: `${BASE}/section-8` },
+    { id: '8',    number: '08', label: t('sections.assignment'),         path: `${BASE}/section-8` },
     { id: 'end',  number: '🏁', label: t('sections.conclusion'),         path: `${BASE}/conclusion` },
     { id: 'bib',  number: '📖', label: t('sections.bibliography'),       path: `${BASE}/bibliography` },
   ];

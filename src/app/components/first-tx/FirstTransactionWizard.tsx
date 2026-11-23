@@ -1,20 +1,20 @@
 import { Component, Suspense, lazy, useCallback, useState, type ReactNode } from 'react';
-import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import {
   Wallet, Droplets, Plug, Send, BadgeCheck, Check, ChevronLeft, ChevronRight, ExternalLink,
   KeyRound, Pickaxe, Radio, Loader2, TriangleAlert, Network, ReceiptText, Users,
 } from 'lucide-react';
-import { useLang, useLocalizedPath } from '../../../i18n/useLang';
+import { useLang } from '../../../i18n/useLang';
 import { KeyPointBar } from '../shared/KeyPointBar';
+import { KeywordText } from '../shared/KeywordText';
 import { CHAIN, FAUCET_LINKS, WALLET_LINKS } from './config';
 import { AMBER, GREEN, INDIGO, NS, PanelMessage, SKY, VIOLET, shorten, type WizardStatus } from './ui';
 import rabbyIcon from '../../../rabby-icon.png';
 import zerionIcon from '../../../zerion-icon.png';
 
 /**
- * "Your First Transaction" — a real, wallet-connected wizard (Smart Contracts §6).
+ * "Your First Transaction" — a real, wallet-connected wizard (Smart Contracts §8, Assignment 3 · Part B).
  *
  * This file is the lightweight SHELL: copy, step rail, wallet and faucet links.
  * Everything that needs wagmi / viem / RainbowKit lives in FirstTxWeb3.tsx, which is
@@ -34,37 +34,11 @@ const LAST = STEPS.length - 1;
 const WEB3_FROM = 2;
 const RAIL_GRADIENT = `linear-gradient(90deg, ${INDIGO}, ${SKY}, ${VIOLET}, ${AMBER}, ${GREEN})`;
 
-/** Keyword → the course page that teaches it (locale-less route). */
-const KEYWORD_ROUTES: Record<string, string> = {
-  wallet: '/blockchain-fundamentals/section-1',
-  transaction: '/blockchain-fundamentals/section-1',
-  gas: '/smart-contracts/section-2',
-  state: '/smart-contracts/section-2',
-  immutability: '/smart-contracts/section-5',
-};
-
 const WALLET_ICONS: Record<string, string | undefined> = { rabby: rabbyIcon, zerion: zerionIcon };
 
 interface StepCopy { label: string; title: string; actions: string[]; why: string; }
 
 const FirstTxWeb3 = lazy(() => import('./FirstTxWeb3'));
-
-/** Renders copy with subtle [keyword](kw:id) links back to the lesson that explains the keyword. */
-function KeywordText({ text }: { text: string }) {
-  const localize = useLocalizedPath();
-  const parts = text.split(/(\[[^\]]+\]\(kw:[a-z]+\))/g);
-  return (
-    <>
-      {parts.map((part, i) => {
-        const m = part.match(/^\[([^\]]+)\]\(kw:([a-z]+)\)$/);
-        const to = m && KEYWORD_ROUTES[m[2]];
-        return m && to
-          ? <Link key={i} to={localize(to)} className="underline decoration-dotted underline-offset-2 text-foreground/90 hover:text-[#6366f1] transition-colors">{m[1]}</Link>
-          : (m ? m[1] : part);
-      })}
-    </>
-  );
-}
 
 /** Keeps a web3 failure (chunk did not load, wallet library threw) inside its panel. */
 class Web3Boundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {

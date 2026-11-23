@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { SiteFooter } from '../../components/shared/SiteFooter';
-import { GraduationCap, Code2, Layers, Building2, Brain, AlertTriangle, Wrench, Users, EyeOff } from 'lucide-react';
+import { GraduationCap, Code2, Layers, Building2, Brain, AlertTriangle, Wrench, Rocket, EyeOff } from 'lucide-react';
 
 const objectiveMeta = [
   { key: 'fundamentals',     icon: <Code2 className="size-6 text-[#6366f1]" />,        color: '#6366f1' },
@@ -11,7 +11,7 @@ const objectiveMeta = [
   { key: 'limitations',      icon: <AlertTriangle className="size-6 text-[#ED1C24]" />, color: '#ED1C24' },
   { key: 'build',            icon: <Wrench className="size-6 text-[#22d3ee]" />,        color: '#22d3ee' },
   { key: 'zkPrivacy',        icon: <EyeOff className="size-6 text-[#8b5cf6]" />,        color: '#8b5cf6' },
-  { key: 'design',           icon: <Users className="size-6 text-[#39B54A]" />,         color: '#39B54A' },
+  { key: 'design',           icon: <Rocket className="size-6 text-[#39B54A]" />,         color: '#39B54A' },
 ];
 
 export function SC_LearningObjectives() {

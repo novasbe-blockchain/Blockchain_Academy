@@ -104,7 +104,7 @@
       "Land on a verdict — ✅ smart contract · ⚠️ hybrid · ❌ database — then say in two sentences why a sceptical CFO should believe it.",
       "Name the single weakest point in the design: the data feed, the legal wrapper, the admin key, or the partners who have to join?"
     ],
-    "note": "This is the warm-up for the Section 8 one-page assignment, where you run the same framework on a problem of your own."
+    "note": "This is the warm-up for the Section 8 assignment, where you design the contract for a problem of your own and say honestly what it cannot do."
   },
   "decisionYes": {
     "heading": "Quando os Smart Contracts Fazem Sentido ✅",
