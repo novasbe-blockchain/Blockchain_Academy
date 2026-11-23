@@ -57,7 +57,7 @@
       "deploy",
       "1 transaction"
     ],
-    "bridge": "Coming up in Section 8: a hands-on assignment where you send a real transaction to a contract on a testnet, and can deploy your own for a bonus. These slides are the map.",
+    "bridge": "Coming up in Section 8: a hands-on assignment where you send a real transaction to a contract on a testnet. These slides are the map.",
     "bridgeCta": "Jump to the walkthrough ↓"
   },
   "erc": {

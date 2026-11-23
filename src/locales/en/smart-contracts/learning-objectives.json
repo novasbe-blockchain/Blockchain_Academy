@@ -36,8 +36,8 @@
       "description": "Explain why public chains are not private, what a zero-knowledge proof does in plain terms, and how selective disclosure enables private transactions and KYC without handing over identity."
     },
     "design": {
-      "title": "Design & Do (Assignment 3)",
-      "description": "Design the smart contract for a problem of your own (its state, its functions, who can call them, what it cannot do) and send a real transaction to a contract on a public testnet."
+      "title": "Your First Transaction (Assignment 3)",
+      "description": "Send a real transaction to a smart contract on a public testnet (a wallet, test ETH, one signed transaction that stores a hash) and verify the result on a block explorer."
     }
   }
 }

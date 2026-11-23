@@ -5,6 +5,7 @@ import { useLocalizedPath } from '../../../i18n/useLang';
 const KEYWORD_ROUTES: Record<string, string> = {
   wallet: '/blockchain-fundamentals/section-1',
   transaction: '/blockchain-fundamentals/section-1',
+  hash: '/blockchain-fundamentals/section-1',
   gas: '/smart-contracts/section-2',
   state: '/smart-contracts/section-2',
   functions: '/smart-contracts/section-2',

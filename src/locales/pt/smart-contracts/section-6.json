@@ -57,7 +57,7 @@
       "deploy",
       "1 transação"
     ],
-    "bridge": "A seguir, na Secção 8: um trabalho prático em que envias uma transação real para um contrato numa testnet e, como bónus, podes fazer deploy do teu. Estes slides são o mapa.",
+    "bridge": "A seguir, na Secção 8: um trabalho prático em que envias uma transação real para um contrato numa testnet. Estes slides são o mapa.",
     "bridgeCta": "Saltar para o passo a passo ↓"
   },
   "erc": {

@@ -1,96 +1,81 @@
 {
   "groups": {
-    "g-understand": "Understand",
-    "g-do": "Do",
-    "g-explore": "Explore"
+    "g-assignment": "The assignment",
+    "g-do": "Do it",
+    "g-optional": "Optional"
   },
   "chapters": {
-    "s8-brief": "Assignment Brief",
+    "s8-brief": "The 3 Steps",
     "s8-first-tx": "▶ Your First Transaction",
-    "s8-explore": "💬 Explore a Contract"
+    "s8-explore": "💬 Explore (optional)"
   },
   "title": {
     "sectionNumber": "SECTION 08",
-    "title": "Assignment: Your Contract, Live",
-    "subtitle": "The hands-on finale. Design the contract for your own problem, send a real transaction on a testnet, then explore contracts that hold real money."
+    "title": "Assignment: Your First Transaction",
+    "subtitle": "The hands-on finale. Send one real transaction on a testnet: it stores the hash of your student number in the Academy's smart contract. Then find it on Etherscan."
   },
   "arc": {
     "label": "Section arc",
-    "understand": "Understand",
-    "do": "Do",
-    "explore": "Explore"
+    "assignment": "Assignment",
+    "do": "Do it",
+    "optional": "Optional"
   },
   "brief": {
-    "kicker": "Assignment 3 · individual",
-    "heading": "Your smart contract, live on a testnet",
-    "subtitle": "Take your Assignment 1 problem one step further: design its contract, then send a real transaction. No coding needed.",
-    "submitLabel": "Submit",
-    "partA": {
-      "tag": "Part A · required",
-      "chip": "no code · 1 page",
-      "title": "Design your contract",
-      "lead": "In plain language, the contract at the heart of a solution to your Assignment 1 problem:",
-      "rows": [
-        { "label": "What it holds", "desc": "The information it stores on-chain: its [state](kw:state)." },
-        { "label": "What users can do", "desc": "The 2–4 key [functions](kw:functions) people would call." },
-        { "label": "Who can call what", "desc": "Open to anyone, or restricted? That is [access control](kw:access)." },
-        { "label": "What it can't do", "desc": "One real limit: no outside data without an [oracle](kw:oracle), it can't trigger itself, its rules are hard to change ([immutability](kw:immutability))." }
-      ],
-      "note": "\"A database would do most of this\" is a fine conclusion: say why."
-    },
-    "partB": {
-      "tag": "Part B · required",
-      "chip": "on Sepolia",
-      "title": "Send a real transaction",
-      "lead": "The wizard on the next slide guides every step. Test funds only, no real money.",
-      "steps": [
-        "Wallet",
-        "Test ETH",
-        "Send",
-        "Proof"
-      ],
-      "submit": [
-        "The transaction hash",
-        "Its block-explorer link",
-        "2–3 sentences on what you did and what changed on-chain"
-      ],
-      "note": "Covers the syllabus requirement: a testnet transaction to a smart contract.",
-      "cta": "Do it now: open the wizard"
-    },
-    "bonus": {
-      "tag": "Bonus · +10%",
-      "chip": "optional",
-      "title": "Make it your own",
-      "lead": "Deploy your own minimal contract for your Assignment 1 problem, and send your transaction to that one.",
-      "ai": "Prompting an AI is fine: Remix's AI or any coding agent.",
-      "aiLink": "Example prompts: Section 6, AI slide.",
-      "explain": "You don't need to be a programmer. You need to explain what you shipped.",
-      "submit": [
-        "Your contract's address",
-        "The deploy or interaction transaction"
-      ],
-      "cta": "Warm up on a live contract"
-    },
-    "grading": {
-      "label": "How it is graded",
-      "labels": {
-        "design": "Part A: a sensible design for your problem",
-        "tx": "Part B: a valid transaction, with proof",
-        "explain": "Explaining what changed on-chain",
-        "writing": "Writing, sources, AI disclosure",
-        "bonus": "Bonus: your own contract"
+    "kicker": "Assignment 3 · individual · no code",
+    "heading": "One transaction, three steps",
+    "subtitle": "Send one transaction to the Academy's smart contract: it stores the hash of your student number. That is the whole assignment, and the wizard on the next slide guides every click.",
+    "resultLabel": "You end with: ",
+    "steps": [
+      {
+        "tag": "Step 1",
+        "title": "Set up",
+        "where": "Wizard · steps 1–3",
+        "lead": "Get a [wallet](kw:wallet) on the Sepolia testnet, with a few free test coins in it.",
+        "items": [
+          "Install a wallet: Rabby, Zerion or MetaMask. Use a fresh one, with no real funds.",
+          "Get free test ETH from a Sepolia faucet. It pays for gas and has no real value.",
+          "Connect the wallet to the wizard and switch it to Sepolia."
+        ],
+        "result": "a wallet on Sepolia holding test ETH."
+      },
+      {
+        "tag": "Step 2",
+        "title": "Register",
+        "where": "Wizard · step 4",
+        "lead": "Send one [transaction](kw:transaction) that stores the [hash](kw:hash) of your student number in the Academy's contract.",
+        "items": [
+          "Type your student number into the wizard.",
+          "It is hashed in your browser with keccak256, the hash function Ethereum uses. Only the hash is sent.",
+          "Press Send transaction and confirm in your wallet: you sign, and you pay the gas."
+        ],
+        "result": "a confirmed transaction, and your hash stored next to your address."
+      },
+      {
+        "tag": "Step 3",
+        "title": "Verify",
+        "where": "Wizard · step 5",
+        "lead": "Find your transaction on Etherscan, and the value it left in the contract's [state](kw:state).",
+        "items": [
+          "The wizard shows your transaction hash and a link to Etherscan.",
+          "Open the link: your address under From, the Academy's contract under To, status Success.",
+          "Back in the wizard, check the stored value: read from the contract, it matches your hash."
+        ],
+        "result": "your transaction hash and its Etherscan link. Keep them: they are your proof."
       }
-    },
-    "rules": [
-      "One PDF on Moodle: Part A, your Part B proof, and the bonus if you did it.",
-      "AI is allowed and encouraged. Say in one line how you used it, and be ready to explain every step.",
-      "Testnet only: never real funds, and never paste a recovery phrase anywhere."
+    ],
+    "cta": "Start now: open the wizard",
+    "optional": "Optional, afterwards: explore a real contract",
+    "notes": [
+      "The contract is deployed by the Academy on Sepolia. Its address is wired into the wizard and will be shared in class.",
+      "Public and permanent. Only the hash goes on-chain, yet anyone who already knows your student number can compute the same hash.",
+      "Testnet only: never real funds, and never type a recovery phrase into a website."
     ]
   },
   "explore": {
-    "kicker": "Explore · class discussion",
+    "kicker": "Go further · explore",
+    "badge": "Optional · not part of the assignment",
     "heading": "Explore a real contract",
-    "subtitle": "Ask the four Part A questions of contracts that hold real money. Then poke a tiny one on the testnet.",
+    "subtitle": "Done with your transaction and curious? Read contracts that hold real money, then poke a tiny one on the testnet. Nothing here is required.",
     "read": {
       "label": "Read · verified on Etherscan",
       "badge": "Mainnet",
@@ -108,7 +93,7 @@
         }
       }
     },
-    "questionsLabel": "Talk it through: the Part A questions",
+    "questionsLabel": "Talk it through: four questions for any contract",
     "questions": [
       { "label": "State", "desc": "What does it remember? Find where the balances live." },
       { "label": "Functions", "desc": "Which actions does it offer? Which only read, and which change state and cost gas?" },
@@ -129,9 +114,7 @@
         "Write Contract: press Connect to Web3 (wallet on Sepolia), type a greeting into setGreeting, confirm.",
         "Read again: the greeting is yours and counter went up by one. Until someone overwrites it."
       ],
-      "warning": "Public and permanent: write nothing personal. This contract is not ours, and anyone can overwrite the greeting.",
-      "bonusLabel": "Bonus idea: ",
-      "bonus": "deploy your own copy, then reshape it for your Assignment 1 problem."
+      "warning": "Public and permanent: write nothing personal. This contract is not ours, and anyone can overwrite the greeting."
     }
   },
   "keyPoints": {

@@ -36,8 +36,8 @@
       "description": "Explicar porque as cadeias públicas não são privadas, o que faz uma prova zero-knowledge em termos simples, e como a divulgação seletiva permite transações privadas e KYC sem entregar a identidade."
     },
     "design": {
-      "title": "Desenhar e Fazer (Trabalho 3)",
-      "description": "Desenhar o smart contract para um problema teu (o seu estado, as suas funções, quem as pode chamar, o que não consegue fazer) e enviar uma transação real para um contrato numa testnet pública."
+      "title": "A Tua Primeira Transação (Trabalho 3)",
+      "description": "Enviar uma transação real para um smart contract numa testnet pública (uma carteira, ETH de teste, uma transação assinada que guarda um hash) e verificar o resultado num explorador de blocos."
     }
   }
 }

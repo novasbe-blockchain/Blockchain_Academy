@@ -1,96 +1,81 @@
 {
   "groups": {
-    "g-understand": "Compreender",
+    "g-assignment": "O trabalho",
     "g-do": "Fazer",
-    "g-explore": "Explorar"
+    "g-optional": "Opcional"
   },
   "chapters": {
-    "s8-brief": "Enunciado do Trabalho",
+    "s8-brief": "Os 3 Passos",
     "s8-first-tx": "▶ Primeira Transação",
-    "s8-explore": "💬 Explorar um Contrato"
+    "s8-explore": "💬 Explorar (opcional)"
   },
   "title": {
     "sectionNumber": "SECÇÃO 08",
-    "title": "Trabalho: o Teu Contrato, ao Vivo",
-    "subtitle": "O final prático. Desenha o contrato para o teu próprio problema, envia uma transação real numa testnet e depois explora contratos que guardam dinheiro a sério."
+    "title": "Trabalho: a Tua Primeira Transação",
+    "subtitle": "O final prático. Envia uma transação real numa testnet: ela guarda o hash do teu número de estudante no smart contract da Academy. Depois encontra-a no Etherscan."
   },
   "arc": {
     "label": "Percurso da secção",
-    "understand": "Compreender",
+    "assignment": "Trabalho",
     "do": "Fazer",
-    "explore": "Explorar"
+    "optional": "Opcional"
   },
   "brief": {
-    "kicker": "Trabalho 3 · individual",
-    "heading": "O teu smart contract, ao vivo numa testnet",
-    "subtitle": "Leva o problema do teu Trabalho 1 um passo mais longe: desenha o contrato e envia uma transação real. Sem programar.",
-    "submitLabel": "Entrega",
-    "partA": {
-      "tag": "Parte A · obrigatória",
-      "chip": "sem código · 1 página",
-      "title": "Desenha o teu contrato",
-      "lead": "Em linguagem simples, o contrato no centro de uma solução para o problema do teu Trabalho 1:",
-      "rows": [
-        { "label": "O que guarda", "desc": "A informação que fica on-chain: o seu [estado](kw:state)." },
-        { "label": "O que se pode fazer com ele", "desc": "As 2 a 4 [funções](kw:functions) principais que as pessoas chamariam." },
-        { "label": "Quem pode chamar o quê", "desc": "Aberto a todos ou restrito? Isso é [controlo de acesso](kw:access)." },
-        { "label": "O que não consegue fazer", "desc": "Um limite real: sem [oráculo](kw:oracle) não lê dados externos, não se aciona sozinho, as regras são difíceis de mudar ([imutabilidade](kw:immutability))." }
-      ],
-      "note": "«Uma base de dados faria quase tudo isto» é uma conclusão válida: explica porquê."
-    },
-    "partB": {
-      "tag": "Parte B · obrigatória",
-      "chip": "na Sepolia",
-      "title": "Envia uma transação real",
-      "lead": "O assistente no slide seguinte guia-te passo a passo. Só fundos de teste, nenhum dinheiro real.",
-      "steps": [
-        "Carteira",
-        "ETH de teste",
-        "Enviar",
-        "Prova"
-      ],
-      "submit": [
-        "O hash da transação",
-        "O link no explorador de blocos",
-        "2 a 3 frases sobre o que fizeste e o que mudou on-chain"
-      ],
-      "note": "Cumpre o requisito do programa: uma transação numa testnet para um smart contract.",
-      "cta": "Faz já: abre o assistente"
-    },
-    "bonus": {
-      "tag": "Bónus · +10%",
-      "chip": "opcional",
-      "title": "Torna-o teu",
-      "lead": "Faz deploy do teu próprio contrato mínimo para o problema do Trabalho 1 e envia a transação para esse.",
-      "ai": "Podes pedir o código a uma IA: a do Remix ou um agente de programação.",
-      "aiLink": "Prompts de exemplo: Secção 6, slide de IA.",
-      "explain": "Não precisas de ser programador. Precisas de explicar o que puseste no ar.",
-      "submit": [
-        "O endereço do teu contrato",
-        "A transação de deploy ou de interação"
-      ],
-      "cta": "Aquece num contrato ao vivo"
-    },
-    "grading": {
-      "label": "Como é avaliado",
-      "labels": {
-        "design": "Parte A: um desenho sensato para o teu problema",
-        "tx": "Parte B: uma transação válida, com prova",
-        "explain": "Explicar o que mudou on-chain",
-        "writing": "Escrita, fontes, uso de IA declarado",
-        "bonus": "Bónus: o teu próprio contrato"
+    "kicker": "Trabalho 3 · individual · sem código",
+    "heading": "Uma transação, três passos",
+    "subtitle": "Envia uma transação para o smart contract da Academy: ela guarda o hash do teu número de estudante. O trabalho é só isto, e o assistente no slide seguinte guia-te em cada clique.",
+    "resultLabel": "Ficas com: ",
+    "steps": [
+      {
+        "tag": "Passo 1",
+        "title": "Prepara",
+        "where": "Assistente · passos 1–3",
+        "lead": "Arranja uma [carteira](kw:wallet) na testnet Sepolia, com algumas moedas de teste gratuitas.",
+        "items": [
+          "Instala uma carteira: Rabby, Zerion ou MetaMask. Usa uma nova, sem fundos reais.",
+          "Pede ETH de teste gratuito numa faucet da Sepolia. Paga o gas e não tem valor real.",
+          "Liga a carteira ao assistente e muda-a para a Sepolia."
+        ],
+        "result": "uma carteira na Sepolia com ETH de teste."
+      },
+      {
+        "tag": "Passo 2",
+        "title": "Regista",
+        "where": "Assistente · passo 4",
+        "lead": "Envia uma [transação](kw:transaction) que guarda o [hash](kw:hash) do teu número de estudante no contrato da Academy.",
+        "items": [
+          "Escreve o teu número de estudante no assistente.",
+          "O hash é calculado no teu browser com keccak256, a função de hash que a Ethereum usa. Só o hash é enviado.",
+          "Carrega em Enviar transação e confirma na carteira: tu assinas e tu pagas o gas."
+        ],
+        "result": "uma transação confirmada e o teu hash guardado ao lado do teu endereço."
+      },
+      {
+        "tag": "Passo 3",
+        "title": "Verifica",
+        "where": "Assistente · passo 5",
+        "lead": "Encontra a tua transação no Etherscan e o valor que ela deixou no [estado](kw:state) do contrato.",
+        "items": [
+          "O assistente mostra o hash da tua transação e um link para o Etherscan.",
+          "Abre o link: o teu endereço em From, o contrato da Academy em To, estado Success.",
+          "De volta ao assistente, confirma o valor guardado: lido do contrato, coincide com o teu hash."
+        ],
+        "result": "o hash da transação e o link do Etherscan. Guarda-os: são a tua prova."
       }
-    },
-    "rules": [
-      "Um PDF no Moodle: Parte A, a tua prova da Parte B e o bónus, se o fizeste.",
-      "A IA é permitida e incentivada. Diz numa linha como a usaste e prepara-te para explicar cada passo.",
-      "Só testnet: nunca fundos reais, e nunca coles uma frase de recuperação em lado nenhum."
+    ],
+    "cta": "Começa já: abre o assistente",
+    "optional": "Opcional, depois: explora um contrato real",
+    "notes": [
+      "O contrato é publicado pela Academy na Sepolia. O endereço já está ligado ao assistente e será partilhado na aula.",
+      "Público e permanente. Só o hash fica on-chain, mas quem já souber o teu número de estudante consegue calcular o mesmo hash.",
+      "Só testnet: nunca fundos reais, e nunca escrevas uma frase de recuperação num site."
     ]
   },
   "explore": {
-    "kicker": "Explorar · discussão em aula",
+    "kicker": "Para ir mais longe · explorar",
+    "badge": "Opcional · não faz parte do trabalho",
     "heading": "Explora um contrato real",
-    "subtitle": "Faz as quatro perguntas da Parte A a contratos que guardam dinheiro a sério. Depois mexe tu num, na testnet.",
+    "subtitle": "Já enviaste a transação e ficaste com curiosidade? Lê contratos que guardam dinheiro a sério e depois mexe tu num, na testnet. Nada disto é obrigatório.",
     "read": {
       "label": "Ler · verificados no Etherscan",
       "badge": "Mainnet",
@@ -108,7 +93,7 @@
         }
       }
     },
-    "questionsLabel": "Para discutir: as perguntas da Parte A",
+    "questionsLabel": "Para discutir: quatro perguntas para qualquer contrato",
     "questions": [
       { "label": "Estado", "desc": "O que é que ele guarda? Descobre onde vivem os saldos." },
       { "label": "Funções", "desc": "Que ações oferece? Quais só leem, e quais alteram o estado e custam gas?" },
@@ -129,9 +114,7 @@
         "Write Contract: carrega em Connect to Web3 (carteira na Sepolia), escreve uma saudação em setGreeting, confirma.",
         "Lê outra vez: a saudação é a tua e counter subiu um. Até alguém a substituir."
       ],
-      "warning": "Público e permanente: não escrevas nada pessoal. Este contrato não é nosso, e qualquer pessoa pode substituir a saudação.",
-      "bonusLabel": "Ideia para o bónus: ",
-      "bonus": "faz deploy da tua própria cópia e adapta-a ao problema do teu Trabalho 1."
+      "warning": "Público e permanente: não escrevas nada pessoal. Este contrato não é nosso, e qualquer pessoa pode substituir a saudação."
     }
   },
   "keyPoints": {
