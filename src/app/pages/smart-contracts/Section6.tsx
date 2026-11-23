@@ -193,33 +193,74 @@ const AI_PROMPTS: { Icon: typeof PenLine; color: string; attach: 'template' | 'r
 ];
 
 // Real Ethereum-mainnet contracts to open live in class for "Explain it" / "Check it".
-// Each was checked on etherscan.io on 2026-11-23: source code verified (Exact Match),
-// Code and Read Contract tabs present. Re-check before reuse; if one ever loses its
-// verified source, replace it here and in the two section-6.json files.
-//   USDC · FiatTokenProxy (solc 0.4.24) in front of FiatTokenV2_2. It is a proxy, so its
-//          read methods are on the "Read as Proxy" tab (#readProxyContract).
+// Each was checked on 2026-11-23: source code verified on Etherscan. Re-check before reuse;
+// if one ever loses its verified source, replace it here and in the two section-6.json files.
+//   USDC · the address everyone uses is FiatTokenProxy, which holds no token logic: it
+//          forwards every call to an implementation contract (FiatTokenV2_2). So "Code"
+//          opens the IMPLEMENTATION, and "Read as Proxy" opens the main (proxy) address.
+//          The implementation address was read from the proxy's implementation slot on
+//          mainnet on 2026-11-23; if Circle upgrades USDC, update USDC_IMPLEMENTATION.
 //   WETH · WETH9 (solc 0.4.19): the contract itself is 60 lines, with no owner or admin.
 //   DAI  · Dai (solc 0.5.12): one file; mint() is guarded by `auth` (the wards mapping).
+// WETH and DAI are not proxies, so their Code tab is all a student needs.
 // The slide prints a shortened address; the links (and the hover title) carry the full one.
 const ETHERSCAN_ADDRESS = 'https://etherscan.io/address/';
-const REAL_CONTRACTS: { id: 'usdc' | 'weth' | 'dai'; name: string; address: string; readTab: string; proxy: boolean }[] = [
-  { id: 'usdc', name: 'USDC', address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', readTab: 'readProxyContract', proxy: true },
-  { id: 'weth', name: 'WETH', address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', readTab: 'readContract',      proxy: false },
-  { id: 'dai',  name: 'DAI',  address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', readTab: 'readContract',      proxy: false },
+const USDC_PROXY = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
+const USDC_IMPLEMENTATION = '0x43506849D7C04F9138D1A2050bbF3A0c054402dd';
+// `address` is the one printed on the slide; each link names the address and the Etherscan tab it opens.
+const REAL_CONTRACTS: {
+  id: 'usdc' | 'weth' | 'dai'; name: string; address: string;
+  links: { label: 'code' | 'readProxy'; address: string; tab: string }[];
+}[] = [
+  {
+    id: 'usdc', name: 'USDC', address: USDC_PROXY,
+    links: [
+      { label: 'code',      address: USDC_IMPLEMENTATION, tab: 'code' },
+      { label: 'readProxy', address: USDC_PROXY,          tab: 'readProxyContract' },
+    ],
+  },
+  {
+    id: 'weth', name: 'WETH', address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    links: [{ label: 'code', address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', tab: 'code' }],
+  },
+  {
+    id: 'dai', name: 'DAI', address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    links: [{ label: 'code', address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', tab: 'code' }],
+  },
 ];
 const shortAddress = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
-const AI_TOOLS = [
-  { Icon: MessageSquare,  color: INDIGO,       href: '' },
-  { Icon: SquareTerminal, color: VIOLET,       href: '' },
-  { Icon: Sparkles,       color: REMIX_ORANGE, href: 'https://remix-ide.readthedocs.io/en/latest/ai.html' },
-  { Icon: Blocks,         color: SKY,          href: 'https://mcp.openzeppelin.com/' },
+// "Where to paste it": one optional link per bullet, in the order of `ai.tools` in the locale files.
+const AI_TOOL_LINKS = [
+  '',
+  '',
+  'https://remix-ide.readthedocs.io/en/latest/ai.html',
+  'https://mcp.openzeppelin.com/',
 ];
-const AI_LOOP = [
-  { Icon: MessageSquare, color: INDIGO },
-  { Icon: Eye,           color: SKY },
-  { Icon: FlaskConical,  color: VIOLET },
-  { Icon: ShieldCheck,   color: GREEN },
-];
+
+// ── Going deeper: the primary sources ────────────────────────────────────────
+// Every URL below was requested on 2026-11-23 and answered 200 (after redirects).
+// Product names are proper nouns, so they stay untranslated; the one-line "what it is
+// for" lives in the locale files under deeper.docs.items.<id>.
+const DEEPER_DOCS = [
+  { id: 'ozContracts', name: 'OpenZeppelin Contracts', Icon: Blocks,         color: VIOLET,       href: 'https://docs.openzeppelin.com/contracts' },
+  { id: 'ozWizard',    name: 'Contracts Wizard',       Icon: Sparkles,       color: VIOLET,       href: 'https://wizard.openzeppelin.com/' },
+  { id: 'remix',       name: 'Remix IDE',              Icon: SquareTerminal, color: REMIX_ORANGE, href: 'https://remix.ethereum.org/' },
+  { id: 'solidity',    name: 'Solidity docs',          Icon: FileCode2,      color: INDIGO,       href: 'https://docs.soliditylang.org/' },
+  { id: 'ethereumOrg', name: 'ethereum.org',           Icon: BookOpen,       color: SKY,          href: 'https://ethereum.org/developers/' },
+  { id: 'etherscan',   name: 'Etherscan',              Icon: ReceiptText,    color: GREEN,        href: 'https://etherscan.io/' },
+] as const;
+// Official documentation for the tools named in the stack cards. Keys match the chip text
+// (identical in both locale files); a chip with no entry here stays plain text.
+const STACK_TOOL_DOCS: Record<string, string> = {
+  'ethers.js': 'https://docs.ethers.org/v6/',
+  'viem':      'https://viem.sh/',
+  'Infura':    'https://docs.metamask.io/services/',
+  'Alchemy':   'https://www.alchemy.com/docs',
+  'Chainlink': 'https://docs.chain.link/',
+  'Pyth':      'https://docs.pyth.network/',
+  'The Graph': 'https://thegraph.com/docs/',
+  'IPFS':      'https://docs.ipfs.tech/',
+};
 
 // ── Hosting: what each piece is for ──────────────────────────────────────────
 // static host → browser, then two separate lanes to the network:
@@ -959,7 +1000,6 @@ function AiSlide() {
   const [copied, setCopied] = useState(false);
   const prompts = t('ai.prompts', { returnObjects: true }) as AiPromptCopy[];
   const tools = t('ai.tools', { returnObjects: true }) as StackItem[];
-  const loop = t('ai.loop', { returnObjects: true }) as LabelDesc[];
   const realCopy = t('ai.real.contracts', { returnObjects: true }) as Record<string, RealContractCopy>;
   const meta = AI_PROMPTS[active];
   const copy = prompts[active];
@@ -1072,19 +1112,17 @@ function AiSlide() {
                   <span className="font-black text-sm text-foreground">{c.name}</span>
                   <span className="font-mono text-[10px] text-muted-foreground whitespace-nowrap" title={c.address}>{shortAddress(c.address)}</span>
                   <span className="ml-auto flex items-center gap-1.5">
-                    {[
-                      { tab: 'code', label: t('ai.real.code') },
-                      { tab: c.readTab, label: t(c.proxy ? 'ai.real.readProxy' : 'ai.real.read') },
-                    ].map(l => (
+                    {c.links.map(l => (
                       <a
-                        key={l.tab}
-                        href={`${ETHERSCAN_ADDRESS}${c.address}#${l.tab}`}
+                        key={l.label}
+                        href={`${ETHERSCAN_ADDRESS}${l.address}#${l.tab}`}
+                        title={l.address}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-bold whitespace-nowrap hover:opacity-75 transition-opacity"
                         style={{ backgroundColor: SKY + '1f', color: SKY }}
                       >
-                        {l.label}<ExternalLink className="size-3" />
+                        {t(`ai.real.${l.label}`)}<ExternalLink className="size-3" />
                       </a>
                     ))}
                   </span>
@@ -1094,64 +1132,35 @@ function AiSlide() {
             ))}
           </div>
 
-          {/* Where to paste it */}
-          <div className="shrink-0 text-xs font-bold uppercase tracking-widest" style={{ color: SKY }}>{t('ai.toolsLabel')}</div>
-          <div className="flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {tools.map((tool, ti) => {
-              const { Icon, color, href } = AI_TOOLS[ti];
-              return (
-                <div key={ti} className="px-3 py-1.5 bg-card border rounded-xl flex flex-col gap-1" style={{ borderColor: color + '50' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="size-7 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: color + '18' }}>
-                      <Icon className="size-4" style={{ color }} />
-                    </div>
-                    <div className="font-black text-[13px] leading-tight" style={{ color }}>{tool.label}</div>
-                  </div>
-                  <p className="text-[11px] text-muted-foreground leading-snug">{tool.desc}</p>
-                  <div className="mt-auto flex flex-wrap items-center gap-1">
-                    {tool.tools.split(' · ').map(name => (
-                      <span key={name} className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap" style={{ backgroundColor: color + '15', color }}>{name}</span>
-                    ))}
-                    {href && (
-                      <a href={href} target="_blank" rel="noreferrer" aria-label={tool.label} className="hover:opacity-70 transition-opacity" style={{ color }}>
-                        <ExternalLink className="size-3.5" />
+          {/* Where to paste it: plain bullets */}
+          <div className="flex-1 min-h-0 flex flex-col gap-2 px-1 pt-2">
+            <div className="text-xs font-bold uppercase tracking-widest" style={{ color: SKY }}>{t('ai.toolsLabel')}</div>
+            <ul className="list-disc pl-5 space-y-1.5 text-[13px] leading-snug text-muted-foreground marker:text-[#0ea5e9]">
+              {tools.map((tool, ti) => {
+                const href = AI_TOOL_LINKS[ti];
+                return (
+                  <li key={ti}>
+                    {href ? (
+                      <a href={href} target="_blank" rel="noopener noreferrer" className="font-bold text-foreground underline decoration-dotted underline-offset-2 hover:text-[#0ea5e9] transition-colors">
+                        {tool.label}<ExternalLink className="inline size-3 ml-1 align-baseline" />
                       </a>
+                    ) : (
+                      <span className="font-bold text-foreground">{tool.label}</span>
                     )}
-                  </div>
-                </div>
-              );
-            })}
+                    {tool.tools && <span> ({tool.tools})</span>}
+                    {': '}{tool.desc}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-          <div className="shrink-0 flex items-start gap-2 px-3 py-1.5 rounded-xl border" style={{ borderColor: RED + '55', backgroundColor: RED + '10' }}>
+          {/* lg:pr-20 keeps the text clear of the floating slide-nav buttons */}
+          <div className="shrink-0 flex items-start gap-2 px-3 py-1.5 lg:pr-20 rounded-xl border" style={{ borderColor: RED + '55', backgroundColor: RED + '10' }}>
             <TriangleAlert className="size-4 shrink-0 mt-0.5" style={{ color: RED }} />
             <p className="text-[11px] text-foreground leading-snug">{t('ai.secretWarning')}</p>
           </div>
         </div>
       </div>
-
-      {/* The loop that keeps you the author */}
-      {/* lg:pr-20 keeps the last step clear of the floating slide-nav buttons */}
-      <div className="shrink-0 mt-3 rounded-2xl border border-border bg-card/50 px-4 py-2 lg:pr-20">
-        <div className="grid grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-center gap-2">
-          {loop.map((l, li) => {
-            const { Icon, color } = AI_LOOP[li];
-            return [
-              li > 0 && <ChevronRight key={`sep-${li}`} className="hidden lg:block size-5 text-muted-foreground" />,
-              <div key={li} className="flex items-center gap-2.5 min-w-0">
-                <div className="size-9 rounded-full border-2 bg-card flex items-center justify-center shrink-0" style={{ borderColor: color }}>
-                  <Icon className="size-4" style={{ color }} />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-black text-foreground leading-tight">{l.label}</div>
-                  <div className="text-[11px] text-muted-foreground leading-snug">{l.desc}</div>
-                </div>
-              </div>,
-            ];
-          })}
-        </div>
-      </div>
-
-      <KeyPointBar text={t('keyPoints.s6-ai')} className="mt-3" />
     </div>
   );
 }
@@ -2109,6 +2118,26 @@ function EventsSlide() {
 
 // ═══ SLIDE 6 · OPTIONAL: GOING DEEPER ═══════════════════════════════════════
 
+/** The tools named on a stack card, one chip each; a chip links to the tool's official docs when we have them. */
+function ToolChips({ tools, color }: { tools: string; color: string }) {
+  const chip = 'text-[10px] font-mono font-bold px-2 py-0.5 rounded-full whitespace-nowrap';
+  const style = { backgroundColor: color + '15', color };
+  return (
+    <>
+      {tools.split(' · ').map(name => {
+        const href = STACK_TOOL_DOCS[name];
+        return href ? (
+          <a key={name} href={href} target="_blank" rel="noopener noreferrer" className={`${chip} inline-flex items-center gap-1 hover:underline`} style={style}>
+            {name}<ExternalLink className="size-2.5" />
+          </a>
+        ) : (
+          <span key={name} className={chip} style={style}>{name}</span>
+        );
+      })}
+    </>
+  );
+}
+
 function DeeperSlide() {
   const { t } = useTranslation(NS);
   const spine = t('deeper.spine', { returnObjects: true }) as StackItem[];
@@ -2140,7 +2169,7 @@ function DeeperSlide() {
                     <div className="font-black text-sm text-foreground">{s.label}</div>
                     <div className="text-xs text-muted-foreground leading-snug">{s.desc}</div>
                   </div>
-                  {s.tools && <span className="hidden xl:block shrink-0 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: color + '15', color }}>{s.tools}</span>}
+                  {s.tools && <span className="hidden xl:flex shrink-0 items-center gap-1"><ToolChips tools={s.tools} color={color} /></span>}
                 </div>
               </div>
             );
@@ -2163,13 +2192,41 @@ function DeeperSlide() {
                   </div>
                   <p className="text-xs text-muted-foreground leading-snug">{a.desc}</p>
                   <div className="mt-auto flex flex-wrap items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: color + '15', color }}>{a.tools}</span>
+                    <ToolChips tools={a.tools} color={color} />
                     {ai === 0 && <RecapHandoff label={t('recapLabel')} text={t('deeper.oracleRecap')} to="/smart-contracts/section-2" color={AMBER} />}
                   </div>
                 </div>
               );
             })}
           </div>
+        </div>
+      </div>
+
+      {/* The primary sources, one click away */}
+      {/* lg:pr-20 keeps the last link clear of the floating slide-nav buttons */}
+      <div className="shrink-0 mt-3 lg:pr-20">
+        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest mb-2" style={{ color: SKY }}>
+          <BookOpen className="size-4" />{t('deeper.docs.label')}
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2">
+          {DEEPER_DOCS.map(d => (
+            <a
+              key={d.id}
+              href={d.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group px-2.5 py-2 bg-card border rounded-xl flex items-start gap-2 transition-colors hover:bg-muted"
+              style={{ borderColor: d.color + '50' }}
+            >
+              <d.Icon className="size-4 shrink-0 mt-0.5" style={{ color: d.color }} />
+              <span className="min-w-0">
+                <span className="flex items-center gap-1 text-xs font-black leading-tight group-hover:underline" style={{ color: d.color }}>
+                  {d.name}<ExternalLink className="size-3 shrink-0" />
+                </span>
+                <span className="block text-[11px] text-muted-foreground leading-snug mt-0.5">{t(`deeper.docs.items.${d.id}`)}</span>
+              </span>
+            </a>
+          ))}
         </div>
       </div>
 
@@ -2199,8 +2256,15 @@ export function SC_Section6() {
       explanation: q.explanation,
     };
   };
-  // In order: why remix a template · why a testnet first · where to deploy for real.
-  const quizQuestions = [quiz('quizTemplate', 1), quiz('quizTestnet', 3), quiz('quiz', 2)];
+  // In order: why remix a template · why a testnet first · write vs read: which one costs gas ·
+  // write vs read: why · where to deploy for real.
+  const quizQuestions = [
+    quiz('quizTemplate', 1),
+    quiz('quizTestnet', 3),
+    quiz('quizWriteRead', 0),
+    quiz('quizReadFree', 1),
+    quiz('quiz', 2),
+  ];
 
   return (
     <div className="h-full w-full flex overflow-hidden">

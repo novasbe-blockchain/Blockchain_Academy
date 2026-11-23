@@ -247,7 +247,7 @@
   },
   "ai": {
     "kicker": "Step 2 · With AI",
-    "heading": "AI-driven development: AI assists, you stay the author",
+    "heading": "AI-driven development",
     "subtitle": "Why it matters: an AI assistant can adapt a template, explain a contract and review it in seconds. But your wallet signs the deployment, so you answer for every line: read it, understand it, verify it. Never deploy an AI draft blind.",
     "hint": "Pick a prompt, copy it, paste it into any AI assistant",
     "promptTag": "Prompt {{n}}",
@@ -274,7 +274,7 @@
         "goal": "understand a contract you did not write. Practise on a real one.",
         "prompt": "Explain what this Solidity contract does in plain English, one function at a time. For each function tell me: who is allowed to call it, what it changes, and whether it can create, move or destroy tokens. Is there an owner or admin with special powers? If you are not sure about something, say so instead of guessing.\n\n[paste the contract's source code here]",
         "checks": [
-          "Check a claim yourself: call name, decimals or totalSupply on Etherscan's read tab.",
+          "Check a claim yourself: call name, decimals or totalSupply on Etherscan's Read Contract tab.",
           "Every function it mentions exists in the verified source: search the Code tab.",
           "Ask a second AI the same question and compare the answers."
         ]
@@ -294,11 +294,10 @@
       "label": "Real contracts · verified on Etherscan",
       "badge": "Mainnet",
       "code": "Code",
-      "read": "Read Contract",
       "readProxy": "Read as Proxy",
       "contracts": {
         "usdc": {
-          "note": "Circle's stablecoin. A proxy: the issuer can upgrade, pause and freeze."
+          "note": "Circle's stablecoin. This address is a proxy: it holds no logic and forwards each call to an implementation contract. Code opens the implementation, Read as Proxy the main address. The issuer can upgrade, pause and freeze."
         },
         "weth": {
           "note": "Wrapped Ether, in 60 lines: ETH in, ERC-20 token out. No owner, no admin."
@@ -312,41 +311,23 @@
     "tools": [
       {
         "label": "Chat assistants",
-        "desc": "Paste a prompt, read the answer. The easiest place to start.",
+        "desc": "paste a prompt, read the answer. The easiest place to start.",
         "tools": "Claude · ChatGPT · Gemini"
       },
       {
         "label": "Coding agents",
-        "desc": "Inside a code editor: they read your files, compile and run tests.",
+        "desc": "inside a code editor, they read your files, compile and run tests.",
         "tools": "Cursor · Copilot · Claude Code"
       },
       {
         "label": "RemixAI Assistant",
-        "desc": "Built into Remix. Explains a contract and its compiler errors.",
-        "tools": "remix.ethereum.org"
+        "desc": "built into Remix, it explains a contract and its compiler errors.",
+        "tools": ""
       },
       {
         "label": "OpenZeppelin Wizard & MCP",
-        "desc": "Vetted templates by tick-box (Wizard) or for agents (MCP).",
-        "tools": "Wizard · MCP"
-      }
-    ],
-    "loop": [
-      {
-        "label": "Prompt",
-        "desc": "Start from a vetted template"
-      },
-      {
-        "label": "Read",
-        "desc": "Until you can explain it"
-      },
-      {
-        "label": "Test",
-        "desc": "On a testnet: errors are free"
-      },
-      {
-        "label": "Audit",
-        "desc": "Before any real money"
+        "desc": "vetted templates, by tick-box (Wizard) or for coding agents (MCP).",
+        "tools": ""
       }
     ],
     "secretWarning": "Never paste a recovery phrase or private key into an AI or a website."
@@ -798,14 +779,24 @@
         "tools": "draft → read → test → audit"
       }
     ],
-    "oracleRecap": "Section 02"
+    "oracleRecap": "Section 02",
+    "docs": {
+      "label": "The real docs: bookmark these",
+      "items": {
+        "ozContracts": "The audited library you inherit from.",
+        "ozWizard": "Tick boxes, get a ready contract.",
+        "remix": "Write, compile and deploy in the browser.",
+        "solidity": "The language reference, by its authors.",
+        "ethereumOrg": "The developer portal: docs and tutorials.",
+        "etherscan": "Look up any address or transaction."
+      }
+    }
   },
   "keyPoints": {
     "s6-why": "Shipping a contract is a short, repeatable routine: standard, template, tool, testnet.",
     "s6-erc": "A standard is a promise about your contract's buttons, so tools built by strangers work with it.",
     "s6-eip": "A standard is not decreed. Anyone can propose it, editors check its form, and open review makes it Final.",
     "s6-template": "The safest line of code is the one you did not have to write.",
-    "s6-ai": "AI assists, you stay the author. Read, understand and verify everything it produces: if you cannot explain a line, do not deploy it.",
     "s6-where": "A testnet is a dress rehearsal: same tools, same steps, nothing at stake.",
     "s6-deploy": "Do these four steps once on a testnet and you know the routine: mainnet is the same, with real money.",
     "s6-first-tx": "A transaction is a signed request to change shared state. Once it is mined, it is public and it stays.",
@@ -843,6 +834,26 @@
       "The tools and steps are the same, but the ETH is free and worthless, so mistakes cost nothing."
     ],
     "explanation": "A public testnet behaves like mainnet and uses the same wallet, tools and steps, but gas is paid in test ETH that has no real value. That makes it the place to make your mistakes. Testnets are public, not private. Nothing moves to mainnet automatically: going live is a separate deployment that you pay for in real ETH. And no rule forces you to use a testnet; it is simply good practice."
+  },
+  "quizWriteRead": {
+    "question": "Your dapp does two things: it shows a customer's token balance, and it lets them send 10 tokens to a shop. Which of the two costs gas?",
+    "options": [
+      "Only sending the tokens: it changes state, so it needs a transaction. Showing the balance is a free read.",
+      "Both: every interaction with a smart contract is a transaction, and every transaction costs gas.",
+      "Only showing the balance: looking data up on the chain is the service the network charges for.",
+      "Neither: on a public blockchain the app's owner pays the network, never the user."
+    ],
+    "explanation": "A write changes the contract's state, so it must be a signed transaction, and that costs gas; a read only asks a node for a value that is already there, so it is free and needs no transaction."
+  },
+  "quizReadFree": {
+    "question": "Why is reading data from a smart contract free, while changing it costs gas?",
+    "options": [
+      "The contract's owner pays for every read in advance; users only pay for the writes.",
+      "One node can answer a read from its own copy of the chain; a write is a transaction that every node must run and record.",
+      "Reads are free only on a testnet: on mainnet a read costs gas just like a write.",
+      "A read is not free: the wallet adds its cost to the user's next transaction."
+    ],
+    "explanation": "A read changes nothing, so a single node answers it from its copy of the state, with no transaction and no gas; a write must be signed, included in a block and executed by every node, and gas pays for that work."
   },
   "quiz": {
     "question": "Your team is building a tokenized real-estate platform. You need: (a) standard ERC-20 and ERC-721 tokens, (b) low fees, because rent is distributed often, (c) to reuse audited OpenZeppelin contracts. Which platform fits BEST?",

@@ -247,7 +247,7 @@
   },
   "ai": {
     "kicker": "Passo 2 · Com IA",
-    "heading": "Desenvolvimento com IA: a IA ajuda, o autor és tu",
+    "heading": "Desenvolvimento com IA",
     "subtitle": "Porque importa: um assistente de IA adapta um template, explica um contrato e revê-o em segundos. Mas é a tua carteira que assina o deploy, por isso respondes por cada linha: lê, percebe, verifica. Nunca faças deploy de um rascunho de IA às cegas.",
     "hint": "Escolhe um prompt, copia-o e cola-o num assistente de IA",
     "promptTag": "Prompt {{n}}",
@@ -274,7 +274,7 @@
         "goal": "perceber um contrato que não escreveste. Treina com um real.",
         "prompt": "Explica em português simples o que este contrato Solidity faz, uma função de cada vez. Para cada função, diz-me: quem a pode chamar, o que ela altera, e se pode criar, mover ou destruir tokens. Existe algum owner ou administrador com poderes especiais? Se não tiveres a certeza de algo, di-lo em vez de adivinhares.\n\n[cola aqui o código-fonte do contrato]",
         "checks": [
-          "Confirma tu uma afirmação: chama name, decimals ou totalSupply no Etherscan.",
+          "Confirma tu uma afirmação: chama name, decimals ou totalSupply no separador Read Contract do Etherscan.",
           "As funções que ela refere existem no código verificado: procura no separador Code.",
           "Faz a mesma pergunta a uma segunda IA e compara as respostas."
         ]
@@ -294,11 +294,10 @@
       "label": "Contratos reais · verificados no Etherscan",
       "badge": "Mainnet",
       "code": "Code",
-      "read": "Read Contract",
       "readProxy": "Read as Proxy",
       "contracts": {
         "usdc": {
-          "note": "Stablecoin da Circle. Proxy: o emissor pode atualizar, pausar e congelar."
+          "note": "Stablecoin da Circle. Este endereço é um proxy: não tem lógica e reencaminha cada chamada para um contrato de implementação. Code abre a implementação, Read as Proxy o endereço principal. O emissor pode atualizar, pausar e congelar."
         },
         "weth": {
           "note": "Wrapped Ether, em 60 linhas: entra ETH, sai um token ERC-20. Sem owner."
@@ -312,41 +311,23 @@
     "tools": [
       {
         "label": "Assistentes de chat",
-        "desc": "Colas um prompt, lês a resposta. O sítio mais fácil para começar.",
+        "desc": "colas um prompt, lês a resposta. O sítio mais fácil para começar.",
         "tools": "Claude · ChatGPT · Gemini"
       },
       {
         "label": "Agentes de programação",
-        "desc": "Num editor de código: leem os teus ficheiros, compilam e correm testes.",
+        "desc": "num editor de código, leem os teus ficheiros, compilam e correm testes.",
         "tools": "Cursor · Copilot · Claude Code"
       },
       {
         "label": "RemixAI Assistant",
-        "desc": "Integrado no Remix. Explica um contrato e os erros do compilador.",
-        "tools": "remix.ethereum.org"
+        "desc": "integrado no Remix, explica um contrato e os erros do compilador.",
+        "tools": ""
       },
       {
         "label": "OpenZeppelin Wizard & MCP",
-        "desc": "Templates validados: caixas de seleção (Wizard) ou agentes (MCP).",
-        "tools": "Wizard · MCP"
-      }
-    ],
-    "loop": [
-      {
-        "label": "Pedir",
-        "desc": "Sobre um template validado"
-      },
-      {
-        "label": "Ler",
-        "desc": "Até conseguires explicar tu"
-      },
-      {
-        "label": "Testar",
-        "desc": "Numa testnet: errar é grátis"
-      },
-      {
-        "label": "Auditar",
-        "desc": "Antes de dinheiro real"
+        "desc": "templates validados, por caixas de seleção (Wizard) ou para agentes de programação (MCP).",
+        "tools": ""
       }
     ],
     "secretWarning": "Nunca coles a frase de recuperação ou a chave privada numa IA."
@@ -798,14 +779,24 @@
         "tools": "rascunho → ler → testar → auditar"
       }
     ],
-    "oracleRecap": "Secção 02"
+    "oracleRecap": "Secção 02",
+    "docs": {
+      "label": "A documentação oficial: guarda estes links",
+      "items": {
+        "ozContracts": "A biblioteca auditada que herdas.",
+        "ozWizard": "Marcas opções, recebes um contrato pronto.",
+        "remix": "Escrever, compilar e fazer deploy no browser.",
+        "solidity": "A referência da linguagem, pelos seus autores.",
+        "ethereumOrg": "O portal para programadores: documentação e tutoriais.",
+        "etherscan": "Consulta qualquer endereço ou transação."
+      }
+    }
   },
   "keyPoints": {
     "s6-why": "Shipping a contract is a short, repeatable routine: standard, template, tool, testnet.",
     "s6-erc": "A standard is a promise about your contract's buttons, so tools built by strangers work with it.",
     "s6-eip": "A standard is not decreed. Anyone can propose it, editors check its form, and open review makes it Final.",
     "s6-template": "The safest line of code is the one you did not have to write.",
-    "s6-ai": "AI assists, you stay the author. Read, understand and verify everything it produces: if you cannot explain a line, do not deploy it.",
     "s6-where": "A testnet is a dress rehearsal: same tools, same steps, nothing at stake.",
     "s6-deploy": "Do these four steps once on a testnet and you know the routine: mainnet is the same, with real money.",
     "s6-first-tx": "A transaction is a signed request to change shared state. Once it is mined, it is public and it stays.",
@@ -843,6 +834,26 @@
       "As ferramentas e os passos são os mesmos, mas o ETH é gratuito e não vale nada, por isso os erros não custam nada."
     ],
     "explanation": "Uma testnet pública comporta-se como a mainnet e usa a mesma carteira, as mesmas ferramentas e os mesmos passos, mas o gas é pago em ETH de teste, que não tem valor real. É, por isso, o sítio certo para cometer erros. As testnets são públicas, não privadas. Nada passa para a mainnet automaticamente: ir para produção é um deploy separado, pago em ETH real. E nenhuma regra obriga a usar uma testnet; é simplesmente boa prática."
+  },
+  "quizWriteRead": {
+    "question": "A tua dapp faz duas coisas: mostra o saldo de tokens de um cliente e deixa-o enviar 10 tokens a uma loja. Qual das duas custa gas?",
+    "options": [
+      "Só enviar os tokens: altera o estado, por isso exige uma transação. Mostrar o saldo é uma leitura gratuita.",
+      "Ambas: qualquer interação com um smart contract é uma transação, e todas as transações custam gas.",
+      "Só mostrar o saldo: consultar dados na chain é o serviço que a rede cobra.",
+      "Nenhuma: numa blockchain pública é o dono da app que paga à rede, nunca o utilizador."
+    ],
+    "explanation": "Uma escrita altera o estado do contrato, por isso tem de ser uma transação assinada, e isso custa gas; uma leitura apenas pergunta a um nó um valor que já lá está, por isso é gratuita e não precisa de transação."
+  },
+  "quizReadFree": {
+    "question": "Porque é que ler dados de um smart contract é gratuito, enquanto alterá-los custa gas?",
+    "options": [
+      "O dono do contrato paga antecipadamente todas as leituras; os utilizadores só pagam as escritas.",
+      "Um único nó responde a uma leitura a partir da sua cópia da chain; uma escrita é uma transação que todos os nós têm de executar e registar.",
+      "As leituras só são gratuitas numa testnet: na mainnet, uma leitura custa gas tal como uma escrita.",
+      "Uma leitura não é gratuita: a carteira soma o seu custo à próxima transação do utilizador."
+    ],
+    "explanation": "Uma leitura não altera nada, por isso um único nó responde a partir da sua cópia do estado, sem transação e sem gas; uma escrita tem de ser assinada, incluída num bloco e executada por todos os nós, e o gas paga esse trabalho."
   },
   "quiz": {
     "question": "A tua equipa está a construir uma plataforma de imobiliário tokenizado. Precisas de: (a) tokens standard ERC-20 e ERC-721, (b) taxas baixas, porque as rendas são distribuídas com frequência, (c) reutilizar contratos auditados da OpenZeppelin. Que plataforma encaixa MELHOR?",
