@@ -11,6 +11,7 @@
     "s7-public": "Public ≠ Private",
     "s7-zk": "ZK: The Idea",
     "s7-waldo": "ZK: Where's Waldo?",
+    "s7-envelopes": "ZK: 100 Envelopes",
     "s7-kyc": "KYC Without Identity",
     "s7-live": "ZK in Production",
     "s7-jobs": "Two Jobs of ZK",
@@ -134,30 +135,99 @@
     ]
   },
   "zkpCave": {
-    "heading": "Where's Waldo? — the same idea, visually",
-    "subtitle": "I prove I found Waldo on a crowded page without telling you where he is.",
+    "heading": "Where's Waldo? — the same idea, step by step",
+    "subtitle": "I prove I found Waldo on a crowded page without showing you where he is. Step through it.",
+    "sceneLabel": "A crowded page, a large opaque sheet laid over it, and one small hole in the sheet",
     "steps": [
       {
+        "pill": "Claim",
         "title": "The claim",
-        "text": "I say I found Waldo on this crowded page. You don't believe me, and I refuse to point, because that gives my answer away."
+        "text": "This page is packed with people. I say I have found Waldo. You don't believe me, and I won't point: pointing gives my answer away.",
+        "caption": ""
       },
       {
-        "title": "The proof",
-        "text": "I cover the whole page with a large opaque sheet that has one tiny Waldo-sized hole, lined up exactly over him. You see Waldo through the hole."
+        "pill": "Cover",
+        "title": "Cover the page",
+        "text": "I lay a huge opaque sheet over everything, far bigger than the page. Underneath it, I slide the page to a spot you cannot see.",
+        "caption": "Opaque sheet, far bigger than the page"
       },
       {
-        "title": "You're convinced",
-        "text": "Waldo is clearly on the page. But the sheet hid the rest, so you still have no idea where on the page he is."
+        "pill": "Hole",
+        "title": "Cut one small hole",
+        "text": "I cut a single Waldo-sized hole in the sheet, right above him. You look through it, and there he is.",
+        "caption": "One small hole, and there he is"
+      },
+      {
+        "pill": "Verdict",
+        "title": "What you learned",
+        "text": "You are convinced: I really did find Waldo. But the page could be lying anywhere under the sheet, so you learned nothing about where on the page he is. That gap is \"zero-knowledge\".",
+        "caption": "The page could be here… or here… or here"
       }
     ],
-    "punchlineLabel": "The punchline — ",
-    "punchlineA": "you end fully convinced Waldo is there, yet learn ",
-    "punchlineStrong": "nothing",
-    "punchlineB": " about his location. That gap is \"zero-knowledge\".",
+    "bubbleProver": "I found Waldo!",
+    "bubbleVerifier": "Prove it. No pointing.",
+    "verdictFound": "✓ Waldo was found",
+    "verdictWhere": "Where on the page? Unknown",
+    "peek": "👀 Peek under the sheet",
+    "peekOff": "🙈 Stop peeking",
+    "peekNote": "The prover's view. The verifier never sees this.",
+    "stepOf": "Step {{n}} of {{total}}",
+    "back": "← Back",
+    "next": "Next step →",
+    "restart": "↺ Start again",
+    "notebook": {
+      "label": "What the verifier knows",
+      "foundQ": "Did they really find Waldo?",
+      "foundNo": "Only their word",
+      "foundYes": "Yes ✓",
+      "whereQ": "Where on the page is he?",
+      "whereNo": "No idea"
+    }
+  },
+  "zkProb": {
+    "heading": "100 envelopes — sure without seeing everything",
+    "subtitle": "Waldo showed how a proof can keep the secret hidden. This shows where the confidence comes from: random spot-checks the prover cannot predict.",
+    "claimLabel": "The prover's claim",
+    "claim": "\"Each of these 100 sealed envelopes holds a $100 bill.\"",
+    "modeLabel": "Is the prover honest?",
+    "honest": "😇 Honest prover",
+    "cheat": "😈 Cheater: 1 empty",
+    "gridLabel": "100 envelopes, {{n}} opened",
+    "bill": "$100",
+    "open1": "Open 1 at random",
+    "open10": "Open 10",
+    "openAll": "Open 99 at random",
+    "reset": "Start over",
+    "tallyLabel": "The verifier's notebook",
+    "openedValue": "{{n}} / 100 opened",
+    "riskLabel": "If one envelope were empty, the chance your random picks have missed it so far",
+    "status": {
+      "idle": "Nothing opened yet. All you have is the prover's word.",
+      "progress": "{{n}} opened, {{n}} × $100. Keep going.",
+      "honestDone": "99 opened, 99 × $100. One stays sealed, and you are almost certain of it without opening it.",
+      "caught": "Caught on pick {{n}}: an empty envelope. One is enough to reject the claim.",
+      "escaped": "This time the empty envelope is the one you left sealed. That is the 1-in-100 case: the \"almost\" in \"almost certain\"."
+    },
+    "tries": "Cheater caught in {{caught}} of {{total}} tries",
+    "whyLabel": "Why random checks convince",
+    "why": [
+      {
+        "t": "Sealed first, picked second",
+        "d": "A cheater cannot move the empty envelope out of your way."
+      },
+      {
+        "t": "Every check shrinks the odds",
+        "d": "After 99 good envelopes, a cheater had 1 chance in 100 of getting this far."
+      },
+      {
+        "t": "Near-certain, never absolute",
+        "d": "Real systems run enough random checks to push those odds far below one in a billion."
+      }
+    ],
+    "bridgeLabel": "Back to zero-knowledge — ",
+    "bridge": "a ZK proof joins the two ideas: random checks a cheater cannot prepare for (the envelopes), answered in a way that reveals nothing else (Waldo's sheet). That is how it convinces without full disclosure.",
     "classicLabel": "The classic version — ",
-    "classicBody": "\"the magic cave\": Alice repeatedly exits the side a verifier shouts, proving she knows the password without ever saying it. Repeat enough and luck is ruled out.",
-    "sheetLabel": "opaque sheet",
-    "pageLabel": "crowded page"
+    "classicBody": "\"the magic cave\": Alice comes out of whichever side the verifier shouts. A bluffer gets it right half the time, so 20 correct exits in a row is a one-in-a-million fluke."
   },
   "zkIdentity": {
     "heading": "KYC without handing over your identity",
@@ -545,7 +615,8 @@
   "keyPoints": {
     "s7-public": "A public ledger is a permanent record; privacy has to be added on purpose.",
     "s7-zk": "Prove it is true without showing why.",
-    "s7-waldo": "A proof convinces by making cheating impossible, not by showing the secret.",
+    "s7-waldo": "A proof can convince you a secret is known without showing the secret itself.",
+    "s7-envelopes": "Random checks the prover cannot predict turn \"trust me\" into near-certainty, without opening everything.",
     "s7-kyc": "Verify the claim, not the person: the issuer vouches once and the customer reveals only what each service needs.",
     "s7-live": "ZK is a product, not a paper: payments, solvency, identity and compliance proofs are live today.",
     "s7-jobs": "ZK can hide the data or skip the re-checking. A ZK rollup does the second: it is cheap, not private.",

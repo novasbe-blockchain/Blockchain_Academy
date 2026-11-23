@@ -11,6 +11,7 @@
     "s7-public": "Public ≠ Private",
     "s7-zk": "ZK: A Ideia",
     "s7-waldo": "ZK: Onde Está o Wally?",
+    "s7-envelopes": "ZK: 100 Envelopes",
     "s7-kyc": "KYC Without Identity",
     "s7-live": "ZK in Production",
     "s7-jobs": "Dois Trabalhos do ZK",
@@ -134,30 +135,99 @@
     "withCaptionB": "."
   },
   "zkpCave": {
-    "heading": "Onde está o Wally? — ZK de forma visual",
-    "subtitle": "A intuição clássica. Provo que encontrei o Wally numa página enorme e cheia de gente — sem te dizer onde ele está.",
+    "heading": "Onde está o Wally? — a mesma ideia, passo a passo",
+    "subtitle": "Provo que encontrei o Wally numa página cheia de gente sem te mostrar onde ele está. Avança passo a passo.",
+    "sceneLabel": "Uma página cheia de gente, uma grande folha opaca por cima e um pequeno furo na folha",
     "steps": [
       {
+        "pill": "Afirmação",
         "title": "A afirmação",
-        "text": "Digo que encontrei o Wally nesta página enorme e cheia de gente. Não acreditas em mim — e recuso-me a simplesmente apontar, porque isso entrega a minha resposta."
+        "text": "Esta página está cheia de gente. Digo que encontrei o Wally. Não acreditas em mim, e eu não aponto: apontar entrega a minha resposta.",
+        "caption": ""
       },
       {
-        "title": "A prova",
-        "text": "Cubro toda a página com uma folha opaca grande que tem um pequeno furo do tamanho do Wally, alinhado exatamente sobre ele. Vês o Wally através do furo."
+        "pill": "Cobrir",
+        "title": "Cobrir a página",
+        "text": "Ponho uma folha opaca enorme por cima de tudo, muito maior do que a página. Por baixo dela, deslizo a página para um sítio que não consegues ver.",
+        "caption": "Folha opaca, muito maior do que a página"
       },
       {
-        "title": "Ficas convencido",
-        "text": "O Wally está claramente na página — provado. Mas a folha escondeu o resto, por isso continuas sem fazer ideia de ONDE ele está realmente na página."
+        "pill": "Furo",
+        "title": "Abrir um pequeno furo",
+        "text": "Abro na folha um único furo do tamanho do Wally, mesmo por cima dele. Espreitas pelo furo, e lá está ele.",
+        "caption": "Um pequeno furo, e lá está ele"
+      },
+      {
+        "pill": "Conclusão",
+        "title": "O que ficaste a saber",
+        "text": "Ficas convencido: encontrei mesmo o Wally. Mas a página pode estar em qualquer sítio debaixo da folha, por isso não ficaste a saber nada sobre o sítio da página onde ele está. Essa diferença é o \"zero-knowledge\".",
+        "caption": "A página pode estar aqui… ou aqui… ou aqui"
       }
     ],
-    "punchlineLabel": "A conclusão — ",
-    "punchlineA": "acabas totalmente convencido de que o Wally lá está, mas não ficas a saber ",
-    "punchlineStrong": "nada",
-    "punchlineB": " sobre a localização dele. Esse intervalo é o \"zero-knowledge\".",
+    "bubbleProver": "Encontrei o Wally!",
+    "bubbleVerifier": "Prova. Sem apontar.",
+    "verdictFound": "✓ O Wally foi encontrado",
+    "verdictWhere": "Em que sítio da página? Não se sabe",
+    "peek": "👀 Espreitar debaixo da folha",
+    "peekOff": "🙈 Parar de espreitar",
+    "peekNote": "A vista de quem prova. O verificador nunca vê isto.",
+    "stepOf": "Passo {{n}} de {{total}}",
+    "back": "← Anterior",
+    "next": "Passo seguinte →",
+    "restart": "↺ Recomeçar",
+    "notebook": {
+      "label": "O que o verificador sabe",
+      "foundQ": "Encontraram mesmo o Wally?",
+      "foundNo": "Só a palavra deles",
+      "foundYes": "Sim ✓",
+      "whereQ": "Em que sítio da página está?",
+      "whereNo": "Não faz ideia"
+    }
+  },
+  "zkProb": {
+    "heading": "100 envelopes — ter a certeza sem ver tudo",
+    "subtitle": "O Wally mostrou como uma prova pode manter o segredo escondido. Aqui vê-se de onde vem a confiança: verificações ao acaso que quem prova não consegue prever.",
+    "claimLabel": "A afirmação de quem prova",
+    "claim": "\"Cada um destes 100 envelopes fechados tem uma nota de 100 dólares.\"",
+    "modeLabel": "Quem prova é honesto?",
+    "honest": "😇 Prova honesta",
+    "cheat": "😈 Batota: 1 vazio",
+    "gridLabel": "100 envelopes, {{n}} abertos",
+    "bill": "$100",
+    "open1": "Abrir 1 ao acaso",
+    "open10": "Abrir 10",
+    "openAll": "Abrir 99 ao acaso",
+    "reset": "Recomeçar",
+    "tallyLabel": "O caderno do verificador",
+    "openedValue": "{{n}} / 100 abertos",
+    "riskLabel": "Se um envelope estivesse vazio, a probabilidade de as tuas escolhas ao acaso ainda não o terem apanhado",
+    "status": {
+      "idle": "Ainda nada aberto. Só tens a palavra de quem prova.",
+      "progress": "{{n}} abertos, {{n}} × $100. Continua.",
+      "honestDone": "99 abertos, 99 × $100. Um fica fechado, e tens quase a certeza sobre ele sem o abrir.",
+      "caught": "Apanhado à {{n}}.ª escolha: um envelope vazio. Um basta para rejeitar a afirmação.",
+      "escaped": "Desta vez o envelope vazio é o que deixaste fechado. É o caso de 1 em 100: o \"quase\" de \"quase de certeza\"."
+    },
+    "tries": "Batoteiro apanhado em {{caught}} de {{total}} tentativas",
+    "whyLabel": "Porque é que verificar ao acaso convence",
+    "why": [
+      {
+        "t": "Primeiro fecha-se, depois escolhe-se",
+        "d": "Um batoteiro não pode desviar o envelope vazio do teu caminho."
+      },
+      {
+        "t": "Cada verificação reduz as hipóteses",
+        "d": "Após 99 envelopes bons, um batoteiro tinha 1 hipótese em 100 de chegar aqui."
+      },
+      {
+        "t": "Quase certo, nunca absoluto",
+        "d": "Os sistemas reais repetem as verificações até essas hipóteses ficarem muito abaixo de uma em mil milhões."
+      }
+    ],
+    "bridgeLabel": "De volta ao zero-knowledge — ",
+    "bridge": "uma prova ZK junta as duas ideias: verificações ao acaso que um batoteiro não consegue antecipar (os envelopes), respondidas sem revelar mais nada (a folha do Wally). É assim que convence sem divulgação total.",
     "classicLabel": "A versão clássica — ",
-    "classicBody": "\"a gruta mágica\": a Alice sai repetidamente do lado que um verificador grita, provando que conhece a palavra-passe sem nunca a dizer. Repete o suficiente e a sorte fica excluída.",
-    "sheetLabel": "opaque sheet",
-    "pageLabel": "crowded page"
+    "classicBody": "\"a gruta mágica\": a Alice sai pelo lado que o verificador gritar. Quem faz bluff acerta metade das vezes, por isso 20 saídas certas seguidas seriam um acaso de um num milhão."
   },
   "zkIdentity": {
     "heading": "KYC without handing over your identity",
@@ -545,7 +615,8 @@
   "keyPoints": {
     "s7-public": "A public ledger is a permanent record; privacy has to be added on purpose.",
     "s7-zk": "Prove it is true without showing why.",
-    "s7-waldo": "A proof convinces by making cheating impossible, not by showing the secret.",
+    "s7-waldo": "Uma prova pode convencer-te de que um segredo é conhecido sem mostrar o próprio segredo.",
+    "s7-envelopes": "Verificações ao acaso que quem prova não consegue prever transformam o \"confia em mim\" em quase certeza, sem abrir tudo.",
     "s7-kyc": "Verify the claim, not the person: the issuer vouches once and the customer reveals only what each service needs.",
     "s7-live": "ZK is a product, not a paper: payments, solvency, identity and compliance proofs are live today.",
     "s7-jobs": "ZK can hide the data or skip the re-checking. A ZK rollup does the second: it is cheap, not private.",
