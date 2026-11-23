@@ -17,12 +17,35 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "index",
+        "name": "timesRegistered",
         "type": "uint256"
       }
     ],
     "name": "Registered",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "allEntries",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "who",
+        "type": "address[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "ids",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "times",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [],
@@ -69,6 +92,11 @@
         "internalType": "string",
         "name": "id",
         "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "times",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -123,6 +151,25 @@
     "name": "register",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "timesRegistered",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

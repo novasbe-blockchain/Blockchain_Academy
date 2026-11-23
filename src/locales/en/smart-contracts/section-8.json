@@ -7,6 +7,7 @@
   "chapters": {
     "s8-brief": "The 3 Steps",
     "s8-first-tx": "▶ Your First Transaction",
+    "s8-board": "🔎 Registered Hashes",
     "s8-explore": "💬 Explore (optional)"
   },
   "title": {
@@ -71,6 +72,12 @@
       "Testnet only: never real funds, and never type a recovery phrase into a website."
     ]
   },
+  "board": {
+    "kicker": "Check · the class list",
+    "badge": "Read-only · no transaction",
+    "heading": "Registered hashes",
+    "subtitle": "Every wallet that has registered and the hash it holds now, read live from the contract. Type a student number to check that its hash is on the list, and which wallet put it there."
+  },
   "explore": {
     "kicker": "Go further · explore",
     "badge": "Optional · not part of the assignment",
@@ -119,6 +126,7 @@
   },
   "keyPoints": {
     "s8-first-tx": "A transaction is a signed request to change shared state. Once it is included in a block, it is public and it stays.",
+    "s8-board": "Reading a contract's state is free and open to everyone. Only writing to it takes a signature and gas.",
     "s8-explore": "Verified source means you don't have to take a contract's word for it: read the code, then check the state yourself."
   }
 }

@@ -7,6 +7,7 @@
   "chapters": {
     "s8-brief": "Os 3 Passos",
     "s8-first-tx": "▶ Primeira Transação",
+    "s8-board": "🔎 Hashes Registados",
     "s8-explore": "💬 Explorar (opcional)"
   },
   "title": {
@@ -71,6 +72,12 @@
       "Só testnet: nunca fundos reais, e nunca escrevas uma frase de recuperação num site."
     ]
   },
+  "board": {
+    "kicker": "Verificar · a lista da turma",
+    "badge": "Só leitura · sem transação",
+    "heading": "Hashes registados",
+    "subtitle": "Todas as carteiras que já se registaram e o hash que cada uma tem agora, lidos em direto do contrato. Escreve um número de estudante para confirmar que o hash está na lista e que carteira o registou."
+  },
   "explore": {
     "kicker": "Para ir mais longe · explorar",
     "badge": "Opcional · não faz parte do trabalho",
@@ -119,6 +126,7 @@
   },
   "keyPoints": {
     "s8-first-tx": "Uma transação é um pedido assinado para alterar um estado partilhado. Depois de incluída num bloco, é pública e fica lá.",
+    "s8-board": "Ler o estado de um contrato é gratuito e está aberto a todos. Só escrever nele exige uma assinatura e gas.",
     "s8-explore": "Código verificado significa que não tens de acreditar na palavra de um contrato: lê o código e confirma tu o estado."
   }
 }

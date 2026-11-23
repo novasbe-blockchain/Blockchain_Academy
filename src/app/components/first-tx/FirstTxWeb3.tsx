@@ -3,7 +3,8 @@
  *
  * Loaded with React.lazy from FirstTransactionWizard.tsx, so wagmi, viem and RainbowKit
  * (and RainbowKit's stylesheet) are only downloaded when a student opens step 3.
- * All network and contract settings come from ./config.
+ * All network and contract settings come from ./config; the chain, the ABI and the hashing
+ * are shared with the read-only board through ./registry.
  */
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
@@ -20,30 +21,20 @@ import {
   useSwitchChain, useWaitForTransactionReceipt, useWriteContract,
 } from 'wagmi';
 import {
-  BaseError, InsufficientFundsError, UserRejectedRequestError, defineChain, formatEther, keccak256,
-  stringToBytes, type Address, type Hex,
+  BaseError, InsufficientFundsError, UserRejectedRequestError, formatEther, type Address, type Hex,
 } from 'viem';
 import {
   BadgeCheck, Check, Copy, Droplets, Eye, Hash, Info, Loader2, Network, Plug, Send, TriangleAlert,
   Users, Wallet, type LucideIcon,
 } from 'lucide-react';
-import classRegistryAbi from './ClassRegistry.abi.json';
 import {
   CHAIN, CONTRACT_ADDRESS, CONTRACT_READY, HASH_IDENTIFIER, MAX_ID_LENGTH, WALLETCONNECT_PROJECT_ID,
   explorerAddressUrl, explorerTxUrl,
 } from './config';
+import { abi, chain, toPayload } from './registry';
 import { AMBER, GREEN, INDIGO, NS, OutLink, PanelMessage, RED, SKY, VIOLET, shorten, type WizardStatus } from './ui';
 
 // ─── One wagmi setup for the whole page (module scope: created once) ────────
-
-const chain = defineChain({
-  id: CHAIN.id,
-  name: CHAIN.name,
-  nativeCurrency: CHAIN.nativeCurrency,
-  rpcUrls: { default: { http: [...CHAIN.rpcUrls] } },
-  blockExplorers: { default: { name: CHAIN.explorerName, url: CHAIN.explorerUrl } },
-  testnet: true,
-});
 
 const hasWalletConnect = WALLETCONNECT_PROJECT_ID.length > 0;
 
@@ -66,17 +57,9 @@ const wagmiConfig = createConfig({
 
 const queryClient = new QueryClient();
 
-const abi = classRegistryAbi;
 const contract = { address: CONTRACT_ADDRESS as Address, abi, chainId: chain.id } as const;
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
-
-/** What `register` receives: the keccak256 hash of the trimmed text (default), or the text itself. */
-function toPayload(raw: string): string {
-  const text = raw.trim();
-  if (!text) return '';
-  return HASH_IDENTIFIER ? keccak256(stringToBytes(text)) : text;
-}
 
 function formatBalance(value: bigint): string {
   const [whole, fraction = ''] = formatEther(value).split('.');

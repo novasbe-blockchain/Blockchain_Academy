@@ -7,13 +7,14 @@ import { TitleSlide } from '../../components/templates/TitleSlide';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { KeywordText } from '../../components/shared/KeywordText';
 import { FirstTransactionWizard } from '../../components/first-tx/FirstTransactionWizard';
+import { RegistryBoard } from '../../components/first-tx/RegistryBoard';
 import { CHAIN, CONTRACT_ADDRESS, CONTRACT_READY, explorerAddressUrl } from '../../components/first-tx/config';
 import {
   ETHERSCAN_ADDRESS, REAL_CONTRACTS, PRACTICE_CONTRACT, PRACTICE_CODE_LINES, shortAddress,
 } from '../../data/realContracts';
 import {
   Rocket, ClipboardList, Send, Search, Wallet, ArrowDown, ChevronRight, ExternalLink, Check,
-  FileCode2, Eye, ShieldAlert, BadgeCheck, FlaskConical, MessageCircle, TriangleAlert,
+  FileCode2, Eye, ShieldAlert, BadgeCheck, FlaskConical, MessageCircle, TriangleAlert, ListChecks,
 } from 'lucide-react';
 
 const NS = 'smart-contracts/section-8';
@@ -26,6 +27,7 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-do' },
   { id: 's8-first-tx' },
+  { id: 's8-board' },
 
   { kind: 'group' as const, id: 'g-optional' },
   { id: 's8-explore' },
@@ -38,7 +40,7 @@ const GREEN = '#39B54A';
 const AMBER = '#f59e0b';
 const RED = '#ef4444';
 
-// The arc, one stop per slide: the assignment, the wizard that does it, the optional extra.
+// The arc: the assignment, doing it (the wizard, then the board that checks the result), the optional extra.
 // `key` indexes `arc.*` in the locale files.
 const ARC = [
   { key: 'assignment', id: 's8-brief',    Icon: ClipboardList, color: INDIGO },
@@ -237,7 +239,23 @@ function BriefSlide() {
   );
 }
 
-// ─── Slide 3 · OPTIONAL: read real contracts, then poke a live one ───────────
+// ─── Slide 3 · CHECK: every registered hash, read live, plus a student-number lookup ──
+
+function BoardSlide() {
+  const { t } = useTranslation(NS);
+  return (
+    <div className="h-full flex flex-col p-6 lg:p-8">
+      <SlideHeader
+        kicker={t('board.kicker')} heading={t('board.heading')} subtitle={t('board.subtitle')}
+        active={1} color={GREEN} icon={<ListChecks className="size-4" />} badge={t('board.badge')}
+      />
+      <RegistryBoard />
+      <KeyPointBar text={t('keyPoints.s8-board')} className="mt-3" />
+    </div>
+  );
+}
+
+// ─── Slide 4 · OPTIONAL: read real contracts, then poke a live one ───────────
 
 function LinkPill({ href, color, title, children }: { href: string; color: string; title?: string; children: ReactNode }) {
   return (
@@ -423,7 +441,10 @@ export function SC_Section8() {
         {/* ═══════ 2 · DO IT: YOUR FIRST TRANSACTION (the wizard walks all three steps: real wallet, real testnet) ═══════ */}
         <div id="s8-first-tx" className="h-full"><FirstTransactionWizard keyPoint={t('keyPoints.s8-first-tx')} /></div>
 
-        {/* ═══════ 3 · OPTIONAL: READ REAL CONTRACTS, POKE A LIVE ONE (not part of the assignment) ═══════ */}
+        {/* ═══════ 3 · CHECK: THE CLASS LIST, READ LIVE FROM THE CONTRACT (read-only: no wallet, no transaction) ═══════ */}
+        <div id="s8-board" className="h-full"><BoardSlide /></div>
+
+        {/* ═══════ 4 · OPTIONAL: READ REAL CONTRACTS, POKE A LIVE ONE (not part of the assignment) ═══════ */}
         <div id="s8-explore" className="h-full"><ExploreSlide /></div>
 
         </div>
