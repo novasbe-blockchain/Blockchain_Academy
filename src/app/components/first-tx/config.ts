@@ -60,6 +60,23 @@ const DEFAULT_WALLETCONNECT_PROJECT_ID = 'cee4447d3f9a73c710644ec093d843c0';
 
 export const WALLETCONNECT_PROJECT_ID: string = (ENV.VITE_WALLETCONNECT_PROJECT_ID ?? DEFAULT_WALLETCONNECT_PROJECT_ID).trim();
 
+/**
+ * How the site introduces itself to a wallet during a WalletConnect pairing: the name,
+ * address and icon on the wallet's "connect to this site?" screen. `url` must be the address
+ * the site is really served from, because wallets compare the two and warn about a mismatch
+ * (build with VITE_APP_URL=https://… when deploying somewhere else). `icon` is a PNG served
+ * by the site itself (public/app-icon.png), since not every wallet draws SVG icons.
+ */
+const DEFAULT_APP_URL = 'https://blockchainacademy.online';
+const APP_URL = (ENV.VITE_APP_URL ?? DEFAULT_APP_URL).trim().replace(/\/+$/, '');
+
+export const APP_METADATA = {
+  name: 'Blockchain Academy',
+  description: 'Your First Transaction: register on the class contract on the Sepolia testnet.',
+  url: APP_URL,
+  icon: `${APP_URL}/app-icon.png`,
+} as const;
+
 /** The contract refuses identifiers longer than this (see `register` in ClassRegistry.sol). */
 export const MAX_ID_LENGTH = 100;
 

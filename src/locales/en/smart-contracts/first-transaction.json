@@ -109,6 +109,11 @@
     "toFaucets": "Back to the faucets",
     "ready": "Ready. Go to the next step.",
     "noWalletConnect": "QR-code connection is not switched on yet. On a phone, open this page in your wallet's built-in browser.",
+    "relayStalled": "The QR-code connection (WalletConnect) is not answering; some networks block it. On a phone? Open this page inside your wallet app's browser (Rabby, Zerion or MetaMask). On a laptop, use a browser-extension wallet, or try the WalletConnect QR code again.",
+    "walletGroups": {
+      "browser": "In this browser",
+      "phone": "On your phone (QR code)"
+    },
     "needConnect": "Connect your wallet on Sepolia first.",
     "goConnect": "Go to step 3",
     "contractPending": "The class contract is not live yet. Your instructor will switch it on. Everything up to this step already works.",

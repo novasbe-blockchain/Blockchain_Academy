@@ -109,6 +109,11 @@
     "toFaucets": "Voltar às faucets",
     "ready": "Tudo pronto. Avança para o passo seguinte.",
     "noWalletConnect": "A ligação por código QR ainda não está ativa. No telemóvel, abre esta página no browser integrado da tua carteira.",
+    "relayStalled": "A ligação por código QR (WalletConnect) não está a responder; algumas redes bloqueiam-na. No telemóvel? Abre esta página no browser integrado da tua carteira (Rabby, Zerion ou MetaMask). No portátil, usa uma carteira em extensão do browser, ou tenta outra vez o código QR do WalletConnect.",
+    "walletGroups": {
+      "browser": "Neste browser",
+      "phone": "No telemóvel (código QR)"
+    },
     "needConnect": "Primeiro liga a carteira na Sepolia.",
     "goConnect": "Ir para o passo 3",
     "contractPending": "O contrato da turma ainda não está ativo. O docente vai ativá-lo. Tudo até este passo já funciona.",

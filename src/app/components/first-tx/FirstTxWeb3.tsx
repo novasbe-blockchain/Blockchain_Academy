@@ -8,17 +8,16 @@
  */
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import {
   RainbowKitProvider, connectorsForWallets, darkTheme, lightTheme, useAccountModal, useConnectModal,
 } from '@rainbow-me/rainbowkit';
-import {
-  injectedWallet, metaMaskWallet, rabbyWallet, walletConnectWallet, zerionWallet,
-} from '@rainbow-me/rainbowkit/wallets';
+import { injectedWallet, rabbyWallet, walletConnectWallet, zerionWallet } from '@rainbow-me/rainbowkit/wallets';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
-  WagmiProvider, createConfig, fallback, http, useAccount, useBalance, useReadContract,
-  useSwitchChain, useWaitForTransactionReceipt, useWriteContract,
+  WagmiProvider, createConfig, fallback, http, useAccount, useBalance, useConnectors, useReadContract,
+  useSwitchChain, useWaitForTransactionReceipt, useWriteContract, type Connector,
 } from 'wagmi';
 import {
   BaseError, InsufficientFundsError, UserRejectedRequestError, formatEther, type Address, type Hex,
@@ -27,8 +26,9 @@ import {
   BadgeCheck, Check, Copy, Droplets, Eye, Hash, Info, Loader2, Network, Plug, Send, TriangleAlert,
   Users, Wallet, type LucideIcon,
 } from 'lucide-react';
+import i18n from '../../../i18n/config';
 import {
-  CHAIN, CONTRACT_ADDRESS, CONTRACT_READY, HASH_IDENTIFIER, MAX_ID_LENGTH, WALLETCONNECT_PROJECT_ID,
+  APP_METADATA, CHAIN, CONTRACT_ADDRESS, CONTRACT_READY, HASH_IDENTIFIER, MAX_ID_LENGTH, WALLETCONNECT_PROJECT_ID,
   explorerAddressUrl, explorerTxUrl,
 } from './config';
 import { abi, chain, toPayload } from './registry';
@@ -38,15 +38,34 @@ import { AMBER, GREEN, INDIGO, NS, OutLink, PanelMessage, RED, SKY, VIOLET, shor
 
 const hasWalletConnect = WALLETCONNECT_PROJECT_ID.length > 0;
 
+// Group titles are read once, in the language the page had when this file loaded.
+const groupName = (key: string) => i18n.t(`web3.walletGroups.${key}`, { ns: NS });
+
+/**
+ * Two ways in, one group each:
+ *  - a wallet that lives in this browser (an extension on a laptop, or the wallet app's own
+ *    browser on a phone). MetaMask, Zerion and any other installed extension announce
+ *    themselves (EIP-6963) and are listed automatically, so only Rabby is named here.
+ *  - a wallet on a phone, paired through the WalletConnect relay by scanning a QR code.
+ *    Both entries share ONE relay client: RainbowKit reuses the WalletConnect connector for
+ *    every wallet created with the same settings. MetaMask's own entry is left out on
+ *    purpose, because it brings a second SDK with a second relay connection; the MetaMask
+ *    app scans the WalletConnect QR code like any other wallet.
+ * Without a WalletConnect project id only the first group can work, so only that is offered.
+ */
 const connectors = connectorsForWallets(
-  [{
-    groupName: 'Wallets',
-    // Without a WalletConnect project id only injected wallets can work, so only those are offered.
-    wallets: hasWalletConnect
-      ? [rabbyWallet, zerionWallet, metaMaskWallet, walletConnectWallet, injectedWallet]
-      : [rabbyWallet, injectedWallet],
-  }],
-  { appName: 'Blockchain Academy', projectId: WALLETCONNECT_PROJECT_ID || 'not-configured' },
+  [
+    { groupName: groupName('browser'), wallets: [rabbyWallet, injectedWallet] },
+    ...(hasWalletConnect ? [{ groupName: groupName('phone'), wallets: [walletConnectWallet, zerionWallet] }] : []),
+  ],
+  {
+    appName: APP_METADATA.name,
+    appDescription: APP_METADATA.description,
+    // A local dev server gives its own address, so the wallet's domain check does not flag a mismatch.
+    appUrl: import.meta.env.DEV ? window.location.origin : APP_METADATA.url,
+    appIcon: APP_METADATA.icon,
+    projectId: WALLETCONNECT_PROJECT_ID || 'not-configured',
+  },
 );
 
 const wagmiConfig = createConfig({
@@ -77,6 +96,96 @@ function useDarkClass() {
     return () => observer.disconnect();
   }, []);
   return dark;
+}
+
+/** RainbowKit's wallet picker sits at z-index 2147483646; this is one above it. */
+const ABOVE_WALLET_PICKER = 2147483647;
+
+/** How long a WalletConnect pairing may stay silent. A relay that can be reached answers in about a second. */
+const RELAY_PATIENCE_MS = 8_000;
+
+/** The few parts of a WalletConnect client the wizard reaches into: its relay socket and its timer. */
+type RelayClient = {
+  heartbeat?: { stop?: () => void; init?: () => unknown };
+  relayer?: { connected?: boolean; transportClose?: () => Promise<void> };
+};
+type RelayedProvider = { signer?: { client?: { core?: RelayClient } } };
+
+/** Relay clients this page has put to rest, so that the next attempt can wake them. */
+const resting = new Set<RelayClient>();
+
+/**
+ * Stops the WalletConnect clients from redialling a relay they cannot reach. Left alone, a
+ * client keeps the unanswered pairing on its list and opens a new socket every few seconds
+ * for as long as the page stays open, wallet picker closed or not, until the browser refuses
+ * with "Insufficient resources". Closing the socket is not enough: the client's 5-second
+ * heartbeat reopens it. So the heartbeat is paused too, and `wakeRelay` restarts it.
+ * Every step is optional: on a client built differently this does nothing at all.
+ */
+async function restRelay(relayed: readonly Connector[], stillStalled: () => boolean) {
+  const providers = await Promise.all(relayed.map((connector) => connector.getProvider().catch(() => undefined)));
+  if (!stillStalled()) return;
+  for (const provider of new Set(providers)) {
+    const client = (provider as RelayedProvider | undefined)?.signer?.client?.core;
+    const heartbeat = client?.heartbeat;
+    // A client that did get through is left alone, and so is one already at rest.
+    if (!client || !heartbeat?.stop || !heartbeat.init || client.relayer?.connected || resting.has(client)) continue;
+    heartbeat.stop();
+    resting.add(client);
+    void client.relayer?.transportClose?.()?.catch(() => { /* already closed */ });
+  }
+}
+
+function wakeRelay() {
+  for (const client of resting) void client.heartbeat?.init?.();
+  resting.clear();
+}
+
+/**
+ * True while a WalletConnect attempt is going unanswered: the relay has not sent the pairing
+ * link, so there is no QR code to draw. RainbowKit shows nothing at all in that case (a
+ * blocked network just leaves its window idle), so the wizard watches for it, says so, and
+ * stops the client from redialling in the background.
+ */
+function useRelayStalled(): boolean {
+  const connectors = useConnectors();
+  const { isConnected } = useAccount();
+  const [stalled, setStalled] = useState(false);
+  const timer = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    // Every WalletConnect-backed wallet is watched: wallets set up alike share one relay
+    // client, and the pairing link is announced on whichever of them asked first.
+    const relayed = connectors.filter((connector) => connector.type === 'walletConnect');
+    let attempt = 0;
+    const onMessage = ({ type }: { type: string }) => {
+      if (type !== 'connecting' && type !== 'display_uri') return;
+      window.clearTimeout(timer.current);
+      setStalled(false);
+      // 'display_uri' is the relay's answer and closes the attempt; 'connecting' opens one.
+      if (type !== 'connecting') return;
+      wakeRelay();
+      const current = ++attempt;
+      timer.current = window.setTimeout(() => {
+        setStalled(true);
+        void restRelay(relayed, () => current === attempt);
+      }, RELAY_PATIENCE_MS);
+    };
+    for (const connector of relayed) connector.emitter.on('message', onMessage);
+    return () => {
+      window.clearTimeout(timer.current);
+      for (const connector of relayed) connector.emitter.off('message', onMessage);
+    };
+  }, [connectors]);
+
+  // Connected after all (a slow relay, or another wallet): nothing left to warn about.
+  useEffect(() => {
+    if (!isConnected) return;
+    window.clearTimeout(timer.current);
+    setStalled(false);
+  }, [isConnected]);
+
+  return stalled && !isConnected;
 }
 
 type Translate = (key: string, options?: Record<string, unknown>) => string;
@@ -162,7 +271,8 @@ interface PanelsProps {
 
 function Panels({ step, goTo, onStatus }: PanelsProps) {
   const { t } = useTranslation(NS);
-  const { openConnectModal } = useConnectModal();
+  const { openConnectModal, connectModalOpen } = useConnectModal();
+  const relayStalled = useRelayStalled();
   const { openAccountModal } = useAccountModal();
   const { address, isConnected, chainId: walletChainId } = useAccount();
   const onChain = isConnected && walletChainId === chain.id;
@@ -286,8 +396,19 @@ function Panels({ step, goTo, onStatus }: PanelsProps) {
 
         <div className="mt-auto flex flex-col gap-2">
           {onChain && funds !== undefined && funds > 0n && <Notice Icon={BadgeCheck} color={GREEN}>{t('web3.ready')}</Notice>}
+          {relayStalled && <Notice Icon={TriangleAlert} color={AMBER}>{t('web3.relayStalled')}</Notice>}
           {!hasWalletConnect && !isConnected && <Notice Icon={Info} color={SKY}>{t('web3.noWalletConnect')}</Notice>}
         </div>
+
+        {/* The wallet picker covers the page, so while it is open the same notice also floats above it. */}
+        {relayStalled && connectModalOpen && createPortal(
+          <div role="status" className="fixed inset-x-0 top-4 px-4 flex justify-center pointer-events-none" style={{ zIndex: ABOVE_WALLET_PICKER }}>
+            <div className="max-w-md rounded-xl bg-card shadow-xl">
+              <Notice Icon={TriangleAlert} color={AMBER}>{t('web3.relayStalled')}</Notice>
+            </div>
+          </div>,
+          document.body,
+        )}
       </div>
     );
   }
