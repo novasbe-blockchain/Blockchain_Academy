@@ -35,7 +35,7 @@ export const CHAIN = {
  * While it is empty the wizard still renders, but the "Send" step stays locked.
  */
 // TODO: set after deploy — paste the address printed by `npm run contract:deploy`.
-const DEPLOYED_CONTRACT_ADDRESS = '';
+const DEPLOYED_CONTRACT_ADDRESS = '0xc5d9e9baa2bb206d0cc40aa1d02c58a0931d0327';
 
 export const CONTRACT_ADDRESS: string = (ENV.VITE_CLASS_REGISTRY_ADDRESS ?? DEPLOYED_CONTRACT_ADDRESS).trim();
 
@@ -56,7 +56,7 @@ export const HASH_IDENTIFIER: boolean = ENV.VITE_HASH_IDENTIFIER !== 'false';
  * (injected) wallets and wallet in-app browsers can connect.
  */
 // TODO: set a WalletConnect project id (or build with VITE_WALLETCONNECT_PROJECT_ID).
-const DEFAULT_WALLETCONNECT_PROJECT_ID = '';
+const DEFAULT_WALLETCONNECT_PROJECT_ID = 'cee4447d3f9a73c710644ec093d843c0';
 
 export const WALLETCONNECT_PROJECT_ID: string = (ENV.VITE_WALLETCONNECT_PROJECT_ID ?? DEFAULT_WALLETCONNECT_PROJECT_ID).trim();
 

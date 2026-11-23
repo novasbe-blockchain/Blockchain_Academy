@@ -297,6 +297,11 @@ function Panels({ step, goTo, onStatus }: PanelsProps) {
     return (
       <div className="flex-1 min-h-0 flex flex-col gap-2.5">
         {!CONTRACT_READY && <Notice Icon={Info} color={SKY}>{t('web3.contractPending')}</Notice>}
+        {CONTRACT_READY && (
+          <div className="text-xs">
+            <OutLink href={explorerAddressUrl(CONTRACT_ADDRESS)} color={INDIGO}>{t('web3.viewContract')}</OutLink>
+          </div>
+        )}
         {!onChain && (
           <Notice Icon={Plug} color={VIOLET}>
             {t('web3.needConnect')}{' '}
