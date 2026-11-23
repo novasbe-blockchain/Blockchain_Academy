@@ -1,0 +1,181 @@
+{
+  "kicker": "Hands-on · Assignment 3",
+  "badge": "Live on a testnet",
+  "heading": "Your first transaction",
+  "subtitle": "Connect a real wallet and write one line into a contract the whole class shares. Test network, zero real money.",
+  "stepOf": "Step {{n}} of {{total}}",
+  "youDo": "you do",
+  "whyLabel": "Why it matters: ",
+  "back": "Back",
+  "next": "Next step",
+  "opens": "opens in a new tab",
+  "statusLabel": "What you have so far",
+  "status": {
+    "address": "Your address",
+    "network": "Network",
+    "balance": "Test ETH",
+    "tx": "Transaction",
+    "count": "Class count"
+  },
+  "steps": [
+    {
+      "label": "Wallet",
+      "title": "Get a wallet",
+      "actions": [
+        "Install Rabby or Zerion on your phone (or MetaMask), then create an account.",
+        "Write the secret recovery phrase on paper. Never type it into a website, this one included.",
+        "Use a fresh wallet for this course, not one that holds real funds."
+      ],
+      "why": "a [wallet](kw:wallet) is a key pair, not an account at a company. The address is public; the key is what signs."
+    },
+    {
+      "label": "Test ETH",
+      "title": "Get test ETH on Sepolia",
+      "actions": [
+        "Copy your wallet address. It starts with 0x.",
+        "Paste it into a faucet. Start with pk910: no login, it mines test ETH in your browser tab.",
+        "Wait until the balance shows in your wallet. The smallest payout is far more than you need."
+      ],
+      "why": "every [transaction](kw:transaction) pays a fee, called [gas](kw:gas), even on a test network. Test ETH pays it and has no real value."
+    },
+    {
+      "label": "Connect",
+      "title": "Connect and switch to Sepolia",
+      "actions": [
+        "Press Connect wallet and pick your wallet. Phone wallet? Scan the QR code, or open this page in the wallet's built-in browser.",
+        "Approve the connection in the wallet. It shares your public address, nothing else.",
+        "If the wallet is on another network, press Switch to Sepolia."
+      ],
+      "why": "connecting lets this page see your address. It cannot move anything: every action still needs your signature."
+    },
+    {
+      "label": "Register",
+      "title": "Send your transaction",
+      "actions": [
+        "Type your student number.",
+        "Look at the hash under the field: it is the only thing that leaves your browser.",
+        "Press Send and confirm in your wallet. You sign, and you pay gas."
+      ],
+      "why": "you are changing the contract's [state](kw:state). What you write is public and permanent: that is [immutability](kw:immutability), first hand."
+    },
+    {
+      "label": "On-chain",
+      "title": "See it on-chain",
+      "actions": [
+        "Open the transaction on Etherscan: your address, the contract, the gas you paid.",
+        "The class count went up by one. Every node now stores your entry.",
+        "Keep the transaction hash. It is your receipt."
+      ],
+      "why": "nobody approved this, and nobody can undo it. The same five steps, with real ETH, are how mainnet works."
+    }
+  ],
+  "wallets": {
+    "heading": "Pick one",
+    "recommended": "Phone app",
+    "alternative": "Alternative",
+    "rabby": "Clear previews of what each signature will do.",
+    "zerion": "Simple phone wallet with a built-in browser.",
+    "metamask": "The best-known browser extension.",
+    "safety": "The recovery phrase IS the wallet. Whoever has the words controls the funds."
+  },
+  "faucets": {
+    "heading": "Sepolia faucets",
+    "lead": "Start here",
+    "pk910": "Solve a captcha, leave the tab mining, then claim. Start early: reaching the minimum payout takes a while.",
+    "pk910Tag": "No login",
+    "google": "Sign in with a Google account, paste your address and request test ETH.",
+    "googleTag": "Google sign-in",
+    "alchemy": "Only pays wallets that already hold 0.001 real ETH on Ethereum mainnet.",
+    "alchemyTag": "Needs mainnet ETH",
+    "note": "A faucet is a website that gives away small amounts of test ETH. Nothing here costs money."
+  },
+  "web3": {
+    "loading": "Loading wallet tools…",
+    "loadError": "The wallet tools could not load. Check your connection and reload the page.",
+    "wallet": "Wallet",
+    "connect": "Connect wallet",
+    "connected": "Connected",
+    "manage": "Change",
+    "notConnected": "No wallet connected yet.",
+    "network": "Network",
+    "onSepolia": "{{name}} · chain ID {{id}}",
+    "wrongNetwork": "Your wallet is on another network (chain ID {{id}}).",
+    "switch": "Switch to {{name}}",
+    "switching": "Confirm in your wallet…",
+    "switchHint": "Not in your wallet's list? This button adds it for you.",
+    "balance": "Balance",
+    "balanceValue": "{{amount}} test ETH",
+    "noFunds": "No test ETH yet. Without it you cannot pay gas.",
+    "toFaucets": "Back to the faucets",
+    "ready": "Ready. Go to the next step.",
+    "noWalletConnect": "QR-code connection is not switched on yet. On a phone, open this page in your wallet's built-in browser.",
+    "needConnect": "Connect your wallet on Sepolia first.",
+    "goConnect": "Go to step 3",
+    "contractPending": "The class contract is not live yet. Your instructor will switch it on. Everything up to this step already works.",
+    "studentNumber": "Student number",
+    "studentPlaceholder": "e.g. 20231234",
+    "willSend": "What goes on-chain",
+    "hashTag": "keccak256 hash",
+    "rawTag": "plain text",
+    "emptyPreview": "Type your number to see its hash.",
+    "privacy": "Public and permanent. Only the hash is sent, but anyone who already knows your student number can compute the same hash and recognise your entry.",
+    "privacyRaw": "Public and permanent. This text is stored exactly as typed, for everyone to read, forever.",
+    "tooLong": "Too long: the contract accepts at most {{max}} characters.",
+    "alreadyRegistered": "This wallet is already registered. Sending again replaces your entry; the count stays the same, and the contract records that you registered again.",
+    "send": "Send transaction",
+    "confirmInWallet": "Confirm in your wallet…",
+    "mining": "Sent. Waiting for the network to include it…",
+    "reverted": "The network included the transaction, but the contract rejected it.",
+    "errors": {
+      "rejected": "You declined the request in your wallet. Nothing was sent.",
+      "noFunds": "Not enough test ETH to pay gas. Get more from a faucet.",
+      "generic": "It did not go through: {{message}}"
+    },
+    "noTxYet": "No transaction yet. Send one in step 4 and the result appears here.",
+    "goRegister": "Go to step 4",
+    "confirmed": "Confirmed in block {{block}}",
+    "registeredEarlier": "This wallet is already on the class list",
+    "txHash": "Transaction hash",
+    "viewTx": "View on Etherscan",
+    "viewContract": "The contract on Etherscan",
+    "copy": "Copy",
+    "copied": "Copied",
+    "classCount": "Class count",
+    "countChange": "before → after",
+    "countLive": "read live from the contract",
+    "yourEntry": "Your entry",
+    "entryIndex": "No. {{n}} on the list",
+    "stored": "Stored value",
+    "matches": "Matches the hash of the number you typed.",
+    "readBack": "Read back from the contract, not from this page."
+  },
+  "board": {
+    "listTitle": "The class list",
+    "onList": "{{n}} on the list",
+    "readAt": "Read at {{time}}",
+    "refresh": "Refresh",
+    "refreshing": "Reading…",
+    "colNumber": "No.",
+    "colWallet": "Wallet",
+    "colHash": "Stored hash",
+    "colTimes": "Times",
+    "legend": "Newest first. ×2 or more: that wallet registered again and replaced its hash.",
+    "notDeployed": "The class contract is not deployed yet. Once it is live, every registered wallet and its hash are listed here.",
+    "loading": "Reading the list from the contract…",
+    "error": "The contract could not be read. Check your connection, then press Refresh.",
+    "empty": "Nobody has registered yet. Send your transaction in the wizard, then press Refresh.",
+    "lookupTitle": "Check a student number",
+    "lookupHint": "Hashed here in your browser, exactly as in the wizard, then compared with the list.",
+    "hashLabel": "Its hash",
+    "emptyHash": "Type a student number to see its hash.",
+    "lookupNotDeployed": "The class contract is not deployed yet, so there is no list to check against. The value above is what the wizard will send.",
+    "found": "Registered",
+    "foundOne": "This hash is on the list. It was registered by this wallet:",
+    "foundMany": "This hash is on the list. {{n}} wallets registered it:",
+    "timesOnce": "registered once",
+    "timesMany": "registered {{n}} times (the last one counts)",
+    "notFound": "Not found",
+    "notFoundBody": "No wallet on the list holds this hash. Check the number for typos. Just sent the transaction? Press Refresh.",
+    "free": "Reading is free: no wallet, no signature, no gas. The number you type never leaves your browser."
+  }
+}

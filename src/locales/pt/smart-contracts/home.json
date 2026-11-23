@@ -47,8 +47,8 @@
       "description": "As cadeias públicas expõem tudo. As provas zero-knowledge permitem a uma empresa provar o que importa — solvência, elegibilidade, um KYC aprovado — sem revelar mais nada. Inclui a história da Tornado Cash."
     },
     "section8": {
-      "title": "In-class Assignment",
-      "description": "In small groups: pick a real-world problem, discuss it, and submit a one-page report — problem, proposed solution, and the pros & cons of using a blockchain."
+      "title": "Trabalho: a Tua Primeira Transação",
+      "description": "O final prático: envia uma transação real numa testnet que guarda o hash do teu número de estudante no contrato da Academy e verifica-a no Etherscan. Extra opcional: explora contratos ao vivo."
     },
     "conclusion": {
       "title": "Conclusão",

@@ -57,7 +57,7 @@
       "deploy",
       "1 transaction"
     ],
-    "bridge": "Coming up: a hands-on assignment where you prompt an AI for a contract and deploy it to a testnet yourself. These slides are the map.",
+    "bridge": "Coming up in Section 8: a hands-on assignment where you send a real transaction to a contract on a testnet. These slides are the map.",
     "bridgeCta": "Jump to the walkthrough ↓"
   },
   "erc": {
@@ -246,8 +246,8 @@
   },
   "ai": {
     "kicker": "Step 2 · With AI",
-    "heading": "AI-driven development: the AI drafts, you stay the author",
-    "subtitle": "Why it matters: you no longer need to write code to get a working contract, and the assignment asks you to do exactly that. But your wallet signs the deployment, so you have to understand every line.",
+    "heading": "AI-driven development",
+    "subtitle": "Why it matters: an AI assistant can adapt a template, explain a contract and review it in seconds. But your wallet signs the deployment, so you answer for every line: read it, understand it, verify it. Never deploy an AI draft blind.",
     "hint": "Pick a prompt, copy it, paste it into any AI assistant",
     "promptTag": "Prompt {{n}}",
     "goalLabel": "Use it to: ",
@@ -255,80 +255,81 @@
     "copy": "Copy",
     "copied": "Copied",
     "checksLabel": "Before you trust the answer",
+    "attachTemplate": ": the previous slide's template, added when you copy.",
+    "attachReal": "Paste under it: the verified source of a real contract, from its Code tab.",
     "prompts": [
       {
-        "tab": "Draft it",
-        "goal": "get a first version built on the vetted template, with every line explained.",
-        "prompt": "Write a minimal ERC-20 token in Solidity named ClassToken (symbol CLS) with a fixed supply of 1,000,000 tokens, all minted to the deployer. Inherit OpenZeppelin Contracts v5: do not rewrite ERC-20 yourself. No owner, no mint function, no extra features. Add a comment in plain English explaining each line for a non-programmer. Then list the steps to deploy it on the Sepolia testnet with Remix and a phone wallet (Rabby or Zerion).",
+        "tab": "Adapt it",
+        "goal": "adapt the vetted template, so the AI invents nothing of its own.",
+        "prompt": "Below is OpenZeppelin's minimal ERC-20 template. Do not write a new contract. Change only the token name to ClassToken and the symbol to CLS: do not add, remove or rewrite anything else. Show me exactly which lines you changed. Then explain in plain English what every line does, for a non-programmer, and tell me what to type for initialSupply at deployment to get 1,000,000 tokens.",
         "checks": [
-          "It imports OpenZeppelin instead of rewriting ERC-20 by hand.",
-          "It compiles in Remix with no changes.",
-          "You can say in your own words what each line does."
+          "Compare with the template line by line: only the name and the symbol changed.",
+          "For 1,000,000 tokens the answer is 1000000: the template adds the 18 decimals itself.",
+          "You can say in your own words what each line does. Until then, it is not yours."
         ]
       },
       {
         "tab": "Explain it",
-        "goal": "understand a contract you did not write, including one an AI has just handed you.",
-        "prompt": "Explain what this Solidity contract does in plain English, one function at a time. For each function tell me: who is allowed to call it, what it changes, and whether it can create, move or destroy tokens. Is there an owner or admin with special powers?\n\n[paste the contract here]",
+        "goal": "understand a contract you did not write. Practise on a real one.",
+        "prompt": "Explain what this Solidity contract does in plain English, one function at a time. For each function tell me: who is allowed to call it, what it changes, and whether it can create, move or destroy tokens. Is there an owner or admin with special powers? If you are not sure about something, say so instead of guessing.\n\n[paste the contract's source code here]",
         "checks": [
-          "The explanation matches what you asked for in prompt 1.",
-          "No function shows up that you did not ask for.",
+          "Check a claim yourself: call name, decimals or totalSupply on Etherscan's Read Contract tab.",
+          "Every function it mentions exists in the verified source: search the Code tab.",
           "Ask a second AI the same question and compare the answers."
         ]
       },
       {
         "tab": "Check it",
-        "goal": "get a second opinion before you deploy.",
-        "prompt": "Act as a smart-contract security reviewer. Is the contract below safe to deploy on a testnet? List anything risky or unusual: unlimited minting, owner-only powers, external calls, anything that differs from the standard OpenZeppelin ERC-20. For each point say why it matters and how to fix it. If you are not sure about something, say so instead of guessing.\n\n[paste the contract here]",
+        "goal": "get a second opinion on who controls a contract and its risks.",
+        "prompt": "Act as a smart-contract security reviewer. Review the contract below and list anything risky or unusual: unlimited minting, owner-only powers (pause, freeze, upgrade), external calls. For each point, quote the line it comes from and say why it matters. If you are not sure about something, say so instead of guessing.\n\n[paste the contract's source code here]",
         "checks": [
-          "An AI review is a second opinion, not an audit.",
-          "Models miss real bugs and invent fake ones: check each claim against the code.",
-          "Anything that will hold real money needs a professional audit."
+          "An AI review is a second opinion, not an audit: real money needs a professional one.",
+          "Models miss real bugs and invent fake ones: find each claim in the verified source.",
+          "Check a power yourself: on USDC's Read as Proxy tab, call paused or isBlacklisted."
         ]
       }
     ],
+    "real": {
+      "label": "Real contracts · verified on Etherscan",
+      "badge": "Mainnet",
+      "code": "Code",
+      "readProxy": "Read as Proxy",
+      "contracts": {
+        "usdc": {
+          "note": "Circle's stablecoin. This address is a proxy: it holds no logic and forwards each call to an implementation contract. Code opens the implementation, Read as Proxy the main address. The issuer can upgrade, pause and freeze."
+        },
+        "weth": {
+          "note": "Wrapped Ether, in 60 lines: ETH in, ERC-20 token out. No owner, no admin."
+        },
+        "dai": {
+          "note": "MakerDAO's stablecoin, in one file. Only its wards list can mint."
+        }
+      }
+    },
     "toolsLabel": "Where to paste it",
     "tools": [
       {
         "label": "Chat assistants",
-        "desc": "Paste a prompt, get the contract and the explanation. The easiest place to start.",
+        "desc": "paste a prompt, read the answer. The easiest place to start.",
         "tools": "Claude · ChatGPT · Gemini"
       },
       {
         "label": "Coding agents",
-        "desc": "Work inside a code editor: they create the files, compile, and can write and run tests.",
-        "tools": "Cursor · GitHub Copilot · Claude Code"
+        "desc": "inside a code editor, they read your files, compile and run tests.",
+        "tools": "Cursor · Copilot · Claude Code"
       },
       {
         "label": "RemixAI Assistant",
-        "desc": "Built into Remix, where you deploy. It writes a contract from a description, explains a contract, and explains compiler errors.",
-        "tools": "remix.ethereum.org"
+        "desc": "built into Remix, it explains a contract and its compiler errors.",
+        "tools": ""
       },
       {
         "label": "OpenZeppelin Wizard & MCP",
-        "desc": "The Wizard builds a standard contract from tick-boxes, with no AI: a baseline to compare against. The MCP server lets AI agents generate from the same vetted templates.",
-        "tools": "Contracts Wizard · Contracts MCP"
+        "desc": "vetted templates, by tick-box (Wizard) or for coding agents (MCP).",
+        "tools": ""
       }
     ],
-    "loop": [
-      {
-        "label": "Prompt",
-        "desc": "Remix a vetted template"
-      },
-      {
-        "label": "Read",
-        "desc": "Until you can explain it yourself"
-      },
-      {
-        "label": "Test",
-        "desc": "On a testnet: mistakes are free"
-      },
-      {
-        "label": "Audit",
-        "desc": "Human review before real money"
-      }
-    ],
-    "secretWarning": "Never paste a recovery phrase or private key into an AI or a website. Prompts may be stored by the provider."
+    "secretWarning": "Never paste a recovery phrase or private key into an AI or a website."
   },
   "where": {
     "kicker": "Step 3 · Tool & network",
@@ -628,12 +629,13 @@
   },
   "events": {
     "kicker": "After deploy · Integration",
-    "heading": "Event-driven architecture: the contract announces, your app reacts",
-    "subtitle": "Why it matters: a contract cannot send an email, refresh a screen or call your CRM. All it can do is announce that something happened. An event is that announcement, and it is the trigger your off-chain systems wait for.",
-    "hint": "Pick a situation, then send the transaction",
+    "heading": "Event-driven architecture: transaction in, event out, your app reacts",
+    "subtitle": "Why it matters: a contract cannot send an email, refresh a screen or call your CRM. So there are two separate interactions: a user writes to the contract with a transaction, and your off-chain systems react to the event the contract emits.",
+    "hint": "Pick a situation, then press Send",
     "scenarios": {
       "payment": {
         "label": "A customer pays in tokens",
+        "state": "Balances updated: customer −10 MTK, shop +10 MTK",
         "reactions": [
           "Receipt emailed to the customer",
           "Balance refreshes on the dashboard",
@@ -642,6 +644,7 @@
       },
       "delivery": {
         "label": "A delivery is confirmed",
+        "state": "Order #1042 is now recorded as delivered",
         "reactions": [
           "Buyer told that the parcel has arrived",
           "Tracking page switches to \"Delivered\"",
@@ -650,6 +653,7 @@
       },
       "ticket": {
         "label": "An NFT ticket is minted",
+        "state": "Ticket #42 now belongs to the buyer",
         "reactions": [
           "Ticket and QR code emailed to the buyer",
           "\"Seats left\" counter drops by one",
@@ -662,27 +666,56 @@
       "Update a screen",
       "Kick off a workflow"
     ],
+    "write": {
+      "name": "Flow 1 · Write",
+      "what": "a transaction",
+      "tags": [
+        "On-chain",
+        "Costs gas"
+      ]
+    },
+    "react": {
+      "name": "Flow 2 · React",
+      "what": "listen",
+      "tags": [
+        "Off-chain",
+        "Free: no gas",
+        "Reactive"
+      ],
+      "nobody": "Nobody sends anything in this flow",
+      "without": [
+        "No click",
+        "No wallet",
+        "No gas"
+      ],
+      "because": "The app was already listening. It reacts to what Flow 1 wrote: the event comes out of the smart contract, on the blockchain."
+    },
+    "user": "User",
+    "wallet": "Wallet",
+    "walletDesc": "signs, pays the gas",
+    "send": "Send",
+    "again": "Again",
+    "arrowTx": "transaction",
     "onChain": "On-chain",
-    "contractTitle": "Your contract",
-    "send": "Send the transaction",
-    "again": "Run it again",
+    "contractTitle": "Smart contract",
     "contractSteps": {
-      "executed": "Function runs, state is updated",
+      "executed": "Function runs",
       "emitted": "Event emitted"
     },
-    "arrowEmit": "emits",
-    "arrowHear": "hears it",
+    "then": "and then emits",
+    "stateLabel": "State change",
     "eventLabel": "Event",
-    "eventNote": "Written to the transaction's log, where anyone can read it.",
+    "eventNote": "Written to the transaction's log, on the blockchain.",
+    "arrowEvent": "event",
     "offChain": "Off-chain",
     "listening": "listening…",
     "heard": "event received",
-    "appTitle": "Your app reacts",
-    "listenerNote": "the whole listener, in one line (ethers.js)",
+    "appTitle": "Your app",
+    "listenerNote": "one line of ethers.js",
     "facts": [
       {
         "label": "A log entry, not a message",
-        "desc": "The contract does not call anyone. It writes the event to the transaction log, and whoever is listening picks it up."
+        "desc": "The contract calls no one: it writes the event to the transaction's log, paid for by the sender's gas."
       },
       {
         "label": "One-way",
@@ -690,11 +723,9 @@
       },
       {
         "label": "Live or later",
-        "desc": "An app can subscribe through a node and get events as they happen, or search past ones at any time."
+        "desc": "Through a node, an app gets events as they happen, or searches past ones later."
       }
-    ],
-    "fitLabel": "Where it fits: ",
-    "fitBody": "the listener reaches the chain through the same node access as on the previous slide. This is how your existing systems keep in step with the contract without anyone watching a block explorer."
+    ]
   },
   "deeper": {
     "kicker": "If you go further",
@@ -747,18 +778,28 @@
         "tools": "draft → read → test → audit"
       }
     ],
-    "oracleRecap": "Section 02"
+    "oracleRecap": "Section 02",
+    "docs": {
+      "label": "The real docs: bookmark these",
+      "items": {
+        "ozContracts": "The audited library you inherit from.",
+        "ozWizard": "Tick boxes, get a ready contract.",
+        "remix": "Write, compile and deploy in the browser.",
+        "solidity": "The language reference, by its authors.",
+        "ethereumOrg": "The developer portal: docs and tutorials.",
+        "etherscan": "Look up any address or transaction."
+      }
+    }
   },
   "keyPoints": {
     "s6-why": "Shipping a contract is a short, repeatable routine: standard, template, tool, testnet.",
     "s6-erc": "A standard is a promise about your contract's buttons, so tools built by strangers work with it.",
     "s6-eip": "A standard is not decreed. Anyone can propose it, editors check its form, and open review makes it Final.",
     "s6-template": "The safest line of code is the one you did not have to write.",
-    "s6-ai": "AI can write the contract. Only you can answer for it: if you cannot explain a line, do not deploy it.",
     "s6-where": "A testnet is a dress rehearsal: same tools, same steps, nothing at stake.",
     "s6-deploy": "Do these four steps once on a testnet and you know the routine: mainnet is the same, with real money.",
     "s6-hosting": "The host serves the site, an RPC provider reads the chain, the wallet writes to it. The contract itself is already hosted, by the network.",
-    "s6-events": "A contract cannot reach out to your systems. It emits an event, and everything off-chain is a reaction to it.",
+    "s6-events": "A transaction writes on-chain and costs gas. The contract then emits an event, and everything off-chain reacts to it.",
     "s6-deeper": "The contract is the smallest part of the product. Everything around it is ordinary software."
   },
   "takeaways": {
@@ -769,7 +810,7 @@
       "Do not write from scratch: inherit OpenZeppelin's audited contracts and add only your own rules",
       "Rehearse on a testnet such as Sepolia: the same steps as mainnet, paid in free test ETH. You end with a public contract address and a transaction hash anyone can check",
       "Around the contract: a static site for the front end, an RPC provider to read the chain, the user's wallet to sign transactions, and events that tell your other systems what happened",
-      "AI can draft the code. You still read it, test it on a testnet, and have anything that holds real money audited"
+      "AI assists, you stay the author: read, understand and verify what it produces, test it on a testnet, and have anything that holds real money audited"
     ]
   },
   "quizTemplate": {
@@ -791,6 +832,26 @@
       "The tools and steps are the same, but the ETH is free and worthless, so mistakes cost nothing."
     ],
     "explanation": "A public testnet behaves like mainnet and uses the same wallet, tools and steps, but gas is paid in test ETH that has no real value. That makes it the place to make your mistakes. Testnets are public, not private. Nothing moves to mainnet automatically: going live is a separate deployment that you pay for in real ETH. And no rule forces you to use a testnet; it is simply good practice."
+  },
+  "quizWriteRead": {
+    "question": "Your dapp does two things: it shows a customer's token balance, and it lets them send 10 tokens to a shop. Which of the two costs gas?",
+    "options": [
+      "Only sending the tokens: it changes state, so it needs a transaction. Showing the balance is a free read.",
+      "Both: every interaction with a smart contract is a transaction, and every transaction costs gas.",
+      "Only showing the balance: looking data up on the chain is the service the network charges for.",
+      "Neither: on a public blockchain the app's owner pays the network, never the user."
+    ],
+    "explanation": "A write changes the contract's state, so it must be a signed transaction, and that costs gas; a read only asks a node for a value that is already there, so it is free and needs no transaction."
+  },
+  "quizReadFree": {
+    "question": "Why is reading data from a smart contract free, while changing it costs gas?",
+    "options": [
+      "The contract's owner pays for every read in advance; users only pay for the writes.",
+      "One node can answer a read from its own copy of the chain; a write is a transaction that every node must run and record.",
+      "Reads are free only on a testnet: on mainnet a read costs gas just like a write.",
+      "A read is not free: the wallet adds its cost to the user's next transaction."
+    ],
+    "explanation": "A read changes nothing, so a single node answers it from its copy of the state, with no transaction and no gas; a write must be signed, included in a block and executed by every node, and gas pays for that work."
   },
   "quiz": {
     "question": "Your team is building a tokenized real-estate platform. You need: (a) standard ERC-20 and ERC-721 tokens, (b) low fees, because rent is distributed often, (c) to reuse audited OpenZeppelin contracts. Which platform fits BEST?",

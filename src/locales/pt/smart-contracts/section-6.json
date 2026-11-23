@@ -57,7 +57,7 @@
       "deploy",
       "1 transação"
     ],
-    "bridge": "A seguir: um trabalho prático em que pedes um contrato a uma IA e fazes tu mesmo o deploy numa testnet. Estes slides são o mapa.",
+    "bridge": "A seguir, na Secção 8: um trabalho prático em que envias uma transação real para um contrato numa testnet. Estes slides são o mapa.",
     "bridgeCta": "Saltar para o passo a passo ↓"
   },
   "erc": {
@@ -246,89 +246,90 @@
   },
   "ai": {
     "kicker": "Passo 2 · Com IA",
-    "heading": "Desenvolvimento com IA: a IA redige, o autor és tu",
-    "subtitle": "Porque importa: já não precisas de escrever código para teres um contrato funcional, e o trabalho prático pede exatamente isso. Mas é a tua carteira que assina o deploy, por isso tens de perceber cada linha.",
-    "hint": "Escolhe um prompt, copia-o e cola-o em qualquer assistente de IA",
+    "heading": "Desenvolvimento com IA",
+    "subtitle": "Porque importa: um assistente de IA adapta um template, explica um contrato e revê-o em segundos. Mas é a tua carteira que assina o deploy, por isso respondes por cada linha: lê, percebe, verifica. Nunca faças deploy de um rascunho de IA às cegas.",
+    "hint": "Escolhe um prompt, copia-o e cola-o num assistente de IA",
     "promptTag": "Prompt {{n}}",
     "goalLabel": "Serve para: ",
     "pasteLabel": "Cola isto",
     "copy": "Copiar",
     "copied": "Copiado",
     "checksLabel": "Antes de confiares na resposta",
+    "attachTemplate": ": o template do slide anterior, acrescentado quando copias.",
+    "attachReal": "Cola por baixo: o código verificado de um contrato real, do separador Code.",
     "prompts": [
       {
-        "tab": "Redigir",
-        "goal": "obter uma primeira versão construída sobre o template validado, com cada linha explicada.",
-        "prompt": "Escreve um token ERC-20 mínimo em Solidity chamado ClassToken (símbolo CLS), com um fornecimento fixo de 1 000 000 de tokens, todos emitidos para quem faz o deploy. Herda dos OpenZeppelin Contracts v5: não reescrevas o ERC-20. Sem owner, sem função de mint, sem funcionalidades extra. Acrescenta um comentário em português simples a explicar cada linha a alguém que não programa. Depois, lista os passos para fazer o deploy na testnet Sepolia com o Remix e uma carteira no telemóvel (Rabby ou Zerion).",
+        "tab": "Adaptar",
+        "goal": "adaptar o template validado, sem a IA inventar nada de seu.",
+        "prompt": "Segue abaixo o template ERC-20 mínimo da OpenZeppelin. Não escrevas um contrato novo. Altera apenas o nome do token para ClassToken e o símbolo para CLS: não acrescentes, removas nem reescrevas mais nada. Mostra-me exatamente que linhas alteraste. Depois explica em português simples o que cada linha faz, para alguém que não programa, e diz-me o que escrever em initialSupply no deploy para obter 1 000 000 de tokens.",
         "checks": [
-          "Importa a OpenZeppelin em vez de reescrever o ERC-20 à mão.",
-          "Compila no Remix sem alterações.",
-          "Consegues dizer por palavras tuas o que cada linha faz."
+          "Compara com o template linha a linha: só mudaram o nome e o símbolo.",
+          "Para 1 000 000 de tokens a resposta é 1000000: o template junta as 18 casas decimais.",
+          "Consegues dizer por palavras tuas o que cada linha faz. Até lá, não é teu."
         ]
       },
       {
         "tab": "Explicar",
-        "goal": "perceber um contrato que não escreveste, incluindo um que uma IA te acabou de entregar.",
-        "prompt": "Explica em português simples o que este contrato Solidity faz, uma função de cada vez. Para cada função, diz-me: quem a pode chamar, o que ela altera, e se pode criar, mover ou destruir tokens. Existe algum owner ou administrador com poderes especiais?\n\n[cola aqui o contrato]",
+        "goal": "perceber um contrato que não escreveste. Treina com um real.",
+        "prompt": "Explica em português simples o que este contrato Solidity faz, uma função de cada vez. Para cada função, diz-me: quem a pode chamar, o que ela altera, e se pode criar, mover ou destruir tokens. Existe algum owner ou administrador com poderes especiais? Se não tiveres a certeza de algo, di-lo em vez de adivinhares.\n\n[cola aqui o código-fonte do contrato]",
         "checks": [
-          "A explicação corresponde ao que pediste no prompt 1.",
-          "Não aparece nenhuma função que não tenhas pedido.",
+          "Confirma tu uma afirmação: chama name, decimals ou totalSupply no separador Read Contract do Etherscan.",
+          "As funções que ela refere existem no código verificado: procura no separador Code.",
           "Faz a mesma pergunta a uma segunda IA e compara as respostas."
         ]
       },
       {
         "tab": "Verificar",
-        "goal": "obter uma segunda opinião antes do deploy.",
-        "prompt": "Age como revisor de segurança de smart contracts. O contrato abaixo é seguro para fazer deploy numa testnet? Lista tudo o que seja arriscado ou invulgar: mint ilimitado, poderes exclusivos do owner, chamadas externas, qualquer diferença face ao ERC-20 standard da OpenZeppelin. Para cada ponto, explica porque importa e como corrigir. Se não tiveres a certeza de algo, di-lo em vez de adivinhares.\n\n[cola aqui o contrato]",
+        "goal": "ter uma segunda opinião sobre quem controla o contrato e os riscos.",
+        "prompt": "Age como revisor de segurança de smart contracts. Revê o contrato abaixo e lista tudo o que seja arriscado ou invulgar: mint ilimitado, poderes exclusivos do owner (pausar, congelar, atualizar), chamadas externas. Para cada ponto, cita a linha de onde vem e explica porque importa. Se não tiveres a certeza de algo, di-lo em vez de adivinhares.\n\n[cola aqui o código-fonte do contrato]",
         "checks": [
-          "Uma revisão por IA é uma segunda opinião, não uma auditoria.",
-          "Os modelos deixam passar bugs reais e inventam bugs falsos: confirma cada afirmação no código.",
-          "Tudo o que vá guardar dinheiro real precisa de uma auditoria profissional."
+          "Uma revisão por IA é uma segunda opinião, não uma auditoria: dinheiro real exige uma.",
+          "Os modelos falham bugs reais e inventam falsos: confirma cada afirmação no código.",
+          "Confirma um poder: no Read as Proxy do USDC, chama paused ou isBlacklisted."
         ]
       }
     ],
+    "real": {
+      "label": "Contratos reais · verificados no Etherscan",
+      "badge": "Mainnet",
+      "code": "Code",
+      "readProxy": "Read as Proxy",
+      "contracts": {
+        "usdc": {
+          "note": "Stablecoin da Circle. Este endereço é um proxy: não tem lógica e reencaminha cada chamada para um contrato de implementação. Code abre a implementação, Read as Proxy o endereço principal. O emissor pode atualizar, pausar e congelar."
+        },
+        "weth": {
+          "note": "Wrapped Ether, em 60 linhas: entra ETH, sai um token ERC-20. Sem owner."
+        },
+        "dai": {
+          "note": "Stablecoin da MakerDAO, num só ficheiro. Só a lista wards faz mint."
+        }
+      }
+    },
     "toolsLabel": "Onde o colar",
     "tools": [
       {
         "label": "Assistentes de chat",
-        "desc": "Colas um prompt, recebes o contrato e a explicação. O sítio mais fácil para começar.",
+        "desc": "colas um prompt, lês a resposta. O sítio mais fácil para começar.",
         "tools": "Claude · ChatGPT · Gemini"
       },
       {
         "label": "Agentes de programação",
-        "desc": "Trabalham dentro de um editor de código: criam os ficheiros, compilam e conseguem escrever e correr testes.",
-        "tools": "Cursor · GitHub Copilot · Claude Code"
+        "desc": "num editor de código, leem os teus ficheiros, compilam e correm testes.",
+        "tools": "Cursor · Copilot · Claude Code"
       },
       {
         "label": "RemixAI Assistant",
-        "desc": "Integrado no Remix, onde fazes o deploy. Escreve um contrato a partir de uma descrição, explica um contrato e explica erros do compilador.",
-        "tools": "remix.ethereum.org"
+        "desc": "integrado no Remix, explica um contrato e os erros do compilador.",
+        "tools": ""
       },
       {
         "label": "OpenZeppelin Wizard & MCP",
-        "desc": "O Wizard monta um contrato standard com caixas de seleção, sem IA: uma referência para comparar. O servidor MCP permite aos agentes de IA gerar a partir dos mesmos templates validados.",
-        "tools": "Contracts Wizard · Contracts MCP"
+        "desc": "templates validados, por caixas de seleção (Wizard) ou para agentes de programação (MCP).",
+        "tools": ""
       }
     ],
-    "loop": [
-      {
-        "label": "Pedir",
-        "desc": "Adapta um template validado"
-      },
-      {
-        "label": "Ler",
-        "desc": "Até conseguires explicar tu"
-      },
-      {
-        "label": "Testar",
-        "desc": "Numa testnet: errar é grátis"
-      },
-      {
-        "label": "Auditar",
-        "desc": "Antes de haver dinheiro real"
-      }
-    ],
-    "secretWarning": "Nunca coles uma frase de recuperação ou uma chave privada numa IA ou num site. Os prompts podem ficar guardados pelo fornecedor."
+    "secretWarning": "Nunca coles a frase de recuperação ou a chave privada numa IA."
   },
   "where": {
     "kicker": "Passo 3 · Ferramenta & rede",
@@ -628,12 +629,13 @@
   },
   "events": {
     "kicker": "Depois do deploy · Integração",
-    "heading": "Arquitetura orientada a eventos: o contrato anuncia, a tua app reage",
-    "subtitle": "Porque importa: um contrato não consegue enviar um email, atualizar um ecrã nem chamar o teu CRM. Só consegue anunciar que algo aconteceu. Um evento é esse anúncio, e é o gatilho de que os teus sistemas off-chain estão à espera.",
-    "hint": "Escolhe uma situação e depois envia a transação",
+    "heading": "Arquitetura orientada a eventos: transação entra, evento sai, a app reage",
+    "subtitle": "Porque importa: um contrato não consegue enviar um email, atualizar um ecrã nem chamar o teu CRM. Por isso há duas interações distintas: um utilizador escreve no contrato com uma transação, e os teus sistemas off-chain reagem ao evento que o contrato emite.",
+    "hint": "Escolhe uma situação e carrega em Enviar",
     "scenarios": {
       "payment": {
         "label": "Um cliente paga em tokens",
+        "state": "Saldos atualizados: cliente −10 MTK, loja +10 MTK",
         "reactions": [
           "Recibo enviado por email ao cliente",
           "O saldo atualiza-se no dashboard",
@@ -642,6 +644,7 @@
       },
       "delivery": {
         "label": "Uma entrega é confirmada",
+        "state": "A encomenda #1042 fica registada como entregue",
         "reactions": [
           "Comprador avisado de que a encomenda chegou",
           "A página de seguimento passa a \"Entregue\"",
@@ -650,6 +653,7 @@
       },
       "ticket": {
         "label": "Um bilhete NFT é emitido",
+        "state": "O bilhete #42 passa a pertencer ao comprador",
         "reactions": [
           "Bilhete e código QR enviados por email ao comprador",
           "O contador de \"lugares livres\" desce um",
@@ -662,39 +666,66 @@
       "Atualizar um ecrã",
       "Arrancar um fluxo de trabalho"
     ],
+    "write": {
+      "name": "Fluxo 1 · Escrever",
+      "what": "uma transação",
+      "tags": [
+        "On-chain",
+        "Custa gas"
+      ]
+    },
+    "react": {
+      "name": "Fluxo 2 · Reagir",
+      "what": "escutar",
+      "tags": [
+        "Off-chain",
+        "Grátis: sem gas",
+        "Reativo"
+      ],
+      "nobody": "Neste fluxo ninguém envia nada",
+      "without": [
+        "Sem clique",
+        "Sem carteira",
+        "Sem gas"
+      ],
+      "because": "A app já estava à escuta. Reage ao que o Fluxo 1 escreveu: o evento sai do smart contract, na blockchain."
+    },
+    "user": "Utilizador",
+    "wallet": "Carteira",
+    "walletDesc": "assina, paga o gas",
+    "send": "Enviar",
+    "again": "Repetir",
+    "arrowTx": "transação",
     "onChain": "On-chain",
-    "contractTitle": "O teu contrato",
-    "send": "Enviar a transação",
-    "again": "Correr outra vez",
+    "contractTitle": "Smart contract",
     "contractSteps": {
-      "executed": "A função corre, o estado é atualizado",
+      "executed": "A função corre",
       "emitted": "Evento emitido"
     },
-    "arrowEmit": "emite",
-    "arrowHear": "escuta",
+    "then": "e depois emite",
+    "stateLabel": "Alteração de estado",
     "eventLabel": "Evento",
-    "eventNote": "Escrito no log da transação, onde qualquer pessoa o pode ler.",
+    "eventNote": "Escrito no log da transação, na blockchain.",
+    "arrowEvent": "evento",
     "offChain": "Off-chain",
     "listening": "à escuta…",
     "heard": "evento recebido",
-    "appTitle": "A tua app reage",
-    "listenerNote": "o listener inteiro, numa linha (ethers.js)",
+    "appTitle": "A tua app",
+    "listenerNote": "uma linha de ethers.js",
     "facts": [
       {
         "label": "Um registo, não uma mensagem",
-        "desc": "O contrato não chama ninguém. Escreve o evento no log da transação, e quem estiver à escuta apanha-o."
+        "desc": "O contrato não chama ninguém: escreve o evento no log da transação, pago pelo gas de quem a enviou."
       },
       {
         "label": "Sentido único",
-        "desc": "Os contratos não conseguem ler eventos, nem sequer os seus. Os eventos existem para o mundo exterior."
+        "desc": "Os contratos não conseguem ler eventos, nem os seus. Os eventos existem para o mundo exterior."
       },
       {
         "label": "Em direto ou mais tarde",
-        "desc": "Uma app pode subscrever através de um nó e receber os eventos à medida que acontecem, ou pesquisar os antigos em qualquer altura."
+        "desc": "Através de um nó, a app recebe os eventos em direto, ou pesquisa os antigos mais tarde."
       }
-    ],
-    "fitLabel": "Onde encaixa: ",
-    "fitBody": "o listener chega à chain pelo mesmo acesso a um nó do slide anterior. É assim que os teus sistemas existentes acompanham o contrato sem ninguém a vigiar um block explorer."
+    ]
   },
   "deeper": {
     "kicker": "Se fores mais longe",
@@ -747,18 +778,28 @@
         "tools": "rascunho → ler → testar → auditar"
       }
     ],
-    "oracleRecap": "Secção 02"
+    "oracleRecap": "Secção 02",
+    "docs": {
+      "label": "A documentação oficial: guarda estes links",
+      "items": {
+        "ozContracts": "A biblioteca auditada que herdas.",
+        "ozWizard": "Marcas opções, recebes um contrato pronto.",
+        "remix": "Escrever, compilar e fazer deploy no browser.",
+        "solidity": "A referência da linguagem, pelos seus autores.",
+        "ethereumOrg": "O portal para programadores: documentação e tutoriais.",
+        "etherscan": "Consulta qualquer endereço ou transação."
+      }
+    }
   },
   "keyPoints": {
     "s6-why": "Shipping a contract is a short, repeatable routine: standard, template, tool, testnet.",
     "s6-erc": "A standard is a promise about your contract's buttons, so tools built by strangers work with it.",
     "s6-eip": "A standard is not decreed. Anyone can propose it, editors check its form, and open review makes it Final.",
     "s6-template": "The safest line of code is the one you did not have to write.",
-    "s6-ai": "AI can write the contract. Only you can answer for it: if you cannot explain a line, do not deploy it.",
     "s6-where": "A testnet is a dress rehearsal: same tools, same steps, nothing at stake.",
     "s6-deploy": "Do these four steps once on a testnet and you know the routine: mainnet is the same, with real money.",
     "s6-hosting": "The host serves the site, an RPC provider reads the chain, the wallet writes to it. The contract itself is already hosted, by the network.",
-    "s6-events": "A contract cannot reach out to your systems. It emits an event, and everything off-chain is a reaction to it.",
+    "s6-events": "A transaction writes on-chain and costs gas. The contract then emits an event, and everything off-chain reacts to it.",
     "s6-deeper": "The contract is the smallest part of the product. Everything around it is ordinary software."
   },
   "takeaways": {
@@ -769,7 +810,7 @@
       "Não escrevas de raiz: herda os contratos auditados da OpenZeppelin e acrescenta apenas as tuas regras",
       "Ensaia numa testnet como a Sepolia: os mesmos passos da mainnet, com ETH de teste gratuito. No fim tens um endereço de contrato e um hash de transação que qualquer pessoa pode verificar",
       "À volta do contrato: um site estático para o front-end, um fornecedor de RPC para ler a chain, a carteira do utilizador para assinar transações, e eventos que avisam os teus outros sistemas do que aconteceu",
-      "A IA pode redigir o código. Continuas a ter de o ler, de o testar numa testnet e de mandar auditar tudo o que guarde dinheiro real"
+      "A IA ajuda, o autor és tu: lê, percebe e verifica o que ela produz, testa numa testnet e manda auditar tudo o que guarde dinheiro real"
     ]
   },
   "quizTemplate": {
@@ -791,6 +832,26 @@
       "As ferramentas e os passos são os mesmos, mas o ETH é gratuito e não vale nada, por isso os erros não custam nada."
     ],
     "explanation": "Uma testnet pública comporta-se como a mainnet e usa a mesma carteira, as mesmas ferramentas e os mesmos passos, mas o gas é pago em ETH de teste, que não tem valor real. É, por isso, o sítio certo para cometer erros. As testnets são públicas, não privadas. Nada passa para a mainnet automaticamente: ir para produção é um deploy separado, pago em ETH real. E nenhuma regra obriga a usar uma testnet; é simplesmente boa prática."
+  },
+  "quizWriteRead": {
+    "question": "A tua dapp faz duas coisas: mostra o saldo de tokens de um cliente e deixa-o enviar 10 tokens a uma loja. Qual das duas custa gas?",
+    "options": [
+      "Só enviar os tokens: altera o estado, por isso exige uma transação. Mostrar o saldo é uma leitura gratuita.",
+      "Ambas: qualquer interação com um smart contract é uma transação, e todas as transações custam gas.",
+      "Só mostrar o saldo: consultar dados na chain é o serviço que a rede cobra.",
+      "Nenhuma: numa blockchain pública é o dono da app que paga à rede, nunca o utilizador."
+    ],
+    "explanation": "Uma escrita altera o estado do contrato, por isso tem de ser uma transação assinada, e isso custa gas; uma leitura apenas pergunta a um nó um valor que já lá está, por isso é gratuita e não precisa de transação."
+  },
+  "quizReadFree": {
+    "question": "Porque é que ler dados de um smart contract é gratuito, enquanto alterá-los custa gas?",
+    "options": [
+      "O dono do contrato paga antecipadamente todas as leituras; os utilizadores só pagam as escritas.",
+      "Um único nó responde a uma leitura a partir da sua cópia da chain; uma escrita é uma transação que todos os nós têm de executar e registar.",
+      "As leituras só são gratuitas numa testnet: na mainnet, uma leitura custa gas tal como uma escrita.",
+      "Uma leitura não é gratuita: a carteira soma o seu custo à próxima transação do utilizador."
+    ],
+    "explanation": "Uma leitura não altera nada, por isso um único nó responde a partir da sua cópia do estado, sem transação e sem gas; uma escrita tem de ser assinada, incluída num bloco e executada por todos os nós, e o gas paga esse trabalho."
   },
   "quiz": {
     "question": "A tua equipa está a construir uma plataforma de imobiliário tokenizado. Precisas de: (a) tokens standard ERC-20 e ERC-721, (b) taxas baixas, porque as rendas são distribuídas com frequência, (c) reutilizar contratos auditados da OpenZeppelin. Que plataforma encaixa MELHOR?",

@@ -1,0 +1,181 @@
+{
+  "kicker": "Prática · Trabalho 3",
+  "badge": "Ao vivo numa testnet",
+  "heading": "A tua primeira transação",
+  "subtitle": "Liga uma carteira a sério e escreve uma linha num contrato partilhado por toda a turma. Rede de testes, zero dinheiro real.",
+  "stepOf": "Passo {{n}} de {{total}}",
+  "youDo": "o que fazes",
+  "whyLabel": "Porque importa: ",
+  "back": "Anterior",
+  "next": "Passo seguinte",
+  "opens": "abre num novo separador",
+  "statusLabel": "O que já tens",
+  "status": {
+    "address": "O teu endereço",
+    "network": "Rede",
+    "balance": "ETH de teste",
+    "tx": "Transação",
+    "count": "Contagem da turma"
+  },
+  "steps": [
+    {
+      "label": "Carteira",
+      "title": "Arranja uma carteira",
+      "actions": [
+        "Instala a Rabby ou a Zerion no telemóvel (ou a MetaMask) e cria uma conta.",
+        "Escreve a frase de recuperação secreta em papel. Nunca a escrevas num site, nem neste.",
+        "Usa uma carteira nova para esta cadeira, não uma que guarde fundos reais."
+      ],
+      "why": "uma [carteira](kw:wallet) é um par de chaves, não uma conta numa empresa. O endereço é público; a chave é o que assina."
+    },
+    {
+      "label": "ETH de teste",
+      "title": "Obtém ETH de teste na Sepolia",
+      "actions": [
+        "Copia o endereço da tua carteira. Começa por 0x.",
+        "Cola-o numa faucet. Começa pela pk910: sem login, minera ETH de teste no separador do browser.",
+        "Espera que o saldo apareça na carteira. O pagamento mínimo é muito mais do que precisas."
+      ],
+      "why": "cada [transação](kw:transaction) paga uma taxa, o [gas](kw:gas), mesmo numa rede de testes. O ETH de teste paga-a e não tem valor real."
+    },
+    {
+      "label": "Ligar",
+      "title": "Liga a carteira e muda para a Sepolia",
+      "actions": [
+        "Carrega em Ligar carteira e escolhe a tua. Carteira no telemóvel? Lê o código QR, ou abre esta página no browser integrado da carteira.",
+        "Aprova a ligação na carteira. Partilha o teu endereço público, mais nada.",
+        "Se a carteira estiver noutra rede, carrega em Mudar para Sepolia."
+      ],
+      "why": "ligar permite a esta página ver o teu endereço. Não pode mexer em nada: cada ação continua a precisar da tua assinatura."
+    },
+    {
+      "label": "Registar",
+      "title": "Envia a tua transação",
+      "actions": [
+        "Escreve o teu número de estudante.",
+        "Repara no hash por baixo do campo: é a única coisa que sai do teu browser.",
+        "Carrega em Enviar e confirma na carteira. Assinas e pagas gas."
+      ],
+      "why": "estás a alterar o [estado](kw:state) do contrato. O que escreves é público e permanente: é a [imutabilidade](kw:immutability), em primeira mão."
+    },
+    {
+      "label": "On-chain",
+      "title": "Vê o resultado on-chain",
+      "actions": [
+        "Abre a transação no Etherscan: o teu endereço, o contrato, o gas que pagaste.",
+        "A contagem da turma subiu um. Todos os nós guardam agora a tua entrada.",
+        "Guarda o hash da transação. É o teu recibo."
+      ],
+      "why": "ninguém aprovou isto, e ninguém o pode desfazer. Os mesmos cinco passos, com ETH real, são como funciona a mainnet."
+    }
+  ],
+  "wallets": {
+    "heading": "Escolhe uma",
+    "recommended": "App de telemóvel",
+    "alternative": "Alternativa",
+    "rabby": "Mostra com clareza o que cada assinatura vai fazer.",
+    "zerion": "Carteira simples para telemóvel, com browser integrado.",
+    "metamask": "A extensão de browser mais conhecida.",
+    "safety": "A frase de recuperação É a carteira. Quem tiver as palavras controla os fundos."
+  },
+  "faucets": {
+    "heading": "Faucets da Sepolia",
+    "lead": "Começa aqui",
+    "pk910": "Resolve um captcha, deixa o separador a minerar e depois levanta. Começa cedo: chegar ao pagamento mínimo demora algum tempo.",
+    "pk910Tag": "Sem login",
+    "google": "Entra com uma conta Google, cola o teu endereço e pede ETH de teste.",
+    "googleTag": "Login Google",
+    "alchemy": "Só paga a carteiras que já tenham 0,001 ETH real na mainnet da Ethereum.",
+    "alchemyTag": "Exige ETH na mainnet",
+    "note": "Uma faucet é um site que oferece pequenas quantidades de ETH de teste. Nada aqui custa dinheiro."
+  },
+  "web3": {
+    "loading": "A carregar as ferramentas da carteira…",
+    "loadError": "Não foi possível carregar as ferramentas da carteira. Verifica a ligação e recarrega a página.",
+    "wallet": "Carteira",
+    "connect": "Ligar carteira",
+    "connected": "Ligada",
+    "manage": "Alterar",
+    "notConnected": "Ainda não há nenhuma carteira ligada.",
+    "network": "Rede",
+    "onSepolia": "{{name}} · chain ID {{id}}",
+    "wrongNetwork": "A tua carteira está noutra rede (chain ID {{id}}).",
+    "switch": "Mudar para {{name}}",
+    "switching": "Confirma na carteira…",
+    "switchHint": "Não aparece na lista da carteira? Este botão adiciona-a por ti.",
+    "balance": "Saldo",
+    "balanceValue": "{{amount}} ETH de teste",
+    "noFunds": "Ainda sem ETH de teste. Sem ele não consegues pagar gas.",
+    "toFaucets": "Voltar às faucets",
+    "ready": "Tudo pronto. Avança para o passo seguinte.",
+    "noWalletConnect": "A ligação por código QR ainda não está ativa. No telemóvel, abre esta página no browser integrado da tua carteira.",
+    "needConnect": "Primeiro liga a carteira na Sepolia.",
+    "goConnect": "Ir para o passo 3",
+    "contractPending": "O contrato da turma ainda não está ativo. O docente vai ativá-lo. Tudo até este passo já funciona.",
+    "studentNumber": "Número de estudante",
+    "studentPlaceholder": "ex.: 20231234",
+    "willSend": "O que vai para a blockchain",
+    "hashTag": "hash keccak256",
+    "rawTag": "texto simples",
+    "emptyPreview": "Escreve o teu número para veres o hash.",
+    "privacy": "Público e permanente. Só o hash é enviado, mas quem já souber o teu número de estudante consegue calcular o mesmo hash e reconhecer a tua entrada.",
+    "privacyRaw": "Público e permanente. Este texto fica guardado tal como o escreveste, à vista de todos, para sempre.",
+    "tooLong": "Demasiado longo: o contrato aceita no máximo {{max}} caracteres.",
+    "alreadyRegistered": "Esta carteira já está registada. Enviar de novo substitui a tua entrada; a contagem não muda, e o contrato regista que te registaste outra vez.",
+    "send": "Enviar transação",
+    "confirmInWallet": "Confirma na carteira…",
+    "mining": "Enviada. À espera que a rede a inclua…",
+    "reverted": "A rede incluiu a transação, mas o contrato rejeitou-a.",
+    "errors": {
+      "rejected": "Recusaste o pedido na carteira. Nada foi enviado.",
+      "noFunds": "ETH de teste insuficiente para pagar gas. Pede mais numa faucet.",
+      "generic": "Não foi possível concluir: {{message}}"
+    },
+    "noTxYet": "Ainda não há transação. Envia uma no passo 4 e o resultado aparece aqui.",
+    "goRegister": "Ir para o passo 4",
+    "confirmed": "Confirmada no bloco {{block}}",
+    "registeredEarlier": "Esta carteira já está na lista da turma",
+    "txHash": "Hash da transação",
+    "viewTx": "Ver no Etherscan",
+    "viewContract": "O contrato no Etherscan",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "classCount": "Contagem da turma",
+    "countChange": "antes → depois",
+    "countLive": "lida em direto do contrato",
+    "yourEntry": "A tua entrada",
+    "entryIndex": "N.º {{n}} da lista",
+    "stored": "Valor guardado",
+    "matches": "Coincide com o hash do número que escreveste.",
+    "readBack": "Lido de volta do contrato, não desta página."
+  },
+  "board": {
+    "listTitle": "A lista da turma",
+    "onList": "{{n}} na lista",
+    "readAt": "Lida às {{time}}",
+    "refresh": "Atualizar",
+    "refreshing": "A ler…",
+    "colNumber": "N.º",
+    "colWallet": "Carteira",
+    "colHash": "Hash guardado",
+    "colTimes": "Vezes",
+    "legend": "As mais recentes primeiro. ×2 ou mais: essa carteira registou-se de novo e substituiu o hash.",
+    "notDeployed": "O contrato da turma ainda não foi publicado. Quando estiver ativo, todas as carteiras registadas e os respetivos hashes aparecem aqui.",
+    "loading": "A ler a lista do contrato…",
+    "error": "Não foi possível ler o contrato. Verifica a ligação e carrega em Atualizar.",
+    "empty": "Ainda ninguém se registou. Envia a tua transação no assistente e depois carrega em Atualizar.",
+    "lookupTitle": "Verificar um número de estudante",
+    "lookupHint": "O hash é calculado aqui, no teu browser, tal como no assistente, e depois comparado com a lista.",
+    "hashLabel": "Hash calculado",
+    "emptyHash": "Escreve um número de estudante para veres o hash.",
+    "lookupNotDeployed": "O contrato da turma ainda não foi publicado, por isso ainda não há lista para comparar. O valor acima é o que o assistente vai enviar.",
+    "found": "Registado",
+    "foundOne": "Este hash está na lista. Foi registado por esta carteira:",
+    "foundMany": "Este hash está na lista. Foi registado por {{n}} carteiras:",
+    "timesOnce": "registou-se uma vez",
+    "timesMany": "registou-se {{n}} vezes (conta a última)",
+    "notFound": "Não encontrado",
+    "notFoundBody": "Nenhuma carteira da lista tem este hash. Confirma se o número está bem escrito. Acabaste de enviar a transação? Carrega em Atualizar.",
+    "free": "Ler é gratuito: sem carteira, sem assinatura, sem gas. O número que escreves nunca sai do teu browser."
+  }
+}

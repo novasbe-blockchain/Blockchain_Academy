@@ -51,14 +51,14 @@
     },
     "smartContracts": {
       "title": "Aplicações Empresariais de Smart Contracts",
-      "description": "Da teoria à disrupção da indústria — compreende o que os smart contracts conseguem e não conseguem fazer pelo teu negócio, com casos de estudo reais, aplicações de DAOs e NFTs, e um trabalho em aula.",
+      "description": "Da teoria à disrupção da indústria — compreende o que os smart contracts conseguem e não conseguem fazer pelo teu negócio, com casos de estudo reais, aplicações de DAOs e NFTs, e um trabalho prático numa testnet.",
       "topics": [
         "Fundamentos de Smart Contracts",
         "EVM e Ecossistema Web3",
         "Casos de Estudo",
         "DAOs & NFTs",
         "Problema do Oráculo",
-        "In-class Assignment"
+        "Trabalho numa Testnet"
       ]
     },
     "projectManagement": {
@@ -93,7 +93,7 @@
     "hyperledger": "Hyperledger",
     "interoperability": "Interoperabilidade",
     "zkPrivacy": "ZK e Privacidade",
-    "inClassAssignment": "In-class Assignment"
+    "assignment": "Trabalho"
   },
   "instructors": {
     "helder": {
