@@ -125,7 +125,7 @@
     }
   },
   "keyPoints": {
-    "s8-first-tx": "Uma transação é um pedido assinado para alterar um estado partilhado. Depois de incluída num bloco, é pública e fica lá.",
+    "s8-first-tx": "Submete o hash do teu número de estudante e o link da transação no Moodle para o Trabalho 2.",
     "s8-board": "Ler o estado de um contrato é gratuito e está aberto a todos. Só escrever nele exige uma assinatura e gas.",
     "s8-explore": "Código verificado significa que não tens de acreditar na palavra de um contrato: lê o código e confirma tu o estado."
   }
