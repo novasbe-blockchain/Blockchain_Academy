@@ -125,7 +125,7 @@
     }
   },
   "keyPoints": {
-    "s8-first-tx": "A transaction is a signed request to change shared state. Once it is included in a block, it is public and it stays.",
+    "s8-first-tx": "Submit your hashed student ID and the transaction link on Moodle for Assignment 2.",
     "s8-board": "Reading a contract's state is free and open to everyone. Only writing to it takes a signature and gas.",
     "s8-explore": "Verified source means you don't have to take a contract's word for it: read the code, then check the state yourself."
   }
