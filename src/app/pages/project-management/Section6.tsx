@@ -1,7 +1,7 @@
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { DiscussionSlide } from '../../components/templates/DiscussionSlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { MicroVaultCallout } from '../../components/shared/MicroVaultCallout';
@@ -23,6 +23,40 @@ const chapters = [
   { id: 's6-discussion', label: 'Discussion' },
   { id: 's6-quiz',       label: 'Quiz' },
   { id: 's6-takeaways',  label: 'Takeaways' },
+];
+
+// The section quiz, in order. GroupedQuiz shows it on one slide, one question at a time.
+const quizQuestions = [
+  {
+    question: "(1/3) A team is one week from its scheduled mainnet date. The audit is complete, but two high-severity findings are 'noted, fix planned post-launch.' The sponsor pushes to launch on schedule. What does the irreversible-commitment gate require?",
+    options: [
+      { text: 'Launch on schedule — the audit itself is complete, which is what the gate requires.', correct: false },
+      { text: 'No-go — the gate requires quality-control activities complete AND findings resolved. Unresolved high-severity findings mean the criteria are not met, regardless of schedule pressure.', correct: true },
+      { text: 'Launch, but publish the findings transparently so users can decide their own risk.', correct: false },
+      { text: 'Escalate to a community vote — decentralized projects should let token holders decide.', correct: false },
+    ],
+    explanation: "The gate consumes evidence, not effort: 'audit performed' is not the criterion — 'findings resolved' is. Quality control (6.1.1) includes confirming every critical/high finding is actually fixed, not just noted. Crossing an irreversible commitment point with known high-severity defects converts a schedule problem into a potentially unrecoverable product problem — the exact asymmetry the cost-of-quality principle describes.",
+  },
+  {
+    question: "(2/3) Contracts have been submitted for audit. A stakeholder proposes a change that touches one of the audited contracts. Under a blockchain change-control process, what makes this different from a routine scope change?",
+    options: [
+      { text: 'Nothing — all scope changes follow the same log-assess-approve path.', correct: false },
+      { text: 'It cannot be considered at all until after launch — audit scope is frozen permanently.', correct: false },
+      { text: 'It triggers a heavier approval bar with explicit sponsor sign-off, because it may invalidate the audit and force a costly re-audit with schedule consequences.', correct: true },
+      { text: 'It skips the process — technical changes are the developers\' decision, not a governance matter.', correct: false },
+    ],
+    explanation: "The change process still applies (log → assess → approve/reject → reflect → communicate), but audit-scope-affecting changes get a heavier approval bar: the assessment must include whether the change invalidates work already audited or scheduled for audit. A 'small contract change' can mean re-auditing — direct cost and schedule impact. That's why MicroVault deferred its new collateral type to a post-launch upgrade rather than approving it informally.",
+  },
+  {
+    question: "(3/3) Six months after mainnet launch, MicroVault's protocol is processing growing volumes, governance proposals are active, and an upgrade is being planned. A team member says 'the project clearly isn't finished.' What is the correct framing?",
+    options: [
+      { text: 'They are right — a blockchain project continues for as long as the protocol operates.', correct: false },
+      { text: 'The project closed at handoff. What continues is the product lifecycle — operations, governance, and upgrades — a different discipline with different owners, even if the same people.', correct: true },
+      { text: 'The project should be formally re-opened each time a protocol upgrade is planned.', correct: false },
+      { text: 'Neither — once the DAO launches, no one is responsible for the protocol.', correct: false },
+    ],
+    explanation: "This is the project/product distinction the course opened with: the project is temporary and bounded (charter to handoff); the product evolves indefinitely (Concept → Development → Launch → Growth → Maturity → Evolution). Ongoing monitoring, governance, and upgrade planning were never the project's responsibility — they belong to operations and product governance. A future upgrade may well be a new project, with its own objective and closure; the platform's ongoing life is not an unfinished project.",
+  },
 ];
 
 export function PM_Section6() {
@@ -484,46 +518,9 @@ export function PM_Section6() {
           />
         </div>
 
-        {/* ═══════ QUIZ 1/3 ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s6-quiz" className="h-full">
-          <QuizSlide
-            question="(1/3) A team is one week from its scheduled mainnet date. The audit is complete, but two high-severity findings are 'noted, fix planned post-launch.' The sponsor pushes to launch on schedule. What does the irreversible-commitment gate require?"
-            options={[
-              { text: 'Launch on schedule — the audit itself is complete, which is what the gate requires.', correct: false },
-              { text: 'No-go — the gate requires quality-control activities complete AND findings resolved. Unresolved high-severity findings mean the criteria are not met, regardless of schedule pressure.', correct: true },
-              { text: 'Launch, but publish the findings transparently so users can decide their own risk.', correct: false },
-              { text: 'Escalate to a community vote — decentralized projects should let token holders decide.', correct: false },
-            ]}
-            explanation="The gate consumes evidence, not effort: 'audit performed' is not the criterion — 'findings resolved' is. Quality control (6.1.1) includes confirming every critical/high finding is actually fixed, not just noted. Crossing an irreversible commitment point with known high-severity defects converts a schedule problem into a potentially unrecoverable product problem — the exact asymmetry the cost-of-quality principle describes."
-          />
-        </div>
-
-        {/* ═══════ QUIZ 2/3 ═══════ */}
-        <div id="s6-quiz-2" className="h-full">
-          <QuizSlide
-            question="(2/3) Contracts have been submitted for audit. A stakeholder proposes a change that touches one of the audited contracts. Under a blockchain change-control process, what makes this different from a routine scope change?"
-            options={[
-              { text: 'Nothing — all scope changes follow the same log-assess-approve path.', correct: false },
-              { text: 'It cannot be considered at all until after launch — audit scope is frozen permanently.', correct: false },
-              { text: 'It triggers a heavier approval bar with explicit sponsor sign-off, because it may invalidate the audit and force a costly re-audit with schedule consequences.', correct: true },
-              { text: 'It skips the process — technical changes are the developers\' decision, not a governance matter.', correct: false },
-            ]}
-            explanation="The change process still applies (log → assess → approve/reject → reflect → communicate), but audit-scope-affecting changes get a heavier approval bar: the assessment must include whether the change invalidates work already audited or scheduled for audit. A 'small contract change' can mean re-auditing — direct cost and schedule impact. That's why MicroVault deferred its new collateral type to a post-launch upgrade rather than approving it informally."
-          />
-        </div>
-
-        {/* ═══════ QUIZ 3/3 ═══════ */}
-        <div id="s6-quiz-3" className="h-full">
-          <QuizSlide
-            question="(3/3) Six months after mainnet launch, MicroVault's protocol is processing growing volumes, governance proposals are active, and an upgrade is being planned. A team member says 'the project clearly isn't finished.' What is the correct framing?"
-            options={[
-              { text: 'They are right — a blockchain project continues for as long as the protocol operates.', correct: false },
-              { text: 'The project closed at handoff. What continues is the product lifecycle — operations, governance, and upgrades — a different discipline with different owners, even if the same people.', correct: true },
-              { text: 'The project should be formally re-opened each time a protocol upgrade is planned.', correct: false },
-              { text: 'Neither — once the DAO launches, no one is responsible for the protocol.', correct: false },
-            ]}
-            explanation="This is the project/product distinction the course opened with: the project is temporary and bounded (charter to handoff); the product evolves indefinitely (Concept → Development → Launch → Growth → Maturity → Evolution). Ongoing monitoring, governance, and upgrade planning were never the project's responsibility — they belong to operations and product governance. A future upgrade may well be a new project, with its own objective and closure; the platform's ongoing life is not an unfinished project."
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

@@ -1,7 +1,7 @@
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { ComparisonSlide } from '../../components/templates/ComparisonSlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { MicroVaultCallout } from '../../components/shared/MicroVaultCallout';
@@ -20,6 +20,40 @@ const chapters = [
   { id: 's1-roles',        label: 'Deep Dive: Key Roles' },
   { id: 's1-quiz',         label: 'Quiz' },
   { id: 's1-takeaways',    label: 'Takeaways' },
+];
+
+// The section quiz, in order. GroupedQuiz shows it on one slide, one question at a time.
+const quizQuestions = [
+  {
+    question: "(1/3) A blockchain project has just deployed its smart contracts to mainnet. The team discovers a critical logic bug that allows unauthorized token minting. What is the correct response?",
+    options: [
+      { text: 'Push a hotfix directly to the mainnet contract to patch the vulnerability as fast as possible.', correct: false },
+      { text: 'Roll back the mainnet deployment to the previous version while the fix is tested.', correct: false },
+      { text: 'Activate the emergency pause mechanism, notify stakeholders, and plan a formal upgrade through the established change control process.', correct: true },
+      { text: 'Accept the bug as a known issue and wait for the next planned release cycle to include the fix.', correct: false },
+    ],
+    explanation: "Smart contract deployments are irreversible — you cannot simply push a patch or roll back. The correct response is to activate the emergency pause (if available), communicate transparently with all stakeholders, and follow the formal upgrade path (proxy upgrade or migration). This is why the audit gate and a well-tested emergency pause mechanism are non-negotiable before mainnet.",
+  },
+  {
+    question: "(2/3) Which kind of work in a blockchain project is BEST suited to a predictive (waterfall) approach, and which benefits from adaptive (agile) iteration?",
+    options: [
+      { text: 'Off-chain integrations → predictive; on-chain smart contract logic → adaptive sprints.', correct: false },
+      { text: 'Fixed, externally mandated work (audits, compliance) → predictive rigor; evolving product work (contract features, UX) → adaptive iteration.', correct: true },
+      { text: 'All work benefits equally from agile sprints — blockchain is no different.', correct: false },
+      { text: 'Neither — blockchain projects must be 100% waterfall because of their irreversibility.', correct: false },
+    ],
+    explanation: "This is the course's central principle: don't choose one approach for the whole project — tailor per work package. Fixed, externally mandated requirements (a security audit's scope doesn't change mid-engagement) fit predictive delivery with formal baselines. Work with genuine requirement uncertainty (contract features, UX) fits adaptive delivery with testnet iteration. Section 2 introduces a formal decision matrix for this choice.",
+  },
+  {
+    question: "(3/3) A DeFi protocol is three weeks from mainnet launch. Which role is specifically responsible for independently reviewing smart contract code for reentrancy attacks and access control vulnerabilities?",
+    options: [
+      { text: 'The Blockchain Architect — they designed the contracts and know them best.', correct: false },
+      { text: 'The Product Owner — they own the backlog and must approve all security requirements.', correct: false },
+      { text: 'The Independent Security Auditor — a third party not involved in development.', correct: true },
+      { text: 'The Integration Engineer — they are responsible for all external interfaces.', correct: false },
+    ],
+    explanation: "Independence is the defining property of the Security Auditor role. A developer cannot fully audit their own code — cognitive bias and familiarity create blind spots. The auditor must be a third party with no prior involvement in the codebase, commissioned specifically to find vulnerabilities before mainnet. This is why the audit is a hard phase gate: no audit sign-off, no mainnet.",
+  },
 ];
 
 export function PM_Section1() {
@@ -663,46 +697,9 @@ export function PM_Section1() {
           </div>
         </div>
 
-        {/* ═══════ QUIZ 1/3 ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s1-quiz" className="h-full">
-          <QuizSlide
-            question="(1/3) A blockchain project has just deployed its smart contracts to mainnet. The team discovers a critical logic bug that allows unauthorized token minting. What is the correct response?"
-            options={[
-              { text: 'Push a hotfix directly to the mainnet contract to patch the vulnerability as fast as possible.', correct: false },
-              { text: 'Roll back the mainnet deployment to the previous version while the fix is tested.', correct: false },
-              { text: 'Activate the emergency pause mechanism, notify stakeholders, and plan a formal upgrade through the established change control process.', correct: true },
-              { text: 'Accept the bug as a known issue and wait for the next planned release cycle to include the fix.', correct: false },
-            ]}
-            explanation="Smart contract deployments are irreversible — you cannot simply push a patch or roll back. The correct response is to activate the emergency pause (if available), communicate transparently with all stakeholders, and follow the formal upgrade path (proxy upgrade or migration). This is why the audit gate and a well-tested emergency pause mechanism are non-negotiable before mainnet."
-          />
-        </div>
-
-        {/* ═══════ QUIZ 2/3 ═══════ */}
-        <div id="s1-quiz-2" className="h-full">
-          <QuizSlide
-            question="(2/3) Which kind of work in a blockchain project is BEST suited to a predictive (waterfall) approach, and which benefits from adaptive (agile) iteration?"
-            options={[
-              { text: 'Off-chain integrations → predictive; on-chain smart contract logic → adaptive sprints.', correct: false },
-              { text: 'Fixed, externally mandated work (audits, compliance) → predictive rigor; evolving product work (contract features, UX) → adaptive iteration.', correct: true },
-              { text: 'All work benefits equally from agile sprints — blockchain is no different.', correct: false },
-              { text: 'Neither — blockchain projects must be 100% waterfall because of their irreversibility.', correct: false },
-            ]}
-            explanation="This is the course's central principle: don't choose one approach for the whole project — tailor per work package. Fixed, externally mandated requirements (a security audit's scope doesn't change mid-engagement) fit predictive delivery with formal baselines. Work with genuine requirement uncertainty (contract features, UX) fits adaptive delivery with testnet iteration. Section 2 introduces a formal decision matrix for this choice."
-          />
-        </div>
-
-        {/* ═══════ QUIZ 3/3 ═══════ */}
-        <div id="s1-quiz-3" className="h-full">
-          <QuizSlide
-            question="(3/3) A DeFi protocol is three weeks from mainnet launch. Which role is specifically responsible for independently reviewing smart contract code for reentrancy attacks and access control vulnerabilities?"
-            options={[
-              { text: 'The Blockchain Architect — they designed the contracts and know them best.', correct: false },
-              { text: 'The Product Owner — they own the backlog and must approve all security requirements.', correct: false },
-              { text: 'The Independent Security Auditor — a third party not involved in development.', correct: true },
-              { text: 'The Integration Engineer — they are responsible for all external interfaces.', correct: false },
-            ]}
-            explanation="Independence is the defining property of the Security Auditor role. A developer cannot fully audit their own code — cognitive bias and familiarity create blind spots. The auditor must be a third party with no prior involvement in the codebase, commissioned specifically to find vulnerabilities before mainnet. This is why the audit is a hard phase gate: no audit sign-off, no mainnet."
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

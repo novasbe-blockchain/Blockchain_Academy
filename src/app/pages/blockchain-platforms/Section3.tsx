@@ -7,7 +7,7 @@ import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { ComparisonSlide } from '../../components/templates/ComparisonSlide';
 import { ConceptSlide } from '../../components/templates/ConceptSlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { Building2 } from 'lucide-react';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
@@ -1212,25 +1212,17 @@ export function BP_Section3() {
   const productionColors = ['#39B54A', '#ED1C24', '#6366f1'];
   const productionCaseList = productionCases.map((c, i) => ({ ...c, statusColor: productionColors[i] }));
   const bestfitCases = t('bestfits.cases', { returnObjects: true }) as { emoji: string; name: string; why: string; example: string }[];
-  const quizOptions = t('quiz.options', { returnObjects: true }) as { text: string }[];
-  const quiz2Options = t('quiz2.options', { returnObjects: true }) as { text: string }[];
-  const quiz3Options = t('quiz3.options', { returnObjects: true }) as { text: string }[];
-  const quiz4Options = t('quiz4.options', { returnObjects: true }) as { text: string }[];
-  const quiz5Options = t('quiz5.options', { returnObjects: true }) as { text: string }[];
-  const quiz6Options = t('quiz6.options', { returnObjects: true }) as { text: string }[];
-  const quiz7Options = t('quiz7.options', { returnObjects: true }) as { text: string }[];
-  const quiz8Options = t('quiz8.options', { returnObjects: true }) as { text: string }[];
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
-  // Correct-answer flags stay in code (language-neutral); text comes from t().
-  const quizCorrect = [false, false, true, false];
-  const quiz2Correct = [true, false, false, false];
-  const quiz3Correct = [false, false, false, true];
-  const quiz4Correct = [false, true, false, false];
-  const quiz5Correct = [false, false, false, true];
-  const quiz6Correct = [true, false, false, false];
-  const quiz7Correct = [false, false, true, false];
-  const quiz8Correct = [false, true, false, false];
+  // The section quiz, in order: locale block + index of its correct option (language-neutral).
+  const quizQuestions = ([
+    ['quiz', 2], ['quiz2', 0], ['quiz3', 3], ['quiz4', 1],
+    ['quiz5', 3], ['quiz6', 0], ['quiz7', 2], ['quiz8', 1],
+  ] as const).map(([key, correctIndex]) => ({
+    question: t(`${key}.question`),
+    options: (t(`${key}.options`, { returnObjects: true }) as { text: string }[]).map((o, i) => ({ text: o.text, correct: i === correctIndex })),
+    explanation: t(`${key}.explanation`),
+  }));
 
   return (
     <div className="h-full w-full flex overflow-hidden">
@@ -1420,84 +1412,9 @@ export function BP_Section3() {
           <VocabSlide part={1} />
         </div>
 
-        {/* ═══════ QUIZ ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s3-quiz" className="h-full">
-          <QuizSlide
-            question={t('quiz.question')}
-            options={quizOptions.map((o, i) => ({ text: o.text, correct: quizCorrect[i] }))}
-            explanation={t('quiz.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 2 — governance (why networks close) ═══════ */}
-        <div id="s3-quiz-2" className="h-full">
-          <QuizSlide
-            question={t('quiz2.question')}
-            options={quiz2Options.map((o, i) => ({ text: o.text, correct: quiz2Correct[i] }))}
-            explanation={t('quiz2.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 3 — Endorsement policy ═══════ */}
-        <div id="s3-quiz-3" className="h-full">
-          <QuizSlide
-            question={t('quiz3.question')}
-            options={quiz3Options.map((o, i) => ({ text: o.text, correct: quiz3Correct[i] }))}
-            explanation={t('quiz3.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 4 — ordering service role ═══════ */}
-        <div id="s3-quiz-4" className="h-full">
-          <QuizSlide
-            question={t('quiz4.question')}
-            options={quiz4Options.map((o, i) => ({ text: o.text, correct: quiz4Correct[i] }))}
-            explanation={t('quiz4.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 5 — on-chain vs off-chain data ═══════ */}
-        <div id="s3-quiz-5" className="h-full">
-          <QuizSlide
-            question={t('quiz5.question')}
-            options={quiz5Options.map((o, i) => ({ text: o.text, correct: quiz5Correct[i] }))}
-            explanation={t('quiz5.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 6 — Raft vs BFT ordering ═══════ */}
-        <div id="s3-quiz-6" className="h-full">
-          <QuizSlide
-            question={t('quiz6.question')}
-            options={quiz6Options.map((o, i) => ({ text: o.text, correct: quiz6Correct[i] }))}
-            explanation={t('quiz6.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 7 — why no gas / token ═══════ */}
-        <div id="s3-quiz-7" className="h-full">
-          <QuizSlide
-            question={t('quiz7.question')}
-            options={quiz7Options.map((o, i) => ({ text: o.text, correct: quiz7Correct[i] }))}
-            explanation={t('quiz7.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 8 — permissioned fit ═══════ */}
-        <div id="s3-quiz-8" className="h-full">
-          <QuizSlide
-            question={t('quiz8.question')}
-            options={quiz8Options.map((o, i) => ({ text: o.text, correct: quiz8Correct[i] }))}
-            explanation={t('quiz8.explanation')}
-            compact
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

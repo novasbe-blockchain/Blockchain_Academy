@@ -1,7 +1,7 @@
 import { TitleSlide } from '../../components/templates/TitleSlide';
 import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { DiscussionSlide } from '../../components/templates/DiscussionSlide';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { MicroVaultCallout } from '../../components/shared/MicroVaultCallout';
@@ -25,6 +25,40 @@ const chapters = [
   { id: 's2-discussion', label: 'Discussion' },
   { id: 's2-quiz',       label: 'Quiz' },
   { id: 's2-takeaways',  label: 'Takeaways' },
+];
+
+// The section quiz, in order. GroupedQuiz shows it on one slide, one question at a time.
+const quizQuestions = [
+  {
+    question: "(1/3) A government agency wants to store citizen identity records on a public blockchain to 'modernize' their system. Applying the blockchain decision checklist, what is the most likely correct verdict?",
+    options: [
+      { text: 'Blockchain is appropriate — government data should be public and immutable for maximum transparency.', correct: false },
+      { text: 'Blockchain is appropriate — multiple agencies need to read and write the same data.', correct: false },
+      { text: 'A traditional database is more appropriate — one trusted party controls all the data, and GDPR requires the right to erasure, which conflicts with immutability.', correct: true },
+      { text: 'Blockchain is appropriate — disintermediation of the current system would reduce costs.', correct: false },
+    ],
+    explanation: "The blockchain decision checklist asks: Is there a trust problem between untrusted parties? Is immutability a core requirement that outweighs privacy concerns? Here, a single trusted authority already exists (the government), and GDPR explicitly requires the right to erasure — which conflicts with blockchain's immutability. A permissioned database with strict access controls is the correct architectural choice.",
+  },
+  {
+    question: "(2/3) You score a work package on the tailoring matrix: requirement stability 1 (fixed, externally mandated), technical novelty 1, regulatory constraint 3, security criticality 3, stakeholder involvement 1, dependencies 2 — total 11. What delivery approach does the matrix recommend?",
+    options: [
+      { text: 'Adaptive — blockchain projects should always use agile sprints.', correct: false },
+      { text: 'Hybrid — the score of 11 falls in the 10–14 band, mixing predictive gates with iterative delivery.', correct: true },
+      { text: 'Predictive — any regulatory constraint automatically forces waterfall.', correct: false },
+      { text: 'The matrix cannot recommend an approach — that is always a judgment call.', correct: false },
+    ],
+    explanation: "Total the six criteria: 6–9 → predictive, 10–14 → hybrid, 15–18 → adaptive. A score of 11 lands in the hybrid band — formal baselines and sign-offs where the regulatory and security stakes demand them, iterative delivery where there is room to learn. This is exactly how MicroVault's Security Audit package scores: hybrid, leaning predictive. The point of the matrix is a repeatable, defensible method instead of instinct — applied per work package, never to the whole project.",
+  },
+  {
+    question: "(3/3) A team drafts its WBS, then continues decomposing the 'Smart Contract Features' work package (scored adaptive) into a fixed, exhaustive activity list with dates. What is wrong with this?",
+    options: [
+      { text: 'Nothing — the WBS should always be decomposed to individual activities for every work package.', correct: false },
+      { text: 'The WBS decomposition should stop at the work-package boundary for adaptive work — a product backlog takes over below it, because the requirements are still being learned.', correct: true },
+      { text: 'The mistake is using a WBS at all — agile projects should skip the WBS and go straight to a backlog.', correct: false },
+      { text: 'The activity list is fine, but it should be written as user stories instead of activities.', correct: false },
+    ],
+    explanation: "This is the WBS/backlog fork: WBS and backlog are parallel tools for different kinds of work, not sequential stages of one decomposition. Predictive work packages decompose into scheduled activities; adaptive work packages hand off to a living, prioritized, intentionally incomplete backlog. Forcing a fixed activity list onto uncertain work defeats the purpose of scoring it adaptive in the first place — it recreates a WBS's stability expectations where they can't hold.",
+  },
 ];
 
 export function PM_Section2() {
@@ -909,46 +943,9 @@ export function PM_Section2() {
           />
         </div>
 
-        {/* ═══════ QUIZ 1/3 ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s2-quiz" className="h-full">
-          <QuizSlide
-            question="(1/3) A government agency wants to store citizen identity records on a public blockchain to 'modernize' their system. Applying the blockchain decision checklist, what is the most likely correct verdict?"
-            options={[
-              { text: 'Blockchain is appropriate — government data should be public and immutable for maximum transparency.', correct: false },
-              { text: 'Blockchain is appropriate — multiple agencies need to read and write the same data.', correct: false },
-              { text: 'A traditional database is more appropriate — one trusted party controls all the data, and GDPR requires the right to erasure, which conflicts with immutability.', correct: true },
-              { text: 'Blockchain is appropriate — disintermediation of the current system would reduce costs.', correct: false },
-            ]}
-            explanation="The blockchain decision checklist asks: Is there a trust problem between untrusted parties? Is immutability a core requirement that outweighs privacy concerns? Here, a single trusted authority already exists (the government), and GDPR explicitly requires the right to erasure — which conflicts with blockchain's immutability. A permissioned database with strict access controls is the correct architectural choice."
-          />
-        </div>
-
-        {/* ═══════ QUIZ 2/3 ═══════ */}
-        <div id="s2-quiz-2" className="h-full">
-          <QuizSlide
-            question="(2/3) You score a work package on the tailoring matrix: requirement stability 1 (fixed, externally mandated), technical novelty 1, regulatory constraint 3, security criticality 3, stakeholder involvement 1, dependencies 2 — total 11. What delivery approach does the matrix recommend?"
-            options={[
-              { text: 'Adaptive — blockchain projects should always use agile sprints.', correct: false },
-              { text: 'Hybrid — the score of 11 falls in the 10–14 band, mixing predictive gates with iterative delivery.', correct: true },
-              { text: 'Predictive — any regulatory constraint automatically forces waterfall.', correct: false },
-              { text: 'The matrix cannot recommend an approach — that is always a judgment call.', correct: false },
-            ]}
-            explanation="Total the six criteria: 6–9 → predictive, 10–14 → hybrid, 15–18 → adaptive. A score of 11 lands in the hybrid band — formal baselines and sign-offs where the regulatory and security stakes demand them, iterative delivery where there is room to learn. This is exactly how MicroVault's Security Audit package scores: hybrid, leaning predictive. The point of the matrix is a repeatable, defensible method instead of instinct — applied per work package, never to the whole project."
-          />
-        </div>
-
-        {/* ═══════ QUIZ 3/3 ═══════ */}
-        <div id="s2-quiz-3" className="h-full">
-          <QuizSlide
-            question="(3/3) A team drafts its WBS, then continues decomposing the 'Smart Contract Features' work package (scored adaptive) into a fixed, exhaustive activity list with dates. What is wrong with this?"
-            options={[
-              { text: 'Nothing — the WBS should always be decomposed to individual activities for every work package.', correct: false },
-              { text: 'The WBS decomposition should stop at the work-package boundary for adaptive work — a product backlog takes over below it, because the requirements are still being learned.', correct: true },
-              { text: 'The mistake is using a WBS at all — agile projects should skip the WBS and go straight to a backlog.', correct: false },
-              { text: 'The activity list is fine, but it should be written as user stories instead of activities.', correct: false },
-            ]}
-            explanation="This is the WBS/backlog fork: WBS and backlog are parallel tools for different kinds of work, not sequential stages of one decomposition. Predictive work packages decompose into scheduled activities; adaptive work packages hand off to a living, prioritized, intentionally incomplete backlog. Forcing a fixed activity list onto uncertain work defeats the purpose of scoring it adaptive in the first place — it recreates a WBS's stability expectations where they can't hold."
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router';
 import { TitleSlide } from '../components/templates/TitleSlide';
 import { DiscussionSlide } from '../components/templates/DiscussionSlide';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
-import { QuizSlide } from '../components/templates/QuizSlide';
+import { GroupedQuiz } from '../components/templates/GroupedQuiz';
 import { Rocket, ExternalLink, Telescope, Cpu, Landmark, Image as ImageIcon, Vote, Lightbulb, Server, Database, ServerCrash, Ban, Coins, Music, Scale, Target } from 'lucide-react';
 import { SectionNav } from '../components/navigation/SectionNav';
 import { SiteFooter } from '../components/shared/SiteFooter';
@@ -1460,6 +1460,17 @@ export function Section3() {
       ),
     [t],
   );
+
+  // The section quiz, in order: locale block + index of its correct option (language-neutral).
+  const quizQuestions = ([
+    ['quizWeb3', 1], ['quizLayers', 2], ['quizContractBug', 1], ['quizAccounts', 2],
+    ['quizOracle', 0], ['quizGas', 3], ['quizFungible', 2],
+  ] as const).map(([key, correctIndex]) => ({
+    question: t(`${key}.question`),
+    options: (t(`${key}.options`, { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === correctIndex })),
+    explanation: t(`${key}.explanation`),
+  }));
+
   return (
     <div className="h-full w-full flex overflow-hidden">
       <SectionNav chapters={section3Chapters} />
@@ -1951,61 +1962,9 @@ export function Section3() {
           />
         </div>
 
-        {/* ═══════ QUIZZES ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s3-quiz" className="h-full">
-          <QuizSlide
-            question={t('quizWeb3.question')}
-            options={(t('quizWeb3.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizWeb3.explanation')}
-          />
-        </div>
-
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizLayers.question')}
-            options={(t('quizLayers.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-            explanation={t('quizLayers.explanation')}
-          />
-        </div>
-
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizContractBug.question')}
-            options={(t('quizContractBug.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizContractBug.explanation')}
-          />
-        </div>
-
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizAccounts.question')}
-            options={(t('quizAccounts.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-            explanation={t('quizAccounts.explanation')}
-          />
-        </div>
-
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizOracle.question')}
-            options={(t('quizOracle.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }))}
-            explanation={t('quizOracle.explanation')}
-          />
-        </div>
-
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizGas.question')}
-            options={(t('quizGas.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 3 }))}
-            explanation={t('quizGas.explanation')}
-          />
-        </div>
-
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizFungible.question')}
-            options={(t('quizFungible.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-            explanation={t('quizFungible.explanation')}
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

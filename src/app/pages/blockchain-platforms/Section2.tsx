@@ -7,7 +7,7 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { ComparisonSlide } from '../../components/templates/ComparisonSlide';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
-import { QuizSlide } from '../../components/templates/QuizSlide';
+import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { Fuel, Hash, KeyRound, Layers, Pickaxe, ScrollText, Wallet } from 'lucide-react';
 import { GasCalculator } from '../../components/ethereum/GasCalculator';
 import { Eip1559Demo } from '../../components/ethereum/Eip1559Demo';
@@ -60,13 +60,6 @@ const chapterShape = [
 
   { kind: 'group' as const, id: 'g-s2-wrap' },
   { id: 's2-quiz' },
-  { id: 's2-quiz-2' },
-  { id: 's2-quiz-3' },
-  { id: 's2-quiz-4' },
-  { id: 's2-quiz-5' },
-  { id: 's2-quiz-6' },
-  { id: 's2-quiz-7' },
-  { id: 's2-quiz-8' },
   { id: 's2-takeaways' },
 ] as const;
 
@@ -889,14 +882,15 @@ export function BP_Section2() {
   const worstFitsItems = t('worstFits.items', { returnObjects: true }) as FitItem[];
   const worstFitsEmojis = ['₿', '🏢', '🚀', '🎮'];
 
-  const quizOptions = (t('quiz.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }));
-  const quiz3Options = (t('quiz3.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }));
-  const quiz2Options = (t('quiz2.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
-  const quiz4Options = (t('quiz4.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
-  const quiz5Options = (t('quiz5.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 3 }));
-  const quiz6Options = (t('quiz6.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 0 }));
-  const quiz7Options = (t('quiz7.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }));
-  const quiz8Options = (t('quiz8.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }));
+  // The section quiz, in order: locale block + index of its correct option (language-neutral).
+  const quizQuestions = ([
+    ['quiz', 2], ['quiz2', 1], ['quiz3', 0], ['quiz4', 1],
+    ['quiz5', 3], ['quiz6', 0], ['quiz7', 2], ['quiz8', 1],
+  ] as const).map(([key, correctIndex]) => ({
+    question: t(`${key}.question`),
+    options: (t(`${key}.options`, { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === correctIndex })),
+    explanation: t(`${key}.explanation`),
+  }));
 
   const takeawayItems = t('takeaways.items', { returnObjects: true }) as string[];
 
@@ -2676,84 +2670,9 @@ export function BP_Section2() {
           <KeyPoint topic="worstFits" className="mt-3" />
         </div>
 
-        {/* ═══════ QUIZ 1 — who is actually staking: solo, liquid, ETF ═══════ */}
+        {/* ═══════ QUIZ — one slide, stepped question by question ═══════ */}
         <div id="s2-quiz" className="h-full">
-          <QuizSlide
-            question={t('quiz.question')}
-            options={quizOptions}
-            explanation={t('quiz.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 2 — EIP-1559 fee mechanics ═══════ */}
-        <div id="s2-quiz-2" className="h-full">
-          <QuizSlide
-            question={t('quiz2.question')}
-            options={quiz2Options}
-            explanation={t('quiz2.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 3 — data availability: valid proofs, withheld data ═══════ */}
-        <div id="s2-quiz-3" className="h-full">
-          <QuizSlide
-            question={t('quiz3.question')}
-            options={quiz3Options}
-            explanation={t('quiz3.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 4 — EOA vs contract account ═══════ */}
-        <div id="s2-quiz-4" className="h-full">
-          <QuizSlide
-            question={t('quiz4.question')}
-            options={quiz4Options}
-            explanation={t('quiz4.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 5 — out of gas → revert ═══════ */}
-        <div id="s2-quiz-5" className="h-full">
-          <QuizSlide
-            question={t('quiz5.question')}
-            options={quiz5Options}
-            explanation={t('quiz5.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 6 — optimistic vs ZK withdrawals ═══════ */}
-        <div id="s2-quiz-6" className="h-full">
-          <QuizSlide
-            question={t('quiz6.question')}
-            options={quiz6Options}
-            explanation={t('quiz6.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 7 — stablecoin backing models ═══════ */}
-        <div id="s2-quiz-7" className="h-full">
-          <QuizSlide
-            question={t('quiz7.question')}
-            options={quiz7Options}
-            explanation={t('quiz7.explanation')}
-            compact
-          />
-        </div>
-
-        {/* ═══════ QUIZ 8 — issuance vs burn ═══════ */}
-        <div id="s2-quiz-8" className="h-full">
-          <QuizSlide
-            question={t('quiz8.question')}
-            options={quiz8Options}
-            explanation={t('quiz8.explanation')}
-            compact
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
         {/* ═══════ TAKEAWAYS ═══════ */}

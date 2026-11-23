@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { TitleSlide } from '../components/templates/TitleSlide';
 import { ConceptSlide } from '../components/templates/ConceptSlide';
 import { TakeawaySlide } from '../components/templates/TakeawaySlide';
-import { QuizSlide } from '../components/templates/QuizSlide';
+import { GroupedQuiz } from '../components/templates/GroupedQuiz';
 import { SwipeQuiz, type SwipeStatement } from '../components/templates/SwipeQuiz';
 import { CalloutBox } from '../components/shared/CalloutBox';
 import { ScrollText, ExternalLink, User, X, AlertTriangle } from 'lucide-react';
@@ -337,6 +337,14 @@ export function Prologue() {
     () => prologueChaptersShape.map((ch) => ({ id: ch.id, label: t(`chapters.${ch.id}`) })),
     [t],
   );
+
+  // The section quiz, in order: locale block + index of its correct option (language-neutral).
+  const quizQuestions = ([['quizMoney', 2], ['quizHashcash', 2], ['quizGenesis', 1]] as const).map(([key, correctIndex]) => ({
+    question: t(`${key}.question`),
+    options: (t(`${key}.options`, { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === correctIndex })),
+    explanation: t(`${key}.explanation`),
+  }));
+
   return (
     <div className="h-full w-full flex overflow-hidden">
       <SectionNav chapters={prologueChapters} />
@@ -715,35 +723,16 @@ export function Prologue() {
           />
         </div>
 
-        {/* ═══════ 6. QUIZZES ═══════ */}
+        {/* ═══════ 6. QUIZ — one slide, stepped question by question ═══════ */}
         <div id="p-quiz" className="h-full">
-          <QuizSlide
-            question={t('quizMoney.question')}
-            options={(t('quizMoney.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-            explanation={t('quizMoney.explanation')}
-          />
+          <GroupedQuiz questions={quizQuestions} compact />
         </div>
 
+        {/* True / false swipe round — its own slide, not part of the stepper */}
         <div className="h-full">
           <SwipeQuiz
             question={t('cypherpunksTF.prompt')}
             statements={t('cypherpunksTF.statements', { returnObjects: true }) as SwipeStatement[]}
-          />
-        </div>
-
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizHashcash.question')}
-            options={(t('quizHashcash.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 2 }))}
-            explanation={t('quizHashcash.explanation')}
-          />
-        </div>
-
-        <div className="h-full">
-          <QuizSlide
-            question={t('quizGenesis.question')}
-            options={(t('quizGenesis.options', { returnObjects: true }) as string[]).map((text, i) => ({ text, correct: i === 1 }))}
-            explanation={t('quizGenesis.explanation')}
           />
         </div>
 
