@@ -4,10 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowRight, Check, Clock, RotateCcw, Send, X } from 'lucide-react';
 import { useLang } from '../../../i18n/useLang';
 import { BrandLogo } from '../../components/shared/BrandLogo';
+import { MockExamLoading } from './MockExamLoading';
 import {
   createAttempt,
   getQuestion,
+  isBankLoaded,
   isCorrect,
+  loadBank,
   loadOrCreateAttempt,
   saveAttempt,
   scoreAttempt,
@@ -17,13 +20,16 @@ import {
 } from './examEngine';
 
 /**
- * Hidden mock-exam page (route `/:lang/mock`). Not linked from anywhere: the
+ * Hidden mock-exam page (route `/:lang/mockexam`). Not linked from anywhere: the
  * only way in is typing the trigger on the Academy homepage (see
  * CourseSelection) or knowing the URL.
  *
  * One question per screen with a question navigator, a wall-clock countdown
  * that auto-submits at zero, and a results screen with a per-course breakdown
  * and a full review. All exam logic lives in ./examEngine.
+ *
+ * The question bank is fetched when the page mounts (see the default export at
+ * the bottom); the exam itself only renders once it has arrived.
  */
 
 const COURSE_COLOR: Record<CourseId, string> = {
@@ -124,7 +130,7 @@ function ConfirmDialog({ title, body, confirmLabel, cancelLabel, onConfirm, onCa
   );
 }
 
-export default function MockExam() {
+function MockExamSession() {
   const { t } = useTranslation('mock-exam');
   const lang = useLang();
   const location = useLocation();
@@ -759,5 +765,49 @@ function ResultsView({ attempt, score, onlyMissed, setOnlyMissed, onNewExam, onB
         </div>
       </section>
     </main>
+  );
+}
+
+/**
+ * Route component: downloads the question bank, then hands over to the exam.
+ * The bank is a separate chunk, so nothing outside this page pays for it.
+ */
+export default function MockExam() {
+  const { t } = useTranslation('mock-exam');
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>(() => (isBankLoaded() ? 'ready' : 'loading'));
+  const [attemptNo, setAttemptNo] = useState(0);
+
+  useEffect(() => {
+    if (isBankLoaded()) return;
+    let active = true;
+    loadBank().then(
+      () => active && setStatus('ready'),
+      () => active && setStatus('error'),
+    );
+    return () => {
+      active = false;
+    };
+  }, [attemptNo]);
+
+  if (status === 'ready') return <MockExamSession />;
+  if (status === 'loading') return <MockExamLoading />;
+
+  return (
+    <div className="flex size-full flex-col items-center justify-center gap-4 bg-background p-6 text-center">
+      <p role="alert" className="max-w-sm text-sm font-semibold text-muted-foreground">
+        {t('loadError')}
+      </p>
+      <button
+        type="button"
+        onClick={() => {
+          setStatus('loading');
+          setAttemptNo((n) => n + 1);
+        }}
+        className="inline-flex cursor-pointer items-center gap-2 rounded-xl border-2 border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-[#6366f1] hover:bg-[#6366f1]/5"
+      >
+        <RotateCcw className="size-4" />
+        {t('retry')}
+      </button>
+    </div>
   );
 }

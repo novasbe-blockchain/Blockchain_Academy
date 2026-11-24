@@ -53,7 +53,7 @@ export function SmallScreenGate() {
 
   // The mock exam is a responsive page, not a slide deck, and its timer is
   // running — don't cover it.
-  const isResponsivePage = /^\/[^/]+\/mock\/?$/.test(pathname);
+  const isResponsivePage = /^\/[^/]+\/mockexam\/?$/.test(pathname);
 
   if (!tooNarrow || dismissed || isResponsivePage) return null;
 

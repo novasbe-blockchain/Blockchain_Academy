@@ -155,8 +155,9 @@ export const router = createHashRouter([
 
           // Hidden mock exam. Deliberately NOT linked from any nav, menu or
           // footer: reached by typing the trigger on the Academy landing page
-          // (see CourseSelection). The page itself is lazy-loaded.
-          { path: "mock", Component: MockExamRoute },
+          // (see CourseSelection). The page and its question bank are
+          // lazy-loaded chunks; only the thin Suspense wrapper is imported here.
+          { path: "mockexam", Component: MockExamRoute },
 
           // Unknown path under a known locale -> locale landing.
           // If :lang itself was actually a legacy path segment, the outer

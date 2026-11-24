@@ -1,22 +1,14 @@
 import { lazy, Suspense } from 'react';
-import { useTranslation } from 'react-i18next';
+import { MockExamLoading } from './MockExamLoading';
 
-// Loaded on demand so the question bank stays out of the main bundle.
+// Loaded on demand: the page is its own chunk, and it fetches the question
+// bank (another chunk) when it mounts. Neither is part of the main bundle.
 const MockExam = lazy(() => import('./MockExam'));
 
-function Loading() {
-  const { t } = useTranslation('mock-exam');
-  return (
-    <div className="flex size-full items-center justify-center bg-background text-sm font-semibold text-muted-foreground">
-      {t('loading')}
-    </div>
-  );
-}
-
-/** Route element for the hidden mock exam (`/:lang/mock`). */
+/** Route element for the hidden mock exam (`/:lang/mockexam`). */
 export function MockExamRoute() {
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<MockExamLoading />}>
       <MockExam />
     </Suspense>
   );

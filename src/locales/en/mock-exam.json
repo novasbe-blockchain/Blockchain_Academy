@@ -3,6 +3,8 @@
   "badge": "Practice",
   "home": "Back to the Academy",
   "loading": "Preparing your exam…",
+  "loadError": "The questions couldn't be loaded. Check your connection and try again.",
+  "retry": "Try again",
   "courses": {
     "blockchain-fundamentals": "Blockchain Fundamentals",
     "blockchain-platforms": "Blockchain Platforms",

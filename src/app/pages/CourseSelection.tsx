@@ -75,7 +75,7 @@ export function CourseSelection() {
   // re-showing the results of an earlier one.
   const navigate = useNavigate();
   useSecretSequence('examexamexam', () =>
-    navigate(`/${lang}/mock`, { state: { mockExamNonce: String(Date.now()) } }),
+    navigate(`/${lang}/mockexam`, { state: { mockExamNonce: String(Date.now()) } }),
   );
 
   return (

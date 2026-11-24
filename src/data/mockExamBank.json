@@ -5341,22 +5341,6 @@
    "explanation": "Proof of personhood answers \"is this a unique human?\" without \"who are you?\"."
   },
   {
-   "id": "sc-1fe5a0a1",
-   "course": "smart-contracts",
-   "section_number": 7,
-   "section_title": "Zero-Knowledge & Privacy",
-   "question": "What sets programmable-privacy platforms such as Aztec and Aleo apart from Zcash or Monero?",
-   "options": [
-    "They make every transaction fully public.",
-    "They are mixers that pool many deposits and pay them out to fresh addresses.",
-    "They rely on regulated banks, rather than on cryptography, to keep customers' data hidden.",
-    "They support smart contracts with private state, not just private payments."
-   ],
-   "correct_option_number": 4,
-   "correct_option_text": "They support smart contracts with private state, not just private payments.",
-   "explanation": "Confidential applications, not just payments, can be built on them; the trade-off is newer tooling, with privacy living at the contract level."
-  },
-  {
    "id": "sc-f68a77b0",
    "course": "smart-contracts",
    "section_number": 7,

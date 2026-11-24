@@ -1,10 +1,12 @@
-import bank from '../../../data/mockExamBank.json';
-
 /* ------------------------------------------------------------------ */
-/*  Mock-exam engine: builds a randomized attempt from the bundled      */
-/*  question bank, scores it, and keeps it in sessionStorage so a page  */
-/*  reload (or iPad Safari evicting the tab) doesn't lose the attempt.  */
+/*  Mock-exam engine: builds a randomized attempt from the question     */
+/*  bank, scores it, and keeps it in sessionStorage so a page reload    */
+/*  (or iPad Safari evicting the tab) doesn't lose the attempt.         */
 /*  Pure logic — no React in here.                                      */
+/*                                                                      */
+/*  The bank is NOT imported statically: loadBank() fetches it as its   */
+/*  own chunk the first time the mock page mounts, and everything       */
+/*  below that reads questions must only run once it has resolved.      */
 /* ------------------------------------------------------------------ */
 
 export type CourseId = 'blockchain-fundamentals' | 'blockchain-platforms' | 'smart-contracts';
@@ -34,11 +36,34 @@ export const EXAM_QUESTION_COUNT = BLUEPRINT.reduce((n, b) => n + b.count, 0);
 /** One minute per question. */
 export const EXAM_DURATION_MS = EXAM_QUESTION_COUNT * 60_000;
 
-const QUESTIONS = bank.questions as BankQuestion[];
-const EXCLUSIVE_PAIRS = bank.exclusivePairs as string[][];
-const BY_ID = new Map(QUESTIONS.map((q) => [q.id, q]));
+let QUESTIONS: BankQuestion[] = [];
+let EXCLUSIVE_PAIRS: string[][] = [];
+let BY_ID = new Map<string, BankQuestion>();
+let bankLoaded = false;
+let bankPromise: Promise<void> | null = null;
 
-export const BANK_SIZE = QUESTIONS.length;
+export const isBankLoaded = () => bankLoaded;
+
+/**
+ * Fetches the question bank (a separate chunk, so it is only downloaded when
+ * the mock page opens). Safe to call repeatedly: the request is shared, and a
+ * failed one is forgotten so the next call retries.
+ */
+export function loadBank(): Promise<void> {
+  bankPromise ??= import('../../../data/mockExamBank.json').then(
+    ({ default: bank }) => {
+      QUESTIONS = bank.questions as BankQuestion[];
+      EXCLUSIVE_PAIRS = bank.exclusivePairs;
+      BY_ID = new Map(QUESTIONS.map((q) => [q.id, q]));
+      bankLoaded = true;
+    },
+    (error) => {
+      bankPromise = null;
+      throw error;
+    },
+  );
+  return bankPromise;
+}
 
 export function getQuestion(id: string): BankQuestion {
   const q = BY_ID.get(id);
