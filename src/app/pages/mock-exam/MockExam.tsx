@@ -239,7 +239,7 @@ function MockExamSession() {
       onClick={onClick}
       title={t('exam.newExam')}
       aria-label={t('exam.newExam')}
-      className="inline-flex cursor-pointer items-center gap-2 rounded-xl border-2 border-border bg-card px-3 py-1.5 text-sm font-semibold text-foreground transition-colors hover:border-[#6366f1] hover:bg-[#6366f1]/5"
+      className="inline-flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-xl border-2 border-border bg-card px-3 py-1.5 text-sm font-semibold text-foreground transition-colors hover:border-[#6366f1] hover:bg-[#6366f1]/5"
     >
       <RotateCcw className="size-4" />
       <span className={label ? '' : 'hidden md:inline'}>{t('exam.newExam')}</span>
@@ -247,9 +247,13 @@ function MockExamSession() {
   );
 
   return (
-    <div ref={scrollRef} className="size-full overflow-y-auto bg-background">
+    // Fixed-height column: top bar, a middle that scrolls, and (during the exam)
+    // a bottom bar. The two bars are flex siblings of the scroller rather than
+    // overlays, so they never move and never cover the question. They reserve
+    // the same scrollbar gutter as the scroller to stay aligned with it.
+    <div className="flex size-full flex-col bg-background">
       {/* ── Top bar: brand · timer · submit ── */}
-      <header className="sticky top-0 z-30 border-b border-border bg-card/90 backdrop-blur">
+      <header className="relative z-30 shrink-0 overflow-y-hidden border-b border-border bg-card [scrollbar-gutter:stable]">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 lg:px-8">
           <Link to={`/${lang}`} title={t('home')} aria-label={t('home')} className="hidden shrink-0 sm:block">
             <BrandLogo className="h-7" />
@@ -306,21 +310,28 @@ function MockExamSession() {
         )}
       </header>
 
-      {submitted && score ? (
-        <ResultsView
-          attempt={attempt}
-          score={score}
-          onlyMissed={onlyMissed}
-          setOnlyMissed={setOnlyMissed}
-          onNewExam={startNewExam}
-          onBackToTop={() => scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
-        />
-      ) : (
-        <ExamView
-          attempt={attempt}
+      <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable]">
+        {submitted && score ? (
+          <ResultsView
+            attempt={attempt}
+            score={score}
+            onlyMissed={onlyMissed}
+            setOnlyMissed={setOnlyMissed}
+            onNewExam={startNewExam}
+            onBackToTop={() => scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
+          />
+        ) : (
+          <ExamView attempt={attempt} current={current} setCurrent={setCurrent} onAnswer={answer} />
+        )}
+      </div>
+
+      {!submitted && (
+        <ExamFooter
           current={current}
+          total={total}
+          picked={attempt.answers[current]}
           setCurrent={setCurrent}
-          onAnswer={answer}
+          onClear={() => answer(current, null)}
           onSubmit={() => setDialog('submit')}
         />
       )}
@@ -360,16 +371,14 @@ interface ExamViewProps {
   current: number;
   setCurrent: (index: number) => void;
   onAnswer: (index: number, option: number | null) => void;
-  onSubmit: () => void;
 }
 
-function ExamView({ attempt, current, setCurrent, onAnswer, onSubmit }: ExamViewProps) {
+function ExamView({ attempt, current, setCurrent, onAnswer }: ExamViewProps) {
   const { t } = useTranslation('mock-exam');
   const total = attempt.items.length;
   const item = attempt.items[current];
   const question = getQuestion(item.id);
   const picked = attempt.answers[current];
-  const isLast = current === total - 1;
 
   return (
     <main className="mx-auto grid max-w-6xl gap-5 px-4 py-5 lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-8 lg:px-8 lg:py-8">
@@ -415,46 +424,10 @@ function ExamView({ attempt, current, setCurrent, onAnswer, onSubmit }: ExamView
             })}
           </div>
         </div>
-
-        {/* Previous · clear · next */}
-        <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-          <div className="justify-self-start">
-            <button
-              type="button"
-              onClick={() => setCurrent(current - 1)}
-              disabled={current === 0}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-xl border-2 border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-[#6366f1] hover:bg-[#6366f1]/5 disabled:cursor-default disabled:opacity-40 disabled:hover:border-border disabled:hover:bg-card"
-            >
-              <ArrowLeft className="size-4" />
-              {t('exam.previous')}
-            </button>
-          </div>
-          <button
-            type="button"
-            onClick={() => onAnswer(current, null)}
-            className={`cursor-pointer rounded-lg px-2 py-1 text-xs font-semibold text-muted-foreground underline-offset-2 hover:text-foreground hover:underline ${
-              picked === null ? 'invisible' : ''
-            }`}
-          >
-            {t('exam.clear')}
-          </button>
-          <div className="justify-self-end">
-            <button
-              type="button"
-              onClick={isLast ? onSubmit : () => setCurrent(current + 1)}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-xl border-2 border-[#6366f1] bg-[#6366f1] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#6366f1]/90"
-            >
-              {isLast ? t('exam.submit') : t('exam.next')}
-              {isLast ? <Send className="size-4" /> : <ArrowRight className="size-4" />}
-            </button>
-          </div>
-        </div>
-
-        <p className="mt-4 hidden text-center text-xs text-muted-foreground lg:block">{t('exam.keyboardHint')}</p>
       </section>
 
       {/* Question navigator */}
-      <aside className="self-start rounded-2xl border border-border bg-card p-4 shadow-sm lg:sticky lg:top-20">
+      <aside className="self-start rounded-2xl border border-border bg-card p-4 shadow-sm lg:sticky lg:top-8">
         <h2 className="mb-3 text-xs font-black uppercase tracking-wider text-muted-foreground">
           {t('exam.navigator')}
         </h2>
@@ -496,6 +469,66 @@ function ExamView({ attempt, current, setCurrent, onAnswer, onSubmit }: ExamView
         </div>
       </aside>
     </main>
+  );
+}
+
+/**
+ * Previous · clear · next. Lives outside the scrolling area (see
+ * MockExamSession), so it sits at the same spot on screen however long the
+ * question is. Its grid mirrors ExamView's, which keeps the buttons under the
+ * question card on wide screens.
+ */
+interface ExamFooterProps {
+  current: number;
+  total: number;
+  picked: number | null;
+  setCurrent: (index: number) => void;
+  onClear: () => void;
+  onSubmit: () => void;
+}
+
+function ExamFooter({ current, total, picked, setCurrent, onClear, onSubmit }: ExamFooterProps) {
+  const { t } = useTranslation('mock-exam');
+  const isLast = current === total - 1;
+
+  return (
+    <footer className="relative z-30 shrink-0 overflow-y-hidden border-t border-border bg-card [scrollbar-gutter:stable]">
+      <div className="mx-auto grid max-w-6xl items-center px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-8 lg:px-8">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+          <div className="justify-self-start">
+            <button
+              type="button"
+              onClick={() => setCurrent(current - 1)}
+              disabled={current === 0}
+              className="inline-flex cursor-pointer items-center gap-2 rounded-xl border-2 border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-[#6366f1] hover:bg-[#6366f1]/5 disabled:cursor-default disabled:opacity-40 disabled:hover:border-border disabled:hover:bg-card"
+            >
+              <ArrowLeft className="size-4" />
+              {t('exam.previous')}
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={onClear}
+            className={`cursor-pointer rounded-lg px-2 py-1 text-xs font-semibold text-muted-foreground underline-offset-2 hover:text-foreground hover:underline ${
+              picked === null ? 'invisible' : ''
+            }`}
+          >
+            {t('exam.clear')}
+          </button>
+          <div className="justify-self-end">
+            <button
+              type="button"
+              onClick={isLast ? onSubmit : () => setCurrent(current + 1)}
+              className="inline-flex cursor-pointer items-center gap-2 rounded-xl border-2 border-[#6366f1] bg-[#6366f1] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#6366f1]/90"
+            >
+              {isLast ? t('exam.submit') : t('exam.next')}
+              {isLast ? <Send className="size-4" /> : <ArrowRight className="size-4" />}
+            </button>
+          </div>
+        </div>
+        <p className="hidden text-center text-xs text-muted-foreground lg:block">{t('exam.keyboardHint')}</p>
+      </div>
+    </footer>
   );
 }
 

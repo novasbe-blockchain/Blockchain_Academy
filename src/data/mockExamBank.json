@@ -4301,20 +4301,20 @@
    "explanation": "The gate never asks who you are, only what you hold: the wallet signs a one-time message, then a free read of the membership contract decides."
   },
   {
-   "id": "sc-78067459",
+   "id": "sc-51b00587",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "According to \"the honest NFT story\", which uses of NFTs survived the 2021 boom?",
+   "question": "Which kind of NFT use is a logical, lasting one because it relies on real utility rather than speculation?",
    "options": [
     "Uses where the token is a key, not a speculation: ticketing, credentials, token-gating.",
     "Perpetual creator royalties, because the chain enforces them on every single resale of a token.",
-    "Brand loyalty collectibles such as Starbucks Odyssey.",
+    "Hype-driven collectibles bought mainly to be resold at a higher price.",
     "Profile-picture collections, whose value rests on floor prices that keep rising year after year."
    ],
    "correct_option_number": 1,
    "correct_option_text": "Uses where the token is a key, not a speculation: ticketing, credentials, token-gating.",
-   "explanation": "Utility that does not depend on the price going up is the utility that lasts."
+   "explanation": "When the token works as a key (a ticket, a credential, access to a gated community), it is useful whatever its price. Utility that does not depend on the price going up is the utility that lasts. Royalties are not reliably enforced on resale, and floor-price or hype-driven collectibles are speculation."
   },
   {
    "id": "sc-2b6ac5ee",
@@ -4395,22 +4395,6 @@
    "correct_option_number": 2,
    "correct_option_text": "By splitting its holdings across many wallets, so that it looks like many separate people.",
    "explanation": "Quadratic voting only dampens plutocracy if every wallet is one real person; without identity checks it is open to this Sybil attack."
-  },
-  {
-   "id": "sc-9ed027fd",
-   "course": "smart-contracts",
-   "section_number": 3,
-   "section_title": "Industries & Case Studies",
-   "question": "A member of a small DAO loses a vote on how the treasury will be spent and strongly disagrees. Which building block lets the member leave with a fair share?",
-   "options": [
-    "A timelock, which delays the decision by a fixed period before the treasury contract can execute it.",
-    "A multisig, which requires several named key holders to approve each payment from the treasury.",
-    "Quadratic voting, which makes each additional vote cost more tokens than the one before it.",
-    "Rage-quit, which lets the member burn their shares and withdraw a proportional slice."
-   ],
-   "correct_option_number": 4,
-   "correct_option_text": "Rage-quit, which lets the member burn their shares and withdraw a proportional slice.",
-   "explanation": "Rage-quit is an exit right: the member withdraws their slice before the decision executes."
   },
   {
    "id": "sc-c60f38ef",
@@ -4653,11 +4637,11 @@
    "explanation": "Portable asset ownership is on the \"makes sense\" list; changing rules, a single trusted party and private data are on the \"rethink\" list."
   },
   {
-   "id": "sc-30c65a0a",
+   "id": "sc-992fda3f",
    "course": "smart-contracts",
    "section_number": 4,
    "section_title": "Critical Thinking",
-   "question": "A blockchain project starts from the technology, has no agreed success metrics and has no senior sponsor to keep it funded through setbacks. Which adoption pillar is failing?",
+   "question": "A blockchain project starts from the technology with no clear business purpose, no agreed success metrics and no executive buy-in. Which adoption pillar is failing?",
    "options": [
     "Strategic alignment",
     "Technical infrastructure",
@@ -4666,7 +4650,7 @@
    ],
    "correct_option_number": 1,
    "correct_option_text": "Strategic alignment",
-   "explanation": "Strategic alignment covers the use case, success metrics, executive buy-in and staff training: is there a clear business purpose, or blockchain for its own sake?"
+   "explanation": "Strategic alignment asks whether there is a clear business purpose or just blockchain for its own sake. It covers the use case, success metrics, executive buy-in and staff training, which is exactly where this project falls short."
   },
   {
    "id": "sc-eb1abe3c",
@@ -5581,11 +5565,11 @@
    "explanation": "Miners can independently produce competing valid blocks before learning about one another's results. A temporary disagreement about the preferred tip is therefore possible without forged transactions or dishonest behaviour. Nodes subsequently follow the valid chain with the greatest accumulated work."
   },
   {
-   "id": "bf-d4483892",
+   "id": "bf-6d30ce5b",
    "course": "blockchain-fundamentals",
    "section_number": 2,
    "section_title": "Bitcoin and Beyond",
-   "question": "Why does expressing a Bitcoin payment in smaller units, such as satoshis, not by itself increase the supply of bitcoin?",
+   "question": "Why does expressing a Bitcoin payment in smaller units, such as counting a payment as 100,000 satoshis instead of 0.001 BTC, not by itself increase the supply of bitcoin?",
    "options": [
     "It creates additional bitcoin that cannot be spent until converted back into BTC.",
     "It increases supply only for the recipient, while leaving the sender's supply fixed.",
@@ -5645,20 +5629,20 @@
    "explanation": "Mining is a probabilistic race. More hash power raises the expected rate of finding blocks, given the network conditions, but short-run outcomes can vary. A production claim should distinguish expected performance from guaranteed results."
   },
   {
-   "id": "bf-b50bc906",
+   "id": "bf-62a75eda",
    "course": "blockchain-fundamentals",
    "section_number": 2,
    "section_title": "Bitcoin and Beyond",
-   "question": "A merchant wants to check incoming Bitcoin payments against consensus rules itself, without competing to produce blocks. Which activity meets that objective?",
+   "question": "A merchant wants to verify for itself that incoming Bitcoin payments follow Bitcoin's rules, without becoming a miner. What should the merchant do?",
    "options": [
-    "Open more receiving addresses while leaving all validation to the wallet provider.",
-    "Run a validating full node without adding a mining operation.",
-    "Buy mining equipment but rely on the exchange's payment dashboard for validation.",
-    "Hold additional BTC so the network assigns the merchant more validation authority."
+    "Leave validation to its wallet provider or exchange and trust the result they report.",
+    "Run its own full node, which validates blocks and transactions but does not mine.",
+    "Buy mining equipment, because only miners are able to validate payments.",
+    "Hold more BTC, because a larger balance gives a node more weight in validation."
    ],
    "correct_option_number": 2,
-   "correct_option_text": "Run a validating full node without adding a mining operation.",
-   "explanation": "Validation and mining are distinct roles. A full node can independently reject invalid blocks and transactions without mining. Mining adds competition to propose blocks; merely holding more BTC does not give a Bitcoin node extra consensus voting weight."
+   "correct_option_text": "Run its own full node, which validates blocks and transactions but does not mine.",
+   "explanation": "Validating and mining are separate roles. A full node checks every block and transaction against Bitcoin's consensus rules and rejects invalid ones, with no mining required. Leaving validation to a wallet provider or exchange means trusting their checks, mining equipment is for competing to produce blocks, and holding more BTC gives no extra say in validation."
   },
   {
    "id": "bf-4e5ed309",
@@ -6189,20 +6173,20 @@
    "explanation": "Standards let software interact with tokens in a predictable way. They do not determine reserve quality, redemption rights, issuer solvency or every administrative power. Technical compatibility and investment equivalence are separate assessments."
   },
   {
-   "id": "bp-5589e70d",
+   "id": "bp-b40a11fd",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "An Ethereum wallet resubmits the exact same signed transaction after an uncertain network response. Once that transaction has executed, why does resubmitting it not normally debit the account again?",
+   "question": "A wallet sends the same signed Ethereum transaction twice because it wasn't sure the first one went through. After the transaction has executed once, why isn't the account charged a second time?",
    "options": [
     "The account nonce prevents the same signed transaction from executing twice on that chain.",
     "The signature authorises only the first node receiving it to apply the payment.",
-    "Only the wallet provider marks the request as used and blocks every later network copy.",
+    "Only the wallet provider marks the request as used and then blocks every later copy on the network.",
     "Ethereum rejects every later payment with the same sender, recipient and token amount."
    ],
    "correct_option_number": 1,
    "correct_option_text": "The account nonce prevents the same signed transaction from executing twice on that chain.",
-   "explanation": "For an ordinary account transaction, the nonce identifies the next authorised transaction position. Once used, the same signed transaction cannot execute again against that account state on the same chain. Rebroadcasting the same request differs from authorising a new payment with a new nonce."
+   "explanation": "Every transaction from an account carries a nonce, a counter that must match the account's next expected number. Once the transaction executes, that number is used up, so an identical copy is rejected instead of running again. Paying twice would need a new transaction with a new nonce."
   },
   {
    "id": "bp-df9564f5",
@@ -6491,22 +6475,6 @@
    "correct_option_number": 2,
    "correct_option_text": "A right to redeem each token immediately for cash or a physical slice of the building.",
    "explanation": "Fractionalisation concerns the size of the recorded claim. Redemption, cash availability, sale procedures and rights in the property depend on the legal and operational arrangement. Small units do not make an indivisible building automatically redeemable on demand."
-  },
-  {
-   "id": "sc-25e4525a",
-   "course": "smart-contracts",
-   "section_number": 2,
-   "section_title": "How Smart Contracts Work",
-   "question": "A bond token and its payment token can be exchanged in one transaction that reverts unless both legs complete. What risk does this design most directly reduce?",
-   "options": [
-    "The parties later disagreeing about the legal terms of the bond's cash flows.",
-    "The bond issuer defaulting on interest due several years after settlement.",
-    "One party delivering its on-chain asset while the other on-chain leg fails to arrive.",
-    "The payment token's issuer failing to maintain sufficient reserves in the future."
-   ],
-   "correct_option_number": 3,
-   "correct_option_text": "One party delivering its on-chain asset while the other on-chain leg fails to arrive.",
-   "explanation": "Atomic exchange can tie the two specified asset movements together, reducing the risk of one-sided delivery in that settlement. It does not remove credit risk, backing risk or disputes over the legal instrument. The scenario concerns compatible assets inside one transaction boundary."
   },
   {
    "id": "sc-e070fe1b",
