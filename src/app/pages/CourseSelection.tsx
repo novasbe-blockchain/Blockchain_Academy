@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Lock, Sparkles, Heart } from 'lucide-react';
 import { useLang } from '../../i18n/useLang';
@@ -8,6 +8,7 @@ import { BrandLogo } from '../components/shared/BrandLogo';
 import { SiteFooter } from '../components/shared/SiteFooter';
 import { BlockchainCheckGame } from '../components/blockchain/BlockchainCheckGame';
 import { useFitToViewport } from '../hooks/useFitToViewport';
+import { useSecretSequence } from '../hooks/useSecretSequence';
 
 interface Course {
   number: string;
@@ -67,6 +68,15 @@ export function CourseSelection() {
   // Scale the hero content so the title, course cards and mini-game always fit
   // within one viewport height — the footer is the only thing below the fold.
   const { ref: fitRef, scale } = useFitToViewport(48);
+
+  // Easter egg: typing "examexamexam" on this page opens the hidden mock exam.
+  // It is the only way in — the route is not linked anywhere. The nonce tells
+  // the exam page this is a new trigger, so it starts a fresh exam rather than
+  // re-showing the results of an earlier one.
+  const navigate = useNavigate();
+  useSecretSequence('examexamexam', () =>
+    navigate(`/${lang}/mock`, { state: { mockExamNonce: String(Date.now()) } }),
+  );
 
   return (
     <div className="size-full overflow-y-auto">

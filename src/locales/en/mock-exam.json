@@ -1,0 +1,58 @@
+{
+  "title": "Mock exam",
+  "badge": "Practice",
+  "home": "Back to the Academy",
+  "loading": "Preparing your exam…",
+  "courses": {
+    "blockchain-fundamentals": "Blockchain Fundamentals",
+    "blockchain-platforms": "Blockchain Platforms",
+    "smart-contracts": "Smart Contracts"
+  },
+  "exam": {
+    "questionOf": "Question {{n}} of {{total}}",
+    "answered": "{{n}} / {{total}} answered",
+    "timeLeft": "Time left",
+    "previous": "Previous",
+    "next": "Next",
+    "submit": "Submit exam",
+    "newExam": "New exam",
+    "navigator": "Questions",
+    "goToQuestion": "Go to question {{n}}",
+    "legendAnswered": "Answered",
+    "legendCurrent": "Current",
+    "legendUnanswered": "Not answered",
+    "clear": "Clear answer",
+    "keyboardHint": "Keys: A–D or 1–4 to answer · ← → to move"
+  },
+  "confirm": {
+    "submitTitle": "Submit your exam?",
+    "submitAllAnswered": "You have answered every question. You can't change your answers after submitting.",
+    "submitUnanswered_one": "{{count}} question is still unanswered and will be marked wrong. You can't change your answers after submitting.",
+    "submitUnanswered_other": "{{count}} questions are still unanswered and will be marked wrong. You can't change your answers after submitting.",
+    "submitConfirm": "Submit exam",
+    "newTitle": "Start a new exam?",
+    "newBody": "This exam and its answers are discarded, and you get a fresh set of 30 questions with the timer reset.",
+    "newConfirm": "Start new exam",
+    "cancel": "Keep going"
+  },
+  "results": {
+    "title": "Your result",
+    "scoreLabel": "{{correct}} of {{total}} correct",
+    "timedOut": "Time ran out, so the exam was submitted automatically.",
+    "timeUsed": "Time used",
+    "answeredStat": "Answered",
+    "byCourse": "By course",
+    "review": "Review",
+    "filterAll": "All questions",
+    "filterWrong": "Only the ones I missed",
+    "nothingMissed": "Nothing missed — every answer was correct.",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
+    "unanswered": "Not answered",
+    "yourAnswer": "Your answer",
+    "correctAnswer": "Correct answer",
+    "explanation": "Explanation",
+    "newExam": "New exam",
+    "backToTop": "Back to top"
+  }
+}
