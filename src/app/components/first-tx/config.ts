@@ -80,11 +80,25 @@ export const APP_METADATA = {
 /** The contract refuses identifiers longer than this (see `register` in ClassRegistry.sol). */
 export const MAX_ID_LENGTH = 100;
 
-/** Outside links used by the wizard steps. `highlight` marks the option we lead with. */
+/**
+ * Outside links used by the wizard steps. `highlight` marks the option we lead with.
+ *
+ * The wizard is done in a laptop or iPad browser, so both wallets are BROWSER EXTENSIONS and
+ * each link goes to the extension's own site. `rdns` is the name the extension announces
+ * itself with in the browser (EIP-6963); `flag` is the older `window.ethereum` marker.
+ */
 export const WALLET_LINKS = [
-  { id: 'rabby', name: 'Rabby', url: 'https://rabby.io', highlight: true },
-  { id: 'zerion', name: 'Zerion', url: 'https://zerion.io', highlight: true },
-  { id: 'metamask', name: 'MetaMask', url: 'https://metamask.io', highlight: false },
+  { id: 'rabby', name: 'Rabby', url: 'https://rabby.io/', rdns: 'io.rabby', flag: 'isRabby', highlight: true },
+  { id: 'metamask', name: 'MetaMask', url: 'https://metamask.io/', rdns: 'io.metamask', flag: 'isMetaMask', highlight: false },
+] as const;
+
+/**
+ * Rabby is also a phone app. These are the store pages rabby.io itself links to (checked
+ * 2026-11). A side note only: a phone wallet connects through the WalletConnect QR code.
+ */
+export const RABBY_MOBILE_LINKS = [
+  { id: 'ios', name: 'App Store', url: 'https://apps.apple.com/us/app/rabby-wallet-crypto-evm/id6474381673' },
+  { id: 'android', name: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.debank.rabbymobile' },
 ] as const;
 
 export const FAUCET_LINKS = [

@@ -8,10 +8,8 @@ import {
 import { useLang } from '../../../i18n/useLang';
 import { KeyPointBar } from '../shared/KeyPointBar';
 import { KeywordText } from '../shared/KeywordText';
-import { CHAIN, FAUCET_LINKS, WALLET_LINKS } from './config';
-import { AMBER, GREEN, INDIGO, NS, PanelMessage, SKY, VIOLET, shorten, type WizardStatus } from './ui';
-import rabbyIcon from '../../../rabby-icon.png';
-import zerionIcon from '../../../zerion-icon.png';
+import { CHAIN, FAUCET_LINKS, RABBY_MOBILE_LINKS, WALLET_LINKS } from './config';
+import { AMBER, GREEN, INDIGO, NS, OutLink, PanelMessage, SKY, VIOLET, WALLET_ICONS, shorten, type WizardStatus } from './ui';
 
 /**
  * "Your First Transaction" — a real, wallet-connected wizard (Smart Contracts §8, Assignment 3 · Part B).
@@ -34,8 +32,6 @@ const LAST = STEPS.length - 1;
 const WEB3_FROM = 2;
 const RAIL_GRADIENT = `linear-gradient(90deg, ${INDIGO}, ${SKY}, ${VIOLET}, ${AMBER}, ${GREEN})`;
 
-const WALLET_ICONS: Record<string, string | undefined> = { rabby: rabbyIcon, zerion: zerionIcon };
-
 interface StepCopy { label: string; title: string; actions: string[]; why: string; }
 
 const FirstTxWeb3 = lazy(() => import('./FirstTxWeb3'));
@@ -53,7 +49,7 @@ function WalletLinks() {
   return (
     <div className="flex-1 min-h-0 flex flex-col gap-2.5">
       <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: INDIGO }}>{t('wallets.heading')}</div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         {WALLET_LINKS.map((w) => {
           const icon = WALLET_ICONS[w.id];
           return (
@@ -79,12 +75,17 @@ function WalletLinks() {
               </div>
               <p className="text-xs text-muted-foreground leading-snug">{t(`wallets.${w.id}`)}</p>
               <span className="mt-auto inline-flex items-center gap-1 text-xs font-bold group-hover:opacity-80" style={{ color: INDIGO }}>
-                {w.url.replace('https://', '')}<ExternalLink className="size-3 shrink-0" />
+                {new URL(w.url).hostname}<ExternalLink className="size-3 shrink-0" />
               </span>
             </a>
           );
         })}
       </div>
+      {/* A footnote, not an option card: the phone app connects by QR code, the slower path in step 3. */}
+      <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-muted-foreground leading-snug">
+        <span>{t('wallets.phone')}</span>
+        {RABBY_MOBILE_LINKS.map((l) => <OutLink key={l.id} href={l.url} color={INDIGO}>{l.name}</OutLink>)}
+      </p>
       <div className="mt-auto flex items-start gap-2 p-2.5 rounded-xl border text-xs leading-snug text-foreground" style={{ borderColor: AMBER + '66', backgroundColor: AMBER + '12' }}>
         <KeyRound className="size-4 shrink-0 mt-0.5" style={{ color: AMBER }} />
         <span>{t('wallets.safety')}</span>

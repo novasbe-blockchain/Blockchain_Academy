@@ -33,7 +33,7 @@
         "where": "Assistente · passos 1–3",
         "lead": "Arranja uma [carteira](kw:wallet) na testnet Sepolia, com algumas moedas de teste gratuitas.",
         "items": [
-          "Instala uma carteira: Rabby, Zerion ou MetaMask. Usa uma nova, sem fundos reais.",
+          "Instala uma carteira como extensão de browser: Rabby ou MetaMask. Usa uma nova, sem fundos reais.",
           "Pede ETH de teste gratuito numa faucet da Sepolia. Paga o gas e não tem valor real.",
           "Liga a carteira ao assistente e muda-a para a Sepolia."
         ],

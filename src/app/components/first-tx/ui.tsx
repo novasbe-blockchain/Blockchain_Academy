@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { ExternalLink, type LucideIcon } from 'lucide-react';
+import rabbyIcon from '../../../rabby-icon.png';
+import metamaskIcon from '../../../metamask-icon.svg';
 
 /** Small presentational bits shared by the wizard shell and its lazy web3 half. */
 
@@ -11,6 +13,9 @@ export const VIOLET = '#8b5cf6';
 export const AMBER = '#f59e0b';
 export const GREEN = '#39B54A';
 export const RED = '#ef4444';
+
+/** Logos of the two browser-extension wallets, keyed by their id in WALLET_LINKS. */
+export const WALLET_ICONS: Record<string, string | undefined> = { rabby: rabbyIcon, metamask: metamaskIcon };
 
 /** What the web3 half reports back, shown in the "what you have so far" strip. */
 export interface WizardStatus {

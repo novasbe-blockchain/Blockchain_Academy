@@ -22,7 +22,7 @@
       "label": "Wallet",
       "title": "Get a wallet",
       "actions": [
-        "Install Rabby or Zerion on your phone (or MetaMask), then create an account.",
+        "In your laptop or iPad browser, install the Rabby or MetaMask browser extension, then create an account.",
         "Write the secret recovery phrase on paper. Never type it into a website, this one included.",
         "Use a fresh wallet for this course, not one that holds real funds."
       ],
@@ -42,8 +42,8 @@
       "label": "Connect",
       "title": "Connect and switch to Sepolia",
       "actions": [
-        "Press Connect wallet and pick your wallet. Phone wallet? Scan the QR code, or open this page in the wallet's built-in browser.",
-        "Approve the connection in the wallet. It shares your public address, nothing else.",
+        "In your laptop or iPad browser: install the Rabby or MetaMask browser extension, then press Connect Rabby or Connect MetaMask.",
+        "Approve the connection in the extension's pop-up. It shares your public address, nothing else.",
         "If the wallet is on another network, press Switch to Sepolia."
       ],
       "why": "connecting lets this page see your address. It cannot move anything: every action still needs your signature."
@@ -70,12 +70,12 @@
     }
   ],
   "wallets": {
-    "heading": "Pick one",
-    "recommended": "Phone app",
-    "alternative": "Alternative",
-    "rabby": "Clear previews of what each signature will do.",
-    "zerion": "Simple phone wallet with a built-in browser.",
-    "metamask": "The best-known browser extension.",
+    "heading": "Pick one browser extension",
+    "recommended": "Browser extension · recommended",
+    "alternative": "Browser extension",
+    "rabby": "Clear previews of what each signature will do. For Chrome, Brave and Edge; on an iPad, use a browser that supports extensions.",
+    "metamask": "The best-known wallet. For Chrome, Firefox, Brave and Edge.",
+    "phone": "Phone only? Rabby is also a mobile app (it connects by QR code in step 3):",
     "safety": "The recovery phrase IS the wallet. Whoever has the words controls the funds."
   },
   "faucets": {
@@ -93,10 +93,21 @@
     "loading": "Loading wallet tools…",
     "loadError": "The wallet tools could not load. Check your connection and reload the page.",
     "wallet": "Wallet",
-    "connect": "Connect wallet",
+    "browserHeading": "Laptop or iPad browser",
+    "browserLead": "Install the Rabby or MetaMask browser extension, then connect.",
+    "connectWallet": "Connect {{name}}",
+    "extension": "Browser extension",
+    "detected": "Found in this browser",
+    "notInstalled": "{{name}} was not found in this browser. Install the extension, reload this page, then connect.",
+    "install": "Get {{name}}",
+    "noExtension": "No extension yet?",
+    "otherWallets": "Also in this browser:",
+    "browserWallet": "browser wallet",
+    "phoneSummary": "On your phone instead? Scan to connect a mobile wallet",
+    "phoneBody": "Shows a QR code (WalletConnect) to scan with a wallet app such as Rabby mobile. Some networks block this connection: if no code appears, use the browser extension.",
+    "phoneButton": "Show QR code",
     "connected": "Connected",
     "manage": "Change",
-    "notConnected": "No wallet connected yet.",
     "network": "Network",
     "onSepolia": "{{name}} · chain ID {{id}}",
     "wrongNetwork": "Your wallet is on another network (chain ID {{id}}).",
@@ -107,9 +118,10 @@
     "balanceValue": "{{amount}} test ETH",
     "noFunds": "No test ETH yet. Without it you cannot pay gas.",
     "toFaucets": "Back to the faucets",
-    "ready": "Ready. Go to the next step.",
-    "noWalletConnect": "QR-code connection is not switched on yet. On a phone, open this page in your wallet's built-in browser.",
-    "relayStalled": "The QR-code connection (WalletConnect) is not answering; some networks block it. On a phone? Open this page inside your wallet app's browser (Rabby, Zerion or MetaMask). On a laptop, use a browser-extension wallet, or try the WalletConnect QR code again.",
+    "ready": "Connected and ready.",
+    "continue": "Continue",
+    "noWalletConnect": "QR-code connection is not switched on. Use the Rabby or MetaMask browser extension, or open this page in your wallet app's built-in browser.",
+    "relayStalled": "The QR-code connection (WalletConnect) is not answering; some networks block it. Use the Rabby or MetaMask browser extension instead. Phone only? Open this page inside your wallet app's browser, or try the QR code again.",
     "walletGroups": {
       "browser": "In this browser",
       "phone": "On your phone (QR code)"
