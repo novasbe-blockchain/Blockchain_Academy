@@ -441,7 +441,7 @@
         "label": "Wallet",
         "title": "Create a wallet",
         "actions": [
-          "On your phone, install [Rabby (rabby.io)](https://rabby.io) or [Zerion (zerion.io)](https://zerion.io) from the App Store or Google Play, then create an account.",
+          "In your laptop or iPad browser, install the [Rabby](https://rabby.io/) (recommended) or [MetaMask](https://metamask.io/) browser extension, then create an account. On an iPad, use a browser that supports extensions.",
           "Write the secret recovery phrase down on paper. Never share it, never type it into a website.",
           "Use a fresh wallet for testing, not one that holds real funds."
         ],
@@ -462,8 +462,8 @@
         "title": "Deploy the contract",
         "actions": [
           "Open Remix, paste the contract and press Compile.",
-          "In Deploy & Run, set the environment to WalletConnect and scan the QR code with your phone wallet.",
-          "Press Deploy and confirm on your phone. Seconds later the contract has an address."
+          "In Deploy & Run, set the environment to Injected Provider - MetaMask (or Rabby): that is your browser extension. Approve the connection in its pop-up and check that it shows Sepolia.",
+          "Press Deploy and confirm in the extension's pop-up. Seconds later the contract has an address."
         ],
         "bridge": "deploying is itself a transaction. You signed it, the network stored your code, and that code now lives at a permanent public address."
       },
@@ -493,7 +493,7 @@
       "faucetFlow": "test ETH",
       "remixTitle": "Remix · Deploy & Run",
       "environment": "Environment",
-      "environmentValue": "WalletConnect · phone wallet",
+      "environmentValue": "Injected Provider - Rabby",
       "contract": "Contract",
       "confirmTitle": "Wallet · confirm",
       "confirmKind": "Contract deployment",
@@ -557,7 +557,7 @@
         "desc": "Holds the user's keys. Signs each transaction and sends it to the network.",
         "chips": [
           "Rabby",
-          "Zerion"
+          "MetaMask"
         ]
       },
       "rpc": {
@@ -607,7 +607,7 @@
         },
         {
           "name": "Write · the user's wallet",
-          "desc": "Rabby, Zerion and others. The user signs and sends; your site never holds keys."
+          "desc": "Rabby, MetaMask and others. The user signs and sends; your site never holds keys."
         }
       ],
       "tradeoff": "Trade-off: a provider saves you the work, but puts one company between your site and the chain."
