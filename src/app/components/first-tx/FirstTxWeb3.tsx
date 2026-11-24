@@ -8,45 +8,69 @@
  */
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import {
   RainbowKitProvider, connectorsForWallets, darkTheme, lightTheme, useAccountModal, useConnectModal,
 } from '@rainbow-me/rainbowkit';
-import {
-  injectedWallet, metaMaskWallet, rabbyWallet, walletConnectWallet, zerionWallet,
-} from '@rainbow-me/rainbowkit/wallets';
+import { injectedWallet, rabbyWallet, walletConnectWallet, zerionWallet } from '@rainbow-me/rainbowkit/wallets';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
-  WagmiProvider, createConfig, fallback, http, useAccount, useBalance, useReadContract,
-  useSwitchChain, useWaitForTransactionReceipt, useWriteContract,
+  WagmiProvider, createConfig, fallback, http, useAccount, useBalance, useConnect, useConnectors, useReadContract,
+  useSwitchChain, useWaitForTransactionReceipt, useWriteContract, type Connector,
 } from 'wagmi';
 import {
   BaseError, InsufficientFundsError, UserRejectedRequestError, formatEther, type Address, type Hex,
 } from 'viem';
 import {
-  BadgeCheck, Check, Copy, Droplets, Eye, Hash, Info, Loader2, Network, Plug, Send, TriangleAlert,
-  Users, Wallet, type LucideIcon,
+  ArrowRight, BadgeCheck, Check, ChevronDown, ChevronRight, Copy, Droplets, Eye, Hash, Info, Loader2, Network, Plug,
+  QrCode, Send, Smartphone, TriangleAlert, Users, Wallet, type LucideIcon,
 } from 'lucide-react';
+import i18n from '../../../i18n/config';
 import {
-  CHAIN, CONTRACT_ADDRESS, CONTRACT_READY, HASH_IDENTIFIER, MAX_ID_LENGTH, WALLETCONNECT_PROJECT_ID,
-  explorerAddressUrl, explorerTxUrl,
+  APP_METADATA, CHAIN, CONTRACT_ADDRESS, CONTRACT_READY, HASH_IDENTIFIER, MAX_ID_LENGTH, WALLETCONNECT_PROJECT_ID,
+  WALLET_LINKS, explorerAddressUrl, explorerTxUrl,
 } from './config';
 import { abi, chain, toPayload } from './registry';
-import { AMBER, GREEN, INDIGO, NS, OutLink, PanelMessage, RED, SKY, VIOLET, shorten, type WizardStatus } from './ui';
+import {
+  AMBER, GREEN, INDIGO, NS, OutLink, PanelMessage, RED, SKY, VIOLET, WALLET_ICONS, shorten, type WizardStatus,
+} from './ui';
 
 // ─── One wagmi setup for the whole page (module scope: created once) ────────
 
 const hasWalletConnect = WALLETCONNECT_PROJECT_ID.length > 0;
 
+// Group titles are read once, in the language the page had when this file loaded.
+const groupName = (key: string) => i18n.t(`web3.walletGroups.${key}`, { ns: NS });
+
+/**
+ * The main way in is a browser-extension wallet, and the connect step has its own buttons for
+ * that (see `findBrowserWallet`): they talk to the extension directly, with no relay and no
+ * QR code. The list below feeds RainbowKit's wallet picker, which is now the SECONDARY path,
+ * opened from "On your phone instead?". Two groups:
+ *  - a wallet that lives in this browser (an extension on a laptop, or the wallet app's own
+ *    browser on a phone). MetaMask, Zerion and any other installed extension announce
+ *    themselves (EIP-6963) and are listed automatically, so only Rabby is named here.
+ *  - a wallet on a phone, paired through the WalletConnect relay by scanning a QR code.
+ *    Both entries share ONE relay client: RainbowKit reuses the WalletConnect connector for
+ *    every wallet created with the same settings. MetaMask's own entry is left out on
+ *    purpose, because it brings a second SDK with a second relay connection; the MetaMask
+ *    app scans the WalletConnect QR code like any other wallet.
+ * Without a WalletConnect project id only the first group can work, so only that is offered.
+ */
 const connectors = connectorsForWallets(
-  [{
-    groupName: 'Wallets',
-    // Without a WalletConnect project id only injected wallets can work, so only those are offered.
-    wallets: hasWalletConnect
-      ? [rabbyWallet, zerionWallet, metaMaskWallet, walletConnectWallet, injectedWallet]
-      : [rabbyWallet, injectedWallet],
-  }],
-  { appName: 'Blockchain Academy', projectId: WALLETCONNECT_PROJECT_ID || 'not-configured' },
+  [
+    { groupName: groupName('browser'), wallets: [rabbyWallet, injectedWallet] },
+    ...(hasWalletConnect ? [{ groupName: groupName('phone'), wallets: [walletConnectWallet, zerionWallet] }] : []),
+  ],
+  {
+    appName: APP_METADATA.name,
+    appDescription: APP_METADATA.description,
+    // A local dev server gives its own address, so the wallet's domain check does not flag a mismatch.
+    appUrl: import.meta.env.DEV ? window.location.origin : APP_METADATA.url,
+    appIcon: APP_METADATA.icon,
+    projectId: WALLETCONNECT_PROJECT_ID || 'not-configured',
+  },
 );
 
 const wagmiConfig = createConfig({
@@ -77,6 +101,128 @@ function useDarkClass() {
     return () => observer.disconnect();
   }, []);
   return dark;
+}
+
+/** RainbowKit's wallet picker sits at z-index 2147483646; this is one above it. */
+const ABOVE_WALLET_PICKER = 2147483647;
+
+/** How long a WalletConnect pairing may stay silent. A relay that can be reached answers in about a second. */
+const RELAY_PATIENCE_MS = 8_000;
+
+/** The few parts of a WalletConnect client the wizard reaches into: its relay socket and its timer. */
+type RelayClient = {
+  heartbeat?: { stop?: () => void; init?: () => unknown };
+  relayer?: { connected?: boolean; transportClose?: () => Promise<void> };
+};
+type RelayedProvider = { signer?: { client?: { core?: RelayClient } } };
+
+/** Relay clients this page has put to rest, so that the next attempt can wake them. */
+const resting = new Set<RelayClient>();
+
+/**
+ * Stops the WalletConnect clients from redialling a relay they cannot reach. Left alone, a
+ * client keeps the unanswered pairing on its list and opens a new socket every few seconds
+ * for as long as the page stays open, wallet picker closed or not, until the browser refuses
+ * with "Insufficient resources". Closing the socket is not enough: the client's 5-second
+ * heartbeat reopens it. So the heartbeat is paused too, and `wakeRelay` restarts it.
+ * Every step is optional: on a client built differently this does nothing at all.
+ */
+async function restRelay(relayed: readonly Connector[], stillStalled: () => boolean) {
+  const providers = await Promise.all(relayed.map((connector) => connector.getProvider().catch(() => undefined)));
+  if (!stillStalled()) return;
+  for (const provider of new Set(providers)) {
+    const client = (provider as RelayedProvider | undefined)?.signer?.client?.core;
+    const heartbeat = client?.heartbeat;
+    // A client that did get through is left alone, and so is one already at rest.
+    if (!client || !heartbeat?.stop || !heartbeat.init || client.relayer?.connected || resting.has(client)) continue;
+    heartbeat.stop();
+    resting.add(client);
+    void client.relayer?.transportClose?.()?.catch(() => { /* already closed */ });
+  }
+}
+
+function wakeRelay() {
+  for (const client of resting) void client.heartbeat?.init?.();
+  resting.clear();
+}
+
+/**
+ * True while a WalletConnect attempt is going unanswered: the relay has not sent the pairing
+ * link, so there is no QR code to draw. RainbowKit shows nothing at all in that case (a
+ * blocked network just leaves its window idle), so the wizard watches for it, says so, and
+ * stops the client from redialling in the background.
+ */
+function useRelayStalled(): boolean {
+  const connectors = useConnectors();
+  const { isConnected } = useAccount();
+  const [stalled, setStalled] = useState(false);
+  const timer = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    // Every WalletConnect-backed wallet is watched: wallets set up alike share one relay
+    // client, and the pairing link is announced on whichever of them asked first.
+    const relayed = connectors.filter((connector) => connector.type === 'walletConnect');
+    let attempt = 0;
+    const onMessage = ({ type }: { type: string }) => {
+      if (type !== 'connecting' && type !== 'display_uri') return;
+      window.clearTimeout(timer.current);
+      setStalled(false);
+      // 'display_uri' is the relay's answer and closes the attempt; 'connecting' opens one.
+      if (type !== 'connecting') return;
+      wakeRelay();
+      const current = ++attempt;
+      timer.current = window.setTimeout(() => {
+        setStalled(true);
+        void restRelay(relayed, () => current === attempt);
+      }, RELAY_PATIENCE_MS);
+    };
+    for (const connector of relayed) connector.emitter.on('message', onMessage);
+    return () => {
+      window.clearTimeout(timer.current);
+      for (const connector of relayed) connector.emitter.off('message', onMessage);
+    };
+  }, [connectors]);
+
+  // Connected after all (a slow relay, or another wallet): nothing left to warn about.
+  useEffect(() => {
+    if (!isConnected) return;
+    window.clearTimeout(timer.current);
+    setStalled(false);
+  }, [isConnected]);
+
+  return stalled && !isConnected;
+}
+
+// ─── Wallets that live in this browser (the main way in) ────────────────────
+
+type BrowserWallet = (typeof WALLET_LINKS)[number];
+
+/** True for a connector that a wallet announced itself (EIP-6963), as opposed to one RainbowKit set up. */
+const isAnnounced = (connector: Connector) => connector.type === 'injected' && !('rkDetails' in connector);
+
+/** The plain `window.ethereum` of a browser whose wallet does not announce itself. */
+const legacyProvider = () => (window as { ethereum?: Partial<Record<BrowserWallet['flag'], boolean>> }).ethereum;
+
+/**
+ * The connector for one browser-extension wallet, or undefined when it is not in this browser.
+ * Extensions announce themselves and wagmi lists each one under its announced name, so the
+ * right wallet is reached even with two installed side by side. Only a browser where nothing
+ * announces itself falls back to the markers on `window.ethereum`.
+ */
+function findBrowserWallet(connectors: readonly Connector[], wallet: BrowserWallet): Connector | undefined {
+  const announced = connectors.filter(isAnnounced);
+  if (announced.length > 0) return announced.find(({ id }) => id === wallet.rdns || id.startsWith(`${wallet.rdns}.`));
+  const ethereum = legacyProvider();
+  // Rabby may set MetaMask's marker as well, so Rabby's own marker decides.
+  const present = wallet.flag === 'isRabby' ? ethereum?.isRabby : ethereum?.isMetaMask && !ethereum.isRabby;
+  return present ? connectors.find(({ id }) => id === 'injected') : undefined;
+}
+
+/** Any other wallet in this browser: another extension, or the browser inside a wallet app. */
+function findOtherWallets(connectors: readonly Connector[], known: readonly (Connector | undefined)[]): Connector[] {
+  const announced = connectors.filter((connector) => isAnnounced(connector) && !known.includes(connector));
+  if (announced.length > 0 || known.some(Boolean) || !legacyProvider()) return announced;
+  return connectors.filter(({ id }) => id === 'injected');
 }
 
 type Translate = (key: string, options?: Record<string, unknown>) => string;
@@ -124,6 +270,31 @@ function ActionButton({ onClick, color, disabled, busy, Icon, children, outline 
   );
 }
 
+/** The large "Connect Rabby" / "Connect MetaMask" button of the connect step. */
+function WalletButton({ icon, title, hint, busy, disabled, onClick }: {
+  icon?: string; title: string; hint: string; busy: boolean; disabled: boolean; onClick: () => void;
+}) {
+  const Glyph = busy ? Loader2 : ChevronRight;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-white transition-opacity cursor-pointer hover:opacity-90 disabled:opacity-60 disabled:cursor-default min-w-0"
+      style={{ backgroundColor: VIOLET }}
+    >
+      {icon
+        ? <img src={icon} alt="" className="size-10 rounded-lg shrink-0 bg-white" />
+        : <span className="size-10 rounded-lg shrink-0 flex items-center justify-center bg-white/20"><Wallet className="size-5" /></span>}
+      <span className="min-w-0 flex-1">
+        <span className="block font-black text-base leading-tight">{title}</span>
+        <span className="block text-[11px] font-bold leading-tight opacity-90 mt-0.5">{hint}</span>
+      </span>
+      <Glyph className={`size-5 shrink-0 ${busy ? 'animate-spin' : ''}`} />
+    </button>
+  );
+}
+
 function Notice({ Icon, color, children }: { Icon: LucideIcon; color: string; children: ReactNode }) {
   return (
     <div className="flex items-start gap-2 p-2.5 rounded-xl border text-xs leading-snug text-foreground" style={{ borderColor: color + '66', backgroundColor: color + '12' }}>
@@ -162,10 +333,26 @@ interface PanelsProps {
 
 function Panels({ step, goTo, onStatus }: PanelsProps) {
   const { t } = useTranslation(NS);
-  const { openConnectModal } = useConnectModal();
+  const { openConnectModal, connectModalOpen } = useConnectModal();
+  const relayStalled = useRelayStalled();
   const { openAccountModal } = useAccountModal();
   const { address, isConnected, chainId: walletChainId } = useAccount();
   const onChain = isConnected && walletChainId === chain.id;
+
+  // The main way in: the wallet extension in this browser, asked directly (no relay, no QR code).
+  const connectors = useConnectors();
+  const connecting = useConnect();
+  const [asked, setAsked] = useState<string>();
+  const [missing, setMissing] = useState<BrowserWallet>();
+  const browserWallets = WALLET_LINKS.map((wallet) => ({ wallet, connector: findBrowserWallet(connectors, wallet) }));
+  const otherWallets = findOtherWallets(connectors, browserWallets.map(({ connector }) => connector));
+  const connectWith = (connector: Connector) => {
+    setMissing(undefined);
+    setAsked(connector.uid);
+    // Asking for Sepolia here saves most students the "Switch" button in the row below.
+    connecting.connect({ connector, chainId: chain.id });
+  };
+  const waitingFor = connecting.isPending ? asked : undefined;
 
   const switcher = useSwitchChain();
   const balance = useBalance({ address, chainId: chain.id, query: { enabled: !!address, refetchInterval: 15_000 } });
@@ -242,19 +429,79 @@ function Panels({ step, goTo, onStatus }: PanelsProps) {
   if (step === 2) {
     return (
       <div className="flex-1 min-h-0 flex flex-col gap-2.5">
-        <Row Icon={Wallet} color={VIOLET} label={t('web3.wallet')} done={isConnected}>
-          {isConnected && address ? (
-            <>
-              <span className="font-mono font-bold break-all">{shorten(address, 10, 8)}</span>
-              <button type="button" onClick={() => openAccountModal?.()} className="text-xs font-bold underline underline-offset-2 text-muted-foreground hover:text-foreground cursor-pointer">{t('web3.manage')}</button>
-            </>
-          ) : (
-            <>
-              <span className="text-muted-foreground">{t('web3.notConnected')}</span>
-              <ActionButton onClick={() => openConnectModal?.()} color={VIOLET} Icon={Plug} disabled={!openConnectModal}>{t('web3.connect')}</ActionButton>
-            </>
-          )}
-        </Row>
+        {isConnected && address ? (
+          <Row Icon={Wallet} color={VIOLET} label={t('web3.wallet')} done>
+            <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: GREEN }}>{t('web3.connected')}</span>
+            <span className="font-mono font-bold break-all">{shorten(address, 10, 8)}</span>
+            <button type="button" onClick={() => openAccountModal?.()} className="text-xs font-bold underline underline-offset-2 text-muted-foreground hover:text-foreground cursor-pointer">{t('web3.manage')}</button>
+          </Row>
+        ) : (
+          <>
+            {/* Main call to action: the wallet extension in this browser */}
+            <div className="rounded-xl border-2 bg-card p-3.5 flex flex-col gap-2.5" style={{ borderColor: VIOLET }}>
+              <div>
+                <div className="text-[10px] font-black uppercase tracking-widest" style={{ color: VIOLET }}>{t('web3.browserHeading')}</div>
+                <p className="mt-0.5 text-sm font-bold text-foreground leading-snug">{t('web3.browserLead')}</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {browserWallets.map(({ wallet, connector }) => {
+                  const busy = !!connector && waitingFor === connector.uid;
+                  return (
+                    <WalletButton
+                      key={wallet.id}
+                      icon={WALLET_ICONS[wallet.id]}
+                      title={t('web3.connectWallet', { name: wallet.name })}
+                      hint={busy ? t('web3.confirmInWallet') : connector ? t('web3.detected') : t('web3.extension')}
+                      busy={busy}
+                      disabled={connecting.isPending}
+                      onClick={() => (connector ? connectWith(connector) : setMissing(wallet))}
+                    />
+                  );
+                })}
+              </div>
+              {otherWallets.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <span>{t('web3.otherWallets')}</span>
+                  {otherWallets.map((connector) => (
+                    <ActionButton key={connector.uid} onClick={() => connectWith(connector)} color={VIOLET} outline Icon={Plug} busy={waitingFor === connector.uid} disabled={connecting.isPending}>
+                      {t('web3.connectWallet', { name: connector.id === 'injected' ? t('web3.browserWallet') : connector.name })}
+                    </ActionButton>
+                  ))}
+                </div>
+              )}
+              {missing && (
+                <Notice Icon={Info} color={AMBER}>
+                  {t('web3.notInstalled', { name: missing.name })}{' '}
+                  <OutLink href={missing.url} color={VIOLET}>{t('web3.install', { name: missing.name })}</OutLink>
+                </Notice>
+              )}
+              {connecting.error && !connecting.isPending && <Notice Icon={TriangleAlert} color={RED}>{describeError(connecting.error, t as Translate)}</Notice>}
+              {!missing && (
+                <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-muted-foreground leading-snug">
+                  <span>{t('web3.noExtension')}</span>
+                  {WALLET_LINKS.map((wallet) => (
+                    <OutLink key={wallet.id} href={wallet.url} color={VIOLET}>{t('web3.install', { name: wallet.name })}</OutLink>
+                  ))}
+                </p>
+              )}
+            </div>
+
+            {/* Secondary, folded away: a phone wallet through the WalletConnect QR code */}
+            <details className="group rounded-xl border border-border bg-card/60 text-xs">
+              <summary className="flex items-center gap-2 px-3 py-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden font-bold text-muted-foreground hover:text-foreground transition-colors">
+                <Smartphone className="size-4 shrink-0" />
+                <span className="min-w-0 flex-1">{t('web3.phoneSummary')}</span>
+                <ChevronDown className="size-4 shrink-0 transition-transform group-open:rotate-180" />
+              </summary>
+              <div className="px-3 pb-3 flex flex-col items-start gap-2 text-muted-foreground leading-snug">
+                <p>{hasWalletConnect ? t('web3.phoneBody') : t('web3.noWalletConnect')}</p>
+                {hasWalletConnect && (
+                  <ActionButton onClick={() => openConnectModal?.()} color={VIOLET} outline Icon={QrCode} disabled={!openConnectModal}>{t('web3.phoneButton')}</ActionButton>
+                )}
+              </div>
+            </details>
+          </>
+        )}
 
         <Row Icon={Network} color={VIOLET} label={t('web3.network')} done={onChain}>
           {!isConnected || onChain ? (
@@ -285,9 +532,24 @@ function Panels({ step, goTo, onStatus }: PanelsProps) {
         </Row>
 
         <div className="mt-auto flex flex-col gap-2">
-          {onChain && funds !== undefined && funds > 0n && <Notice Icon={BadgeCheck} color={GREEN}>{t('web3.ready')}</Notice>}
-          {!hasWalletConnect && !isConnected && <Notice Icon={Info} color={SKY}>{t('web3.noWalletConnect')}</Notice>}
+          {onChain && funds !== undefined && funds > 0n && (
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="min-w-40 flex-1"><Notice Icon={BadgeCheck} color={GREEN}>{t('web3.ready')}</Notice></div>
+              <ActionButton onClick={() => goTo(3)} color={GREEN} Icon={ArrowRight}>{t('web3.continue')}</ActionButton>
+            </div>
+          )}
+          {relayStalled && <Notice Icon={TriangleAlert} color={AMBER}>{t('web3.relayStalled')}</Notice>}
         </div>
+
+        {/* The wallet picker covers the page, so while it is open the same notice also floats above it. */}
+        {relayStalled && connectModalOpen && createPortal(
+          <div role="status" className="fixed inset-x-0 top-4 px-4 flex justify-center pointer-events-none" style={{ zIndex: ABOVE_WALLET_PICKER }}>
+            <div className="max-w-md rounded-xl bg-card shadow-xl">
+              <Notice Icon={TriangleAlert} color={AMBER}>{t('web3.relayStalled')}</Notice>
+            </div>
+          </div>,
+          document.body,
+        )}
       </div>
     );
   }

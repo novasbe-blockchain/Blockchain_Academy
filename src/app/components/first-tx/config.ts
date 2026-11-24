@@ -60,14 +60,45 @@ const DEFAULT_WALLETCONNECT_PROJECT_ID = 'cee4447d3f9a73c710644ec093d843c0';
 
 export const WALLETCONNECT_PROJECT_ID: string = (ENV.VITE_WALLETCONNECT_PROJECT_ID ?? DEFAULT_WALLETCONNECT_PROJECT_ID).trim();
 
+/**
+ * How the site introduces itself to a wallet during a WalletConnect pairing: the name,
+ * address and icon on the wallet's "connect to this site?" screen. `url` must be the address
+ * the site is really served from, because wallets compare the two and warn about a mismatch
+ * (build with VITE_APP_URL=https://… when deploying somewhere else). `icon` is a PNG served
+ * by the site itself (public/app-icon.png), since not every wallet draws SVG icons.
+ */
+const DEFAULT_APP_URL = 'https://blockchainacademy.online';
+const APP_URL = (ENV.VITE_APP_URL ?? DEFAULT_APP_URL).trim().replace(/\/+$/, '');
+
+export const APP_METADATA = {
+  name: 'Blockchain Academy',
+  description: 'Your First Transaction: register on the class contract on the Sepolia testnet.',
+  url: APP_URL,
+  icon: `${APP_URL}/app-icon.png`,
+} as const;
+
 /** The contract refuses identifiers longer than this (see `register` in ClassRegistry.sol). */
 export const MAX_ID_LENGTH = 100;
 
-/** Outside links used by the wizard steps. `highlight` marks the option we lead with. */
+/**
+ * Outside links used by the wizard steps. `highlight` marks the option we lead with.
+ *
+ * The wizard is done in a laptop or iPad browser, so both wallets are BROWSER EXTENSIONS and
+ * each link goes to the extension's own site. `rdns` is the name the extension announces
+ * itself with in the browser (EIP-6963); `flag` is the older `window.ethereum` marker.
+ */
 export const WALLET_LINKS = [
-  { id: 'rabby', name: 'Rabby', url: 'https://rabby.io', highlight: true },
-  { id: 'zerion', name: 'Zerion', url: 'https://zerion.io', highlight: true },
-  { id: 'metamask', name: 'MetaMask', url: 'https://metamask.io', highlight: false },
+  { id: 'rabby', name: 'Rabby', url: 'https://rabby.io/', rdns: 'io.rabby', flag: 'isRabby', highlight: true },
+  { id: 'metamask', name: 'MetaMask', url: 'https://metamask.io/', rdns: 'io.metamask', flag: 'isMetaMask', highlight: false },
+] as const;
+
+/**
+ * Rabby is also a phone app. These are the store pages rabby.io itself links to (checked
+ * 2026-11). A side note only: a phone wallet connects through the WalletConnect QR code.
+ */
+export const RABBY_MOBILE_LINKS = [
+  { id: 'ios', name: 'App Store', url: 'https://apps.apple.com/us/app/rabby-wallet-crypto-evm/id6474381673' },
+  { id: 'android', name: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.debank.rabbymobile' },
 ] as const;
 
 export const FAUCET_LINKS = [

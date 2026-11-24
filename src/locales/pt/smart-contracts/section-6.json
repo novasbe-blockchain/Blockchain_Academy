@@ -441,7 +441,7 @@
         "label": "Carteira",
         "title": "Cria uma carteira",
         "actions": [
-          "No telemóvel, instala a [Rabby (rabby.io)](https://rabby.io) ou a [Zerion (zerion.io)](https://zerion.io) a partir da App Store ou do Google Play e cria uma conta.",
+          "No browser do portátil ou do iPad, instala a extensão de browser [Rabby](https://rabby.io/) (recomendada) ou [MetaMask](https://metamask.io/) e cria uma conta. No iPad, usa um browser que suporte extensões.",
           "Escreve a frase de recuperação secreta em papel. Nunca a partilhes nem a escrevas num site.",
           "Usa uma carteira nova para testes, não uma que guarde fundos reais."
         ],
@@ -462,8 +462,8 @@
         "title": "Faz deploy do contrato",
         "actions": [
           "Abre o Remix, cola o contrato e carrega em Compile.",
-          "Em Deploy & Run, escolhe WalletConnect como ambiente e lê o código QR com a carteira do telemóvel.",
-          "Carrega em Deploy e confirma no telemóvel. Segundos depois, o contrato tem um endereço."
+          "Em Deploy & Run, escolhe Injected Provider - MetaMask (ou Rabby) como ambiente: é a tua extensão de browser. Aprova a ligação na janela da extensão e confirma que mostra Sepolia.",
+          "Carrega em Deploy e confirma na janela da extensão. Segundos depois, o contrato tem um endereço."
         ],
         "bridge": "fazer deploy é, em si, uma transação. Assinaste-a, a rede guardou o teu código, e esse código vive agora num endereço público permanente."
       },
@@ -493,7 +493,7 @@
       "faucetFlow": "ETH de teste",
       "remixTitle": "Remix · Deploy & Run",
       "environment": "Ambiente",
-      "environmentValue": "WalletConnect · carteira no telemóvel",
+      "environmentValue": "Injected Provider - Rabby",
       "contract": "Contrato",
       "confirmTitle": "Carteira · confirmar",
       "confirmKind": "Deploy de contrato",
@@ -557,7 +557,7 @@
         "desc": "Guarda as chaves do utilizador. Assina cada transação e envia-a para a rede.",
         "chips": [
           "Rabby",
-          "Zerion"
+          "MetaMask"
         ]
       },
       "rpc": {
@@ -607,7 +607,7 @@
         },
         {
           "name": "Escrita · carteira do utilizador",
-          "desc": "Rabby, Zerion e outras. O utilizador assina e envia; o site nunca guarda chaves."
+          "desc": "Rabby, MetaMask e outras. O utilizador assina e envia; o site nunca guarda chaves."
         }
       ],
       "tradeoff": "Compromisso: um fornecedor poupa-te o trabalho, mas põe uma empresa entre o teu site e a chain."

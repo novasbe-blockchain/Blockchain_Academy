@@ -22,7 +22,7 @@
       "label": "Carteira",
       "title": "Arranja uma carteira",
       "actions": [
-        "Instala a Rabby ou a Zerion no telemóvel (ou a MetaMask) e cria uma conta.",
+        "No browser do portátil ou do iPad, instala a extensão de browser Rabby ou MetaMask e cria uma conta.",
         "Escreve a frase de recuperação secreta em papel. Nunca a escrevas num site, nem neste.",
         "Usa uma carteira nova para esta cadeira, não uma que guarde fundos reais."
       ],
@@ -42,8 +42,8 @@
       "label": "Ligar",
       "title": "Liga a carteira e muda para a Sepolia",
       "actions": [
-        "Carrega em Ligar carteira e escolhe a tua. Carteira no telemóvel? Lê o código QR, ou abre esta página no browser integrado da carteira.",
-        "Aprova a ligação na carteira. Partilha o teu endereço público, mais nada.",
+        "No browser do portátil ou do iPad: instala a extensão de browser Rabby ou MetaMask e carrega em Ligar Rabby ou Ligar MetaMask.",
+        "Aprova a ligação na janela da extensão. Partilha o teu endereço público, mais nada.",
         "Se a carteira estiver noutra rede, carrega em Mudar para Sepolia."
       ],
       "why": "ligar permite a esta página ver o teu endereço. Não pode mexer em nada: cada ação continua a precisar da tua assinatura."
@@ -70,12 +70,12 @@
     }
   ],
   "wallets": {
-    "heading": "Escolhe uma",
-    "recommended": "App de telemóvel",
-    "alternative": "Alternativa",
-    "rabby": "Mostra com clareza o que cada assinatura vai fazer.",
-    "zerion": "Carteira simples para telemóvel, com browser integrado.",
-    "metamask": "A extensão de browser mais conhecida.",
+    "heading": "Escolhe uma extensão de browser",
+    "recommended": "Extensão de browser · recomendada",
+    "alternative": "Extensão de browser",
+    "rabby": "Mostra com clareza o que cada assinatura vai fazer. Para Chrome, Brave e Edge; no iPad, usa um browser que suporte extensões.",
+    "metamask": "A carteira mais conhecida. Para Chrome, Firefox, Brave e Edge.",
+    "phone": "Só tens telemóvel? A Rabby também é uma app móvel (liga-se por código QR no passo 3):",
     "safety": "A frase de recuperação É a carteira. Quem tiver as palavras controla os fundos."
   },
   "faucets": {
@@ -93,10 +93,21 @@
     "loading": "A carregar as ferramentas da carteira…",
     "loadError": "Não foi possível carregar as ferramentas da carteira. Verifica a ligação e recarrega a página.",
     "wallet": "Carteira",
-    "connect": "Ligar carteira",
+    "browserHeading": "Browser do portátil ou do iPad",
+    "browserLead": "Instala a extensão de browser Rabby ou MetaMask e depois liga.",
+    "connectWallet": "Ligar {{name}}",
+    "extension": "Extensão de browser",
+    "detected": "Encontrada neste browser",
+    "notInstalled": "A {{name}} não foi encontrada neste browser. Instala a extensão, recarrega esta página e depois liga.",
+    "install": "Obter {{name}}",
+    "noExtension": "Ainda sem extensão?",
+    "otherWallets": "Também neste browser:",
+    "browserWallet": "carteira do browser",
+    "phoneSummary": "No telemóvel? Lê um código QR para ligar uma carteira móvel",
+    "phoneBody": "Mostra um código QR (WalletConnect) para leres com uma app de carteira, como a Rabby para telemóvel. Algumas redes bloqueiam esta ligação: se o código não aparecer, usa a extensão de browser.",
+    "phoneButton": "Mostrar código QR",
     "connected": "Ligada",
     "manage": "Alterar",
-    "notConnected": "Ainda não há nenhuma carteira ligada.",
     "network": "Rede",
     "onSepolia": "{{name}} · chain ID {{id}}",
     "wrongNetwork": "A tua carteira está noutra rede (chain ID {{id}}).",
@@ -107,8 +118,14 @@
     "balanceValue": "{{amount}} ETH de teste",
     "noFunds": "Ainda sem ETH de teste. Sem ele não consegues pagar gas.",
     "toFaucets": "Voltar às faucets",
-    "ready": "Tudo pronto. Avança para o passo seguinte.",
-    "noWalletConnect": "A ligação por código QR ainda não está ativa. No telemóvel, abre esta página no browser integrado da tua carteira.",
+    "ready": "Ligada e pronta.",
+    "continue": "Continuar",
+    "noWalletConnect": "A ligação por código QR não está ativa. Usa a extensão de browser Rabby ou MetaMask, ou abre esta página no browser integrado da tua app de carteira.",
+    "relayStalled": "A ligação por código QR (WalletConnect) não está a responder; algumas redes bloqueiam-na. Usa antes a extensão de browser Rabby ou MetaMask. Só tens telemóvel? Abre esta página no browser integrado da tua app de carteira, ou tenta outra vez o código QR.",
+    "walletGroups": {
+      "browser": "Neste browser",
+      "phone": "No telemóvel (código QR)"
+    },
     "needConnect": "Primeiro liga a carteira na Sepolia.",
     "goConnect": "Ir para o passo 3",
     "contractPending": "O contrato da turma ainda não está ativo. O docente vai ativá-lo. Tudo até este passo já funciona.",

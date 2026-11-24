@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "contract:compile": "node scripts/deploy-class-registry.mjs compile",
     "contract:address": "node scripts/deploy-class-registry.mjs address",
-    "contract:deploy": "node scripts/deploy-class-registry.mjs deploy"
+    "contract:deploy": "node scripts/deploy-class-registry.mjs deploy",
+    "walletconnect:test": "node scripts/walletconnect-relay-test.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -84,6 +85,9 @@
     "solc": "0.8.39",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"
+  },
+  "overrides": {
+    "cuer": "0.0.4"
   },
   "pnpm": {
     "overrides": {

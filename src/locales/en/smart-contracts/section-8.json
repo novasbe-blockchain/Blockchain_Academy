@@ -33,7 +33,7 @@
         "where": "Wizard · steps 1–3",
         "lead": "Get a [wallet](kw:wallet) on the Sepolia testnet, with a few free test coins in it.",
         "items": [
-          "Install a wallet: Rabby, Zerion or MetaMask. Use a fresh one, with no real funds.",
+          "Install a wallet as a browser extension: Rabby or MetaMask. Use a fresh one, with no real funds.",
           "Get free test ETH from a Sepolia faucet. It pays for gas and has no real value.",
           "Connect the wallet to the wizard and switch it to Sepolia."
         ],
