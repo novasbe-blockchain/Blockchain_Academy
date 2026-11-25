@@ -5,6 +5,7 @@ import { Check, X, KeyRound } from 'lucide-react';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { HookHeader } from './Section3Family';
+import { PageLabelRow } from '../../components/shared/PageLabel';
 
 // Section 3 — NFT utility & DAO interactives and real cases + TradeLens failure case.
 // Text lives in smart-contracts/section-3.json; this file holds layout + language-neutral data.
@@ -446,6 +447,7 @@ export function DaoExamplesSlide({ variant }: { variant: 'works' | 'broke' }) {
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-4">
+        {variant === 'works' && <PageLabelRow kind="optional" />}
         <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{heading}</h2>
         <p className="text-muted-foreground text-sm mt-1">{subtitle}</p>
       </div>

@@ -11,6 +11,7 @@ import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { Building2 } from 'lucide-react';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
+import { PageLabel, PageLabelRow } from '../../components/shared/PageLabel';
 
 // Language-neutral shape — only IDs + kind. Labels come from t() at render time.
 const chapterShape = [
@@ -394,10 +395,13 @@ function VocabSlide({ part }: { part: number }) {
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-4">
-        <div className="text-[11px] font-black uppercase tracking-widest" style={{ color: VOCAB_FAB_COLOR }}>
-          {p.tag} · {p.title}
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="text-[11px] font-black uppercase tracking-widest" style={{ color: VOCAB_FAB_COLOR }}>
+            {p.tag} · {p.title}
+          </span>
+          <PageLabel kind="reference" />
         </div>
-        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">{t('vocab.heading')}</h2>
+        <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1.5">{t('vocab.heading')}</h2>
         <p className="text-sm text-muted-foreground mt-1 max-w-5xl">
           {t('vocab.intro.a')}<strong className="text-foreground">{t('vocab.intro.strong')}</strong>{t('vocab.intro.b')}
         </p>
@@ -485,6 +489,7 @@ function NetworkSlide() {
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-4">
+        <PageLabelRow kind="optional" />
         <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('network.heading')}</h2>
         <p className="text-sm text-muted-foreground mt-1">{t('network.subtitle')}</p>
       </div>

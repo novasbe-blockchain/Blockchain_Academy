@@ -6,7 +6,7 @@ import { TakeawaySlide } from '../../components/templates/TakeawaySlide';
 import { GroupedQuiz } from '../../components/templates/GroupedQuiz';
 import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
-import { DeepDiveBadge } from '../../components/shared/DeepDiveBadge';
+import { PageLabel } from '../../components/shared/PageLabel';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { RecapHandoff } from '../../components/shared/RecapHandoff';
 import { ETHERSCAN_ADDRESS, REAL_CONTRACTS, shortAddress } from '../../data/realContracts';
@@ -600,7 +600,7 @@ function EipSlide() {
 
   return (
     <div className="h-full flex flex-col p-6 lg:px-8 lg:py-6">
-      <SlideHeader kicker={t('eip.kicker')} heading={t('eip.heading')} subtitle={t('eip.subtitle')} />
+      <SlideHeader kicker={t('eip.kicker')} heading={t('eip.heading')} subtitle={t('eip.subtitle')} aside={<PageLabel kind="reference" />} />
 
       <div className="flex-1 min-h-0 flex flex-col gap-3">
         {/* Zoomed out: the whole information flow, with the proposal's current holder lit */}
@@ -981,7 +981,7 @@ function AiSlide() {
 
   return (
     <div className="h-full flex flex-col p-6 lg:px-8 lg:py-6">
-      <SlideHeader kicker={t('ai.kicker')} heading={t('ai.heading')} subtitle={t('ai.subtitle')} color={SKY} />
+      <SlideHeader kicker={t('ai.kicker')} heading={t('ai.heading')} subtitle={t('ai.subtitle')} color={SKY} aside={<PageLabel kind="optional" />} />
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-3">
         {/* Prompt workbench */}
@@ -1158,7 +1158,7 @@ function WhereSlide() {
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
-      <SlideHeader kicker={t('where.kicker')} heading={t('where.heading')} subtitle={t('where.subtitle')} color={SKY} />
+      <SlideHeader kicker={t('where.kicker')} heading={t('where.heading')} subtitle={t('where.subtitle')} color={SKY} aside={<PageLabel kind="reference" />} />
 
       <div className="flex-1 min-h-0 flex flex-col justify-center gap-5">
         {/* Mode toggle */}
@@ -2113,7 +2113,7 @@ function DeeperSlide() {
         heading={t('deeper.heading')}
         subtitle={t('deeper.subtitle')}
         color={VIOLET}
-        aside={<DeepDiveBadge label={t('deeper.badge')} />}
+        aside={<PageLabel kind="optional" />}
       />
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)] gap-6 content-center">

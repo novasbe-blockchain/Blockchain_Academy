@@ -21,6 +21,7 @@ import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import imgDaoTimeline   from '../../../assets/sc/dao-timeline.png';
 import imgAsxAsic       from '../../../assets/sc/asx-asic.jpg';
 import imgDecisionChart from '../../../assets/sc/decision-flowchart.png';
+import { PageLabel } from '../../components/shared/PageLabel';
 
 // Language-neutral shape — IDs + kind only. Labels resolved via t() at render time.
 const chapterShape = [
@@ -311,10 +312,13 @@ const longest = (items: { ok: string; ko: string }[]) => Math.max(...items.flatM
 
 const scrollToSlide = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
-function SlideHead({ kicker, heading, subtitle }: { kicker: string; heading: string; subtitle: string }) {
+function SlideHead({ kicker, heading, subtitle, aside }: { kicker: string; heading: string; subtitle: string; aside?: ReactNode }) {
   return (
     <div className="shrink-0">
-      <div className="text-sm font-bold uppercase tracking-widest mb-1 text-[#6366f1]">{kicker}</div>
+      <div className="flex items-center gap-3 flex-wrap mb-1">
+        <span className="text-sm font-bold uppercase tracking-widest text-[#6366f1]">{kicker}</span>
+        {aside}
+      </div>
       <h2 className="text-3xl lg:text-4xl font-bold text-foreground leading-tight">{heading}</h2>
       <p className="text-muted-foreground text-base lg:text-lg mt-1">{subtitle}</p>
     </div>
@@ -946,7 +950,10 @@ export function SC_Section4() {
         {/* ═══════ ADOPTION — THREE CHECKS BEFORE YOU BUILD ═══════ */}
         <div id="s4-adoption" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
-            <div className="text-xs font-bold text-[#6366f1] uppercase tracking-widest mb-1">{t('adoption.kicker')}</div>
+            <div className="flex items-center gap-3 flex-wrap mb-1">
+              <span className="text-xs font-bold text-[#6366f1] uppercase tracking-widest">{t('adoption.kicker')}</span>
+              <PageLabel kind="optional" />
+            </div>
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('adoption.heading')}</h2>
             <p className="text-muted-foreground text-sm mt-1">{t('adoption.subtitle')}</p>
           </div>
@@ -956,7 +963,7 @@ export function SC_Section4() {
 
         {/* ═══════ OPPORTUNITIES & CHALLENGES ═══════ */}
         <div id="s4-opps-challenges" className="h-full flex flex-col p-6 lg:p-10">
-          <SlideHead kicker={t('oppsChallenges.kicker')} heading={t('oppsChallenges.heading')} subtitle={t('oppsChallenges.subtitle')} />
+          <SlideHead kicker={t('oppsChallenges.kicker')} heading={t('oppsChallenges.heading')} subtitle={t('oppsChallenges.subtitle')} aside={<PageLabel kind="reference" />} />
           <div className="flex-1 min-h-0 flex flex-col mt-4">
             <div className="shrink-0 grid grid-cols-[1fr_2.5rem_1fr] gap-3 mb-2">
               <SFLabel ok>{t('oppsChallenges.opportunitiesLabel')}</SFLabel>
@@ -1006,7 +1013,7 @@ export function SC_Section4() {
 
         {/* ═══════ STRATEGIES FOR COMPETITIVE ADVANTAGE ═══════ */}
         <div id="s4-strategies" className="h-full flex flex-col p-6 lg:p-10">
-          <SlideHead kicker={t('strategies.kicker')} heading={t('strategies.heading')} subtitle={t('strategies.subtitle')} />
+          <SlideHead kicker={t('strategies.kicker')} heading={t('strategies.heading')} subtitle={t('strategies.subtitle')} aside={<PageLabel kind="reference" />} />
           <div className="flex-1 min-h-0 grid grid-cols-3 grid-rows-[auto_minmax(0,1fr)_minmax(0,1fr)] gap-x-4 gap-y-2.5 mt-4">
             <SFLabel ok className="col-span-2">{t('strategies.workedLabel')}</SFLabel>
             <SFLabel ok={false}>{t('strategies.closedLabel')}</SFLabel>

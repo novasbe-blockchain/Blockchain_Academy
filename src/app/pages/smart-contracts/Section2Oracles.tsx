@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { Check, X, Lock } from 'lucide-react';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { DefinitionBox } from '../../components/shared/DefinitionBox';
+import { PageLabel } from '../../components/shared/PageLabel';
 
 // Section 2 — Oracles block: why · what · how · the oracle problem · two real cases.
 // Text lives in smart-contracts/section-2.json under `oracle`; this file holds layout + language-neutral data.
@@ -18,11 +19,18 @@ const AMBER = '#f59e0b';
 const RED = '#ED1C24';
 const CYAN = '#22d3ee';
 
-function SlideHeader({ kicker, heading, subtitle }: { kicker?: string; heading: string; subtitle: string }) {
+function SlideHeader({ kicker, heading, subtitle, aside }: { kicker?: string; heading: string; subtitle: string; aside?: ReactNode }) {
   return (
     <div className="shrink-0 mb-4">
-      {kicker && <span className="text-xs font-black uppercase tracking-widest text-[#6366f1]">{kicker}</span>}
-      <h2 className={`text-2xl lg:text-3xl font-bold text-foreground ${kicker ? 'mt-1' : ''}`}>{heading}</h2>
+      {aside ? (
+        <div className="flex items-center gap-3 flex-wrap">
+          {kicker && <span className="text-xs font-black uppercase tracking-widest text-[#6366f1]">{kicker}</span>}
+          {aside}
+        </div>
+      ) : (
+        kicker && <span className="text-xs font-black uppercase tracking-widest text-[#6366f1]">{kicker}</span>
+      )}
+      <h2 className={`text-2xl lg:text-3xl font-bold text-foreground ${aside ? 'mt-1.5' : kicker ? 'mt-1' : ''}`}>{heading}</h2>
       <p className="text-muted-foreground text-sm mt-1">{subtitle}</p>
     </div>
   );
@@ -633,7 +641,7 @@ export function OracleParisSlide() {
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-10">
-      <SlideHeader kicker={t('oracle.paris.kicker')} heading={t('oracle.paris.heading')} subtitle={t('oracle.paris.subtitle')} />
+      <SlideHeader kicker={t('oracle.paris.kicker')} heading={t('oracle.paris.heading')} subtitle={t('oracle.paris.subtitle')} aside={<PageLabel kind="optional" />} />
 
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-5 content-center">
 
@@ -823,7 +831,7 @@ export function OracleAttackSlide() {
 
   return (
     <div className="h-full flex flex-col p-6 lg:p-8">
-      <SlideHeader kicker={t('oracle.attack.kicker')} heading={t('oracle.attack.heading')} subtitle={t('oracle.attack.subtitle')} />
+      <SlideHeader kicker={t('oracle.attack.kicker')} heading={t('oracle.attack.heading')} subtitle={t('oracle.attack.subtitle')} aside={<PageLabel kind="optional" />} />
 
       {/* Step pills */}
       <div className="shrink-0 flex items-center gap-1.5 mb-3">

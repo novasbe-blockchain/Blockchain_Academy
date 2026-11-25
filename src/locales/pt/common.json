@@ -146,5 +146,9 @@
   },
   "underTheHood": "under the hood →",
   "keyPoint": "Key point",
-  "optionalAdvanced": "Optional · Developer-oriented"
+  "optionalAdvanced": "Optional · Developer-oriented",
+  "pageLabel": {
+    "optionalReading": "Leitura Opcional",
+    "forReference": "Para Consulta"
+  }
 }

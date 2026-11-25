@@ -729,7 +729,6 @@
   },
   "deeper": {
     "kicker": "If you go further",
-    "badge": "Optional · skim",
     "heading": "Going deeper: the stack around a live contract",
     "subtitle": "A deployed contract is one piece. A real product wraps ordinary software around it. Skim this now and come back when you build.",
     "spineLabel": "The path of one click",
