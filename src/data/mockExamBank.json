@@ -957,11 +957,11 @@
    "explanation": "XRPL agrees by a vote among known validators: they propose, vote in rounds, and at 80% agreement the ledger is final — no rewards, no mining. Below 80% the network pauses rather than splits. The trade-off: most nodes use the default published list of validators, so you trust that list not to collude — a different bet from proof of work or proof of stake."
   },
   {
-   "id": "bp-9220af93",
+   "id": "bp-26e0bef8",
    "course": "blockchain-platforms",
    "section_number": 4,
    "section_title": "Interoperability",
-   "question": "In the course's layer model, which line describes the division of labour between the layers correctly?",
+   "question": "In the commonly used layer model (Layer 0, Layer 1, Layer 2), which line describes the division of labour between the layers correctly?",
    "options": [
     "L0 adds cheap scale, L1 connects chains to each other, L2 secures and settles.",
     "L2 secures and settles, L1 adds cheap scale on top of it, L0 stores the data.",
@@ -1133,11 +1133,11 @@
    "explanation": "The contract moves the token in seconds, but the property's legal title still sits in a land registry and changes hands off-chain. So the property is placed in a company and the token represents ownership of that company; exactly what the holder gets depends on the legal documents behind the token. That legal wrapper is where the risk sits: if the entity, the custodian or the law fails to honour the link, the token cannot enforce itself. Tokenising does not create buyers either: the secondary market can stay thin and the price can drift from the asset's value."
   },
   {
-   "id": "sc-61b372f1",
+   "id": "sc-13711773",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "TradeLens (Maersk and IBM) shut down in 2023, while GSBN, a similar shipping platform, is still running. Which explanation does the course's case study point to?",
+   "question": "TradeLens (Maersk and IBM) shut down in 2023, while GSBN, a similar shipping platform, is still running. What best explains the difference?",
    "options": [
     "Technology: the permissioned ledger behind TradeLens could not cope with the volume of shipping documents sent to it.",
     "Regulation: customs authorities in key ports refused to accept electronic bills of lading issued through TradeLens.",
@@ -1821,11 +1821,11 @@
    "explanation": "The classic pre-Bitcoin solutions needed known, pre-authenticated participants; 'the open internet has no guest list' — Bitcoin dropped the guest list."
   },
   {
-   "id": "bf-c3560b1a",
+   "id": "bf-8d7de13e",
    "course": "blockchain-fundamentals",
    "section_number": 2,
    "section_title": "Bitcoin and Beyond",
-   "question": "Five banks that know each other want a shared ledger run by their own five approved validators. A consultant claims that only Bitcoin-style mining can make them agree. Based on the Section 2 timeline, what is the best response?",
+   "question": "Five banks that know each other want a shared ledger run by their own five approved validators. A consultant claims that only Bitcoin-style mining can make them agree. What is the best response?",
    "options": [
     "He is right: before Bitcoin, computers on a network had no known method for reaching agreement",
     "He is right: mining is the only method ever devised that can tolerate dishonest participants",
@@ -2413,11 +2413,11 @@
    "explanation": "Zero-knowledge proofs let you 'prove a fact without revealing the data behind it'."
   },
   {
-   "id": "bf-c170dce8",
+   "id": "bf-2b6fdda0",
    "course": "blockchain-fundamentals",
    "section_number": 3,
    "section_title": "What's Next for Blockchain?",
-   "question": "Earlier in the course, self-custody came with a hard user experience: no password reset and no support line. Which future trend from Section 3 targets this problem most directly?",
+   "question": "Self-custody comes with a hard user experience: no password reset and no support line. Which of these trends targets this problem most directly?",
    "options": [
     "Real-world assets — bonds, property and funds that are tokenised on-chain",
     "Interoperability — a network of networks, with chains that talk to each other",
@@ -2426,14 +2426,14 @@
    ],
    "correct_option_number": 3,
    "correct_option_text": "Account abstraction — wallets that feel like normal apps, with recovery built in",
-   "explanation": "Account abstraction is described as 'wallets that feel like normal apps: recovery, sponsored gas'."
+   "explanation": "Account abstraction aims to make wallets feel like normal apps, with account recovery and sponsored gas."
   },
   {
-   "id": "bf-2a0fa23a",
+   "id": "bf-382d857d",
    "course": "blockchain-fundamentals",
    "section_number": 3,
    "section_title": "What's Next for Blockchain?",
-   "question": "Several competing shipping firms, banks and customs agencies need one shared record of shipments. None of them is willing to let any single member — or an outside company — run the database. Following the course's 'could a blockchain fix this?' reasoning, why is a blockchain worth considering here?",
+   "question": "Several competing shipping firms, banks and customs agencies need one shared record of shipments. None of them is willing to let any single member — or an outside company — run the database. Why is a blockchain worth considering here?",
    "options": [
     "Because a blockchain is faster and cheaper to run than a database shared between several firms",
     "Because the core problem is trust between parties who have no single operator they would all accept",
@@ -2445,11 +2445,11 @@
    "explanation": "A shared ledger that no single party controls fits when trust or coordination between parties is the heart of the problem; where one trusted operator is acceptable, a database is enough."
   },
   {
-   "id": "bp-79c34582",
+   "id": "bp-3417266c",
    "course": "blockchain-platforms",
    "section_number": 0,
    "section_title": "Recap",
-   "question": "Public permissionless, consortium and private permissioned blockchains are presented as three types. According to the course, what actually separates them?",
+   "question": "Public permissionless, consortium and private permissioned blockchains are three types of blockchain. What actually separates them?",
    "options": [
     "How many transactions per second each one can process",
     "Whether the ledger is built from hashed, chained blocks",
@@ -2461,11 +2461,11 @@
    "explanation": "The three types differ in who may read, write and validate, not in the cryptography underneath; speed is a consequence, not the definition."
   },
   {
-   "id": "bp-7c3f3c49",
+   "id": "bp-d1ec004e",
    "course": "blockchain-platforms",
    "section_number": 0,
    "section_title": "Recap",
-   "question": "Six insurers who know one another, and can be held legally accountable, want a shared register of fraudulent claims. Each insists that its own claim volumes stay hidden from the other five. Using the course's \"three questions to place your project\", where does this project sit?",
+   "question": "Six insurers who know one another, and can be held legally accountable, want a shared register of fraudulent claims. Each insists that its own claim volumes stay hidden from the other five. Where does this project sit on the spectrum from permissionless to permissioned?",
    "options": [
     "Off the spectrum: one insurer should simply host the register in its own internal database",
     "Towards permissioned: all participants are known and accountable, and some data must stay hidden",
@@ -2477,11 +2477,11 @@
    "explanation": "Known, accountable participants and data that must stay hidden from some of them both point towards permissioned; and since no insurer is trusted to keep the register alone, a single-owner database does not fit."
   },
   {
-   "id": "bp-c7cf6c3b",
+   "id": "bp-5eb5c932",
    "course": "blockchain-platforms",
    "section_number": 0,
    "section_title": "Recap",
-   "question": "A retail group wants to track stock across its 200 stores and three warehouses, all of which it owns and operates. A consultant proposes a blockchain. What does the course's checklist say?",
+   "question": "A retail group wants to track stock across its 200 stores and three warehouses, all of which it owns and operates. A consultant proposes a blockchain. What is the right advice?",
    "options": [
     "Use a public blockchain, so that every stock movement is tamper-evident to outsiders",
     "Use a database: one organisation controls every participant, so it is cheaper and faster",
@@ -2493,11 +2493,11 @@
    "explanation": "If one organisation controls every writer you do not need a blockchain, you need a database: it is cheaper and faster. A blockchain earns its place when several parties share a record none is trusted to keep alone."
   },
   {
-   "id": "bp-2aefc5b9",
+   "id": "bp-ed0c8ed4",
    "course": "blockchain-platforms",
    "section_number": 0,
    "section_title": "Recap",
-   "question": "A company keeps its ledger on 500 servers spread across 30 countries, but a single administrator can edit or delete any entry. By the definition used in this course, is the ledger decentralized?",
+   "question": "A company keeps its ledger on 500 servers spread across 30 countries, but a single administrator can edit or delete any entry. Is the ledger decentralized in the sense that matters for a blockchain?",
    "options": [
     "Yes: once entries are spread over many machines, no single person can change them",
     "Yes: a record copied across that many servers and countries is decentralized by definition",
@@ -2506,14 +2506,14 @@
    ],
    "correct_option_number": 4,
    "correct_option_text": "No: what counts is who can change or censor the record, not the shape of the network",
-   "explanation": "The course defines decentralization by control (who can change or censor the record), and treats the shape of the network as a separate question."
+   "explanation": "Decentralization is about control: who can change or censor the record. The shape of the network (how many machines, in how many places) is a separate question."
   },
   {
-   "id": "bp-a0c6e3fa",
+   "id": "bp-5fb67ac0",
    "course": "blockchain-platforms",
    "section_number": 0,
    "section_title": "Recap",
-   "question": "A consortium chooses a permissioned chain instead of a public one. On the course's spectrum, which of these is it giving up by \"moving right\"?",
+   "question": "A consortium chooses a permissioned chain instead of a public one. Which of these is it giving up?",
    "options": [
     "Neutrality: a member can now be frozen out or removed",
     "Compliance: participants can no longer be identified",
@@ -2541,11 +2541,11 @@
    "explanation": "Permissioned means known members agree the rules and can authorise a fix (normally a correcting entry, not an erasure of history); permissionless means nobody can be excluded and nobody is in a position to undo. Only an exceptional, community-wide fork, as after The DAO, has ever overridden that."
   },
   {
-   "id": "bp-5a65f02f",
+   "id": "bp-e4258367",
    "course": "blockchain-platforms",
    "section_number": 0,
    "section_title": "Recap",
-   "question": "A start-up plans to record \"certified organic\" labels for vegetables on a blockchain and tells buyers that this guarantees the produce really is organic. Which item on the course's \"don't use a blockchain when…\" list does the pitch run into?",
+   "question": "A start-up plans to record \"certified organic\" labels for vegetables on a blockchain and tells buyers that this guarantees the produce really is organic. What is the flaw in the pitch?",
    "options": [
     "One organisation controls every participant, so a database would do",
     "All parties already trust a central party, such as a regulator",
@@ -2605,11 +2605,11 @@
    "explanation": "If the value depends on anyone in the world being able to join, lean permissionless; that end offers open access and neutrality, not speed or privacy."
   },
   {
-   "id": "bp-6b94e6bc",
+   "id": "bp-707fa2fc",
    "course": "blockchain-platforms",
    "section_number": 0,
    "section_title": "Recap",
-   "question": "Which of these situations best \"earns\" a blockchain under the course's checklist?",
+   "question": "Which of these situations is the best case for using a blockchain?",
    "options": [
     "A video service that stores millions of its customers' private viewing logs every hour",
     "Carriers, ports and customs need one record of container hand-offs, and none trusts another to keep it",
@@ -2701,11 +2701,11 @@
    "explanation": "Each new block on top makes rewriting yours more expensive; after about six blocks the payment is irreversible for all practical purposes."
   },
   {
-   "id": "bp-a53842a3",
+   "id": "bp-a379eabf",
    "course": "blockchain-platforms",
    "section_number": 1,
    "section_title": "Bitcoin: The First Permissionless Blockchain",
-   "question": "On Bitcoin and on Ethereum, a payment goes through the same basic steps (sign, broadcast, queue, block, confirm). According to the section, what is actually different between the two?",
+   "question": "On Bitcoin and on Ethereum, a payment goes through the same basic steps (sign, broadcast, queue, block, confirm). What is actually different between the two?",
    "options": [
     "Whether nodes re-check each new block: they do on Bitcoin, but not on Ethereum",
     "Whether the wallet signs the payment: it does on Bitcoin, but not on Ethereum",
@@ -2749,11 +2749,11 @@
    "explanation": "Platforms tend to optimise for two corners and pay on the third: Solana puts throughput first, and its high hardware requirements concentrate the validator set."
   },
   {
-   "id": "bp-4d43950a",
+   "id": "bp-ab2e05db",
    "course": "blockchain-platforms",
    "section_number": 1,
    "section_title": "Bitcoin: The First Permissionless Blockchain",
-   "question": "Ordinals, BRC-20 and Runes let people put non-payment data and tokens on Bitcoin. Why does the section call them \"contested\"?",
+   "question": "Ordinals, BRC-20 and Runes let people put non-payment data and tokens on Bitcoin. Why are they contested within the Bitcoin community?",
    "options": [
     "They move bitcoin onto sidechains run by a federation of exchanges",
     "They raise Bitcoin's total supply above the 21 million cap that makes it scarce",
@@ -2797,11 +2797,11 @@
    "explanation": "For cross-border settlement the slide lists censorship resistance, no intermediary and 24/7 availability, settling in minutes versus days; programmability, privacy and base-layer volume are where Bitcoin loses."
   },
   {
-   "id": "bp-4d0a6537",
+   "id": "bp-51786e10",
    "course": "blockchain-platforms",
    "section_number": 1,
    "section_title": "Bitcoin: The First Permissionless Blockchain",
-   "question": "Three projects are pitched \"on Bitcoin\": (A) a lending app with programmable rules, (B) confidential records shared by four known suppliers, (C) thousands of small coffee payments a day. Following the section's \"Not a fit for\" guidance, where should each go?",
+   "question": "Three projects are pitched \"on Bitcoin\": (A) a lending app with programmable rules, (B) confidential records shared by four known suppliers, (C) thousands of small coffee payments a day. None of them suits Bitcoin's base layer. Where should each go?",
    "options": [
     "A: Lightning; B: a programmable chain such as Ethereum; C: Bitcoin's base layer",
     "A: a programmable chain such as Ethereum; B: Fabric; C: Lightning",
@@ -2829,11 +2829,11 @@
    "explanation": "Bitcoin's Script was deliberately limited and offered no shared environment for general-purpose programs, so a new application usually meant a new chain with its own security (or awkward workarounds on top of Bitcoin); Ethereum's answer was one chain that can run any program."
   },
   {
-   "id": "bp-8c7f00ae",
+   "id": "bp-83c71714",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "The section compares Bitcoin Script to a vending machine and the Ethereum Virtual Machine to a kitchen. What is the point of the comparison?",
+   "question": "Bitcoin Script can be compared to a vending machine and the Ethereum Virtual Machine to a kitchen. What is the point of the comparison?",
    "options": [
     "Script is faster because it runs on a single machine, while the EVM is slower because it runs on many machines",
     "Bitcoin is meant for individuals making small purchases, while Ethereum is meant for businesses with large orders",
@@ -3021,22 +3021,6 @@
    "explanation": "Bigger blocks are not free: they need stronger computers to check them, so fewer people would be checking the chain. Ethereum keeps decentralisation and security on L1 and pushes scale to L2."
   },
   {
-   "id": "bp-71eb8344",
-   "course": "blockchain-platforms",
-   "section_number": 2,
-   "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "The section's key point is that rollups \"move execution off Ethereum while security stays on it\". What does that look like in practice?",
-   "options": [
-    "The rollup keeps its data and proofs on its own servers and reports to Ethereum only if there is a dispute",
-    "Users move their ETH to a separate chain whose own validators then take over the whole job of securing it",
-    "A sequencer executes transactions off-chain and posts one compressed update to Ethereum for verification",
-    "Ethereum's validators execute every rollup transaction themselves, but charge a lower fee for doing so"
-   ],
-   "correct_option_number": 3,
-   "correct_option_text": "A sequencer executes transactions off-chain and posts one compressed update to Ethereum for verification",
-   "explanation": "A rollup batches thousands of transactions off-chain and posts one compressed update to L1: execution moves off-chain, the data stays on-chain, and security is inherited from Ethereum."
-  },
-  {
    "id": "bp-fac5bd39",
    "course": "blockchain-platforms",
    "section_number": 2,
@@ -3149,11 +3133,11 @@
    "explanation": "The listed limits: turnout is often in the low single digits, a few whales can decide, and many DAOs delegate to a small core team. Where execution is on-chain, the treasury is moved by code after a vote and leaves an audit trail."
   },
   {
-   "id": "bp-fa15cbcd",
+   "id": "bp-3bc966c9",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "Which of these projects does the section flag as the wrong job for Ethereum mainnet?",
+   "question": "Which of these projects is the wrong job for Ethereum mainnet?",
    "options": [
     "A consortium that has to store supplier contracts and health records",
     "A ticketing scheme that issues each ticket as a unique token (NFT)",
@@ -3162,7 +3146,7 @@
    ],
    "correct_option_number": 1,
    "correct_option_text": "A consortium that has to store supplier contracts and health records",
-   "explanation": "Mainnet is fully public, so it is unsuitable for KYC data, supplier contracts or health records; the other three (DeFi, NFTs, DAOs) are listed as best fits."
+   "explanation": "Mainnet is fully public, so it is unsuitable for KYC data, supplier contracts or health records; the other three (DeFi, NFTs, DAOs) are among its best fits."
   },
   {
    "id": "bp-67cd332e",
@@ -3181,11 +3165,11 @@
    "explanation": "With ~12-second blocks on L1, Ethereum is too slow for latency-critical, real-time applications; even fast rollups are not built to record 60 updates a second per player."
   },
   {
-   "id": "bp-de552fa8",
+   "id": "bp-f8c5a4a3",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "The section says to choose Ethereum \"when composability and shared liquidity are the product\". What does composability mean here?",
+   "question": "Ethereum is the natural choice when composability and shared liquidity are the product. What does composability mean here?",
    "options": [
     "Applications can be freely rewritten by their developers at any time after they have been deployed",
     "Each application runs on its own separate chain, with its own rules and its own set of validators",
@@ -3213,22 +3197,6 @@
    "explanation": "On a permissioned chain trust moves from maths to governance: you rely on the consortium agreement and on whoever runs the ordering nodes."
   },
   {
-   "id": "bp-e068bac4",
-   "course": "blockchain-platforms",
-   "section_number": 3,
-   "section_title": "Permissioned Blockchains: Hyperledger Fabric",
-   "question": "Among the trade-finance networks in this section, the bank consortia (we.trade, Contour, Marco Polo) closed, while JPMorgan's Kinexys is still live. What explanation does the section give?",
-   "options": [
-    "Kinexys rewards its members with a token; the consortia had no means of paying the banks that took part",
-    "Kinexys has a single owner whose own clients use it; the consortia worked technically but lost their funding",
-    "Kinexys runs on a public chain, so it inherited an existing base of users, while the consortia had to start from zero",
-    "Kinexys runs on better technology; the software that the consortia were using could not cope with the volume of deals"
-   ],
-   "correct_option_number": 2,
-   "correct_option_text": "Kinexys has a single owner whose own clients use it; the consortia worked technically but lost their funding",
-   "explanation": "In trade finance the technology worked; the consortia closed when the banks stopped funding them, and the survivor has a single owner whose own clients use it."
-  },
-  {
    "id": "bp-23fabf52",
    "course": "blockchain-platforms",
    "section_number": 3,
@@ -3245,11 +3213,11 @@
    "explanation": "Permissioned networks succeed when someone can require participation and the old process is visibly broken, not when the technology is best. (This is a lesson about how adoption was won; check Food Trust's current commercial status before describing it as live.)"
   },
   {
-   "id": "bp-350b8c63",
+   "id": "bp-e64c7333",
    "course": "blockchain-platforms",
    "section_number": 3,
    "section_title": "Permissioned Blockchains: Hyperledger Fabric",
-   "question": "The section argues that government-led networks such as the EU's EBSI are better placed than market consortia to get past the network-effect problem. What is the sound version of that argument?",
+   "question": "Why is a government-led network such as the EU's EBSI better placed than a market consortium to get past the network-effect problem?",
    "options": [
     "EBSI runs on Bitcoin, which already has millions of users around the world",
     "Public bodies issue a token whose rising price attracts users to the network",
@@ -3261,11 +3229,11 @@
    "explanation": "A market consortium must persuade each competitor that joining pays; a public authority can act as the neutral convener, fund the infrastructure, set common standards and, where legislation provides for it, make participation mandatory. That eases the network-effect problem but does not abolish it: EBSI itself has grown through voluntary participation and pilots, and useful adoption still has to be earned."
   },
   {
-   "id": "bp-3fe44b3f",
+   "id": "bp-3389452e",
    "course": "blockchain-platforms",
    "section_number": 3,
    "section_title": "Permissioned Blockchains: Hyperledger Fabric",
-   "question": "A sceptic asks why the partners in a Fabric network don't just use one shared database. What is the section's answer?",
+   "question": "A sceptic asks why the partners in a Fabric network don't just use one shared database. What is the best answer?",
    "options": [
     "A database needs a native token to pay its operators; in Fabric the nodes are paid for by transaction fees",
     "A database can be used by only one company at a time; in Fabric several organisations can be online at once",
@@ -3501,11 +3469,11 @@
    "explanation": "Not every wrapper needs a custodian: WETH on Ethereum itself is a plain contract that swaps ETH and WETH 1:1 with nobody in the middle."
   },
   {
-   "id": "bp-bd71facf",
+   "id": "bp-18c91cff",
    "course": "blockchain-platforms",
    "section_number": 4,
    "section_title": "Interoperability",
-   "question": "A treasurer needs to move funds from Ethereum to Arbitrum. Following the section's practical advice on bridges, what should she do?",
+   "question": "A treasurer needs to move funds from Ethereum to Arbitrum. What is the safest way for her to do it?",
    "options": [
     "Use a bridge run by a small group of signers, since fewer keys are easier to guard",
     "Use the rollup's own official (canonical) bridge, and move only the amount needed",
@@ -3549,11 +3517,11 @@
    "explanation": "The canonical route back to L1 is slow (about 7 days on an optimistic rollup); fast third-party bridges fix that by adding a party, and its liquidity, that you must trust."
   },
   {
-   "id": "bp-807cfa80",
+   "id": "bp-f5bc0a16",
    "course": "blockchain-platforms",
    "section_number": 4,
    "section_title": "Interoperability",
-   "question": "A large, well-secured chain connects over IBC to a small chain with a weak validator set. According to the section's \"where it breaks\", how secure is the connection?",
+   "question": "A large, well-secured chain connects over IBC to a small chain with a weak validator set. How secure is the connection?",
    "options": [
     "As strong as the larger chain, which protects both",
     "As strong as the relayer that carries the messages",
@@ -3645,11 +3613,11 @@
    "explanation": "XRPL is a payments rail, not an app platform: fast and cheap because it does less, with no general smart contracts on the main ledger, and it is a public ledger."
   },
   {
-   "id": "bp-40372e41",
+   "id": "bp-7cef36ff",
    "course": "blockchain-platforms",
    "section_number": 4,
    "section_title": "Interoperability",
-   "question": "An enthusiast says: \"The XRP Ledger has no miners and no staking, so there is nobody you have to trust.\" What is the section's reply?",
+   "question": "An enthusiast says: \"The XRP Ledger has no miners and no staking, so there is nobody you have to trust.\" What is the best reply?",
    "options": [
     "Not quite: you trust Bitcoin's miners, because the XRP Ledger is secured as a sidechain of Bitcoin",
     "Not quite: you trust one company's server, which approves each payment and then publishes the result",
@@ -3677,11 +3645,11 @@
    "explanation": "With an escrow agent the buyer and supplier are held to the deal, but the agent has the money, so the trust (plus a fee and days of waiting) sits with that one middleman."
   },
   {
-   "id": "sc-f1dee091",
+   "id": "sc-23676e9b",
    "course": "smart-contracts",
    "section_number": 1,
    "section_title": "Introduction to Smart Contracts",
-   "question": "The same two firms rely only on a lawyer-drafted paper contract. According to the course's comparison of ways to make a deal stick, what is the main limitation?",
+   "question": "A Lisbon importer and a Shenzhen supplier rely only on a lawyer-drafted paper contract for a €50,000 deal. What is the main limitation of this arrangement?",
    "options": [
     "Enforcement comes afterwards through the courts: slow, expensive, and harder still across borders.",
     "The lawyer holds the €50,000 for the whole period and could go bust before paying any of it out.",
@@ -3709,11 +3677,11 @@
    "explanation": "Provided no admin or upgrade key was left in, no one can bend the rule once it is live, but code has no judgement and cannot see the real world, so a bug or a bad delivery feed is the weak spot."
   },
   {
-   "id": "sc-04d0ebcd",
+   "id": "sc-e3533bc0",
    "course": "smart-contracts",
    "section_number": 1,
    "section_title": "Introduction to Smart Contracts",
-   "question": "A vendor says: \"The code is the contract, so you will not need lawyers.\" What does the course say is actually true?",
+   "question": "A vendor says: \"The code is the contract, so you will not need lawyers.\" What is actually true?",
    "options": [
     "The vendor is right: courts everywhere treat deployed code as a signed agreement.",
     "The vendor is right, provided the code was independently audited before launch.",
@@ -3725,11 +3693,11 @@
    "explanation": "A smart contract is not a legal contract by itself, which is why real projects pair the code with a written agreement."
   },
   {
-   "id": "sc-a6eaee9b",
+   "id": "sc-582b05f3",
    "course": "smart-contracts",
    "section_number": 1,
    "section_title": "Introduction to Smart Contracts",
-   "question": "A founder pitches: \"Our product runs on a smart contract, so nobody can ever switch it off.\" Which point from the course best challenges this claim?",
+   "question": "A founder pitches: \"Our product runs on a smart contract, so nobody can ever switch it off.\" Which point best challenges this claim?",
    "options": [
     "Validators can vote to delete any contract that they disapprove of.",
     "A contract stops running automatically as soon as its developer's wallet no longer holds enough to pay the fees.",
@@ -3741,11 +3709,11 @@
    "explanation": "Tornado Cash's website went dark in 2022 while the contract kept running: the product around a contract depends on ordinary, controllable pieces, so \"unstoppable\" is hype."
   },
   {
-   "id": "sc-73735665",
+   "id": "sc-ce516780",
    "course": "smart-contracts",
    "section_number": 1,
    "section_title": "Introduction to Smart Contracts",
-   "question": "\"Once it is live, nobody can quietly bend the rule.\" The course counts this as genuine value, on one condition. Which condition?",
+   "question": "\"Once a smart contract is live, nobody can quietly bend the rule.\" That is a genuine benefit, but only on one condition. Which condition?",
    "options": [
     "The contract runs on the operator's own servers.",
     "No admin or upgrade key was left in the contract.",
@@ -3773,11 +3741,11 @@
    "explanation": "\"Not free\" is one of the four hype corrections: you pay the network for every step, and on-chain storage is among the most expensive things a contract can do."
   },
   {
-   "id": "sc-46392ee6",
+   "id": "sc-a4b14e6c",
    "course": "smart-contracts",
    "section_number": 1,
    "section_title": "Introduction to Smart Contracts",
-   "question": "The course names three genuine benefits of a smart contract: removing a middleman, locking a rule for everyone, and settling fast across borders. Which of these projects actually draws on one or more of them?",
+   "question": "A smart contract offers three genuine benefits: removing a middleman, locking a rule for everyone, and settling fast across borders. Which of these projects actually draws on one or more of them?",
    "options": [
     "A bakery's stock list, kept by the owner and one employee.",
     "A company that wants to store its staff rota more cheaply than in a database.",
@@ -3949,11 +3917,11 @@
    "explanation": "After deployment nobody can edit the rules, Rui included; the funds move only when the contract's own conditions are met."
   },
   {
-   "id": "sc-95e6d2c7",
+   "id": "sc-93278cac",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "A team has a working Solidity contract on Ethereum and now wants it on Arbitrum and Base as well. What does the course say this takes?",
+   "question": "A team has a working Solidity contract on Ethereum and now wants it on Arbitrum and Base as well. What does this take?",
    "options": [
     "A full rewrite in Rust, because each of these chains has its own programming language.",
     "Permission from Ethereum's validators, who must vote before code can be copied to another chain.",
@@ -4093,11 +4061,11 @@
    "explanation": "A median ignores a minority of outliers: one or two liars can at most nudge the result within the range the honest nodes report, but three of five control it. Many reporters replace \"trust this one company\" with \"trust that most of them are honest\"."
   },
   {
-   "id": "sc-56d83f7c",
+   "id": "sc-f743c912",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "During network congestion a price feed stops updating, and a lending smart contract keeps liquidating loans at a six-hour-old price. Which oracle failure is this, and what defence does the course give?",
+   "question": "During network congestion a price feed stops updating, and a lending smart contract keeps liquidating loans at a six-hour-old price. Which oracle failure is this, and what is the defence?",
    "options": [
     "Manipulation; combine deep markets and reject outliers.",
     "Single point of failure; add more validators to the blockchain.",
@@ -4109,11 +4077,11 @@
    "explanation": "The contract keeps acting on a number that is no longer true, so it should check the age of the data before using it."
   },
   {
-   "id": "sc-15d2c7b6",
+   "id": "sc-2cd99f77",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "A prediction market on \"the highest temperature in Paris\" settled on one named airport sensor, which then showed a brief spike that nearby stations did not. What lesson does the course draw?",
+   "question": "A prediction market on \"the highest temperature in Paris\" settled on one named airport sensor, which then showed a brief spike that nearby stations did not. What does this episode show?",
    "options": [
     "The market's smart contract contained a coding bug that misread the temperature the sensor had reported.",
     "The blockchain's validators altered the sensor's reading before it was stored, to favour the long-shot bets.",
@@ -4141,27 +4109,11 @@
    "explanation": "One small pool barely moves an aggregated feed, so the collateral is booked near its real value, the loan cannot cover the flash loan, and atomicity undoes everything."
   },
   {
-   "id": "sc-33ad0edb",
-   "course": "smart-contracts",
-   "section_number": 2,
-   "section_title": "How Smart Contracts Work",
-   "question": "What is \"the irony\" of the oracle problem, as the course puts it?",
-   "options": [
-    "Oracles make contracts so expensive to run that hiring a human middleman becomes the cheaper option after all.",
-    "Contracts remove the trusted middleman from the deal, then let one back in through the data feed.",
-    "Oracles are so reliable that the blockchain itself becomes unnecessary.",
-    "The more oracles a contract uses, the less data it is able to receive."
-   ],
-   "correct_option_number": 2,
-   "correct_option_text": "Contracts remove the trusted middleman from the deal, then let one back in through the data feed.",
-   "explanation": "A blockchain can verify signatures and arithmetic, not whether a number is true, so a contract is only as trustworthy as its data source."
-  },
-  {
-   "id": "sc-b40d8913",
+   "id": "sc-5c6dfea3",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "A stablecoin transfer on a Layer 2 settles in seconds, for cents, at any hour, where a bank wire takes days. What is \"the catch\" the course attaches to this?",
+   "question": "A stablecoin transfer on a Layer 2 settles in seconds, for cents, at any hour, where a bank wire takes days. What is the catch?",
    "options": [
     "The transfer can be seen only by banks, not by the person receiving it.",
     "It cannot be reversed, and getting money in and out still usually goes through a bank or regulated exchange.",
@@ -4253,11 +4205,11 @@
    "explanation": "When the token works as a key (a ticket, a credential, access to a gated community), it is useful whatever its price. Utility that does not depend on the price going up is the utility that lasts. Royalties are not reliably enforced on resale, and floor-price or hype-driven collectibles are speculation."
   },
   {
-   "id": "sc-2b6ac5ee",
+   "id": "sc-ef77955e",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "An analyst points to huge on-chain NFT trading volume as proof of real demand. What caution does the course give?",
+   "question": "An analyst points to huge on-chain NFT trading volume as proof of real demand. What caution applies?",
    "options": [
     "On-chain volume is always understated, because most trades are kept private.",
     "Volume figures are set by the marketplaces and never touch the chain.",
@@ -4267,22 +4219,6 @@
    "correct_option_number": 3,
    "correct_option_text": "On-chain data is transparent but not necessarily true: volume can be inflated by wash trading.",
    "explanation": "Wash trading means selling a token to yourself from a second wallet; transparent is not the same as true, so read on-chain volume like any unaudited number."
-  },
-  {
-   "id": "sc-f151d14b",
-   "course": "smart-contracts",
-   "section_number": 3,
-   "section_title": "Industries & Case Studies",
-   "question": "The course calls the word \"autonomous\" in DAO \"generous\". What is actually automatic?",
-   "options": [
-    "Writing the proposals: the contract drafts them by itself from members' past votes.",
-    "Deciding which proposals are good for the organisation.",
-    "Getting members to turn out, read the proposals and cast their votes on time.",
-    "Executing the result: once an on-chain vote passes, the treasury contract carries it out."
-   ],
-   "correct_option_number": 4,
-   "correct_option_text": "Executing the result: once an on-chain vote passes, the treasury contract carries it out.",
-   "explanation": "People still write proposals, argue and vote; code enforces the rules, but people still choose them. (DAOs that vote off-chain rely on signers to carry the result out.)"
   },
   {
    "id": "sc-7124c272",
@@ -4333,11 +4269,11 @@
    "explanation": "Quadratic voting only dampens plutocracy if every wallet is one real person; without identity checks it is open to this Sybil attack."
   },
   {
-   "id": "sc-c60f38ef",
+   "id": "sc-c3571d60",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "ConstitutionDAO pooled about $47M from 17,000+ people in under a week, then lost the auction. What lesson does the course draw?",
+   "question": "ConstitutionDAO pooled about $47M from 17,000+ people in under a week, then lost the auction. What does the episode show?",
    "options": [
     "A bug in its contract let an attacker drain the pooled funds.",
     "Regulators blocked the bid at the last minute, because under US law a DAO is not allowed to own historical documents.",
@@ -4365,11 +4301,11 @@
    "explanation": "Short-dated sovereign debt is standardised, liquid and legally simple to wrap, so tokenised treasuries grew fastest; each property is a one-off with its own title, registry and local law. A token moves in seconds, but legal title moves at the speed of the law."
   },
   {
-   "id": "sc-8fb6db58",
+   "id": "sc-715ceab8",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "A firm tokenises an office building and expects its shares to trade as freely as a listed stock. What does the course warn?",
+   "question": "A firm tokenises an office building and expects its shares to trade as freely as a listed stock. What is wrong with that expectation?",
    "options": [
     "Tokens cannot be divided into smaller units, so only one buyer at a time can hold the building.",
     "The token will always trade above the value of the building.",
@@ -4461,11 +4397,11 @@
    "explanation": "A true record of a false claim: verification is instant, but the issuer's honesty when creating the record is still the weak point."
   },
   {
-   "id": "sc-3283677e",
+   "id": "sc-5549306b",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "Two hospitals want patient consent for record sharing handled by a smart contract. Following the course's design example, what goes where?",
+   "question": "Two hospitals want patient consent for record sharing handled by a smart contract. In a sound design, what goes where?",
    "options": [
     "Records and consent both go on-chain, so every hospital can see everything.",
     "Consent is signed on-chain and an access token is issued; the medical data stays off-chain.",
@@ -4474,7 +4410,7 @@
    ],
    "correct_option_number": 2,
    "correct_option_text": "Consent is signed on-chain and an access token is issued; the medical data stays off-chain.",
-   "explanation": "The key constraint in that design is privacy law: the medical data itself must stay off-chain."
+   "explanation": "The key constraint is privacy law: the medical data itself must stay off-chain."
   },
   {
    "id": "sc-71b9cf1c",
@@ -4538,7 +4474,7 @@
    ],
    "correct_option_number": 4,
    "correct_option_text": "It is a red flag: the trust sits in those outside sources, so rethink whether a smart contract is needed.",
-   "explanation": "If most inputs come from outside, the chain adds little: you are really trusting the data feeds, not the code. This is one of the course's \"when to rethink\" red flags: when most of the data or logic lives off-chain, ask whether a smart contract (or a blockchain) is needed at all."
+   "explanation": "If most inputs come from outside, the chain adds little: you are really trusting the data feeds, not the code. This is a \"when to rethink\" red flag: when most of the data or logic lives off-chain, ask whether a smart contract (or a blockchain) is needed at all."
   },
   {
    "id": "sc-e5f9f5ab",
@@ -4669,11 +4605,11 @@
    "explanation": "None of the six strategy cases won on technology alone; the ones that worked removed a real cost and gave others a reason to join."
   },
   {
-   "id": "sc-5a72930e",
+   "id": "sc-ec7c4b63",
    "course": "smart-contracts",
    "section_number": 4,
    "section_title": "Critical Thinking",
-   "question": "A project's plan depends on moving assets between several blockchains through bridges. Which challenge from the course does this run into?",
+   "question": "A project's plan depends on moving assets between several blockchains through bridges. Which known challenge does this run into?",
    "options": [
     "Interoperability: cross-chain bridges are fragile and a major source of exploits.",
     "Scarce talent: only Solidity engineers are allowed to operate bridges.",
@@ -4682,14 +4618,14 @@
    ],
    "correct_option_number": 1,
    "correct_option_text": "Interoperability: cross-chain bridges are fragile and a major source of exploits.",
-   "explanation": "Interoperability is one of the four listed challenges, alongside scalability limits, user experience and scarce talent."
+   "explanation": "Cross-chain bridges are fragile and a major source of exploits. Interoperability is a standing challenge for blockchain projects, alongside scalability limits, user experience and scarce talent."
   },
   {
-   "id": "sc-d5827b9c",
+   "id": "sc-17c61fde",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "In the chain \"data source → oracle → smart contract\", where does the course place the weakest link?",
+   "question": "In the chain \"data source → oracle → smart contract\", which link is the weakest?",
    "options": [
     "The smart contract, because its code is public.",
     "The data source: one sensor, API or market, which nothing on-chain can check.",
@@ -4701,11 +4637,11 @@
    "explanation": "The chain secures the contract, but nothing on-chain secures the number it acts on, so the system is only as strong as its weakest link."
   },
   {
-   "id": "sc-e3f01113",
+   "id": "sc-3bc90831",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "A smart contract pays out $20 million on the basis of one figure, and bending that figure would cost an attacker about $50,000. Using the course's three questions for any smart contract that reads outside data, what should you conclude?",
+   "question": "A smart contract pays out $20 million on the basis of one figure, and bending that figure would cost an attacker about $50,000. What should you conclude?",
    "options": [
     "Nothing: the blockchain's validators will reject a false figure.",
     "The risk is low, because $50,000 is a serious sum for an attacker.",
@@ -4714,7 +4650,7 @@
    ],
    "correct_option_number": 4,
    "correct_option_text": "Expect an attack: bending the number costs less than the money it controls.",
-   "explanation": "The third question is \"what would it cost to bend it?\"; if that is less than the money the number controls, expect an attack."
+   "explanation": "For any outside figure a smart contract relies on, ask what it would cost to bend it; if that is less than the money the number controls, expect an attack."
   },
   {
    "id": "sc-4a6f6d26",
@@ -4733,11 +4669,11 @@
    "explanation": "Every oracle defence moves the trust somewhere else or puts a price on it; none deletes it."
   },
   {
-   "id": "sc-240ddcf4",
+   "id": "sc-9b086445",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "A team adds sanity checks and a switch that pauses payouts when the feed looks wrong. What new issue does the course point out?",
+   "question": "A team adds sanity checks and a switch that pauses payouts when the feed looks wrong. What new issue does this create?",
    "options": [
     "A paused contract loses the funds that it holds.",
     "Sanity checks make the underlying data source easier for an attacker to tamper with.",
@@ -4749,11 +4685,11 @@
    "explanation": "The pause protects against bad data but reintroduces someone you must trust (the admin-key problem)."
   },
   {
-   "id": "sc-54ab52a7",
+   "id": "sc-95030e3f",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "Why does a base-layer blockchain handle far fewer transactions per second than a card network, and what does the course say helps?",
+   "question": "Why does a base-layer blockchain handle far fewer transactions per second than a card network, and what helps?",
    "options": [
     "Validators only work office hours; adding night shifts helps.",
     "Every validating node re-executes every transaction; Layer 2 rollups help and still settle on Layer 1.",
@@ -4829,11 +4765,11 @@
    "explanation": "Calling back in before the state is updated lets the attacker drain the contract; this bug class cost The DAO $60M, and the fix is to update state before calling out (Checks-Effects-Interactions)."
   },
   {
-   "id": "sc-e1f579f8",
+   "id": "sc-2fd2a8b0",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "In 2017 a user accidentally took ownership of a shared library contract and destroyed it; every wallet built on it froze, with ETH worth about $150M at the time still unreachable. What lesson does the course draw?",
+   "question": "In 2017 a user accidentally took ownership of a shared library contract and destroyed it; every wallet built on it froze, with ETH worth about $150M at the time still unreachable. What is the lesson?",
    "options": [
     "Flash loans should be banned from wallet contracts.",
     "Price oracles need more than one data source, so that a single feed cannot be bent.",
@@ -4845,11 +4781,11 @@
    "explanation": "The Parity multisig freeze combined an access-control gap with immutability: nobody could undo it."
   },
   {
-   "id": "sc-13cb5230",
+   "id": "sc-7eab1d0c",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "A bridge is protected by a 5-of-9 multisig, but four of the nine keys are run by the same company. Which lesson from the course applies?",
+   "question": "A bridge is protected by a 5-of-9 multisig, but four of the nine keys are run by the same company. Which lesson applies?",
    "options": [
     "A multisig is only as decentralised as the people who hold its keys.",
     "A 5-of-9 multisig cannot be compromised, because five separate signatures are always required.",
@@ -4861,11 +4797,11 @@
    "explanation": "This was the Ronin bridge: attackers obtained five keys through social engineering, four of them run by one company, and withdrew $625M."
   },
   {
-   "id": "sc-4b0fd86b",
+   "id": "sc-52274610",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "A team launches the same smart contract to users around the world. Which regulatory risk does the course stress?",
+   "question": "A team launches the same smart contract to users around the world. Which regulatory risk does it face?",
    "options": [
     "None: a public blockchain sits outside every national law.",
     "Rules differ by country: a contract that is legal in one jurisdiction may be illegal in another.",
@@ -4877,11 +4813,11 @@
    "explanation": "Laws move in years and contracts move in months; MiCA is a comprehensive framework for the EU only."
   },
   {
-   "id": "sc-720c793c",
+   "id": "sc-4bdff49b",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "A team stores only hashes of personal records on a public chain and declares the privacy problem solved. What caveat does the course add?",
+   "question": "A team stores only hashes of personal records on a public chain and declares the privacy problem solved. What caveat applies?",
    "options": [
     "Any validator can reverse a hash on request.",
     "Hashes are deleted from the chain after 30 days.",
@@ -4890,7 +4826,7 @@
    ],
    "correct_option_number": 4,
    "correct_option_text": "Even hashes can leak information through metadata and linkability.",
-   "explanation": "A hash of personal data can still be linked back to a person, and short or guessable inputs can be found by trial and error. Public by design clashes with privacy law, which is why ZK proofs, permissioned chains and off-chain encryption are listed as further tools."
+   "explanation": "A hash of personal data can still be linked back to a person, and short or guessable inputs can be found by trial and error. Public by design clashes with privacy law, which is why ZK proofs, permissioned chains and off-chain encryption are used as further tools."
   },
   {
    "id": "sc-5192dd1b",
@@ -5021,22 +4957,6 @@
    "explanation": "The code then lives at a permanent public address, which is why even a testnet deployment needs (free) test ETH for gas."
   },
   {
-   "id": "sc-ff1ffe32",
-   "course": "smart-contracts",
-   "section_number": 6,
-   "section_title": "Build & Integration",
-   "question": "A class project deploys from Remix in the browser. What does the course recommend for a team shipping a real product?",
-   "options": [
-    "Keep using Remix on mainnet: nothing else needs to change.",
-    "Keep using Remix, but have a second team member watch each deployment step on screen.",
-    "Hardhat or Foundry: a local project with automated tests and scripted, repeatable deployments.",
-    "Deploy from Remix to mainnet first, then write tests once real users show which functions matter."
-   ],
-   "correct_option_number": 3,
-   "correct_option_text": "Hardhat or Foundry: a local project with automated tests and scripted, repeatable deployments.",
-   "explanation": "Same contract and same steps, but with real money at stake the code is tested and audited first, because deployed code cannot simply be edited."
-  },
-  {
    "id": "sc-c48753bd",
    "course": "smart-contracts",
    "section_number": 6,
@@ -5053,11 +4973,11 @@
    "explanation": "Reads go through an RPC provider; only a wallet-signed transaction changes anything on-chain, and that costs gas."
   },
   {
-   "id": "sc-43a1d4c0",
+   "id": "sc-006d0eb7",
    "course": "smart-contracts",
    "section_number": 6,
    "section_title": "Build & Integration",
-   "question": "A team chooses a hosted RPC provider such as Infura or Alchemy over running its own node. What trade-off does the course point out?",
+   "question": "A team chooses a hosted RPC provider such as Infura or Alchemy over running its own node. What is the trade-off?",
    "options": [
     "A provider is slower, but it is the only way to send transactions.",
     "A provider saves the work, but puts one company between your site and the chain.",
@@ -5117,11 +5037,11 @@
    "explanation": "Pseudonymous is not anonymous: every address, balance and transfer is visible forever, so once an address is linked to a name (by the exchange, by investigators with access to its records, or through a leak) the trail can be followed backwards and forwards."
   },
   {
-   "id": "sc-bfb34b56",
+   "id": "sc-a8f97e6f",
    "course": "smart-contracts",
    "section_number": 7,
    "section_title": "Zero-Knowledge & Privacy",
-   "question": "A firm moves its payroll and supplier payments onto a public chain with no privacy technology. What consequence does the course highlight?",
+   "question": "A firm moves its payroll and supplier payments onto a public chain with no privacy technology. What is the consequence?",
    "options": [
     "Payment amounts are public, so salaries can be worked out and competitors can watch its treasury move.",
     "Its payments become invisible to its own auditors and to the tax authorities.",
@@ -5245,11 +5165,11 @@
    "explanation": "Proof of personhood answers \"is this a unique human?\" without \"who are you?\"."
   },
   {
-   "id": "sc-f68a77b0",
+   "id": "sc-2c87463f",
    "course": "smart-contracts",
    "section_number": 7,
    "section_title": "Zero-Knowledge & Privacy",
-   "question": "A regulated fintech wants on-chain privacy for its customers. After the Tornado Cash story, what design guidance does the course give?",
+   "question": "A regulated fintech wants on-chain privacy for its customers. In light of the Tornado Cash sanctions, which design approach is soundest?",
    "options": [
     "Use a mixer: hiding everything is the safest position with regulators.",
     "Prefer selective disclosure and proof-of-compliance over all-or-nothing anonymity.",
@@ -5259,22 +5179,6 @@
    "correct_option_number": 2,
    "correct_option_text": "Prefer selective disclosure and proof-of-compliance over all-or-nothing anonymity.",
    "explanation": "For example, prove \"not on a sanctions list\" without revealing identity. The US sanctioned Tornado Cash in 2022 and lifted the sanctions in March 2025 after losing in court, but the lesson stands: all-or-nothing anonymity invites a collision with regulators."
-  },
-  {
-   "id": "sc-109b2a4d",
-   "course": "smart-contracts",
-   "section_number": 7,
-   "section_title": "Zero-Knowledge & Privacy",
-   "question": "The course says \"two things are true at once\" about Tornado Cash. Which pair?",
-   "options": [
-    "It was run by a company, and that company kept customer records.",
-    "It never handled any illicit funds, and regulators acted against it without having any reason.",
-    "The tools shielded a state-sponsored hacking group's loot, and also protected ordinary people.",
-    "It was shut down for good, and its code was deleted from the chain."
-   ],
-   "correct_option_number": 3,
-   "correct_option_text": "The tools shielded a state-sponsored hacking group's loot, and also protected ordinary people.",
-   "explanation": "Regulators had a genuine problem, yet sanctioning the code (in 2022; lifted in March 2025 after a US court ruling) punished users who had done nothing wrong; that tension is why the course points to selective disclosure."
   },
   {
    "id": "sc-6278225b",
@@ -5309,11 +5213,11 @@
    "explanation": "A shared ledger handles double selling, retirement and ownership history, but it faithfully records whatever it is given, true or not. If the measurement behind a credit was wrong or faked, the token is still recorded perfectly: garbage in, garbage out. Checking the real-world claim has to happen off-chain."
   },
   {
-   "id": "sc-6cf359cd",
+   "id": "sc-19176e7d",
    "course": "smart-contracts",
    "section_number": 8,
    "section_title": "In-class Assignment & Discussion",
-   "question": "Replacing a freelance platform with an escrow smart contract cuts fees and removes the platform's discretion over funds. What does the course say disappears along with it?",
+   "question": "Replacing a freelance platform with an escrow smart contract cuts fees and removes the platform's discretion over funds. What disappears along with it?",
    "options": [
     "The freelancer's ability to be paid at all.",
     "The platform's support in a messy dispute.",
@@ -5325,11 +5229,11 @@
    "explanation": "Existing platforms are escrow already; the contract removes their discretion and their support, so dispute resolution must be designed in."
   },
   {
-   "id": "sc-a4561b2a",
+   "id": "sc-e7d7b1ce",
    "course": "smart-contracts",
    "section_number": 8,
    "section_title": "In-class Assignment & Discussion",
-   "question": "A group proposes stablecoins on a Layer 2 for cross-border tuition and remittances. Where does the course say the case is strongest?",
+   "question": "A group proposes stablecoins on a Layer 2 for cross-border tuition and remittances. Where is the case strongest?",
    "options": [
     "In corridors that are already served by cheap and instant bank transfers, where habits are established.",
     "Wherever the recipient prefers cash to digital money.",
@@ -5341,11 +5245,11 @@
    "explanation": "The honest alternative (Wise, SEPA Instant) already works well in many corridors, so the blockchain case depends on where it does not."
   },
   {
-   "id": "sc-25658e0d",
+   "id": "sc-6a35fe5c",
    "course": "smart-contracts",
    "section_number": 8,
    "section_title": "In-class Assignment & Discussion",
-   "question": "For diploma verification, the \"honest alternative\" to anchoring hashes on-chain is a national verification API run by the education ministry. How does the course weigh it?",
+   "question": "For diploma verification, an alternative to anchoring hashes on-chain is a national verification API run by the education ministry. How does that alternative compare?",
    "options": [
     "Cheaper, but it makes the ministry the single point of trust and failure.",
     "More expensive, and every employer would still need a wallet.",
@@ -5357,11 +5261,11 @@
    "explanation": "A good report takes the non-blockchain alternative seriously and says what is given up either way."
   },
   {
-   "id": "sc-3697bbca",
+   "id": "sc-6db6555e",
    "course": "smart-contracts",
    "section_number": 8,
    "section_title": "In-class Assignment & Discussion",
-   "question": "For group-buying a rare asset, the course contrasts a DAO with \"a fund or cooperative with a lawyer\". What is the alternative's key advantage?",
+   "question": "For group-buying a rare asset, the alternative to a DAO is a fund or cooperative set up with a lawyer. What is that alternative's key advantage?",
    "options": [
     "It raises money from strangers faster than a DAO.",
     "It needs no legal entity at all.",
@@ -5747,7 +5651,7 @@
    "section_title": "Ethereum: From Money to Programmable Blockchain",
    "question": "A rollup publishes its transaction data in Ethereum blobs. An auditor will need that data years later. Which statement is correct?",
    "options": [
-    "Validity proofs make it unnecessary to keep transaction data for later audits.",
+    "A validity proof replaces the transaction data, so none of it is kept anywhere.",
     "Blobs are kept for a short window only; later access needs separate archiving.",
     "Blob data stays private to the sequencer, so only the sequencer can supply it.",
     "Every Ethereum node stores each blob permanently, as it does block headers."
@@ -5898,7 +5802,7 @@
    ],
    "correct_option_number": 3,
    "correct_option_text": "It moves the issuer's native issuance between chains rather than creating a claim on a separate bridge vault.",
-   "explanation": "The course contrasts native multi-chain issuance with bridge-issued stand-ins. Burning and minting by the issuer differs from locking an asset behind a separate wrapper. Issuer and message-verification dependencies still matter; the transfer method does not remove every trust assumption."
+   "explanation": "Native multi-chain issuance is different from bridge-issued stand-ins. Burning and minting by the issuer differs from locking an asset behind a separate wrapper. Issuer and message-verification dependencies still matter; the transfer method does not remove every trust assumption."
   },
   {
    "id": "bp-e2f0fb94",
@@ -6013,11 +5917,11 @@
    "explanation": "Atomic execution applies to the operations inside the relevant transaction boundary. A later action on another chain needs an explicitly designed cross-chain coordination mechanism; ordinary separate transactions do not create automatic rollback of the earlier settled action."
   },
   {
-   "id": "bp-bc361716",
+   "id": "bp-5f7011f7",
    "course": "blockchain-platforms",
    "section_number": 4,
    "section_title": "Interoperability",
-   "question": "On the XRP Ledger described in the course, transaction fees are destroyed rather than paid as mining rewards. What role can those fees still serve?",
+   "question": "On the XRP Ledger, transaction fees are destroyed rather than paid as mining rewards. What role can those fees still serve?",
    "options": [
     "They impose a cost on submitting transactions and help deter spam.",
     "They become refundable deposits whose release depends on the recipient's chosen issuer.",
@@ -6170,7 +6074,7 @@
    ],
    "correct_option_number": 4,
    "correct_option_text": "Query the relevant past on-chain logs and process the missing events.",
-   "explanation": "The course distinguishes live listening from searching past events through a node. The listener's outage does not erase settled transactions or their logs. Recovery can replay missed records, with appropriate controls against duplicating the company's off-chain actions."
+   "explanation": "Listening for events live is different from searching past events through a node. The listener's outage does not erase settled transactions or their logs. Recovery can replay missed records, with appropriate controls against duplicating the company's off-chain actions."
   },
   {
    "id": "sc-82d88547",
@@ -6539,22 +6443,6 @@
    "correct_option_number": 4,
    "correct_option_text": "Give the guardian a specific pause permission without a treasury-transfer permission.",
    "explanation": "A role can be limited to specified functions. Granting a pause power need not imply granting custody or arbitrary withdrawal authority. The relevant question is what the implemented access controls permit, not merely the guardian's title or assurances."
-  },
-  {
-   "id": "sc-1eedcab7",
-   "course": "smart-contracts",
-   "section_number": 3,
-   "section_title": "Industries & Case Studies",
-   "question": "A DAO offers exit with a proportional share of the tokens in its treasury. Most treasury value is in illiquid investment tokens. What should a departing member not assume?",
-   "options": [
-    "That the received assets may retain their own liquidity and redemption constraints.",
-    "That the exit can be defined as a transfer of a proportional token basket.",
-    "That the treasury's composition matters when evaluating the practical exit right.",
-    "That the exit necessarily delivers immediate cash equal to the quoted portfolio value."
-   ],
-   "correct_option_number": 4,
-   "correct_option_text": "That the exit necessarily delivers immediate cash equal to the quoted portfolio value.",
-   "explanation": "Receiving a share of assets differs from receiving instantly spendable cash. An exit mechanism can deliver the promised basket while leaving the member exposed to its illiquidity or restricted redemption. Exit rights should be evaluated alongside the assets they actually return."
   },
   {
    "id": "sc-331b2ed3",
