@@ -6,14 +6,14 @@
   ],
   [
    "bp-e2f0fb94",
-   "bp-92e3bbc3"
+   "bp-342daceb"
   ],
   [
    "sc-fb2976cd",
    "sc-39f605b7"
   ],
   [
-   "sc-7f2df729",
+   "sc-82d88547",
    "sc-d0f9c4d0"
   ]
  ],
@@ -2059,22 +2059,6 @@
    "correct_option_number": 2,
    "correct_option_text": "C's hash, the combined hash of the C–D pair, and the Merkle root",
    "explanation": "Tampering with one transaction changes its leaf hash and every node on the path up to the root; the A–B branch is untouched."
-  },
-  {
-   "id": "bf-0cf625f8",
-   "course": "blockchain-fundamentals",
-   "section_number": 2,
-   "section_title": "Bitcoin and Beyond",
-   "question": "Section 2 describes people in high-inflation countries turning to peer-to-peer crypto to protect their savings. What 'honest footnote' does it add?",
-   "options": [
-    "That dollar stablecoins are often used more than Bitcoin day to day in these countries",
-    "That the price of Bitcoin stayed perfectly stable throughout the years in question",
-    "That the governments of these countries adopted Bitcoin as their official currency",
-    "That most of this activity was short-term speculation rather than an attempt to save"
-   ],
-   "correct_option_number": 1,
-   "correct_option_text": "That dollar stablecoins are often used more than Bitcoin day to day in these countries",
-   "explanation": "The slide's caveat: in these countries dollar stablecoins are often used more than Bitcoin — 'the lesson is the exit, not the asset'."
   },
   {
    "id": "bf-17a5da99",
@@ -4253,11 +4237,11 @@
    "explanation": "The gate never asks who you are, only what you hold: the wallet signs a one-time message, then a free read of the membership contract decides."
   },
   {
-   "id": "sc-51b00587",
+   "id": "sc-97e18f01",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "Which kind of NFT use is a logical, lasting one because it relies on real utility rather than speculation?",
+   "question": "Which kind of NFT use is most likely to last, because it relies on real utility rather than on speculation?",
    "options": [
     "Uses where the token is a key, not a speculation: ticketing, credentials, token-gating.",
     "Uses that count on royalty income from future resales, which marketplaces can skip and the chain does not enforce.",
@@ -4365,22 +4349,6 @@
    "explanation": "Who would legally own and hold the document was never settled. After the loss, refunds were offered, but gas fees ate a large share of small contributions (some donors paid about as much in fees as they had given). Pooling money is the easy part; deciding, holding and unwinding it safely is where DAOs struggle."
   },
   {
-   "id": "sc-ec4c2e3d",
-   "course": "smart-contracts",
-   "section_number": 3,
-   "section_title": "Industries & Case Studies",
-   "question": "Token holders in an unincorporated DAO vote on its decisions. What legal risk did the US Ooki DAO case (CFTC, 2022–23) reveal?",
-   "options": [
-    "Voters can be treated as members of an unincorporated association, personally exposed to its liabilities.",
-    "Votes that are cast on-chain are automatically void in a court of law.",
-    "Token holders must register as company directors before they may vote.",
-    "The DAO's developers alone carry all of the liability, however the token holders choose to cast their votes."
-   ],
-   "correct_option_number": 1,
-   "correct_option_text": "Voters can be treated as members of an unincorporated association, personally exposed to its liabilities.",
-   "explanation": "Legal status is unsettled and varies by country, which is why many DAOs now pair the contracts with a legal wrapper."
-  },
-  {
    "id": "sc-a1083a43",
    "course": "smart-contracts",
    "section_number": 3,
@@ -4445,20 +4413,20 @@
    "explanation": "It is collaborative rather than competitive infrastructure; counterfeiters cannot forge the on-chain history, though they can still copy the bag."
   },
   {
-   "id": "sc-077e940b",
+   "id": "sc-25417df9",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "A fake \"university\" anchors a diploma's hash on the blockchain through its own smart contract, and the diploma file matches that record exactly. Why is the match not enough to treat the diploma as authentic?",
+   "question": "A fraudster posing as a real university anchors a diploma's hash on the blockchain through the fraudster's own smart contract, and the diploma file matches that record exactly. Why is the match not enough to treat the diploma as authentic?",
    "options": [
     "Hashes change every day, so yesterday's match proves nothing.",
     "A matching hash only shows that the file is the right size.",
-    "The blockchain deletes genuine records once they have been verified, so a surviving match is suspicious.",
-    "Anyone can anchor a hash; the verifier must also check that the university's own contract wrote it."
+    "A matching hash proves who issued the diploma, but it cannot show whether the file was changed afterwards.",
+    "Anyone can anchor a hash; the verifier must also check that the real university's own contract wrote it."
    ],
    "correct_option_number": 4,
-   "correct_option_text": "Anyone can anchor a hash; the verifier must also check that the university's own contract wrote it.",
-   "explanation": "Two checks are needed: the hash matches (the document is unchanged) and the university's own contract wrote it (who issued it)."
+   "correct_option_text": "Anyone can anchor a hash; the verifier must also check that the real university's own contract wrote it.",
+   "explanation": "Two checks are needed: the hash matches (the document is unchanged) and the real university's own contract wrote it (who issued it). A match against a record that anyone could have written shows only that the file is unchanged."
   },
   {
    "id": "sc-7e83b6bb",
@@ -5002,7 +4970,7 @@
    ],
    "correct_option_number": 3,
    "correct_option_text": "Automated tests and an independent professional audit: an AI review can miss real bugs and invent fake ones.",
-   "explanation": "The loop is prompt, read, test, audit. An AI review is a useful extra check, but it is not evidence of safety: models miss real bugs and invent fake ones, and two models can share the same blind spot. Anything that will hold real money needs tests that exercise its rules (on a testnet, not with customers' funds) and a professional, human audit."
+   "explanation": "The loop is draft, read, test, audit. An AI review is a useful extra check, but it is not evidence of safety: models miss real bugs and invent fake ones, and two models can share the same blind spot. Anything that will hold real money needs tests that exercise its rules (on a testnet, not with customers' funds) and a professional, human audit."
   },
   {
    "id": "sc-8c00e935",
@@ -6077,35 +6045,19 @@
    "explanation": "A threshold is meaningful relative to the set over which it is measured. If trusted sets differ greatly, local observations alone do not establish shared agreement. List selection, overlap and the protocol's fault assumptions matter, not just the quoted percentage."
   },
   {
-   "id": "bp-fb990d8a",
-   "course": "blockchain-platforms",
-   "section_number": 1,
-   "section_title": "Bitcoin: The First Permissionless Blockchain",
-   "question": "A retailer advertises near-zero marginal Lightning payment fees as meaning its payment operation requires no committed funds. What has it missed?",
-   "options": [
-    "Every off-chain payment requires a new minimum-sized on-chain mining deposit.",
-    "Capital is required only at channel closure, leaving operating liquidity unaffected before then.",
-    "Channel liquidity ties up capital that may be needed to support the payment flows.",
-    "Off-chain balances are merely accounting entries, so maintaining them cannot commit capital."
-   ],
-   "correct_option_number": 3,
-   "correct_option_text": "Channel liquidity ties up capital that may be needed to support the payment flows.",
-   "explanation": "Low per-payment fees do not eliminate the cost of providing liquidity. Channel capacity has to be funded and positioned to support flows, which can impose capital and operating costs. Marginal transaction cost and total economic cost are different measures."
-  },
-  {
-   "id": "bp-92e3bbc3",
+   "id": "bp-342daceb",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "Two ERC-20 tokens expose the same standard transfer interface. An analyst concludes they must have equivalent backing and holder rights. What is wrong with that conclusion?",
+   "question": "Two tokens both follow the ERC-20 standard, so wallets and apps handle them in the same way. An analyst concludes that they must have the same backing and give holders the same rights. What is wrong with that conclusion?",
    "options": [
-    "The conclusion holds only if both tokens were created in the same month.",
-    "The conclusion holds only if both tokens appear on the same block explorer.",
-    "The interface is only a set of function signatures; it says nothing about backing, reserves or rights.",
-    "A token's backing is set by the name of its transfer function, not by its interface."
+    "Nothing: two tokens that follow the same standard must have the same backing and the same rights.",
+    "It holds for the backing, which the standard fixes, but not for the rights, which each wallet sets.",
+    "The standard only sets how wallets and apps talk to a token, not its backing or holders' rights.",
+    "It holds only for stablecoins, because the ERC-20 standard requires them to keep full reserves."
    ],
    "correct_option_number": 3,
-   "correct_option_text": "The interface is only a set of function signatures; it says nothing about backing, reserves or rights.",
+   "correct_option_text": "The standard only sets how wallets and apps talk to a token, not its backing or holders' rights.",
    "explanation": "A standard such as ERC-20 is only a shared set of function signatures, so wallets and apps can handle any token the same way. It guarantees nothing about what backs a token, its reserves, redemption rights or the issuer's powers. Those have to be checked separately for each token."
   },
   {
@@ -6125,20 +6077,20 @@
    "explanation": "Every transaction from an account carries a nonce, a counter that must match the account's next expected number. Once the transaction executes, that number is used up, so an identical copy is rejected instead of running again. Paying twice would need a new transaction with a new nonce."
   },
   {
-   "id": "bp-de97d657",
+   "id": "bp-e9d7fd98",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "Two customers request the last available tokenised seat. The smart contract sells only to the first valid purchase it executes. Why can both requests be individually well-formed, yet only one purchase succeed?",
+   "question": "Two customers each send a valid request to buy the last tokenised seat. The smart contract sells the seat to the first valid purchase it processes. Why does only one of the two purchases succeed?",
    "options": [
-    "Deterministic rules apply to the ordered transactions and the state each one encounters.",
-    "Deterministic execution requires the contract to divide the seat between both buyers.",
+    "Transactions run one at a time in an agreed order, so the second finds the seat already sold.",
+    "A block can hold only one purchase per smart contract, so the second request is simply thrown away.",
     "The contract must give priority to whichever customer's wallet was created earlier.",
     "Both purchases succeed on different nodes until the seller chooses its preferred buyer."
    ],
    "correct_option_number": 1,
-   "correct_option_text": "Deterministic rules apply to the ordered transactions and the state each one encounters.",
-   "explanation": "Determinism does not mean that competing transactions see an unchanged starting state. The first successful purchase changes availability; the next encounters the updated state. Agreement on ordering and execution allows nodes to reach the same final outcome."
+   "correct_option_text": "Transactions run one at a time in an agreed order, so the second finds the seat already sold.",
+   "explanation": "Every node runs the transactions one after another in the same agreed order. The first valid purchase changes the record (the seat is sold); the second then meets that updated record and fails. This is what deterministic execution means: same order, same rules, so every node reaches the same final result."
   },
   {
    "id": "bp-92296dcf",
@@ -6221,20 +6173,20 @@
    "explanation": "The course distinguishes live listening from searching past events through a node. The listener's outage does not erase settled transactions or their logs. Recovery can replay missed records, with appropriate controls against duplicating the company's off-chain actions."
   },
   {
-   "id": "sc-7f2df729",
+   "id": "sc-82d88547",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "An app's smart contract address and customer balances stay the same, but an authorised upgrade changes the code it delegates to. Why can the app's effective behaviour change?",
+   "question": "An app's smart contract keeps the same address and the same customer balances, but an authorised upgrade changes the code that it passes its work to. Why can the app now behave differently?",
    "options": [
-    "The network permits anyone holding a token to replace the code behind its address.",
-    "Customer balances are copied into every newly deployed contract on the same chain.",
-    "An unchanged address means the observed behaviour must come only from a wallet display bug.",
-    "A proxy can keep the state-facing address while delegating execution to new implementation logic."
+    "The network allows anyone who holds the app's token to replace the code behind its address.",
+    "Any smart contract's code can be edited in place, at any time, by whoever first deployed it.",
+    "The network's validators vote on each new version and swap the code in once most of them agree.",
+    "The address is a proxy: it keeps the balances but hands each call to code that can be swapped."
    ],
    "correct_option_number": 4,
-   "correct_option_text": "A proxy can keep the state-facing address while delegating execution to new implementation logic.",
-   "explanation": "A proxy separates the address and state users interact with from the implementation logic it delegates to. An authorised upgrade can therefore change effective rules without changing that user-facing address. The upgrade authority is a material part of the trust model."
+   "correct_option_text": "The address is a proxy: it keeps the balances but hands each call to code that can be swapped.",
+   "explanation": "A proxy separates the address and stored balances that users see from the code that does the work. An authorised upgrade can point the proxy at new code, so the rules change while the address stays the same. Whoever holds that upgrade power is an important part of what users are trusting."
   },
   {
    "id": "sc-d0f9c4d0",
@@ -6467,9 +6419,9 @@
    "section_title": "Introduction to Smart Contracts",
    "question": "A lending app accepts a token whose value depends on another protocol. That other protocol fails, even though the lending app's own code works exactly as designed. Why can the lending app still be hurt?",
    "options": [
-    "A lending app whose code works correctly is protected from any outside token losing value.",
-    "Different contract addresses mean business risks cannot pass between the two products.",
-    "The failure matters only if both products share the same website.",
+    "The blockchain spreads a failed protocol's losses evenly across every app on the same chain.",
+    "The failed protocol's developers automatically gain control of the lending app's smart contract.",
+    "Validators freeze every app that holds a token from a protocol that has failed.",
     "An app that builds on other protocols also takes on their risks and losses."
    ],
    "correct_option_number": 4,
@@ -6525,20 +6477,20 @@
    "explanation": "A filter can make a transient disturbance less influential while also delaying response to genuine changes. Those are two effects of using historical information. Oracle design requires balancing manipulation resistance with timeliness rather than treating smoothing as a complete cure."
   },
   {
-   "id": "sc-1e2a59f5",
+   "id": "sc-67e2158d",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "Crop insurance pays according to rainfall at a named regional gauge. The gauge reports accurately, but a covered farm gets very different rainfall. What risk remains despite accurate reporting?",
+   "question": "Crop insurance pays out based on the rainfall measured at one regional gauge. The gauge reports accurately, but an insured farm gets very different rainfall. What problem remains, even though the reporting is accurate?",
    "options": [
-    "The chosen measurement can differ from the loss the farmer actually experiences.",
-    "The difference proves the blockchain's transaction ordering must have been manipulated.",
-    "Accurate reporting requires the contract to ignore the named gauge and use the farmer's claim.",
-    "A valid oracle report makes every farm in the region experience the same rainfall."
+    "The gauge's reading can differ from the loss the farmer actually suffers.",
+    "The oracle must be dishonest, because its reading does not match the farm's rainfall.",
+    "Only a shortage of gauges: with a few more of them, every mismatch would disappear.",
+    "The contract relies on a gauge when it should simply trust each farmer's own claim."
    ],
    "correct_option_number": 1,
-   "correct_option_text": "The chosen measurement can differ from the loss the farmer actually experiences.",
-   "explanation": "A correctly reported external measure can still be an imperfect proxy for the intended business risk. The contract's data definition and coverage need to be understood separately from the oracle's reporting integrity. Accurate inputs do not guarantee a good match to an individual customer's loss."
+   "correct_option_text": "The gauge's reading can differ from the loss the farmer actually suffers.",
+   "explanation": "This is basis risk: the insurance pays on a stand-in measurement (rainfall at the gauge), not on the farmer's actual loss, and the two can differ even when the oracle reports perfectly. The oracle was honest, so this is not an oracle failure. More gauges can shrink the gap but never remove it, and paying on each farmer's own claim would invite false claims, which is the problem the gauge was meant to avoid."
   },
   {
    "id": "sc-93e8fe1f",
@@ -6563,7 +6515,7 @@
    "section_title": "Industries & Case Studies",
    "question": "A DAO holds an advisory token vote off-chain. Its treasury only moves when three named multisig signers approve the payment on-chain. A proposal wins the advisory vote. What does winning that vote alone NOT do?",
    "options": [
-    "Show that most of the voting token holders support the proposal.",
+    "Show that most of the tokens that voted were in favour of the proposal.",
     "Make it final on-chain: no money moves until the three signers sign.",
     "Give the three signers a clear signal of what token holders want.",
     "Produce a recorded result that members can point to in later discussions."
@@ -6653,20 +6605,20 @@
    "explanation": "A snapshot defines which historical state determines voting weight. Current ownership can differ from the recorded eligibility used for that proposal. This limits some short-term borrowing strategies, but the question concerns the timing rule itself rather than assuming every governance attack is prevented."
   },
   {
-   "id": "sc-49214a8c",
+   "id": "sc-da3022ad",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "A formal analysis establishes that an insurance smart contract never pays more than its available token balance. Which conclusion would be unjustified?",
+   "question": "A formal (mathematical) check proves that an insurance smart contract never pays out more than the tokens it holds. Which conclusion would be unjustified?",
    "options": [
     "That the contract's coverage and payout rules meet customers' actual insurance needs.",
-    "That a precisely specified property can be assessed independently of marketing claims.",
-    "That the meaning of the chosen property matters when interpreting the result.",
-    "That checking a property is different from proving every desirable product characteristic."
+    "That the contract will never pay out more tokens than it holds at that moment.",
+    "That one specific rule has been proven, rather than the quality of the whole insurance product.",
+    "That any other property of the contract would need its own separate check."
    ],
    "correct_option_number": 1,
    "correct_option_text": "That the contract's coverage and payout rules meet customers' actual insurance needs.",
-   "explanation": "Verification concerns specified properties under stated assumptions. A bound on payments does not prove adequate coverage, truthful inputs or fair terms. A contract can satisfy that property while still being a poor insurance design."
+   "explanation": "A formal check proves one stated property under stated assumptions. Here it proves the payout limit and nothing more: it does not show that the cover is adequate, that the inputs are truthful or that the terms are fair. A contract can pass this check and still be a poor insurance product."
   },
   {
    "id": "sc-3a2c7b3f",
