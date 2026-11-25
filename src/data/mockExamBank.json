@@ -2717,20 +2717,20 @@
    "explanation": "Each new block on top makes rewriting yours more expensive; after about six blocks the payment is irreversible for all practical purposes."
   },
   {
-   "id": "bp-71f15eb1",
+   "id": "bp-a53842a3",
    "course": "blockchain-platforms",
    "section_number": 1,
    "section_title": "Bitcoin: The First Permissionless Blockchain",
-   "question": "The section says a payment makes the same basic journey on Bitcoin and on Ethereum. Comparing the two, what does it say actually differs?",
+   "question": "On Bitcoin and on Ethereum, a payment goes through the same basic steps (sign, broadcast, queue, block, confirm). According to the section, what is actually different between the two?",
    "options": [
-    "Whether every node re-checks each new block, which happens only on Bitcoin",
-    "Whether the wallet signs the payment, which happens only on Bitcoin and not on Ethereum",
-    "Who proposes the block (miner or chosen validator) and how fast it becomes final",
-    "Whether valid transactions wait in a fee-ranked queue, which happens only on Bitcoin"
+    "Whether nodes re-check each new block: they do on Bitcoin, but not on Ethereum",
+    "Whether the wallet signs the payment: it does on Bitcoin, but not on Ethereum",
+    "Who proposes the block (miner or validator) and how fast it becomes final",
+    "Whether payments wait in a fee-ranked queue: they do on Bitcoin only"
    ],
    "correct_option_number": 3,
-   "correct_option_text": "Who proposes the block (miner or chosen validator) and how fast it becomes final",
-   "explanation": "A payment makes the same basic journey on both (sign, broadcast, queue, block, confirm); the platforms differ in who proposes the block and how fast it becomes final."
+   "correct_option_text": "Who proposes the block (miner or validator) and how fast it becomes final",
+   "explanation": "The steps are the same on both: sign, broadcast, queue, block, confirm. What differs is who proposes the block (a miner on Bitcoin, a chosen validator on Ethereum) and how fast the payment becomes final (about 1 hour on Bitcoin, about 13 minutes on Ethereum)."
   },
   {
    "id": "bp-5a74b1c9",
@@ -3517,20 +3517,20 @@
    "explanation": "A bridge never moves a coin: the original stays locked in the vault. To return, you burn the wrapped copy and the operator releases the original."
   },
   {
-   "id": "bp-c732a1a7",
+   "id": "bp-a724d1a8",
    "course": "blockchain-platforms",
    "section_number": 4,
    "section_title": "Interoperability",
-   "question": "You hold 1 WBTC on Ethereum and want actual bitcoin. According to the wrapped-token slide, how do most holders get out?",
+   "question": "You hold 1 WBTC on Ethereum and want real bitcoin back on the Bitcoin chain. According to the wrapped-token (bridge) slide, how do you actually get it?",
    "options": [
-    "They redeem it with the custodian directly, which every holder of WBTC is entitled to do at any time",
-    "They sell it on an exchange, since only approved, identity-checked merchants can redeem WBTC for BTC",
-    "They ask Bitcoin's miners to release the BTC, since the miners are the ones guarding the vault",
-    "They send the WBTC to a Bitcoin address, where the network converts it back into BTC automatically"
+    "Wait for Ethereum's validators to convert it, since they keep a reserve of real BTC behind every WBTC",
+    "Send the WBTC back through the bridge (custodian) that minted it, which unlocks the real BTC on the Bitcoin chain",
+    "Ask Bitcoin's miners to release the BTC, since the miners are the ones who guard the vault where the BTC is locked",
+    "Send the WBTC to a Bitcoin address, where the network converts it back into BTC automatically"
    ],
    "correct_option_number": 2,
-   "correct_option_text": "They sell it on an exchange, since only approved, identity-checked merchants can redeem WBTC for BTC",
-   "explanation": "Usually you cannot redeem a wrapped token yourself: only approved, identity-checked merchants swap WBTC back for BTC, and everyone else sells it on an exchange."
+   "correct_option_text": "Send the WBTC back through the bridge (custodian) that minted it, which unlocks the real BTC on the Bitcoin chain",
+   "explanation": "A bridge never moves a coin: the real BTC stays locked with the custodian, and the WBTC is the claim ticket. To get the BTC back you hand the ticket back: the WBTC returns to the bridge (custodian) that minted it and is burned, and the locked BTC is released on the Bitcoin chain (the \"burn → withdraw\" arrow on the slide). Miners and validators do not hold the vault, and the Bitcoin network cannot read an Ethereum token. In practice this redemption step runs through the custodian's approved merchants."
   },
   {
    "id": "bp-3b1c0cb3",
@@ -5837,20 +5837,20 @@
    "explanation": "Under EIP-4844, nodes are required to keep blobs only for a limited window (about 18 days), not as a permanent archive. Long-term access needs separate retention or archival arrangements. That requirement is different from the proof and settlement rules that establish the rollup's state."
   },
   {
-   "id": "bp-438d3e46",
+   "id": "bp-aa34a836",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "A validity-rollup provider says Ethereum can check its batches cheaply. Which conclusion would be unjustified?",
+   "question": "A ZK (validity) rollup provider says Ethereum can check its batches of transactions cheaply. Which conclusion would be a mistake?",
    "options": [
-    "That some execution work can take place outside Ethereum's base layer.",
-    "That producing the proofs must also be cheap and operationally effortless.",
-    "That many user transactions can be represented by a batched state update.",
-    "That a verifier can check a result without repeating the full computation."
+    "That some of the work is done outside Ethereum's main chain.",
+    "That creating the proofs is also cheap and easy for the provider.",
+    "That many user transactions can be bundled into a single batch.",
+    "That Ethereum can check the result without redoing all of the work."
    ],
    "correct_option_number": 2,
-   "correct_option_text": "That producing the proofs must also be cheap and operationally effortless.",
-   "explanation": "Proof generation and verification are different tasks with different costs. Cheap verification can coexist with substantial prover computation. A business comparing rollup designs should not infer the operator's total cost from the cost of checking a proof alone."
+   "correct_option_text": "That creating the proofs is also cheap and easy for the provider.",
+   "explanation": "Checking a proof and creating a proof are two different jobs with different costs. Checking can be cheap for Ethereum while creating the proof still takes a lot of computing work for the provider. So cheap checking tells you nothing about the provider's own costs."
   },
   {
    "id": "bp-09a6aad9",
@@ -5883,22 +5883,6 @@
    "correct_option_number": 2,
    "correct_option_text": "Normal processing can be disrupted even while Ethereum itself remains healthy.",
    "explanation": "A rollup has components beyond the base chain. Availability of Ethereum alone does not establish availability of the ordinary sequencer path. Alternative submission or exit mechanisms depend on the rollup's design and are not specified in this scenario."
-  },
-  {
-   "id": "bp-bcc224a4",
-   "course": "blockchain-platforms",
-   "section_number": 3,
-   "section_title": "Permissioned Blockchains: Hyperledger Fabric",
-   "question": "Two Fabric transactions are endorsed after reading the same available inventory. The first changes that inventory when committed. Why might the second be marked invalid even though its endorsements are genuine?",
-   "options": [
-    "Its earlier read no longer matches the current state when validation occurs.",
-    "The second transaction must use a different certificate authority to share the inventory.",
-    "Genuine endorsements expire whenever another organisation submits an unrelated proposal.",
-    "The ordering service is required to accept only one transaction per supplier per block."
-   ],
-   "correct_option_number": 1,
-   "correct_option_text": "Its earlier read no longer matches the current state when validation occurs.",
-   "explanation": "Fabric separates simulation from ordering and validation. A transaction can become stale if a value it read has changed before validation. Valid signatures are therefore necessary but not always sufficient for the proposed state update to take effect."
   },
   {
    "id": "bp-c2374908",
@@ -6253,20 +6237,20 @@
    "explanation": "Correct execution is not the same as a complete agreement. If the stated rules provide no way out of a foreseeable impasse, the code cannot invent one. The question concerns missing business conditions, not necessarily a programming bug."
   },
   {
-   "id": "sc-2adb45f1",
+   "id": "sc-3a02b6fd",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "A buyer sends ETH directly to an escrow address. Assume the transfer is accepted, but the contract updates the order status only through its designated payment function, which was not called. What should the seller avoid assuming?",
+   "question": "An escrow contract marks an order as \"paid\" only when the buyer uses its pay function. A buyer skips that function and sends ETH straight to the contract's address. Assume the ETH arrives. What should the seller NOT assume?",
    "options": [
-    "That the contract's stored order status and its ETH balance are distinct records.",
-    "That the payment workflow may require an action beyond an ordinary value transfer.",
-    "That the higher ETH balance proves the order's required payment state was recorded.",
-    "That the accepted transfer can affect the escrow address's ETH balance."
+    "That the contract's order record and its ETH balance are two separate things.",
+    "That paying correctly takes more than simply sending ETH to the address.",
+    "That the order is now marked as paid, because the ETH has arrived.",
+    "That the ETH which arrived increased the contract's balance."
    ],
    "correct_option_number": 3,
-   "correct_option_text": "That the higher ETH balance proves the order's required payment state was recorded.",
-   "explanation": "An address balance and an application's business state are not identical. Under the stated design, an accepted value transfer does not itself run the function that records the order as paid. The seller should verify the relevant state transition, not infer it from balance alone."
+   "correct_option_text": "That the order is now marked as paid, because the ETH has arrived.",
+   "explanation": "A contract's ETH balance and its order records are two different things. Sending ETH straight to the address does not run the pay function, so nothing marks the order as paid. The seller should check the order status in the contract, not just see that ETH arrived."
   },
   {
    "id": "sc-04153de9",
@@ -6429,20 +6413,20 @@
    "explanation": "A unique token identifies a ticket; it does not by itself implement every business rule about redemption. A one-entry policy also needs a reliable check and update of use status, plus appropriate presentation/holder checks. Uniqueness and consumption are separate requirements."
   },
   {
-   "id": "sc-df11886c",
+   "id": "sc-2274bf3a",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "A professional qualification is meant to certify the person who earned it. Why might freely transferable tokens be a poor default design for that particular credential?",
+   "question": "A professional certificate should prove that one specific person earned it. Why is a freely transferable token a poor choice for that kind of credential?",
    "options": [
-    "Transferable tokens cannot record which organisation originally issued them.",
-    "A token transfer automatically changes the university's assessment of who earned the qualification.",
-    "The first named graduate necessarily remains the token holder even when the token is resold.",
-    "A token sale could move the proof of holding without moving the underlying qualification."
+    "A transferable token cannot show which organisation issued it.",
+    "Transferring the token automatically changes the issuer's record of who passed.",
+    "The person who earned it always stays the holder, even after the token is sold.",
+    "It can be sold or sent to someone who never earned the certificate."
    ],
    "correct_option_number": 4,
-   "correct_option_text": "A token sale could move the proof of holding without moving the underlying qualification.",
-   "explanation": "A membership that is deliberately resellable and a qualification earned by one person represent different rights. Transfer policy should reflect the intended claim. Non-transferability or other holder-binding checks may help, although they do not alone establish identity, truth or privacy."
+   "correct_option_text": "It can be sold or sent to someone who never earned the certificate.",
+   "explanation": "A credential should stay with the person who earned it. If the token can be freely sold or sent, the new holder has the token but never earned the qualification, so it no longer proves \"this person earned it\". That is why non-transferable (\"soulbound\") tokens suit diplomas, while resellable tokens suit things like tickets."
   },
   {
    "id": "sc-2d8906cf",
@@ -6541,20 +6525,20 @@
    "explanation": "With unchanged prices and debt, more collateral increases the margin supporting that debt. This can reduce proximity to a liquidation threshold, but cannot guarantee safety under every later price move or protocol failure. More buffer is not elimination of risk."
   },
   {
-   "id": "sc-d0b1e3da",
+   "id": "sc-e5de9c79",
    "course": "smart-contracts",
    "section_number": 1,
    "section_title": "Introduction to Smart Contracts",
-   "question": "A lending product accepts a token whose value depends on another protocol. That upstream protocol fails even though the lending product's own code behaves as specified. Why can the lending product still be affected?",
+   "question": "A lending app accepts a token whose value depends on another protocol. That other protocol fails, even though the lending app's own code works exactly as designed. Why can the lending app still be hurt?",
    "options": [
-    "A correctly executed lending contract is insulated from every external token's economic value.",
-    "Different contract addresses ensure that business risks cannot pass between the two products.",
-    "The upstream failure can matter only if both products share the same front-end website.",
-    "Composability can import dependencies and losses from the assets and protocols it uses."
+    "A lending app whose code works correctly is protected from any outside token losing value.",
+    "Different contract addresses mean business risks cannot pass between the two products.",
+    "The failure matters only if both products share the same website.",
+    "An app that builds on other protocols also takes on their risks and losses."
    ],
    "correct_option_number": 4,
-   "correct_option_text": "Composability can import dependencies and losses from the assets and protocols it uses.",
-   "explanation": "Building on other contracts can create useful combinations and also transmit risk. The downstream application's code can execute correctly while the assets or services it relies on deteriorate. Reviewing one contract in isolation is therefore not a complete economic assessment."
+   "correct_option_text": "An app that builds on other protocols also takes on their risks and losses.",
+   "explanation": "Building on other protocols (\"composability\") lets apps combine useful pieces, but it also passes risk along. The lending app's code can work perfectly while a token it relies on loses its value. Checking one contract on its own is therefore not a full risk check."
   },
   {
    "id": "sc-c69e9b3d",
@@ -6637,20 +6621,20 @@
    "explanation": "A quorum sets a minimum participation condition; a majority condition sets a support threshold within the relevant vote count. Satisfying one does not imply satisfying the other. The question states both as necessary, so the proposal is not approved."
   },
   {
-   "id": "sc-25fc2fb0",
+   "id": "sc-ed4b4e04",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "A DAO uses an advisory token vote, while treasury transfers require three named multisig signers. A proposal wins the advisory vote. What has that vote alone not established?",
+   "question": "A DAO holds an advisory token vote off-chain. Its treasury only moves when three named multisig signers approve the payment on-chain. A proposal wins the advisory vote. What does winning that vote alone NOT do?",
    "options": [
-    "That the proposal can be discussed before any treasury transaction occurs.",
-    "That the signatures needed to move the treasury have actually been supplied.",
-    "That token holders expressed support under the advisory voting rules.",
-    "That the DAO uses distinct preference-signalling and execution mechanisms."
+    "Show that most of the voting token holders support the proposal.",
+    "Make it final on-chain: no money moves until the three signers sign.",
+    "Give the three signers a clear signal of what token holders want.",
+    "Produce a recorded result that members can point to in later discussions."
    ],
    "correct_option_number": 2,
-   "correct_option_text": "That the signatures needed to move the treasury have actually been supplied.",
-   "explanation": "DAOs can combine different mechanisms. In this stipulated design, a token vote signals a preference but does not replace the multisig's authorisation condition. The actual authority to move assets must be traced through the implemented controls."
+   "correct_option_text": "Make it final on-chain: no money moves until the three signers sign.",
+   "explanation": "In this DAO the token vote only signals what members want. It does not move money and it is not final settlement: nothing happens on-chain until the three multisig signers sign the payment. To see who really controls the treasury, look at who can execute the transaction, not at who won the vote."
   },
   {
    "id": "sc-266da126",
