@@ -308,7 +308,7 @@
     },
     "cards": [
       { "title": "What it is", "desc": "A token on one chain that stands for a coin held on another. 1 WBTC on Ethereum is a claim on 1 BTC kept by a custodian, much as a casino chip is a claim on cash at the cage." },
-      { "title": "Who can redeem it", "desc": "Usually not you. Only approved, identity-checked merchants swap WBTC back for BTC; everyone else sells it on an exchange. The price holds only while people believe the vault is full." },
+      { "title": "Who can redeem it", "desc": "Send WBTC back through the bridge (custodian) that minted it and the real BTC is released on Bitcoin. In practice only approved, identity-checked merchants do this; everyone else sells on an exchange. The price holds only while people believe the vault is full." },
       { "title": "Who can freeze it", "desc": "The issuer. The WBTC contract can be paused by its owner, and a bridge operator can stop minting or releasing. If the vault is emptied, as at Wormhole in 2022, the copies are backed by nothing." }
     ],
     "noteLabel": "Not every wrapper needs a custodian",

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router';
 import { MonitorSmartphone, RotateCw } from 'lucide-react';
 
 const DISMISS_KEY = 'small-screen-gate-dismissed';
@@ -20,6 +21,7 @@ const DISMISS_KEY = 'small-screen-gate-dismissed';
 const MIN_WIDTH = 1024; // px — Tailwind `lg:` breakpoint
 
 export function SmallScreenGate() {
+  const { pathname } = useLocation();
   const [tooNarrow, setTooNarrow] = useState(false);
   const [dismissed, setDismissed] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
@@ -49,7 +51,11 @@ export function SmallScreenGate() {
     try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch { /* ignore */ }
   };
 
-  if (!tooNarrow || dismissed) return null;
+  // The mock exam is a responsive page, not a slide deck, and its timer is
+  // running — don't cover it.
+  const isResponsivePage = /^\/[^/]+\/mockexam\/?$/.test(pathname);
+
+  if (!tooNarrow || dismissed || isResponsivePage) return null;
 
   return (
     <div
