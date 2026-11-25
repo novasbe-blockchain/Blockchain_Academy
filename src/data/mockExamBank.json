@@ -637,20 +637,20 @@
    "explanation": "The base fee (25 Gwei) is burned. The tip (2 Gwei) goes to the validator. Effective price is min(maxFeePerGas, baseFee + tip) = min(30, 27) = 27 Gwei per gas; the unused 3 Gwei is never charged. maxFeePerGas is a cap, not a target."
   },
   {
-   "id": "bp-6680da4a",
+   "id": "bp-37c8eec3",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "A scaling chain posts a valid proof for every batch to Ethereum, but keeps the transaction data on its own servers (a design known as a validium). One day the operator goes offline and nobody else has a copy of the data. What happens to users' funds?",
+   "question": "A scaling chain posts a validity proof for every batch to Ethereum but keeps the transaction data on its own servers (a design called a validium). The operator goes offline and nobody else has a copy of the data. What happens to users' funds?",
    "options": [
-    "They are frozen: without the data, nobody can show what their own balance is.",
-    "Nothing changes. A valid proof is all Ethereum needs to pay each user out.",
-    "Ethereum's validators rebuild the missing data from the proofs and reopen withdrawals.",
-    "The funds are burned, the same way a cheating validator is slashed."
+    "They are frozen: without the data, no one can build the Merkle proof needed to withdraw.",
+    "Nothing changes: the validity proof on Ethereum is enough for anyone to withdraw.",
+    "They are safe: Ethereum keeps a copy of the data, so users can withdraw as normal.",
+    "They are refunded: Ethereum automatically sends every user's balance back to them."
    ],
    "correct_option_number": 1,
-   "correct_option_text": "They are frozen: without the data, nobody can show what their own balance is.",
-   "explanation": "A proof shows the batch followed the rules; it does not contain the transactions. To leave without the operator, a user must prove their balance to the contract on Ethereum, and that takes the data. This is why true rollups publish their data on Ethereum (in blobs since 2024), and why designs that keep data off-chain (validiums) are cheaper but add someone you have to trust to keep the data available."
+   "correct_option_text": "They are frozen: without the data, no one can build the Merkle proof needed to withdraw.",
+   "explanation": "A validity proof shows that the new state root (the fingerprint of everyone's balances) is correct, but it does not contain the transactions. To withdraw without the operator, a user must build a Merkle proof of their own balance against that state root, and that takes the underlying data. With no copy of the data, nobody can build it, so the funds are frozen: not stolen, and not refunded. This is why true rollups publish their data on Ethereum (in blobs since 2024), and why designs that keep data off-chain (validiums) are cheaper but add someone you have to trust to keep the data available."
   },
   {
    "id": "bp-199c7c26",
@@ -3604,7 +3604,7 @@
    "question": "A Lisbon importer and a Shenzhen supplier rely only on a lawyer-drafted paper contract for a €50,000 deal. What is the main limitation of this arrangement?",
    "options": [
     "Enforcement comes afterwards through the courts: slow, expensive, and harder still across borders.",
-    "The lawyer holds the €50,000 for the whole period and could go bust before paying any of it out.",
+    "The lawyer charges a one-off drafting fee, which is small compared with the €50,000 deal itself.",
     "The other party cannot read the contract until the deal has been completed.",
     "A network fee has to be paid every time one of the clauses is checked."
    ],
@@ -5661,22 +5661,6 @@
    "explanation": "A rollup has components beyond the base chain. Availability of Ethereum alone does not establish availability of the ordinary sequencer path. Alternative submission or exit mechanisms depend on the rollup's design and are not specified in this scenario."
   },
   {
-   "id": "bp-c2374908",
-   "course": "blockchain-platforms",
-   "section_number": 3,
-   "section_title": "Permissioned Blockchains: Hyperledger Fabric",
-   "question": "A former consortium employee's Fabric certificate is revoked for future use. What should an auditor avoid concluding from the revocation alone?",
-   "options": [
-    "That the network can use identity rules to restrict future participation.",
-    "That the person's credential and the ledger's historical records are different things.",
-    "That earlier committed records signed with that credential have been erased.",
-    "That a certificate's status matters when deciding whether to accept new activity."
-   ],
-   "correct_option_number": 3,
-   "correct_option_text": "That earlier committed records signed with that credential have been erased.",
-   "explanation": "Identity controls can restrict future use without rewriting the append-only record of past activity. Revocation is not a mechanism for deleting historical transactions. The precise acceptance rules depend on network policy, but historical erasure does not follow from revocation alone."
-  },
-  {
    "id": "bp-e950c333",
    "course": "blockchain-platforms",
    "section_number": 3,
@@ -5691,22 +5675,6 @@
    "correct_option_number": 3,
    "correct_option_text": "Yes; chaincode can maintain application-level asset and ownership records.",
    "explanation": "No native cryptocurrency means the platform does not require a built-in coin for its operation. It does not prevent business applications from defining balances, receipts or other assets as records governed by chaincode."
-  },
-  {
-   "id": "bp-5e36985a",
-   "course": "blockchain-platforms",
-   "section_number": 3,
-   "section_title": "Permissioned Blockchains: Hyperledger Fabric",
-   "question": "A consortium requires every member organisation to endorse a payment. It adds more mandatory endorsers but no backup endorsement paths. Which trade-off should it anticipate?",
-   "options": [
-    "Broader required approval also makes progress depend on more organisations being available.",
-    "Each added member supplies an extra signature that can replace any missing mandatory endorsement.",
-    "Adding mandatory approvers removes the need to check signatures during final validation.",
-    "Endorser availability becomes irrelevant because the orderer can supply missing approvals."
-   ],
-   "correct_option_number": 1,
-   "correct_option_text": "Broader required approval also makes progress depend on more organisations being available.",
-   "explanation": "An all-members policy spreads required approval across organisations, but a valid update still needs every required endorsement. Without redundancy or a policy change, an unavailable mandatory participant can block progress. Broader required participation does not automatically improve service availability."
   },
   {
    "id": "bp-1b31bb20",
@@ -5787,22 +5755,6 @@
    "correct_option_number": 4,
    "correct_option_text": "Transfers, execution costs and price changes can consume the apparent price difference.",
    "explanation": "Separate markets can produce different prices, but exploiting a gap requires a feasible route and trades at achievable prices. Fees, time, liquidity and changing prices can outweigh the quoted difference. A visible gap is not the same as a risk-free realised profit."
-  },
-  {
-   "id": "bp-f6acf1ac",
-   "course": "blockchain-platforms",
-   "section_number": 4,
-   "section_title": "Interoperability",
-   "question": "An IBC connection verifies messages with light-client proofs. Its only active relayer stops forwarding new messages. What distinction matters?",
-   "options": [
-    "Proof checks can protect authenticity while delivery still depends on an available relaying path.",
-    "The destination automatically treats every unrelayed message as already received.",
-    "Light-client verification itself forwards pending messages, so no delivery path is needed.",
-    "The destination must accept the latest unproved claim until its relayer resumes delivery."
-   ],
-   "correct_option_number": 1,
-   "correct_option_text": "Proof checks can protect authenticity while delivery still depends on an available relaying path.",
-   "explanation": "Verification prevents acceptance of unauthorised claims, but cannot by itself cause a message to be delivered. If the available forwarding path stops, progress can be delayed even though invalid messages remain rejectable. Additional relayers may provide another path where the design allows them."
   },
   {
    "id": "bp-3dfe2863",
