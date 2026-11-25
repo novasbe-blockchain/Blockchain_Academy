@@ -6,14 +6,14 @@
   ],
   [
    "bp-e2f0fb94",
-   "bp-6b0ff727"
+   "bp-92e3bbc3"
   ],
   [
-   "sc-04153de9",
+   "sc-fb2976cd",
    "sc-39f605b7"
   ],
   [
-   "sc-5068a91c",
+   "sc-7f2df729",
    "sc-d0f9c4d0"
   ]
  ],
@@ -461,11 +461,11 @@
    "explanation": "Every action starts with a wallet's key; contracts only react. A contract has no key and no clock — if nothing calls it, nothing happens."
   },
   {
-   "id": "bf-d688cdd6",
+   "id": "bf-70455041",
    "course": "blockchain-fundamentals",
    "section_number": 3,
    "section_title": "What's Next for Blockchain?",
-   "question": "A flight-delay insurance contract must pay out when a flight is late. How does it find out about the delay?",
+   "question": "A flight-delay insurance smart contract must pay out when a flight is late. How does it find out about the delay?",
    "options": [
     "An oracle, which you must trust, writes it on-chain",
     "The contract looks up the airline's website by itself",
@@ -653,11 +653,11 @@
    "explanation": "A proof shows the batch followed the rules; it does not contain the transactions. To leave without the operator, a user must prove their balance to the contract on Ethereum, and that takes the data. This is why true rollups publish their data on Ethereum (in blobs since 2024), and why designs that keep data off-chain (validiums) are cheaper but add someone you have to trust to keep the data available."
   },
   {
-   "id": "bp-523e08d7",
+   "id": "bp-199c7c26",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "A lending contract on Ethereum holds millions of dollars in ETH. Can the contract decide, by itself, to send a payment at midnight?",
+   "question": "A lending smart contract on Ethereum holds millions of dollars in ETH. Can the contract decide, by itself, to send a payment at midnight?",
    "options": [
     "Yes — a contract has its own private key and signs its own transactions whenever its code tells it to.",
     "No — a contract only reacts: a wallet (EOA) must sign and send a transaction that triggers it.",
@@ -1037,11 +1037,11 @@
    "explanation": "The contract checks its rules (here: is the caller the buyer?) before anything moves. A failed check reverts the whole transaction: balances, status and events stay exactly as they were, and the 2 ETH never leaves the stranger's wallet. The nodes still did the work of running it, so the gas already used is not refunded."
   },
   {
-   "id": "sc-e64cb6a1",
+   "id": "sc-7d414a46",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "A crop-insurance contract must pay out when rainfall is below 10 mm. Why can't the contract simply call a weather API itself?",
+   "question": "A crop-insurance smart contract must pay out when rainfall is below 10 mm. Why can't the contract simply call a weather API itself?",
    "options": [
     "Every node re-runs the contract, and a live API could answer each node differently",
     "Calling an API would cost more gas than most contracts can afford",
@@ -2749,22 +2749,6 @@
    "explanation": "Signing happens in the wallet and puts nothing on-chain; the transaction only leaves the device when it is broadcast to the nodes."
   },
   {
-   "id": "bp-9104be92",
-   "course": "blockchain-platforms",
-   "section_number": 1,
-   "section_title": "Bitcoin: The First Permissionless Blockchain",
-   "question": "A Bitcoin miner completes the Proof of Work for a new block and broadcasts it. According to the transaction-flow slide, what do the other nodes do before the block counts?",
-   "options": [
-    "Each node re-checks the block itself and then adds it to its own copy of the chain",
-    "They accept it as it stands, because the Proof of Work already proves that the content is valid",
-    "They wait until a majority of the other miners have signed the block as approved",
-    "They pass it to the wallet apps, which confirm their own users' payments"
-   ],
-   "correct_option_number": 1,
-   "correct_option_text": "Each node re-checks the block itself and then adds it to its own copy of the chain",
-   "explanation": "When a block is broadcast, every node re-checks it and adds it to its own copy of the chain; nobody takes the miner's word for it."
-  },
-  {
    "id": "bp-15a9c188",
    "course": "blockchain-platforms",
    "section_number": 1,
@@ -2779,22 +2763,6 @@
    "correct_option_number": 3,
    "correct_option_text": "Decentralization, because costly hardware concentrates the validator set",
    "explanation": "Platforms tend to optimise for two corners and pay on the third: Solana puts throughput first, and its high hardware requirements concentrate the validator set."
-  },
-  {
-   "id": "bp-feb363cc",
-   "course": "blockchain-platforms",
-   "section_number": 1,
-   "section_title": "Bitcoin: The First Permissionless Blockchain",
-   "question": "A shop tries to receive a large Lightning payment and it fails, even though both wallets are online and the Bitcoin network is running normally. Which \"honest limit\" of Lightning best explains this?",
-   "options": [
-    "Lightning has its own miners, who can decline to include a payment they dislike",
-    "Liquidity must be locked into channels in advance, so a payment can fail to route",
-    "Every Lightning payment needs its own on-chain transaction, and the latest block was already full",
-    "Every Lightning payment must first wait for six confirmations on the Bitcoin chain"
-   ],
-   "correct_option_number": 2,
-   "correct_option_text": "Liquidity must be locked into channels in advance, so a payment can fail to route",
-   "explanation": "Lightning's stated limit is that liquidity must be pre-allocated, so payments can fail to route; the payments themselves never touch the base chain."
   },
   {
    "id": "bp-4d43950a",
@@ -2941,11 +2909,11 @@
    "explanation": "Deterministic means the same input gives the same output on every node; thousands of machines run the same program and must agree on one result."
   },
   {
-   "id": "bp-7733bf84",
+   "id": "bp-28139c6a",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "Two transactions land in the same Ethereum block with the same tip: a plain ETH transfer and a call to a complex contract that stores a lot of data. Why does the contract call cost more?",
+   "question": "Two transactions land in the same Ethereum block with the same tip: a plain ETH transfer and a call to a complex smart contract that stores a lot of data. Why does the contract call cost more?",
    "options": [
     "It uses more gas: every operation is priced in gas, and heavier work uses more",
     "Validators set a higher base fee for contract calls than they do for plain transfers",
@@ -3341,22 +3309,6 @@
    "explanation": "The blockchain is the full, append-only history of transactions; the world state is the current value of every record, kept for fast look-ups."
   },
   {
-   "id": "bp-3ca9355c",
-   "course": "blockchain-platforms",
-   "section_number": 3,
-   "section_title": "Permissioned Blockchains: Hyperledger Fabric",
-   "question": "During the \"Endorse\" stage of a Fabric transaction, what is written to the ledger?",
-   "options": [
-    "The full transaction, which can be rolled back if another member objects",
-    "Nothing yet: endorsing peers only simulate the chaincode and sign the result",
-    "A provisional entry that only the submitting organisation is able to see",
-    "A new block containing the transaction, cut by the endorsing peers"
-   ],
-   "correct_option_number": 2,
-   "correct_option_text": "Nothing yet: endorsing peers only simulate the chaincode and sign the result",
-   "explanation": "Endorsing peers simulate the chaincode and return a signed result; nothing is written to the ledger until the validate-and-commit stage."
-  },
-  {
    "id": "bp-de9d9541",
    "course": "blockchain-platforms",
    "section_number": 3,
@@ -3507,21 +3459,21 @@
    "section_title": "Interoperability",
    "question": "You used a lock-and-mint bridge to turn 1 ETH on Ethereum into 1 wETH on Solana. How do you get your original ETH back?",
    "options": [
-    "Burn the wETH on Solana; the operator then releases the 1 ETH from the vault",
-    "Wait for the wETH to expire, at which point the vault refunds the ETH",
-    "Send the wETH from Solana straight to your own address on Ethereum, where it turns back into ETH",
-    "Ask Solana's validators to transfer the ETH back across to Ethereum"
+    "Burn (hand back) the wETH on Solana; the bridge then unlocks your original ETH on Ethereum.",
+    "Do nothing: the wETH expires after a set time and the ETH returns to your wallet by itself.",
+    "Send the wETH straight to your Ethereum address; it turns back into ETH when it arrives.",
+    "Ask Solana's validators to release it, because they are holding your original ETH."
    ],
    "correct_option_number": 1,
-   "correct_option_text": "Burn the wETH on Solana; the operator then releases the 1 ETH from the vault",
-   "explanation": "A bridge never moves a coin: the original stays locked in the vault. To return, you burn the wrapped copy and the operator releases the original."
+   "correct_option_text": "Burn (hand back) the wETH on Solana; the bridge then unlocks your original ETH on Ethereum.",
+   "explanation": "A bridge never moves a coin: your original ETH stays locked in the bridge's vault on Ethereum, and the wETH on Solana is a claim ticket. To go back, you return the wETH to the bridge, which burns it and unlocks the original ETH on Ethereum. Wrapped tokens do not expire, cannot be sent directly to another chain, and Solana's validators do not hold the ETH."
   },
   {
-   "id": "bp-a724d1a8",
+   "id": "bp-9de88218",
    "course": "blockchain-platforms",
    "section_number": 4,
    "section_title": "Interoperability",
-   "question": "You hold 1 WBTC on Ethereum and want real bitcoin back on the Bitcoin chain. According to the wrapped-token (bridge) slide, how do you actually get it?",
+   "question": "You hold 1 WBTC on Ethereum. How would you get real bitcoin on the Bitcoin network?",
    "options": [
     "Wait for Ethereum's validators to convert it, since they keep a reserve of real BTC behind every WBTC",
     "Send the WBTC back through the bridge (custodian) that minted it, which unlocks the real BTC on the Bitcoin chain",
@@ -3933,11 +3885,11 @@
    "explanation": "A dApp is a full stack: the contract keeps running on-chain, but the website, data feeds and storage are usually ordinary services that someone controls."
   },
   {
-   "id": "sc-d6ff95e8",
+   "id": "sc-efb3928d",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "Why does a typical NFT project keep its images off-chain (for example on IPFS) and store only a content hash or link in the contract?",
+   "question": "Why does a typical NFT project keep its images off-chain (for example on IPFS) and store only a content hash or link in the smart contract?",
    "options": [
     "The law forbids blockchains from holding image files of any kind.",
     "On-chain storage is very expensive, so only a reference to the file (its fingerprint) is kept there.",
@@ -3949,11 +3901,11 @@
    "explanation": "Good design keeps heavy data off-chain (the file lives on IPFS or similar, and must be kept available there) and puts only the proof, the hash, on-chain."
   },
   {
-   "id": "sc-c839b9ac",
+   "id": "sc-55f52047",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "A dashboard reads a customer's token balance from a contract, and the customer then sends 10 tokens to a friend. Which of these actions costs gas?",
+   "question": "A dashboard reads a customer's token balance from a smart contract, and the customer then sends 10 tokens to a friend. Which of these actions costs gas?",
    "options": [
     "Both: every interaction with a contract costs gas.",
     "Neither: gas is charged only when a contract is deployed.",
@@ -4125,11 +4077,11 @@
    "explanation": "Protocols snap together like \"money legos\": one contract calls another, and nobody's permission is needed."
   },
   {
-   "id": "sc-af097756",
+   "id": "sc-f0ec3a0d",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "When a contract uses an oracle, does its code reach out to the internet for the data?",
+   "question": "When a smart contract uses an oracle, does its code reach out to the internet for the data?",
    "options": [
     "Yes: the oracle opens a secure, encrypted channel to the internet that the contract can call at any time.",
     "Yes, but only to websites that the validators have approved in advance.",
@@ -4157,11 +4109,11 @@
    "explanation": "A median ignores a minority of outliers: one or two liars can at most nudge the result within the range the honest nodes report, but three of five control it. Many reporters replace \"trust this one company\" with \"trust that most of them are honest\"."
   },
   {
-   "id": "sc-f333f602",
+   "id": "sc-56d83f7c",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "During network congestion a price feed stops updating, and a lending contract keeps liquidating loans at a six-hour-old price. Which oracle failure is this, and what defence does the course give?",
+   "question": "During network congestion a price feed stops updating, and a lending smart contract keeps liquidating loans at a six-hour-old price. Which oracle failure is this, and what defence does the course give?",
    "options": [
     "Manipulation; combine deep markets and reject outliers.",
     "Single point of failure; add more validators to the blockchain.",
@@ -4308,7 +4260,7 @@
    "question": "Which kind of NFT use is a logical, lasting one because it relies on real utility rather than speculation?",
    "options": [
     "Uses where the token is a key, not a speculation: ticketing, credentials, token-gating.",
-    "Perpetual creator royalties, because the chain enforces them on every single resale of a token.",
+    "Uses that count on royalty income from future resales, which marketplaces can skip and the chain does not enforce.",
     "Hype-driven collectibles bought mainly to be resold at a higher price.",
     "Profile-picture collections, whose value rests on floor prices that keep rising year after year."
    ],
@@ -4493,11 +4445,11 @@
    "explanation": "It is collaborative rather than competitive infrastructure; counterfeiters cannot forge the on-chain history, though they can still copy the bag."
   },
   {
-   "id": "sc-5e461927",
+   "id": "sc-077e940b",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "A fake \"university\" anchors a diploma's hash on the blockchain through its own contract, and the diploma file matches that record exactly. Why is the match not enough to treat the diploma as authentic?",
+   "question": "A fake \"university\" anchors a diploma's hash on the blockchain through its own smart contract, and the diploma file matches that record exactly. Why is the match not enough to treat the diploma as authentic?",
    "options": [
     "Hashes change every day, so yesterday's match proves nothing.",
     "A matching hash only shows that the file is the right size.",
@@ -4525,11 +4477,11 @@
    "explanation": "Change one character and the fingerprint changes completely; the document itself never goes on-chain."
   },
   {
-   "id": "sc-8957e29f",
+   "id": "sc-186f6009",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "A university wrongly issues a diploma to someone who never graduated and anchors it on-chain through its official contract. What will verification show?",
+   "question": "A university wrongly issues a diploma to someone who never graduated and anchors it on-chain through its official smart contract. What will verification show?",
    "options": [
     "Authentic, in the sense of genuinely issued and unaltered, even if the issuer erred.",
     "Forged: the chain detects that the underlying claim is false.",
@@ -4605,20 +4557,20 @@
    "explanation": "Hybrid means only the proof or the shared rule goes on-chain, while sensitive data and discretion stay off-chain."
   },
   {
-   "id": "sc-923929e3",
+   "id": "sc-4773f17a",
    "course": "smart-contracts",
    "section_number": 4,
    "section_title": "Critical Thinking",
-   "question": "A proposed contract would take about 80% of its inputs from oracles and external APIs. What does the \"when to rethink\" list say about this?",
+   "question": "A smart contract would take about 80% of its inputs from oracles and external APIs. What does this suggest?",
    "options": [
-    "It is ideal, because the contract has very little left to compute and so costs less gas.",
+    "It is ideal: the smart contract has little left to compute, so it costs less gas to run.",
     "It makes no difference: the on-chain logic is equally trustworthy whatever its inputs are.",
-    "It is acceptable as long as the APIs are free to use.",
-    "It is a red flag: the trust then sits with those data sources, not on-chain."
+    "It is fine, provided the external APIs are free to use and respond quickly.",
+    "It is a red flag: the trust sits in those outside sources, so rethink whether a smart contract is needed."
    ],
    "correct_option_number": 4,
-   "correct_option_text": "It is a red flag: the trust then sits with those data sources, not on-chain.",
-   "explanation": "If most inputs come from outside, the chain adds little: you are trusting the feeds."
+   "correct_option_text": "It is a red flag: the trust sits in those outside sources, so rethink whether a smart contract is needed.",
+   "explanation": "If most inputs come from outside, the chain adds little: you are really trusting the data feeds, not the code. This is one of the course's \"when to rethink\" red flags: when most of the data or logic lives off-chain, ask whether a smart contract (or a blockchain) is needed at all."
   },
   {
    "id": "sc-e5f9f5ab",
@@ -4685,11 +4637,11 @@
    "explanation": "The failing pattern is \"sold first, classified by a regulator later\"; one token sale can get three different answers in Singapore, the US and the EU."
   },
   {
-   "id": "sc-d1a549aa",
+   "id": "sc-97090050",
    "course": "smart-contracts",
    "section_number": 4,
    "section_title": "Critical Thinking",
-   "question": "An exploit starts at 3 a.m. and the team spends the first hour arguing about who is allowed to pause the contract. Which element of risk management was missing?",
+   "question": "An exploit starts at 3 a.m. and the team spends the first hour arguing about who is allowed to pause the smart contract. Which element of risk management was missing?",
    "options": [
     "A bug bounty that pays outside researchers.",
     "Formal verification, in which the contract's key properties are proven mathematically.",
@@ -4781,11 +4733,11 @@
    "explanation": "The chain secures the contract, but nothing on-chain secures the number it acts on, so the system is only as strong as its weakest link."
   },
   {
-   "id": "sc-f9ef9e0b",
+   "id": "sc-e3f01113",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "A contract pays out $20 million on the basis of one figure, and bending that figure would cost an attacker about $50,000. Using the course's three questions for any contract that reads outside data, what should you conclude?",
+   "question": "A smart contract pays out $20 million on the basis of one figure, and bending that figure would cost an attacker about $50,000. Using the course's three questions for any smart contract that reads outside data, what should you conclude?",
    "options": [
     "Nothing: the blockchain's validators will reject a false figure.",
     "The risk is low, because $50,000 is a serious sum for an attacker.",
@@ -4797,11 +4749,11 @@
    "explanation": "The third question is \"what would it cost to bend it?\"; if that is less than the money the number controls, expect an attack."
   },
   {
-   "id": "sc-ad502e65",
+   "id": "sc-4a6f6d26",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "To protect an insurance contract, a team holds each payout for 24 hours so that anyone can challenge the reading. What does this defence still leave exposed?",
+   "question": "To protect an insurance smart contract, a team holds each payout for 24 hours so that anyone can challenge the reading. What does this defence still leave exposed?",
    "options": [
     "Payouts are slower, somebody has to be watching, and a dispute still needs a judge.",
     "Nothing: a dispute window removes oracle risk completely.",
@@ -4893,11 +4845,11 @@
    "explanation": "Ethereum keeps security and decentralisation and pushes scale to Layer 2 rollups; base-layer designs trade these three goals off against each other."
   },
   {
-   "id": "sc-d9450c50",
+   "id": "sc-07a903b8",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "A contract sends money to a caller before it updates its own record of that caller's balance. Which attack does this invite?",
+   "question": "A smart contract sends money to a caller before it updates its own record of that caller's balance. Which attack does this invite?",
    "options": [
     "A flash-loan attack that bends the price reported by the contract's oracle.",
     "Reentrancy: the attacker calls back in before the record is updated.",
@@ -4989,11 +4941,11 @@
    "explanation": "ERC stands for Ethereum Request for Comments. A token standard is a promise about your contract's \"buttons\", so tools built by strangers work with it."
   },
   {
-   "id": "sc-38d049c1",
+   "id": "sc-a6253e53",
    "course": "smart-contracts",
    "section_number": 6,
    "section_title": "Build & Integration",
-   "question": "A game studio wants a single contract to hold both interchangeable gold coins and one-of-a-kind swords, and to send many items in one transfer. Which standard fits best?",
+   "question": "A game studio wants a single smart contract to hold both interchangeable gold coins and one-of-a-kind swords, and to send many items in one transfer. Which standard fits best?",
    "options": [
     "ERC-1155",
     "ERC-20",
@@ -5037,11 +4989,11 @@
    "explanation": "ERCs are application-level standards that wallets and apps choose to support; Core EIPs change the protocol itself and go live in a network upgrade."
   },
   {
-   "id": "sc-e1a67c72",
+   "id": "sc-8b6b1265",
    "course": "smart-contracts",
    "section_number": 6,
    "section_title": "Build & Integration",
-   "question": "A team asks an AI assistant to review a contract that will hold customer funds, and the AI replies that it found no issues. What is still missing before deployment?",
+   "question": "A team asks an AI assistant to review a smart contract that will hold customer funds, and the AI replies that it found no issues. What is still missing before deployment?",
    "options": [
     "Nothing more: a clean AI review plus a successful compile is the normal bar for a contract holding funds.",
     "Only agreement from a second AI model, since two models rarely miss the same bug.",
@@ -5373,20 +5325,20 @@
    "explanation": "For example, an exchange proves solvency or a firm proves an audit passed, without opening its books."
   },
   {
-   "id": "sc-457718b4",
+   "id": "sc-2040c7cb",
    "course": "smart-contracts",
    "section_number": 8,
    "section_title": "In-class Assignment & Discussion",
-   "question": "A group proposes tokenising carbon credits on one shared ledger used by all participating registries: each credit is a unique token that is burned when retired, which stops double counting. Which problem does the course say no ledger fixes?",
+   "question": "Carbon credits are put on one shared ledger as unique tokens, and each token is burned when its credit is used (retired). This stops double counting. Which problem can no ledger fix?",
    "options": [
-    "Bad or fraudulent measurement at the source.",
-    "Selling or retiring the same token twice.",
-    "Proving that a credit has been retired.",
-    "Showing a credit's chain of custody."
+    "A credit that was never real: the carbon saving was mis-measured or faked.",
+    "The same credit token being sold or used twice.",
+    "Proving that a credit has already been used (retired).",
+    "Showing who has held a credit over time."
    ],
    "correct_option_number": 1,
-   "correct_option_text": "Bad or fraudulent measurement at the source.",
-   "explanation": "With one shared ledger, the token design handles double selling, retirement and custody, but a ledger faithfully records whatever was measured, true or not. (If registries stay on separate systems, duplicate issuance across them is a further problem that a single ledger cannot see.)"
+   "correct_option_text": "A credit that was never real: the carbon saving was mis-measured or faked.",
+   "explanation": "A shared ledger handles double selling, retirement and ownership history, but it faithfully records whatever it is given, true or not. If the measurement behind a credit was wrong or faked, the token is still recorded perfectly: garbage in, garbage out. Checking the real-world claim has to happen off-chain."
   },
   {
    "id": "sc-6cf359cd",
@@ -6141,20 +6093,20 @@
    "explanation": "Low per-payment fees do not eliminate the cost of providing liquidity. Channel capacity has to be funded and positioned to support flows, which can impose capital and operating costs. Marginal transaction cost and total economic cost are different measures."
   },
   {
-   "id": "bp-6b0ff727",
+   "id": "bp-92e3bbc3",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "Two tokens expose the same standard transfer interface. An analyst concludes that they must have equivalent backing and holder rights. What is wrong with that conclusion?",
+   "question": "Two ERC-20 tokens expose the same standard transfer interface. An analyst concludes they must have equivalent backing and holder rights. What is wrong with that conclusion?",
    "options": [
-    "Equivalent backing follows if both token contracts were deployed in the same month.",
-    "Equal interfaces imply equal backing only when both tokens appear in the same explorer.",
-    "A shared interface standard does not establish equal economic or legal promises.",
-    "A token's backing is determined by its transfer function's name rather than its issuer."
+    "The conclusion holds only if both tokens were created in the same month.",
+    "The conclusion holds only if both tokens appear on the same block explorer.",
+    "The interface is only a set of function signatures; it says nothing about backing, reserves or rights.",
+    "A token's backing is set by the name of its transfer function, not by its interface."
    ],
    "correct_option_number": 3,
-   "correct_option_text": "A shared interface standard does not establish equal economic or legal promises.",
-   "explanation": "Standards let software interact with tokens in a predictable way. They do not determine reserve quality, redemption rights, issuer solvency or every administrative power. Technical compatibility and investment equivalence are separate assessments."
+   "correct_option_text": "The interface is only a set of function signatures; it says nothing about backing, reserves or rights.",
+   "explanation": "A standard such as ERC-20 is only a shared set of function signatures, so wallets and apps can handle any token the same way. It guarantees nothing about what backs a token, its reserves, redemption rights or the issuer's powers. Those have to be checked separately for each token."
   },
   {
    "id": "bp-b40a11fd",
@@ -6173,11 +6125,11 @@
    "explanation": "Every transaction from an account carries a nonce, a counter that must match the account's next expected number. Once the transaction executes, that number is used up, so an identical copy is rejected instead of running again. Paying twice would need a new transaction with a new nonce."
   },
   {
-   "id": "bp-df9564f5",
+   "id": "bp-de97d657",
    "course": "blockchain-platforms",
    "section_number": 2,
    "section_title": "Ethereum: From Money to Programmable Blockchain",
-   "question": "Two customers request the last available tokenised seat. The contract sells only to the first valid purchase it executes. Why can both requests be individually well-formed, yet only one purchase succeed?",
+   "question": "Two customers request the last available tokenised seat. The smart contract sells only to the first valid purchase it executes. Why can both requests be individually well-formed, yet only one purchase succeed?",
    "options": [
     "Deterministic rules apply to the ordered transactions and the state each one encounters.",
     "Deterministic execution requires the contract to divide the seat between both buyers.",
@@ -6205,22 +6157,6 @@
    "explanation": "The fee is first determined in ETH from the computational work and its ETH-denominated price. Expressing that cost in euros adds an exchange-rate conversion. An unchanged gas workload and Gwei price do not imply an unchanged euro cost."
   },
   {
-   "id": "sc-66c10355",
-   "course": "smart-contracts",
-   "section_number": 2,
-   "section_title": "How Smart Contracts Work",
-   "question": "A merchant dispatches a physical parcel before a related on-chain settlement finishes. That transaction later reverts. What should the merchant understand about the parcel?",
-   "options": [
-    "Reversion undoes the transaction's on-chain effects, not the physical dispatch.",
-    "The carrier is required by consensus rules to stop delivery at the next depot.",
-    "The parcel can continue moving only after the recipient repeats the transaction.",
-    "The parcel's legal ownership automatically returns to the dispatching warehouse."
-   ],
-   "correct_option_number": 1,
-   "correct_option_text": "Reversion undoes the transaction's on-chain effects, not the physical dispatch.",
-   "explanation": "Atomicity has an execution boundary. A blockchain transaction can revert its own state changes, but cannot physically recall a parcel or automatically roll back a separate logistics system. Business release conditions need to account for that boundary."
-  },
-  {
    "id": "sc-48bf8dfb",
    "course": "smart-contracts",
    "section_number": 2,
@@ -6237,11 +6173,11 @@
    "explanation": "Correct execution is not the same as a complete agreement. If the stated rules provide no way out of a foreseeable impasse, the code cannot invent one. The question concerns missing business conditions, not necessarily a programming bug."
   },
   {
-   "id": "sc-3a02b6fd",
+   "id": "sc-61bb6053",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "An escrow contract marks an order as \"paid\" only when the buyer uses its pay function. A buyer skips that function and sends ETH straight to the contract's address. Assume the ETH arrives. What should the seller NOT assume?",
+   "question": "An escrow smart contract marks an order as \"paid\" only when the buyer uses its pay function. A buyer skips that function and sends ETH straight to the contract's address. Assume the ETH arrives. What should the seller NOT assume?",
    "options": [
     "That the contract's order record and its ETH balance are two separate things.",
     "That paying correctly takes more than simply sending ETH to the address.",
@@ -6253,20 +6189,20 @@
    "explanation": "A contract's ETH balance and its order records are two different things. Sending ETH straight to the address does not run the pay function, so nothing marks the order as paid. The seller should check the order status in the contract, not just see that ETH arrived."
   },
   {
-   "id": "sc-04153de9",
+   "id": "sc-fb2976cd",
    "course": "smart-contracts",
    "section_number": 6,
    "section_title": "Build & Integration",
-   "question": "A developer proposes recording a used-coupon marker only in an event, then having a future contract call read that old event to reject reuse. What needs changing in this design?",
+   "question": "A smart contract must stop a coupon being used twice. The developer's plan: emit a \"coupon used\" event each time, and have the smart contract read its old events later to reject a reuse. What is wrong with this plan?",
    "options": [
-    "Have the off-chain listener emit a confirmation event instead of maintaining redemption state.",
-    "Store the needed redemption status in contract state for future execution to consult.",
-    "Use an explicit event name, because contracts can query all of their own named events.",
-    "Move the event to a new block each time the coupon is presented."
+    "Nothing: a smart contract can look up its own past events at any time, so reuse is blocked.",
+    "Smart contracts cannot read past events; the \"used\" marker must be stored in the contract's on-chain state.",
+    "Events are deleted after a few blocks, so the event must be emitted again in every new block.",
+    "Events are private to the developer, so the coupon holder's wallet must emit the event instead."
    ],
    "correct_option_number": 2,
-   "correct_option_text": "Store the needed redemption status in contract state for future execution to consult.",
-   "explanation": "Events are logs for off-chain consumers; contracts do not query their own past event logs as a state database during ordinary execution. A rule that needs to consult prior redemption status should maintain the necessary state. Off-chain systems can still use the events for reporting."
+   "correct_option_text": "Smart contracts cannot read past events; the \"used\" marker must be stored in the contract's on-chain state.",
+   "explanation": "Events are logs for the outside world: apps and servers listen to them, but a smart contract cannot read past events while it runs. To reject a reused coupon, the smart contract must save a \"used\" marker in its own on-chain storage (state) and check it on every call. The event is still useful for off-chain reporting."
   },
   {
    "id": "sc-7775262d",
@@ -6285,11 +6221,11 @@
    "explanation": "The course distinguishes live listening from searching past events through a node. The listener's outage does not erase settled transactions or their logs. Recovery can replay missed records, with appropriate controls against duplicating the company's off-chain actions."
   },
   {
-   "id": "sc-5068a91c",
+   "id": "sc-7f2df729",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "An app's contract address and customer balances stay the same, but an authorised upgrade changes the code it delegates to. Why can the app's effective behaviour change?",
+   "question": "An app's smart contract address and customer balances stay the same, but an authorised upgrade changes the code it delegates to. Why can the app's effective behaviour change?",
    "options": [
     "The network permits anyone holding a token to replace the code behind its address.",
     "Customer balances are copied into every newly deployed contract on the same chain.",
@@ -6317,11 +6253,11 @@
    "explanation": "Forwarding logic alone is not the complete application. For a proxy-based token, the current implementation and the upgrade controls determine important behaviour. Looking at only the wrapper can miss powers such as minting, pausing or address restrictions in the operative system."
   },
   {
-   "id": "sc-2821bbaa",
+   "id": "sc-47f398a3",
    "course": "smart-contracts",
    "section_number": 6,
    "section_title": "Build & Integration",
-   "question": "A company holds an issuer-controlled stablecoin in its own wallet. The token contract permits the issuer to freeze specified addresses. Does holding the wallet's keys remove that token-level control?",
+   "question": "A company holds an issuer-controlled stablecoin in its own wallet. The token's smart contract permits the issuer to freeze specified addresses. Does holding the wallet's keys remove that token-level control?",
    "options": [
     "Yes; any token held outside a bank becomes governed only by the wallet software.",
     "No; every token transfer always requires both an issuer signature and a holder signature.",
@@ -6333,11 +6269,11 @@
    "explanation": "Self-custody gives the company control over its signing credentials. It does not remove restrictions built into an issuer-controlled asset. The company can possess the key while the token's rules prevent a transfer from the specified address."
   },
   {
-   "id": "sc-29cdeb66",
+   "id": "sc-704be71d",
    "course": "smart-contracts",
    "section_number": 6,
    "section_title": "Build & Integration",
-   "question": "A company authorises a purchasing contract to spend up to a stated allowance of one ERC-20 token. Which description best fits that authorisation?",
+   "question": "A company authorises a purchasing smart contract to spend up to a stated allowance of one ERC-20 token. Which description best fits that authorisation?",
    "options": [
     "It transfers ownership of every asset in the wallet to the purchasing contract.",
     "It gives the spender authority across every ERC-20 token, not just the token granting approval.",
@@ -6717,11 +6653,11 @@
    "explanation": "A snapshot defines which historical state determines voting weight. Current ownership can differ from the recorded eligibility used for that proposal. This limits some short-term borrowing strategies, but the question concerns the timing rule itself rather than assuming every governance attack is prevented."
   },
   {
-   "id": "sc-a077bc11",
+   "id": "sc-49214a8c",
    "course": "smart-contracts",
    "section_number": 5,
    "section_title": "Limitations & Risks",
-   "question": "A formal analysis establishes that an insurance contract never pays more than its available token balance. Which conclusion would be unjustified?",
+   "question": "A formal analysis establishes that an insurance smart contract never pays more than its available token balance. Which conclusion would be unjustified?",
    "options": [
     "That the contract's coverage and payout rules meet customers' actual insurance needs.",
     "That a precisely specified property can be assessed independently of marketing claims.",
@@ -6749,22 +6685,6 @@
    "explanation": "A reviewed component is useful evidence about that component and version. It does not automatically cover later custom logic, configuration or interactions. The resulting system should be assessed against its actual requirements and changed control surface."
   },
   {
-   "id": "sc-8e45287e",
-   "course": "smart-contracts",
-   "section_number": 6,
-   "section_title": "Build & Integration",
-   "question": "A proposed interface is in Last Call. Reviewers identify a necessary change to the specification itself. What should a company building against it expect under the course's EIP process?",
-   "options": [
-    "The original review deadline guarantees that every implementation already matches the new text.",
-    "The changed interface becomes final immediately because Last Call prohibits further review.",
-    "Compatibility is already guaranteed because the proposal received a formal EIP number.",
-    "The proposal returns to review rather than becoming final unchanged merely because a deadline exists."
-   ],
-   "correct_option_number": 4,
-   "correct_option_text": "The proposal returns to review rather than becoming final unchanged merely because a deadline exists.",
-   "explanation": "Last Call is a final review window, not a guarantee that material objections will be ignored. A necessary specification change can return the proposal to Review. A company should distinguish a proposed interface from a stable final specification when assessing compatibility."
-  },
-  {
    "id": "sc-1cbb2670",
    "course": "smart-contracts",
    "section_number": 6,
@@ -6781,20 +6701,20 @@
    "explanation": "A testnet can demonstrate the mechanics of a transaction on that test network. Its faucet assets and state are separate from mainnet value. A successful exercise is evidence of that test interaction, not a real business payment on another network."
   },
   {
-   "id": "sc-0345773e",
+   "id": "sc-db72a925",
    "course": "smart-contracts",
    "section_number": 3,
    "section_title": "Industries & Case Studies",
-   "question": "A club asks a wallet to sign a fresh login message to demonstrate control of an address. The request is not an on-chain transaction or token-spending approval. What does successful signing principally achieve?",
+   "question": "A club's website asks you to sign a one-time login message with your wallet. Nothing is sent on-chain and no spending is approved. What does signing achieve?",
    "options": [
-    "It pays a network fee to record a new club membership on-chain.",
-    "It grants the club permission to spend every token held by the address.",
-    "It transfers the membership token into the club's custody for that session.",
-    "It authenticates control of the address for the stated login check."
+    "It pays a network fee to record your club membership on-chain.",
+    "It gives the club permission to spend the tokens held at your address.",
+    "It moves your membership token into the club's custody for the session.",
+    "It proves you control that address, so the club can log you in."
    ],
    "correct_option_number": 4,
-   "correct_option_text": "It authenticates control of the address for the stated login check.",
-   "explanation": "The scenario specifies an authentication message, not a transaction or allowance. A verifiable fresh message can demonstrate control of the signing address without itself moving assets or changing chain state. Users still need to inspect what kind of signing request is actually presented."
+   "correct_option_text": "It proves you control that address, so the club can log you in.",
+   "explanation": "Signing a login message is authentication: it proves you hold the key that controls the address, without moving funds, paying a fee or approving any spending. Always check what kind of request your wallet is showing before you sign."
   },
   {
    "id": "sc-8d703868",
