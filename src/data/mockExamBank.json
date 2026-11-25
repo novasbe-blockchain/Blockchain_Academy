@@ -749,22 +749,6 @@
    "explanation": "Channels are Fabric's main privacy mechanism (private data collections are a finer-grained option inside a channel). A channel is a private ledger with its own members, chaincode and transaction history; organisations outside it hold no copy and see nothing. The MSP answers \"who are you?\", not \"what may you read?\", and the ordering service only sequences transactions. Compare a transparent public chain, where every participant can see every transaction."
   },
   {
-   "id": "bp-6ca0c58a",
-   "course": "blockchain-platforms",
-   "section_number": 3,
-   "section_title": "Permissioned Blockchains: Hyperledger Fabric",
-   "question": "The world's largest shipping line builds a Fabric network to track containers and invites its rivals to join. The software works well and ports sign up, but the network closes after four years. Going by this section's case studies, what is the most likely reason?",
-   "options": [
-    "Too few rival carriers were willing to commit their data to a network owned and branded by a competitor, so it never reached critical mass.",
-    "Fabric could not process the volume: global shipping generates more events than a permissioned chain can order.",
-    "Without a native token there was no way to pay the organisations running the nodes.",
-    "Channels exposed each carrier's prices to the others, and the members left when they found out."
-   ],
-   "correct_option_number": 1,
-   "correct_option_text": "Too few rival carriers were willing to commit their data to a network owned and branded by a competitor, so it never reached critical mass.",
-   "explanation": "This is the TradeLens story (Maersk + IBM; launched 2018, closure announced November 2022, offline in early 2023). The technology worked and handled hundreds of millions of events a year; channels kept commercial data private; and a consortium pays for its nodes like any shared IT, so no token is needed. What failed was governance: competitors are reluctant to commit to a ledger that a rival controls, and although some large carriers signed up, it never reached industry-wide coverage. Networks that last have a convener everyone accepts — a dominant buyer such as Walmart, or a public body such as the EU for EBSI."
-  },
-  {
    "id": "bp-08737755",
    "course": "blockchain-platforms",
    "section_number": 3,
@@ -1149,11 +1133,11 @@
    "explanation": "The gain is a shared, tamper-evident record: a paper title can be lost or forged and takes days or weeks of paperwork to transfer, while a digital title is designed to be checked and moved in minutes. Much of that speed comes from digitising the title at all; what the chain adds is a record that outside parties can verify has not been altered. The DMV still issues every title and runs the permissioned network, so you are still trusting the DMV, not removing it. On-chain storage costs more than a database, the records are not open to the public, and the chain cannot stop a car being stolen or correct a false entry made at the source."
   },
   {
-   "id": "sc-cbf84804",
+   "id": "sc-52a6196f",
    "course": "smart-contracts",
    "section_number": 4,
    "section_title": "Critical Thinking",
-   "question": "Estonia's e-Residency is the success story among the three cases. According to this section, why does it work?",
+   "question": "Estonia's e-Residency is often cited as a blockchain success story in government. Why does it work?",
    "options": [
     "It publishes every citizen's records on a public blockchain, so anyone can verify them.",
     "It pairs an institution people already trust (the state) with blockchain used narrowly, to prove records have not been altered.",
@@ -1405,11 +1389,11 @@
    "explanation": "Bitcoin cannot be frozen at the protocol layer, but a custodian can freeze the coins it holds; 'your keys, your coins' applies only if you self-custody."
   },
   {
-   "id": "bf-ed6811cd",
+   "id": "bf-5047df97",
    "course": "blockchain-fundamentals",
    "section_number": 0,
    "section_title": "The History of Blockchain",
-   "question": "Which statement best matches the prologue's definition of decentralization?",
+   "question": "Which statement best describes decentralization in the sense that matters for a blockchain?",
    "options": [
     "The system runs on a very large number of computers spread across many countries",
     "There are no rules at all, so every participant is free to act as they see fit",
@@ -2045,11 +2029,11 @@
    "explanation": "Tampering with one transaction changes its leaf hash and every node on the path up to the root; the A–B branch is untouched."
   },
   {
-   "id": "bf-17a5da99",
+   "id": "bf-293142de",
    "course": "blockchain-fundamentals",
    "section_number": 2,
    "section_title": "Bitcoin and Beyond",
-   "question": "El Salvador made Bitcoin legal tender in 2021. What does the outcome described in Section 2 suggest?",
+   "question": "El Salvador made Bitcoin legal tender in 2021, yet surveys found most people still did not use it, and in 2025 acceptance became voluntary. What does this suggest?",
    "options": [
     "Legal status was enough to turn Bitcoin into the everyday money of most of the population",
     "The Bitcoin network had to change its rules in order to serve the population of a whole country",
@@ -2093,11 +2077,11 @@
    "explanation": "Bitcoin Script handles simple conditions such as 'spend only with two signatures' or 'unlock after a delay' — no loops, no persistent state, no native token standard."
   },
   {
-   "id": "bf-6a02be5e",
+   "id": "bf-5a58c697",
    "course": "blockchain-fundamentals",
    "section_number": 2,
    "section_title": "Bitcoin and Beyond",
-   "question": "Bitcoin's community declined to add more programmability, and Ethereum was built instead. How does Section 2 judge the two choices?",
+   "question": "Bitcoin's community declined to add more programmability, and Ethereum was built instead. What is a fair assessment of the two choices?",
    "options": [
     "Bitcoin's choice was a mistake, and Ethereum was created in order to correct it for good",
     "Ethereum's choice was reckless, and Bitcoin's refusal to change was the only safe option",
@@ -2106,7 +2090,7 @@
    ],
    "correct_option_number": 3,
    "correct_option_text": "Neither is 'right': Bitcoin keeps a smaller attack surface, Ethereum can do far more",
-   "explanation": "The slides frame it as a trade-off: Bitcoin does one thing extremely well; Ethereum does many things with a larger attack surface."
+   "explanation": "It is a trade-off: Bitcoin does one thing extremely well; Ethereum does many things with a larger attack surface."
   },
   {
    "id": "bf-a51b0967",
@@ -2237,11 +2221,11 @@
    "explanation": "'Bigger trades move further along the curve, so each extra ETH costs more.'"
   },
   {
-   "id": "bf-2aed5647",
+   "id": "bf-5f5304a8",
    "course": "blockchain-fundamentals",
    "section_number": 3,
    "section_title": "What's Next for Blockchain?",
-   "question": "Which is the most accurate summary of where DeFi stands today, according to Section 3?",
+   "question": "Which is the most accurate summary of where DeFi stands today?",
    "options": [
     "It works and is open 24/7, but most of its volume is crypto being traded for other crypto",
     "It has replaced banks for most everyday payments, loans and savings where it is available",
@@ -2250,7 +2234,7 @@
    ],
    "correct_option_number": 1,
    "correct_option_text": "It works and is open 24/7, but most of its volume is crypto being traded for other crypto",
-   "explanation": "The slide's 'hype vs real': DeFi works and is open 24/7, but most volume is crypto trading crypto, not everyday finance — and it carries risks such as contract bugs."
+   "explanation": "Hype vs real: DeFi works and is open 24/7, but most volume is crypto trading crypto, not everyday finance — and it carries risks such as contract bugs."
   },
   {
    "id": "bf-ada08e70",
@@ -2301,11 +2285,11 @@
    "explanation": "'Because the standard is shared, every wallet, exchange and app can hold it.'"
   },
   {
-   "id": "bf-96f95faa",
+   "id": "bf-eabd5b75",
    "course": "blockchain-fundamentals",
    "section_number": 3,
    "section_title": "What's Next for Blockchain?",
-   "question": "A pharmaceutical company wants every pack of medicine to be traceable from the factory to the pharmacy, so that counterfeits can be spotted. Which of the recurring patterns from Section 3 does this illustrate?",
+   "question": "A pharmaceutical company wants every pack of medicine to be traceable from the factory to the pharmacy, so that counterfeits can be spotted. Which of these blockchain use patterns does this illustrate?",
    "options": [
     "Trust without intermediaries — money and claims settling directly between parties",
     "Self-sovereign coordination — coordinating without a platform or registrar in the middle",
@@ -2314,7 +2298,7 @@
    ],
    "correct_option_number": 4,
    "correct_option_text": "Verifiable provenance — an unbroken chain of custody built into the record",
-   "explanation": "Track-and-trace and drug-pack authentication are the slide's examples of verifiable provenance: an unbroken chain of custody."
+   "explanation": "Track-and-trace and drug-pack authentication are standard examples of verifiable provenance: an unbroken chain of custody."
   },
   {
    "id": "bf-15a6c70a",
@@ -3181,22 +3165,6 @@
    "explanation": "On a permissioned chain trust moves from maths to governance: you rely on the consortium agreement and on whoever runs the ordering nodes."
   },
   {
-   "id": "bp-23fabf52",
-   "course": "blockchain-platforms",
-   "section_number": 3,
-   "section_title": "Permissioned Blockchains: Hyperledger Fabric",
-   "question": "IBM Food Trust won real adoption among Walmart's suppliers, while TradeLens shut down after about four years, although both ran on Fabric. According to the case-study lessons, what made the difference for Food Trust?",
-   "options": [
-    "It was open to anonymous participants, which let its network grow faster than TradeLens",
-    "It could process far more transactions per second than TradeLens, which struggled",
-    "Walmart could require its suppliers to join, and the old paper process had failed during recalls",
-    "It paid each supplier a token reward for every record uploaded, which TradeLens did not"
-   ],
-   "correct_option_number": 3,
-   "correct_option_text": "Walmart could require its suppliers to join, and the old paper process had failed during recalls",
-   "explanation": "Permissioned networks succeed when someone can require participation and the old process is visibly broken, not when the technology is best. (This is a lesson about how adoption was won; check Food Trust's current commercial status before describing it as live.)"
-  },
-  {
    "id": "bp-e64c7333",
    "course": "blockchain-platforms",
    "section_number": 3,
@@ -3997,11 +3965,11 @@
    "explanation": "A transaction is all or nothing, so the pool is either repaid in full or the loan never happened; the borrower loses only the gas fee."
   },
   {
-   "id": "sc-471fe68f",
+   "id": "sc-32a35c77",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "In the flash-loan example, DEX A never agreed to work with the lending pool, yet the trader used both in one transaction. Which capability does this show?",
+   "question": "A trader borrows from a lending pool and trades on a DEX in a single transaction, although the DEX and the pool never agreed to work together. Which capability does this show?",
    "options": [
     "Permissionless composability: any contract can call another's public functions without approval.",
     "Censorship resistance: no government or company can block a valid transaction.",
@@ -4077,11 +4045,11 @@
    "explanation": "An oracle is a trust and definition problem, not only a technical one: ask which exact source decides, and who can touch it."
   },
   {
-   "id": "sc-b7288fe6",
+   "id": "sc-542de008",
    "course": "smart-contracts",
    "section_number": 2,
    "section_title": "How Smart Contracts Work",
-   "question": "In the price-attack walkthrough, suppose the lender values collateral with a feed that averages many markets over time instead of one small pool's live price. What happens to the attack?",
+   "question": "An attacker takes a flash loan, pumps a token's price in one small pool, and borrows against the inflated collateral from a lender that reads that pool's live price. Suppose the lender instead used a feed that averages many markets over time. What happens to the attack?",
    "options": [
     "The attacker cannot borrow enough to repay the flash loan, so the whole transaction is cancelled at the cost of gas only.",
     "It still succeeds, but the attacker's profit is cut roughly in half because the averaged price only partly follows the pumped pool.",
@@ -5085,11 +5053,11 @@
    "explanation": "The three properties are completeness (true claims pass), soundness (false claims fail: without a genuine credential, producing a valid proof is practically impossible) and zero-knowledge (nothing else leaks). The proof is only as good as the credential behind it: it relies on the issuer having attested the right date of birth."
   },
   {
-   "id": "sc-43da0208",
+   "id": "sc-3a46c723",
    "course": "smart-contracts",
    "section_number": 7,
    "section_title": "Zero-Knowledge & Privacy",
-   "question": "In the \"KYC without handing over your identity\" pattern, where does your personal data sit, and what does the app receive?",
+   "question": "In zero-knowledge KYC, where does your personal data sit, and what does the app receive?",
    "options": [
     "A bank-signed credential stays in your wallet; the app checks a proof with none of the raw data.",
     "The bank uploads your passport to the chain; the app reads it there.",
@@ -5101,11 +5069,11 @@
    "explanation": "The bank verifies you once and signs a credential; your wallet proves statements such as \"age ≥ 18, not sanctioned\" without the data leaving it."
   },
   {
-   "id": "sc-673adc68",
+   "id": "sc-5a1b8efa",
    "course": "smart-contracts",
    "section_number": 7,
    "section_title": "Zero-Knowledge & Privacy",
-   "question": "Why would a business prefer this zero-knowledge KYC pattern to collecting customers' documents itself?",
+   "question": "In zero-knowledge KYC, a bank checks the customer once and signs a credential; the customer's wallet then proves statements such as \"over 18, not sanctioned\" without handing over documents. Why would a business prefer this to collecting customers' documents itself?",
    "options": [
     "It removes the need for anyone to carry out a KYC check.",
     "It holds no passport database that could leak, and regulators can still get proof the check was done.",
