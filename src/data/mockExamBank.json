@@ -3453,20 +3453,20 @@
    "explanation": "A bridge never moves a coin: your original ETH stays locked in the bridge's vault on Ethereum, and the wETH on Solana is a claim ticket. To go back, you return the wETH to the bridge, which burns it and unlocks the original ETH on Ethereum. Wrapped tokens do not expire, cannot be sent directly to another chain, and Solana's validators do not hold the ETH."
   },
   {
-   "id": "bp-9de88218",
+   "id": "bp-ab120482",
    "course": "blockchain-platforms",
    "section_number": 4,
    "section_title": "Interoperability",
-   "question": "You hold 1 WBTC on Ethereum. How would you get real bitcoin on the Bitcoin network?",
+   "question": "How is 1 WBTC on Ethereum turned back into real bitcoin on the Bitcoin network?",
    "options": [
-    "Wait for Ethereum's validators to convert it, since they keep a reserve of real BTC behind every WBTC",
-    "Send the WBTC back through the bridge (custodian) that minted it, which unlocks the real BTC on the Bitcoin chain",
-    "Ask Bitcoin's miners to release the BTC, since the miners are the ones who guard the vault where the BTC is locked",
-    "Send the WBTC to a Bitcoin address, where the network converts it back into BTC automatically"
+    "Ethereum's validators convert it, since they keep a reserve of real BTC behind every WBTC",
+    "It is sent back through the bridge (custodian) that minted it, which releases the real BTC on the Bitcoin chain",
+    "Bitcoin's miners release the BTC, since the miners are the ones who guard the vault where the BTC is locked",
+    "It is sent to a Bitcoin address, where the network converts it back into BTC automatically"
    ],
    "correct_option_number": 2,
-   "correct_option_text": "Send the WBTC back through the bridge (custodian) that minted it, which unlocks the real BTC on the Bitcoin chain",
-   "explanation": "A bridge never moves a coin: the real BTC stays locked with the custodian, and the WBTC is the claim ticket. To get the BTC back you hand the ticket back: the WBTC returns to the bridge (custodian) that minted it and is burned, and the locked BTC is released on the Bitcoin chain (the \"burn → withdraw\" arrow on the slide). Miners and validators do not hold the vault, and the Bitcoin network cannot read an Ethereum token. In practice this redemption step runs through the custodian's approved merchants."
+   "correct_option_text": "It is sent back through the bridge (custodian) that minted it, which releases the real BTC on the Bitcoin chain",
+   "explanation": "A bridge never moves a coin: the real BTC stays locked with the custodian, and the WBTC is the claim ticket. To get the BTC back, the ticket is handed back: the WBTC returns to the bridge (custodian) that minted it and is burned, and the locked BTC is released on the Bitcoin chain (the \"burn → withdraw\" arrow on the slide). Miners and validators do not hold the vault, and the Bitcoin network cannot read an Ethereum token. In practice this redemption step runs through the custodian's approved merchants."
   },
   {
    "id": "bp-3b1c0cb3",
@@ -6219,22 +6219,6 @@
    "correct_option_number": 3,
    "correct_option_text": "No; key custody and the token contract's transfer restrictions are separate controls.",
    "explanation": "Self-custody gives the company control over its signing credentials. It does not remove restrictions built into an issuer-controlled asset. The company can possess the key while the token's rules prevent a transfer from the specified address."
-  },
-  {
-   "id": "sc-704be71d",
-   "course": "smart-contracts",
-   "section_number": 6,
-   "section_title": "Build & Integration",
-   "question": "A company authorises a purchasing smart contract to spend up to a stated allowance of one ERC-20 token. Which description best fits that authorisation?",
-   "options": [
-    "It transfers ownership of every asset in the wallet to the purchasing contract.",
-    "It gives the spender authority across every ERC-20 token, not just the token granting approval.",
-    "It grants a token-specific spending permission without handing over the wallet's private key.",
-    "It lets the spender sign unrelated transactions in the owner's name without a separate permission."
-   ],
-   "correct_option_number": 3,
-   "correct_option_text": "It grants a token-specific spending permission without handing over the wallet's private key.",
-   "explanation": "An ERC-20 approval can authorise a spender within the token contract's allowance rules. It is not the same as disclosing the owner's private key or granting control over all unrelated assets. The spender's powers and the allowance still deserve careful assessment."
   },
   {
    "id": "sc-83449c31",
