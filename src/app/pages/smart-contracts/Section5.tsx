@@ -12,6 +12,7 @@ import {
   Link2, Cloud, Check, X, Scale, Rocket, Repeat, Lock, Users, Timer, Ban, Bug, CircleCheck,
   Zap, CornerUpLeft,
 } from 'lucide-react';
+import { PageLabelRow } from '../../components/shared/PageLabel';
 
 // Language-neutral shape — only IDs. Labels come from t() at render time.
 const chapterIds = [
@@ -747,6 +748,7 @@ export function SC_Section5() {
         {/* ═══════ SECURITY RISKS — mistake vs fix ledger + the running total ═══════ */}
         <div id="s5-risks-security" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-5">
+            <PageLabelRow kind="optional" />
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('security.heading')}</h2>
             <p className="text-muted-foreground text-sm mt-1">{t('security.subtitle')}</p>
           </div>
@@ -885,6 +887,7 @@ export function SC_Section5() {
         {/* ═══════ FAILURES — six case files ═══════ */}
         <div id="s5-failures" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
+            <PageLabelRow kind="reference" />
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('failures.heading')}</h2>
             <p className="text-muted-foreground text-sm mt-1">{t('failures.subtitle')}</p>
           </div>

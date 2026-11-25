@@ -12,6 +12,7 @@ import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { RecapHandoff } from '../../components/shared/RecapHandoff';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { Network, ShieldCheck } from 'lucide-react';
+import { PageLabelRow } from '../../components/shared/PageLabel';
 
 // Language-neutral shape — IDs + kind only. Labels resolved via t() at render time.
 const chapterShape = [
@@ -1079,6 +1080,7 @@ function LayersOverview({ recapLabel, keyPoint }: { recapLabel: string; keyPoint
     <div id="s4-layers" className="h-full flex flex-col p-6 lg:p-10">
       <div className="shrink-0 mb-3 flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
         <div>
+          <PageLabelRow kind="reference" />
           <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('layers.heading')}</h2>
           <p className="text-sm text-muted-foreground mt-1">{t('layers.subtitle')}</p>
         </div>
@@ -1852,6 +1854,7 @@ export function BP_Section4() {
         {/* ═══════ S4-COSMOS ═══════ */}
         <div id="s4-cosmos" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
+            <PageLabelRow kind="optional" />
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
               {t('cosmos.heading')}
             </h2>

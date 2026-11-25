@@ -8,7 +8,7 @@ import { SectionNav } from '../../components/navigation/SectionNav';
 import { SiteFooter } from '../../components/shared/SiteFooter';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { KeyPointBar } from '../../components/shared/KeyPointBar';
-import { DeepDiveBadge } from '../../components/shared/DeepDiveBadge';
+import { PageLabel } from '../../components/shared/PageLabel';
 import { RecapHandoff } from '../../components/shared/RecapHandoff';
 import { Cog, Check, X, Server, ShieldCheck, Activity, Database, Coins, Ban } from 'lucide-react';
 import {
@@ -797,8 +797,11 @@ function DAppStackExercise() {
     <div className="h-full flex flex-col p-6 lg:p-8">
       <div className="shrink-0 flex items-center justify-between mb-4">
         <div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">{t('stackExercise.badge')}</span>
-          <h2 className="text-2xl font-bold text-foreground mt-1">{t('stackExercise.heading')}</h2>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#6366f1]/15 border border-[#6366f1]/40 text-[#6366f1] text-xs font-bold">{t('stackExercise.badge')}</span>
+            <PageLabel kind="optional" />
+          </div>
+          <h2 className="text-2xl font-bold text-foreground mt-1.5">{t('stackExercise.heading')}</h2>
           <p className="text-muted-foreground text-sm">
             {selected ? <span className="text-[#6366f1] font-semibold">{t('stackExercise.promptSelectedA')}<span className="font-black">{itemLabel(selected)}</span></span>
               : t('stackExercise.promptIdle')}
@@ -1462,7 +1465,7 @@ export function SC_Section2() {
           <div className="shrink-0 mb-4">
             <div className="flex items-center gap-3 flex-wrap">
               <span className="text-xs font-black uppercase tracking-widest text-[#6366f1]">{t('solidity.kicker')}</span>
-              <DeepDiveBadge label={t('optionalAdvanced', { ns: 'common' })} />
+              <PageLabel kind="reference" />
             </div>
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1 mb-1">{t('solidity.heading')}</h2>
             <p className="text-sm text-muted-foreground">{t('solidity.subtitle')}</p>

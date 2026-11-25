@@ -13,6 +13,7 @@ import { GasCalculator } from '../../components/ethereum/GasCalculator';
 import { Eip1559Demo } from '../../components/ethereum/Eip1559Demo';
 import { StakingFlow } from '../../components/ethereum/StakingFlow';
 import { useLocalizedPath } from '../../../i18n/useLang';
+import { PageLabelRow } from '../../components/shared/PageLabel';
 
 // Language-neutral shape — only IDs + kind. Labels come from t() at render time.
 const chapterShape = [
@@ -2118,6 +2119,7 @@ export function BP_Section2() {
         {/* ═══════ S2-ROLLUPS-2 — optimistic vs ZK, L1 vs L2 for users ═══════ */}
         <div id="s2-rollups-2" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
+            <PageLabelRow kind="optional" />
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('rollups2.heading')}</h2>
             <p className="text-sm text-muted-foreground mt-1">{t('rollups2.subtitle')}</p>
           </div>
@@ -2200,6 +2202,7 @@ export function BP_Section2() {
         {/* ═══════ S2-DATA-WHERE — where the data goes: calldata · blobs · off-chain ═══════ */}
         <div id="s2-data-where" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-3">
+            <PageLabelRow kind="optional" />
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('dataWhere.heading')}</h2>
             <p className="text-sm text-muted-foreground mt-1 max-w-4xl">{t('dataWhere.subtitle')}</p>
           </div>

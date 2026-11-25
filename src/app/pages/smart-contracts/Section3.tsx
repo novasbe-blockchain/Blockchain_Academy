@@ -26,6 +26,7 @@ import {
 import imgRwaProcess     from '../../../assets/sc/rwa-process.png';
 import imgSupplyProv     from '../../../assets/sc/supply-provenance.png';
 import imgCertDecent     from '../../../assets/sc/cert-decentralization.png';
+import { PageLabelRow, type PageLabelKind } from '../../components/shared/PageLabel';
 
 // Language-neutral shape — IDs + kind only. Labels resolved via t() at render time.
 const chapterShape = [
@@ -1029,9 +1030,9 @@ const CASE_META = [
 // ─── "In production" slide: 2–3 real deployments side by side ────────────────
 
 function RealWorldSlide({
-  heading, subtitle, image, columns, colors, terms, keyPoint,
+  heading, subtitle, image, columns, colors, terms, keyPoint, label,
 }: {
-  heading: string; subtitle: string; image?: string;
+  heading: string; subtitle: string; image?: string; label?: PageLabelKind;
   columns: RealColumn[]; colors: string[]; terms: string[]; keyPoint: string;
 }) {
   return (
@@ -1039,6 +1040,7 @@ function RealWorldSlide({
       <div className="shrink-0 mb-4 flex items-start gap-4">
         {image && <img src={image} alt="" className="hidden lg:block h-16 object-contain shrink-0" />}
         <div>
+          {label && <PageLabelRow kind={label} />}
           <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{heading}</h2>
           <p className="text-muted-foreground text-sm mt-1">{subtitle}</p>
         </div>
@@ -1268,7 +1270,7 @@ export function SC_Section3() {
         </div>
         <div id="s3-cert-real" className="h-full">
           <RealWorldSlide
-            heading={t('certReal.heading')} subtitle={t('certReal.subtitle')} image={imgCertDecent}
+            heading={t('certReal.heading')} subtitle={t('certReal.subtitle')} image={imgCertDecent} label="optional"
             columns={certReal} colors={['#22d3ee', '#8b5cf6', '#f59e0b']}
             terms={['hash chain', 'KSI', 'Merkle tree', 'timestamping', 'verifiable credential']}
             keyPoint={kp('s3-cert-real')}
@@ -1282,6 +1284,7 @@ export function SC_Section3() {
 
         <div id="s3-case-gallery" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
+            <PageLabelRow kind="reference" />
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('caseGallery.heading')}</h2>
             <p className="text-muted-foreground text-sm mt-1">{t('caseGallery.subtitle')}</p>
           </div>

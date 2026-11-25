@@ -10,6 +10,7 @@ import { KeyPointBar } from '../../components/shared/KeyPointBar';
 import { UnderTheHood } from '../../components/shared/UnderTheHood';
 import { RecapHandoff } from '../../components/shared/RecapHandoff';
 import { EyeOff } from 'lucide-react';
+import { PageLabelRow } from '../../components/shared/PageLabel';
 
 const NS = 'smart-contracts/section-7';
 
@@ -1208,6 +1209,7 @@ export function SC_Section7() {
         {/* ═══════ S7-APPROACHES — four ways to get privacy on-chain ═══════ */}
         <div id="s7-approaches" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
+            <PageLabelRow kind="optional" />
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('privacyApproaches.heading')}</h2>
             <p className="text-sm text-muted-foreground mt-1">{t('privacyApproaches.subtitle')}</p>
           </div>
@@ -1247,6 +1249,7 @@ export function SC_Section7() {
         {/* ═══════ S7-TORNADO — when privacy code met the law ═══════ */}
         <div id="s7-tornado" className="h-full flex flex-col p-6 lg:p-10">
           <div className="shrink-0 mb-4">
+            <PageLabelRow kind="reference" />
             <h2 className="text-2xl lg:text-3xl font-bold text-foreground">{t('privacyRegulation.heading')}</h2>
             <p className="text-sm text-muted-foreground mt-1">{t('privacyRegulation.subtitle')}</p>
             <div className="mt-2">
